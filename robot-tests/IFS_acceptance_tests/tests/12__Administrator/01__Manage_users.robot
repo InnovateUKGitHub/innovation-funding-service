@@ -88,10 +88,10 @@ Administrator can successfully invite a new user
 Administrator can successfully finish the rest of the invitation
     [Documentation]  IFS-2412
     [Tags]  HappyPath
-    Then the user should see the element                     jQuery=h1:contains("Manage users")
+    Given the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
     And the user should see the element                      jQuery=.selected:contains("Pending")
-    And the user resends the invite
+    When the user resends the invite
     Then the user verifies pending tab content
     When the user clicks the button/link                     jQuery=a:contains("Active")
     Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
