@@ -28,7 +28,7 @@ public class LabourCost extends AbstractFinanceRowItem {
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class, message = MAX_DIGITS_MESSAGE)
-    private BigDecimal grossAnnualSalary;
+    private BigDecimal grossEmployeeCost;
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
     @Min.List({
@@ -46,7 +46,7 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     }
 
-    public LabourCost(Long id, String name, String role, BigDecimal grossAnnualSalary, Integer labourDays, String description) {
+    public LabourCost(Long id, String name, String role, BigDecimal grossEmployeeCost, Integer labourDays, String description) {
         this();
         this.id = id;
         this.name = name;
@@ -57,7 +57,7 @@ public class LabourCost extends AbstractFinanceRowItem {
             // User is only allowed to enter the labourDays on this instance, so need to fill the role field for validation.
             this.role =LabourCostCategory.WORKING_DAYS_PER_YEAR;
         }
-        this.grossAnnualSalary = grossAnnualSalary;
+        this.grossEmployeeCost = grossEmployeeCost;
         this.labourDays = labourDays;
         this.description = description;
     }
@@ -87,8 +87,8 @@ public class LabourCost extends AbstractFinanceRowItem {
         return role;
     }
 
-    public BigDecimal getGrossAnnualSalary() {
-        return grossAnnualSalary;
+    public BigDecimal getGrossEmployeeCost() {
+        return grossEmployeeCost;
     }
 
     public BigDecimal getRate(Integer workingDaysPerYear) {
@@ -97,7 +97,7 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     private BigDecimal getRatePerDay(Integer workingDaysPerYear) {
-        if(grossAnnualSalary == null || workingDaysPerYear == null) {
+        if(grossEmployeeCost == null || workingDaysPerYear == null) {
             return null;
         }
 
@@ -105,7 +105,7 @@ public class LabourCost extends AbstractFinanceRowItem {
             return BigDecimal.ZERO;
         }
 
-        return grossAnnualSalary.divide(new BigDecimal(workingDaysPerYear), 5, RoundingMode.HALF_EVEN);
+        return grossEmployeeCost.divide(new BigDecimal(workingDaysPerYear), 5, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getRate() {
@@ -139,8 +139,8 @@ public class LabourCost extends AbstractFinanceRowItem {
         }
     }
 
-    public void setGrossAnnualSalary(BigDecimal grossAnnualSalary) {
-        this.grossAnnualSalary = grossAnnualSalary;
+    public void setGrossEmployeeCost(BigDecimal grossEmployeeCost) {
+        this.grossEmployeeCost = grossEmployeeCost;
     }
 
     public void setName(String name) {

@@ -910,7 +910,7 @@ Project finance user can view Lead partner's changes for Labour
     Given the user clicks the button/link                                   link=Eligibility
     When the user clicks the button/link                                    link=View changes to finances
     Then the user verifies the action and section for revised finances     Change  Labour
-    And the revised categories are verified for specified Section          Change  Labour  0  Gross annual salary  200  120000
+    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
     And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
     And the revised cost is verified for the specified section             Change  Labour  2  52,000
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
@@ -988,7 +988,7 @@ Project finance user can view partner's revised changes for Labour
     Given the user clicks the button/link                                   link=Eligibility
     When the user clicks the button/link                                    link=View changes to finances
     Then the user verifies the action and section for revised finances     Change  Labour
-    And the revised categories are verified for specified Section          Change  Labour  0  Gross annual salary  200  120000
+    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
     And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
     And the revised cost is verified for the specified section             Change  Labour  2  52,000
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
@@ -1104,8 +1104,8 @@ Project finance user adds, modifies and removes labour rows
     And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               1    3%    £5,886
     When the user clicks the button/link           jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(2) button:contains('Remove')
-    And the user clears the text from the element  jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]
-    And the user enters text to a text field       jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]    100
+    And the user clears the text from the element  jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]
+    And the user enters text to a text field       jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]    100
     And the user clicks the button/link            css=section:nth-of-type(1) .button[name=save-eligibility]
     Then verify percentage and total               1    2%    £4,748
     And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(3) td:contains("£1,626")

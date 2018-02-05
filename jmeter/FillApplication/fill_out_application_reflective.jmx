@@ -6927,7 +6927,7 @@ Adding in some extra detail into the WYSIWYG text editor</stringProp>
                 <elementProp name="fieldName" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
                   <stringProp name="Argument.name">fieldName</stringProp>
-                  <stringProp name="Argument.value">labour-grossAnnualSalary-28-155</stringProp>
+                  <stringProp name="Argument.value">labour-grossEmployeeCost-28-155</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
@@ -11139,9 +11139,9 @@ Adding in some extra detail into the WYSIWYG text editor</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 </elementProp>
-                <elementProp name="labour-grossAnnualSalary-28-155" elementType="HTTPArgument">
+                <elementProp name="labour-grossEmployeeCost-28-155" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.name">labour-grossAnnualSalary-28-155</stringProp>
+                  <stringProp name="Argument.name">labour-grossEmployeeCost-28-155</stringProp>
                   <stringProp name="Argument.value">50000</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
