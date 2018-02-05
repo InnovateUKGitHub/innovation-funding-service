@@ -6,6 +6,8 @@ if (project.hasProperty("profile")) {
     }
 }
 
+apply from: rootProject.file("java-spring-boot.gradle")
+
 jar {
     baseName = 'ifs-rest-api-service'
 }
@@ -17,7 +19,6 @@ configurations {
 
 ext {
     javaLanguageLevel = 1.8
-    sourceCompatibility = 1.8
 }
 
 bootRepackage.enabled=false
@@ -33,18 +34,5 @@ dependencies {
 task client(type: Jar) {
     from(sourceSets.main.output) {
         exclude "org/innovateuk/ifs/Application.class"
-    }
-}
-
-//noinspection GroovyMissingReturnStatement
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
     }
 }

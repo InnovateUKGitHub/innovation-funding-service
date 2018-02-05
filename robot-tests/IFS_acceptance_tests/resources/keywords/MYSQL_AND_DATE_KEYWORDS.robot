@@ -6,9 +6,9 @@ Resource          ../defaultResources.robot
 
 *** Keywords ***
 the assessment start period changes in the db in the past
-    ${today}=    get time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    [Arguments]   ${competition_id}
+    ${yesterday} =    get yesterday
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     And reload page
 
 the calculation of the remaining days should be correct
@@ -32,8 +32,7 @@ the total calculation in dashboard should be correct
     Page Should Contain    ${TEXT} (${NO_OF_COMP_OR_APPL})
 
 The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
-    ${today}=    get time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    ${yesterday} =   get yesterday
     When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
     And reload page
 

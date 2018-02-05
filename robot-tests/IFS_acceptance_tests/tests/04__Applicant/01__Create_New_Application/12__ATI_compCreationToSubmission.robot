@@ -73,7 +73,9 @@ Project Finance is able to see the Overheads costs file
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
     And the user clicks the button/link    jQuery=tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    Then the project finance user is able to download the Overheads file    ${ProjectID}  22    #TODO IFS-2599 Raised to improve this as we need cannot rely on hard-coded values.
+    Then the user should see the element   jQuery=a:contains("${excel_file}")
+    And the project finance user is able to download the Overheads file    ${ProjectID}  22
+    # TODO IFS-2599 Raised to improve this as we cannot rely on hard-coded values.
 
 *** Keywords ***
 Custom Suite Setup

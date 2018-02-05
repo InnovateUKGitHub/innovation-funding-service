@@ -100,6 +100,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setSections(new ArrayList<>(template.getSections()));
         competition.setFullApplicationFinance(template.isFullApplicationFinance());
         competition.setTermsAndConditions(template.getTermsAndConditions());
+        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
         return competition;
     }
 
@@ -116,7 +117,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private ServiceResult<Question> initializeAndPersistQuestion(Section applicationQuestionsSection, Competition competition) {
         Question question = defaultApplicationQuestionCreator.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
-        question.setCompetition(competition);
 
         Question createdQuestion = questionTemplatePersistorServiceImpl.persistByEntity(Arrays.asList(question)).get(0);
         Question prioritizedQuestion = questionPriorityService.prioritiseAssessedQuestionAfterCreation(createdQuestion);

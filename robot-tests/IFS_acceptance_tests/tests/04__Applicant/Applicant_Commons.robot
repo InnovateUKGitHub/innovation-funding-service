@@ -359,6 +359,7 @@ the user navigates to the eligibility of the competition
 
 the applicant submits the application
     the user clicks the button/link                    link=Review and submit
+    the user should not see the element                jQuery=.task-status-incomplete
     the user clicks the button/link                    jQuery=.button:contains("Submit application")
     the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  submit

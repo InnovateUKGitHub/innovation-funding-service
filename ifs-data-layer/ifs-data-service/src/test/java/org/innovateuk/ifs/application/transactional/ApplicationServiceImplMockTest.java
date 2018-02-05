@@ -678,10 +678,10 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Organisation organisation1 = new Organisation(1L, "test organisation 1");
         Organisation organisation2 = new Organisation(2L, "test organisation 2");
 
-        ProcessRole testProcessRole1 = new ProcessRole(0L, testUser1, testApplication1.getId(), new Role(), organisation1.getId());
-        ProcessRole testProcessRole2 = new ProcessRole(1L, testUser1, testApplication2.getId(), new Role(), organisation1.getId());
-        ProcessRole testProcessRole3 = new ProcessRole(2L, testUser2, testApplication2.getId(), new Role(), organisation2.getId());
-        ProcessRole testProcessRole4 = new ProcessRole(3L, testUser2, testApplication3.getId(), new Role(), organisation2.getId());
+        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(new Role()).withOrganisationId( organisation1.getId()).build();
+        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(new Role()).withOrganisationId( organisation1.getId()).build();
+        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(new Role()).withOrganisationId( organisation2.getId()).build();
+        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(new Role()).withOrganisationId( organisation2.getId()).build();
 
         when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
         when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
