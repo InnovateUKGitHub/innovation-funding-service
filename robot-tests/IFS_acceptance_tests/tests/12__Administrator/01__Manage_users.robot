@@ -86,7 +86,6 @@ Administrator can successfully invite a new user
     Then the user cannot see a validation error in the page
 
 Administrator can successfully finish the rest of the invitation
-    #Wanted to split these two as it was getting too large.
     [Documentation]  IFS-2412
     [Tags]  HappyPath
     Then the user should see the element                     jQuery=h1:contains("Manage users")
