@@ -16,8 +16,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelEvent.NOTIFY;
-import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelEvent.RESPOND;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelEvent.*;
 import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState.*;
 
 /**
@@ -29,7 +28,6 @@ public class AssessmentInterviewPanelWorkflow extends StateMachineConfigurerAdap
 
     @Autowired
     private NotifyAssessmentInterviewPanelAction notifyAssessmentInterviewPanelAction;
-
 
     @Autowired
     private FeedbackResponseAssessmentInterviewPanelAction feedbackResponseAssessmentInterviewPanelAction;
@@ -53,11 +51,15 @@ public class AssessmentInterviewPanelWorkflow extends StateMachineConfigurerAdap
                 .source(CREATED).target(AWAITING_FEEDBACK_RESPONSE)
                 .event(NOTIFY)
                 .action(notifyAssessmentInterviewPanelAction)
+
                 .and()
+
                 .withExternal()
                 .source(AWAITING_FEEDBACK_RESPONSE).target(AWAITING_FEEDBACK_RESPONSE)
                 .event(NOTIFY)
+
                 .and()
+
                 .withExternal()
                 .source(AWAITING_FEEDBACK_RESPONSE).target(SUBMITTED_FEEDBACK_RESPONSE)
                 .event(RESPOND)
