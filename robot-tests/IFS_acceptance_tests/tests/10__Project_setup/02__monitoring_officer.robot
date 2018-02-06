@@ -170,8 +170,8 @@ MO details accessible/seen by all partners
     [Tags]    HappyPath
     Given Log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=ul li.complete:nth-child(3)
-    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    Then the user should see the element    css=ul li.complete:nth-child(2)
+    And the user should see the text in the element    css=ul li.complete:nth-child(2) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
