@@ -6,9 +6,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.thread.viewmodel.ThreadState.AWAITING_RESPONSE;
-import static org.innovateuk.ifs.thread.viewmodel.ThreadState.CLOSED;
-import static org.innovateuk.ifs.thread.viewmodel.ThreadState.PENDING;
+import static org.innovateuk.ifs.thread.viewmodel.ThreadState.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class ThreadViewModel {
@@ -78,9 +76,9 @@ public class ThreadViewModel {
         if (closedDate != null) {
             return CLOSED;
         } else if (isLastPostProjectFinance()) {
-            return PENDING;
+            return LAST_POST_BY_INTERNAL_USER;
         }
-        return AWAITING_RESPONSE;
+        return LAST_POST_BY_EXTERNAL_USER;
     }
 
 
@@ -88,13 +86,12 @@ public class ThreadViewModel {
         return getState().equals(CLOSED);
     }
 
-    public boolean isPending() {
-        return getState().equals(PENDING);
+    public boolean isLastPostByInternalUser() {
+        return getState().equals(LAST_POST_BY_INTERNAL_USER);
     }
 
-
-    public boolean isAwaitingResponse() {
-        return getState().equals(AWAITING_RESPONSE);
+    public boolean isLastPostByExternalUser() {
+        return getState().equals(LAST_POST_BY_EXTERNAL_USER);
     }
 
     private boolean isLastPostProjectFinance() {

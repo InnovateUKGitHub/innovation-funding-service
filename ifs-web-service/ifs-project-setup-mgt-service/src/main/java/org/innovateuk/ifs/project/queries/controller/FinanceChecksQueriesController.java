@@ -53,7 +53,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * This Controller handles finance check queries activity for the finance team members
+ * This Controller handles finance check queries activity for the finance team members (internal)
  */
 @Controller
 @RequestMapping(FinanceChecksQueriesController.FINANCE_CHECKS_QUERIES_BASE_URL)

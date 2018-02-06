@@ -90,7 +90,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
- * This controller will handle requests related to finance checks
+ * This controller will handle requests related to finance checks for external users
  */
 @Controller
 @RequestMapping(ProjectFinanceChecksController.PROJECT_FINANCE_CHECKS_BASE_URL)
@@ -390,13 +390,13 @@ public class ProjectFinanceChecksController {
         Map<ThreadState, List<ThreadViewModel>> groupedQueries = getGroupedQueries(projectId, organisationId);
 
         List<ThreadViewModel> closedQueryThreads = groupedQueries.get(ThreadState.CLOSED) == null ? emptyList() : groupedQueries.get(ThreadState.CLOSED);
-        List<ThreadViewModel> pendingQueryThreads = groupedQueries.get(ThreadState.PENDING) == null ? emptyList() : groupedQueries.get(ThreadState.PENDING);
-        List<ThreadViewModel> awaitingResponseQueryThreads = groupedQueries.get(ThreadState.AWAITING_RESPONSE) == null ? emptyList() : groupedQueries.get(ThreadState.AWAITING_RESPONSE);
+        List<ThreadViewModel> lastPostByExternalUserQueryThreads = groupedQueries.get(ThreadState.LAST_POST_BY_EXTERNAL_USER) == null ? emptyList() : groupedQueries.get(ThreadState.LAST_POST_BY_EXTERNAL_USER);
+        List<ThreadViewModel> lastPostByInternalUserQueryThreads = groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER) == null ? emptyList() : groupedQueries.get(ThreadState.LAST_POST_BY_INTERNAL_USER);
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
-                pendingQueryThreads,
-                awaitingResponseQueryThreads,
+                lastPostByInternalUserQueryThreads,
+                lastPostByExternalUserQueryThreads,
                 closedQueryThreads,
                 approved,
                 attachmentLinks,
