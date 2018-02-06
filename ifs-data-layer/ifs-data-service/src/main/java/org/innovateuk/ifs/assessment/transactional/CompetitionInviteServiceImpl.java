@@ -290,24 +290,58 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, Pageable pageable, String email) {
+    public ServiceResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, Pageable pageable, List<String> emails) {
+        /* return getCompetition(competitionId).andOnSuccessReturn(competition ->
+                mapWithIndex(newUserStagedInvites, (index, invite) ->
+                        getByEmailAndCompetition(invite.getEmail(), competitionId).handleSuccessOrFailure(
+                                failure -> getInnovationArea(invite.getInnovationAreaId())
+                                        .andOnSuccess(innovationArea ->
+                                                inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
+                                        )
+                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
+                                                "invites[" + index + "].innovationArea",
+                                                invite.getInnovationAreaId(),
+                                                "validation.competitionInvite.create.innovationArea.required"
+                                                ))
+                                        ),
+                                success -> serviceFailure(Error.fieldError(
+                                        "invites[" + index + "].email",
+                                        invite.getEmail(),
+                                        "validation.competitionInvite.create.email.exists"
+                                ))
+                        )
+                ))
+                .andOnSuccess(list -> aggregate(list))
+                .andOnSuccessReturnVoid();*/
+
+        String errorEmail = "";
+        boolean error = false;
+
         ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
 
-        List<String> emails = resource.getSuccessObjectOrThrowException().getContent().stream()
+        List<String> existingEmails = resource.getSuccessObjectOrThrowException().getContent().stream()
                 .map(AssessorCreatedInviteResource::getEmail)
                 .collect(Collectors.toList());
 
-        List<String> userIsAlreadyInvitedList = emails.stream()
-                .filter(e -> e.equals(email))
-                .collect(Collectors.toList());
+        for (String email : emails) {
+            List<String> userIsAlreadyInvitedList = existingEmails.stream()
+                    .filter(e -> e.equals(email))
+                    .collect(Collectors.toList());
 
-        Optional<User> userExists = userRepository.findByEmail(email);
-        boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
+            Optional<User> userExists = userRepository.findByEmail(email);
+            boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
 
-        if(userIsAlreadyInvited && !userExists.isPresent()) {
+            if (!userIsAlreadyInvited || userExists.isPresent()) {
+                errorEmail = email;
+                error = true;
+                break;
+            }
+        }
+
+        if (!error) {
             return resource;
-        }else{
-            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
+        } else {
+            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, errorEmail));
         }
 
     }

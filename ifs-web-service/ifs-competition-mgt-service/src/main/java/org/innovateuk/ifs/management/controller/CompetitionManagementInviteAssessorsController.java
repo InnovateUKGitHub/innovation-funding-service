@@ -319,12 +319,15 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                                ValidationHandler validationHandler) {
         form.setVisible(true);
 
-        String email = form.getInvites().get(0).getEmail();
+        List<InviteNewAssessorsRowForm>  invites = form.getInvites();
+        List<String> emails = invites.stream()
+                .map(invite -> invite.getEmail())
+                .collect(Collectors.toList());
 
             return validationHandler.failNowOrSucceedWith(
                     () -> invite(model, competitionId, form, page, queryParams),
                     () -> {
-                        RestResult<AssessorCreatedInvitePageResource> restResult = competitionInviteRestService.validateNonRegisteredAssessor(competitionId, page, email);
+                        RestResult<AssessorCreatedInvitePageResource> restResult = competitionInviteRestService.validateNonRegisteredAssessor(competitionId, page, emails);
 
                         return validationHandler.addAnyErrors(restResult)
                                 .failNowOrSucceedWith(
@@ -347,7 +350,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                         }
                                 );
                     }
-
             );
 
     }

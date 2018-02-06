@@ -277,6 +277,10 @@ public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceS
             return null;
         }
 
+        @Override
+        public ServiceResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, Pageable pageable, String email) {
+            return null;
+        }
 
         @Override
         public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,

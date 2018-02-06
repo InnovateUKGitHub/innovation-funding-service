@@ -108,10 +108,10 @@ public class CompetitionInviteController {
     @GetMapping("/validateNonRegisteredAssessor/{competitionId}")
     public RestResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(
             @PathVariable long competitionId,
-            @RequestParam String email,
+            @RequestParam List<String> emails,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return competitionInviteService.validateNonRegisteredAssessor(competitionId, pageable, email).toGetResponse();
+        return competitionInviteService.validateNonRegisteredAssessor(competitionId, pageable, emails).toGetResponse();
     }
 
     @GetMapping("/getInvitationOverview/{competitionId}")

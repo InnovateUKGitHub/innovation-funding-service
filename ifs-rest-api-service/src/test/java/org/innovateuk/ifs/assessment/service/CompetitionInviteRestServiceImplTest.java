@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -203,6 +204,22 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", restUrl, "getCreatedInvites", competitionId), AssessorCreatedInvitePageResource.class, expected);
 
         AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, page).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Ignore
+    @Test
+    public void validateNonRegisteredAssessor() throws Exception {
+        long competitionId = 1L;
+        int page = 1;
+        String email = "test@gmail.com";
+        AssessorCreatedInvitePageResource expected = newAssessorCreatedInvitePageResource()
+                .withContent(newAssessorCreatedInviteResource().build(2))
+                .build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", restUrl, "validateNonRegisteredAssessor", competitionId), AssessorCreatedInvitePageResource.class, expected);
+
+        AssessorCreatedInvitePageResource actual = service.validateNonRegisteredAssessor(competitionId, page, email).getSuccessObject();
         assertEquals(expected, actual);
     }
 
