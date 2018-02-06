@@ -56,6 +56,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -316,7 +317,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     @Test
-    public void generateTestData() {
+    public void generateTestData() throws ExecutionException, InterruptedException {
 
         long before = System.currentTimeMillis();
 
@@ -329,14 +330,20 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createExternalUsers();
         createCompetitions();
         createApplications();
-        createFundingDecisions();
-        updateQuestions();
-        createCompetitionFunders();
-        createPublicContentGroups();
-        createPublicContentDates();
-        createAssessors();
-        createNonRegisteredAssessorInvites();
-        createAssessments();
+        Future<?> fundingDecisions = taskExecutor.submit(() -> createFundingDecisions());
+        taskExecutor.submit(() -> updateQuestions());
+        taskExecutor.submit(() -> createCompetitionFunders());
+        taskExecutor.submit(() -> {
+            createPublicContentGroups();
+            createPublicContentDates();
+        });
+        taskExecutor.submit(() -> {
+            createAssessors();
+            createNonRegisteredAssessorInvites();
+            createAssessments();
+        });
+
+        fundingDecisions.get();
         createProjects();
 
         long after = System.currentTimeMillis();
