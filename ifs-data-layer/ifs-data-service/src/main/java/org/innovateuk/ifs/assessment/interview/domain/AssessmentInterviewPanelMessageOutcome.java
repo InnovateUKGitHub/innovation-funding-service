@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 
 
 /**
- * Process outcome for the @link AssessmentInterviewPanel}'s {@code SEND} event.
+ * Process outcome for the @link AssessmentInterviewPanel}'s {@code NOTIFY} event.
  */
 @Entity
 @DiscriminatorValue(value = "assessment-interview-panel-message")

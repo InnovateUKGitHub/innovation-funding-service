@@ -28,7 +28,7 @@ public enum UserRoleType {
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
     SUPPORT("support", "IFS Support User"),
     PANEL_ASSESSOR("panel_assessor", "Panel Assessor"),
-    INTERVIEW_ASSESSOR("Interview_assessor", "Interview Assessor");
+    INTERVIEW_ASSESSOR("interview_assessor", "Interview Assessor");
 
     private String name;
     private String displayName;

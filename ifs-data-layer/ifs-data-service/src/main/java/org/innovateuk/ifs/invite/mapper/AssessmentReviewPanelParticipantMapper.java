@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.mapper;
 
-import org.innovateuk.ifs.assessment.mapper.AssessmentReviewPanelInviteMapper;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewPanelInviteMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;

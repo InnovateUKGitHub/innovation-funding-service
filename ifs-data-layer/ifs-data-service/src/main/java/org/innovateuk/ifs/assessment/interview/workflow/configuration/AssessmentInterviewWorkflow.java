@@ -17,7 +17,6 @@ import static org.innovateuk.ifs.assessment.interview.resource.AssessmentIntervi
 import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.CREATED;
 import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.PENDING;
 
-
 /**
  * Describes the workflow for assessment interviews.
  */

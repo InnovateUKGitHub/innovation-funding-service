@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.interview.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -26,6 +28,14 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private AssessmentInterviewPanelResponseOutcome response;
+
+    public AssessmentInterviewPanel() {
+    }
+
+    public AssessmentInterviewPanel(Application target, ProcessRole participant) {
+        this.target = target;
+        this.participant = participant;
+    }
 
     @Override
     public void setParticipant(ProcessRole participant) {
@@ -62,5 +72,37 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
 
     public void setMessage(AssessmentInterviewPanelMessageOutcome message) {
         this.message = message;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessmentInterviewPanel that = (AssessmentInterviewPanel) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(participant, that.participant)
+                .append(target, that.target)
+                .append(message, that.message)
+                .append(response, that.response)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(participant)
+                .append(target)
+                .append(message)
+                .append(response)
+                .toHashCode();
+    }
+
+    public AssessmentInterviewPanelMessageOutcome getMessage() {
+        return message;
     }
 }

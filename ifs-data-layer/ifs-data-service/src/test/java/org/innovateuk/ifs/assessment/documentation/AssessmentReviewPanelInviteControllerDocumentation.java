@@ -16,8 +16,8 @@ import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AssessmentPanelInviteDocs.ASSESSMENT_REVIEW_PANEL_INVITE_RESOURCE_BUILDER;
-import static org.innovateuk.ifs.documentation.AssessmentPanelInviteDocs.assessmentPanelInviteFields;
+import static org.innovateuk.ifs.documentation.AssessmentReviewPanelInviteDocs.ASSESSMENT_REVIEW_PANEL_INVITE_RESOURCE_BUILDER;
+import static org.innovateuk.ifs.documentation.AssessmentReviewPanelInviteDocs.assessmentReviewPanelInviteFields;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
@@ -315,7 +315,7 @@ public class AssessmentReviewPanelInviteControllerDocumentation extends BaseCont
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being opened")
                         ),
-                        responseFields(assessmentPanelInviteFields)
+                        responseFields(assessmentReviewPanelInviteFields)
                 ));
     }
 
