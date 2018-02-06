@@ -386,8 +386,8 @@ Non lead partner not eligible for funding
     [Tags]  HappyPath
     Given log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.complete:nth-child(2)
-    Then the user should not see the element    css=ul li.require-action:nth-child(4)
+    And the user should see the element    css=ul li.complete:nth-child(1)
+    Then the user should not see the element    css=ul li.require-action:nth-child(3)
     When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=View the status of partners
