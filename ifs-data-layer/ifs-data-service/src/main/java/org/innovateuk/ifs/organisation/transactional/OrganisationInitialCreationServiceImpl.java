@@ -65,7 +65,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
 
         if (linkedOrganisation == null) {
             linkedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate)
-                    .filter(match -> filterExistingCollaboratorOrLeadOrganisation(match, invite))
+                    .filter(match -> isNotExistingCollaboratorOrLeadOrganisation(match, invite))
                     .map(match -> linkOrganisation(invite.getInviteOrganisation(), match).getOrganisation())
                     .orElseGet(() -> createOrganisationAndLinkToInviteOrganisation(
                             organisationToCreate,
@@ -87,7 +87,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
      * are met. Otherwise we create a new organisation and link
      * that instead.
      */
-    private boolean filterExistingCollaboratorOrLeadOrganisation(
+    private boolean isNotExistingCollaboratorOrLeadOrganisation(
             Organisation organisationMatch,
             ApplicationInvite invite
     ) {
