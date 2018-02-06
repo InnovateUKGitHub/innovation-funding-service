@@ -4,9 +4,14 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
+import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -64,11 +69,11 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
+import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
@@ -153,6 +158,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected CompetitionService competitionService;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
     private TestService testService;
 
     @Autowired
@@ -161,6 +172,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private ApplicationDataBuilder applicationDataBuilder;
     private CompetitionDataBuilder competitionDataBuilder;
     private QuestionDataBuilder questionDataBuilder;
+    private ApplicationFinanceDataBuilder applicationFinanceDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
     private PublicContentDateDataBuilder publicContentDateDataBuilder;
@@ -304,6 +316,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         questionDataBuilder = newQuestionData(serviceLocator);
+        applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
@@ -329,7 +342,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
-        createApplications();
+
+        createBasicApplicationDetails();
+        createApplicationQuestionResponses();
+        createApplicationFinances();
+        completeApplications();
+        moveCompetitionsToCorrectFinalState();
+
         Future<?> fundingDecisions = taskExecutor.submit(() -> createFundingDecisions());
         taskExecutor.submit(() -> updateQuestions());
         taskExecutor.submit(() -> createCompetitionFunders());
@@ -373,7 +392,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     }
 
-    private void createApplications() {
+    private void createBasicApplicationDetails() {
 
         LOG.info("============ STAGE 5 of X - creating Applications =================");
 
@@ -402,6 +421,118 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         });
 
         waitForFuturesToComplete(createApplicationFutures);
+    }
+
+    private void createApplicationQuestionResponses() {
+
+        applicationLines.forEach(line -> {
+
+            testService.doWithinTransaction(() -> {
+
+                List<ApplicationQuestionResponseLine> responsesForApplication =
+                        simpleFilter(questionResponseLines, r -> r.competitionName.equals(line.competitionName) && r.applicationName.equals(line.title));
+
+                ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.withExistingApplication(line.title);
+
+                // if we have specific answers for questions in the application-questions.csv file, fill them in here now
+                if (!responsesForApplication.isEmpty()) {
+                    applicationBuilder.
+                            withQuestionResponses(questionResponsesFromCsv(line.leadApplicant, responsesForApplication)).
+                            build();
+                }
+                // otherwise provide a default set of marked as complete questions if the application is to be submitted
+                else if (line.submittedDate != null) {
+                    applicationBuilder.
+                            withDefaultQuestionResponses().
+                            build();
+                }
+            });
+        });
+    }
+
+    private void createApplicationFinances() {
+
+        applicationLines.forEach(line -> {
+
+            List<ApplicationFinanceDataBuilder> financeBuilders = testService.doWithinTransaction(() -> {
+
+                Application applicationFromRepository = applicationRepository.findByName(line.title).get(0);
+                long applicationId = applicationFromRepository.getId();
+                ApplicationResource application = doAs(compAdmin(), () -> applicationService.getApplicationById(applicationId).getSuccessObjectOrThrowException());
+                CompetitionResource competition = doAs(compAdmin(), () -> competitionService.getCompetitionById(application.getCompetition()).getSuccessObjectOrThrowException());
+
+                List<String> applicants = combineLists(line.leadApplicant, line.collaborators);
+
+                List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
+                    UserResource user = retrieveUserByEmail(email);
+                    OrganisationResource organisation = retrieveOrganisationByUserId(user.getId());
+                    return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+                });
+
+                List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations =
+                        simpleFilter(organisations, triple -> isUniqueOrFirstDuplicateOrganisation(triple, organisations));
+
+                List<ApplicationFinanceDataBuilder> builders = simpleMap(uniqueOrganisations, orgDetails -> {
+
+                    String user = orgDetails.getLeft();
+                    String organisationName = orgDetails.getMiddle();
+                    OrganisationTypeEnum organisationType = orgDetails.getRight();
+
+                    Optional<ApplicationOrganisationFinanceBlock> organisationFinances = simpleFindFirst(applicationFinanceLines, finances ->
+                            finances.competitionName.equals(line.competitionName) &&
+                                    finances.applicationName.equals(line.title) &&
+                                    finances.organisationName.equals(organisationName));
+
+                    if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
+
+                        if (organisationFinances.isPresent()) {
+                            return generateAcademicFinancesFromSuppliedData(application, competition, user, organisationName, line.markFinancesComplete);
+                        } else {
+                            return generateAcademicFinances(application, competition, user, organisationName, line.markFinancesComplete);
+                        }
+                    } else {
+                        if (organisationFinances.isPresent()) {
+                            return generateIndustrialCostsFromSuppliedData(application, competition, user, organisationName, organisationFinances.get(), line.markFinancesComplete);
+                        } else {
+                            return generateIndustrialCosts(application, competition, user, organisationName, line.markFinancesComplete);
+                        }
+                    }
+
+                });
+
+                return builders;
+            });
+
+            financeBuilders.forEach(BaseBuilder::build);
+        });
+    }
+
+    private void completeApplications() {
+
+        applicationLines.forEach(line -> {
+
+            ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
+                    withExistingApplication(line.title).
+                    markApplicationDetailsComplete(line.markDetailsComplete);
+
+            if (line.submittedDate != null) {
+                applicationBuilder = applicationBuilder.submitApplication();
+            }
+
+            if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(line.status)) {
+                applicationBuilder = applicationBuilder.markApplicationIneligible(line.ineligibleReason);
+                if (line.status == ApplicationState.INELIGIBLE_INFORMED) {
+                    applicationBuilder = applicationBuilder.informApplicationIneligible();
+                }
+            }
+
+            applicationBuilder.build();
+        });
+    }
+
+    private void moveCompetitionsToCorrectFinalState() {
+
+        List<String> competitionsToAddApplicationsTo = removeDuplicates(simpleMap(applicationLines, line -> line.competitionName));
 
         competitionsToAddApplicationsTo.forEach(competitionName -> {
 
@@ -720,102 +851,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             baseBuilder = baseBuilder.beginApplication();
         }
 
-        List<String> applicants = combineLists(line.leadApplicant, line.collaborators);
-
-        List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
-            UserResource user = retrieveUserByEmail(email);
-            OrganisationResource organisation = retrieveOrganisationByUserId(user.getId());
-            return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
-        });
-
-        List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations =
-                organisations.stream().filter(triple -> isUniqueOrFirstDuplicateOrganisation(triple, organisations)).collect(toList());
-
-        List<UnaryOperator<ApplicationFinanceDataBuilder>> financeBuilders = simpleMap(uniqueOrganisations, orgDetails -> {
-
-            String user = orgDetails.getLeft();
-            String organisationName = orgDetails.getMiddle();
-            OrganisationTypeEnum organisationType = orgDetails.getRight();
-
-            Optional<ApplicationOrganisationFinanceBlock> organisationFinances = simpleFindFirst(applicationFinanceLines, finances ->
-                    finances.competitionName.equals(line.competitionName) &&
-                            finances.applicationName.equals(line.title) &&
-                            finances.organisationName.equals(organisationName));
-
-            if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
-
-                if (organisationFinances.isPresent()) {
-                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
-                } else {
-                    return generateAcademicFinances(user, organisationName, line.markFinancesComplete);
-                }
-            } else {
-                if (organisationFinances.isPresent()) {
-                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
-                } else {
-                    return generateIndustrialCosts(user, organisationName, line.markFinancesComplete);
-                }
-            }
-        });
-
-        List<ApplicationQuestionResponseLine> responsesForApplication =
-                simpleFilter(questionResponseLines, r -> r.competitionName.equals(line.competitionName) && r.applicationName.equals(line.title));
-
-        // if we have specific answers for questions in the application-questions.csv file, fill them in here now
-        if (!responsesForApplication.isEmpty()) {
-            baseBuilder = baseBuilder.withQuestionResponses(questionResponsesFromCsv(line.leadApplicant, responsesForApplication));
-        }
-        // otherwise provide a default set of marked as complete questions if the application is to be submitted
-        else if (line.submittedDate != null) {
-            baseBuilder = baseBuilder.withDefaultQuestionResponses();
-        }
-
-        baseBuilder = baseBuilder.withFinances(financeBuilders);
-
-        baseBuilder = baseBuilder.markApplicationDetailsComplete(line.markDetailsComplete);
-
-        if (line.submittedDate != null) {
-            baseBuilder = baseBuilder.submitApplication();
-        }
-
-        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(line.status)) {
-            baseBuilder = baseBuilder.markApplicationIneligible(line.ineligibleReason);
-            if (line.status == ApplicationState.INELIGIBLE_INFORMED) {
-                baseBuilder = baseBuilder.informApplicationIneligible();
-            }
-        }
-
         baseBuilder.build();
     }
 
     private boolean isUniqueOrFirstDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
         return organisationList.stream().filter(triple -> triple.getMiddle().equals(currentOrganisation.getMiddle())).findFirst().get().equals(currentOrganisation);
-    }
-
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCostsFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances, boolean markAsComplete) {
-        return finance -> {
-
-            List<ApplicationFinanceRow> financeRows = organisationFinances.rows;
-
-            ApplicationFinanceDataBuilder baseBuilder = finance.
-                    withOrganisation(organisationName).
-                    withUser(user);
-
-            UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
-
-                IndustrialCostDataBuilder costsWithData = costs;
-
-                for (ApplicationFinanceRow financeRow : financeRows) {
-                    costsWithData = addFinanceRow(costsWithData, financeRow);
-                }
-
-                return costsWithData;
-            };
-
-
-            return baseBuilder.withIndustrialCosts(costBuilder)
-                    .markAsComplete(markAsComplete);
-        };
     }
 
     private IndustrialCostDataBuilder addFinanceRow(IndustrialCostDataBuilder builder, ApplicationFinanceRow financeRow) {
@@ -859,30 +899,60 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCosts(String user, String organisationName, boolean markAsComplete) {
-        return finance ->
-                finance.withOrganisation(organisationName).
-                        withUser(user).
-                        withIndustrialCosts(
-                                costs -> costs.
-                                        withWorkingDaysPerYear(123).
-                                        withGrantClaim(30).
-                                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("2468")).
-                                        withLabourEntry("Role 1", 200, 200).
-                                        withLabourEntry("Role 2", 400, 300).
-                                        withLabourEntry("Role 3", 600, 365).
-                                        withAdministrationSupportCostsNone().
-                                        withMaterials("Generator", bd("10020"), 10).
-                                        withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60).
-                                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
-                                        withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
-                                        withOtherCosts("Some more costs", bd("1100")).
-                                        withOrganisationSize(1L))
-                        .markAsComplete(markAsComplete);
+    private ApplicationFinanceDataBuilder generateIndustrialCostsFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances, boolean markAsComplete) {
+
+        ApplicationFinanceDataBuilder finance = this.applicationFinanceDataBuilder.
+                withApplication(application).
+                withCompetition(competition).
+                withOrganisation(organisationName).
+                withUser(user);
+
+        List<ApplicationFinanceRow> financeRows = organisationFinances.rows;
+
+        UnaryOperator<IndustrialCostDataBuilder> costBuilder = costs -> {
+
+            IndustrialCostDataBuilder costsWithData = costs;
+
+            for (ApplicationFinanceRow financeRow : financeRows) {
+                costsWithData = addFinanceRow(costsWithData, financeRow);
+            }
+
+            return costsWithData;
+        };
+
+
+        return finance.
+                withIndustrialCosts(costBuilder).
+                markAsComplete(markAsComplete);
     }
 
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinances(String user, String organisationName, boolean markAsComplete) {
-        return finance -> finance.
+    private ApplicationFinanceDataBuilder generateIndustrialCosts(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
+        return applicationFinanceDataBuilder.
+                withApplication(application).
+                withCompetition(competition).
+                withOrganisation(organisationName).
+                withUser(user).
+                withIndustrialCosts(costs -> costs.
+                        withWorkingDaysPerYear(123).
+                        withGrantClaim(30).
+                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("2468")).
+                        withLabourEntry("Role 1", 200, 200).
+                        withLabourEntry("Role 2", 400, 300).
+                        withLabourEntry("Role 3", 600, 365).
+                        withAdministrationSupportCostsNone().
+                        withMaterials("Generator", bd("10020"), 10).
+                        withCapitalUsage(12, "Depreciating Stuff", true, bd("2120"), bd("1200"), 60).
+                        withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
+                        withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
+                        withOtherCosts("Some more costs", bd("1100")).
+                        withOrganisationSize(1L))
+                .markAsComplete(markAsComplete);
+    }
+
+    private ApplicationFinanceDataBuilder generateAcademicFinances(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
+        return applicationFinanceDataBuilder.
+                withApplication(application).
+                withCompetition(competition).
                 withOrganisation(organisationName).
                 withUser(user).
                 withAcademicCosts(costs -> costs.
@@ -900,11 +970,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .markAsComplete(markAsComplete);
     }
 
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinancesFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock existingFinances, boolean markAsComplete) {
-        return finance -> finance.
+    private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
+        return applicationFinanceDataBuilder.
+                withApplication(application).
+                withCompetition(competition).
                 withOrganisation(organisationName).
                 withUser(user).
-                withAcademicCosts(costs -> costs.withTsbReference("My REF").withUploadedJesForm())
+                withAcademicCosts(costs -> costs.
+                        withTsbReference("My REF").
+                        withUploadedJesForm())
                 .markAsComplete(markAsComplete);
     }
 
