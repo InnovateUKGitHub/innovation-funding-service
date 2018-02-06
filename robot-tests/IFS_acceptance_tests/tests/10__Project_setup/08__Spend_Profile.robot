@@ -297,7 +297,7 @@ Non-lead partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before you can start your project.
+    And the user should see the text in the page    You must complete your project and bank details within 30 days of our notification.
     [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see correct project start date and duration
@@ -506,7 +506,7 @@ Partner can receive edit rights to his SP
     [Tags]    HappyPath
     [Setup]  log in as a different user     ${PS_SP_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    Then the user should see the element    css=li.require-action:nth-child(6)
+    Then the user should see the element    css=li.require-action:nth-child(5)
     When the user clicks the button/link    link=Spend profile
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
@@ -664,7 +664,7 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     [Tags]
     Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.complete:nth-of-type(6)
+    Then the user should see the element    css=li.complete:nth-of-type(5)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
     Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
