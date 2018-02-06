@@ -59,10 +59,10 @@
     </th:block>
 
     <h2 class="heading-medium">Queries</h2>
-    
+
     <div class="collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
         <th:block th:each="query : ${model.getPendingQueries()}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
+            <h2 th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <div class="section-status section-incomplete">Pending query</div>
             </h2>
@@ -157,7 +157,7 @@
 
 
         <th:block th:each="query : ${model.getAwaitingResponseQueries()}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
+            <h2 th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <div class="section-status section-awaiting">Awaiting review</div>
             </h2>
@@ -250,7 +250,7 @@
         </th:block>
 
         <th:block th:each="query : ${model.getClosedQueries()}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
+            <h2 th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <div class="section-status section-complete">Resolved</div>
             </h2>
