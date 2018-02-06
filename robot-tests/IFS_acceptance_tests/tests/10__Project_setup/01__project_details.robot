@@ -105,11 +105,8 @@ Non-lead partner can see the project setup page
     When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    And the user should see the element    css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
-    And the user should see the element    link=View application and feedback
-    And the user clicks the button/link    link=View the grant terms and conditions
+    And the user should see the element    link=view application and feedback
+    And the user clicks the button/link    link=view the grant terms and conditions
     And the user should see the text in the page     Terms and conditions of an Innovate UK grant award
     And the user goes back to the previous page
     And the user should see the text in the page    Project details
@@ -162,16 +159,13 @@ Lead partner can see the project setup page
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    Then the user should see the element    css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
-    And the user should see the element    link=View application and feedback
-    And the user should see the element    link=View the grant terms and conditions
+    And the user should see the element    link=view application feedback
+    And the user should see the element    link=view the grant terms and conditions
     And the user should see the text in the page    Project details
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
-    And the user should see the element    css=li.require-action:nth-of-type(2)    #Action required, seen by lead
+    And the user should see the element    css=li.require-action:nth-of-type(1)    #Action required, seen by lead
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    status of my partners
     When the user clicks the button/link    link=status of my partners
