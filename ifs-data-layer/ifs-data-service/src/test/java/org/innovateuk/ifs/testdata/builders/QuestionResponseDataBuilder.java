@@ -107,7 +107,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
             UserResource leadUser = retrieveUserById(lead.getUser());
 
             doAs(leadUser, () ->
-                questionService.markAsComplete(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()), lead.getId()));
+                    questionService.markAsComplete(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()), lead.getId()));
         });
     }
 

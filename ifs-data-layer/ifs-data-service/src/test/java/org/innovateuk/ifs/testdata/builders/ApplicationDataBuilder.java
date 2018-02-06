@@ -202,8 +202,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 withInviteResources(applicationInvite).
                 build(), Optional.of(data.getApplication().getId())).getSuccessObjectOrThrowException();
 
-        testService.flushAndClearSession();
-
         List<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
 
         InviteOrganisationResource newInvite = simpleFindFirst(invites, i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
@@ -313,6 +311,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             });
 
             responseBuilders.forEach(BaseBuilder::build);
+        });
+    }
+
+    public ApplicationDataBuilder withExistingApplication(ApplicationData applicationData) {
+        return with(data -> {
+            data.setApplication(applicationData.getApplication());
+            data.setCompetition(applicationData.getCompetition());
+            data.setLeadApplicant(applicationData.getLeadApplicant());
         });
     }
 
