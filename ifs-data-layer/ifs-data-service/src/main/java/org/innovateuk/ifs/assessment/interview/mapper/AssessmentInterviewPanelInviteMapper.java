@@ -1,31 +1,31 @@
-package org.innovateuk.ifs.assessment.mapper;
+package org.innovateuk.ifs.assessment.interview.mapper;
 
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelInviteResource;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
+import org.innovateuk.ifs.invite.resource.AssessmentInterviewPanelInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 /**
- * Mapper between {@link AssessmentReviewPanelInvite} and {@link AssessmentReviewPanelInviteResource}.
+ * Mapper between {@link AssessmentInterviewPanelInvite} and {@link AssessmentInterviewPanelInviteResource}.
  */
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = { InnovationAreaMapper.class }
 )
-public abstract class AssessmentReviewPanelInviteMapper extends BaseMapper<AssessmentReviewPanelInvite, AssessmentReviewPanelInviteResource, Long> {
+public abstract class AssessmentInterviewPanelInviteMapper extends BaseMapper<AssessmentInterviewPanelInvite, AssessmentInterviewPanelInviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "target.id", target = "competitionId"),
             @Mapping(source = "target.name", target = "competitionName"),
             @Mapping(source = "user.id", target = "userId"),
-            @Mapping(source = "target.assessmentPanelDate", target = "panelDate"),
+            @Mapping(source = "target.panelDate", target = "interviewDate"),
     })
     @Override
-    public abstract AssessmentReviewPanelInviteResource mapToResource(AssessmentReviewPanelInvite domain);
+    public abstract AssessmentInterviewPanelInviteResource mapToResource(AssessmentInterviewPanelInvite domain);
 
     @Mappings({
             @Mapping(target="id", ignore=true),
@@ -35,9 +35,9 @@ public abstract class AssessmentReviewPanelInviteMapper extends BaseMapper<Asses
             @Mapping(target="target", ignore=true),
     })
     @Override
-    public abstract AssessmentReviewPanelInvite mapToDomain(AssessmentReviewPanelInviteResource resource);
+    public abstract AssessmentInterviewPanelInvite mapToDomain(AssessmentInterviewPanelInviteResource resource);
 
-    public Long mapAssessmentPanelInviteToId(AssessmentReviewPanelInvite object) {
+    public Long mapAssessmentInterviewPanelInviteToId(AssessmentInterviewPanelInvite object) {
         if (object == null) {
             return null;
         }

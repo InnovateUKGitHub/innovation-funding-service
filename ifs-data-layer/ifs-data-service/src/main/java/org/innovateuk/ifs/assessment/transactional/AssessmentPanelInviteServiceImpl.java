@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.mapper.AssessmentReviewPanelInviteMapper;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
