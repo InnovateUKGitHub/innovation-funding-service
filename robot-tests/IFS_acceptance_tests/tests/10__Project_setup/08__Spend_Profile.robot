@@ -665,7 +665,7 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
     Then the user should see the element    css=li.complete:nth-of-type(5)
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
     Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
