@@ -66,7 +66,7 @@ Bank details page
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link=${PS_BD_APPLICATION_TITLE}
     Then the user should see the element    css=ul li.require-action:nth-child(3)
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element     css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
@@ -195,8 +195,8 @@ Submission of bank details for academic user
     And the user clicks the button/link            jquery=button:contains("Submit")
     And the user should see the text in the page   The bank account details below are being reviewed
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    And the user should see the element            jQuery=ul li.complete:nth-child(2)
-    When the user clicks the button/link           link=status of my partners
+    And the user should see the element            jQuery=ul li.complete:nth-child(1)
+    When the user clicks the button/link           link=View the status of partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
     And the user should see the element            css=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
