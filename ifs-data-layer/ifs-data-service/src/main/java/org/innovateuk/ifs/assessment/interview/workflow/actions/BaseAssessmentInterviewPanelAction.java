@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 
 /**
- * A base class for Assessment-related workflow Actions
+ * A base class for Assessment Interview Panel-related workflow Actions
  */
 public abstract class BaseAssessmentInterviewPanelAction extends TestableTransitionWorkflowAction<AssessmentInterviewPanelState, AssessmentInterviewPanelEvent> {
 
