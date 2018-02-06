@@ -29,37 +29,40 @@
         </div>
     </th:block>
     <th:block th:unless="${model.isApproved()}">
-        <p>Innovate UK are reviewing your finances and may contact you with any queries. You can review your application finance details using the link below.</p>
+        <p>Innovate UK is reviewing
+            <th:block th:if="${!model.isAcademic()}">
+                <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">your finances</a>.
+            </th:block>
+            <th:block th:if="${model.isAcademic()}">
+                your finances.
+            </th:block>
+            You can also view the <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">project finance overview</a>.
+        </p>
     </th:block>
-
-    <ul class="task-list">
-        <li th:if="${!model.isAcademic()}">
-            <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">View finances</a>
-        </li>
-        <li>
-            <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">Project finance overview</a>
-        </li>
-    </ul>
 
     <th:block th:if="${model.getPendingQueries().isEmpty()}">
         <th:block th:if="${model.getAwaitingResponseQueries().isEmpty()}">
-            <p>All queries have been resolved.</p>
+            <div class="success-alert">
+                <p>All queries have been resolved.</p>
+            </div>
         </th:block>
         <th:block th:unless="${model.getAwaitingResponseQueries().isEmpty()}">
-            <p>Your response has been sent and will be reviewed by Innovate UK.</p>
+            <div class="assigned-alert">
+                <p>Your response has been sent and will be reviewed by Innovate UK.</p>
+            </div>
         </th:block>
     </th:block>
     <th:block th:unless="${model.getPendingQueries().isEmpty()}">
-        <p>You have a pending finance query.</p>
+        <div class="warning-alert">
+            <p>You have a pending finance query.</p>
+        </div>
     </th:block>
 
     <h2 class="heading-medium">Queries</h2>
 
-    <p>Any queries we raise will appear here, with the most recent queries first. You can upload files to support your answers if necessary.</p>
-
     <div class="collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
         <th:block th:each="query : ${model.getPendingQueries()}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
+            <h2 th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <div class="section-status section-incomplete">Pending query</div>
             </h2>
@@ -154,7 +157,7 @@
 
 
         <th:block th:each="query : ${model.getAwaitingResponseQueries()}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
+            <h2 th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <div class="section-status section-awaiting">Awaiting review</div>
             </h2>
@@ -247,7 +250,7 @@
         </th:block>
 
         <th:block th:each="query : ${model.getClosedQueries()}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
+            <h2 th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <div class="section-status section-complete">Resolved</div>
             </h2>
