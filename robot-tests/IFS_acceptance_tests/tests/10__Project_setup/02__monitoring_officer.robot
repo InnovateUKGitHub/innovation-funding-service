@@ -128,7 +128,7 @@ MO details can be added
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    css=ul li.complete:nth-child(2)
     And the user should see the text in the element    css=ul li.complete:nth-child(2) p    Your Monitoring Officer for this project is Abbey Abigail.
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details(email step)
