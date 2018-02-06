@@ -10,6 +10,8 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -25,7 +27,6 @@ import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
-import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -55,8 +56,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -148,6 +147,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     protected CompetitionRepository competitionRepository;
+
+    @Autowired
+    protected CompetitionService competitionService;
 
     @Autowired
     private TestService testService;
@@ -326,6 +328,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
+        createApplications();
+        createFundingDecisions();
         updateQuestions();
         createCompetitionFunders();
         createPublicContentGroups();
@@ -341,7 +345,71 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
     }
 
+    private void createFundingDecisions() {
+
+        LOG.info("============ STAGE 6 of X - creating Funding Decisions for Applications =================");
+
+        competitionLines.forEach(line -> {
+
+            Long competitionId = competitionRepository.findByName(line.name).get(0).getId();
+
+            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+
+            if (line.fundersPanelEndDate != null && line.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
+
+                basicCompetitionInformation.
+                        moveCompetitionIntoFundersPanelStatus().
+                        sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
+                        restoreOriginalMilestones().build();
+            }
+        });
+
+    }
+
+    private void createApplications() {
+
+        LOG.info("============ STAGE 5 of X - creating Applications =================");
+
+        List<String> competitionsToAddApplicationsTo = removeDuplicates(simpleMap(applicationLines, line -> line.competitionName));
+
+        competitionsToAddApplicationsTo.forEach(competitionName -> {
+
+            Long competitionId = competitionRepository.findByName(competitionName).get(0).getId();
+
+            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+
+            basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
+        });
+
+        List<? extends Future<?>> createApplicationFutures = simpleMap(applicationLines, line -> {
+
+            return taskExecutor.submit(() -> {
+                testService.doWithinTransaction(() -> {
+                    Long competitionId = competitionRepository.findByName(line.competitionName).get(0).getId();
+
+                    CompetitionResource competition = doAs(compAdmin(), () -> competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException());
+
+                    createApplicationFromCsv(applicationDataBuilder.withCompetition(competition), line);
+                });
+            });
+        });
+
+        waitForFuturesToComplete(createApplicationFutures);
+
+        competitionsToAddApplicationsTo.forEach(competitionName -> {
+
+            Long competitionId = competitionRepository.findByName(competitionName).get(0).getId();
+
+            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+
+            basicCompetitionInformation.restoreOriginalMilestones().build();
+        });
+    }
+
     private void updateQuestions() {
+
+        LOG.info("============ STAGE 7 of X - updating Questions =================");
+
         questionLines.forEach(this::updateQuestion);
     }
 
@@ -354,6 +422,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createProjects() {
+
+        LOG.info("============ STAGE 14 of X - creating Projects =================");
+
         projectLines.forEach(this::createProject);
     }
 
@@ -407,14 +478,23 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
+
+        LOG.info("============ STAGE 3 of X - creating External Users =================");
+
         externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
 
     private void createAssessors() {
+
+        LOG.info("============ STAGE 11 of X - creating Assessors =================");
+
         assessorUserLines.forEach(this::createAssessor);
     }
 
     private void createNonRegisteredAssessorInvites() {
+
+        LOG.info("============ STAGE 12 of X - creating Assessor Invites =================");
+
         testService.doWithinTransaction(() -> {
             List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
             List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
@@ -423,7 +503,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessments() {
-        LOG.info("Creating assessments...");
+
+        LOG.info("============ STAGE 13 of X - creating Assessments =================");
 
         testService.doWithinTransaction(() -> assessmentLines.forEach(this::createAssessment));
         testService.doWithinTransaction(() -> assessorResponseLines.forEach(this::createAssessorResponse));
@@ -464,15 +545,24 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitionFunders() {
+
+        LOG.info("============ STAGE 8 of X - creating Competition Funders =================");
+
         testService.doWithinTransaction(() -> competitionFunderLines.forEach(this::createCompetitionFunder));
     }
 
     private void createPublicContentGroups() {
+
+        LOG.info("============ STAGE 9 of X - creating Public Content groups =================");
+
         testService.doWithinTransaction(() -> setDefaultCompAdmin());
         testService.doWithinTransaction(() -> publicContentGroupLines.forEach(this::createPublicContentGroup));
     }
 
     private void createPublicContentDates() {
+
+        LOG.info("============ STAGE 10 of X - creating Public Content dates =================");
+
         testService.doWithinTransaction(() -> publicContentDateLines.forEach(this::createPublicContentDate));
     }
 
@@ -492,6 +582,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createOrganisations() {
+
+        LOG.info("============ STAGE 1 of X - creating Organisations =================");
 
         List<Future<?>> futures = simpleMap(organisationLines, line -> {
 
@@ -516,6 +608,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createInternalUsers() {
 
+        LOG.info("============ STAGE 2 of X - creating Internal Users =================");
+
         internalUserLines.forEach(line -> {
 
             testService.doWithinTransaction(() -> {
@@ -533,6 +627,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createCompetitions() {
 
+        LOG.info("============ STAGE 4 of X - creating Competitions =================");
+
         List<Future<?>> futures = simpleMap(competitionLines, line -> {
 
             return taskExecutor.submit(() -> {
@@ -543,39 +639,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                         "Connected digital additive manufacturing".equals(line.name) ? Optional.of(1L) : Optional.empty();
 
                 createCompetition(line, existingCompetitionIdWithName);
-
-                List<ApplicationLine> competitionApplications =
-                        simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
-
-                if (competitionApplications.isEmpty()) {
-                    return;
-                }
-
-                Long competitionId = competitionRepository.findByName(line.name).get(0).getId();
-
-                CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
-
-                CompetitionData competitionData = basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
-
-                ApplicationDataBuilder baseApplicationBuilder = applicationDataBuilder.withCompetition(competitionData.getCompetition());
-
-                List<ApplicationDataBuilder> applicationBuilders = simpleMap(competitionApplications, applicationLine -> {
-                    return createApplicationFromCsv(baseApplicationBuilder, applicationLine, line);
-                });
-
-                applicationBuilders.forEach(builder -> {
-                    testService.doWithinTransaction(() -> builder.build());
-                });
-
-                basicCompetitionInformation.restoreOriginalMilestones().build();
-
-                if (line.fundersPanelEndDate != null && line.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
-
-                    basicCompetitionInformation.
-                            moveCompetitionIntoFundersPanelStatus().
-                            sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
-                            restoreOriginalMilestones().build();
-                }
             });
         });
 
@@ -624,33 +687,33 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    private ApplicationDataBuilder createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine applicationLine, CompetitionLine competitionLine) {
+    private void createApplicationFromCsv(ApplicationDataBuilder builder, ApplicationLine line) {
 
-        UserResource leadApplicant = retrieveUserByEmail(applicationLine.leadApplicant);
+        UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
         ApplicationDataBuilder baseBuilder = builder.
-                withBasicDetails(leadApplicant, applicationLine.title, applicationLine.researchCategory, applicationLine.resubmission).
-                withInnovationArea(applicationLine.innovationArea).
-                withStartDate(applicationLine.startDate).
-                withDurationInMonths(applicationLine.durationInMonths);
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission).
+                withInnovationArea(line.innovationArea).
+                withStartDate(line.startDate).
+                withDurationInMonths(line.durationInMonths);
 
-        for (String collaborator : applicationLine.collaborators) {
+        for (String collaborator : line.collaborators) {
             baseBuilder = baseBuilder.inviteCollaborator(retrieveUserByEmail(collaborator));
         }
 
         List<InviteLine> pendingInvites = simpleFilter(BaseGenerateTestData.inviteLines,
-                invite -> "APPLICATION".equals(invite.type) && applicationLine.title.equals(invite.targetName));
+                invite -> "APPLICATION".equals(invite.type) && line.title.equals(invite.targetName));
 
         for (InviteLine invite : pendingInvites) {
             baseBuilder = baseBuilder.inviteCollaboratorNotYetRegistered(invite.email, invite.hash, invite.name,
                     invite.ownerName);
         }
 
-        if (applicationLine.status != ApplicationState.CREATED) {
+        if (line.status != ApplicationState.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
 
-        List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
+        List<String> applicants = combineLists(line.leadApplicant, line.collaborators);
 
         List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
             UserResource user = retrieveUserByEmail(email);
@@ -668,54 +731,54 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             OrganisationTypeEnum organisationType = orgDetails.getRight();
 
             Optional<ApplicationOrganisationFinanceBlock> organisationFinances = simpleFindFirst(applicationFinanceLines, finances ->
-                    finances.competitionName.equals(applicationLine.competitionName) &&
-                            finances.applicationName.equals(applicationLine.title) &&
+                    finances.competitionName.equals(line.competitionName) &&
+                            finances.applicationName.equals(line.title) &&
                             finances.organisationName.equals(organisationName));
 
             if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
                 if (organisationFinances.isPresent()) {
-                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), applicationLine.markFinancesComplete);
+                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
                 } else {
-                    return generateAcademicFinances(user, organisationName, applicationLine.markFinancesComplete);
+                    return generateAcademicFinances(user, organisationName, line.markFinancesComplete);
                 }
             } else {
                 if (organisationFinances.isPresent()) {
-                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get(), applicationLine.markFinancesComplete);
+                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
                 } else {
-                    return generateIndustrialCosts(user, organisationName, applicationLine.markFinancesComplete);
+                    return generateIndustrialCosts(user, organisationName, line.markFinancesComplete);
                 }
             }
         });
 
         List<ApplicationQuestionResponseLine> responsesForApplication =
-                simpleFilter(questionResponseLines, r -> r.competitionName.equals(competitionLine.name) && r.applicationName.equals(applicationLine.title));
+                simpleFilter(questionResponseLines, r -> r.competitionName.equals(line.competitionName) && r.applicationName.equals(line.title));
 
         // if we have specific answers for questions in the application-questions.csv file, fill them in here now
         if (!responsesForApplication.isEmpty()) {
-            baseBuilder = baseBuilder.withQuestionResponses(questionResponsesFromCsv(applicationLine.leadApplicant, responsesForApplication));
+            baseBuilder = baseBuilder.withQuestionResponses(questionResponsesFromCsv(line.leadApplicant, responsesForApplication));
         }
         // otherwise provide a default set of marked as complete questions if the application is to be submitted
-        else if (applicationLine.submittedDate != null) {
+        else if (line.submittedDate != null) {
             baseBuilder = baseBuilder.withDefaultQuestionResponses();
         }
 
         baseBuilder = baseBuilder.withFinances(financeBuilders);
 
-        baseBuilder = baseBuilder.markApplicationDetailsComplete(applicationLine.markDetailsComplete);
+        baseBuilder = baseBuilder.markApplicationDetailsComplete(line.markDetailsComplete);
 
-        if (applicationLine.submittedDate != null) {
+        if (line.submittedDate != null) {
             baseBuilder = baseBuilder.submitApplication();
         }
 
-        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(applicationLine.status)) {
-            baseBuilder = baseBuilder.markApplicationIneligible(applicationLine.ineligibleReason);
-            if (applicationLine.status == ApplicationState.INELIGIBLE_INFORMED) {
+        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(line.status)) {
+            baseBuilder = baseBuilder.markApplicationIneligible(line.ineligibleReason);
+            if (line.status == ApplicationState.INELIGIBLE_INFORMED) {
                 baseBuilder = baseBuilder.informApplicationIneligible();
             }
         }
 
-        return baseBuilder;
+        baseBuilder.build();
     }
 
     private boolean isUniqueOrFirstDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
