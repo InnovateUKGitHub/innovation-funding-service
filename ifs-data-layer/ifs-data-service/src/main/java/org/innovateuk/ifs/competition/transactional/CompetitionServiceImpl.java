@@ -43,6 +43,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -411,12 +412,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
 
-        return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
+        List<Object[]> pendingSpendProfiles = competitionRepository.getPendingSpendProfiles(competitionId);
+        return serviceSuccess(simpleMap(pendingSpendProfiles, object ->
+                new SpendProfileStatusResource(((BigInteger)object[0]).longValue(), ((BigInteger)object[1]).longValue(), (String)object[2])));
+
+        //return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
     }
 
     @Override
     public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
 
-        return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId));
+        return serviceSuccess(((BigInteger)competitionRepository.countPendingSpendProfiles(competitionId)).longValue());
+
+        //return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId));
     }
 }
