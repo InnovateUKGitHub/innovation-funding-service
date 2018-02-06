@@ -115,7 +115,7 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Finance checks
     And the user should see the text in the page    Spend profile
     And the user should see the text in the page    Other documents
-    And the user should see the element    css=li.require-action:nth-of-type(2)    #Action required, seen by non-lead
+    And the user should see the element    css=li.require-action:nth-of-type(1)    #Action required, seen by non-lead
     And the user should see the text in the page    Grant offer letter
     And the user should see the text in the page    status of my partners
     When the user clicks the button/link    link=status of my partners
@@ -128,8 +128,6 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
     Then the user should not see the element    link = Monitoring Officer
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
