@@ -88,7 +88,7 @@ public interface ApplicationService {
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
     @SecuredBySpring(value = "READ", description = "Only system registrar should be using this function")
-    @PreAuthorize("hasAnyAuthority('system_registrar')")
+    @PreAuthorize("hasAuthority('system_registrar')")
     ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")

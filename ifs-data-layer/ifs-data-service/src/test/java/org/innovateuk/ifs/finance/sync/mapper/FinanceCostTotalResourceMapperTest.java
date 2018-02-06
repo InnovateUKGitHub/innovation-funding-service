@@ -121,10 +121,5 @@ public class FinanceCostTotalResourceMapperTest {
                 expectedMaterialCostTotalResource,
                 expectedOtherCostTotalResource,
                 expectedMaterialCostTotalResource);
-
-        assertThat(actualResult.get(0)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
-        assertThat(actualResult.get(1)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
-        assertThat(actualResult.get(2)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
-        assertThat(actualResult.get(3)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
     }
 }

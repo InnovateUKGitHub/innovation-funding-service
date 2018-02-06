@@ -433,8 +433,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState>
-                                                                                        applicationStates) {
+        public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
             return null;
         }
 
