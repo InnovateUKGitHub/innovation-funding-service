@@ -628,9 +628,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         ServiceResult<Void> result = service.resendInternalUserInvite(123L);
 
-        // assert this was a failure
         assertTrue(result.isFailure());
-
         assertTrue(result.getFailure().is(notFoundError(RoleInvite.class, 123L)));
 
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
