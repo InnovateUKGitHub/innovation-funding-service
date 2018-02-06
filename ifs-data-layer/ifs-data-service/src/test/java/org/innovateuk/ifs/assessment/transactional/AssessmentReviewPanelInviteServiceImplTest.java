@@ -939,8 +939,8 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         when(assessmentPanelParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(assessmentReviewPanelParticipant);
         when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(emptyList());
         when(roleRepositoryMock.findOneByName(UserRoleType.PANEL_ASSESSOR.getName())).thenReturn(newRole().withType(UserRoleType.PANEL_ASSESSOR).build());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING))
-                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
+                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
 
         service.acceptInvite(openedInviteHash).getSuccessObjectOrThrowException();
 
@@ -950,7 +950,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         inOrder.verify(assessmentPanelParticipantRepositoryMock).getByInviteHash(openedInviteHash);
         inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING);
+        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -969,8 +969,8 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         when(assessmentPanelParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(assessmentReviewPanelParticipant);
         when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(applicationsOnPanel);
         when(roleRepositoryMock.findOneByName(UserRoleType.PANEL_ASSESSOR.getName())).thenReturn(newRole().withType(UserRoleType.PANEL_ASSESSOR).build());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING))
-                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, expectedAssessmentReviewState));
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
+                .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState));
 
         service.acceptInvite(openedInviteHash).getSuccessObjectOrThrowException();
 
@@ -980,7 +980,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         inOrder.verify(assessmentPanelParticipantRepositoryMock).getByInviteHash(openedInviteHash);
         inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
-        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, expectedAssessmentReviewState);
+        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState);
         inOrder.verify(assessmentReviewRepositoryMock, times(2)).save(any(AssessmentReview.class));
 
         inOrder.verifyNoMoreInteractions();

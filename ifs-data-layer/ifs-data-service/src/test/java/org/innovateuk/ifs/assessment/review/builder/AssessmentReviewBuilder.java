@@ -14,7 +14,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 
 public class AssessmentReviewBuilder extends BaseBuilder<AssessmentReview, AssessmentReviewBuilder> {
 
@@ -53,6 +53,6 @@ public class AssessmentReviewBuilder extends BaseBuilder<AssessmentReview, Asses
     }
 
     public AssessmentReviewBuilder withState(AssessmentReviewState... states) {
-        return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_PANEL_APPLICATION_INVITE, state.getBackingState())), states);
+        return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_REVIEW, state.getBackingState())), states);
     }
 }

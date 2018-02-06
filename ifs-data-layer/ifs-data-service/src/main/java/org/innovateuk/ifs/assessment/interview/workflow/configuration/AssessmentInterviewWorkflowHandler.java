@@ -20,7 +20,7 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewEvent.NOTIFY;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW;
 
 /**
  * Manages the process for assigning applications to assessors for an assessment interview.
@@ -52,7 +52,7 @@ public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler
 
     @Override
     protected ActivityType getActivityType() {
-        return ASSESSMENT_PANEL_APPLICATION_INVITE;
+        return ASSESSMENT_INTERVIEW;
     }
 
     @Override

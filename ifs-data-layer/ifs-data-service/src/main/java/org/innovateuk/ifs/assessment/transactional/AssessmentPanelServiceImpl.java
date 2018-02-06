@@ -175,7 +175,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     private ServiceResult<Void> createAssessmentReview(AssessmentReviewPanelParticipant assessor, Application application) {
         if (!assessmentReviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
             final Role panelAssessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
-            final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED);
+            final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED);
 
             AssessmentReview assessmentReview =  new AssessmentReview(application, assessor, panelAssessorRole);
             assessmentReview.setActivityState(createdActivityState);

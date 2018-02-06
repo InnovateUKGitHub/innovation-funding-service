@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilesto
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -144,7 +144,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .build(1);
-        ActivityState acceptedActivityState = new ActivityState(ASSESSMENT_PANEL_APPLICATION_INVITE, State.ACCEPTED);
+        ActivityState acceptedActivityState = new ActivityState(ASSESSMENT_REVIEW, State.ACCEPTED);
 
 
         List<ProcessRole> processRoles = newProcessRole()
@@ -171,7 +171,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         when(processRoleRepositoryMock.save(isA(ProcessRole.class))).thenReturn(processRoles.get(0));
 
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED))
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ASSESSMENT_REVIEW, State.CREATED))
                 .thenReturn(acceptedActivityState);
 
         when(assessmentReviewRepositoryMock
@@ -205,7 +205,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
                 .existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, applications.get(0), (State.WITHDRAWN));
         inOrder.verify(roleRepositoryMock).findOneByName(panelAssessorRole.getName());
         inOrder.verify(activityStateRepositoryMock)
-                .findOneByActivityTypeAndState(ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED);
+                .findOneByActivityTypeAndState(ASSESSMENT_REVIEW, State.CREATED);
         inOrder.verify(assessmentReviewRepositoryMock)
                 .save(assessmentReview);
         inOrder.verify(assessmentReviewRepositoryMock)

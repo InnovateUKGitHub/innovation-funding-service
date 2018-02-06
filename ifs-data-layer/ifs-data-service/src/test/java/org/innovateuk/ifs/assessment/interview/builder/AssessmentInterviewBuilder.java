@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW_APPLICATION_INVITE;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW;
 
 public class AssessmentInterviewBuilder extends BaseBuilder<AssessmentInterview, AssessmentInterviewBuilder> {
 
@@ -48,6 +48,6 @@ public class AssessmentInterviewBuilder extends BaseBuilder<AssessmentInterview,
     }
 
     public AssessmentInterviewBuilder withState(AssessmentInterviewState... states) {
-        return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_INTERVIEW_APPLICATION_INVITE, state.getBackingState())), states);
+        return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_INTERVIEW, state.getBackingState())), states);
     }
 }

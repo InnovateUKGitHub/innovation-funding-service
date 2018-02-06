@@ -95,7 +95,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
         repository.save(assessmentReview);
 
         assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application, State.WITHDRAWN)); // probably should be notExists if that's allowed
@@ -130,7 +130,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
         repository.save(assessmentReview);
 
         assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application2, State.WITHDRAWN));
@@ -169,7 +169,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
         repository.save(assessmentReview);
 
 
@@ -210,7 +210,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
         repository.save(assessmentReview);
 
 
@@ -303,7 +303,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
 
         repository.save(assessmentReview);
 
@@ -357,7 +357,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.WITHDRAWN));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.WITHDRAWN));
 
         repository.save(assessmentReview);
 
