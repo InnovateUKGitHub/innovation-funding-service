@@ -1000,7 +1000,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Setup]    log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user should see the element     css=ul li.complete:nth-child(1)
-    And the user should see the element     css=ul li.complete:nth-child (3)
+    And the user should see the element     css=ul li.complete:nth-child(3)
     And the user should see the element     css=ul li.complete:nth-child(4)
     And the user should see the element     css=ul li.read-only:nth-child(5)
 
