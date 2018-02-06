@@ -25,8 +25,8 @@ Before Monitoring Officer is assigned
     [Setup]    Log in as a different user               &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    We will assign the project a Monitoring Officer.
-    And the user should not see the element    css=ul li.complete:nth-child(3)
-    And the user should see the element    css=ul li.waiting:nth-child(3)
+    And the user should not see the element    css=ul li.complete:nth-child(2)
+    And the user should see the element    css=ul li.waiting:nth-child(2)
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
@@ -126,8 +126,8 @@ MO details can be added
     And the user should see the text in the page    A Monitoring Officer has been assigned.
     Then Log in as a different user       &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.complete:nth-child(3)
-    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
+    And the user should see the element    css=ul li.complete:nth-child(2)
+    And the user should see the text in the element    css=ul li.complete:nth-child(2) p    Your Monitoring Officer for this project is Abbey Abigail.
     And the user clicks the button/link    link=status of my partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
@@ -148,8 +148,8 @@ MO details can be edited and viewed in the Project setup status page
     And the user can see the changed MO details
     When Log in as a different user        &{lead_applicant_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.complete:nth-child(3)
-    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    And the user should see the element    css=ul li.complete:nth-child(2)
+    And the user should see the text in the element    css=ul li.complete:nth-child(2) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
@@ -181,8 +181,8 @@ MO details accessible/seen by all partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
     When Log in as a different user       &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=ul li.complete:nth-child(3)
-    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    Then the user should see the element    css=ul li.complete:nth-child(2)
+    And the user should see the text in the element    css=ul li.complete:nth-child(2) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
@@ -197,8 +197,6 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Tags]      HappyPath
     [Setup]    Log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
     Then the user should see the element    link = Monitoring Officer
     And the user should see the element    link = Finance checks
     And the user should not see the element    link = Spend profile
