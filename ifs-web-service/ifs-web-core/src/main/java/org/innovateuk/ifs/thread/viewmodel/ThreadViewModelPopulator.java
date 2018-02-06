@@ -4,7 +4,6 @@ import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
@@ -40,13 +39,8 @@ public class ThreadViewModelPopulator {
 
         List<ThreadPostViewModel> posts = addPosts(query.posts, userToUsernameFn);
 
-        boolean isPending =  query.closedDate == null &&
-                posts.get(posts.size() -1)
-                .author
-                .hasRole(PROJECT_FINANCE);
-
         return new ThreadViewModel(posts, query.section,
-                query.title, query.awaitingResponse, isPending, query.createdOn, query.id,
+                query.title, query.createdOn, query.id,
                 organisationId, projectId, query.closedBy, query.closedDate);
     }
 
@@ -71,7 +65,7 @@ public class ThreadViewModelPopulator {
                 user.getName() + " - Innovate UK");
 
         return new ThreadViewModel(posts, null,
-                note.title, false, false, note.createdOn, note.id,
+                note.title, note.createdOn, note.id,
                 organisationId, projectId, null, null);
     }
 

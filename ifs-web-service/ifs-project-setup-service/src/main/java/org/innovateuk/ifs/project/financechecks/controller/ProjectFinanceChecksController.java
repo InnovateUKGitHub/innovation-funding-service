@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
@@ -42,6 +43,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
+import org.innovateuk.ifs.thread.viewmodel.ThreadState;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
@@ -75,7 +77,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.groupingBy;
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -373,37 +377,21 @@ public class ProjectFinanceChecksController {
 
     private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
 
-        ProjectResource projectResource = projectService.getById(compositeId.getProjectId());
-        OrganisationResource organisationResource = organisationService.getOrganisationById(compositeId.getOrganisationId());
+        Long projectId = compositeId.getProjectId();
+        Long organisationId = compositeId.getOrganisationId();
+        ProjectResource projectResource = projectService.getById(projectId);
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
 
         Map<Long, String> attachmentLinks =
                 simpleToMap(attachments, identity(), id -> financeCheckService.getAttachmentInfo(id).getName());
 
         boolean approved = isApproved(compositeId);
+        
+        Map<ThreadState, List<ThreadViewModel>> groupedQueries = getGroupedQueries(projectId, organisationId);
 
-        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(compositeId.getProjectId(), compositeId.getOrganisationId());
-
-        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
-
-        List<Long> projectUserIds =
-                removeDuplicates(simpleMap(projectService.getProjectUsersForProject(compositeId.getProjectId()), ProjectUserResource::getUser));
-
-        List<ThreadViewModel> closedQueryThreads = emptyList();
-        List<ThreadViewModel> awaitingResponseQueryThreads = emptyList();
-        List<ThreadViewModel> pendingQueryThreads = emptyList();
-
-        if (queriesResult.isSuccess()) {
-
-            List<QueryResource> closedQueries = queriesResult.getSuccessObject().stream().filter(q -> q.closedDate != null).collect(Collectors.toList());
-            closedQueryThreads = getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId(), closedQueries, projectUserIds);
-
-            List<QueryResource> awaitingResponseQueries = queriesResult.getSuccessObject().stream().filter(q -> !q.posts.get(q.posts.size()-1).author.hasRole(UserRoleType.PROJECT_FINANCE)).filter(q -> q.closedDate == null).collect(Collectors.toList());
-            awaitingResponseQueryThreads = getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId(), awaitingResponseQueries, projectUserIds);
-
-            List<QueryResource> pendingQueries = queriesResult.getSuccessObject().stream().filter(q -> q.posts.get(q.posts.size()-1).author.hasRole(UserRoleType.PROJECT_FINANCE)).filter(q -> q.closedDate == null).collect(Collectors.toList());
-            pendingQueryThreads = getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId(), pendingQueries, projectUserIds);
-
-        }
+        List<ThreadViewModel> closedQueryThreads = groupedQueries.get(ThreadState.CLOSED) == null ? emptyList() : groupedQueries.get(ThreadState.CLOSED);
+        List<ThreadViewModel> pendingQueryThreads = groupedQueries.get(ThreadState.PENDING) == null ? emptyList() : groupedQueries.get(ThreadState.PENDING);
+        List<ThreadViewModel> awaitingResponseQueryThreads = groupedQueries.get(ThreadState.AWAITING_RESPONSE) == null ? emptyList() : groupedQueries.get(ThreadState.AWAITING_RESPONSE);
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
@@ -423,11 +411,28 @@ public class ProjectFinanceChecksController {
         return COMPLETE.equals(organisationStatus.map(ProjectPartnerStatusResource::getFinanceChecksStatus).orElse(null));
     }
 
-    private List<ThreadViewModel> getQueriesAndPopulateViewModel(Long projectId, Long organisationId, List<QueryResource> queries, List<Long> projectUserIds) {
-            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queries, user ->
-                    projectUserIds.contains(user.getId()) ?
-                            user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
-                            "Innovate UK - Finance team");
+    private Map<ThreadState, List<ThreadViewModel>> getGroupedQueries(Long projectId, Long organisationId) {
+
+        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+
+        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
+
+        List<Long> projectUserIds =
+                removeDuplicates(simpleMap(projectService.getProjectUsersForProject(projectId), ProjectUserResource::getUser));
+        return queriesResult.handleSuccessOrFailure(
+
+                failure -> emptyMap(),
+                success -> {
+                    List<ThreadViewModel> queryThreads = threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccessObject(), user ->
+                            projectUserIds.contains(user.getId()) ?
+                                    user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
+                                    "Innovate UK - Finance team");
+
+                    return queryThreads
+                            .stream()
+                            .collect(groupingBy(ThreadViewModel::getState)
+                            );
+                });
     }
 
     private String redirectToQueries(Long projectId) {
