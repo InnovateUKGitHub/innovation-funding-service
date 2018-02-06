@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -32,6 +30,8 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -68,7 +68,7 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 @Service
 public class InviteServiceImpl extends BaseTransactionalService implements InviteService {
 
-    private static final Log LOG = LogFactory.getLog(InviteServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InviteServiceImpl.class);
 
     enum Notifications {
         INVITE_COLLABORATOR
@@ -243,18 +243,25 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 invite.open();
+
                 List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
+
                 if (invite.getInviteOrganisation().getOrganisation() == null && !usersOrganisations.isEmpty()) {
                     invite.getInviteOrganisation().setOrganisation(usersOrganisations.get(0));
                 }
+
                 invite = applicationInviteRepository.save(invite);
                 initializeInvitee(invite, user);
 
                 return serviceSuccess();
             }
-            LOG.error(format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
-            Error e = new Error("Invited emailaddress not the same as the users emailaddress", NOT_ACCEPTABLE);
-            return serviceFailure(e);
+
+            LOG.error("Invite email address '{}' not the same as the user's email address '{}'", user.getEmail(), invite.getEmail());
+
+            return serviceFailure(new Error(
+                    "Invite email address not the same as the user's email address",
+                    NOT_ACCEPTABLE
+            ));
         });
     }
 
