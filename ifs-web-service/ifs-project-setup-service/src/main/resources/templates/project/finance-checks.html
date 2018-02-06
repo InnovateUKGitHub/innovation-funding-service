@@ -41,6 +41,18 @@
         </li>
     </ul>
 
+    <th:block th:if="${model.getPendingQueries().isEmpty()}">
+        <th:block th:if="${model.getAwaitingResponseQueries().isEmpty()}">
+            <p>All queries have been resolved.</p>
+        </th:block>
+        <th:block th:unless="${model.getAwaitingResponseQueries().isEmpty()}">
+            <p>Your response has been sent and will be reviewed by Innovate UK.</p>
+        </th:block>
+    </th:block>
+    <th:block th:unless="${model.getPendingQueries().isEmpty()}">
+        <p>You have a pending finance query.</p>
+    </th:block>
+
     <h2 class="heading-medium">Queries</h2>
 
     <p>Any queries we raise will appear here, with the most recent queries first. You can upload files to support your answers if necessary.</p>
@@ -49,7 +61,7 @@
         <th:block th:each="query : ${model.getPendingQueries()}">
             <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
-                <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
+                <div class="section-status section-incomplete">Pending query</div>
             </h2>
             <div class="collapsible-content">
                 <th:block th:each="(post, iteration : ${query.viewModelPosts})">
@@ -73,14 +85,14 @@
                     </div>
                 </th:block>
                 <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                    <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
+                    <a id="post-new-response-1" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
                 </th:block>
                 <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                         enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                             <h2 class="heading-medium">Respond to query</h2>
                             <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
-                                <label for="response">
+                                <label for="response-1">
                                     <span class="form-label-bold">Response</span>
                                     <th:block th:if="${#fields.hasErrors('response')}">
                                         <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
@@ -92,7 +104,7 @@
                                               th:field="*{response}"
                                               class="form-control"
                                               th:errorclass="field-group-error"
-                                              id="response"
+                                              id="response-1"
                                               name="response"
                                               th:attr="maxlength=${model.maxQueryCharacters},
                                                data-max_words=${model.maxQueryWords},
@@ -120,12 +132,12 @@
                                     <th:block th:if="${#fields.hasErrors('attachment')}">
                                         <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                     </th:block>
-                                    <input type="file" id="attachment" class="inputfile" name="attachment">
-                                    <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-                                    <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                                    <input type="file" id="attachment-1" class="inputfile" name="attachment">
+                                    <label for="attachment-1" class="button-secondary extra-margin">+ Upload</label>
+                                    <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment-1">Save</button>
                                 </div>
                             </div>
-                        <input type="hidden" id="action" value="postResponse">
+                        <input type="hidden" id="action-1" value="postResponse">
                         <div class="grid-row">
                             <div class="column-half">
                                 <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
@@ -144,7 +156,7 @@
         <th:block th:each="query : ${model.getAwaitingResponseQueries()}">
             <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
-                <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
+                <div class="section-status section-awaiting">Awaiting review</div>
             </h2>
             <div class="collapsible-content">
                 <th:block th:each="(post, iteration : ${query.viewModelPosts})">
@@ -168,14 +180,14 @@
                     </div>
                 </th:block>
                 <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                    <a id="apost-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
+                    <a id="post-new-response-2" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
                 </th:block>
                 <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                           enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                         <h2 class="heading-medium">Respond to query</h2>
                         <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
-                            <label for="response">
+                            <label for="response-2">
                                 <span class="form-label-bold">Response</span>
                                 <th:block th:if="${#fields.hasErrors('response')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
@@ -187,7 +199,7 @@
                                               th:field="*{response}"
                                               class="form-control"
                                               th:errorclass="field-group-error"
-                                              id="aresponse"
+                                              id="response-2"
                                               name="response"
                                               th:attr="maxlength=${model.maxQueryCharacters},
                                                data-max_words=${model.maxQueryWords},
@@ -215,12 +227,12 @@
                                 <th:block th:if="${#fields.hasErrors('attachment')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                 </th:block>
-                                <input type="file" id="aattachment" class="inputfile" name="attachment">
-                                <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-                                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                                <input type="file" id="attachment-2" class="inputfile" name="attachment">
+                                <label for="attachment-2" class="button-secondary extra-margin">+ Upload</label>
+                                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment-2">Save</button>
                             </div>
                         </div>
-                        <input type="hidden" id="aaction" value="postResponse">
+                        <input type="hidden" id="action-2" value="postResponse">
                         <div class="grid-row">
                             <div class="column-half">
                                 <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
@@ -237,7 +249,7 @@
         <th:block th:each="query : ${model.getClosedQueries()}">
             <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
-                <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
+                <div class="section-status section-complete">Resolved</div>
             </h2>
             <div class="collapsible-content">
                 <th:block th:each="(post, iteration : ${query.viewModelPosts})">
@@ -261,14 +273,14 @@
                     </div>
                 </th:block>
                 <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
-                    <a id="bpost-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
+                    <a id="post-new-response-3" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
                 </th:block>
                 <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" th:id="${'form-query-' + query.id}" method="post"
                           enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
                         <h2 class="heading-medium">Respond to query</h2>
                         <div class="form-group" th:classappend="${#fields.hasErrors('response')}? 'form-group-error'">
-                            <label for="response">
+                            <label for="response-3">
                                 <span class="form-label-bold">Response</span>
                                 <th:block th:if="${#fields.hasErrors('response')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
@@ -280,7 +292,7 @@
                                               th:field="*{response}"
                                               class="form-control"
                                               th:errorclass="field-group-error"
-                                              id="bresponse"
+                                              id="response-3"
                                               name="response"
                                               th:attr="maxlength=${model.maxQueryCharacters},
                                                data-max_words=${model.maxQueryWords},
@@ -308,12 +320,12 @@
                                 <th:block th:if="${#fields.hasErrors('attachment')}">
                                     <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
                                 </th:block>
-                                <input type="file" id="battachment" class="inputfile" name="attachment">
-                                <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-                                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                                <input type="file" id="attachment-3" class="inputfile" name="attachment">
+                                <label for="attachment-3" class="button-secondary extra-margin">+ Upload</label>
+                                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment-3">Save</button>
                             </div>
                         </div>
-                        <input type="hidden" id="baction" value="postResponse">
+                        <input type="hidden" id="action-3" value="postResponse">
                         <div class="grid-row">
                             <div class="column-half">
                                 <button class="button button-large no-margin" data-content-on-submit="Please wait...">Post response</button>
