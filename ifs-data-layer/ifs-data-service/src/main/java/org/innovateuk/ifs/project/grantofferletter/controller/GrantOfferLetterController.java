@@ -174,6 +174,7 @@ public class GrantOfferLetterController {
         return grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
     }
 
+    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     @GetMapping("/{projectId}/signed-grant-offer-letter/approval")
     public RestResult<Boolean> isSignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
         return grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();

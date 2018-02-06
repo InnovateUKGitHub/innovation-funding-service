@@ -65,7 +65,7 @@ public class GrantOfferLetterController {
     @GetMapping("/send")
     public String viewGrantOfferLetterSend(@P("projectId")@PathVariable Long projectId, Model model) {
         GrantOfferLetterLetterForm form = new GrantOfferLetterLetterForm();
-        return doViewGrantOfferLetterSendImproved(projectId, model, form);
+        return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -76,14 +76,14 @@ public class GrantOfferLetterController {
                                        @SuppressWarnings("unused") BindingResult bindingResult,
                                        ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> doViewGrantOfferLetterSendImproved(projectId, model, form);
+        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
         ServiceResult<Void> generateResult = grantOfferLetterService.sendGrantOfferLetter(projectId);
 
         return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () ->
                 redirectToGrantOfferLetterPage(projectId));
     }
 
-    private String doViewGrantOfferLetterSendImproved(Long projectId, Model model, GrantOfferLetterLetterForm form) {
+    private String doViewGrantOfferLetterSend(Long projectId, Model model, GrantOfferLetterLetterForm form) {
         GrantOfferLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
 
         model.addAttribute("model", viewModel);
@@ -132,7 +132,7 @@ public class GrantOfferLetterController {
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, GrantOfferLetterLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
 
         Supplier<String> successView = () -> redirectToGrantOfferLetterPage(projectId);
-        Supplier<String> failureView = () -> doViewGrantOfferLetterSendImproved(projectId, model, form);
+        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
 
         return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
     }

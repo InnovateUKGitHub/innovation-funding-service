@@ -75,6 +75,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertTrue(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
+
+        verifySignedSentGrantOfferLetterExpectations(projectId, userId);
     }
 
     @Test
@@ -101,6 +103,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertTrue(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
+
+        verifySignedSentGrantOfferLetterExpectations(projectId, userId);
     }
 
     @Test
@@ -127,6 +131,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertTrue(model.isSubmitted());
         assertTrue(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
+
+        verifySignedSentGrantOfferLetterExpectations(projectId, userId);
     }
 
     @Test
@@ -153,6 +159,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertFalse(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertTrue(model.isGrantOfferLetterRejected());
+
+        verifySignedSentGrantOfferLetterExpectations(projectId, userId);
     }
 
     @Test
@@ -179,6 +187,8 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertTrue(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
+
+        verifySignedSentGrantOfferLetterExpectations(projectId, userId);
     }
 
     @Test
@@ -396,6 +406,17 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
         when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(state));
+    }
+
+    private void verifySignedSentGrantOfferLetterExpectations(long projectId, long userId) {
+
+        verify(projectService).getById(projectId);
+        verify(projectService).isProjectManager(userId, projectId);
+        verify(projectService).isUserLeadPartner(projectId, userId);
+        verify(grantOfferLetterService).getSignedGrantOfferLetterFileDetails(projectId);
+        verify(grantOfferLetterService).getGrantOfferFileDetails(projectId);
+        verify(grantOfferLetterService).getAdditionalContractFileDetails(projectId);
+        verify(grantOfferLetterService).getGrantOfferLetterState(projectId);
     }
 
     @Override
