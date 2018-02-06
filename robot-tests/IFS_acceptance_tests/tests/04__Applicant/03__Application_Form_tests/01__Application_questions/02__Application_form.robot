@@ -85,7 +85,7 @@ Autosave in the form questions
     And the user clicks the button/link   link=Project summary
     When The user enters text to a text field  css=.editor  I am a robot
     And the user reloads the page
-    Then the user should not see the text in the element  css=.editor  I am a robot
+    Then the user should see the text in the element  css=.editor  I am a robot
 
 Word count works
     [Documentation]    INFUND-198
