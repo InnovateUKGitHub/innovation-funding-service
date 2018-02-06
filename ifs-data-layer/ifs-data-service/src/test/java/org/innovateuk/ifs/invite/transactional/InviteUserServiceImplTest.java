@@ -605,8 +605,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(loggedInUserSupplierMock.get()).thenReturn(loggedInUser);
 
         ServiceResult<Void> result = service.resendInternalUserInvite(123L);
-
-        // assert this was a success
         assertTrue(result.isSuccess());
 
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
