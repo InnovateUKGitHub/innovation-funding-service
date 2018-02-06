@@ -105,7 +105,7 @@ Non-lead partner can see the project setup page
     When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    And the user should see the element    link=view application and feedback
+    And the user should see the element    link=view application feedback
     And the user clicks the button/link    link=view the grant terms and conditions
     And the user should see the text in the page     Terms and conditions of an Innovate UK grant award
     And the user goes back to the previous page
@@ -149,7 +149,7 @@ Non-lead partner can see the application overview
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    Other documents
-    When the user clicks the button/link    link=View application and feedback
+    When the user clicks the button/link    link=view application feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
     And the user should see the text in the page    Application details
 
@@ -184,7 +184,7 @@ Lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=View application and feedback
+    When the user clicks the button/link    link=view application feedback
     Then the user should see the element    jQuery=.success-alert h2:contains("Congratulations, your application has been successful")
     And the user should see the element     jQuery=h2:contains("Application details")
 
