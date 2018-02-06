@@ -80,7 +80,6 @@ public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler
         return (AssessmentInterview) message.getHeaders().get("target");
     }
 
-
     private static MessageBuilder<AssessmentInterviewEvent> assessmentPanelApplicationInviteMessage(AssessmentInterview AssessmentInterview, AssessmentInterviewEvent event) {
         return MessageBuilder
                 .withPayload(event)
