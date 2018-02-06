@@ -155,11 +155,11 @@ Lead partner can view spend profile page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    When the user clicks the button/link             link=status of my partners
+    When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
-    Then the user should see the element      css=li.require-action:nth-child(6)
+    Then the user should see the element      css=li.require-action:nth-child(5)
     When the user clicks the button/link     link=Spend profile
     And the user should not see the element    link=Total project profile spend
     And the user clicks the button/link      link=${Katz_Name}
@@ -265,19 +265,17 @@ Lead partner marks spend profile as complete
     Then the user should not see the element   jQuery=.success-alert p:contains("Your spend profile is marked as complete. You can still edit this page.")
     And the user should not see the element    css=table a[type="number"]    # checking here that the table has become read-only
     When the user clicks the button/link            link=Project setup status
-    And the user clicks the button/link             link=status of my partners
+    And the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
-    Then the user should see the element             css=li.require-action:nth-child(6)
+    Then the user should see the element             css=li.require-action:nth-child(5)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
-    And the user should see the element             css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
     Then the user should see the element            link = Monitoring Officer
     And the user should see the element             link = Bank details
     And the user should see the element         link = Finance checks
@@ -289,11 +287,11 @@ Non-lead partner can view spend profile page
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_TITLE}
-    When the user clicks the button/link             link=status of my partners
+    When the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
-    Then the user should see the element             css=li.require-action:nth-child(6)
+    Then the user should see the element             css=li.require-action:nth-child(5)
     When the user clicks the button/link             link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
@@ -326,8 +324,8 @@ Non-lead partner marks Spend Profile as complete
 Status updates for industrial user after spend profile submission
     [Documentation]    INFUND-6881
     When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    Then the user should see the element    css=ul li.complete:nth-child(6)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=ul li.complete:nth-child(5)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
@@ -336,11 +334,11 @@ Project Manager doesn't have the option to send spend profiles until all partner
     [Tags]
     [Setup]    log in as a different user       ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link       link=${PS_SP_APPLICATION_TITLE}
-    And the user clicks the button/link             link=status of my partners
+    And the user clicks the button/link             link=View the status of partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
-    Then the user should see the element             jQuery=li.require-action:nth-child(6)
+    Then the user should see the element             jQuery=li.require-action:nth-child(5)
     When the user clicks the button/link        link=Spend profile
     Then the user should not see the element    jQuery=.button:contains("Review spend profiles")
     #The complete name of the button is anyways not selected. Please use the short version of it.
@@ -355,7 +353,7 @@ Academic partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Zooveo_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before you can start your project.
+    And the user should see the text in the page    You must complete your project and bank details within 30 days of our notification.
     [Teardown]    the user goes back to the previous page
 
 Academic partner can see correct project start date and duration
@@ -425,8 +423,8 @@ Academic partner marks Spend Profile as complete
 Status updates for academic user after spend profile submission
     [Documentation]    INFUND-6881
     When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    Then the user should see the element    css=ul li.complete:nth-child(6)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=ul li.complete:nth-child(5)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     And the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
@@ -534,7 +532,7 @@ PM's Spend profile Summary page gets updated after submit
 Status updates after spend profile submitted
     [Documentation]    INFUND-6225
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(5)
 
 
@@ -543,16 +541,16 @@ Partners can see the Spend Profile section completed
     [Tags]
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.waiting:nth-of-type(6)
+    Then the user should see the element    css=li.waiting:nth-of-type(5)
     Given Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.waiting:nth-of-type(6)
+    Then the user should see the element    css=li.waiting:nth-of-type(5)
     Given Log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.complete:nth-of-type(6)
+    Then the user should see the element    css=li.complete:nth-of-type(5)
     Given Log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     And the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.complete:nth-of-type(6)
+    Then the user should see the element    css=li.complete:nth-of-type(5)
 
 Project Finance is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
@@ -656,8 +654,8 @@ Lead partner can see that the spend profile has been rejected
     [Tags]
     Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.require-action:nth-of-type(6)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=li.require-action:nth-of-type(5)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     [Teardown]    the user goes back to the previous page
 
@@ -671,8 +669,8 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
     Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.complete:nth-of-type(6)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=li.complete:nth-of-type(5)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 Lead partner no longer has the 'submitted' view of the spend profiles
@@ -702,8 +700,8 @@ Industrial partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.require-action:nth-of-type(6)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=li.require-action:nth-of-type(5)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     When the user clicks the button/link    link=Spend profile
@@ -712,15 +710,15 @@ Industrial partner receives edit rights and can submit their spend profile
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
 Academic partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
     Given log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_TITLE}
-    Then the user should see the element    css=li.require-action:nth-of-type(6)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=li.require-action:nth-of-type(5)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
@@ -729,7 +727,7 @@ Academic partner receives edit rights and can submit their spend profile
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 
