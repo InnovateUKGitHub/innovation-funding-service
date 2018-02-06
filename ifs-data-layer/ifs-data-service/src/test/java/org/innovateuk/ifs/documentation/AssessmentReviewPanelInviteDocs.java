@@ -9,15 +9,15 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteR
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class AssessmentPanelInviteDocs {
+public class AssessmentReviewPanelInviteDocs {
 
-    public static final FieldDescriptor[] assessmentPanelInviteFields = {
+    public static final FieldDescriptor[] assessmentReviewPanelInviteFields = {
             fieldWithPath("competitionId").description("Id of the competition"),
             fieldWithPath("competitionName").description("Name of the competition"),
             fieldWithPath("email").description("Email of the competition invitee"),
             fieldWithPath("hash").description("Hash id of the competition invite"),
             fieldWithPath("status").description("Status of the competition invite"),
-            fieldWithPath("panelDate").description("Start date of the assessment panel"),
+            fieldWithPath("panelDate").description("Start date of the assessment review panel"),
             fieldWithPath("userId").description("Id of user invited"),
     };
 
