@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
@@ -310,7 +311,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 return responseBuilder.markAsComplete();
             });
 
-            responseBuilders.forEach(QuestionResponseDataBuilder::build);
+            responseBuilders.forEach(BaseBuilder::build);
         });
     }
 

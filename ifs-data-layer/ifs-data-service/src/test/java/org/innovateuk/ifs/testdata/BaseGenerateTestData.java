@@ -24,7 +24,6 @@ import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.*;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
@@ -46,17 +45,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -150,6 +151,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private TestService testService;
+
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
 
     private ApplicationDataBuilder applicationDataBuilder;
     private CompetitionDataBuilder competitionDataBuilder;
@@ -403,11 +407,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
-        List<CompletableFuture<Void>> futures = simpleMap(externalUserLines, line -> {
-            return testService.nonAsync(() -> createUser(externalUserBuilder, line));
-        });
-
-        waitForFuturesToComplete(futures);
+        externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
 
     private void createAssessors() {
@@ -493,9 +493,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createOrganisations() {
 
-        List<CompletableFuture<Void>> futures = simpleMap(organisationLines, line -> {
+        List<Future<?>> futures = simpleMap(organisationLines, line -> {
 
-            return testService.async(() -> {
+            return taskExecutor.submit(() -> {
 
                 OrganisationDataBuilder organisation =
                         organisationBuilder.createOrganisation(line.name, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
@@ -516,30 +516,26 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createInternalUsers() {
 
-        List<CompletableFuture<Void>> futures = simpleMap(internalUserLines, line -> {
+        internalUserLines.forEach(line -> {
 
-            return testService.nonAsync(() -> {
-                testService.doWithinTransaction(() -> {
+            testService.doWithinTransaction(() -> {
 
-                    setDefaultSystemRegistrar();
+                setDefaultSystemRegistrar();
 
-                    List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
+                List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
 
-                    InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
+                InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
 
-                    createUser(baseBuilder, line);
-                });
+                createUser(baseBuilder, line);
             });
         });
-
-        waitForFuturesToComplete(futures);
     }
 
     private void createCompetitions() {
 
-        List<CompletableFuture<Void>> futures = simpleMap(competitionLines, line -> {
+        List<Future<?>> futures = simpleMap(competitionLines, line -> {
 
-            CompletableFuture<Long> createCompetitionFuture = testService.async(() -> {
+            return taskExecutor.submit(() -> {
 
                 testService.doWithinTransaction(this::setDefaultCompAdmin);
 
@@ -548,17 +544,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
                 createCompetition(line, existingCompetitionIdWithName);
 
-                return competitionRepository.findByName(line.name).get(0).getId();
-            });
-
-            CompletableFuture<Long> createApplicationsFuture = createCompetitionFuture.thenApplyAsync(competitionId -> {
-
                 List<ApplicationLine> competitionApplications =
                         simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
 
                 if (competitionApplications.isEmpty()) {
-                    return competitionId;
+                    return;
                 }
+
+                Long competitionId = competitionRepository.findByName(line.name).get(0).getId();
 
                 CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
 
@@ -570,18 +563,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                     return createApplicationFromCsv(baseApplicationBuilder, applicationLine, line);
                 });
 
-                List<CompletableFuture<ApplicationData>> applicationFutures = simpleMap(applicationBuilders, builder -> {
-                    return testService.async(() -> {
-                        return testService.doWithinTransaction(() -> builder.build());
-                    });
+                applicationBuilders.forEach(builder -> {
+                    testService.doWithinTransaction(() -> builder.build());
                 });
-
-                return competitionId;
-            });
-
-            CompletableFuture<Void> fundersPanelDecisionFuture = createApplicationsFuture.thenAcceptAsync(competitionId -> {
-
-                CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
 
                 basicCompetitionInformation.restoreOriginalMilestones().build();
 
@@ -593,8 +577,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                             restoreOriginalMilestones().build();
                 }
             });
-
-            return fundersPanelDecisionFuture;
         });
 
         waitForFuturesToComplete(futures);
@@ -1140,7 +1122,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         );
     }
 
-    private void waitForFuturesToComplete(List<? extends CompletableFuture<?>> futures) {
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[] {})).join();
+    private void waitForFuturesToComplete(List<? extends Future<?>> futures) {
+        futures.forEach(f -> {
+            try {
+                f.get();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
