@@ -16,8 +16,6 @@ configurations {
     mapstruct
 }
 
-
-
 dependencies {
     compile project(":ifs-commons")
 

@@ -4,6 +4,7 @@ import com.google.common.io.Files;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.apache.commons.io.FileUtils;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 
 import java.io.File;
@@ -124,7 +125,7 @@ public class ByFileIdFileStorageStrategyTest extends BaseFileStorageStrategyTest
             assertEquals("Original content 2", Files.readFirstLine(createdFile2, defaultCharset()));
 
         } finally {
-            FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
+            FileUtils.deleteDirectory(pathElementsToFile(CollectionFunctions.combineLists(tempFolderPathAsString, "BaseFolder")));
             tempFileWithContents1.delete();
             tempFileWithContents2.delete();
         }

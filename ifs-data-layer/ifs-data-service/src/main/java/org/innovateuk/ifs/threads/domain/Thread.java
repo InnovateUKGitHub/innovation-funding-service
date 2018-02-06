@@ -113,4 +113,12 @@ public abstract class Thread {
         this.closedBy = closedBy;
         this.closedDate = ZonedDateTime.now();
     }
+
+    public void setClosedDate(ZonedDateTime closedDate) {
+        this.closedDate = closedDate;
+    }
+
+    public void setClosedBy(User closedBy) {
+        this.closedBy = closedBy;
+    }
 }
