@@ -65,7 +65,8 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
 
         if (linkedOrganisation == null) {
             linkedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate)
-                    .flatMap(match -> linkOrganisationIfNotExistingOrLeadOrganisation(match, invite))
+                    .filter(match -> filterExistingCollaboratorOrLeadOrganisation(match, invite))
+                    .map(match -> linkOrganisation(invite.getInviteOrganisation(), match).getOrganisation())
                     .orElseGet(() -> createOrganisationAndLinkToInviteOrganisation(
                             organisationToCreate,
                             inviteOrganisation
@@ -75,30 +76,35 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
         return serviceSuccess(organisationMapper.mapToResource(linkedOrganisation));
     }
 
-    private Optional<Organisation> linkOrganisationIfNotExistingOrLeadOrganisation(
+    /**
+     * This may seem counter-intuitive, but we need to avoid a
+     * new collaborator being able to add themselves to any other
+     * existing organisations that are collaborating on the
+     * application or even the lead organisation.
+     *
+     * We should only link the {@link ApplicationInvite#inviteOrganisation}
+     * to the matched organisation if neither of these criteria
+     * are met. Otherwise we create a new organisation and link
+     * that instead.
+     */
+    private boolean filterExistingCollaboratorOrLeadOrganisation(
             Organisation organisationMatch,
             ApplicationInvite invite
     ) {
+        // Check the lead organisation directly from the
+        // `ApplicationInvite` as this information won't exist
+        // in an `InviteOrganisation`.
         if (organisationMatch.getId().equals(invite.getTarget().getLeadOrganisationId())) {
-            return Optional.empty();
+            return false;
         }
 
-        Optional<InviteOrganisation> existingInvite =
+        Optional<InviteOrganisation> existingCollaboratorInviteOrganisation =
                 inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(
                         organisationMatch.getId(),
                         invite.getTarget().getId()
                 );
 
-        if (existingInvite.isPresent()) {
-            // This seems counter-intuitive, but for now we need to avoid a
-            // new collaborator being able to add themselves to any existing
-            // application organisations (including the lead applicant's).
-            // Consequently, if there is an existing matching organisation,
-            // we just ignore it for now and create a new organisation.
-            return Optional.empty();
-        }
-
-        return Optional.of(linkOrganisation(invite.getInviteOrganisation(), organisationMatch).getOrganisation());
+        return !existingCollaboratorInviteOrganisation.isPresent();
     }
 
     private Organisation createOrganisationAndLinkToInviteOrganisation(
