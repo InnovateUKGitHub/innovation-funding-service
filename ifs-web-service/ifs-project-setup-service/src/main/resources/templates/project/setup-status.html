@@ -43,7 +43,7 @@
 
     <th:block th:unless="${model.projectComplete}">
         <div class="message-alert">
-            <p>You must complete your project and bank details within 30 days of our notification.</p>
+            <p>You must complete your project and bank details within 30 days of our notification to you.</p>
             <p>All project partners have individual steps to complete in this section.</p>
             <p><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">View the status of partners</a></p>
         </div>
