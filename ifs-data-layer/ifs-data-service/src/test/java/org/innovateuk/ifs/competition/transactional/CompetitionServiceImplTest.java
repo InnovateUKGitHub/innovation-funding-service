@@ -854,6 +854,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<Long> result = service.countPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertEquals((Long)pendingSpendProfileCount.longValue(), result.getSuccessObject());
+        assertEquals(Long.valueOf(pendingSpendProfileCount.longValue()), result.getSuccessObject());
     }
 }
