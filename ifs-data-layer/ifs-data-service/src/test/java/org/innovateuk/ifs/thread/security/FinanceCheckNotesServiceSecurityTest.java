@@ -6,8 +6,8 @@ import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.threads.security.NoteLookupStrategy;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -80,7 +80,6 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         });
     }
 
-
     public static class TestFinanceCheckNotesService implements FinanceCheckNotesService {
 
         @Override
@@ -99,6 +98,11 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Long> create(NoteResource NoteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> close(Long noteId) {
             return null;
         }
 

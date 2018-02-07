@@ -3,16 +3,21 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
+import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.review.domain.AssessmentReviewRejectOutcome;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
@@ -29,16 +34,20 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuilder.newAssessmentReview;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewRejectOutcomeBuilder.newAssessmentReviewRejectOutcome;
+import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelServiceImpl.INVITE_DATE_FORMAT;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -47,6 +56,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
     private static final long applicationId = 1L;
     private static final long competitionId = 1L;
+    private static final long userId = 2L;
     private Application application;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -61,22 +71,20 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         application = newApplication().withId(applicationId).build();
     }
 
-
-
     @Test
-    public void assignApplicationsToPanel() throws Exception {
+    public void assignApplicationsToPanel() {
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
         ServiceResult<Void> result = service.assignApplicationToPanel(applicationId);
         assertTrue(result.isSuccess());
-        assertTrue(application.isInAssessmentPanel());
+        assertTrue(application.isInAssessmentReviewPanel());
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verifyNoMoreInteractions(applicationRepositoryMock);
     }
 
     @Test
-    public void unAssignApplicationsFromPanel() throws Exception {
+    public void unAssignApplicationsFromPanel() {
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentReviewRepositoryMock
                 .findByTargetIdAndActivityStateStateNot(applicationId, State.WITHDRAWN))
@@ -84,7 +92,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
         assertTrue(result.isSuccess());
-        assertFalse(application.isInAssessmentPanel());
+        assertFalse(application.isInAssessmentReviewPanel());
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verify(assessmentReviewRepositoryMock).findByTargetIdAndActivityStateStateNot(applicationId, State.WITHDRAWN);
@@ -92,7 +100,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
     }
 
     @Test
-    public void unAssignApplicationsFromPanel_existingReviews() throws Exception {
+    public void unAssignApplicationsFromPanel_existingReviews() {
         List<AssessmentReview> assessmentReviews = newAssessmentReview().withTarget(application).withState(AssessmentReviewState.WITHDRAWN).build(2);
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
@@ -102,7 +110,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
         assertTrue(result.isSuccess());
-        assertFalse(application.isInAssessmentPanel());
+        assertFalse(application.isInAssessmentReviewPanel());
 
         assessmentReviews.forEach(a -> assertEquals(State.WITHDRAWN, a.getActivityState().getBackingState()));
 
@@ -122,35 +130,40 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .withName(competitionName)
-                .withMilestones(asList(newMilestone()
+                .withMilestones(singletonList(newMilestone()
                         .withType(MilestoneType.ASSESSMENT_PANEL)
                         .withDate(panelDate)
                         .build())
                 )
                 .build();
 
-        List<AssessmentPanelParticipant> assessmentPanelParticipants =
+        List<AssessmentReviewPanelParticipant> assessmentReviewPanelParticipants =
                 newAssessmentPanelParticipant()
                         .withUser(assessor)
                         .build(1);
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .build(1);
-        ActivityState acceptedActivityState = new ActivityState(ASSESSMENT_PANEL_APPLICATION_INVITE, State.ACCEPTED);
+        ActivityState acceptedActivityState = new ActivityState(ASSESSMENT_REVIEW, State.ACCEPTED);
 
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(assessor)
+                .withApplication(applications.toArray(new Application[1]))
                 .build(1);
 
-        AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), processRoles.get(0));
+        Role panelAssessorRole = newRole().withType(UserRoleType.PANEL_ASSESSOR).build();
+
+        AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), assessmentReviewPanelParticipants.get(0), panelAssessorRole);
         assessmentReview.setActivityState(acceptedActivityState);
+
+        when(roleRepositoryMock.findOneByName(panelAssessorRole.getName())).thenReturn(panelAssessorRole);
 
         when(assessmentPanelParticipantRepositoryMock
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
-                .thenReturn(assessmentPanelParticipants);
+                .thenReturn(assessmentReviewPanelParticipants);
         when(applicationRepositoryMock
-                .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED))
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED))
                 .thenReturn(applications);
 
         when(assessmentReviewRepositoryMock.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, application, State.WITHDRAWN))
@@ -158,7 +171,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         when(processRoleRepositoryMock.save(isA(ProcessRole.class))).thenReturn(processRoles.get(0));
 
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED))
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ASSESSMENT_REVIEW, State.CREATED))
                 .thenReturn(acceptedActivityState);
 
         when(assessmentReviewRepositoryMock
@@ -183,16 +196,16 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock, applicationRepositoryMock,
                 assessmentReviewRepositoryMock, activityStateRepositoryMock,  assessmentReviewRepositoryMock,
-                assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock);
+                assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock, roleRepositoryMock);
         inOrder.verify(assessmentPanelParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
         inOrder.verify(applicationRepositoryMock)
-                .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
         inOrder.verify(assessmentReviewRepositoryMock)
                 .existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, applications.get(0), (State.WITHDRAWN));
-        inOrder.verify(processRoleRepositoryMock).save(isA(ProcessRole.class));
+        inOrder.verify(roleRepositoryMock).findOneByName(panelAssessorRole.getName());
         inOrder.verify(activityStateRepositoryMock)
-                .findOneByActivityTypeAndState(ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED);
+                .findOneByActivityTypeAndState(ASSESSMENT_REVIEW, State.CREATED);
         inOrder.verify(assessmentReviewRepositoryMock)
                 .save(assessmentReview);
         inOrder.verify(assessmentReviewRepositoryMock)
@@ -201,13 +214,12 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
                 .notifyInvitation(assessmentReview);
         inOrder.verify(notificationSenderMock)
                 .sendNotification(isA(Notification.class));
-
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void isPendingReviewNotifications() {
-        boolean expectedPendingReviewNotifications = true;
+        final boolean expectedPendingReviewNotifications = true;
 
         when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
 
@@ -218,12 +230,137 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
     @Test
     public void isPendingReviewNotifications_none() {
-        boolean expectedPendingReviewNotifications = false;
+        final boolean expectedPendingReviewNotifications = false;
 
         when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
 
         assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
 
         verify(assessmentReviewRepositoryMock, only()).notifiable(competitionId);
+    }
+
+    @Test
+    public void getAssessmentReviews() {
+        List<AssessmentReview> assessmentReviews = newAssessmentReview().build(2);
+
+        List<AssessmentReviewResource> assessmentReviewResources = newAssessmentReviewResource().build(2);
+
+        when(assessmentReviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId)).thenReturn(assessmentReviews);
+        when(assessmentReviewMapperMock.mapToResource(same(assessmentReviews.get(0)))).thenReturn(assessmentReviewResources.get(0));
+        when(assessmentReviewMapperMock.mapToResource(same(assessmentReviews.get(1)))).thenReturn(assessmentReviewResources.get(1));
+
+        assertEquals(assessmentReviewResources, service.getAssessmentReviews(userId, competitionId).getSuccessObjectOrThrowException());
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewMapperMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        inOrder.verify(assessmentReviewMapperMock).mapToResource(same(assessmentReviews.get(0)));
+        inOrder.verify(assessmentReviewMapperMock).mapToResource(same(assessmentReviews.get(1)));
+    }
+
+    @Test
+    public void acceptAssessmentReview() {
+        AssessmentReview assessmentReview = newAssessmentReview().build();
+
+        when(assessmentReviewRepositoryMock.findOne(assessmentReview.getId())).thenReturn(assessmentReview);
+        when(assessmentReviewWorkflowHandlerMock.acceptInvitation(assessmentReview)).thenReturn(true);
+
+        service.acceptAssessmentReview(assessmentReview.getId()).getSuccessObjectOrThrowException();
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
+        inOrder.verify(assessmentReviewWorkflowHandlerMock).acceptInvitation(assessmentReview);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void acceptAssessmentReview_notFound() {
+        AssessmentReview assessmentReview = newAssessmentReview().build();
+
+        ServiceResult<Void> serviceResult = service.acceptAssessmentReview(assessmentReview.getId());
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void acceptAssessmentReview_invalidState() {
+        AssessmentReview assessmentReview = newAssessmentReview().build();
+
+        when(assessmentReviewRepositoryMock.findOne(assessmentReview.getId())).thenReturn(assessmentReview);
+        when(assessmentReviewWorkflowHandlerMock.acceptInvitation(assessmentReview)).thenReturn(false);
+
+        ServiceResult<Void> serviceResult = service.acceptAssessmentReview(assessmentReview.getId());
+        assertTrue(serviceResult.isFailure());
+        assertEquals(ASSESSMENT_REVIEW_ACCEPT_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
+        inOrder.verify(assessmentReviewWorkflowHandlerMock).acceptInvitation(assessmentReview);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectAssessmentReview() {
+        AssessmentReviewRejectOutcomeResource rejectOutcomeResource =
+                newAssessmentReviewRejectOutcomeResource().build();
+        AssessmentReview assessmentReview = newAssessmentReview().build();
+        AssessmentReviewRejectOutcome assessmentReviewRejectOutcome = newAssessmentReviewRejectOutcome().build();
+
+        when(assessmentReviewRepositoryMock.findOne(assessmentReview.getId())).thenReturn(assessmentReview);
+        when(assessmentReviewWorkflowHandlerMock.rejectInvitation(assessmentReview, assessmentReviewRejectOutcome)).thenReturn(true);
+        when(assessmentReviewRejectOutcomeMapperMock.mapToDomain(rejectOutcomeResource)).thenReturn(assessmentReviewRejectOutcome);
+
+        service.rejectAssessmentReview(assessmentReview.getId(), rejectOutcomeResource).getSuccessObjectOrThrowException();
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock, assessmentReviewRejectOutcomeMapperMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
+        inOrder.verify(assessmentReviewRejectOutcomeMapperMock).mapToDomain(rejectOutcomeResource);
+        inOrder.verify(assessmentReviewWorkflowHandlerMock).rejectInvitation(assessmentReview, assessmentReviewRejectOutcome);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void rejectAssessmentReview_invalidState() {
+        AssessmentReviewRejectOutcomeResource rejectOutcomeResource =
+                newAssessmentReviewRejectOutcomeResource().build();
+        AssessmentReview assessmentReview = newAssessmentReview().build();
+        AssessmentReviewRejectOutcome assessmentReviewRejectOutcome = newAssessmentReviewRejectOutcome().build();
+
+        when(assessmentReviewRepositoryMock.findOne(assessmentReview.getId())).thenReturn(assessmentReview);
+        when(assessmentReviewWorkflowHandlerMock.rejectInvitation(assessmentReview, assessmentReviewRejectOutcome)).thenReturn(false);
+        when(assessmentReviewRejectOutcomeMapperMock.mapToDomain(rejectOutcomeResource)).thenReturn(assessmentReviewRejectOutcome);
+
+        ServiceResult<Void> serviceResult = service.rejectAssessmentReview(assessmentReview.getId(), rejectOutcomeResource);
+        assertTrue(serviceResult.isFailure());
+        assertEquals(ASSESSMENT_REVIEW_REJECT_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock, assessmentReviewRejectOutcomeMapperMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
+        inOrder.verify(assessmentReviewRejectOutcomeMapperMock).mapToDomain(rejectOutcomeResource);
+        inOrder.verify(assessmentReviewWorkflowHandlerMock).rejectInvitation(assessmentReview, assessmentReviewRejectOutcome);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getAssessmentReview() {
+        AssessmentReviewResource assessmentReviewResource = newAssessmentReviewResource().build();
+        AssessmentReview assessmentReview = newAssessmentReview().build();
+
+        when(assessmentReviewRepositoryMock.findOne(assessmentReviewResource.getId())).thenReturn(assessmentReview);
+        when(assessmentReviewMapperMock.mapToResource(assessmentReview)).thenReturn(assessmentReviewResource);
+
+        AssessmentReviewResource result = service.getAssessmentReview(assessmentReviewResource.getId())
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(assessmentReviewResource, result);
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewMapperMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReviewResource.getId());
+        inOrder.verify(assessmentReviewMapperMock).mapToResource(assessmentReview);
+        inOrder.verifyNoMoreInteractions();
     }
 }

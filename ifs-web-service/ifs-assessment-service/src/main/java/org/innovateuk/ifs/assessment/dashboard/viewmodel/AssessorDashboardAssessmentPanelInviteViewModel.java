@@ -2,62 +2,40 @@ package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Holder of model attributes for assessment panel invites on the assessor dashboard.
  */
-public class AssessorDashboardAssessmentPanelInviteViewModel {
+public class AssessorDashboardAssessmentPanelInviteViewModel extends AssessorDashboardAssessmentPanelViewModel {
 
-    private final String hash;
-    private final String competitionName;
-    private final long competitionId;
+    private String inviteHash;
 
-    public AssessorDashboardAssessmentPanelInviteViewModel(
-            String hash,
-            String competitionName,
-            long competitionId
-    ) {
-        this.hash = hash;
-        this.competitionName = competitionName;
-        this.competitionId = competitionId;
-    }
-
-    public long getCompetitionId() {
-        return competitionId;
+    public AssessorDashboardAssessmentPanelInviteViewModel(String competitionName, long competitionId, String hash) {
+        super(competitionName, competitionId);
+        this.inviteHash = hash;
     }
 
     public String getInviteHash() {
-        return hash;
-    }
-
-    public String getCompetitionName() {
-        return competitionName;
+        return inviteHash;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessorDashboardAssessmentPanelInviteViewModel that = (AssessorDashboardAssessmentPanelInviteViewModel) o;
 
         return new EqualsBuilder()
-                .append(hash, that.hash)
-                .append(competitionName, that.competitionName)
-                .append(competitionId, that.competitionId)
+                .append(inviteHash, that.inviteHash)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(hash)
-                .append(competitionName)
-                .append(competitionId)
+                .append(inviteHash)
                 .toHashCode();
     }
 }

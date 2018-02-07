@@ -18,10 +18,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
@@ -32,56 +32,96 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class EligibilityModelPopulatorTest {
 
-	@InjectMocks
-	private EligibilityModelPopulator populator;
+    @InjectMocks
+    private EligibilityModelPopulator populator;
 
-	@Mock
-	private CategoryRestService categoryRestService;
+    @Mock
+    private CategoryRestService categoryRestService;
 
-	@Mock
-	private CategoryFormatter categoryFormatter;
+    @Mock
+    private CategoryFormatter categoryFormatter;
 
-	@Mock
-	private OrganisationTypeRestService organisationTypeRestService;
+    @Mock
+    private OrganisationTypeRestService organisationTypeRestService;
 
-	@Test
-	public void testSectionToPopulateModel() {
-		CompetitionSetupSection result = populator.sectionToPopulateModel();
+    @Test
+    public void testSectionToPopulateModel() {
+        CompetitionSetupSection result = populator.sectionToPopulateModel();
 
-		assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
-	}
+        assertEquals(CompetitionSetupSection.ELIGIBILITY, result);
+    }
 
-	@Test
-	public void testPopulateModel() {
-		CompetitionResource competition = newCompetitionResource()
-				.withCompetitionCode("code")
-				.withName("name")
-				.withId(8L)
+    @Test
+    public void populateModelWithResearchParticipationAmounts() {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("code")
+                .withName("name")
+                .withId(8L)
                 .withLeadApplicantType(asList(1L, 2L))
-				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-				.build();
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .build();
 
-		List<ResearchCategoryResource> researchCategories = new ArrayList<>();
-		when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(researchCategories));
-		when(categoryFormatter.format(CollectionFunctions.asLinkedSet(2L, 3L), researchCategories)).thenReturn("formattedcategories");
+        List<ResearchCategoryResource> researchCategories = emptyList();
+        when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(categoryFormatter.format(CollectionFunctions.asLinkedSet(2L, 3L), researchCategories))
+                .thenReturn("formattedcategories");
 
-		when(organisationTypeRestService.getAll()).thenReturn(RestResult.restSuccess(newOrganisationTypeResource()
+        when(organisationTypeRestService.getAll()).thenReturn(RestResult.restSuccess(newOrganisationTypeResource()
                 .withId(1L, 2L, 3L)
                 .withName("Business", "Research", "Something else")
                 .withVisibleInSetup(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
                 .build(3)));
 
-		EligibilityViewModel viewModel = (EligibilityViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
+        EligibilityViewModel viewModel = (EligibilityViewModel) populator.populateModel(
+                getBasicGeneralSetupView(competition),
+                competition
+        );
 
-		assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
-		assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
-		assertEquals(researchCategories, viewModel.getResearchCategories());
-		assertEquals("Business, Research", viewModel.getLeadApplicantTypesText());
+        assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
+        assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
+        assertEquals(researchCategories, viewModel.getResearchCategories());
+        assertEquals("Business, Research", viewModel.getLeadApplicantTypesText());
         assertEquals("formattedcategories", viewModel.getResearchCategoriesFormatted());
         assertEquals(CompetitionSetupSection.ELIGIBILITY, viewModel.getGeneral().getCurrentSection());
-	}
+    }
 
-	private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
-		return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.ELIGIBILITY, CompetitionSetupSection.values(), Boolean.TRUE);
-	}
+    @Test
+    public void populateModelWithNoResearchParticipationAmounts() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("code")
+                .withName("name")
+                .withId(8L)
+                .withLeadApplicantType(asList(1L, 2L))
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .withFullApplicationFinance(null)
+                .build();
+
+        List<ResearchCategoryResource> researchCategories = emptyList();
+        when(categoryRestService.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+        when(categoryFormatter.format(CollectionFunctions.asLinkedSet(2L, 3L), researchCategories))
+                .thenReturn("formattedcategories");
+
+        when(organisationTypeRestService.getAll()).thenReturn(RestResult.restSuccess(newOrganisationTypeResource()
+                .withId(1L, 2L, 3L)
+                .withName("Business", "Research", "Something else")
+                .withVisibleInSetup(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
+                .build(3)));
+
+        EligibilityViewModel viewModel = (EligibilityViewModel) populator.populateModel(
+                getBasicGeneralSetupView(competition),
+                competition
+        );
+
+        assertArrayEquals(new ResearchParticipationAmount[]{}, viewModel.getResearchParticipationAmounts());
+    }
+
+    private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
+        return new GeneralSetupViewModel(
+                Boolean.FALSE,
+                competition,
+                CompetitionSetupSection.ELIGIBILITY,
+                CompetitionSetupSection.values(),
+                Boolean.TRUE
+        );
+    }
 }

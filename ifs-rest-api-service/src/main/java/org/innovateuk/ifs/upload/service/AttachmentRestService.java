@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.upload.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.springframework.core.io.ByteArrayResource;
 
 public interface AttachmentRestService {

@@ -57,7 +57,7 @@ function getHost() {
     elif [[ ${TARGET} == "production" ]]; then
       echo "apply-for-innovation-funding.service.gov.uk"
     else
-      echo "prod.ifs-test-clusters.com"
+      echo $(getClusterAddress)
     fi
 }
 
@@ -78,7 +78,7 @@ function getRegistry() {
     if [[ (${TARGET} == "local") ]]; then
         echo "$(getLocalRegistryUrl)"
     else
-        echo "docker-registry-default.apps.prod.ifs-test-clusters.com"
+        echo "docker-registry-default.apps."$(getClusterAddress)
     fi
 }
 
@@ -87,7 +87,7 @@ function getInternalRegistry() {
     if [[ (${TARGET} == "local") ]]; then
         echo "$(getLocalRegistryUrl)"
     else
-        echo "172.30.80.28:5000"
+        echo "$(getRemoteRegistryUrl)"
     fi
 }
 
@@ -100,7 +100,7 @@ function getSvcAccountClause() {
     if [[ (${TARGET} == "local") ]]; then
         SVC_ACCOUNT_CLAUSE_SERVER_PART='localhost:8443'
     else
-        SVC_ACCOUNT_CLAUSE_SERVER_PART='console.prod.ifs-test-clusters.com:443'
+        SVC_ACCOUNT_CLAUSE_SERVER_PART="console."$(getClusterAddress)":443"
     fi
 
     echo "--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://${SVC_ACCOUNT_CLAUSE_SERVER_PART} --insecure-skip-tls-verify=true"
@@ -135,6 +135,9 @@ function injectDBVariables() {
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
     sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" $(getBuildLocation)/db-reset/*.yml
+
+    [ -z "$SYSTEM_USER_UUID" ] && { echo "Set SYSTEM_USER_UUID environment variable"; exit -1; }
+    sed -i.bak "s#<<SYSTEM-USER-UUID>>#${SYSTEM_USER_UUID}#g" $(getBuildLocation)/db-reset/*.yml
 }
 
 function injectLDAPVariables() {
@@ -214,6 +217,7 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
     sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/finance-data-service/*.yml
     sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/sil-stub/*.yml
     sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/shib/56-*.yml
 
@@ -310,15 +314,19 @@ function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/mysql/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/finance-data-service/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql-client/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/shib/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mail/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/finance-data-service/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/fractal/*.yml
@@ -372,6 +380,10 @@ function scaleDataService() {
     oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
 
+function scaleFinanceDataService() {
+    oc scale dc finance-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
+}
+
 function createProject() {
     until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
     do
@@ -384,4 +396,14 @@ function createProjectIfNecessaryForNonNamedEnvs() {
     if ! $(isNamedEnvironment $TARGET); then
         createProject
     fi
+}
+
+function getClusterAddress() {
+    echo "prod.ifs-test-clusters.com"
+#     echo "dev-nige-1.dev.ifs-test-clusters.com"
+}
+
+function getRemoteRegistryUrl() {
+        echo "172.30.80.28:5000"
+#        echo "172.30.114.178:5000"
 }

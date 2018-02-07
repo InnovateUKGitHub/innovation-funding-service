@@ -58,7 +58,10 @@ The question is enabled for the assignee
     And the user clicks the button/link   link=Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
-    And the user clicks the button/link   link= Public description
+    When the user clicks the button/link  jQuery=.button:contains("Review")
+    And the user expands the section      Public description
+    Then the user should see the element  jQuery=button:contains("Assign to lead for review")
+    And the user clicks the button/link   jQuery=.form-group button:contains("Return and edit")
     And the user should see the element   css=.textarea-wrapped .editor
 
 Collaborator should see the terms and conditions from the overview page
@@ -80,13 +83,6 @@ Collaborator should see the review button instead of the review and submit
     And the user clicks the button/link           jQuery=.button:contains("Review")
     And the user should see the text in the page  All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
     And the user should not see the element       jQuery=.button:contains("Submit application")
-
-Collaborator should be able to edit the assigned question
-    [Documentation]  INFUND-2302
-    ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
-    When the user clicks the button/link  jQuery=button:contains("Public description")
-    And the user should see the element   jQuery=button:contains("Assign to lead for review")
 
 Last update message is correctly updating
     [Documentation]  INFUND-280

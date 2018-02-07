@@ -39,7 +39,7 @@ Comp Admin starts a new Competition
     When the user clicks the button/link           jQuery=.button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}
+    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -110,7 +110,7 @@ Once the project growth table is selected
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}
+    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
@@ -241,10 +241,9 @@ Mark Organisation as complete when yes
     And the user enters text to a text field     css=input[name$="year"]    2016
     And the user populates the project growth table
     When the user enters text to a text field    jQuery=label:contains("employees") + input    4
-    # TODO pending due to IFS-484
-    #    And the user clicks the button/link     jQuery=a:contains("Return to finances")
-    #    And the user clicks the button/link     link=Your organisation
-    #    Then the user should see the element    jQuery=td:contains("Research and development spend") + td input[value="15000"]
+    And the user clicks the button/link          jQuery=button:contains("Save and return to finances")
+    And the user clicks the button/link          link=Your organisation
+    Then the user should see the element         jQuery=td:contains("Research and development spend") + td input[value="15000"]
     When the user clicks the button/link         jQuery=button:contains("Mark as complete")
     Then the user should see the element         jQuery=li:contains("Your organisation") > .task-status-complete
 
@@ -345,8 +344,11 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
+
 the user should see the dates in full format
-    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${monthWord} ${nextyear}")
+    ${today} =    Get time
+    ${tomorrowMonthWord} =    Add time To Date    ${today}    1 day    result_format=%B    exclude_millis=true
+    the user should see the element   jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${tomorrowMonthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")

@@ -25,13 +25,14 @@ import java.util.Optional;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeResourceBuilder.newIneligibleOutcomeResource;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 
 @Rollback
 public class ApplicationControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationController> {
 
-    public static final long APPLICATION_ID = 1L;
-    public static final long APPLICATION_SUBMITTABLE_ID = 7L;
+    private static final long APPLICATION_ID = 1L;
+    private static final long APPLICATION_SUBMITTABLE_ID = 7L;
 
     @Autowired
     private UserMapper userMapper;
@@ -50,22 +51,14 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
                 new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
         application.setId(APPLICATION_ID);
-        processRoles.add(
-            new ProcessRole(
-                leadApplicantProcessRole,
-                null,
-                application.getId(),
-                null,
-                null
-            )
-        );
+        processRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(application).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
         processRoles.get(0).setUser(user);
         swapOutForUser(userMapper.mapToResource(user));
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         swapOutForUser(null);
     }
 

@@ -39,7 +39,7 @@ dependencies {
     testCompile "com.openpojo:openpojo:0.8.4"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
-
+    testCompile group: 'com.jayway.awaitility', name: 'awaitility', version: '1.7.0'
 }
 
 // enabling Spring dev tools has security consequences so only do so for local development
@@ -52,14 +52,3 @@ ext.encryptionSalt=project.properties['ifs.csrf.encryption.salt'] ?: "fa7814848e
 ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d970-b250-4b15-9621-3534325691b4"
 ext.springCloudVersion = 'Dalston.RELEASE'
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}

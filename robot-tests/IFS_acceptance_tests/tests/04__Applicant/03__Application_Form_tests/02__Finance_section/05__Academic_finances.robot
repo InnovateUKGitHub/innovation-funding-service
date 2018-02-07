@@ -101,22 +101,13 @@ Lead applicant can't view the file on the finances page
     And the user clicks the button/link                link=Your project costs
     Then the user should not see the text in the page  ${valid_pdf}
 
-Lead applicant can view the file on the finances overview page
-    [Documentation]    INFUND-917
-    [Tags]    Pending
-    # TODO Pending due to INFUND-9372
-    When the user navigates to the finance overview of the academic
-    And the user should see the text in the page  ${valid_pdf}
-    When the user opens the link in new window    ${valid_pdf}
-    Then the user should not see an error in the page
-    [Teardown]    the user goes back to the previous page
-
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
     [Tags]
     [Setup]    log in as a different user     ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     Then the user should not see the element  link=Your funding
+    And the user should see correct grant percentage
     When the user clicks the button/link      link=Your project costs
     Then the user can see JeS details
 
@@ -138,6 +129,7 @@ User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
     [Tags]
     When the user navigates to the academic application finances
+    And the user should see correct grant percentage
     And the user clicks the button/link       link=Your project costs
     Then the user should not see the element  jQuery=button:contains("Remove")
     And the user should see the element       css=#incurred-staff[readonly]
@@ -239,3 +231,7 @@ Mark academic finances as complete
 the user waits for the file to be scanned by the anti virus software
     Sleep    5s
     # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
+
+the user should see correct grant percentage
+    the user should see the text in the element   css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
+    the user should see the text in the element   css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%

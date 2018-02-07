@@ -16,25 +16,8 @@ def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?: "changeit"
 
-task getNewRelicAgent {
-    if (!file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
-            !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists()) {
-        exec {
-            executable = 'curl'
-            args = ['--connect-timeout', '30',
-                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
-                    'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
-            ]
-        }
-        exec {
-            executable = 'curl'
-            args = ['--connect-timeout', '30',
-                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
-                    'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
-            ]
-        }
-    }
-}
+apply from: rootProject.file("new-relic.gradle")
+
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
@@ -113,8 +96,14 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
+
 project.version = idpVersion
 tagDocker.tag = idpVersion
-osStageRemote.tag = idpVersion
 tagDockerLocal.tag = idpVersion
+osStageRemote.tag = idpVersion
 osStageLocal.tag = idpVersion
+
+
+
+
+

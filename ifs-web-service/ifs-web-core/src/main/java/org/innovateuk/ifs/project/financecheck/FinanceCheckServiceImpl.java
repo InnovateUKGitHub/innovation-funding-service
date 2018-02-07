@@ -11,10 +11,10 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesRestService;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.upload.service.AttachmentRestService;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
@@ -100,6 +100,11 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     @Override
     public ServiceResult<Void> saveQueryPost(PostResource post, long threadId) {
         return queryService.addPost(post, threadId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> closeQuery(Long queryId) {
+        return queryService.close(queryId).toServiceResult();
     }
 
     @Override

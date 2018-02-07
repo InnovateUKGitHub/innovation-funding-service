@@ -17,8 +17,9 @@ import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.service.MappingThreadService;
 import org.innovateuk.ifs.threads.service.ThreadService;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -62,8 +63,8 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
 
     @Autowired
-    public FinanceCheckQueriesServiceImpl(QueryRepository queryRepository, QueryMapper queryMapper, PostMapper postMapper) {
-        service = new MappingThreadService<>(queryRepository, queryMapper, postMapper, ProjectFinance.class);
+    public FinanceCheckQueriesServiceImpl(QueryRepository queryRepository, UserRepository userRepository, QueryMapper queryMapper, PostMapper postMapper) {
+        service = new MappingThreadService<>(queryRepository, userRepository, queryMapper, postMapper, ProjectFinance.class);
     }
 
     @Override
@@ -123,6 +124,12 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                         return serviceFailure(forbiddenError(QUERIES_CANNOT_BE_SENT_AS_FINANCE_CONTACT_NOT_SUBMITTED));
                     }
                 });
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> close(Long queryId) {
+        return service.close(queryId);
     }
 
     private ServiceResult<Void> sendResponseNotification(User financeContact, Project project) {

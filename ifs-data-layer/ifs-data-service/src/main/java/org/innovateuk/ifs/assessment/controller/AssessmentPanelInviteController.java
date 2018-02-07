@@ -4,12 +4,10 @@ import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,9 +31,8 @@ public class AssessmentPanelInviteController {
     }
 
     @GetMapping("/getAllInvitesToResend/{competitionId}")
-    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(
-            @PathVariable long competitionId,
-            @RequestParam List<Long> inviteIds) {
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(@PathVariable long competitionId,
+                                                                           @RequestParam List<Long> inviteIds) {
         return assessmentPanelInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
     }
 
@@ -46,7 +43,8 @@ public class AssessmentPanelInviteController {
     }
 
     @PostMapping("/resendInvites")
-    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds,
+                                          @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return assessmentPanelInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
@@ -71,20 +69,17 @@ public class AssessmentPanelInviteController {
     }
 
     @GetMapping(value = "/getAvailableAssessorIds/{competitionId}")
-    public RestResult<List<Long>> getAvailableAssessorIds(
-            @PathVariable long competitionId) {
+    public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
 
     @GetMapping("/getAllInvitesByUser/{userId}")
-    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(
-            @PathVariable long userId) {
+    public RestResult<List<AssessmentReviewPanelParticipantResource>> getAllInvitesByUser(@PathVariable long userId) {
         return assessmentPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
 
     @GetMapping(value = "/getNonAcceptedAssessorInviteIds/{competitionId}")
-    public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(
-            @PathVariable long competitionId) {
+    public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(@PathVariable long competitionId) {
         return assessmentPanelInviteService.getNonAcceptedAssessorInviteIds(competitionId).toGetResponse();
     }
 
@@ -97,14 +92,13 @@ public class AssessmentPanelInviteController {
     }
 
     @PostMapping("/openInvite/{inviteHash}")
-    public RestResult<AssessmentPanelInviteResource> openInvite(@PathVariable String inviteHash) {
+    public RestResult<AssessmentReviewPanelInviteResource> openInvite(@PathVariable String inviteHash) {
         return assessmentPanelInviteService.openInvite(inviteHash).toPostWithBodyResponse();
     }
 
     @PostMapping("/acceptInvite/{inviteHash}")
     public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
-        final UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return assessmentPanelInviteService.acceptInvite(inviteHash, currentUser).toPostResponse();
+        return assessmentPanelInviteService.acceptInvite(inviteHash).toPostResponse();
     }
 
     @PostMapping("/rejectInvite/{inviteHash}")

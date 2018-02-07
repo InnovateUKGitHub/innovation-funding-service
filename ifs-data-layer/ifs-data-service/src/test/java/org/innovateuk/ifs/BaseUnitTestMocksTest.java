@@ -14,11 +14,15 @@ import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
 import org.innovateuk.ifs.assessment.mapper.*;
-import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
-import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewPanelInviteMapper;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.review.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -47,7 +51,6 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -334,7 +337,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
-    protected AssessmentPanelInviteMapper assessmentPanelInviteMapperMock;
+    protected AssessmentReviewPanelInviteMapper assessmentReviewPanelInviteMapperMock;
 
     @Mock
     protected CompetitionMapper competitionMapperMock;
@@ -352,7 +355,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ParticipantStatusMapper participantStatusMapperMock;
 
     @Mock
-    protected AssessmentPanelParticipantMapper assessmentPanelParticipantMapperMock;
+    protected AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapperMock;
 
     @Mock
     protected InviteProjectRepository inviteProjectRepositoryMock;
@@ -425,9 +428,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SystemNotificationSource systemNotificationSourceMock;
-
-    @Mock
-    protected FileHttpHeadersValidator fileValidatorMock;
 
     @Mock
     protected FileEntryRepository fileEntryRepositoryMock;
@@ -718,7 +718,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentReviewRepository assessmentReviewRepositoryMock;
 
     @Mock
+    protected AssessmentInterviewRepository assessmentInterviewRepositoryMock;
+
+    @Mock
     protected AssessmentReviewWorkflowHandler assessmentReviewWorkflowHandlerMock;
+
+    @Mock
+    protected AssessmentReviewMapper assessmentReviewMapperMock;
+
+    @Mock
+    protected AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapperMock;
 
     @Before
     public void setupMockInjection() {

@@ -5,7 +5,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.user.repository.UserRepository;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R
     private final M threadMapper;
     private final PostMapper postMapper;
 
-    public MappingThreadService(ThreadRepository<D> threadRepository, M threadMapper, PostMapper postMapper, Class<C> context) {
-        this.service = new GenericThreadService<>(threadRepository, context);
+    public MappingThreadService(ThreadRepository<D> threadRepository, UserRepository userRepository, M threadMapper, PostMapper postMapper, Class<C> context) {
+        this.service = new GenericThreadService<>(threadRepository, userRepository, context);
         this.threadMapper = threadMapper;
         this.postMapper = postMapper;
     }
@@ -33,6 +34,11 @@ public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R
 
     public ServiceResult<Long> create(R query) {
         return service.create(threadMapper.mapToDomain(query));
+    }
+
+    @Override
+    public ServiceResult<Void> close(Long threadId) {
+        return service.close(threadId);
     }
 
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {

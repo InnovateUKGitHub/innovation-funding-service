@@ -335,7 +335,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertEquals(false, viewModel.getTabs().nonIFS());
         assertEquals(false, viewModel.getTabs().upcoming());
         assertEquals(true, viewModel.getTabs().projectSetup());
-        assertEquals(false, viewModel.getTabs().previous());
+        assertEquals(true, viewModel.getTabs().previous());
     }
 
     @Override

@@ -7,10 +7,10 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
@@ -38,6 +38,8 @@ public interface FinanceCheckService {
     ServiceResult<Long> saveQuery(QueryResource query);
 
     ServiceResult<Void> saveQueryPost(PostResource post, long threadId);
+
+    ServiceResult<Void> closeQuery(Long queryId);
 
     ServiceResult<List<QueryResource>> getQueries(Long projectFinanceId);
 

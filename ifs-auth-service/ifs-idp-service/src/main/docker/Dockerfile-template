@@ -2,9 +2,9 @@ FROM debian:jessie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
   JAVAVER=8 \
-  JAVAUPD=151 \
+  JAVAUPD=161 \
   JAVABLD=12 \
-  JAVASIG=e758a0de34e24606bca991d704f6dcbf \
+  JAVASIG=2f38c3b165be4555a1fa6e98c45e0808 \
   IDPVER="3.3.1"
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle

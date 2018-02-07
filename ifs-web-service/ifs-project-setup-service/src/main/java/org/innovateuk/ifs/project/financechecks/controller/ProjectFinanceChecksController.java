@@ -23,7 +23,6 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
@@ -43,18 +42,17 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -73,8 +71,9 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+import static java.util.function.Function.identity;
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -82,7 +81,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * This controller will handle requests related to finance checks
@@ -104,9 +103,6 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ApplicationService applicationService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
@@ -146,6 +142,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ApplicantRestService applicantRestService;
+
+    @Autowired
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -371,16 +370,12 @@ public class ProjectFinanceChecksController {
     }
 
     private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
+
         ProjectResource projectResource = projectService.getById(compositeId.getProjectId());
         OrganisationResource organisationResource = organisationService.getOrganisationById(compositeId.getOrganisationId());
 
-        Map<Long, String> attachmentLinks = new HashMap<>();
-        if (attachments != null) {
-            attachments.forEach(id -> {
-                FileEntryResource file = financeCheckService.getAttachmentInfo(id);
-                attachmentLinks.put(id, file.getName());
-            });
-        }
+        Map<Long, String> attachmentLinks =
+                simpleToMap(attachments, identity(), id -> financeCheckService.getAttachmentInfo(id).getName());
 
         boolean approved = isApproved(compositeId);
 
@@ -402,46 +397,21 @@ public class ProjectFinanceChecksController {
 
     private List<ThreadViewModel> getQueriesAndPopulateViewModel(Long projectId, Long organisationId) {
 
-        List<ThreadViewModel> queryModel = new LinkedList<>();
-
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        financeCheckService.getQueries(projectFinance.getId()).ifSuccessful( queries -> {
-            // order queries by most recent post
-            List<QueryResource> sortedQueries = queries.stream().
-                    flatMap(t -> t.posts.stream()
-                            .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
-                    .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
-                    .map(m -> m.getKey())
-                    .distinct()
-                    .collect(Collectors.toList());
 
-            for (QueryResource query : sortedQueries) {
-                List<ThreadPostViewModel> posts = new LinkedList<>();
-                for (PostResource p : query.posts) {
-                    ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
-                    List<Long> projectUserIds = projectService.getProjectUsersForProject(projectId).stream().map(ProjectUserResource::getUser).distinct().collect(Collectors.toList());
-                    if (projectUserIds.contains(p.author.getId())) {
-                        UserResource user = userService.findById(p.author.getId());
-                        post.setUsername(user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
+        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
-                    } else {
-                        post.setUsername("Innovate UK - Finance team");
-                    }
-                    posts.add(post);
-                }
-                ThreadViewModel detail = new ThreadViewModel();
-                detail.setViewModelPosts(posts);
-                detail.setSectionType(query.section);
-                detail.setCreatedOn(query.createdOn);
-                detail.setAwaitingResponse(query.awaitingResponse);
-                detail.setTitle(query.title);
-                detail.setId(query.id);
-                detail.setProjectId(projectId);
-                detail.setOrganisationId(organisationId);
-                queryModel.add(detail);
-            }
-        });
-        return queryModel;
+        List<Long> projectUserIds =
+                removeDuplicates(simpleMap(projectService.getProjectUsersForProject(projectId), ProjectUserResource::getUser));
+
+        if (queriesResult.isSuccess()) {
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccessObject(), user ->
+                    projectUserIds.contains(user.getId()) ?
+                            user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
+                            "Innovate UK - Finance team");
+        } else {
+            return emptyList();
+        }
     }
 
     private String redirectToQueries(Long projectId) {

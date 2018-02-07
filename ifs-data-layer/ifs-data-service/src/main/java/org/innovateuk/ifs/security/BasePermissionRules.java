@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -39,6 +41,12 @@ public abstract class BasePermissionRules extends RootPermissionRules {
 
     @Autowired
     protected AssessmentRepository assessmentRepository;
+
+    @Autowired
+    protected AssessmentReviewRepository assessmentReviewRepository;
+
+    @Autowired
+    protected AssessmentInterviewRepository assessmentInterviewRepository;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;

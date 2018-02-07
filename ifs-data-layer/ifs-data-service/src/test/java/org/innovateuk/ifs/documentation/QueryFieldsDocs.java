@@ -14,7 +14,9 @@ public class QueryFieldsDocs {
                 fieldWithPath("section").description("The Finance Check section to which this Query belongs to."),
                 fieldWithPath("title").description("The title of this Query."),
                 fieldWithPath("awaitingResponse").description("Informs if this Query is awaiting response."),
-                fieldWithPath("createdOn").description("The datetime this Query was created.")
+                fieldWithPath("createdOn").description("The datetime this Query was created."),
+                fieldWithPath("closedBy").description("The User who closed this Query, if any."),
+                fieldWithPath("closedDate").description("The datetime this Query was closed, if any.")
         };
     }
 }

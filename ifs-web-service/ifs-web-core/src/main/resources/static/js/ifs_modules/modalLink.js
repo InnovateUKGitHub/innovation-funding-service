@@ -6,6 +6,7 @@ IFS.core.modal = (function () {
   return {
     settings: {
       element: '[data-js-modal]',
+      modalTargetSwitch: '[data-switches-modal-target]',
       html5validationMode: {}
     },
     init: function () {
@@ -14,6 +15,9 @@ IFS.core.modal = (function () {
 
       IFS.core.modal.initButtonRole()
 
+      jQuery('body').on('click', s.modalTargetSwitch, function (e) {
+        IFS.core.modal.setModalTarget(e, this)
+      })
       jQuery('body').on('click', s.element, function (e) {
         IFS.core.modal.openModal(e, this)
       })
@@ -40,6 +44,12 @@ IFS.core.modal = (function () {
       }
       return formValid
     },
+    setModalTarget: function (event, button) {
+      var targetSetter = jQuery(button)
+      var targetButton = targetSetter.attr('data-switches-modal-target')
+      var targetModal = targetSetter.attr('data-switches-modal-target-value')
+      jQuery(targetButton).attr('data-js-modal', targetModal)
+    },
     openModal: function (event, button) {
       button = jQuery(button)
       var formValid = IFS.core.modal.checkForInputErrors(button)
@@ -63,9 +73,11 @@ IFS.core.modal = (function () {
         }
       }
 
-      if (target.find('form').length) {
+      var form = target.find('form')
+      if (form.length) {
         // update the form url of the modal if a data- attribute exists
         if (modalFormAction !== undefined) {
+          this.setInputValues(form, jQuery(event.target))
           target.find('form').attr('action', modalFormAction)
         }
 
@@ -91,6 +103,16 @@ IFS.core.modal = (function () {
           }
         })
       }
+    },
+    setInputValues: function (form, eventTarget) {
+      jQuery.each(eventTarget[0].attributes, function (index, val) {
+        if (val.name.startsWith('data-modal-input-')) {
+          var inputName = val.name.replace('data-modal-input-', '')
+          var inputVal = val.value
+          var input = jQuery('#' + inputName)
+          input.val(inputVal)
+        }
+      })
     },
     disableTabPage: function () {
       jQuery(':tabbable').each(function () {
