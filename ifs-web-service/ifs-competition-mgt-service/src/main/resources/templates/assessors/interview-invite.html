@@ -59,11 +59,11 @@
                 <li class="selected">
                     <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
-                <li class="not-selected">
-                    <label>Pending and rejected</label>
+                <li class="not-selected" aria-label="Item not selected">
+                    <a class="buttonlink disabled">Pending and rejected</a>
                 </li>
-                <li class="not-selected">
-                    <label>Accepted</label>
+                <li class="not-selected" aria-label="Item not selected">
+                    <a class="buttonlink disabled">Accepted</a>
                 </li>
             </ul>
 
@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
-                        <a th:href="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                        <a class="button disabled">Review and send invites</a>
                     </div>
                 </div>
 
