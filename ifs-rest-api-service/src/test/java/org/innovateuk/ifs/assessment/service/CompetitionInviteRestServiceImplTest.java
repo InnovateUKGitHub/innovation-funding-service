@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;

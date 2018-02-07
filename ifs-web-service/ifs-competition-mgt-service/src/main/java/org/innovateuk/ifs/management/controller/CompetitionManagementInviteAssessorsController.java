@@ -17,7 +17,6 @@ import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsFindModelPo
 import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsFindViewModel;
-import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -56,9 +55,6 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
-
-    @Autowired
-    private UserRestService userRestService;
 
     @Autowired
     private CompetitionInviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
