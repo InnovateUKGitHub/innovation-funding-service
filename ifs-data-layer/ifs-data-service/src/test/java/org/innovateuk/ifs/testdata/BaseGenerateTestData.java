@@ -6,11 +6,11 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -18,6 +18,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
@@ -31,6 +34,8 @@ import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
+import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
+import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -72,6 +77,7 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
@@ -90,6 +96,7 @@ import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProject
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.QuestionDataBuilder.newQuestionData;
+import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
@@ -104,7 +111,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
@@ -161,10 +168,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected CompetitionService competitionService;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
+    private QuestionService questionService;
 
     @Autowired
-    private ApplicationService applicationService;
+    private FormInputService formInputService;
 
     @Autowired
     private TestService testService;
@@ -187,6 +194,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private AssessmentDataBuilder assessmentDataBuilder;
     private AssessorResponseDataBuilder assessorResponseDataBuilder;
     private ProjectDataBuilder projectDataBuilder;
+    private QuestionResponseDataBuilder questionResponseDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -330,6 +338,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         projectDataBuilder = newProjectData(serviceLocator);
         publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
+        questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
     }
 
     @Test
@@ -350,13 +359,26 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         List<CompletableFuture<CompletableFuture<Void>>> questionResponseFutures = simpleMap(applicationFutures, applicationFuture -> {
             return applicationFuture.thenApplyAsync(applicationData -> {
-                CompletableFuture<ApplicationData> questionResponses = buildCompletableFutureFromListenableFuture(taskExecutor.submitListenable(() -> createApplicationQuestionResponses(applicationData)));
-                CompletableFuture<ApplicationData> applicationFinances = buildCompletableFutureFromListenableFuture(taskExecutor.submitListenable(() -> createApplicationFinances(applicationData)));
-                return CompletableFuture.allOf(combineLists(questionResponses, applicationFinances).toArray(new CompletableFuture[] {})).thenAcceptAsync(done -> completeApplication(applicationData));
+
+                CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = future(taskExecutor.submitListenable(() ->
+                        createApplicationQuestionResponses(applicationData)));
+
+                CompletableFuture<List<ApplicationFinanceData>> applicationFinances = future(taskExecutor.submitListenable(() ->
+                        createApplicationFinances(applicationData)));
+
+                return CompletableFuture.allOf(combineLists(questionResponses, applicationFinances).toArray(new CompletableFuture[] {})).thenAcceptAsync(done -> {
+                    List<ApplicationQuestionResponseData> responses = questionResponses.join();
+                    List<ApplicationFinanceData> finances = applicationFinances.join();
+                    completeApplication(applicationData, responses, finances);
+                });
+
             }, taskExecutor);
         });
 
-        waitForFuturesToComplete(questionResponseFutures);
+        questionResponseFutures.forEach(f1 -> {
+            CompletableFuture<Void> f2 = f1.join();
+            f2.join();
+        });
 
         moveCompetitionsToCorrectFinalState();
 
@@ -420,7 +442,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         List<CompletableFuture<ApplicationData>> createApplicationFutures = simpleMap(applicationLines, line -> {
 
-            return buildCompletableFutureFromListenableFuture(taskExecutor.submitListenable(() -> {
+            return future(taskExecutor.submitListenable(() -> {
 
                 Long competitionId = competitionRepository.findByName(line.competitionName).get(0).getId();
 
@@ -433,7 +455,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         return createApplicationFutures;
     }
 
-    private ApplicationData createApplicationQuestionResponses(ApplicationData applicationData) {
+    private List<ApplicationQuestionResponseData> createApplicationQuestionResponses(ApplicationData applicationData) {
+
+        QuestionResponseDataBuilder baseBuilder =
+                questionResponseDataBuilder.withApplication(applicationData.getApplication());
 
         ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
                 l.title.equals(applicationData.getApplication().getName()));
@@ -441,24 +466,53 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r -> r.competitionName.equals(applicationLine.competitionName) && r.applicationName.equals(applicationLine.title));
 
-        ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.withExistingApplication(applicationData);
-
         // if we have specific answers for questions in the application-questions.csv file, fill them in here now
         if (!responsesForApplication.isEmpty()) {
-            return applicationBuilder.
-                    withQuestionResponses(questionResponsesFromCsv(applicationLine.leadApplicant, responsesForApplication)).
-                    build();
+
+            List<QuestionResponseDataBuilder> responseBuilders = questionResponsesFromCsv(baseBuilder, applicationLine.leadApplicant, responsesForApplication, applicationData);
+
+            return simpleMap(responseBuilders, BaseBuilder::build);
         }
         // otherwise provide a default set of marked as complete questions if the application is to be submitted
         else if (applicationLine.submittedDate != null) {
-            return applicationBuilder.
-                    withDefaultQuestionResponses().
-                    build();
+
+            // TODO DW - this was cached in builder before
+            List<QuestionResource> competitionQuestions = questionService.findByCompetition(applicationData.getCompetition().getId()).getSuccessObjectOrThrowException();
+
+            List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
+                    q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
+
+            List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
+
+                QuestionResponseDataBuilder responseBuilder = baseBuilder.
+                        forQuestion(question.getName()).
+                        withAssignee(applicationData.getLeadApplicant().getEmail()).
+                        withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", applicationData.getLeadApplicant().getEmail());
+
+                // TODO DW - this was cached in builder before
+                List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+
+                if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
+
+                    String fileUploadName = (applicationData.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
+                            .toLowerCase().replace(' ', '-') ;
+
+                    responseBuilder = responseBuilder.
+                            withFileUploads(singletonList(fileUploadName), applicationData.getLeadApplicant().getEmail());
+                }
+
+                return responseBuilder;
+            });
+
+            return simpleMap(responseBuilders, builder -> {
+                return testService.doWithinTransaction(() -> builder.build());
+            });
         }
-        return applicationData;
+
+        return emptyList();
     }
 
-    private ApplicationData createApplicationFinances(ApplicationData applicationData) {
+    private List<ApplicationFinanceData> createApplicationFinances(ApplicationData applicationData) {
 
         ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
                 l.title.equals(applicationData.getApplication().getName()));
@@ -502,15 +556,27 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         });
 
-        builders.forEach(BaseBuilder::build);
-
-        return applicationData;
+        return simpleMap(builders, BaseBuilder::build);
     }
 
-    private void completeApplication(ApplicationData applicationData) {
+    private void completeApplication(ApplicationData applicationData, List<ApplicationQuestionResponseData> questionResponseData, List<ApplicationFinanceData> financeData) {
 
         ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
                 l.title.equals(applicationData.getApplication().getName()));
+
+        questionResponseData.forEach(response -> {
+            // TODO DW - which should we MAC
+            questionResponseDataBuilder.
+                    withExistingResponse(response).
+                    markAsComplete();
+        });
+
+        financeData.forEach(finance -> {
+            // TODO DW - which should we MAC
+            applicationFinanceDataBuilder.
+                    withExistingFinances(finance.getApplication(), finance.getCompetition(), finance.getUser()).
+                    markAsComplete(true);
+        });
 
         ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
                 withExistingApplication(applicationData).
@@ -793,9 +859,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         competitionBuilderWithBasicInformation(competitionLine, competitionId).build();
     }
 
-    private List<UnaryOperator<QuestionResponseDataBuilder>> questionResponsesFromCsv(String leadApplicant, List<ApplicationQuestionResponseLine> responsesForApplication) {
+    private List<QuestionResponseDataBuilder> questionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<ApplicationQuestionResponseLine> responsesForApplication, ApplicationData applicationData) {
 
-        return simpleMap(responsesForApplication, line -> baseBuilder -> {
+        return simpleMap(responsesForApplication, line -> {
 
             String answeringUser = !isBlank(line.answeredBy) ? line.answeredBy : (!isBlank(line.assignedTo) ? line.assignedTo : leadApplicant);
 
@@ -813,14 +879,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             UnaryOperator<QuestionResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
 
-            UnaryOperator<QuestionResponseDataBuilder> markAsCompleteIfNecessary = builder ->
-                    line.markedAsComplete ? builder.markAsComplete() : builder;
-
             return withQuestion.
                     andThen(answerIfNecessary).
                     andThen(uploadFilesIfNecessary).
                     andThen(assignIfNecessary).
-                    andThen(markAsCompleteIfNecessary).
                     apply(baseBuilder);
         });
     }
@@ -922,8 +984,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
 
         return finance.
-                withIndustrialCosts(costBuilder).
-                markAsComplete(markAsComplete);
+                withIndustrialCosts(costBuilder);
+//                markAsComplete(markAsComplete);
     }
 
     private ApplicationFinanceDataBuilder generateIndustrialCosts(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
@@ -1282,7 +1344,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
      *
      * Originally from https://blog.krecan.net/2014/06/11/converting-listenablefutures-to-completablefutures-and-back/
      */
-    protected <T> CompletableFuture<T> buildCompletableFutureFromListenableFuture(ListenableFuture<T> listenableFuture) {
+    protected <T> CompletableFuture<T> future(ListenableFuture<T> listenableFuture) {
 
         //create an instance of CompletableFuture
         CompletableFuture<T> completable = new CompletableFuture<T>() {

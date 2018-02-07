@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
-import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles("integration-test")
 public abstract class BaseIntegrationTest extends BaseTest {
 
-    @LocalServerPort
+//    @LocalServerPort
     protected int port;
 
     /**

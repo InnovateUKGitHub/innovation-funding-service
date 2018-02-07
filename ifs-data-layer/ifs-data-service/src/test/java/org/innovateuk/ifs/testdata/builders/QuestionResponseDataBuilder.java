@@ -38,6 +38,13 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
 
     private static Cache<Pair<Long, String>, List<FormInputResource>> formInputsByCompetitionIdAndQuestionName = CacheBuilder.newBuilder().build();
 
+    public QuestionResponseDataBuilder withExistingResponse(ApplicationQuestionResponseData response) {
+        return with(data -> {
+           data.setApplication(response.getApplication());
+           data.setQuestionName(response.getQuestionName());
+        });
+    }
+
     public QuestionResponseDataBuilder withApplication(ApplicationResource application) {
         return with(data -> data.setApplication(application));
     }
