@@ -32,7 +32,8 @@ function dbReset() {
       sleep 10
     done
 
-    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | grep -v virus-scan-holding | xargs rm -rf'
+    # Note: We remove just contents of virus-scan-holding and not the directory itself as its monitored by clamAV for scanning, but we delete other directories completely.
+    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && rm -rf virus-scan-holding/* && ls | grep -v .trashcan | grep -v virus-scan-holding | xargs rm -rf'
 }
 
 # Entry point

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-details">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/IFS-2437-feedback-overview'})" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">Machine learning in robots</span>
+        Project summary
+    </h1>
+
+    <p>The Project aims to identify, isolate and correct an issue that has hindered progress in this field for a number of years.</p>
+    <p>Identification will involve the university testing conditions to determine the exact circumstance of the issue.</p>
+    <p>Once Identification has been assured we will work to Isolate the issue but replicating the circumstances in
+        which it occurs within a laboratory environment.</p>
+   <p>After this we will work with our prototyping partner to create a tool to correct the issue. Once tested and certified this will be rolled out to mass production.</p>
+
+    <ul class="pagination">
+        <li class="next">
+            <a rel="next" title="Navigate to next part" href="/prototypes/IFS-2437-public-description">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Public description</span>
+            </a>
+        </li>
+    </ul>
+
+    <a href="/prototypes/IFS-2437-feedback-overview" class="button-secondary">Return to feedback overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

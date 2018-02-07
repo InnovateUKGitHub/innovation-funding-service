@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.mapper.AssessmentPanelInviteMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
@@ -19,7 +20,6 @@ import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -30,9 +30,15 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -90,9 +96,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private RejectionReasonRepository rejectionReasonRepository;
-
-    @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
@@ -127,6 +130,12 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Autowired
     private AssessmentReviewRepository assessmentReviewRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     enum Notifications {
         INVITE_ASSESSOR_TO_PANEL,
@@ -447,11 +456,24 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     @Override
-    public ServiceResult<Void> acceptInvite(String inviteHash, UserResource currentUser) {
-        final User user = userRepository.findOne(currentUser.getId());
+    public ServiceResult<Void> acceptInvite(String inviteHash) {
         return getParticipantByInviteHash(inviteHash)
-                .andOnSuccess(p -> accept(p, user))
+                .andOnSuccess(AssessmentPanelInviteServiceImpl::accept)
+                .andOnSuccess(this::assignAllPanelApplicationsToParticipant)
                 .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> assignAllPanelApplicationsToParticipant(AssessmentPanelParticipant participant) {
+        Competition competition = participant.getProcess();
+        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        final Role panelAssessorRole = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
+        final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING);
+        applicationsInPanel.forEach(application -> {
+            AssessmentReview assessmentReview = new AssessmentReview(application, participant, panelAssessorRole);
+            assessmentReview.setActivityState(pendingActivityState);
+            assessmentReviewRepository.save(assessmentReview);
+        });
+        return serviceSuccess();
     }
 
     private ServiceResult<AssessmentPanelParticipant> getParticipantByInviteHash(String inviteHash) {
@@ -480,7 +502,8 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
     }
 
-    private ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant, User user) {
+    private static ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant) {
+        User user = participant.getUser();
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
@@ -504,7 +527,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         }
     }
 
-    private String getInviteCompetitionName(AssessmentPanelParticipant participant) {
+    private static String getInviteCompetitionName(AssessmentPanelParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
 

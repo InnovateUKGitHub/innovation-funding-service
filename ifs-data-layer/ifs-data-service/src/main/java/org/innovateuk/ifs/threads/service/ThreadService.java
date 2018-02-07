@@ -13,5 +13,7 @@ public interface ThreadService<E, P> {
 
     ServiceResult<Long> create(E e);
 
+    ServiceResult<Void> close(Long threadId);
+
     ServiceResult<Void> addPost(P post, Long threadId);
 }
