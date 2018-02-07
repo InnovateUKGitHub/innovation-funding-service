@@ -50,6 +50,11 @@ public class ProjectDocs {
             fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent")
     };
 
+    public static final FieldDescriptor[] grantOfferLetterStateResourceFields = {
+            fieldWithPath("state").description("The current workflow state of the grant offer letter"),
+            fieldWithPath("lastEvent").description("The last workflow event to take place on the grant offer letter"),
+    };
+
     @SuppressWarnings("unchecked")
     public static final ProjectResourceBuilder projectResourceBuilder = newProjectResource()
             .withId(1L)

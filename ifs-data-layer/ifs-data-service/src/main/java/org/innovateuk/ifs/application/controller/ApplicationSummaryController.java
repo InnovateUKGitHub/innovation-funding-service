@@ -59,8 +59,8 @@ public class ApplicationSummaryController {
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
             @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
-            @RequestParam(value = "inAssessmentPanel", required = false) Optional<Boolean> inAssessmentPanel) {
-        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentPanel).toGetResponse();
+            @RequestParam(value = "inAssessmentReviewPanel", required = false) Optional<Boolean> inAssessmentReviewPanel) {
+        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentReviewPanel).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/not-submitted")

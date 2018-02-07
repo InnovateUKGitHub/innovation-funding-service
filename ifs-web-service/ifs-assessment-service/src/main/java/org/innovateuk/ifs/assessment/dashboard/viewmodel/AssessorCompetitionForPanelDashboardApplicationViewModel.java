@@ -2,10 +2,10 @@ package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.ACCEPTED;
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.PENDING;
+import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.ACCEPTED;
+import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.PENDING;
 
 /**
  * Holder of model attributes for the applications shown on the Assessor Competition for Panel Dashboard.
