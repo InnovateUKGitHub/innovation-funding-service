@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * CompletableFutures generated from this Thread will be registered here.  Any child Futures of these registered Futures
  * will also be registered here and the same for the children's' children's Futures etc.
  *
- * As the ConcurrentLinkedQueue holding all of these Futures was created in the main HttpServletRequest-handling Thread
+ * As the {@link Queue} holding all of these Futures was created in the main HttpServletRequest-handling Thread
  * and passed down to child Threads, child's child Threads etc for them to also register their generated futures in,
  * we are therefore able to await the completion of all Futures, child Futures etc back in the main
  * HttpServletRequest-handling Thread so that we can halt rendering of any templates from the Controllers until all
@@ -90,7 +90,7 @@ public class AsyncFuturesHolder {
      */
     public static Queue<RegisteredAsyncFutureDetails<?>> getFuturesOrInitialise() {
         if (ASYNC_FUTURES.get() == null) {
-            ASYNC_FUTURES.set(new ConcurrentLinkedQueue<>());
+            ASYNC_FUTURES.set(new LinkedBlockingQueue<>());
         }
         return ASYNC_FUTURES.get();
     }

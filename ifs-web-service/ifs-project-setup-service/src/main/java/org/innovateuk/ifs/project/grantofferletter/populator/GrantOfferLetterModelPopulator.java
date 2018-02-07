@@ -31,7 +31,10 @@ public class GrantOfferLetterModelPopulator {
         boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
         boolean grantOfferLetterApproved = grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).getSuccessObjectOrThrowException();
         boolean grantOfferLetterSent = grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).getSuccessObjectOrThrowException();
-        boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
+        boolean grantOfferLetterRejected = false;
+        if (projectManager) {
+            grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
+        }
 
         return new GrantOfferLetterModel(projectId, project.getName(),
                 leadPartner,
