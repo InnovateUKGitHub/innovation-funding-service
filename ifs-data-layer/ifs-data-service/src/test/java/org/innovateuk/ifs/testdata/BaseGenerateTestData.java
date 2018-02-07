@@ -33,10 +33,7 @@ import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.*;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
-import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
-import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
+import org.innovateuk.ifs.testdata.builders.data.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -353,32 +350,52 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createOrganisations();
         createInternalUsers();
         createExternalUsers();
-        createCompetitions();
 
-        List<CompletableFuture<ApplicationData>> applicationFutures = createBasicApplicationDetails();
+        List<CompletableFuture<CompetitionData>> createCompetitionFutures = createCompetitions();
 
-        List<CompletableFuture<CompletableFuture<Void>>> questionResponseFutures = simpleMap(applicationFutures, applicationFuture -> {
-            return applicationFuture.thenApplyAsync(applicationData -> {
+        Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
 
-                CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = future(taskExecutor.submitListenable(() ->
-                        createApplicationQuestionResponses(applicationData)));
+            CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = future(taskExecutor.submitListenable(() ->
+                    createApplicationQuestionResponses(applicationData)));
 
-                CompletableFuture<List<ApplicationFinanceData>> applicationFinances = future(taskExecutor.submitListenable(() ->
-                        createApplicationFinances(applicationData)));
+            CompletableFuture<List<ApplicationFinanceData>> applicationFinances = future(taskExecutor.submitListenable(() ->
+                    createApplicationFinances(applicationData)));
 
-                return CompletableFuture.allOf(combineLists(questionResponses, applicationFinances).toArray(new CompletableFuture[] {})).thenAcceptAsync(done -> {
-                    List<ApplicationQuestionResponseData> responses = questionResponses.join();
-                    List<ApplicationFinanceData> finances = applicationFinances.join();
-                    completeApplication(applicationData, responses, finances);
-                }, taskExecutor);
+            CompletableFuture<ApplicationData> completeApplicationFuture = CompletableFuture.allOf(combineLists(questionResponses, applicationFinances).toArray(new CompletableFuture[]{})).thenAcceptAsync(done -> {
+                List<ApplicationQuestionResponseData> responses = questionResponses.join();
+                List<ApplicationFinanceData> finances = applicationFinances.join();
+                completeApplication(applicationData, responses, finances);
+            }, taskExecutor).thenCompose(done -> CompletableFuture.supplyAsync(() -> applicationData));
 
-            }, taskExecutor);
+            return completeApplicationFuture;
+        };
+
+        Function<CompetitionData, List<CompletableFuture<ApplicationData>>> fillInAndCompleteApplications = competitionData -> {
+
+            List<CompletableFuture<ApplicationData>> applicationFutures = createBasicApplicationDetails(competitionData);
+
+            List<CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFutures = simpleMap(applicationFutures, applicationFuture -> {
+
+                CompletableFuture<ApplicationData> fillInAndCompleteApplicationFuture = applicationFuture.
+                        thenApplyAsync(fillInAndCompleteApplicationFn, taskExecutor).
+                        thenCompose(done -> CompletableFuture.completedFuture(applicationFuture.join()));
+
+                return fillInAndCompleteApplicationFuture;
+            });
+
+            return fillInAndCompleteApplicationFutures;
+        };
+
+        List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures = simpleMap(createCompetitionFutures, competition -> {
+
+            CompletableFuture<List<CompletableFuture<ApplicationData>>> competitionAndApplicationFutures =
+                    competition.thenApplyAsync(fillInAndCompleteApplications, taskExecutor);
+
+            return competitionAndApplicationFutures.thenCompose(applicationFutures ->
+                    CompletableFuture.completedFuture(simpleMap(applicationFutures, CompletableFuture::join)));
         });
 
-        questionResponseFutures.forEach(f1 -> {
-            CompletableFuture<Void> f2 = f1.join();
-            f2.join();
-        });
+        waitForFuturesToComplete(createApplicationsFutures);
 
         moveCompetitionsToCorrectFinalState();
 
@@ -423,28 +440,25 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     }
 
-    private List<CompletableFuture<ApplicationData>> createBasicApplicationDetails() {
+    private List<CompletableFuture<ApplicationData>> createBasicApplicationDetails(CompetitionData competitionData) {
 
-        List<String> competitionsToAddApplicationsTo = removeDuplicates(simpleMap(applicationLines, line -> line.competitionName));
+        List<ApplicationLine> applicationsForCompetition = simpleFilter(applicationLines, applicationLine ->
+                applicationLine.competitionName.equals(competitionData.getCompetition().getName()));
 
-        competitionsToAddApplicationsTo.forEach(competitionName -> {
+        if (applicationsForCompetition.isEmpty()) {
+            return emptyList();
+        }
 
-            Long competitionId = competitionRepository.findByName(competitionName).get(0).getId();
+        Long competitionId = competitionRepository.findByName(competitionData.getCompetition().getName()).get(0).getId();
+        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+        basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
 
-            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+        ApplicationDataBuilder applicationBuilder = applicationDataBuilder.withCompetition(competitionData.getCompetition());
 
-            basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
-        });
-
-        List<CompletableFuture<ApplicationData>> createApplicationFutures = simpleMap(applicationLines, line -> {
+        List<CompletableFuture<ApplicationData>> createApplicationFutures = simpleMap(applicationsForCompetition, applicationLine -> {
 
             return future(taskExecutor.submitListenable(() -> {
-
-                Long competitionId = competitionRepository.findByName(line.competitionName).get(0).getId();
-
-                CompetitionResource competition = doAs(compAdmin(), () -> competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException());
-
-                return createApplicationFromCsv(applicationDataBuilder.withCompetition(competition), line);
+                return createApplicationFromCsv(applicationBuilder, applicationLine);
             }));
         });
 
@@ -795,22 +809,19 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    private void createCompetitions() {
+    private List<CompletableFuture<CompetitionData>> createCompetitions() {
 
-        List<Future<?>> futures = simpleMap(competitionLines, line -> {
+        List<CompletableFuture<CompetitionData>> futures = simpleMap(competitionLines, line -> {
 
-            return taskExecutor.submit(() -> {
+            return future(taskExecutor.submitListenable(() -> {
 
                 testService.doWithinTransaction(this::setDefaultCompAdmin);
 
-                Optional<Long> existingCompetitionIdWithName =
-                        "Connected digital additive manufacturing".equals(line.name) ? Optional.of(1L) : Optional.empty();
-
-                createCompetition(line, existingCompetitionIdWithName);
-            });
+                return createCompetition(line);
+            }));
         });
 
-        waitForFuturesToComplete(futures);
+        return futures;
     }
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
@@ -819,8 +830,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
-    private void createCompetition(CompetitionLine competitionLine, Optional<Long> competitionId) {
-        competitionBuilderWithBasicInformation(competitionLine, competitionId).build();
+    private CompetitionData createCompetition(CompetitionLine competitionLine) {
+        return competitionBuilderWithBasicInformation(competitionLine).build();
     }
 
     private List<QuestionResponseDataBuilder> questionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<ApplicationQuestionResponseLine> responsesForApplication, ApplicationData applicationData) {
@@ -1004,18 +1015,19 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                         withUploadedJesForm());
     }
 
-    private CompetitionDataBuilder competitionBuilderWithBasicInformation(CompetitionLine line, Optional<Long> existingCompetitionId) {
+    private CompetitionDataBuilder competitionBuilderWithBasicInformation(CompetitionLine line) {
         CompetitionDataBuilder basicInformation;
                 if (line.nonIfs) {
                     basicInformation = nonIfsCompetitionDataBuilder(line);
                 } else {
-                    basicInformation = ifsCompetitionDataBuilder(line, existingCompetitionId);
+                    basicInformation = ifsCompetitionDataBuilder(line);
                 }
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
 
     private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CompetitionLine line) {
+
         return competitionDataBuilder
                 .createNonIfsCompetition()
                 .withBasicData(line.name, null, line.innovationAreas,
@@ -1027,32 +1039,21 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .withFundersPanelEndDate(line.fundersPanelEndDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
                 .withRegistrationDate(line.registrationDate)
-                .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                .withPublicContent(
+                        line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }
 
-    private CompetitionDataBuilder ifsCompetitionDataBuilder(CompetitionLine line, Optional<Long> existingCompetitionId) {
-        return existingCompetitionId.map(id -> competitionDataBuilder.
-                withExistingCompetition(1L).
-                withBasicData(line.name, line.type, line.innovationAreas,
-                        line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage,
-                        line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
-                withNewMilestones().
-                withFundersPanelEndDate(line.fundersPanelEndDate).
-                withReleaseFeedbackDate(line.releaseFeedback).
-                withFeedbackReleasedDate(line.feedbackReleased).
-                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly)
+    private CompetitionDataBuilder ifsCompetitionDataBuilder(CompetitionLine line) {
 
-        ).orElse(competitionDataBuilder.
+        return competitionDataBuilder.
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
-                withNewMilestones()).
+                withNewMilestones().
                 withOpenDate(line.openDate).
                 withBriefingDate(line.briefingDate).
                 withSubmissionDate(line.submissionDate).
@@ -1069,8 +1070,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 withFundersPanelEndDate(line.fundersPanelEndDate).
                 withReleaseFeedbackDate(line.releaseFeedback).
                 withFeedbackReleasedDate(line.feedbackReleased).
-                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
+                withPublicContent(
+                        line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords,
+                        line.inviteOnly);
     }
 
     private void freshDb() throws Exception {

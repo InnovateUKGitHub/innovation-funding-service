@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.testdata;
 
 
-import org.innovateuk.ifs.publiccontent.domain.PublicContent;
-
-
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
@@ -28,7 +25,7 @@ public class GenerateTestData extends BaseGenerateTestData {
     public void fixUpDatabase() {
         // Remove the public content that is in place for competition one so that generation does not fail with
         // PUBLIC_CONTENT_ALREADY_INITIALISED
-        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
-        publicContentRepository.delete(publicContentForCompetitionOne.getId());
+//        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
+//        publicContentRepository.delete(publicContentForCompetitionOne.getId());
     }
 }
