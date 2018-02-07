@@ -415,15 +415,11 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         List<Object[]> pendingSpendProfiles = competitionRepository.getPendingSpendProfiles(competitionId);
         return serviceSuccess(simpleMap(pendingSpendProfiles, object ->
                 new SpendProfileStatusResource(((BigInteger)object[0]).longValue(), ((BigInteger)object[1]).longValue(), (String)object[2])));
-
-        //return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
     }
 
     @Override
     public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
 
         return serviceSuccess(((BigInteger)competitionRepository.countPendingSpendProfiles(competitionId)).longValue());
-
-        //return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId));
     }
 }
