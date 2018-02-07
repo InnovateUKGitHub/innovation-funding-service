@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;

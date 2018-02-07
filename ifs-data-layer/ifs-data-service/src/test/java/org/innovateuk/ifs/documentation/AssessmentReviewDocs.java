@@ -1,16 +1,13 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder;
-import org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentReviewRejectOutcomeDocs.assessmentReviewRejectOutcomeResourceBuilder;
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.PENDING;
+import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.PENDING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessmentReviewDocs {

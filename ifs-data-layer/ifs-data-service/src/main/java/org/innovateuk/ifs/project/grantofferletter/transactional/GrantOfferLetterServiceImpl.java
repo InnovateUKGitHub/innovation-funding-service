@@ -25,8 +25,10 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -570,6 +572,23 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
+    }
+
+    @Override
+    public ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
+
+        return getProject(projectId).andOnSuccess(project ->
+               getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+
+            GrantOfferLetterState state = golWorkflowHandler.getState(project);
+            GrantOfferLetterEvent lastProcessEvent = golWorkflowHandler.getLastProcessEvent(project);
+
+            if (project.isPartner(user) && !project.isProjectManager(user)) {
+                return GrantOfferLetterStateResource.stateInformationForPartnersView(state, lastProcessEvent);
+            } else {
+                return GrantOfferLetterStateResource.stateInformationForNonPartnersView(state, lastProcessEvent);
+            }
+        }));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

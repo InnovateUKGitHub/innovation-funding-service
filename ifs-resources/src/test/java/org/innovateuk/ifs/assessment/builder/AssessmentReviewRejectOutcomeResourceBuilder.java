@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;

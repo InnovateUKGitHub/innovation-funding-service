@@ -130,6 +130,10 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         return getRole().isFinanceContact();
     }
 
+    public boolean isProjectManager() {
+        return getRole().isProjectManager();
+    }
+
     public void setInvite(ProjectInvite invite) {
         this.invite = invite;
     }
