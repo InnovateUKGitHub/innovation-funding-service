@@ -41,6 +41,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigInteger;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -833,25 +834,26 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void getPendingSpendProfiles() throws Exception {
 
-        List<SpendProfileStatusResource> pendingSpendProfiles = singletonList(new SpendProfileStatusResource(11L, 1L, "Project 1"));
+        List<Object[]> pendingSpendProfiles = singletonList(new Object[]{BigInteger.valueOf(11L), BigInteger.valueOf(1L), new String("Project 1")});
 
         when(competitionRepositoryMock.getPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfiles);
 
         ServiceResult<List<SpendProfileStatusResource>> result = service.getPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertEquals(pendingSpendProfiles, result.getSuccessObject());
+        List<SpendProfileStatusResource> expectedPendingSpendProfiles = singletonList(new SpendProfileStatusResource(11L, 1L, "Project 1"));
+        assertEquals(expectedPendingSpendProfiles, result.getSuccessObject());
     }
 
     @Test
     public void countPendingSpendProfiles() throws Exception {
 
-        final Long pendingSpendProfileCount = 3L;
+        final BigInteger pendingSpendProfileCount = BigInteger.TEN;
         when(competitionRepositoryMock.countPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfileCount);
 
         ServiceResult<Long> result = service.countPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertEquals(pendingSpendProfileCount, result.getSuccessObject());
+        assertEquals((Long)pendingSpendProfileCount.longValue(), result.getSuccessObject());
     }
 }
