@@ -124,7 +124,7 @@ public class InviteOrganisationPermissionRules {
     }
 
     private boolean isApplicationCollaborator(ApplicationInviteResource applicationInviteResource, UserResource userResource) {
-        return checkProcessRole(userResource, applicationInviteResource.getApplication(), COLLABORATOR, processRoleRepository, roleRepository);
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), COLLABORATOR, processRoleRepository);
     }
 
     private boolean isApplicationCollaboratorForOrganisation(InviteOrganisationResource inviteOrganisationResource, ApplicationInviteResource applicationInviteResource, UserResource userResource) {
@@ -132,7 +132,7 @@ public class InviteOrganisationPermissionRules {
     }
 
     private boolean isLeadApplicant(ApplicationInviteResource applicationInviteResource, UserResource userResource) {
-        return checkProcessRole(userResource, applicationInviteResource.getApplication(), LEADAPPLICANT, processRoleRepository, roleRepository);
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean allInviteApplicationIdsMatch(InviteOrganisationResource inviteOrganisation) {

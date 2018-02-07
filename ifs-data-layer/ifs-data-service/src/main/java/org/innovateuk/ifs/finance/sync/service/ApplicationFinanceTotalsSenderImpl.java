@@ -41,11 +41,9 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
         List<FinanceCostTotalResource> financeCostTotalResourceList = financeCostTotalResourceMapper
                 .mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
-        ServiceResult<Void> result = messageQueueServiceStub.sendFinanceTotals(spendProfileCostFilter
-                .filterBySpendProfile(financeCostTotalResourceList));
-        result.andOnFailure(logErrorOnSend(applicationId));
-
-        return result;
+        return (ServiceResult) messageQueueServiceStub
+                .sendFinanceTotals(spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList))
+                .andOnFailure(logErrorOnSend(applicationId));
     }
 
     private Runnable logErrorOnSend(long applicationId) {
