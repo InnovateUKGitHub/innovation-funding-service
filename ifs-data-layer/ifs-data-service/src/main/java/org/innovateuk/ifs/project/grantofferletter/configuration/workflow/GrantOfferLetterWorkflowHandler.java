@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -18,13 +19,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
+
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
  *
@@ -35,8 +37,8 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRAN
 public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterEvent, Project, ProjectUser> {
 
     @Autowired
-    @Qualifier("golStateMachine")
-    private StateMachine<GrantOfferLetterState, GrantOfferLetterEvent> stateMachine;
+    @Qualifier("golStateMachineFactory")
+    private StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> stateMachineFactory;
 
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
@@ -88,6 +90,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
     }
 
+    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     public boolean isAlreadySent(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && !GrantOfferLetterState.PENDING.equals(process.getActivityState());
@@ -129,6 +132,11 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return fn.apply(project, projectUser);
     }
 
+    public GrantOfferLetterEvent getLastProcessEvent(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null ? GrantOfferLetterEvent.getByType(process.getProcessEvent()) : null;
+    }
+
     public boolean sign(Project project) {
         return getIfProjectAndUserValid(project, this::grantOfferLetterSigned);
     }
@@ -159,8 +167,8 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     }
 
     @Override
-    protected StateMachine<GrantOfferLetterState, GrantOfferLetterEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

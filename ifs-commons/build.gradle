@@ -8,9 +8,7 @@ dependencies {
     compile "org.javassist:javassist:3.20.0-GA"
     compile project(":ifs-resources")
 
-
     testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
-
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 

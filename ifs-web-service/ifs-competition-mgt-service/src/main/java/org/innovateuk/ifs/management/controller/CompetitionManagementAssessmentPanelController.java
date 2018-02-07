@@ -19,7 +19,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementAssessmentPanelController.class)
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can view the Manage Assessment Panel dashboard", securedType = CompetitionManagementAssessmentPanelController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementAssessmentPanelController {
 

@@ -75,6 +75,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withName(expectedCompetitionName)
                 .withCompetitionStatus(expectedCompetitionStatus)
                 .withHasAssessmentPanel(true)
+                .withHasInterviewStage(true)
                 .build();
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
@@ -124,6 +125,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals(4, (int) model.getKeyStatistics().getStatFour());
         assertEquals(5, (int) model.getKeyStatistics().getStatFive());
         assertEquals(true, model.isAssessmentPanelEnabled());
+        assertEquals(true, model.isInterviewPanelEnabled());
     }
 
     @Test

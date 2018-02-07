@@ -44,6 +44,17 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     }
 
     @Test
+    public void getAllAssessorFormInputResponsesForPanel() throws Exception {
+        List<AssessorFormInputResponseResource> expected = Stream.of(1, 2, 3).map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
+
+        long assessmentId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/panel/%s", assessorFormInputResponseRestUrl, assessmentId), assessorFormInputResponseResourceListType(), expected, OK);
+        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponsesForPanel(assessmentId).getSuccessObject();
+        assertSame(expected, response);
+    }
+
+    @Test
     public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
         List<AssessorFormInputResponseResource> expected = Stream.of(1, 2, 3).map(i -> new AssessorFormInputResponseResource()).collect(Collectors.toList());
 

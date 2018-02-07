@@ -28,24 +28,12 @@ ext['spring-restdocs.version']='1.1.2.RELEASE'
 
 dependencies {
     compile project(':ifs-resources')
+    compile project(':ifs-commons')
     testCompile project(':ifs-resources').sourceSets.test.output
 }
 
 task client(type: Jar) {
     from(sourceSets.main.output) {
         exclude "org/innovateuk/ifs/Application.class"
-    }
-}
-
-//noinspection GroovyMissingReturnStatement
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
     }
 }
