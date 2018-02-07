@@ -242,7 +242,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (!invite.getEmail().equalsIgnoreCase(user.getEmail())) {
-                LOG.error("Invite email address '{}' not the same as the user's email address '{}'", user.getEmail(), invite.getEmail());
+                LOG.error(
+                        "Invite (id: {}) email address does not match user's (id: {})",
+                        invite.getId(),
+                        user.getId()
+                );
 
                 return serviceFailure(new Error(
                         "Invite email address not the same as the user's email address",
