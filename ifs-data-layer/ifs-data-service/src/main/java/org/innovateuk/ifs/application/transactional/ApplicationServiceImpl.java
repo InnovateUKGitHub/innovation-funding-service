@@ -390,7 +390,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
         if (Collections.singletonList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
-                return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
+            return serviceFailure(CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED);
         }
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);

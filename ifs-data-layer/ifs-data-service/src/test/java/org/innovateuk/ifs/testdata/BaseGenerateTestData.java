@@ -370,7 +370,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                     List<ApplicationQuestionResponseData> responses = questionResponses.join();
                     List<ApplicationFinanceData> finances = applicationFinances.join();
                     completeApplication(applicationData, responses, finances);
-                });
+                }, taskExecutor);
 
             }, taskExecutor);
         });
@@ -504,9 +504,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 return responseBuilder;
             });
 
-            return simpleMap(responseBuilders, builder -> {
-                return testService.doWithinTransaction(() -> builder.build());
-            });
+            return simpleMap(responseBuilders, builder -> builder.build());
         }
 
         return emptyList();
@@ -564,19 +562,23 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
                 l.title.equals(applicationData.getApplication().getName()));
 
-        questionResponseData.forEach(response -> {
-            // TODO DW - which should we MAC
-            questionResponseDataBuilder.
-                    withExistingResponse(response).
-                    markAsComplete();
-        });
+        if (applicationLine.submittedDate != null) {
+            questionResponseData.forEach(response -> {
+                questionResponseDataBuilder.
+                        withExistingResponse(response).
+                        markAsComplete().
+                        build();
+            });
+        }
 
-        financeData.forEach(finance -> {
-            // TODO DW - which should we MAC
-            applicationFinanceDataBuilder.
-                    withExistingFinances(finance.getApplication(), finance.getCompetition(), finance.getUser()).
-                    markAsComplete(true);
-        });
+        if (applicationLine.markFinancesComplete) {
+            financeData.forEach(finance -> {
+                applicationFinanceDataBuilder.
+                        withExistingFinances(finance.getApplication(), finance.getCompetition(), finance.getUser(), finance.getOrganisation()).
+                        markAsComplete(true).
+                        build();
+            });
+        }
 
         ApplicationDataBuilder applicationBuilder = this.applicationDataBuilder.
                 withExistingApplication(applicationData).
@@ -699,20 +701,18 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("============ STAGE 12 of X - creating Assessor Invites =================");
 
-        testService.doWithinTransaction(() -> {
-            List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
-            List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
-            nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
-        });
+        List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
+        List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
+        nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
     }
 
     private void createAssessments() {
 
         LOG.info("============ STAGE 13 of X - creating Assessments =================");
 
-        testService.doWithinTransaction(() -> assessmentLines.forEach(this::createAssessment));
-        testService.doWithinTransaction(() -> assessorResponseLines.forEach(this::createAssessorResponse));
-        testService.doWithinTransaction(() -> assessmentLines.forEach(this::submitAssessment));
+        assessmentLines.forEach(this::createAssessment);
+        assessorResponseLines.forEach(this::createAssessorResponse);
+        assessmentLines.forEach(this::submitAssessment);
     }
 
     private void createAssessment(AssessmentLine line) {
@@ -752,7 +752,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("============ STAGE 8 of X - creating Competition Funders =================");
 
-        testService.doWithinTransaction(() -> competitionFunderLines.forEach(this::createCompetitionFunder));
+        competitionFunderLines.forEach(this::createCompetitionFunder);
     }
 
     private void createPublicContentGroups() {
@@ -760,14 +760,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         LOG.info("============ STAGE 9 of X - creating Public Content groups =================");
 
         testService.doWithinTransaction(() -> setDefaultCompAdmin());
-        testService.doWithinTransaction(() -> publicContentGroupLines.forEach(this::createPublicContentGroup));
+        publicContentGroupLines.forEach(this::createPublicContentGroup);
     }
 
     private void createPublicContentDates() {
 
         LOG.info("============ STAGE 10 of X - creating Public Content dates =================");
 
-        testService.doWithinTransaction(() -> publicContentDateLines.forEach(this::createPublicContentDate));
+        publicContentDateLines.forEach(this::createPublicContentDate);
     }
 
     private void createCompetitionFunder(CompetitionFunderLine line) {
