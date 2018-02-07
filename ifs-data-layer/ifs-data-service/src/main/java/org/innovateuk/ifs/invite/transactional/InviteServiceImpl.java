@@ -241,28 +241,56 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Transactional
     public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-            if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
-                invite.open();
+            if (!invite.getEmail().equalsIgnoreCase(user.getEmail())) {
+                LOG.error("Invite email address '{}' not the same as the user's email address '{}'", user.getEmail(), invite.getEmail());
 
-                List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-
-                if (invite.getInviteOrganisation().getOrganisation() == null && !usersOrganisations.isEmpty()) {
-                    invite.getInviteOrganisation().setOrganisation(usersOrganisations.get(0));
-                }
-
-                invite = applicationInviteRepository.save(invite);
-                initializeInvitee(invite, user);
-
-                return serviceSuccess();
+                return serviceFailure(new Error(
+                        "Invite email address not the same as the user's email address",
+                        NOT_ACCEPTABLE
+                ));
             }
 
-            LOG.error("Invite email address '{}' not the same as the user's email address '{}'", user.getEmail(), invite.getEmail());
+            invite.open();
 
-            return serviceFailure(new Error(
-                    "Invite email address not the same as the user's email address",
-                    NOT_ACCEPTABLE
-            ));
+            if (invite.getInviteOrganisation().getOrganisation() == null) {
+                assignOrganisationToInvite(invite, user);
+            }
+
+            initializeInvitee(invite, user);
+
+            return serviceSuccess();
         });
+    }
+
+    private void assignOrganisationToInvite(ApplicationInvite invite, User user) {
+        // A bit contentious, but we assume that the first organisation
+        // that a user belongs to is their 'current' organisation.
+        Organisation usersCurrentOrganisation = organisationRepository.findFirstByUsers(user);
+
+        Optional<InviteOrganisation> existingCollaboratorInviteOrganisation =
+                inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(
+                        usersCurrentOrganisation.getId(),
+                        invite.getTarget().getId()
+                );
+
+        if (existingCollaboratorInviteOrganisation.isPresent()) {
+            mergeWithExistingInviteOrganisation(invite, existingCollaboratorInviteOrganisation.get());
+        } else {
+            invite.getInviteOrganisation().setOrganisation(usersCurrentOrganisation);
+            applicationInviteRepository.save(invite);
+        }
+    }
+
+    private void mergeWithExistingInviteOrganisation(
+            ApplicationInvite invite,
+            InviteOrganisation existingInviteOrganisation
+    ) {
+        InviteOrganisation currentInviteOrganisation = invite.getInviteOrganisation();
+
+        invite.setInviteOrganisation(existingInviteOrganisation);
+        applicationInviteRepository.saveAndFlush(invite);
+
+        inviteOrganisationRepository.delete(currentInviteOrganisation);
     }
 
     private void initializeInvitee(ApplicationInvite invite, User user) {
