@@ -60,19 +60,10 @@ public class ApplicationFinanceController {
 
         return financeRowService.findApplicationFinanceByApplication(applicationId).toGetResponse();
     }
-
-    // TODO DW - INFUND-1555 - remove ObjectNode usage
+    
     @GetMapping("/getResearchParticipationPercentage/{applicationId}")
-    public RestResult<ObjectNode> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
-
-        ServiceResult<ObjectNode> result = financeRowService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put(RESEARCH_PARTICIPATION_PERCENTAGE, percentage);
-            return node;
-        });
-
-        return result.toGetResponse();
+    public RestResult<Double> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
+        return financeRowService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> percentage).toGetResponse();
     }
 
     @PostMapping("/add/{applicationId}/{organisationId}")
