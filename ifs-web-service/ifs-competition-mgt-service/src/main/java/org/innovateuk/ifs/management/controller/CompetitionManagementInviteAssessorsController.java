@@ -322,11 +322,11 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
         return validationHandler.failNowOrSucceedWith(
                 () -> invite(model, competitionId, form, page, queryParams),
                 () -> {
-                    RestResult<Void> result = competitionInviteRestService.inviteNewUsers(
+                    RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
                             newInviteFormToResource(form, competitionId), competitionId
                     );
 
-                    return validationHandler.addAnyErrors(result)
+                    return validationHandler.addAnyErrors(restResult)
                             .failNowOrSucceedWith(
                                     () -> invite(model, competitionId, form, page, queryParams),
                                     () -> redirectToInvite(competitionId, page)

@@ -207,22 +207,6 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         assertEquals(expected, actual);
     }
 
-    @Ignore
-    @Test
-    public void validateNonRegisteredAssessor() throws Exception {
-        long competitionId = 1L;
-        int page = 1;
-        String email = "test@gmail.com";
-        AssessorCreatedInvitePageResource expected = newAssessorCreatedInvitePageResource()
-                .withContent(newAssessorCreatedInviteResource().build(2))
-                .build();
-
-        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", restUrl, "validateNonRegisteredAssessor", competitionId), AssessorCreatedInvitePageResource.class, expected);
-
-        AssessorCreatedInvitePageResource actual = service.validateNonRegisteredAssessor(competitionId, page, email).getSuccessObject();
-        assertEquals(expected, actual);
-    }
-
     @Test
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
