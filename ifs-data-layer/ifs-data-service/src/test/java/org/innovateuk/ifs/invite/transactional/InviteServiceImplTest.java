@@ -1,8 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.assertj.core.api.Assertions;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
@@ -40,6 +37,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -56,7 +54,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -64,7 +61,6 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 public class InviteServiceImplTest extends BaseUnitTestMocksTest {
-    private final Log log = LogFactory.getLog(getClass());
 
     @Mock
     private NotificationService notificationService;
@@ -106,7 +102,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationInvite> result = inviteService.findOneByHash(hash);
 
-        assertEquals(applicationInvite, result.getSuccessObjectOrThrowException());
+        assertThat(result.getSuccessObjectOrThrowException()).isEqualTo(applicationInvite);
     }
 
     @Test
@@ -128,7 +124,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
         localValidatorFactory.validate(invite, errors);
 
-        assertEquals(2, errors.getErrorCount());
+        assertThat(errors.getErrorCount()).isEqualTo(2);
     }
 
     @Test
@@ -151,7 +147,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         Errors errors = new BeanPropertyBindingResult(invite, invite.getClass().getName());
         localValidatorFactory.validate(invite, errors);
 
-        assertEquals(1, errors.getErrorCount());
+        assertThat(errors.getErrorCount()).isOne();
     }
 
     @Test
@@ -185,8 +181,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Void>> results =
                 inviteService.inviteCollaborators("http:localhost:189809", singletonList(invite));
-        assertEquals(1, results.size());
-        assertTrue(results.get(0).isSuccess());
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).isSuccess()).isTrue();
     }
 
     @Test
@@ -210,8 +206,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         List<ServiceResult<Void>> results =
                 inviteService.inviteCollaborators("http:localhost:189809", singletonList(invite));
-        assertEquals(1, results.size());
-        assertTrue(results.get(0).isFailure());
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).isFailure()).isTrue();
     }
 
     @Test
@@ -230,7 +226,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         InviteOrganisation saveInviteOrganisationExpectations = argThat(lambdaMatches(inviteOrganisation -> {
-            assertEquals("new organisation", inviteOrganisation.getOrganisationName());
+            assertThat(inviteOrganisation.getOrganisationName()).isEqualTo("new organisation");
             return true;
         }));
 
@@ -244,8 +240,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         List<ApplicationInvite> savedInvites = ApplicationInviteBuilder.newApplicationInvite().build(5);
 
         List<ApplicationInvite> saveInvitesExpectations = argThat(lambdaMatches(invites -> {
-            assertEquals(5, invites.size());
-            assertEquals("testname", invites.get(0).getName());
+            assertThat(invites).hasSize(5);
+            assertThat(invites.get(0).getName()).isEqualTo("testname");
             return true;
         }));
 
@@ -255,7 +251,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<InviteResultsResource> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
-        assertTrue(result.isSuccess());
+
+        assertThat(result.isSuccess()).isTrue();
 
         verify(inviteOrganisationRepositoryMock).save(isA(InviteOrganisation.class));
         verify(applicationInviteRepositoryMock, times(5)).save(isA(ApplicationInvite.class));
@@ -316,7 +313,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<InviteResultsResource> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
-        assertTrue(result.isFailure());
+
+        assertThat(result.isFailure()).isTrue();
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
         verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
@@ -345,12 +343,13 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<InviteResultsResource> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
-        assertTrue(result.isSuccess());
+        assertThat(result.isSuccess()).isTrue();
 
         ArgumentCaptor<InviteOrganisation> argument = ArgumentCaptor.forClass(InviteOrganisation.class);
         verify(inviteOrganisationRepositoryMock, times(1)).save(argument.capture());
-        assertEquals(inviteOrganisationResource.getOrganisationName(), argument.getValue().getOrganisationName());
-        assertNull(argument.getValue().getOrganisation());
+
+        assertThat(inviteOrganisationResource.getOrganisationName()).isEqualTo(argument.getValue().getOrganisationName());
+        assertThat(argument.getValue().getOrganisation()).isNull();
 
         verify(applicationInviteRepositoryMock, times(1)).save(isA(ApplicationInvite.class));
     }
@@ -381,12 +380,15 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<InviteResultsResource> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
-        assertTrue(result.isSuccess());
+        assertThat(result.isSuccess()).isTrue();
 
         ArgumentCaptor<InviteOrganisation> argument = ArgumentCaptor.forClass(InviteOrganisation.class);
         verify(inviteOrganisationRepositoryMock, times(1)).save(argument.capture());
-        assertEquals(organisation.getId(), argument.getValue().getOrganisation().getId());
-        assertEquals(inviteOrganisationResource.getOrganisationName(), argument.getValue().getOrganisationName());
+
+        assertThat(organisation.getId())
+                .isEqualTo(argument.getValue().getOrganisation().getId());
+        assertThat(inviteOrganisationResource.getOrganisationName())
+                .isEqualTo(argument.getValue().getOrganisationName());
 
         verify(applicationInviteRepositoryMock, times(1)).save(isA(ApplicationInvite.class));
 
@@ -426,12 +428,15 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<InviteResultsResource> result =
                 inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
 
-        assertTrue(result.isSuccess());
+        assertThat(result.isSuccess()).isTrue();
 
         ArgumentCaptor<InviteOrganisation> argument = ArgumentCaptor.forClass(InviteOrganisation.class);
         verify(inviteOrganisationRepositoryMock, times(1)).save(argument.capture());
-        assertEquals(inviteOrganisation.getOrganisation().getName(), argument.getValue().getOrganisation().getName());
-        assertEquals(inviteOrganisation.getOrganisationName(), argument.getValue().getOrganisationName());
+
+        assertThat(inviteOrganisation.getOrganisation().getName())
+                .isEqualTo(argument.getValue().getOrganisation().getName());
+        assertThat(inviteOrganisation.getOrganisationName())
+                .isEqualTo(argument.getValue().getOrganisationName());
 
         verify(applicationInviteRepositoryMock, times(1)).save(isA(ApplicationInvite.class));
     }
@@ -461,19 +466,19 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withApplication(application.getId())
                 .build();
 
-        InviteOrganisationResource expectedInviteOrganisationResoucr = newInviteOrganisationResource().
+        InviteOrganisationResource expectedInviteOrganisationResource = newInviteOrganisationResource().
                 withId(inviteOrganisation.getId()).
                 withInviteResources(singletonList(inviteResource)).
                 build();
 
         when(applicationInviteRepositoryMock.getByHash("an organisation hash")).thenReturn(invite);
         when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
-        when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(expectedInviteOrganisationResoucr);
+        when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(expectedInviteOrganisationResource);
 
         InviteOrganisationResource inviteOrganisationResource =
                 inviteService.getInviteOrganisationByHash("an organisation hash").getSuccessObject();
 
-        assertEquals(expectedInviteOrganisationResoucr, inviteOrganisationResource);
+        assertThat(expectedInviteOrganisationResource).isEqualTo(inviteOrganisationResource);
     }
 
     @Test
@@ -483,8 +488,13 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<InviteOrganisationResource> organisationInvite =
                 inviteService.getInviteOrganisationByHash("an organisation hash");
-        assertTrue(organisationInvite.isFailure());
-        assertTrue(organisationInvite.getFailure().is(notFoundError(ApplicationInvite.class, "an organisation hash")));
+        assertThat(organisationInvite.isFailure()).isTrue();
+        assertThat(
+                organisationInvite
+                        .getFailure()
+                        .is(notFoundError(ApplicationInvite.class, "an organisation hash"))
+        )
+                .isTrue();
     }
 
     @Test
@@ -522,7 +532,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(applicationFinanceRepositoryMock).delete(applicationFinance);
         inOrder.verifyNoMoreInteractions();
 
-        assertTrue(applicationInviteResult.isSuccess());
+        assertThat(applicationInviteResult.isSuccess()).isTrue();
     }
 
 
@@ -567,7 +577,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(inviteOrganisationRepositoryMock).save(inviteOrganisation);
         inOrder.verifyNoMoreInteractions();
 
-        assertTrue(applicationInviteResult.isSuccess());
+        assertThat(applicationInviteResult.isSuccess()).isTrue();
     }
 
     private void assertInvalidInvites(List<ApplicationInviteResource> inviteResources) {
@@ -583,7 +593,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(inviteOrganisationRepositoryMock.findAll(isA(List.class))).thenReturn(newInviteOrganisation().build(1));
 
         ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
-        assertTrue(result.isFailure());
+        assertThat(result.isFailure()).isTrue();
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
         verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
@@ -603,7 +613,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = inviteService.acceptInvite(testInviteHash, user.getId());
 
-        assertTrue(result.isFailure());
+        assertThat(result.isFailure()).isTrue();
     }
 
     @Test
@@ -644,8 +654,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         verify(applicationInviteRepositoryMock).saveAndFlush(invite);
         verify(inviteOrganisationRepositoryMock).delete(inviteOrganisationToBeReplaced);
 
-        assertTrue(result.isSuccess());
-        Assertions.assertThat(invite.getInviteOrganisation())
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(invite.getInviteOrganisation())
                 .isEqualToComparingFieldByField(collaboratorInviteOrganisation);
     }
 
@@ -679,8 +689,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         verify(applicationInviteRepositoryMock).save(invite);
 
-        assertTrue(result.isSuccess());
-        Assertions.assertThat(invite.getInviteOrganisation().getOrganisation())
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(invite.getInviteOrganisation().getOrganisation())
                 .isEqualToComparingFieldByField(usersCurrentOrganisation);
     }
 }
