@@ -51,15 +51,11 @@ public class AssessmentInterviewPanelWorkflow extends StateMachineConfigurerAdap
                 .source(CREATED).target(AWAITING_FEEDBACK_RESPONSE)
                 .event(NOTIFY)
                 .action(notifyAssessmentInterviewPanelAction)
-
                 .and()
-
                 .withExternal()
                 .source(AWAITING_FEEDBACK_RESPONSE).target(AWAITING_FEEDBACK_RESPONSE)
                 .event(NOTIFY)
-
                 .and()
-
                 .withExternal()
                 .source(AWAITING_FEEDBACK_RESPONSE).target(SUBMITTED_FEEDBACK_RESPONSE)
                 .event(RESPOND)
