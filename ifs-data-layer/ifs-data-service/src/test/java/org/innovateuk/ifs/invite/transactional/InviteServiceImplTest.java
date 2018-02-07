@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.assertj.core.api.Assertions;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
@@ -80,6 +81,8 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private InviteServiceImpl inviteService = new InviteServiceImpl();
     private LocalValidatorFactoryBean localValidatorFactory;
+
+    private final String testInviteHash = "abcdef";
 
     @Before
     public void setup() {
@@ -517,5 +520,100 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
         verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
+    }
+
+    @Test
+    public void acceptInvite_failsOnEmailAddressMismatch() {
+        ApplicationInvite invite = newApplicationInvite()
+                .withEmail("james@test.com")
+                .build();
+        User user = newUser()
+                .withEmailAddress("bob@test.com")
+                .build();
+
+        when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        ServiceResult<Void> result = inviteService.acceptInvite(testInviteHash, user.getId());
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void acceptInvite_replaceWithExistingCollaboratorInviteOrganisation() {
+        InviteOrganisation inviteOrganisationToBeReplaced = newInviteOrganisation().build();
+
+        ApplicationInvite invite = newApplicationInvite()
+                .withEmail("james@test.com")
+                .withApplication(newApplication().build())
+                .withInviteOrganisation(inviteOrganisationToBeReplaced)
+                .build();
+        User user = newUser()
+                .withEmailAddress("james@test.com")
+                .build();
+
+        when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        Organisation usersCurrentOrganisation = newOrganisation().build();
+
+        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(usersCurrentOrganisation);
+
+        InviteOrganisation collaboratorInviteOrganisation = newInviteOrganisation()
+                .withOrganisation(usersCurrentOrganisation)
+                .build();
+
+        when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
+                usersCurrentOrganisation.getId(),
+                invite.getTarget().getId()
+        ))
+                .thenReturn(Optional.of(collaboratorInviteOrganisation));
+
+        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+                .thenReturn(serviceSuccess(BigDecimal.ONE));
+
+        ServiceResult<Void> result = inviteService.acceptInvite(testInviteHash, user.getId());
+
+        verify(applicationInviteRepositoryMock).saveAndFlush(invite);
+        verify(inviteOrganisationRepositoryMock).delete(inviteOrganisationToBeReplaced);
+
+        assertTrue(result.isSuccess());
+        Assertions.assertThat(invite.getInviteOrganisation())
+                .isEqualToComparingFieldByField(collaboratorInviteOrganisation);
+    }
+
+    @Test
+    public void acceptInvite_assignsUsersCurrentOrganisationIfNoCollaboratorOrganisationExists() {
+        ApplicationInvite invite = newApplicationInvite()
+                .withEmail("james@test.com")
+                .withApplication(newApplication().build())
+                .withInviteOrganisation(newInviteOrganisation().build())
+                .build();
+        User user = newUser()
+                .withEmailAddress("james@test.com")
+                .build();
+
+        when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        Organisation usersCurrentOrganisation = newOrganisation().build();
+
+        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(usersCurrentOrganisation);
+        when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
+                usersCurrentOrganisation.getId(),
+                invite.getTarget().getId()
+        ))
+                .thenReturn(Optional.empty());
+
+        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+                .thenReturn(serviceSuccess(BigDecimal.ONE));
+
+        ServiceResult<Void> result = inviteService.acceptInvite(testInviteHash, user.getId());
+
+        verify(applicationInviteRepositoryMock).save(invite);
+
+        assertTrue(result.isSuccess());
+        Assertions.assertThat(invite.getInviteOrganisation().getOrganisation())
+                .isEqualToComparingFieldByField(usersCurrentOrganisation);
     }
 }

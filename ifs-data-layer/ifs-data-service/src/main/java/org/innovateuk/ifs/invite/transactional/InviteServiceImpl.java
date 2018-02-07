@@ -274,20 +274,20 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 );
 
         if (existingCollaboratorInviteOrganisation.isPresent()) {
-            mergeWithExistingInviteOrganisation(invite, existingCollaboratorInviteOrganisation.get());
+            replaceInviteOrganisationOnInvite(invite, existingCollaboratorInviteOrganisation.get());
         } else {
             invite.getInviteOrganisation().setOrganisation(usersCurrentOrganisation);
             applicationInviteRepository.save(invite);
         }
     }
 
-    private void mergeWithExistingInviteOrganisation(
+    private void replaceInviteOrganisationOnInvite(
             ApplicationInvite invite,
-            InviteOrganisation existingInviteOrganisation
+            InviteOrganisation inviteOrganisation
     ) {
         InviteOrganisation currentInviteOrganisation = invite.getInviteOrganisation();
 
-        invite.setInviteOrganisation(existingInviteOrganisation);
+        invite.setInviteOrganisation(inviteOrganisation);
         applicationInviteRepository.saveAndFlush(invite);
 
         inviteOrganisationRepository.delete(currentInviteOrganisation);
