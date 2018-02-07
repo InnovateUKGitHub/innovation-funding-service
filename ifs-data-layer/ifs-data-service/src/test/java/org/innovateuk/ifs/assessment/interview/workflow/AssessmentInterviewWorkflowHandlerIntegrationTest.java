@@ -23,6 +23,7 @@ import java.util.function.Function;
 import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewBuilder.newAssessmentInterview;
 import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.CREATED;
 import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.PENDING;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -34,7 +35,7 @@ public class AssessmentInterviewWorkflowHandlerIntegrationTest
         AssessmentInterviewWorkflowHandler,
         AssessmentInterviewRepository, TestableTransitionWorkflowAction> {
 
-    private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
+    private static final ActivityType ACTIVITY_TYPE = ASSESSMENT_INTERVIEW;
 
     @Autowired
     private AssessmentInterviewWorkflowHandler workflowHandler;

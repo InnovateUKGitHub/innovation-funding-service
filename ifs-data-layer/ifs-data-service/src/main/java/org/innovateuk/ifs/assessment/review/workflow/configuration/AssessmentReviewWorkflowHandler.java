@@ -21,7 +21,7 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewEvent.*;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 
 /**
  * Manages the process for assigning applications to assessors on an assessment panel.
@@ -78,7 +78,7 @@ public class AssessmentReviewWorkflowHandler extends BaseWorkflowEventHandler<As
 
     @Override
     protected ActivityType getActivityType() {
-        return ASSESSMENT_PANEL_APPLICATION_INVITE;
+        return ASSESSMENT_REVIEW;
     }
 
     @Override

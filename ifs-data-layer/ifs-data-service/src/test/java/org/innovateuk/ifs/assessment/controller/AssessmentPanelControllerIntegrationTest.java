@@ -300,7 +300,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
@@ -370,7 +370,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.WITHDRAWN));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.WITHDRAWN));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
@@ -442,8 +442,8 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                         .withTarget(application)
                         .build(2);
 
-        assessmentReviews.get(0).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.ACCEPTED));
-        assessmentReviews.get(1).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReviews.get(0).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.ACCEPTED));
+        assessmentReviews.get(1).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
         assessmentReviewRepository.save(assessmentReviews.get(0));
         assessmentReviewRepository.save(assessmentReviews.get(1));
 
@@ -486,7 +486,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
@@ -526,7 +526,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.REJECTED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.REJECTED));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
@@ -566,7 +566,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-
 /**
  * Process outcome for the @link AssessmentInterviewPanel}'s {@code NOTIFY} event.
  */

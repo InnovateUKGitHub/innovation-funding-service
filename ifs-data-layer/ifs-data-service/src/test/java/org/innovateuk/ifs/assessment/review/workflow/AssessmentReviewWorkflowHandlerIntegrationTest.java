@@ -35,7 +35,7 @@ public class AssessmentReviewWorkflowHandlerIntegrationTest
         AssessmentReviewWorkflowHandler,
         AssessmentReviewRepository, TestableTransitionWorkflowAction> {
 
-    private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
+    private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_REVIEW;
 
     @Autowired
     private AssessmentReviewWorkflowHandler workflowHandler;
