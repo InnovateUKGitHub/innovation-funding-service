@@ -20,25 +20,25 @@
     <div class="grid-row">
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
+                <span class="heading-large" th:text="0">60</span><br/>
                 <small>Invited</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
+                <span class="heading-large" th:text="0">23</span><br/>
                 <small>Accepted</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
+                <span class="heading-large" th:text="0">3</span><br/>
                 <small>Rejected</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
-                <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
+                <span class="heading-large" th:text="0">6</span><br/>
                 <small>Assessors on invite list</small>
             </div>
         </div>
@@ -56,16 +56,16 @@
 
     <ul class="inline-nav">
         <li class="selected">
-            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
         <li class="not-selected">
-            <a>Pending and rejected</a>
+            <label>Pending and rejected</label>
         </li>
         <li class="not-selected">
-            <a>Accepted</a>
+            <label>Accepted</label>
         </li>
     </ul>
 
@@ -90,7 +90,7 @@
 
     <form method="POST"
           th:action="@{/assessment/panel/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
-          th:object="${assessorPanelSelectionForm}"
+          th:object="${assessorInterviewPanelSelectionForm}"
           data-multipage-select=""
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
@@ -100,18 +100,18 @@
                     <input type="checkbox"
                            data-select-all=""
                            id="select-all-check"
-                           th:checked="${assessorPanelSelectionForm.getAllSelected()}"
+                           th:checked="${assessorInterviewPanelSelectionForm.getAllSelected()}"
                            th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
                     <label for="select-all-check">
                         Select all assessors
                     </label>
                 </div>
                 <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(assessorPanelSelectionForm.selectedAssessorIds)}"></span> assessors selected
+                    <span data-count-selected="" th:text="${#lists.size(assessorInterviewPanelSelectionForm.selectedAssessorIds)}"></span> assessors selected
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorPanelSelectionForm.selectedAssessorIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorInterviewPanelSelectionForm.selectedAssessorIds)}">
                     Add selected to invite list
                 </button>
             </div>

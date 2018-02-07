@@ -18,25 +18,25 @@
             <div class="grid-row">
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
+                        <span class="heading-large" th:text="0">60</span><br/>
                         <small>Invited</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
+                        <span class="heading-large" th:text="0">23</span><br/>
                         <small>Accepted</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
+                        <span class="heading-large" th:text="0">3</span><br/>
                         <small>Declined</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
+                        <span class="heading-large" th:text="0">6</span><br/>
                         <small>Assessors on invite list</small>
                     </div>
                 </div>
@@ -54,16 +54,16 @@
 
             <ul class="inline-nav">
                 <li class="not-selected">
-                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
                 </li>
                 <li class="selected">
-                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
                 <li class="not-selected">
-                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
+                    <label>Pending and rejected</label>
                 </li>
                 <li class="not-selected">
-                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
+                    <label>Accepted</label>
                 </li>
             </ul>
 

@@ -3,9 +3,9 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterview;
+import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState;
-import org.innovateuk.ifs.assessment.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;

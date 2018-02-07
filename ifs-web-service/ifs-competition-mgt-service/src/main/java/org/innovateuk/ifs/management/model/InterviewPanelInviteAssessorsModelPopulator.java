@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,12 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 abstract class InterviewPanelInviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
 
-    @Autowired
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
-
     public ViewModelType populateModel(CompetitionResource competition) {
         ViewModelType model = populateCompetitionDetails(createModel(), competition);
-        populateStatistics(model,competition);
         populateCompetitionInnovationSectorAndArea(model, competition);
         return model;
     }
@@ -30,14 +23,6 @@ abstract class InterviewPanelInviteAssessorsModelPopulator<ViewModelType extends
         model.setCompetitionId(competition.getId());
         model.setCompetitionName(competition.getName());
         return model;
-    }
-
-    private void populateStatistics(ViewModelType model, CompetitionResource competitionResource) {
-        AssessmentPanelInviteStatisticsResource statisticsResource = competitionKeyStatisticsRestService.getAssessmentPanelInviteStatisticsByCompetition(competitionResource.getId()).getSuccessObject();
-        model.setAssessorsInvited(statisticsResource.getInvited());
-        model.setAssessorsAccepted(statisticsResource.getAccepted());
-        model.setAssessorsDeclined(statisticsResource.getDeclined());
-        model.setAssessorsStaged(statisticsResource.getPending());
     }
 
     private void populateCompetitionInnovationSectorAndArea(ViewModelType model, CompetitionResource competition) {
