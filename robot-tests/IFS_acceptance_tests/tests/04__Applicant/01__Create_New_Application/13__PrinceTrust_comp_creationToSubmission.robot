@@ -49,7 +49,7 @@ The competition admin creates The Prince's Trust Comp
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
-    the user marks the Application as done  no  ${compType_EOI}
+    the user marks the Application as done(Prince's Trust comp)
     the user fills in the CS Assessors
     the user clicks the button/link  link=Public content
     the user fills in the Public content and publishes  ${extraKeyword}
@@ -60,9 +60,15 @@ The competition admin creates The Prince's Trust Comp
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(Prince's Trust comp type)
-    the lead applicant marks every question as complete   Project summary
-    the lead applicant marks every question as complete   Scope
-    # Please note there will be changes to the questions shortly , so for now using EOI questions array
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the user marks the Application as done(Prince's Trust comp)
+    the user clicks the button/link  link=Application
+    the user marks each question as complete    Application details
+    the assessed questions are marked complete(EOI type)
+    the user opts no finances for EOI comp
+    the user clicks the button/link  jQuery=button:contains("Done")
+    the user clicks the button/link  link=Competition setup
+    the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
