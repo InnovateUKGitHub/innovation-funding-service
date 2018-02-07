@@ -53,6 +53,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
@@ -620,21 +621,9 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     public void acceptInvite_replaceWithExistingCollaboratorInviteOrganisation() {
         InviteOrganisation inviteOrganisationToBeReplaced = newInviteOrganisation().build();
 
-        ApplicationInvite invite = newApplicationInvite()
-                .withEmail("james@test.com")
-                .withApplication(newApplication().build())
-                .withInviteOrganisation(inviteOrganisationToBeReplaced)
-                .build();
-        User user = newUser()
-                .withEmailAddress("james@test.com")
-                .build();
-
-        when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-
-        Organisation usersCurrentOrganisation = newOrganisation().build();
-
-        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(usersCurrentOrganisation);
+        ApplicationInvite invite = createAndExpectInvite(inviteOrganisationToBeReplaced);
+        User user = createAndExpectInviteUser();
+        Organisation usersCurrentOrganisation = createAndExpectCurrentOrganisationForUser(user);
 
         InviteOrganisation collaboratorInviteOrganisation = newInviteOrganisation()
                 .withOrganisation(usersCurrentOrganisation)
@@ -661,21 +650,10 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void acceptInvite_assignsUsersCurrentOrganisationIfNoCollaboratorOrganisationExists() {
-        ApplicationInvite invite = newApplicationInvite()
-                .withEmail("james@test.com")
-                .withApplication(newApplication().build())
-                .withInviteOrganisation(newInviteOrganisation().build())
-                .build();
-        User user = newUser()
-                .withEmailAddress("james@test.com")
-                .build();
+        ApplicationInvite invite = createAndExpectInvite(newInviteOrganisation().build());
+        User user = createAndExpectInviteUser();
+        Organisation usersCurrentOrganisation = createAndExpectCurrentOrganisationForUser(user);
 
-        when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-
-        Organisation usersCurrentOrganisation = newOrganisation().build();
-
-        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(usersCurrentOrganisation);
         when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
                 usersCurrentOrganisation.getId(),
                 invite.getTarget().getId()
@@ -693,4 +671,74 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         assertThat(invite.getInviteOrganisation().getOrganisation())
                 .isEqualToComparingFieldByField(usersCurrentOrganisation);
     }
+
+    @Test
+    public void acceptInvite_processRoleIsInitialisedCorrectly() {
+        ApplicationInvite invite = createAndExpectInvite(newInviteOrganisation().build());
+        User user = createAndExpectInviteUser();
+        Organisation usersCurrentOrganisation = createAndExpectCurrentOrganisationForUser(user);
+
+        Role collaboratorRole = newRole(COLLABORATOR).build();
+
+        when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
+                usersCurrentOrganisation.getId(),
+                invite.getTarget().getId()
+        ))
+                .thenReturn(Optional.empty());
+
+        when(roleRepositoryMock.findOneByName(COLLABORATOR.getName())).thenReturn(collaboratorRole);
+
+        ProcessRole expectedProcessRole = new ProcessRole(
+                user,
+                invite.getTarget().getId(),
+                collaboratorRole,
+                usersCurrentOrganisation.getId()
+        );
+
+        when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(expectedProcessRole);
+        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+                .thenReturn(serviceSuccess(BigDecimal.ONE));
+
+        ServiceResult<Void> result = inviteService.acceptInvite(testInviteHash, user.getId());
+
+        verify(applicationInviteRepositoryMock).save(invite);
+        verify(processRoleRepositoryMock).save(expectedProcessRole);
+
+        assertThat(result.isSuccess()).isTrue();
+        assertThat(invite.getTarget().getProcessRoles())
+                .contains(expectedProcessRole);
+    }
+
+    private User createAndExpectInviteUser() {
+        User user = newUser()
+                .withEmailAddress("james@test.com")
+                .build();
+
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        return user;
+    }
+
+    private ApplicationInvite createAndExpectInvite(InviteOrganisation inviteOrganisation) {
+        ApplicationInvite invite = newApplicationInvite()
+                .withEmail("james@test.com")
+                .withApplication(newApplication().build())
+                .withInviteOrganisation(inviteOrganisation)
+                .build();
+
+        when(applicationInviteRepositoryMock.getByHash(testInviteHash)).thenReturn(invite);
+
+        return invite;
+    }
+
+    private Organisation createAndExpectCurrentOrganisationForUser(User user) {
+        Organisation usersCurrentOrganisation = newOrganisation()
+                .withUser(singletonList(user))
+                .build();
+
+        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(usersCurrentOrganisation);
+
+        return usersCurrentOrganisation;
+    }
+
 }
