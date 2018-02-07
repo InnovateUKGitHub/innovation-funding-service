@@ -50,13 +50,11 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return putWithRestResult(applicationRestURL + "/updateApplicationState?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
-    // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
     @Override
     public Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
-        Future<RestResult<ObjectNode>> result = getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
-        return adapt(result, n -> n.andOnSuccessReturn(jsonResponse -> jsonResponse.get("completedPercentage").asDouble()));
+        Future<RestResult<Double>> result = getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, Double.class);
+        return result;
     }
-
     @Override
     public RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId) {
         return getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, Boolean.class);
