@@ -87,14 +87,21 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
                                               final Long markedAsCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true);
+        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, true);
     }
 
     @Override
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                 final Long markedAsInCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false);
+        return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<ValidationMessages>> markAsCompleteWithoutApplicationCompletionStatusUpdate(final QuestionApplicationCompositeId ids,
+                                                                                                          final Long markedAsCompleteById) {
+        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false);
     }
 
     @Override
@@ -356,12 +363,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         .collect(toList());
     }
     
-    private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
+    private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
         return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
-                -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete));
+                -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete, updateApplicationCompleteStatus));
     }
 
-    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, Long processRoleId, boolean markAsComplete){
+    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus){
 
         QuestionStatus questionStatus = null;
 
@@ -388,11 +395,17 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         }
 
         questionStatusRepository.save(questionStatus);
-        BigDecimal completion = applicationService.getProgressPercentageBigDecimalByApplicationId(application.getId()).getSuccessObject();
-        application.setCompletion(completion);
-        applicationRepository.save(application);
+
+        if (updateApplicationCompleteStatus) {
+            updateApplicationCompleteStatus(application);
+        }
 
         return serviceSuccess(validationMessages);
+    }
+
+    private void updateApplicationCompleteStatus(Application application) {
+        BigDecimal completion = applicationService.getProgressPercentageBigDecimalByApplicationId(application.getId()).getSuccessObject();
+        application.setCompletion(completion);
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {

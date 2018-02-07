@@ -174,6 +174,11 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
+        public ServiceResult<List<ValidationMessages>> markAsCompleteWithoutApplicationCompletionStatusUpdate(QuestionApplicationCompositeId ids, Long markedAsCompleteById) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> assign(QuestionApplicationCompositeId ids, Long assigneeId, Long assignedById) {
             return null;
         }

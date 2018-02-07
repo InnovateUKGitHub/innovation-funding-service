@@ -13,8 +13,8 @@ public class TestApplication {
     @Bean
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(100);
-        executor.setMaxPoolSize(100);
+        executor.setCorePoolSize(50);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(Integer.MAX_VALUE);
         executor.setAllowCoreThreadTimeOut(true);
         executor.setThreadNamePrefix("IFS-Test-Executor-");

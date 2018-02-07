@@ -406,8 +406,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createFundingDecisions() {
 
-        LOG.info("============ STAGE 6 of X - creating Funding Decisions for Applications =================");
-
         competitionLines.forEach(line -> {
 
             Long competitionId = competitionRepository.findByName(line.name).get(0).getId();
@@ -426,8 +424,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private List<CompletableFuture<ApplicationData>> createBasicApplicationDetails() {
-
-        LOG.info("============ STAGE 5 of X - creating Applications =================");
 
         List<String> competitionsToAddApplicationsTo = removeDuplicates(simpleMap(applicationLines, line -> line.competitionName));
 
@@ -563,19 +559,21 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 l.title.equals(applicationData.getApplication().getName()));
 
         if (applicationLine.submittedDate != null) {
-            questionResponseData.forEach(response -> {
+            forEachWithIndex(questionResponseData, (i, response) -> {
+                boolean lastElement = i == questionResponseData.size() - 1;
                 questionResponseDataBuilder.
                         withExistingResponse(response).
-                        markAsComplete().
+                        markAsComplete(lastElement).
                         build();
             });
         }
 
         if (applicationLine.markFinancesComplete) {
-            financeData.forEach(finance -> {
+            forEachWithIndex(financeData, (i, finance) -> {
+                boolean lastElement = i == financeData.size() - 1;
                 applicationFinanceDataBuilder.
                         withExistingFinances(finance.getApplication(), finance.getCompetition(), finance.getUser(), finance.getOrganisation()).
-                        markAsComplete(true).
+                        markAsComplete(true, lastElement).
                         build();
             });
         }
@@ -613,9 +611,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void updateQuestions() {
-
-        LOG.info("============ STAGE 7 of X - updating Questions =================");
-
         questionLines.forEach(this::updateQuestion);
     }
 
@@ -628,9 +623,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createProjects() {
-
-        LOG.info("============ STAGE 14 of X - creating Projects =================");
-
         projectLines.forEach(this::createProject);
     }
 
@@ -684,32 +676,20 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
-
-        LOG.info("============ STAGE 3 of X - creating External Users =================");
-
         externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
 
     private void createAssessors() {
-
-        LOG.info("============ STAGE 11 of X - creating Assessors =================");
-
         assessorUserLines.forEach(this::createAssessor);
     }
 
     private void createNonRegisteredAssessorInvites() {
-
-        LOG.info("============ STAGE 12 of X - creating Assessor Invites =================");
-
         List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
         List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
         nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
     }
 
     private void createAssessments() {
-
-        LOG.info("============ STAGE 13 of X - creating Assessments =================");
-
         assessmentLines.forEach(this::createAssessment);
         assessorResponseLines.forEach(this::createAssessorResponse);
         assessmentLines.forEach(this::submitAssessment);
@@ -749,24 +729,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitionFunders() {
-
-        LOG.info("============ STAGE 8 of X - creating Competition Funders =================");
-
         competitionFunderLines.forEach(this::createCompetitionFunder);
     }
 
     private void createPublicContentGroups() {
-
-        LOG.info("============ STAGE 9 of X - creating Public Content groups =================");
-
         testService.doWithinTransaction(() -> setDefaultCompAdmin());
         publicContentGroupLines.forEach(this::createPublicContentGroup);
     }
 
     private void createPublicContentDates() {
-
-        LOG.info("============ STAGE 10 of X - creating Public Content dates =================");
-
         publicContentDateLines.forEach(this::createPublicContentDate);
     }
 
@@ -786,9 +757,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createOrganisations() {
-
-        LOG.info("============ STAGE 1 of X - creating Organisations =================");
-
         List<Future<?>> futures = simpleMap(organisationLines, line -> {
 
             return taskExecutor.submit(() -> {
@@ -812,8 +780,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void createInternalUsers() {
 
-        LOG.info("============ STAGE 2 of X - creating Internal Users =================");
-
         internalUserLines.forEach(line -> {
 
             testService.doWithinTransaction(() -> {
@@ -830,8 +796,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitions() {
-
-        LOG.info("============ STAGE 4 of X - creating Competitions =================");
 
         List<Future<?>> futures = simpleMap(competitionLines, line -> {
 
@@ -985,7 +949,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         return finance.
                 withIndustrialCosts(costBuilder);
-//                markAsComplete(markAsComplete);
     }
 
     private ApplicationFinanceDataBuilder generateIndustrialCosts(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
@@ -1007,8 +970,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                         withSubcontractingCost("Developers", "UK", "To develop stuff", bd("90000")).
                         withTravelAndSubsistence("To visit colleagues", 15, bd("398")).
                         withOtherCosts("Some more costs", bd("1100")).
-                        withOrganisationSize(1L)).
-                markAsComplete(markAsComplete);
+                        withOrganisationSize(1L));
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinances(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
@@ -1028,8 +990,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                         withIndirectCosts(bd("154")).
                         withExceptionsStaff(bd("176")).
                         withExceptionsOtherCosts(bd("198")).
-                        withUploadedJesForm()).
-                markAsComplete(markAsComplete);
+                        withUploadedJesForm());
     }
 
     private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
@@ -1040,8 +1001,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 withUser(user).
                 withAcademicCosts(costs -> costs.
                         withTsbReference("My REF").
-                        withUploadedJesForm()).
-                markAsComplete(markAsComplete);
+                        withUploadedJesForm());
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CompetitionLine line, Optional<Long> existingCompetitionId) {

@@ -115,14 +115,18 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
         });
     }
 
-    public QuestionResponseDataBuilder markAsComplete() {
+    public QuestionResponseDataBuilder markAsComplete(boolean updateApplicationCompletionStatus) {
         return with(data -> {
             QuestionResource question = retrieveQuestionByCompetitionAndName(data.getQuestionName(), data.getApplication().getCompetition());
             ProcessRoleResource lead = retrieveLeadApplicant(data.getApplication().getId());
             UserResource leadUser = retrieveUserById(lead.getUser());
 
-            doAs(leadUser, () ->
-                    questionService.markAsComplete(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()), lead.getId()));
+            doAs(leadUser, () -> {
+                QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId());
+                return updateApplicationCompletionStatus ?
+                        questionService.markAsComplete(questionKey, lead.getId()) :
+                        questionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, lead.getId());
+            });
         });
     }
 

@@ -33,6 +33,10 @@ public interface QuestionService {
                           final Long markedAsInCompleteById);
 
     @PreAuthorize("hasPermission(#ids, 'UPDATE')")
+    ServiceResult<List<ValidationMessages>> markAsCompleteWithoutApplicationCompletionStatusUpdate(
+            final QuestionApplicationCompositeId ids, final Long markedAsCompleteById);
+
+    @PreAuthorize("hasPermission(#ids, 'UPDATE')")
     ServiceResult<Void> assign(final QuestionApplicationCompositeId ids,
                 final Long assigneeId,
                 final Long assignedById);

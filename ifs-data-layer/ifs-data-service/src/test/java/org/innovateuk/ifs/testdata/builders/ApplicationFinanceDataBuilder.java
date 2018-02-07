@@ -20,6 +20,8 @@ import java.util.function.UnaryOperator;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.AcademicCostDataBuilder.newAcademicCostData;
 import static org.innovateuk.ifs.testdata.builders.IndustrialCostDataBuilder.newIndustrialCostData;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Generates Application Finance data for an Organisation on an Application
@@ -93,22 +95,28 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         });
     }
 
-    public ApplicationFinanceDataBuilder markAsComplete(boolean markAsComplete) {
+    public ApplicationFinanceDataBuilder markAsComplete(boolean markAsComplete, boolean updateApplicationCompleteStatus) {
         return doAsUser(data -> {
             if (markAsComplete) {
                 List<QuestionResource> questions = questionService
                         .findByCompetition(data.getCompetition().getId())
                         .getSuccessObjectOrThrowException();
 
-                questions
-                        .stream()
-                        .filter(QuestionResource::hasMultipleStatuses)
-                        .forEach(q -> questionService.markAsComplete(
-                                new QuestionApplicationCompositeId(q.getId(), data.getApplication().getId()),
-                                processRoleRepository.findByUserIdAndApplicationId(
-                                        data.getUser().getId(),
-                                        data.getApplication().getId())
-                                        .getId()).getSuccessObjectOrThrowException());
+                List<QuestionResource> questionsToComplete = simpleFilter(questions, QuestionResource::hasMultipleStatuses);
+
+                forEachWithIndex(questionsToComplete, (i, q) -> {
+                    QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(q.getId(), data.getApplication().getId());
+                    Long processRoleId = processRoleRepository.findByUserIdAndApplicationId(data.getUser().getId(),
+                            data.getApplication().getId()).getId();
+
+                    boolean lastElement = i == questions.size() - 1;
+
+                    if (lastElement && updateApplicationCompleteStatus) {
+                        questionService.markAsComplete(questionKey, processRoleId).getSuccessObjectOrThrowException();
+                    } else {
+                        questionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccessObjectOrThrowException();
+                    }
+                });
             }
         });
     }
