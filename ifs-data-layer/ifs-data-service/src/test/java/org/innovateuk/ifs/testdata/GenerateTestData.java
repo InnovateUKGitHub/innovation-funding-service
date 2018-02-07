@@ -23,9 +23,5 @@ public class GenerateTestData extends BaseGenerateTestData {
      */
     @Override
     public void fixUpDatabase() {
-        // Remove the public content that is in place for competition one so that generation does not fail with
-        // PUBLIC_CONTENT_ALREADY_INITIALISED
-//        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
-//        publicContentRepository.delete(publicContentForCompetitionOne.getId());
     }
 }

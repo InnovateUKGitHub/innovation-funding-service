@@ -1,4 +1,4 @@
--- Remove the Competition 1
+-- Remove the Competition 1 - based on the patch V107_2_0__Remove_old_competition.sql but this only purges the single Competition, not the templates
 
 delete from form_input_validator where form_input_id in (select fi.id from form_input fi join question q on q.id = fi.question_id where q.competition_id in (1));
 
@@ -16,11 +16,5 @@ delete from section where competition_id in (1);
 SET foreign_key_checks = 1;
 
 delete from milestone where competition_id in (1);
-
--- update competition_type set template_competition_id = NULL where name = 'Sector';
--- update competition_type set template_competition_id = NULL where name = 'Generic';
--- update competition_type set template_competition_id = NULL where name = 'Expression of interest';
--- update competition_type set template_competition_id = NULL where name = 'Advanced Propulsion Centre';
--- update competition_type set template_competition_id = NULL where name = 'Aerospace Technology Institute';
 
 delete from competition where id in (1);

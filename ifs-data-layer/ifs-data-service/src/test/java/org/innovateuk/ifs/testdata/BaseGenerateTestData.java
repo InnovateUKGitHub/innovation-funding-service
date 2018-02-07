@@ -15,7 +15,6 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -26,7 +25,6 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -156,13 +154,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private BankDetailsService bankDetailsService;
 
     @Autowired
-    protected PublicContentRepository publicContentRepository;
-
-    @Autowired
     protected CompetitionRepository competitionRepository;
-
-    @Autowired
-    protected CompetitionService competitionService;
 
     @Autowired
     private QuestionService questionService;
