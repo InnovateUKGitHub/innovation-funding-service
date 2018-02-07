@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.Future;
-
-import static org.innovateuk.ifs.application.service.Futures.adapt;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link ApplicationResource}.
