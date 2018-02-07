@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemRegistrationUser;
  */
 @Component
 @PermissionRules
-public class FinanceTotalsRules extends BasePermissionRules {
+public class FinanceTotalsPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "SEND_APPLICATION_TOTALS_ON_SUBMIT", description = "Internal users and lead applicants are allowed to send the application totals.")
     public boolean leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(final ApplicationResource applicationResource,
                                                                                 final UserResource user) {

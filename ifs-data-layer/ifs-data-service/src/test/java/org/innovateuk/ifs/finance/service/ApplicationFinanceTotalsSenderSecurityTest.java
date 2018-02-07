@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.security.FinanceTotalsRules;
+import org.innovateuk.ifs.finance.security.FinanceTotalsPermissionRules;
 import org.innovateuk.ifs.finance.sync.service.ApplicationFinanceTotalsSender;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -19,13 +19,13 @@ import static org.mockito.Mockito.when;
 
 public class ApplicationFinanceTotalsSenderSecurityTest extends BaseServiceSecurityTest<ApplicationFinanceTotalsSender> {
     private ApplicationPermissionRules applicationPermissionRules;
-    private FinanceTotalsRules financeTotalsRules;
+    private FinanceTotalsPermissionRules financeTotalsPermissionRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
 
 
     @Before
     public void instantiateThoseThings() {
-        financeTotalsRules = getMockPermissionRulesBean(FinanceTotalsRules.class);
+        financeTotalsPermissionRules = getMockPermissionRulesBean(FinanceTotalsPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
 
@@ -39,7 +39,7 @@ public class ApplicationFinanceTotalsSenderSecurityTest extends BaseServiceSecur
         when(applicationLookupStrategy.getApplicationResource(1L)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.sendFinanceTotalsForApplication(1L),
-                () -> verify(financeTotalsRules).leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(
+                () -> verify(financeTotalsPermissionRules).leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(
                         isA(ApplicationResource.class),
                         isA(UserResource.class))
         );

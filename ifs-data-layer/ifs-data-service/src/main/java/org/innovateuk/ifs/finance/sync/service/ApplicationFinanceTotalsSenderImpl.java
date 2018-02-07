@@ -43,10 +43,6 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
 
         return (ServiceResult) messageQueueServiceStub
                 .sendFinanceTotals(spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList))
-                .andOnFailure(logErrorOnSend(applicationId));
-    }
-
-    private Runnable logErrorOnSend(long applicationId) {
-        return () -> LOG.error("Failed sending financeTotals for applicationId: {}", applicationId);
+                .andOnFailure(() -> LOG.error("Failed sending financeTotals for applicationId: {}", applicationId));
     }
 }
