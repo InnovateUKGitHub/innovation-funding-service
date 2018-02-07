@@ -44,6 +44,10 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
         return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), ParameterizedTypeReferences.assessmentResourceListType());
     }
 
+    public RestResult<List<AssessmentResource>> getByUserAndApplication(long userId, long applicationId) {
+        return getWithRestResult(format("%s/user/%s/application/%s", assessmentRestURL, userId, applicationId), ParameterizedTypeReferences.assessmentResourceListType());
+    }
+
     @Override
     public RestResult<Long> countByStateAndCompetition(AssessmentState state, long competitionId) {
         return getWithRestResult(format("%s/state/%s/competition/%s/count", assessmentRestURL, state.getStateName(), competitionId), Long.TYPE);
@@ -63,7 +67,6 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     public RestResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId) {
         return getWithRestResult(format("%s/application/%s/feedback", assessmentRestURL, applicationId), ApplicationAssessmentFeedbackResource.class);
     }
-
 
     @Override
     public RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {

@@ -216,7 +216,8 @@
                        th:field="${form.projectSize}"
                        required="required"
                        th:errorclass="form-control-error"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
+                       th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required},
+                                data-maxlength-errormessage=#{validation.publiccontent.summaryform.projectSize.max}" />
             </div>
 
         <th:block th:insert="fragments/public-content :: content-groups(form=${form},model=${model})" />

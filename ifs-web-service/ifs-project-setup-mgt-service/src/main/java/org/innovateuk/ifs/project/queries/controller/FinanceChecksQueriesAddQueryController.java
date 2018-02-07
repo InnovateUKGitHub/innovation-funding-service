@@ -128,7 +128,7 @@ public class FinanceChecksQueriesAddQueryController {
 
             List<PostResource> posts = new ArrayList<>();
             posts.add(post);
-            QueryResource query = new QueryResource(null, projectFinance.getId(), posts, section, form.getQueryTitle(), true, ZonedDateTime.now());
+            QueryResource query = new QueryResource(null, projectFinance.getId(), posts, section, form.getQueryTitle(), true, ZonedDateTime.now(), null, null);
             ServiceResult<Long> result = financeCheckService.saveQuery(query);
             validationHandler.addAnyErrors(result);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
