@@ -10,7 +10,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.Participant;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
@@ -65,9 +66,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -400,7 +401,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         )
                         .andOnSuccessReturn(competitionInviteMapper::mapToResource),
                 success -> serviceFailure(Error.globalError(
-                        "validation.competitionInvite.create.email.exists",
+                        "validation.competitionAssessmentInvite.create.email.exists",
                         singletonList(stagedInvite.getEmail())
                 ))
         );
@@ -417,12 +418,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                         )
                                         .andOnFailure(() -> ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, invite.getEmail()))
                                         ),
-                                success -> ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, invite.getEmail()))
-//                                success -> serviceFailure(Error.fieldError(
-//                                        "invites[" + index + "].email",
-//                                        invite.getEmail(),
-//                                        "validation.competitionInvite.create.email.exists"
-//                                ))
+                                success -> serviceFailure(Error.fieldError(
+                                        "invites[" + index + "].email",
+                                        invite.getEmail(),
+                                        "validation.competitionAssessmentInvite.create.email.exists"
+                                ))
                         )
                 ))
                 .andOnSuccess(list -> aggregate(list))
