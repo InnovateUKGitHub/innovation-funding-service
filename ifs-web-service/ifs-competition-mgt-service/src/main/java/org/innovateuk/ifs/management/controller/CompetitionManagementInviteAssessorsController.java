@@ -319,39 +319,20 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                                ValidationHandler validationHandler) {
         form.setVisible(true);
 
-        List<InviteNewAssessorsRowForm>  invites = form.getInvites();
-        List<String> emails = invites.stream()
-                .map(invite -> invite.getEmail())
-                .collect(Collectors.toList());
+        return validationHandler.failNowOrSucceedWith(
+                () -> invite(model, competitionId, form, page, queryParams),
+                () -> {
+                    RestResult<Void> result = competitionInviteRestService.inviteNewUsers(
+                            newInviteFormToResource(form, competitionId), competitionId
+                    );
 
-            return validationHandler.failNowOrSucceedWith(
-                    () -> invite(model, competitionId, form, page, queryParams),
-                    () -> {
-                        RestResult<AssessorCreatedInvitePageResource> restResult = competitionInviteRestService.validateNonRegisteredAssessor(competitionId, page, emails);
-
-                        return validationHandler.addAnyErrors(restResult)
-                                .failNowOrSucceedWith(
-                                        () -> invite(model, competitionId, form, page, queryParams),
-                                        () -> {
-                                            return validationHandler.failNowOrSucceedWith(
-                                                    () -> invite(model, competitionId, form, page, queryParams),
-                                                    () -> {
-                                                        RestResult<Void> result = competitionInviteRestService.inviteNewUsers(
-                                                                newInviteFormToResource(form, competitionId), competitionId
-                                                        );
-
-                                                        return validationHandler.addAnyErrors(result)
-                                                                .failNowOrSucceedWith(
-                                                                        () -> invite(model, competitionId, form, page, queryParams),
-                                                                        () -> redirectToInvite(competitionId, page)
-                                                                );
-                                                    }
-                                            );
-                                        }
-                                );
-                    }
-            );
-
+                    return validationHandler.addAnyErrors(result)
+                            .failNowOrSucceedWith(
+                                    () -> invite(model, competitionId, form, page, queryParams),
+                                    () -> redirectToInvite(competitionId, page)
+                            );
+                }
+        );
     }
 
     private String redirectToInvite(long competitionId, int page) {

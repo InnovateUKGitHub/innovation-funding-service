@@ -81,11 +81,6 @@ public interface CompetitionInviteService {
     ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
-            description = "Competition Admins and Project Finance users can retrieve created invites by competition")
-    ServiceResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, Pageable pageable, List<String> emails);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve invitation overview by competition")
     ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,

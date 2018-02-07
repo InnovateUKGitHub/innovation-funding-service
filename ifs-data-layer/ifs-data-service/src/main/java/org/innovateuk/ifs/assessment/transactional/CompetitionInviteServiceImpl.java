@@ -38,7 +38,9 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,6 +74,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
  * Service for managing {@link CompetitionAssessmentInvite}s.
@@ -290,63 +293,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, Pageable pageable, List<String> emails) {
-        /* return getCompetition(competitionId).andOnSuccessReturn(competition ->
-                mapWithIndex(newUserStagedInvites, (index, invite) ->
-                        getByEmailAndCompetition(invite.getEmail(), competitionId).handleSuccessOrFailure(
-                                failure -> getInnovationArea(invite.getInnovationAreaId())
-                                        .andOnSuccess(innovationArea ->
-                                                inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
-                                        )
-                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
-                                                "invites[" + index + "].innovationArea",
-                                                invite.getInnovationAreaId(),
-                                                "validation.competitionInvite.create.innovationArea.required"
-                                                ))
-                                        ),
-                                success -> serviceFailure(Error.fieldError(
-                                        "invites[" + index + "].email",
-                                        invite.getEmail(),
-                                        "validation.competitionInvite.create.email.exists"
-                                ))
-                        )
-                ))
-                .andOnSuccess(list -> aggregate(list))
-                .andOnSuccessReturnVoid();*/
-
-        String errorEmail = "";
-        boolean error = false;
-
-        ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
-
-        List<String> existingEmails = resource.getSuccessObjectOrThrowException().getContent().stream()
-                .map(AssessorCreatedInviteResource::getEmail)
-                .collect(Collectors.toList());
-
-        for (String email : emails) {
-            List<String> userIsAlreadyInvitedList = existingEmails.stream()
-                    .filter(e -> e.equals(email))
-                    .collect(Collectors.toList());
-
-            Optional<User> userExists = userRepository.findByEmail(email);
-            boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
-
-            if (!userIsAlreadyInvited || userExists.isPresent()) {
-                errorEmail = email;
-                error = true;
-                break;
-            }
-        }
-
-        if (!error) {
-            return resource;
-        } else {
-            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, errorEmail));
-        }
-
-    }
-
-    @Override
     public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
         CompetitionInviteStatisticsResource statisticsResource = new CompetitionInviteStatisticsResource();
         statisticsResource.setInvited(competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
@@ -464,22 +410,19 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition ->
                 mapWithIndex(newUserStagedInvites, (index, invite) ->
-                        getByEmailAndCompetition(invite.getEmail(), competitionId).handleSuccessOrFailure(
+                        getByEmailAndCompetitionWithValidation(invite.getEmail(), competitionId).handleSuccessOrFailure(
                                 failure -> getInnovationArea(invite.getInnovationAreaId())
                                         .andOnSuccess(innovationArea ->
                                                 inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
                                         )
-                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
-                                                "invites[" + index + "].innovationArea",
-                                                invite.getInnovationAreaId(),
-                                                "validation.competitionInvite.create.innovationArea.required"
-                                                ))
+                                        .andOnFailure(() -> ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, invite.getEmail()))
                                         ),
-                                success -> serviceFailure(Error.fieldError(
-                                        "invites[" + index + "].email",
-                                        invite.getEmail(),
-                                        "validation.competitionInvite.create.email.exists"
-                                ))
+                                success -> ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, invite.getEmail()))
+//                                success -> serviceFailure(Error.fieldError(
+//                                        "invites[" + index + "].email",
+//                                        invite.getEmail(),
+//                                        "validation.competitionInvite.create.email.exists"
+//                                ))
                         )
                 ))
                 .andOnSuccess(list -> aggregate(list))
@@ -689,6 +632,31 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private ServiceResult<CompetitionAssessmentInvite> getByEmailAndCompetition(String email, long competitionId) {
         return find(competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
     }
+
+    private ServiceResult<Void> getByEmailAndCompetitionWithValidation(String email, long competitionId) {
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
+
+        List<String> existingEmails = resource.getSuccessObjectOrThrowException().getContent().stream()
+                .map(AssessorCreatedInviteResource::getEmail)
+                .collect(Collectors.toList());
+
+        List<String> userIsAlreadyInvitedList = existingEmails.stream()
+                    .filter(e -> e.equals(email))
+                    .collect(Collectors.toList());
+
+        Optional<User> userExists = userRepository.findByEmail(email);
+
+        boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
+
+        if (!userIsAlreadyInvited || userExists.isPresent() || competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null) {
+            return ServiceResult.serviceSuccess();
+        } else {
+            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
+        }
+}
 
     private ServiceResult<Void> deleteInvite(CompetitionAssessmentInvite invite) {
         if (invite.getStatus() != CREATED) {
