@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -22,7 +20,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
-import static org.innovateuk.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -60,7 +57,7 @@ public class ApplicationFinanceController {
 
         return financeRowService.findApplicationFinanceByApplication(applicationId).toGetResponse();
     }
-    
+
     @GetMapping("/getResearchParticipationPercentage/{applicationId}")
     public RestResult<Double> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
         return financeRowService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> percentage).toGetResponse();
