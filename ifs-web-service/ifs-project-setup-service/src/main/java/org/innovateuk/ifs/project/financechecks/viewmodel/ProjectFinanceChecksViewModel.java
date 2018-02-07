@@ -161,4 +161,8 @@ public class ProjectFinanceChecksViewModel {
         return (Stream.of(pendingQueries, awaitingResponseQueries, closedQueries).count() == 1);
     }
 
+    public boolean noQueries() {
+        return pendingQueries.isEmpty() && awaitingResponseQueries.isEmpty() && closedQueries.isEmpty();
+    }
+
 }

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
@@ -52,7 +51,6 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -74,7 +72,6 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
