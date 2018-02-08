@@ -296,7 +296,8 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(queryInDB);
-        when(userRepositoryMock.findOne(loggedInUserId)).thenReturn(loggedInUser);
+        when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
+
         setLoggedInUser(newUserResource().withId(loggedInUserId)
                 .withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
 
