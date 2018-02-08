@@ -167,4 +167,19 @@ public class ProjectFinanceChecksViewModel {
         return pendingQueries.isEmpty() && awaitingResponseQueries.isEmpty() && closedQueries.isEmpty();
     }
 
+    public boolean onlyClosedQueries() {
+        return !noQueries() && pendingQueries.isEmpty() && awaitingResponseQueries.isEmpty();
+    }
+
+    public boolean anyPendingQueries() {
+        return !pendingQueries.isEmpty();
+    }
+
+    public boolean onePendingQuery() {
+        return pendingQueries.size() == 1;
+    }
+
+    public boolean noPendingAndAnyAwaitingResponseQueries() {
+        return pendingQueries.isEmpty() && !awaitingResponseQueries.isEmpty();
+    }
 }
