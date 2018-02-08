@@ -49,9 +49,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
 
     @Override
     public Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
-        Future<RestResult<Double>> result = getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, Double.class);
-        return result;
+        return getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, Double.class);
     }
+
     @Override
     public RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId) {
         return getWithRestResult(applicationRestURL + "/applicationReadyForSubmit/" + applicationId, Boolean.class);
