@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.builder;
 
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
 import org.junit.Test;
 
 import java.util.List;
