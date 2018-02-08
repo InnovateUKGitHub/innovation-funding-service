@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -90,24 +91,13 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void test_getCompleteQuestionsPercentage() throws Exception {
 
-        ApplicationResource returnedResponse = new ApplicationResource();
+        Double returnedResponse = 60.5;
 
-        setupGetWithRestResultExpectations(applicationRestURL + "/getProgressPercentageByApplicationId/123", Object.class, returnedResponse);
+        String expectedUrl = applicationRestURL + "/getProgressPercentageByApplicationId/123";
+        setupGetWithRestResultAsyncExpectations(expectedUrl, Double.class, returnedResponse);
 
         Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccessObject();
-        assertNotNull(percentage);
-        Assert.assertEquals(returnedResponse, percentage);
-
-//        String expectedUrl =  BaseRestServiceUnitTest.dataServicesUrl + applicationRestURL + "/getProgressPercentageByApplicationId/123";
-//        ObjectNode returnedDetails = new ObjectMapper().createObjectNode().put("completedPercentage", "60.5");
-//
-//        when(mockAsyncRestTemplate.exchange(expectedUrl, HttpMethod.GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(settable(new ResponseEntity<>(returnedDetails, OK)));
-//
-//        // now run the method under test
-//        Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccessObject();
-//
-//        assertNotNull(percentage);
-//        assertEquals(Double.valueOf(60.5), percentage);
+        assertEquals(returnedResponse, percentage);
     }
 
     @Test
