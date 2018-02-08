@@ -405,7 +405,7 @@ public class ProjectFinanceChecksController {
                 removeDuplicates(simpleMap(projectService.getProjectUsersForProject(projectId), ProjectUserResource::getUser));
 
         if (queriesResult.isSuccess()) {
-            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccessObject(), user ->
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
                     projectUserIds.contains(user.getId()) ?
                             user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
                             "Innovate UK - Finance team");

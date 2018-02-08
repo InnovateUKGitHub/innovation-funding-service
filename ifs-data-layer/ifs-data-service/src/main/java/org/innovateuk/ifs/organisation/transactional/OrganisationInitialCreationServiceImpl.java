@@ -58,7 +58,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
             OrganisationResource organisationToCreate,
             String inviteHash
     ) {
-        ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccessObjectOrThrowException();
+        ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccess();
 
         InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();
