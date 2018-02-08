@@ -44,7 +44,7 @@
         <th:block th:if="${model.getPendingQueries().isEmpty()}">
             <th:block th:if="${model.getAwaitingResponseQueries().isEmpty()}">
                 <div class="success-alert">
-                    <p>All queries have been resolved.</p>
+                    <p th:text="${model.isSingleQuery()} ? 'This query has been resolved.' : 'All queries have been resolved.'"></p>
                 </div>
             </th:block>
             <th:block th:unless="${model.getAwaitingResponseQueries().isEmpty()}">
