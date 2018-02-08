@@ -34,15 +34,26 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
 
     @Override
     public ApplicationFinanceRow toCost(LabourCost labourCostItem) {
-        return labourCostItem != null ? new ApplicationFinanceRow(labourCostItem.getId(), labourCostItem.getName(),
-                labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(),
-                labourCostItem.getGrossEmployeeCost(), null, null) : null;
+        return labourCostItem != null ? new ApplicationFinanceRow(
+                                            labourCostItem.getId(),
+                                            labourCostItem.getName(),
+                                            labourCostItem.getRole(),
+                                            labourCostItem.getDescription(),
+                                            labourCostItem.getLabourDays(),
+                                            labourCostItem.getGrossEmployeeCost(),
+                                            null, null) : null;
     }
 
     @Override
     public ProjectFinanceRow toProjectCost(LabourCost costItem) {
-        return new ProjectFinanceRow(costItem.getId(), costItem.getName(), costItem.getRole(), costItem.getDescription(),
-                costItem.getLabourDays(), costItem.getGrossEmployeeCost(), null, null);
+        return new ProjectFinanceRow(
+                    costItem.getId(),
+                    costItem.getName(),
+                    costItem.getRole(),
+                    costItem.getDescription(),
+                    costItem.getLabourDays(),
+                    costItem.getGrossEmployeeCost(),
+                    null, null);
     }
 
     @Override
