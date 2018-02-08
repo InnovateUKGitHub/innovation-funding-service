@@ -12,7 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to interview panel',subTitle=${model.competitionName},size='heading-xlarge'" />
             <h2 class="heading-medium">Key statistics</h2>
 
             <div class="grid-row">
@@ -69,7 +69,7 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite assessors to this panel.</h2>
+                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite assessors to interview panel.</h2>
                 </div>
             </div>
 
