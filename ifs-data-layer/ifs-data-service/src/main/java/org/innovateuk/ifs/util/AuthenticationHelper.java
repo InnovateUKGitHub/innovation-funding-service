@@ -15,6 +15,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Component
+/**
+ * A util class to provide common authentication related services
+ */
 public class AuthenticationHelper {
 
     @Autowired
