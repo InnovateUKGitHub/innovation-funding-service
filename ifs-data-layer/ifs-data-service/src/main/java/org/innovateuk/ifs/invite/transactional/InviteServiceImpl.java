@@ -23,10 +23,8 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -45,7 +43,6 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -59,14 +56,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
-public class InviteServiceImpl extends BaseTransactionalService implements InviteService {
+public class InviteServiceImpl extends BaseInviteService implements InviteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InviteServiceImpl.class);
 
@@ -237,86 +232,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         });
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
-        return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-            if (!invite.getEmail().equalsIgnoreCase(user.getEmail())) {
-                LOG.error(
-                        "Invite (id: {}) email address does not match user's (id: {})",
-                        invite.getId(),
-                        user.getId()
-                );
-
-                return serviceFailure(new Error(
-                        "Invite email address not the same as the user's email address",
-                        NOT_ACCEPTABLE
-                ));
-            }
-
-            invite.open();
-
-            if (invite.getInviteOrganisation().getOrganisation() == null) {
-                assignOrganisationToInvite(invite, user);
-            }
-
-            initializeInvitee(invite, user);
-
-            return serviceSuccess();
-        });
-    }
-
-    private void assignOrganisationToInvite(ApplicationInvite invite, User user) {
-        List<Organisation> organisations = organisationRepository.findByUsers(user);
-
-        if (organisations.isEmpty()) {
-            return;
-        }
-
-        // A bit contentious, but we assume that the first organisation
-        // that a user belongs to is their 'current' organisation.
-        Organisation usersCurrentOrganisation = organisations.get(0);
-
-        Optional<InviteOrganisation> existingCollaboratorInviteOrganisation =
-                inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(
-                        usersCurrentOrganisation.getId(),
-                        invite.getTarget().getId()
-                );
-
-        if (existingCollaboratorInviteOrganisation.isPresent()) {
-            replaceInviteOrganisationOnInvite(invite, existingCollaboratorInviteOrganisation.get());
-        } else {
-            invite.getInviteOrganisation().setOrganisation(usersCurrentOrganisation);
-            applicationInviteRepository.save(invite);
-        }
-    }
-
-    private void replaceInviteOrganisationOnInvite(
-            ApplicationInvite invite,
-            InviteOrganisation inviteOrganisation
-    ) {
-        InviteOrganisation currentInviteOrganisation = invite.getInviteOrganisation();
-        currentInviteOrganisation.removeInvite(invite);
-        inviteOrganisationRepository.saveAndFlush(currentInviteOrganisation);
-
-        if (currentInviteOrganisation.getInvites().isEmpty()) {
-            inviteOrganisationRepository.delete(currentInviteOrganisation);
-        }
-
-        invite.setInviteOrganisation(inviteOrganisation);
-        applicationInviteRepository.save(invite);
-    }
-
-    private void initializeInvitee(ApplicationInvite invite, User user) {
-        Application application = invite.getTarget();
-        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
-        Organisation organisation = invite.getInviteOrganisation().getOrganisation();
-        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
-        processRoleRepository.save(processRole);
-        application.addProcessRole(processRole);
-        updateApplicationProgress(application);
-    }
-
     private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
         ApplicationInviteResource inviteResource = applicationInviteMapper.mapToResource(invite);
         Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
@@ -381,14 +296,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             }
         }
         updateApplicationProgress(application);
-    }
-
-    private Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
-        return () -> getByHash(hash);
-    }
-
-    private ServiceResult<ApplicationInvite> getByHash(String hash) {
-        return find(applicationInviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
     }
 
     private InviteResultsResource sendInvites(List<ApplicationInvite> invites) {
