@@ -640,12 +640,44 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<Void> result = inviteService.acceptInvite(testInviteHash, user.getId());
 
-        verify(applicationInviteRepositoryMock).saveAndFlush(invite);
-        verify(inviteOrganisationRepositoryMock).delete(inviteOrganisationToBeReplaced);
+        InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, applicationInviteRepositoryMock);
+        inOrder.verify(inviteOrganisationRepositoryMock).saveAndFlush(inviteOrganisationToBeReplaced);
+        inOrder.verify(inviteOrganisationRepositoryMock).delete(inviteOrganisationToBeReplaced);
+        inOrder.verify(applicationInviteRepositoryMock).save(invite);
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getInviteOrganisation())
                 .isEqualToComparingFieldByField(collaboratorInviteOrganisation);
+    }
+
+    @Test
+    public void acceptInvite_previousInviteOrganisationIsNotDeletedIfThereAreOtherInvitesAttached() {
+        InviteOrganisation inviteOrganisationToBeReplaced = newInviteOrganisation()
+                .withInvites(newApplicationInvite().build(2))
+                .build();
+
+        ApplicationInvite invite = createAndExpectInvite(inviteOrganisationToBeReplaced);
+        User user = createAndExpectInviteUser();
+        Organisation usersCurrentOrganisation = createAndExpectUsersCurrentOrganisation(user);
+
+        InviteOrganisation collaboratorInviteOrganisation = newInviteOrganisation()
+                .withOrganisation(usersCurrentOrganisation)
+                .build();
+
+        when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
+                usersCurrentOrganisation.getId(),
+                invite.getTarget().getId()
+        ))
+                .thenReturn(Optional.of(collaboratorInviteOrganisation));
+
+        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+                .thenReturn(serviceSuccess(BigDecimal.ONE));
+
+        ServiceResult<Void> result = inviteService.acceptInvite(testInviteHash, user.getId());
+
+        verify(inviteOrganisationRepositoryMock, never()).delete(inviteOrganisationToBeReplaced);
+
+        assertThat(result.isSuccess()).isTrue();
     }
 
     @Test
