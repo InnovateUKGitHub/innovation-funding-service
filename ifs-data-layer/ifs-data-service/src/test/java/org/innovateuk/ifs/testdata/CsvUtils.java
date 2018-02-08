@@ -305,7 +305,7 @@ class CsvUtils {
         String assignedTo;
         boolean markedAsComplete;
 
-        private ApplicationQuestionResponseLine(List<String> line) {
+        ApplicationQuestionResponseLine(List<String> line) {
 
             int i = 0;
             competitionName = line.get(i++);
@@ -713,7 +713,7 @@ class CsvUtils {
         }
     }
 
-    private static List<List<String>> readCsvLines(String csvName) {
+    public static List<List<String>> readCsvLines(String csvName) {
         try {
             File file = new File(CsvUtils.class.getResource("/testdata/" + csvName + ".csv").toURI());
             CSVReader reader = new CSVReader(new FileReader(file), ',', '"');
