@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -78,7 +77,10 @@ public class AcceptInviteServiceImpl extends BaseInviteService implements Accept
             invite.open();
 
             if (invite.getInviteOrganisation().getOrganisation() == null) {
-                assignOrganisationToInvite(invite, user);
+                // A bit contentious, but we assume that the first organisation
+                // that a user belongs to is their 'current' organisation.
+                organisationRepository.findFirstByUsers(user)
+                        .ifPresent(organisation -> assignOrganisationToInvite(invite, organisation));
             }
 
             initializeInvitee(invite, user);
@@ -87,35 +89,33 @@ public class AcceptInviteServiceImpl extends BaseInviteService implements Accept
         });
     }
 
-    private void assignOrganisationToInvite(ApplicationInvite invite, User user) {
-        List<Organisation> organisations = organisationRepository.findByUsers(user);
-
-        if (organisations.isEmpty()) {
-            return;
-        }
-
-        // A bit contentious, but we assume that the first organisation
-        // that a user belongs to is their 'current' organisation.
-        Organisation usersCurrentOrganisation = organisations.get(0);
-
+    private void assignOrganisationToInvite(ApplicationInvite invite, Organisation organisation) {
         Optional<InviteOrganisation> existingCollaboratorInviteOrganisation =
                 inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(
-                        usersCurrentOrganisation.getId(),
+                        organisation.getId(),
                         invite.getTarget().getId()
                 );
 
         if (existingCollaboratorInviteOrganisation.isPresent()) {
             replaceInviteOrganisationOnInvite(invite, existingCollaboratorInviteOrganisation.get());
         } else {
-            invite.getInviteOrganisation().setOrganisation(usersCurrentOrganisation);
+            invite.getInviteOrganisation().setOrganisation(organisation);
             applicationInviteRepository.save(invite);
         }
     }
 
     private void replaceInviteOrganisationOnInvite(
             ApplicationInvite invite,
-            InviteOrganisation inviteOrganisation
+            InviteOrganisation newInviteOrganisation
     ) {
+        unlinkOldInviteOrganisation(invite);
+
+        invite.setInviteOrganisation(newInviteOrganisation);
+
+        applicationInviteRepository.save(invite);
+    }
+
+    private void unlinkOldInviteOrganisation(ApplicationInvite invite) {
         InviteOrganisation currentInviteOrganisation = invite.getInviteOrganisation();
         currentInviteOrganisation.removeInvite(invite);
         inviteOrganisationRepository.saveAndFlush(currentInviteOrganisation);
@@ -123,9 +123,6 @@ public class AcceptInviteServiceImpl extends BaseInviteService implements Accept
         if (currentInviteOrganisation.getInvites().isEmpty()) {
             inviteOrganisationRepository.delete(currentInviteOrganisation);
         }
-
-        invite.setInviteOrganisation(inviteOrganisation);
-        applicationInviteRepository.save(invite);
     }
 
     private void initializeInvitee(ApplicationInvite invite, User user) {

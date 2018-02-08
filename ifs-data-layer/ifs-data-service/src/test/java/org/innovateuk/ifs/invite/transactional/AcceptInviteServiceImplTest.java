@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.mockito.InOrder;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -200,13 +199,12 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
     }
 
     private Organisation createAndExpectUsersCurrentOrganisation(User user) {
-        List<Organisation> usersOrganisations = newOrganisation()
+        Organisation usersOrganisation = newOrganisation()
                 .withUser(singletonList(user))
-                .build(1);
+                .build();
 
-        when(organisationRepositoryMock.findByUsers(user)).thenReturn(usersOrganisations);
+        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(Optional.of(usersOrganisation));
 
-        return usersOrganisations.get(0);
+        return usersOrganisation;
     }
-
 }
