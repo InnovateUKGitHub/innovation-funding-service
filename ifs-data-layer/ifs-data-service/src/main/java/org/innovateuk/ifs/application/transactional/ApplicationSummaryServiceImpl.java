@@ -121,15 +121,15 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             int pageSize,
             Optional<String> filter,
             Optional<FundingDecisionStatus> fundingFilter,
-            Optional<Boolean> inAssessmentPanel) {
+            Optional<Boolean> inAssessmentReviewPanel) {
 
         String filterString = trimFilterString(filter);
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentPanel.orElse(null), pageable),
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null), pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentPanel.orElse(null)));
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentReviewPanel.orElse(null)));
     }
 
     @Override

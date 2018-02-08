@@ -81,7 +81,7 @@ public abstract class ApplicationSummaryMapper {
 
         result.setInnovationArea(source.getInnovationArea() != null ? source.getInnovationArea().getName() : null);
 
-        result.setInAssessmentPanel(source.isInAssessmentPanel());
+        result.setInAssessmentPanel(source.isInAssessmentReviewPanel());
 
         return result;
     }

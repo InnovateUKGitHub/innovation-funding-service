@@ -103,6 +103,11 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
+    public ServiceResult<Void> closeQuery(Long queryId) {
+        return queryService.close(queryId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Long> saveNote(NoteResource note) {
         return noteService.create(note).toServiceResult();
     }

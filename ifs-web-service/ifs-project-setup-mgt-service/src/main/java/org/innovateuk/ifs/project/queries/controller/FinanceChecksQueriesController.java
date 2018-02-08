@@ -16,17 +16,16 @@ import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstrain
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +43,8 @@ import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -72,13 +71,13 @@ public class FinanceChecksQueriesController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private CookieUtil cookieUtil;
     @Autowired
     private ProjectFinanceService projectFinanceService;
     @Autowired
     private FinanceCheckService financeCheckService;
+    @Autowired
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping
@@ -90,6 +89,18 @@ public class FinanceChecksQueriesController {
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
         model.addAttribute("model", viewModel);
         return QUERIES_VIEW;
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PostMapping("/{queryId}/close")
+    public String closeQuery(@PathVariable Long projectId,
+                             @PathVariable Long organisationId,
+                             @PathVariable Long queryId,
+                             Model model) {
+
+        financeCheckService.closeQuery(queryId);
+
+        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/query";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
@@ -280,44 +291,18 @@ public class FinanceChecksQueriesController {
 
     private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
 
-        List<ThreadViewModel> queryModel = new LinkedList<>();
-
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        financeCheckService.getQueries(projectFinance.getId()).ifSuccessful( queries -> {
-            // order queries by most recent post
-            List<QueryResource> sortedQueries = queries.stream().
-                    flatMap(t -> t.posts.stream()
-                            .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
-                    .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
-                    .map(m -> m.getKey())
-                    .distinct()
-                    .collect(Collectors.toList());
 
-            for (QueryResource query : sortedQueries) {
-                List<ThreadPostViewModel> posts = new LinkedList<>();
-                for (PostResource p : query.posts) {
-                    UserResource user = userService.findById(p.author.getId());
-                    ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
-                    if (user.hasRole(UserRoleType.PROJECT_FINANCE)) {
-                        post.setUsername(user.getName() + " - Innovate UK (Finance team)");
-                    } else {
-                        post.setUsername(user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
-                    }
-                    posts.add(post);
-                }
-                ThreadViewModel detail = new ThreadViewModel();
-                detail.setViewModelPosts(posts);
-                detail.setSectionType(query.section);
-                detail.setCreatedOn(query.createdOn);
-                detail.setAwaitingResponse(query.awaitingResponse);
-                detail.setTitle(query.title);
-                detail.setId(query.id);
-                detail.setProjectId(projectId);
-                detail.setOrganisationId(organisationId);
-                queryModel.add(detail);
-            }
-        });
-        return queryModel;
+        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
+
+        if (queriesResult.isSuccess()) {
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccessObject(), user ->
+                    user.hasRole(UserRoleType.PROJECT_FINANCE) ?
+                        user.getName() + " - Innovate UK (Finance team)" :
+                        user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
+        } else {
+            return emptyList();
+        }
     }
 
     private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments) {

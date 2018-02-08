@@ -51,6 +51,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "template", ignore = true),
             @Mapping(target = "applications", ignore = true),
             @Mapping(target = "assessmentPanelDate", ignore = true),
+            @Mapping(target = "panelDate", ignore = true),
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 

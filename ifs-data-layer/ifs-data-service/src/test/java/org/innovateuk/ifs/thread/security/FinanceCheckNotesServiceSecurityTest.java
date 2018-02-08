@@ -80,7 +80,6 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         });
     }
 
-
     public static class TestFinanceCheckNotesService implements FinanceCheckNotesService {
 
         @Override
@@ -99,6 +98,11 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Long> create(NoteResource NoteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> close(Long noteId) {
             return null;
         }
 
