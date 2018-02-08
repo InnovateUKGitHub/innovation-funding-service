@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.assessment.review.builder;
+package org.innovateuk.ifs.assessment.interview.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
-import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewPanelParticipantBuilder.newAssessmentPanelParticipant;
+import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelInviteBuilder.newAssessmentInterviewPanelInvite;
+import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelParticipantBuilder.newAssessmentInterviewPanelParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipan
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
-public class AssessmentReviewPanelParticipantBuilderTest {
+public class AssessmentInterviewPanelParticipantBuilderTest {
 
     @Test
     public void buildOne() {
@@ -32,9 +32,9 @@ public class AssessmentReviewPanelParticipantBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         RejectionReason expectedRejectionReason = newRejectionReason().withReason("Unavailable").build();
         String expectedRejectionComment = "Too busy";
-        AssessmentReviewPanelInvite expectedInvite = newAssessmentPanelInvite().build();
+        AssessmentInterviewPanelInvite expectedInvite = newAssessmentInterviewPanelInvite().build();
 
-        AssessmentReviewPanelParticipant participant = newAssessmentPanelParticipant()
+        AssessmentInterviewPanelParticipant participant = newAssessmentInterviewPanelParticipant()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withUser(expectedUser)
@@ -62,11 +62,11 @@ public class AssessmentReviewPanelParticipantBuilderTest {
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         CompetitionParticipantRole[] expectedRoles = { ASSESSOR, ASSESSOR };
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
-        AssessmentReviewPanelInvite[] expectedCompetitionInvites = newAssessmentPanelInvite().buildArray(2, AssessmentReviewPanelInvite.class);
+        AssessmentInterviewPanelInvite[] expectedCompetitionInvites = newAssessmentInterviewPanelInvite().buildArray(2, AssessmentInterviewPanelInvite.class);
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
-        List<AssessmentReviewPanelParticipant> participants = newAssessmentPanelParticipant()
+        List<AssessmentInterviewPanelParticipant> participants = newAssessmentInterviewPanelParticipant()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withUser(expectedUsers)
@@ -77,7 +77,7 @@ public class AssessmentReviewPanelParticipantBuilderTest {
                 .withRejectionComment(expectedRejectionComment)
                 .build(2);
 
-        AssessmentReviewPanelParticipant first = participants.get(0);
+        AssessmentInterviewPanelParticipant first = participants.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedStatuses[0], first.getStatus());
         assertEquals(expectedUsers[0], first.getUser());
@@ -87,7 +87,7 @@ public class AssessmentReviewPanelParticipantBuilderTest {
         assertEquals(expectedRejectionReasons[0], first.getRejectionReason());
         assertEquals(expectedRejectionComment[0], first.getRejectionReasonComment());
 
-        AssessmentReviewPanelParticipant second = participants.get(1);
+        AssessmentInterviewPanelParticipant second = participants.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedStatuses[1], second.getStatus());
         assertEquals(expectedUsers[1], second.getUser());

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite}s.
  */
-public interface InterviewPanelInviteService {
+public interface AssessmentInterviewPanelInviteService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_CREATED_INTERVIEW_PANEL_INVITES",

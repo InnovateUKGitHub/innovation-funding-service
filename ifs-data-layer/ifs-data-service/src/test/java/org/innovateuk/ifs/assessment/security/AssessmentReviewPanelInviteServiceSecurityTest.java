@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
+import org.innovateuk.ifs.assessment.transactional.AssessmentReviewPanelInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
 
-public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelInviteService> {
+public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentReviewPanelInviteService> {
 
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
     private AssessmentPanelInvitePermissionRules assessmentPanelInvitePermissionRules;
@@ -37,7 +37,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
 
 
     @Override
-    protected Class<? extends AssessmentPanelInviteService> getClassUnderTest() {
+    protected Class<? extends AssessmentReviewPanelInviteService> getClassUnderTest() {
         return TestAssessmentReviewPanelInviteService.class;
     }
 
@@ -232,7 +232,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
-    public static class TestAssessmentReviewPanelInviteService implements AssessmentPanelInviteService {
+    public static class TestAssessmentReviewPanelInviteService implements AssessmentReviewPanelInviteService {
 
         @Override
         public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {

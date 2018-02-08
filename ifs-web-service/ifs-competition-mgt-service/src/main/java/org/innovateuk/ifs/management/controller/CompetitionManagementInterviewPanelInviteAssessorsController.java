@@ -35,11 +35,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
- * This controller will handle all Competition Management requests related to inviting assessors to an Assessment Interview.
+ * This controller will handle all Competition Management requests related to inviting assessors to an Interview Interview.
  */
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementInterviewPanelInviteAssessorsController.class)
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = CompetitionManagementInterviewPanelInviteAssessorsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementInterviewPanelInviteAssessorsController extends CompetitionManagementCookieController<InterviewPanelSelectionForm> {
 
