@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Determines if a registering user has to become part of an already existing organisation Companies House or Je-s organisations on the basis of specific organisation details.
+ * Determines if a registering user has to become part of an already existing organisation
+ * Companies House or Je-s organisations on the basis of specific organisation details.
  */
 @Service
 public class OrganisationMatchingServiceImpl implements OrganisationMatchingService {
@@ -24,7 +25,7 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
     private OrganisationPatternMatcher organisationPatternMatcher;
 
     public Optional<Organisation> findOrganisationMatch(OrganisationResource submittedOrganisationResource) {
-        if(OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
+        if (OrganisationTypeEnum.isResearch(submittedOrganisationResource.getOrganisationType())) {
             return findFirstCompaniesHouseMatch(submittedOrganisationResource);
         } else {
             return findFirstResearchMatch(submittedOrganisationResource);
@@ -33,16 +34,34 @@ public class OrganisationMatchingServiceImpl implements OrganisationMatchingServ
 
     private Optional<Organisation> findFirstResearchMatch(OrganisationResource submittedOrganisationResource) {
         return findOrganisationByCompaniesHouseId(submittedOrganisationResource).stream()
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(foundOrganisation, submittedOrganisationResource))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, submittedOrganisationResource, OrganisationAddressType.OPERATING, false))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, submittedOrganisationResource, OrganisationAddressType.REGISTERED, true))
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeMatches(
+                        foundOrganisation,
+                        submittedOrganisationResource
+                ))
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
+                        foundOrganisation,
+                        submittedOrganisationResource,
+                        OrganisationAddressType.OPERATING,
+                        false
+                ))
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
+                        foundOrganisation,
+                        submittedOrganisationResource,
+                        OrganisationAddressType.REGISTERED,
+                        true
+                ))
                 .findFirst();
     }
 
     private Optional<Organisation> findFirstCompaniesHouseMatch(OrganisationResource submittedOrganisationResource) {
         return findOrganisationByName(submittedOrganisationResource).stream()
                 .filter(foundOrganisation -> organisationPatternMatcher.organisationTypeIsResearch(foundOrganisation))
-                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(foundOrganisation, submittedOrganisationResource, OrganisationAddressType.OPERATING, true))
+                .filter(foundOrganisation -> organisationPatternMatcher.organisationAddressMatches(
+                        foundOrganisation,
+                        submittedOrganisationResource,
+                        OrganisationAddressType.OPERATING,
+                        true
+                ))
                 .findFirst();
     }
 

@@ -10,16 +10,28 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project setup status',subTitle=${model.projectName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Set up your project',subTitle=${model.projectName},size='heading-xlarge'" />
 
-    <dl class="font-xsmall extra-margin-bottom">
-        <dt>Project number:</dt>
-        <dd th:text="${model.applicationId}" />
-        <dt>Competition:</dt>
-        <dd th:text="${model.competitionName}" />
-        <dt>Funding body:</dt>
-        <dd>Innovate UK</dd>
-    </dl>
+    <div class="grid-row">
+        <div class="column-half">
+            <dl class="font-xsmall extra-margin-bottom">
+                <dt>Project number:</dt>
+                <dd th:text="${model.applicationId}"/>
+                <dt>Competition:</dt>
+                <dd th:text="${model.competitionName}"/>
+                <dt>Funding body:</dt>
+                <dd>Innovate UK</dd>
+            </dl>
+        </div>
+        <div class="column-half">
+            <ul class="list list-bullet">
+                <li><a th:href="${'/application/' + model.applicationId + '/summary'}">
+                    view application feedback</a></li>
+                <li><a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}">
+                    view the grant terms and conditions</a></li>
+            </ul>
+        </div>
+    </div>
 
     <th:block th:if="${model.projectComplete}">
         <div class="success-alert extra-margin-bottom">
@@ -29,7 +41,13 @@
         <p>The following steps have been completed by all partners. The project can now start.</p>
     </th:block>
 
-    <p th:unless="${model.projectComplete}" class="form-hint">You need to complete the following steps before you can start your project. All partners have individual steps to complete.</p>
+    <th:block th:unless="${model.projectComplete}">
+        <div class="message-alert">
+            <p>You must complete your project and bank details within 30 days of our notification to you.</p>
+            <p>All project partners have individual steps to complete in this section.</p>
+            <p><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">View the status of partners</a></p>
+        </div>
+    </th:block>
 
     <!--/*TODO INFUND-3008 INFUND-4622 Not being implemented in the current release, tickets in backlog for creation of the companies house pages.-->
     <!--<div class="warning-alert extra-margin-bottom" th:unless="${model.hasCompanyHouse}">-->
@@ -39,23 +57,8 @@
     <!--<p><a href="/prototypes/4242-register-no-companies-house">Business has no legal responsibility to register with Companies House</a></p>-->
     <!--</div>*/-->
 
-    <p th:unless="${model.projectComplete}">What's the <a th:href="@{/project/{id}/team-status(id=${model.projectId})}">status of my partners</a>?</p>
-
     <div class="progress-list progress-list--individual-blocks">
         <ul>
-            <li class="complete">
-                <div class="task">
-                    <h2 class="heading-small">Successful application</h2>
-                    <p>The application <strong th:text="${model.projectName}">Machine learning in robots</strong> has been successful within the <strong th:text="${model.competitionName}">Technology inspired</strong> competition</p>
-                    <p class="no-margin">
-                        <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View
-                            application and feedback</a>
-                        <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
-                           class="buttonlink">View the grant terms and conditions</a>
-                    </p>
-                </div>
-                <th:block th:insert="project/fragments :: project-setup-status-indicator('complete')"/>
-            </li>
             <!--/* ========================= Project Details ========================= */-->
             <li th:classappend="${model.projectDetailsStatus.getSectionStatus()}">
                 <div class="task">
