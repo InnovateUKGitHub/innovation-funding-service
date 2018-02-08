@@ -4,8 +4,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
-import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 
 import java.util.List;
 
@@ -13,14 +13,17 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public class GenericThreadService<E extends Thread, C> extends UserTransactionalService implements ThreadService<E, Post> {
+public class GenericThreadService<E extends Thread, C> implements ThreadService<E, Post> {
     private final ThreadRepository<E> repository;
     private final Class<C> contextClass;
+    private final UserServiceImpl userService;
 
     GenericThreadService(ThreadRepository<E> repository, UserRepository userRepository, Class<C> contextClassName) {
         this.repository = repository;
-        this.userRepository = userRepository;
         this.contextClass = contextClassName;
+
+        userService = new UserServiceImpl();
+        userService.setUserRepository(userRepository);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class GenericThreadService<E extends Thread, C> extends UserTransactional
     public ServiceResult<Void> close(Long threadId) {
 
         return find(repository.findOne(threadId), notFoundError(Thread.class))
-                .andOnSuccessReturnVoid(thread -> getCurrentlyLoggedInUser()
+                .andOnSuccessReturnVoid(thread -> userService.getCurrentlyLoggedInUser()
                         .andOnSuccess(currentUser -> {
                             thread.closeThread(currentUser);
                             return serviceSuccess();

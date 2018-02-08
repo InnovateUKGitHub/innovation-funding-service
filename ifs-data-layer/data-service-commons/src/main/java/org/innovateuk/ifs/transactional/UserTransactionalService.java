@@ -32,6 +32,10 @@ public abstract class UserTransactionalService {
     @Autowired
     protected RoleRepository roleRepository;
 
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     protected Supplier<ServiceResult<User>> user(final Long id) {
         return () -> getUser(id);
     }
@@ -56,7 +60,7 @@ public abstract class UserTransactionalService {
         return find(roleRepository.findOneByName(roleName), notFoundError(Role.class, roleName));
     }
 
-    protected ServiceResult<User> getCurrentlyLoggedInUser() {
+    public ServiceResult<User> getCurrentlyLoggedInUser() {
         UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
         if (currentUser == null) {
