@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 
 import java.util.List;
@@ -18,12 +17,10 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
     private final Class<C> contextClass;
     private final UserServiceImpl userService;
 
-    GenericThreadService(ThreadRepository<E> repository, UserRepository userRepository, Class<C> contextClassName) {
+    GenericThreadService(ThreadRepository<E> repository, UserServiceImpl userService, Class<C> contextClassName) {
         this.repository = repository;
         this.contextClass = contextClassName;
-
-        userService = new UserServiceImpl();
-        userService.setUserRepository(userRepository);
+        this.userService = userService;
     }
 
     @Override

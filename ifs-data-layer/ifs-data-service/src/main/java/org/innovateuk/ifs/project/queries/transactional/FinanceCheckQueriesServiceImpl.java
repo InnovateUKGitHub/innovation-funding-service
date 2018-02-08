@@ -19,7 +19,7 @@ import org.innovateuk.ifs.threads.service.ThreadService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
-import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,10 +61,9 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         NEW_FINANCE_CHECK_QUERY_RESPONSE
     }
 
-
     @Autowired
-    public FinanceCheckQueriesServiceImpl(QueryRepository queryRepository, UserRepository userRepository, QueryMapper queryMapper, PostMapper postMapper) {
-        service = new MappingThreadService<>(queryRepository, userRepository, queryMapper, postMapper, ProjectFinance.class);
+    public FinanceCheckQueriesServiceImpl(QueryRepository queryRepository, UserServiceImpl userService, QueryMapper queryMapper, PostMapper postMapper) {
+        service = new MappingThreadService<>(queryRepository, userService, queryMapper, postMapper, ProjectFinance.class);
     }
 
     @Override

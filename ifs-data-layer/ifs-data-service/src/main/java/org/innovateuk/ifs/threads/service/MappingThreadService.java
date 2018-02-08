@@ -6,7 +6,7 @@ import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
 import org.innovateuk.ifs.threads.resource.PostResource;
-import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 
 import java.util.List;
 
@@ -17,8 +17,8 @@ public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R
     private final M threadMapper;
     private final PostMapper postMapper;
 
-    public MappingThreadService(ThreadRepository<D> threadRepository, UserRepository userRepository, M threadMapper, PostMapper postMapper, Class<C> context) {
-        this.service = new GenericThreadService<>(threadRepository, userRepository, context);
+    public MappingThreadService(ThreadRepository<D> threadRepository, UserServiceImpl userService, M threadMapper, PostMapper postMapper, Class<C> context) {
+        this.service = new GenericThreadService<>(threadRepository, userService, context);
         this.threadMapper = threadMapper;
         this.postMapper = postMapper;
     }

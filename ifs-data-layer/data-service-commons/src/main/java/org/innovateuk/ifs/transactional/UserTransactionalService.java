@@ -32,10 +32,6 @@ public abstract class UserTransactionalService {
     @Autowired
     protected RoleRepository roleRepository;
 
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     protected Supplier<ServiceResult<User>> user(final Long id) {
         return () -> getUser(id);
     }
