@@ -35,7 +35,7 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
 
     @Override
     public ServiceResult<Void> sendFinanceTotalsForApplication(Long applicationId) {
-        LOG.info("Initiating sendFinanceTotalsForApplication for applicationId: {}", applicationId);
+        LOG.debug("Initiating sendFinanceTotalsForApplication for applicationId: {}", applicationId);
 
         List<ApplicationFinanceResource> applicationFinanceResources = applicationFinanceHandler.getApplicationFinances(applicationId);
         List<FinanceCostTotalResource> financeCostTotalResourceList = financeCostTotalResourceMapper

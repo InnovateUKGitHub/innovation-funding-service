@@ -27,7 +27,7 @@ public class CompetitionFinanceTotalsSenderImpl implements CompetitionFinanceTot
 
     @Override
     public ServiceResult<Void> sendFinanceTotalsForCompetition(Long competitionId) {
-        LOG.info("Initiating sendFinanceTotalsForCompetition for competitionId: {}", competitionId);
+        LOG.debug("Initiating sendFinanceTotalsForCompetition for competitionId: {}", competitionId);
 
         List<Application> applications = applicationService.getApplicationsByCompetitionIdAndState(competitionId,
                 ApplicationState.submittedStates).getSuccessObjectOrThrowException();

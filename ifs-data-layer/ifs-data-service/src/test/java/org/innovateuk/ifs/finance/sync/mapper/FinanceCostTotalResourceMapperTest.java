@@ -61,13 +61,13 @@ public class FinanceCostTotalResourceMapperTest {
                 financeCostTotalResourceMapper.mapFromApplicationFinanceResourceToList(applicationFinanceResource);
 
         FinanceCostTotalResource expectedOtherCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.OTHER_COSTS.getName())
+                .withName(FinanceRowType.OTHER_COSTS.getType())
                 .withTotal(BigDecimal.valueOf(1000))
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
         FinanceCostTotalResource expectedMaterialCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.MATERIALS.getName())
+                .withName(FinanceRowType.MATERIALS.getType())
                 .withTotal(BigDecimal.valueOf(5000))
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
@@ -106,13 +106,13 @@ public class FinanceCostTotalResourceMapperTest {
                 financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
         FinanceCostTotalResource expectedOtherCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.OTHER_COSTS.getName())
+                .withName(FinanceRowType.OTHER_COSTS.getType())
                 .withTotal(BigDecimal.valueOf(1000))
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
         FinanceCostTotalResource expectedMaterialCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.MATERIALS.getName())
+                .withName(FinanceRowType.MATERIALS.getType())
                 .withTotal(BigDecimal.valueOf(5000))
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();

@@ -26,7 +26,7 @@ public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender{
 
     @Override
     public ServiceResult<Void> sendAllFinanceTotals() {
-        LOG.info("Initiating sendAllFinanceTotals.");
+        LOG.debug("Initiating sendAllFinanceTotals.");
 
         Stream<Application> applications = applicationService.getApplicationsByState(ApplicationState.submittedStates)
                 .getSuccessObjectOrThrowException();
