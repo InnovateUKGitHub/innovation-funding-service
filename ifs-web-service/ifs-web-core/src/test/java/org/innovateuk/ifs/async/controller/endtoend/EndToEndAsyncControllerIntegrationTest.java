@@ -302,7 +302,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
             int randomMillis = (int) (Math.random() * 10) + 10;
 
             await().pollDelay(randomMillis, TimeUnit.MILLISECONDS).
-                    timeout(randomMillis + 1, TimeUnit.MILLISECONDS).
+                    timeout(randomMillis + 10, TimeUnit.MILLISECONDS).
                     until(() -> false);
 
         } catch (ConditionTimeoutException e) {
