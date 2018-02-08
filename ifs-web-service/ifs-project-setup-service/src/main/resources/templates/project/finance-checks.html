@@ -40,7 +40,7 @@
         </p>
     </th:block>
 
-    <th:block th:unless="${model.noQueries()} == true">
+    <th:block th:unless="${model.noQueries()}">
         <th:block th:if="${model.getPendingQueries().isEmpty()}">
             <th:block th:if="${model.getAwaitingResponseQueries().isEmpty()}">
                 <div class="success-alert">
