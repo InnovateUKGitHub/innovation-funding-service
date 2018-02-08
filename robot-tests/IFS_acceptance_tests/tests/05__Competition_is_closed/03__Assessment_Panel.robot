@@ -46,6 +46,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
 ${assessment_panel}          ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
@@ -95,20 +96,8 @@ There are no Assessors in Invite and Pending and rejected tab before sending inv
 CompAdmin can add an assessor to invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link  link=Find
-    Given the user clicks the button/link    jQuery=tr:contains("${assessor_ben}") label
-    And the user clicks the button/link      jQuery=tr:contains("${assessor_joel}") label
-    And the user clicks the button/link      jquery=tr:contains("${assessor_madeleine}") label
-    And the user clicks the button/link      jquery=tr:contains("${assessor_riley}") label
-    When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
-    Then the user should see the element     jQuery=td:contains("${assessor_ben}") + td:contains("${panel_assessor_ben}")
-    And the user should see the element      jQuery=td:contains("${assessor_joel}") + td:contains("${panel_assessor_joel}")
-    And the user should see the element      jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
-    And the user should see the element      jQuery=td:contains("${assessor_riley}") + td:contains("${panel_assessor_riley}")
-    When the user clicks the button/link      link=Find
-    Then the user should not see the element  jQuery=td:contains("${assessor_ben}")
-    And the user should not see the element   jQuery=td:contains("${assessor_joel}")
-    And the user should not see the element   jquery=tr:contains("${assessor_madeleine}")
+    When the user clicks the button/link     link=Find
+    Then the comp admin invite assessors for the competition
 
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
