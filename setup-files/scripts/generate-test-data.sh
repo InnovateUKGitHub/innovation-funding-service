@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+set -e
+
 cd "$(dirname "$0")"
 
 reset_db () {

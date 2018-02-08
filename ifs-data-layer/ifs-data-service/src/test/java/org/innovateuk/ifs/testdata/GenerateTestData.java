@@ -4,9 +4,6 @@ package org.innovateuk.ifs.testdata;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-
-
-
 public class GenerateTestData extends BaseGenerateTestData {
 
     @Override
