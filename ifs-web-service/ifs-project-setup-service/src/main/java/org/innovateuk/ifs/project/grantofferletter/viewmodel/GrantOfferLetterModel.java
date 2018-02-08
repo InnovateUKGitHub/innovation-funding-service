@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
-
-import java.time.ZonedDateTime;
 
 /**
  * A view model that backs the Project grant offer letter page
@@ -17,15 +16,11 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
-    private ZonedDateTime submitDate;
-    private boolean grantOfferLetterApproved;
-    private boolean grantOfferLetterSent;
-    private boolean grantOfferLetterRejected;
+    private GrantOfferLetterStateResource golState;
 
     public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 ZonedDateTime submitDate, boolean projectManager, boolean grantOfferLetterApproved,
-                                 boolean grantOfferLetterSent, boolean grantOfferLetterRejected) {
+                                 boolean projectManager, GrantOfferLetterStateResource golState) {
 
         this.projectId = projectId;
         this.projectName = projectName;
@@ -33,11 +28,8 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
-        this.submitDate = submitDate;
-        this.grantOfferLetterApproved = grantOfferLetterApproved;
         this.projectManager = projectManager;
-        this.grantOfferLetterSent = grantOfferLetterSent;
-        this.grantOfferLetterRejected = grantOfferLetterRejected;
+        this.golState = golState;
     }
 
     @Override
@@ -55,7 +47,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isSubmitted() {
-        return submitDate != null;
+        return golState.isSignedGrantOfferLetterReceivedByInternalTeam();
     }
 
     public FileDetailsViewModel getGrantOfferLetterFile() {
@@ -63,7 +55,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isGrantOfferLetterApproved() {
-        return grantOfferLetterApproved;
+        return golState.isSignedGrantOfferLetterApproved();
     }
 
     public FileDetailsViewModel getAdditionalContractFile() {
@@ -72,10 +64,6 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isOfferSigned() {
         return signedGrantOfferLetterFile != null;
-    }
-
-    public ZonedDateTime getSubmitDate() {
-        return submitDate;
     }
 
     public FileDetailsViewModel getSignedGrantOfferLetterFile() {
@@ -87,7 +75,16 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isShowDisabledSubmitButton() {
-        return leadPartner && (!isOfferSigned() || !projectManager);
+
+        if (!projectManager) {
+            return false;
+        }
+
+        if (isSubmitted()) {
+            return false;
+        }
+
+        return !isOfferSigned();
     }
 
     public boolean isProjectManager() {
@@ -95,11 +92,11 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isGrantOfferLetterSent() {
-        return grantOfferLetterSent;
+        return golState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }
 
     public boolean isGrantOfferLetterRejected() {
-        return grantOfferLetterRejected;
+        return golState.isSignedGrantOfferLetterRejected();
     }
 
     public boolean isShowGrantOfferLetterRejectedMessage() {
