@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.testdata;
+package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;

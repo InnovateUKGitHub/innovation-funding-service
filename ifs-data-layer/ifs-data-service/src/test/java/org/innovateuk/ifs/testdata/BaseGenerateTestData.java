@@ -2,7 +2,6 @@ package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -26,6 +25,10 @@ import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.testdata.services.ApplicationDataBuilderService;
+import org.innovateuk.ifs.testdata.services.CompetitionDataBuilderService;
+import org.innovateuk.ifs.testdata.services.CsvUtils;
+import org.innovateuk.ifs.testdata.services.ProjectDataBuilderService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -61,9 +64,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.testdata.BaseDataBuilderService.COMP_ADMIN_EMAIL;
-import static org.innovateuk.ifs.testdata.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
-import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
@@ -73,10 +73,12 @@ import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
-import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.QuestionDataBuilder.newQuestionData;
+import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
+import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
@@ -148,6 +150,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private ApplicationDataBuilderService applicationDataBuilderService;
 
+    @Autowired
+    private ProjectDataBuilderService projectDataBuilderService;
+
     private CompetitionDataBuilder competitionDataBuilder;
     private QuestionDataBuilder questionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
@@ -160,7 +165,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private AssessorInviteDataBuilder assessorInviteUserBuilder;
     private AssessmentDataBuilder assessmentDataBuilder;
     private AssessorResponseDataBuilder assessorResponseDataBuilder;
-    private ProjectDataBuilder projectDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -188,8 +192,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static List<AssessorResponseLine> assessorResponseLines;
 
-    private static List<ProjectLine> projectLines;
-
     @Before
     public void setup() throws Exception {
         if (cleanDbFirst()) {
@@ -212,7 +214,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessorUserLines = readAssessorUsers();
         assessmentLines = readAssessments();
         assessorResponseLines = readAssessorResponses();
-        projectLines = readProjects();
     }
 
     @PostConstruct
@@ -258,7 +259,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
         assessorResponseDataBuilder = newAssessorResponseData(serviceLocator);
-        projectDataBuilder = newProjectData(serviceLocator);
         publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
     }
@@ -301,7 +301,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         });
 
         fundingDecisions.get();
-        createProjects();
+
+        projectDataBuilderService.createProjects();
 
         long after = System.currentTimeMillis();
 
@@ -311,67 +312,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private void updateQuestions() {
         questionLines.forEach(this::updateQuestion);
-    }
-
-    private void updateQuestion(QuestionLine questionLine) {
-        this.questionDataBuilder.updateApplicationQuestionHeading(questionLine.ordinal,
-                        questionLine.competitionName,
-                        questionLine.heading,
-                        questionLine.title,
-                        questionLine.subtitle).build();
-    }
-
-    private void createProjects() {
-        projectLines.forEach(this::createProject);
-    }
-
-    private void createProject(ProjectLine line) {
-
-        ProjectDataBuilder baseBuilder = this.projectDataBuilder.
-                withExistingProject(line.name).
-                withStartDate(line.startDate);
-
-        UnaryOperator<ProjectDataBuilder> assignProjectManagerIfNecessary =
-                builder -> !isBlank(line.projectManager) ? builder.withProjectManager(line.projectManager) : builder;
-
-        UnaryOperator<ProjectDataBuilder> setProjectAddressIfNecessary =
-                builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress() : builder;
-
-        UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
-                builder -> !isBlank(line.moFirstName) ?
-                        builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
-
-        UnaryOperator<ProjectDataBuilder> selectFinanceContactsIfNecessary = builder -> {
-
-            ProjectDataBuilder currentBuilder = builder;
-
-            for (Pair<String, String> fc : line.financeContactsForOrganisations) {
-                currentBuilder = currentBuilder.withFinanceContact(fc.getLeft(), fc.getRight());
-            }
-
-            return currentBuilder;
-        };
-
-        UnaryOperator<ProjectDataBuilder> submitBankDetailsIfNecessary = builder -> {
-
-            ProjectDataBuilder currentBuilder = builder;
-
-            for (Triple<String, String, String> bd : line.bankDetailsForOrganisations) {
-                currentBuilder = currentBuilder.withBankDetails(bd.getLeft(), bd.getMiddle(), bd.getRight());
-            }
-
-            return currentBuilder;
-        };
-
-        testService.doWithinTransaction(() ->
-            assignProjectManagerIfNecessary.
-                    andThen(setProjectAddressIfNecessary).
-                    andThen(setMonitoringOfficerIfNecessary).
-                    andThen(selectFinanceContactsIfNecessary).
-                    andThen(submitBankDetailsIfNecessary).
-                    apply(baseBuilder).
-                    build());
-
     }
 
     private void createExternalUsers() {
@@ -394,38 +334,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         assessmentLines.forEach(this::submitAssessment);
     }
 
-    private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(
-                line.assessorEmail,
-                line.applicationName,
-                line.rejectReason,
-                line.rejectComment,
-                line.state,
-                line.feedback,
-                line.recommendComment
-        )
-                .build();
+    private void updateQuestion(QuestionLine questionLine) {
+        this.questionDataBuilder.updateApplicationQuestionHeading(questionLine.ordinal,
+                questionLine.competitionName,
+                questionLine.heading,
+                questionLine.title,
+                questionLine.subtitle).build();
     }
 
-    private void createAssessorResponse(AssessorResponseLine line) {
-        assessorResponseDataBuilder.withAssessorResponseData(line.competitionName,
-                line.applicationName,
-                line.assessorEmail,
-                line.shortName,
-                line.description,
-                line.isResearchCategory,
-                line.value)
-            .build();
-    }
-
-    private void submitAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withSubmission(
-                line.applicationName,
-                line.assessorEmail,
-                line.state
-        )
-                .build();
-    }
+    
 
     private void createCompetitionFunders() {
         competitionFunderLines.forEach(this::createCompetitionFunder);

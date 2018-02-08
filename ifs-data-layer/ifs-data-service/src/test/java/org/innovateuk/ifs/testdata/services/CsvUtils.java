@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.testdata;
+package org.innovateuk.ifs.testdata.services;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Splitter;
@@ -39,72 +39,72 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * Helper class to read from csvs in src/test/resources/testdata into basic structures for the purposes of generating
  * test data from it
  */
-class CsvUtils {
+public class CsvUtils {
 
     static final DateTimeFormatter DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    static List<OrganisationLine> readOrganisations() {
+    public static List<OrganisationLine> readOrganisations() {
         return simpleMap(readCsvLines("organisations"), OrganisationLine::new);
     }
 
-    static List<ExternalUserLine> readExternalUsers() {
+    public static List<ExternalUserLine> readExternalUsers() {
         return simpleMap(readCsvLines("external-users"), ExternalUserLine::new);
     }
 
-    static List<InternalUserLine> readInternalUsers() {
+    public static List<InternalUserLine> readInternalUsers() {
         return simpleMap(readCsvLines("internal-users"), InternalUserLine::new);
     }
 
-    static List<AssessorUserLine> readAssessorUsers() {
+    public static List<AssessorUserLine> readAssessorUsers() {
         return simpleMap(readCsvLines("assessor-users"), AssessorUserLine::new);
     }
 
-    static List<CompetitionLine> readCompetitions() {
+    public static List<CompetitionLine> readCompetitions() {
         return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
     }
 
-    static List<CompetitionFunderLine> readCompetitionFunders() {
+    public static List<CompetitionFunderLine> readCompetitionFunders() {
         return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
     }
 
-    static List<PublicContentGroupLine> readPublicContentGroups() {
+    public static List<PublicContentGroupLine> readPublicContentGroups() {
         return simpleMap(readCsvLines("public-content-groups"), PublicContentGroupLine::new);
     }
 
-    static List<PublicContentDateLine> readPublicContentDates() {
+    public static List<PublicContentDateLine> readPublicContentDates() {
         return simpleMap(readCsvLines("public-content-dates"), PublicContentDateLine::new);
     }
 
-    static List<ApplicationLine> readApplications() {
+    public static List<ApplicationLine> readApplications() {
         return simpleMap(readCsvLines("applications"), ApplicationLine::new);
     }
 
-    static List<AssessmentLine> readAssessments() {
+    public static List<AssessmentLine> readAssessments() {
         return simpleMap(readCsvLines("assessments"), AssessmentLine::new);
     }
 
-    static List<AssessorResponseLine> readAssessorResponses() {
+    public static List<AssessorResponseLine> readAssessorResponses() {
         return simpleMap(readCsvLines("assessor-responses"), AssessorResponseLine::new);
     }
 
-    static List<InviteLine> readInvites() {
+    public static List<InviteLine> readInvites() {
         return simpleMap(readCsvLines("invites"), InviteLine::new);
     }
 
-    static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
+    public static List<ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
         return simpleMap(readCsvLines("application-questions"), ApplicationQuestionResponseLine::new);
     }
 
-    static List<ProjectLine> readProjects() {
+    public static List<ProjectLine> readProjects() {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
 
-    static List<QuestionLine> readQuestions() {
+    public static List<QuestionLine> readQuestions() {
         return simpleMap(readCsvLines("questions"), QuestionLine::new);
     }
 
-    static class ProjectLine {
+    public static class ProjectLine {
 
         String name;
         LocalDate startDate;
@@ -171,7 +171,7 @@ class CsvUtils {
         }
     }
 
-    static List<ApplicationOrganisationFinanceBlock> readApplicationFinances() {
+    public static List<ApplicationOrganisationFinanceBlock> readApplicationFinances() {
 
         List<List<String>> lines = simpleFilterNot(readCsvLines("application-finances"), line -> isBlank(line.get(0)));
         List<List<List<String>>> financeLinesPerOrganisation = new ArrayList<>();
@@ -235,7 +235,7 @@ class CsvUtils {
         return organisationFinances;
     }
 
-    static class InviteLine {
+    public static class InviteLine {
 
         String email;
         String hash;
@@ -263,7 +263,7 @@ class CsvUtils {
         }
     }
 
-    static class ApplicationOrganisationFinanceBlock {
+    public static class ApplicationOrganisationFinanceBlock {
 
         String competitionName;
         String applicationName;
@@ -283,7 +283,7 @@ class CsvUtils {
         }
     }
 
-    static class ApplicationFinanceRow {
+    public static class ApplicationFinanceRow {
 
         String category;
         List<String> metadata;
@@ -294,7 +294,7 @@ class CsvUtils {
         }
     }
 
-    static class ApplicationQuestionResponseLine {
+    public static class ApplicationQuestionResponseLine {
 
         String competitionName;
         String applicationName;
@@ -320,7 +320,7 @@ class CsvUtils {
         }
     }
 
-    static class ApplicationLine {
+    public static class ApplicationLine {
 
         String title;
         String competitionName;
@@ -357,7 +357,7 @@ class CsvUtils {
         }
     }
 
-    static class AssessmentLine {
+    public static class AssessmentLine {
 
         String assessorEmail;
         String applicationName;
@@ -381,7 +381,7 @@ class CsvUtils {
         }
     }
 
-    static class AssessorResponseLine {
+    public static class AssessorResponseLine {
         String competitionName;
         String applicationName;
         String assessorEmail;
@@ -402,7 +402,7 @@ class CsvUtils {
         }
     }
 
-    static class CompetitionLine {
+    public static class CompetitionLine {
 
         String name;
         String type;
@@ -510,7 +510,7 @@ class CsvUtils {
         }
     }
 
-    static class CompetitionFunderLine {
+    public static class CompetitionFunderLine {
         String competitionName;
         String funder;
         BigInteger funder_budget;
@@ -525,7 +525,7 @@ class CsvUtils {
         }
     }
 
-    static class PublicContentGroupLine {
+    public static class PublicContentGroupLine {
         String competitionName;
         PublicContentSectionType section;
         String heading;
@@ -540,7 +540,7 @@ class CsvUtils {
         }
     }
 
-    static class PublicContentDateLine {
+    public static class PublicContentDateLine {
         String competitionName;
         ZonedDateTime date;
         String content;
@@ -575,7 +575,7 @@ class CsvUtils {
         }
     }
 
-    static class OrganisationLine {
+    public static class OrganisationLine {
 
         String name;
         String organisationType;
@@ -607,7 +607,7 @@ class CsvUtils {
         }
     }
 
-    static class AssessorUserLine extends UserLine {
+    public static class AssessorUserLine extends UserLine {
 
         Disability disability;
         Gender gender;
@@ -680,7 +680,7 @@ class CsvUtils {
         }
     }
 
-    static class QuestionLine {
+    public static class QuestionLine {
         int ordinal;
         String competitionName;
         String heading;
@@ -697,13 +697,13 @@ class CsvUtils {
         }
     }
 
-    static class ExternalUserLine extends UserLine {
+    public static class ExternalUserLine extends UserLine {
         private ExternalUserLine(List<String> line) {
             super(line);
         }
     }
 
-    static class InternalUserLine extends UserLine {
+    public static class InternalUserLine extends UserLine {
 
         List<String> roles;
 
@@ -806,7 +806,7 @@ class CsvUtils {
         return Boolean.parseBoolean(s);
     }
 
-    private static List<String> nullableSplittableString(String s) {
+    public static List<String> nullableSplittableString(String s) {
         String value = nullable(s);
 
         if (value == null) {
@@ -817,7 +817,7 @@ class CsvUtils {
                 .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
     }
 
-    private static List<String> nullableSplitOnNewLines(String s) {
+    public static List<String> nullableSplitOnNewLines(String s) {
         return nullable(s) != null ? simpleMap(s.split("\n"), String::trim) : emptyList();
     }
 }

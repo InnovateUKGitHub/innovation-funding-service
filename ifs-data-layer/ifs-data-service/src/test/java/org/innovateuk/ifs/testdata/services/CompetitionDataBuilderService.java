@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.testdata;
+package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.testdata.CsvUtils.readApplications;
-import static org.innovateuk.ifs.testdata.CsvUtils.readCompetitions;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplications;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.testdata.ListenableFutureToCompletableFutureHelper.future;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -57,7 +57,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         applicationLines = readApplications();
     }
 
-    List<CompletableFuture<CompetitionData>> createCompetitions() {
+    public List<CompletableFuture<CompetitionData>> createCompetitions() {
 
         List<CompletableFuture<CompetitionData>> futures = simpleMap(competitionLines, line -> {
 
@@ -72,7 +72,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         return futures;
     }
 
-    void moveCompetitionsToCorrectFinalState() {
+    public void moveCompetitionsToCorrectFinalState() {
 
         List<String> competitionsToAddApplicationsTo = removeDuplicates(simpleMap(applicationLines, line -> line.competitionName));
 
