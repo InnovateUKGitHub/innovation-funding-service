@@ -3,7 +3,9 @@ package org.innovateuk.ifs.project.grandofferletter;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterServiceImpl;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
@@ -18,6 +20,7 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -127,7 +130,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testAddAdditionalContractFile() throws Exception {
+    public void testAddAdditionalContractFile() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
@@ -144,7 +147,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetter() throws Exception {
+    public void testApproveOrRejectSignedGrantOfferLetter() {
 
         when(grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(restSuccess());
 
@@ -157,63 +160,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testIsSignedGrantOfferLetterApproved() throws Exception {
-
-        when(grantOfferLetterRestService.isSignedGrantOfferLetterApproved(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterApproved(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isSignedGrantOfferLetterApproved(123L);
-
-    }
-
-    @Test
-    public void testIsSignedGrantOfferLetterRejected() throws Exception {
-
-        when(grantOfferLetterRestService.isSignedGrantOfferLetterRejected(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterRejected(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isSignedGrantOfferLetterRejected(123L);
-
-    }
-
-    @Test
-    public void testGrantOfferLetterAlreadySent() throws Exception {
-
-        when(grantOfferLetterRestService.isGrantOfferLetterAlreadySent(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isGrantOfferLetterAlreadySent(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isGrantOfferLetterAlreadySent(123L);
-
-    }
-
-    @Test
-    public void testIsSendGrantOfferLetterAllowed() throws Exception {
-
-        when(grantOfferLetterRestService.isSendGrantOfferLetterAllowed(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isSendGrantOfferLetterAllowed(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isSendGrantOfferLetterAllowed(123L);
-
-    }
-
-    @Test
-    public void testSendGrantOfferLetter() throws Exception {
+    public void testSendGrantOfferLetter() {
 
         when(grantOfferLetterRestService.sendGrantOfferLetter(123L)).thenReturn(restSuccess());
 
@@ -226,19 +173,20 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testGetGrantOfferLetterWorkflowState() throws Exception {
+    public void testGetGrantOfferLetterState() {
 
         Long projectId = 123L;
 
-        when(grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(restSuccess(GrantOfferLetterState.APPROVED));
+        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.SIGNED_GOL_APPROVED);
 
-        ServiceResult<GrantOfferLetterState> result = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId);
+        when(grantOfferLetterRestService.getGrantOfferLetterState(projectId)).thenReturn(restSuccess(state));
+
+        ServiceResult<GrantOfferLetterStateResource> result = grantOfferLetterService.getGrantOfferLetterState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
+        assertSame(state, result.getSuccessObject());
 
-        verify(grantOfferLetterRestService).getGrantOfferLetterWorkflowState(projectId);
+        verify(grantOfferLetterRestService).getGrantOfferLetterState(projectId);
 
     }
-
 }
