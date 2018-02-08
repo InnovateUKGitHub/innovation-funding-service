@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
-import org.innovateuk.ifs.user.transactional.UserServiceImpl;
+import org.innovateuk.ifs.util.AuthenticationHelper;
 
 import java.util.List;
 
@@ -15,12 +15,12 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class GenericThreadService<E extends Thread, C> implements ThreadService<E, Post> {
     private final ThreadRepository<E> repository;
     private final Class<C> contextClass;
-    private final UserServiceImpl userService;
+    private final AuthenticationHelper authenticationHelper;
 
-    GenericThreadService(ThreadRepository<E> repository, UserServiceImpl userService, Class<C> contextClassName) {
+    GenericThreadService(ThreadRepository<E> repository, AuthenticationHelper authenticationHelper, Class<C> contextClassName) {
         this.repository = repository;
         this.contextClass = contextClassName;
-        this.userService = userService;
+        this.authenticationHelper = authenticationHelper;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
     public ServiceResult<Void> close(Long threadId) {
 
         return find(repository.findOne(threadId), notFoundError(Thread.class))
-                .andOnSuccessReturnVoid(thread -> userService.getCurrentlyLoggedInUser()
+                .andOnSuccessReturnVoid(thread -> authenticationHelper.getCurrentlyLoggedInUser()
                         .andOnSuccess(currentUser -> {
                             thread.closeThread(currentUser);
                             return serviceSuccess();
