@@ -267,9 +267,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private void assignOrganisationToInvite(ApplicationInvite invite, User user) {
+        List<Organisation> organisations = organisationRepository.findByUsers(user);
+
+        if (organisations.isEmpty()) {
+            return;
+        }
+
         // A bit contentious, but we assume that the first organisation
         // that a user belongs to is their 'current' organisation.
-        Organisation usersCurrentOrganisation = organisationRepository.findFirstByUsers(user);
+        Organisation usersCurrentOrganisation = organisations.get(0);
 
         Optional<InviteOrganisation> existingCollaboratorInviteOrganisation =
                 inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(

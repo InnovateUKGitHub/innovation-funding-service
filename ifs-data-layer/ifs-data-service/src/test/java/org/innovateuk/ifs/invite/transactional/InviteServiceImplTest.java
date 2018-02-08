@@ -623,7 +623,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ApplicationInvite invite = createAndExpectInvite(inviteOrganisationToBeReplaced);
         User user = createAndExpectInviteUser();
-        Organisation usersCurrentOrganisation = createAndExpectCurrentOrganisationForUser(user);
+        Organisation usersCurrentOrganisation = createAndExpectUsersCurrentOrganisation(user);
 
         InviteOrganisation collaboratorInviteOrganisation = newInviteOrganisation()
                 .withOrganisation(usersCurrentOrganisation)
@@ -652,7 +652,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     public void acceptInvite_assignsUsersCurrentOrganisationIfNoCollaboratorOrganisationExists() {
         ApplicationInvite invite = createAndExpectInvite(newInviteOrganisation().build());
         User user = createAndExpectInviteUser();
-        Organisation usersCurrentOrganisation = createAndExpectCurrentOrganisationForUser(user);
+        Organisation usersCurrentOrganisation = createAndExpectUsersCurrentOrganisation(user);
 
         when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
                 usersCurrentOrganisation.getId(),
@@ -676,7 +676,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     public void acceptInvite_processRoleIsInitialisedCorrectly() {
         ApplicationInvite invite = createAndExpectInvite(newInviteOrganisation().build());
         User user = createAndExpectInviteUser();
-        Organisation usersCurrentOrganisation = createAndExpectCurrentOrganisationForUser(user);
+        Organisation usersCurrentOrganisation = createAndExpectUsersCurrentOrganisation(user);
 
         Role collaboratorRole = newRole(COLLABORATOR).build();
 
@@ -731,14 +731,14 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         return invite;
     }
 
-    private Organisation createAndExpectCurrentOrganisationForUser(User user) {
-        Organisation usersCurrentOrganisation = newOrganisation()
+    private Organisation createAndExpectUsersCurrentOrganisation(User user) {
+        List<Organisation> usersOrganisations = newOrganisation()
                 .withUser(singletonList(user))
-                .build();
+                .build(1);
 
-        when(organisationRepositoryMock.findFirstByUsers(user)).thenReturn(usersCurrentOrganisation);
+        when(organisationRepositoryMock.findByUsers(user)).thenReturn(usersOrganisations);
 
-        return usersCurrentOrganisation;
+        return usersOrganisations.get(0);
     }
 
 }
