@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+
 /**
  * View model to back the Finance Checks page.
  */
@@ -158,7 +160,7 @@ public class ProjectFinanceChecksViewModel {
     }
 
     public boolean isSingleQuery() {
-        return (Stream.of(pendingQueries, awaitingResponseQueries, closedQueries).count() == 1);
+        return combineLists(pendingQueries, awaitingResponseQueries, closedQueries).size() == 1;
     }
 
     public boolean noQueries() {
