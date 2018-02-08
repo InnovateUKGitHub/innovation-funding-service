@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_
 /**
  * TODO DW - document this class
  */
-abstract class BaseDataBuilderService {
+public abstract class BaseDataBuilderService {
 
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";

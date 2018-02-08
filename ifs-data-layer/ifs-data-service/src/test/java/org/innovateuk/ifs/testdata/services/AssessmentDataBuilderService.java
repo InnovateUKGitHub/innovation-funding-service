@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.testdata.services;
 
-import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
-import org.innovateuk.ifs.testdata.builders.ServiceLocator;
-import org.innovateuk.ifs.testdata.builders.TestService;
-import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.testdata.builders.*;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
@@ -11,19 +11,18 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
+import java.util.UUID;
 
-import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.testdata.ListenableFutureToCompletableFutureHelper.future;
-import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplications;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
+import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
+import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
+import static org.innovateuk.ifs.testdata.builders.AssessorResponseDataBuilder.newAssessorResponseData;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * TODO DW - document this class
@@ -41,120 +40,180 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
     private UserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private GenericApplicationContext applicationContext;
 
-    private CompetitionDataBuilder competitionDataBuilder;
+    private List<CsvUtils.AssessmentLine> assessmentLines;
 
-    private List<CsvUtils.CompetitionLine> competitionLines;
+    private static List<CsvUtils.AssessorResponseLine> assessorResponseLines;
 
-    private List<CsvUtils.ApplicationLine> applicationLines;
+    private static List<CsvUtils.AssessorUserLine> assessorUserLines;
+
+    private static List<CsvUtils.InviteLine> inviteLines;
+
+    private AssessmentDataBuilder assessmentBuilder;
+    private AssessorDataBuilder assessorUserBuilder;
+    private AssessorResponseDataBuilder assessorResponseBuilder;
+    private AssessorInviteDataBuilder assessorInviteUserBuilder;
 
     @PostConstruct
     public void readCsvs() {
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
-        competitionDataBuilder = newCompetitionData(serviceLocator);
-        competitionLines = readCompetitions();
-        applicationLines = readApplications();
+
+        assessmentBuilder = newAssessmentData(serviceLocator);
+        assessorUserBuilder = newAssessorData(serviceLocator);
+        assessorResponseBuilder = newAssessorResponseData(serviceLocator);
+        assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
+
+        assessmentLines = readAssessments();
+        assessorUserLines = readAssessorUsers();
+        assessorResponseLines = readAssessorResponses();
+        inviteLines = readInvites();
     }
 
-    public List<CompletableFuture<CompetitionData>> createCompetitions() {
-
-        List<CompletableFuture<CompetitionData>> futures = simpleMap(competitionLines, line -> {
-
-            return future(taskExecutor.submitListenable(() -> {
-
-                testService.doWithinTransaction(this::setDefaultCompAdmin);
-
-                return createCompetition(line);
-            }));
-        });
-
-        return futures;
+    public void createAssessments() {
+        assessmentLines.forEach(this::createAssessment);
+        assessorResponseLines.forEach(this::createAssessorResponse);
+        assessmentLines.forEach(this::submitAssessment);
     }
 
-    public void moveCompetitionsToCorrectFinalState() {
-
-        List<String> competitionsToAddApplicationsTo = removeDuplicates(simpleMap(applicationLines, line -> line.competitionName));
-
-        competitionsToAddApplicationsTo.forEach(competitionName -> {
-
-            Long competitionId = competitionRepository.findByName(competitionName).get(0).getId();
-
-            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
-
-            basicCompetitionInformation.restoreOriginalMilestones().build();
-        });
+    public void createAssessors() {
+        assessorUserLines.forEach(this::createAssessor);
     }
 
-    private CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {
-        return competitionBuilderWithBasicInformation(competitionLine).build();
+    public void createNonRegisteredAssessorInvites() {
+        List<CsvUtils.InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
+        List<CsvUtils.InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
+        nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
     }
 
-    private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line) {
-        CompetitionDataBuilder basicInformation;
-        if (line.nonIfs) {
-            basicInformation = nonIfsCompetitionDataBuilder(line);
-        } else {
-            basicInformation = ifsCompetitionDataBuilder(line);
+    private void createAssessment(AssessmentLine line) {
+        assessmentBuilder.withAssessmentData(
+                line.assessorEmail,
+                line.applicationName,
+                line.rejectReason,
+                line.rejectComment,
+                line.state,
+                line.feedback,
+                line.recommendComment)
+                .build();
+    }
+
+    private void createAssessorResponse(AssessorResponseLine line) {
+        assessorResponseBuilder.withAssessorResponseData(line.competitionName,
+                line.applicationName,
+                line.assessorEmail,
+                line.shortName,
+                line.description,
+                line.isResearchCategory,
+                line.value)
+                .build();
+    }
+
+    private void submitAssessment(AssessmentLine line) {
+        assessmentBuilder.withSubmission(
+                line.applicationName,
+                line.assessorEmail,
+                line.state)
+                .build();
+    }
+
+    private void createAssessor(AssessorUserLine line) {
+
+        List<InviteLine> assessorInvitesForThisAssessor = simpleFilter(inviteLines, invite ->
+                invite.email.equals(line.emailAddress) && invite.type.equals("COMPETITION"));
+
+        AssessorDataBuilder builder = assessorUserBuilder;
+
+        Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
+        Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
+        Optional<ZonedDateTime> sentOn = Optional.of(ZonedDateTime.now());
+
+        for (InviteLine invite : assessorInvitesForThisAssessor) {
+            builder = builder.withInviteToAssessCompetition(
+                    invite.targetName,
+                    invite.email,
+                    invite.name,
+                    invite.hash,
+                    invite.status,
+                    existingUser,
+                    invite.innovationAreaName,
+                    sentBy,
+                    sentOn
+            );
         }
 
-        return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
-    }
+        String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
+        String innovationArea = !line.innovationAreas.isEmpty() ? line.innovationAreas.get(0) : "";
 
-    private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CsvUtils.CompetitionLine line) {
-
-        return competitionDataBuilder
-                .createNonIfsCompetition()
-                .withBasicData(line.name, null, line.innovationAreas,
-                        line.innovationSector, null, null, null,
-                        null, null, null, null, null, null, null, null, null,
-                        null, emptyList(), null, null, line.nonIfsUrl)
-                .withOpenDate(line.openDate)
-                .withSubmissionDate(line.submissionDate)
-                .withFundersPanelEndDate(line.fundersPanelEndDate)
-                .withReleaseFeedbackDate(line.releaseFeedback)
-                .withRegistrationDate(line.registrationDate)
-                .withPublicContent(
-                        line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
-    }
-
-    private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line) {
-
-        return competitionDataBuilder.
-                createCompetition().
-                withBasicData(line.name, line.type, line.innovationAreas,
-                        line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage,
-                        line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
-                withApplicationFormFromTemplate().
-                withNewMilestones().
-                withOpenDate(line.openDate).
-                withBriefingDate(line.briefingDate).
-                withSubmissionDate(line.submissionDate).
-                withAllocateAssesorsDate(line.allocateAssessorDate).
-                withAssessorBriefingDate(line.assessorBriefingDate).
-                withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
-                withAssessorEndDate(line.assessorEndDate).
-                withAssessmentClosedDate(line.assessmentClosedDate).
-                withLineDrawDate(line.drawLineDate).
-                withAsessmentPanelDate(line.assessmentPanelDate).
-                withPanelDate(line.panelDate).
-                withFundersPanelDate(line.fundersPanelDate).
-                withFundersPanelEndDate(line.fundersPanelEndDate).
-                withReleaseFeedbackDate(line.releaseFeedback).
-                withFeedbackReleasedDate(line.feedbackReleased).
-                withPublicContent(
-                        line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords,
-                        line.inviteOnly);
-    }
-
-    private void setDefaultCompAdmin() {
-        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
-        testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+        AssessorDataBuilder baseBuilder = builder.withInviteToAssessCompetition(
+                line.competitionName,
+                line.emailAddress,
+                line.firstName + " " + line.lastName,
+                inviteHash,
+                line.inviteStatus,
+                existingUser,
+                innovationArea,
+                sentBy,
+                sentOn
         );
+
+        if (!existingUser.isPresent()) {
+            baseBuilder = baseBuilder.registerUser(
+                    line.firstName,
+                    line.lastName,
+                    line.emailAddress,
+                    line.phoneNumber,
+                    line.ethnicity,
+                    line.gender,
+                    line.disability,
+                    inviteHash
+            );
+        } else {
+            baseBuilder = baseBuilder.addAssessorRole();
+        }
+
+        baseBuilder = baseBuilder.addSkills(line.skillAreas, line.businessType, line.innovationAreas);
+        baseBuilder = baseBuilder.addAffiliations(
+                line.principalEmployer,
+                line.role,
+                line.professionalAffiliations,
+                line.appointments,
+                line.financialInterests,
+                line.familyAffiliations,
+                line.familyFinancialInterests
+        );
+
+        if (line.agreementSigned) {
+            baseBuilder = baseBuilder.addAgreementSigned();
+        }
+
+        if (!line.rejectionReason.isEmpty()) {
+            baseBuilder = baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment);
+        } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
+            baseBuilder = baseBuilder.acceptInvite(inviteHash);
+        }
+
+        baseBuilder.build();
     }
+
+    private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
+        assessorInviteUserBuilder.withInviteToAssessCompetition(
+                line.targetName,
+                line.email,
+                line.name,
+                line.hash,
+                line.status,
+                userRepository.findByEmail(line.email),
+                line.innovationAreaName,
+                userRepository.findByEmail(line.sentByEmail),
+                Optional.of(line.sentOn)).
+                build();
+    }
+
+
+
 }
+

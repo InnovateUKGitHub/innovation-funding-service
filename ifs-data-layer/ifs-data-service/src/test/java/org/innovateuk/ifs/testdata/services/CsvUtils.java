@@ -106,17 +106,17 @@ public class CsvUtils {
 
     public static class ProjectLine {
 
-        String name;
-        LocalDate startDate;
-        String projectManager;
-        boolean projectAddressAdded;
-        List<Pair<String, String>> financeContactsForOrganisations;
-        String moFirstName;
-        String moLastName;
-        String moEmail;
-        String moPhoneNumber;
-        List<Triple<String, String, String>> bankDetailsForOrganisations;
-        List<String> organisationsWithApprovedFinanceChecks;
+        public String name;
+        public LocalDate startDate;
+        public String projectManager;
+        public boolean projectAddressAdded;
+        public List<Pair<String, String>> financeContactsForOrganisations;
+        public String moFirstName;
+        public String moLastName;
+        public String moEmail;
+        public String moPhoneNumber;
+        public List<Triple<String, String, String>> bankDetailsForOrganisations;
+        public List<String> organisationsWithApprovedFinanceChecks;
 
         private ProjectLine(List<String> line) {
             int i = 0;
@@ -237,16 +237,16 @@ public class CsvUtils {
 
     public static class InviteLine {
 
-        String email;
-        String hash;
-        String name;
-        InviteStatus status;
-        String type;
-        String targetName;
-        String ownerName;
-        String innovationAreaName;
-        String sentByEmail;
-        ZonedDateTime sentOn;
+        public String email;
+        public String hash;
+        public String name;
+        public InviteStatus status;
+        public String type;
+        public String targetName;
+        public String ownerName;
+        public String innovationAreaName;
+        public String sentByEmail;
+        public ZonedDateTime sentOn;
 
         private InviteLine(List<String> line) {
             int i = 0;
@@ -265,10 +265,10 @@ public class CsvUtils {
 
     public static class ApplicationOrganisationFinanceBlock {
 
-        String competitionName;
-        String applicationName;
-        String organisationName;
-        List<ApplicationFinanceRow> rows = new ArrayList<>();
+        public String competitionName;
+        public String applicationName;
+        public String organisationName;
+        public List<ApplicationFinanceRow> rows = new ArrayList<>();
 
         private ApplicationOrganisationFinanceBlock(List<String> line) {
 
@@ -285,8 +285,8 @@ public class CsvUtils {
 
     public static class ApplicationFinanceRow {
 
-        String category;
-        List<String> metadata;
+        public String category;
+        public List<String> metadata;
 
         private ApplicationFinanceRow(String category, List<String> costDetails) {
             this.category = category;
@@ -296,14 +296,14 @@ public class CsvUtils {
 
     public static class ApplicationQuestionResponseLine {
 
-        String competitionName;
-        String applicationName;
-        String questionName;
-        String value;
-        List<String> filesUploaded;
-        String answeredBy;
-        String assignedTo;
-        boolean markedAsComplete;
+        public String competitionName;
+        public String applicationName;
+        public String questionName;
+        public String value;
+        public List<String> filesUploaded;
+        public String answeredBy;
+        public String assignedTo;
+        public boolean markedAsComplete;
 
         ApplicationQuestionResponseLine(List<String> line) {
 
@@ -322,20 +322,20 @@ public class CsvUtils {
 
     public static class ApplicationLine {
 
-        String title;
-        String competitionName;
-        LocalDate startDate;
-        Integer durationInMonths;
-        String leadApplicant;
-        List<String> collaborators;
-        ZonedDateTime submittedDate;
-        ApplicationState status;
-        boolean markFinancesComplete;
-        String researchCategory;
-        String innovationArea;
-        boolean resubmission;
-        boolean markDetailsComplete;
-        String ineligibleReason;
+        public String title;
+        public String competitionName;
+        public LocalDate startDate;
+        public Integer durationInMonths;
+        public String leadApplicant;
+        public List<String> collaborators;
+        public ZonedDateTime submittedDate;
+        public ApplicationState status;
+        public boolean markFinancesComplete;
+        public String researchCategory;
+        public String innovationArea;
+        public boolean resubmission;
+        public boolean markDetailsComplete;
+        public String ineligibleReason;
 
         private ApplicationLine(List<String> line) {
             int i = 0;
@@ -359,13 +359,13 @@ public class CsvUtils {
 
     public static class AssessmentLine {
 
-        String assessorEmail;
-        String applicationName;
-        AssessmentRejectOutcomeValue rejectReason;
-        String rejectComment;
-        AssessmentState state;
-        String feedback;
-        String recommendComment;
+        public String assessorEmail;
+        public String applicationName;
+        public AssessmentRejectOutcomeValue rejectReason;
+        public String rejectComment;
+        public AssessmentState state;
+        public String feedback;
+        public String recommendComment;
 
         private AssessmentLine(List<String> line) {
 
@@ -382,13 +382,14 @@ public class CsvUtils {
     }
 
     public static class AssessorResponseLine {
-        String competitionName;
-        String applicationName;
-        String assessorEmail;
-        String shortName;
-        String description;
-        boolean isResearchCategory;
-        String value;
+
+        public String competitionName;
+        public String applicationName;
+        public String assessorEmail;
+        public String shortName;
+        public String description;
+        public boolean isResearchCategory;
+        public String value;
 
         private AssessorResponseLine(List<String> line) {
             int i = 0;
@@ -404,56 +405,55 @@ public class CsvUtils {
 
     public static class CompetitionLine {
 
-        String name;
-        String type;
-        List<String> innovationAreas;
-        String innovationSector;
-        String researchCategory;
-        String collaborationLevel;
-        List<OrganisationTypeEnum> leadApplicantTypes;
-        Integer researchRatio;
-        Boolean resubmission;
-        Boolean multiStream;
-        ZonedDateTime openDate;
-        ZonedDateTime briefingDate;
-        ZonedDateTime registrationDate;
-        ZonedDateTime submissionDate;
-        ZonedDateTime allocateAssessorDate;
-        ZonedDateTime assessorBriefingDate;
-        ZonedDateTime assessorsNotifiedDate;
-        ZonedDateTime assessorAcceptsDate;
-        ZonedDateTime assessorEndDate;
-        ZonedDateTime assessmentClosedDate;
-        ZonedDateTime drawLineDate;
-        ZonedDateTime assessmentPanelDate;
-        ZonedDateTime panelDate;
-        ZonedDateTime fundersPanelDate;
-        ZonedDateTime fundersPanelEndDate;
-        ZonedDateTime releaseFeedback;
-        ZonedDateTime feedbackReleased;
-        String leadTechnologist;
-        String compExecutive;
-        boolean setupComplete;
-        String budgetCode;
-        String code;
-        String pafCode;
-        String activityCode;
-        Integer assessorCount;
-        BigDecimal assessorPay;
-        Boolean hasAssessmentPanel;
-        Boolean hasInterviewStage;
-        boolean published;
-        String shortDescription;
-        String fundingRange;
-        String eligibilitySummary;
-        String competitionDescription;
-        FundingType fundingType;
-        String projectSize;
-        List<String> keywords;
-        boolean inviteOnly;
-        boolean nonIfs;
-        String nonIfsUrl;
-
+        public String name;
+        public String type;
+        public List<String> innovationAreas;
+        public String innovationSector;
+        public String researchCategory;
+        public String collaborationLevel;
+        public List<OrganisationTypeEnum> leadApplicantTypes;
+        public Integer researchRatio;
+        public Boolean resubmission;
+        public Boolean multiStream;
+        public ZonedDateTime openDate;
+        public ZonedDateTime briefingDate;
+        public ZonedDateTime registrationDate;
+        public ZonedDateTime submissionDate;
+        public ZonedDateTime allocateAssessorDate;
+        public ZonedDateTime assessorBriefingDate;
+        public ZonedDateTime assessorsNotifiedDate;
+        public ZonedDateTime assessorAcceptsDate;
+        public ZonedDateTime assessorEndDate;
+        public ZonedDateTime assessmentClosedDate;
+        public ZonedDateTime drawLineDate;
+        public ZonedDateTime assessmentPanelDate;
+        public ZonedDateTime panelDate;
+        public ZonedDateTime fundersPanelDate;
+        public ZonedDateTime fundersPanelEndDate;
+        public ZonedDateTime releaseFeedback;
+        public ZonedDateTime feedbackReleased;
+        public String leadTechnologist;
+        public String compExecutive;
+        public boolean setupComplete;
+        public String budgetCode;
+        public String code;
+        public String pafCode;
+        public String activityCode;
+        public Integer assessorCount;
+        public BigDecimal assessorPay;
+        public Boolean hasAssessmentPanel;
+        public Boolean hasInterviewStage;
+        public boolean published;
+        public String shortDescription;
+        public String fundingRange;
+        public String eligibilitySummary;
+        public String competitionDescription;
+        public FundingType fundingType;
+        public String projectSize;
+        public List<String> keywords;
+        public boolean inviteOnly;
+        public boolean nonIfs;
+        public String nonIfsUrl;
 
         private CompetitionLine(List<String> line) {
 
@@ -511,10 +511,10 @@ public class CsvUtils {
     }
 
     public static class CompetitionFunderLine {
-        String competitionName;
-        String funder;
-        BigInteger funder_budget;
-        boolean co_funder;
+        public String competitionName;
+        public String funder;
+        public BigInteger funder_budget;
+        public boolean co_funder;
 
         private CompetitionFunderLine(List<String> line) {
             int i = 0;
@@ -526,10 +526,10 @@ public class CsvUtils {
     }
 
     public static class PublicContentGroupLine {
-        String competitionName;
-        PublicContentSectionType section;
-        String heading;
-        String content;
+        public String competitionName;
+        public PublicContentSectionType section;
+        public String heading;
+        public String content;
 
         private PublicContentGroupLine(List<String> line) {
             int i = 0;
@@ -541,9 +541,9 @@ public class CsvUtils {
     }
 
     public static class PublicContentDateLine {
-        String competitionName;
-        ZonedDateTime date;
-        String content;
+        public String competitionName;
+        public ZonedDateTime date;
+        public String content;
 
         private PublicContentDateLine(List<String> line) {
             int i = 0;
@@ -554,14 +554,14 @@ public class CsvUtils {
     }
 
 
-    static abstract class UserLine {
+    public static abstract class UserLine {
 
-        String emailAddress;
-        String firstName;
-        String lastName;
-        boolean emailVerified;
-        String organisationName;
-        String phoneNumber;
+        public String emailAddress;
+        public String firstName;
+        public String lastName;
+        public boolean emailVerified;
+        public String organisationName;
+        public String phoneNumber;
 
         private UserLine(List<String> line) {
 
@@ -577,16 +577,16 @@ public class CsvUtils {
 
     public static class OrganisationLine {
 
-        String name;
-        String organisationType;
-        String addressLine1;
-        String addressLine2;
-        String addressLine3;
-        String town;
-        String postcode;
-        String county;
-        List<OrganisationAddressType> addressType;
-        String companyRegistrationNumber;
+        public String name;
+        public String organisationType;
+        public String addressLine1;
+        public String addressLine2;
+        public String addressLine3;
+        public String town;
+        public String postcode;
+        public String county;
+        public List<OrganisationAddressType> addressType;
+        public String companyRegistrationNumber;
 
         private OrganisationLine(List<String> line) {
 
@@ -609,25 +609,25 @@ public class CsvUtils {
 
     public static class AssessorUserLine extends UserLine {
 
-        Disability disability;
-        Gender gender;
-        String ethnicity;
-        String competitionName;
-        String hash;
-        InviteStatus inviteStatus;
-        String rejectionReason;
-        String rejectionComment;
-        String skillAreas;
-        BusinessType businessType;
-        List<String> innovationAreas;
-        String principalEmployer;
-        String role;
-        String professionalAffiliations;
-        List<Map<String, String>> appointments;
-        String financialInterests;
-        List<Map<String, String>> familyAffiliations;
-        String familyFinancialInterests;
-        boolean agreementSigned;
+        public Disability disability;
+        public Gender gender;
+        public String ethnicity;
+        public String competitionName;
+        public String hash;
+        public InviteStatus inviteStatus;
+        public String rejectionReason;
+        public String rejectionComment;
+        public String skillAreas;
+        public BusinessType businessType;
+        public List<String> innovationAreas;
+        public String principalEmployer;
+        public String role;
+        public String professionalAffiliations;
+        public List<Map<String, String>> appointments;
+        public String financialInterests;
+        public List<Map<String, String>> familyAffiliations;
+        public String familyFinancialInterests;
+        public boolean agreementSigned;
 
         private AssessorUserLine(List<String> line) {
 
@@ -681,11 +681,11 @@ public class CsvUtils {
     }
 
     public static class QuestionLine {
-        int ordinal;
-        String competitionName;
-        String heading;
-        String title;
-        String subtitle;
+        public int ordinal;
+        public String competitionName;
+        public String heading;
+        public String title;
+        public String subtitle;
 
         private QuestionLine(List<String> line) {
             int i = 0;
@@ -705,7 +705,7 @@ public class CsvUtils {
 
     public static class InternalUserLine extends UserLine {
 
-        List<String> roles;
+        public List<String> roles;
 
         private InternalUserLine(List<String> line) {
             super(line);

@@ -73,8 +73,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private List<CsvUtils.ApplicationLine> applicationLines;
     private static List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
     private static List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
-
-
     private static List<CsvUtils.InviteLine> inviteLines;
 
     public List<CompletableFuture<List<ApplicationData>>> fillInAndCompleteApplication(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {

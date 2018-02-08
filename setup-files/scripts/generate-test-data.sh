@@ -1,7 +1,7 @@
 #!/bin/sh
 cd "$(dirname "$0")"
 
-function reset_db() {
+reset_db () {
     mysql -uroot -ppassword -hifs-database -e "drop database ifs";
     mysql -uroot -ppassword -hifs-database -e "create database ifs";
     mysql -uroot -ppassword -hifs-database -e "drop database ifs_test";
@@ -10,7 +10,7 @@ function reset_db() {
     ./gradlew flywayClean flywayMigrate
 }
 
-function do_baseline() {
+do_baseline () {
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
     # navigate to project root

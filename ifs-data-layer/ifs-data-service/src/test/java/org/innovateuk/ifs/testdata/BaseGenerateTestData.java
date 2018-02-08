@@ -12,7 +12,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
@@ -25,11 +24,7 @@ import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
-import org.innovateuk.ifs.testdata.services.ApplicationDataBuilderService;
-import org.innovateuk.ifs.testdata.services.CompetitionDataBuilderService;
-import org.innovateuk.ifs.testdata.services.CsvUtils;
-import org.innovateuk.ifs.testdata.services.ProjectDataBuilderService;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -62,12 +57,9 @@ import java.util.function.UnaryOperator;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
-import static org.innovateuk.ifs.testdata.builders.AssessorResponseDataBuilder.newAssessorResponseData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
@@ -151,6 +143,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private ApplicationDataBuilderService applicationDataBuilderService;
 
     @Autowired
+    private AssessmentDataBuilderService assessmentDataBuilderService;
+
+    @Autowired
     private ProjectDataBuilderService projectDataBuilderService;
 
     private CompetitionDataBuilder competitionDataBuilder;
@@ -163,8 +158,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private OrganisationDataBuilder organisationBuilder;
     private AssessorDataBuilder assessorUserBuilder;
     private AssessorInviteDataBuilder assessorInviteUserBuilder;
-    private AssessmentDataBuilder assessmentDataBuilder;
-    private AssessorResponseDataBuilder assessorResponseDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
 
@@ -257,8 +250,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         organisationBuilder = newOrganisationData(serviceLocator);
         assessorUserBuilder = newAssessorData(serviceLocator);
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
-        assessmentDataBuilder = newAssessmentData(serviceLocator);
-        assessorResponseDataBuilder = newAssessorResponseData(serviceLocator);
         publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
     }
@@ -295,9 +286,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             createPublicContentDates();
         });
         taskExecutor.submit(() -> {
-            createAssessors();
-            createNonRegisteredAssessorInvites();
-            createAssessments();
+            assessmentDataBuilderService.createAssessors();
+            assessmentDataBuilderService.createNonRegisteredAssessorInvites();
+            assessmentDataBuilderService.createAssessments();
         });
 
         fundingDecisions.get();
@@ -318,22 +309,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
 
-    private void createAssessors() {
-        assessorUserLines.forEach(this::createAssessor);
-    }
-
-    private void createNonRegisteredAssessorInvites() {
-        List<InviteLine> assessorInvites = simpleFilter(inviteLines, invite -> "COMPETITION".equals(invite.type));
-        List<InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
-        nonRegisteredAssessorInvites.forEach(line -> createAssessorInvite(assessorInviteUserBuilder, line));
-    }
-
-    private void createAssessments() {
-        assessmentLines.forEach(this::createAssessment);
-        assessorResponseLines.forEach(this::createAssessorResponse);
-        assessmentLines.forEach(this::submitAssessment);
-    }
-
     private void updateQuestion(QuestionLine questionLine) {
         this.questionDataBuilder.updateApplicationQuestionHeading(questionLine.ordinal,
                 questionLine.competitionName,
@@ -342,7 +317,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 questionLine.subtitle).build();
     }
 
-    
+
 
     private void createCompetitionFunders() {
         competitionFunderLines.forEach(this::createCompetitionFunder);
@@ -475,100 +450,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         f.setPlaceholders(placeholders);
         f.clean();
         f.migrate();
-    }
-
-    private void createAssessor(AssessorUserLine line) {
-
-        List<InviteLine> assessorInvitesForThisAssessor = simpleFilter(inviteLines, invite ->
-                invite.email.equals(line.emailAddress) && invite.type.equals("COMPETITION"));
-
-        AssessorDataBuilder builder = assessorUserBuilder;
-
-        Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
-        Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
-        Optional<ZonedDateTime> sentOn = Optional.of(ZonedDateTime.now());
-
-        for (InviteLine invite : assessorInvitesForThisAssessor) {
-            builder = builder.withInviteToAssessCompetition(
-                    invite.targetName,
-                    invite.email,
-                    invite.name,
-                    invite.hash,
-                    invite.status,
-                    existingUser,
-                    invite.innovationAreaName,
-                    sentBy,
-                    sentOn
-            );
-        }
-
-        String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
-        String innovationArea = !line.innovationAreas.isEmpty() ? line.innovationAreas.get(0) : "";
-
-        AssessorDataBuilder baseBuilder = builder.withInviteToAssessCompetition(
-                line.competitionName,
-                line.emailAddress,
-                line.firstName + " " + line.lastName,
-                inviteHash,
-                line.inviteStatus,
-                existingUser,
-                innovationArea,
-                sentBy,
-                sentOn
-        );
-
-        if (!existingUser.isPresent()) {
-            baseBuilder = baseBuilder.registerUser(
-                    line.firstName,
-                    line.lastName,
-                    line.emailAddress,
-                    line.phoneNumber,
-                    line.ethnicity,
-                    line.gender,
-                    line.disability,
-                    inviteHash
-            );
-        } else {
-            baseBuilder = baseBuilder.addAssessorRole();
-        }
-
-        baseBuilder = baseBuilder.addSkills(line.skillAreas, line.businessType, line.innovationAreas);
-        baseBuilder = baseBuilder.addAffiliations(
-                line.principalEmployer,
-                line.role,
-                line.professionalAffiliations,
-                line.appointments,
-                line.financialInterests,
-                line.familyAffiliations,
-                line.familyFinancialInterests
-        );
-
-        if (line.agreementSigned) {
-            baseBuilder = baseBuilder.addAgreementSigned();
-        }
-
-        if (!line.rejectionReason.isEmpty()) {
-            baseBuilder = baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment);
-        } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
-            baseBuilder = baseBuilder.acceptInvite(inviteHash);
-        }
-
-        baseBuilder.build();
-    }
-
-    private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
-        assessorInviteUserBuilder.withInviteToAssessCompetition(
-                line.targetName,
-                line.email,
-                line.name,
-                line.hash,
-                line.status,
-                userRepository.findByEmail(line.email),
-                line.innovationAreaName,
-                userRepository.findByEmail(line.sentByEmail),
-                Optional.of(line.sentOn)
-        ).
-                build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, UserLine line) {
