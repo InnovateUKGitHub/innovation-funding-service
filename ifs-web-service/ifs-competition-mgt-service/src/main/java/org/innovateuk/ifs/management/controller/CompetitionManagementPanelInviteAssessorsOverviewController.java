@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.PanelOverviewSelectionForm;
@@ -32,7 +32,7 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewPanelInviteRestService reviewPanelInviteRestService;
 
     @Autowired
     private PanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
@@ -160,6 +160,6 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
     }
 
     private List<Long> getAllInviteIds(long competitionId) {
-        return assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccessObjectOrThrowException();
+        return reviewPanelInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccessObjectOrThrowException();
     }
 }

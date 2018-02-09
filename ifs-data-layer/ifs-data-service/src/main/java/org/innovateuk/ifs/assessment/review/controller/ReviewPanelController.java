@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.controller;
+package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/assessmentpanel")
-public class AssessmentPanelController {
+public class ReviewPanelController {
 
     @Autowired
     private AssessmentPanelService assessmentPanelService;

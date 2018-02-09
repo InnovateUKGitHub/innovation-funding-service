@@ -1,8 +1,9 @@
-package org.innovateuk.ifs.assessment.controller;
+package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.review.controller.ReviewPanelController;
 import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
@@ -48,7 +49,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 
-public class AssessmentPanelControllerIntegrationTest extends BaseControllerIntegrationTest<AssessmentPanelController> {
+public class ReviewPanelControllerIntegrationTest extends BaseControllerIntegrationTest<ReviewPanelController> {
 
     private static final long applicationId = 2L;
     private static final long competitionId = 3L;
@@ -90,7 +91,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
     @Autowired
     @Override
-    public void setControllerUnderTest(AssessmentPanelController controller) {
+    public void setControllerUnderTest(ReviewPanelController controller) {
         this.controller = controller;
     }
 

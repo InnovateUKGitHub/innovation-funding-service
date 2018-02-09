@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.controller;
+package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/assessmentpanelinvite")
-public class AssessmentPanelInviteController {
+public class ReviewPanelInviteController {
 
     private static final int DEFAULT_PAGE_SIZE = 20;
 

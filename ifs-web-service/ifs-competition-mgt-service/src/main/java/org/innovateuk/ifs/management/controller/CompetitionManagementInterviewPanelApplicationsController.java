@@ -11,10 +11,10 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.PanelSelectionForm;
+import org.innovateuk.ifs.management.model.InterviewPanelInviteApplicationsFindModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
-import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.ReviewPanelInviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.viewmodel.InterviewPanelInviteApplicationsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,10 +39,10 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  * This controller will handle all Competition Management requests related to inviting assessors to an Assessment Panel.
  */
 @Controller
-@RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementPanelInviteAssessorsController.class)
+@RequestMapping("/assessment/interview-panel/competition/{competitionId}/applications")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementInterviewPanelApplicationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementPanelInviteAssessorsController extends CompetitionManagementCookieController<PanelSelectionForm> {
+public class CompetitionManagementInterviewPanelApplicationsController extends CompetitionManagementCookieController<PanelSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
@@ -51,7 +51,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     private ReviewPanelInviteRestService reviewPanelInviteRestService;
 
     @Autowired
-    private PanelInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
+    private InterviewPanelInviteApplicationsFindModelPopulator interviewPanelInviteApplicationsFindModelPopulator;
 
     @Autowired
     private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
@@ -67,10 +67,10 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         return PanelSelectionForm.class;
     }
 
-    @GetMapping
-    public String assessors(@PathVariable("competitionId") long competitionId) {
-        return format("redirect:/competition/%s/assessors/panel-find", competitionId);
-    }
+//    @GetMapping
+//    public String applications(@PathVariable("competitionId") long competitionId) {
+//        return format("redirect:/competition/%s/applications/panel-find", competitionId);
+//    }
 
     @GetMapping("/find")
     public String find(Model model,
@@ -84,12 +84,14 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
-        ReviewPanelInviteAssessorsFindViewModel reviewPanelInviteAssessorsFindViewModel = panelInviteAssessorsFindModelPopulator.populateModel(competitionId, page, originQuery);
 
-        model.addAttribute("model", reviewPanelInviteAssessorsFindViewModel);
+        InterviewPanelInviteApplicationsFindViewModel interviewPanelInviteAssessorsFindViewModel =
+                interviewPanelInviteApplicationsFindModelPopulator.populateModel(competitionId, page, originQuery);
+
+        model.addAttribute("model", interviewPanelInviteAssessorsFindViewModel);
         model.addAttribute("originQuery", originQuery);
 
-        return "assessors/panel-find";
+        return "assessors/interview-panel-find";
     }
 
     private void updateSelectionForm(HttpServletRequest request,

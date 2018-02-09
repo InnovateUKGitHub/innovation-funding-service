@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.controller.AssessmentPanelInviteController;
+import org.innovateuk.ifs.assessment.review.controller.ReviewPanelInviteController;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
@@ -44,11 +44,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AssessmentReviewPanelInviteControllerDocumentation extends BaseControllerMockMVCTest<AssessmentPanelInviteController> {
+public class ReviewPanelInviteControllerDocumentation extends BaseControllerMockMVCTest<ReviewPanelInviteController> {
 
     @Override
-    protected AssessmentPanelInviteController supplyControllerUnderTest() {
-        return new AssessmentPanelInviteController();
+    protected ReviewPanelInviteController supplyControllerUnderTest() {
+        return new ReviewPanelInviteController();
     }
 
     @Test

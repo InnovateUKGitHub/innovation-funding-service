@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 /**
- * Holder of model attributes for the Invite assessors for Assessment Panel 'Find' view.
+ * Holder of model attributes for the Invite assessors 'Overview' view.
  */
-public class PanelInviteAssessorsFindViewModel extends InviteAssessorsViewModel<PanelAvailableAssessorRowViewModel> {
+public class ReviewPanelInviteAssessorsOverviewViewModel extends InviteAssessorsViewModel<OverviewAssessorRowViewModel> {
 
     private boolean selectAllDisabled;
 

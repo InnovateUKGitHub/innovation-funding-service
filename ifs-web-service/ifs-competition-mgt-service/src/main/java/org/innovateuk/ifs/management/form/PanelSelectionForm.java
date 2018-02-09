@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Form for the selection of assessors on the Find assessors for assessment panel tab
+ * Form for the selection of assessors on the Find panel tabs
  */
 public class PanelSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
-    private List<Long> selectedAssessorIds;
+    private List<Long> selectedIds;
 
     public PanelSelectionForm() {
-        this.selectedAssessorIds = new ArrayList<>();
+        this.selectedIds = new ArrayList<>();
     }
 
     public boolean getAllSelected() {
@@ -27,16 +27,16 @@ public class PanelSelectionForm extends BaseBindingResultTarget {
         this.allSelected = allSelected;
     }
 
-    public List<Long> getSelectedAssessorIds() {
-        return selectedAssessorIds;
+    public List<Long> getSelectedIds() {
+        return selectedIds;
     }
 
-    public void setSelectedAssessorIds(List<Long> selectedAssessorIds) {
-        this.selectedAssessorIds = selectedAssessorIds;
+    public void setSelectedIds(List<Long> selectedIds) {
+        this.selectedIds = selectedIds;
     }
 
     public boolean anySelectionIsMade() {
-        return this.selectedAssessorIds.size() > 0;
+        return this.selectedIds.size() > 0;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class PanelSelectionForm extends BaseBindingResultTarget {
 
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)
-                .append(selectedAssessorIds, that.selectedAssessorIds)
+                .append(selectedIds, that.selectedIds)
                 .isEquals();
     }
 
@@ -57,7 +57,7 @@ public class PanelSelectionForm extends BaseBindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(allSelected)
-                .append(selectedAssessorIds)
+                .append(selectedIds)
                 .toHashCode();
     }
 }

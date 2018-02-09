@@ -136,11 +136,11 @@
                     </label>
                 </div>
                 <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(assessorSelectionForm.selectedAssessorIds)}"></span> assessors selected
+                    <span data-count-selected="" th:text="${#lists.size(assessorSelectionForm.selectedIds)}"></span> assessors selected
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorSelectionForm.selectedAssessorIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorSelectionForm.selectedIds)}">
                     Add selected to invite list
                 </button>
             </div>
@@ -163,7 +163,7 @@
                         <div class="multiple-choice">
                             <input type="checkbox"
                                    th:id="|assessor-row-${index.count}|"
-                                   th:field="*{selectedAssessorIds}"
+                                   th:field="*{selectedIds}"
                                    th:value="${assessor.id}"/>
                             <label th:for="|assessor-row-${index.count}|">
                                 <span class="invisible">Add</span>

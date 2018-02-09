@@ -6,14 +6,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 /**
  * Holder of model attributes for the Competition Interview Panel dashboard
  */
-public class InterviewPanelViewModel {
+public class InterviewPanelDashboardViewModel {
     private final long competitionId;
     private final String competitionName;
     private final CompetitionStatus competitionStatus;
 
-    public InterviewPanelViewModel(long competitionId,
-                                   String competitionName,
-                                   CompetitionStatus competitionStatus) {
+    public InterviewPanelDashboardViewModel(long competitionId,
+                                            String competitionName,
+                                            CompetitionStatus competitionStatus) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;

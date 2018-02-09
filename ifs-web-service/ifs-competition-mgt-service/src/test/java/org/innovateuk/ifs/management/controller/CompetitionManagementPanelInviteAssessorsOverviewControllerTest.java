@@ -11,7 +11,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsOverviewViewModel;
+import org.innovateuk.ifs.management.viewmodel.ReviewPanelInviteAssessorsOverviewViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -95,9 +95,9 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
+        when(reviewPanelInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
                 .thenReturn(restSuccess(pageResource));
-        when(assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
+        when(reviewPanelInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/overview", competition.getId())
                 .param("page", "1"))
@@ -109,10 +109,10 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService);
-        inOrder.verify(assessmentPanelInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, reviewPanelInviteRestService);
+        inOrder.verify(reviewPanelInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
+        inOrder.verify(reviewPanelInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -153,8 +153,8 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof PanelInviteAssessorsOverviewViewModel);
-        PanelInviteAssessorsOverviewViewModel model = (PanelInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof ReviewPanelInviteAssessorsOverviewViewModel);
+        ReviewPanelInviteAssessorsOverviewViewModel model = (ReviewPanelInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInviteOverviews.size(), model.getAssessors().size());
 

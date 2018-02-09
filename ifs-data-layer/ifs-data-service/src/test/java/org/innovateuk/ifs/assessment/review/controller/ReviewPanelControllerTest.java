@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.assessment.controller;
+package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.review.controller.ReviewPanelController;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.junit.Test;
@@ -20,15 +21,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<AssessmentPanelController> {
+public class ReviewPanelControllerTest extends BaseControllerMockMVCTest<ReviewPanelController> {
 
     private static final long applicationId = 1L;
     private static final long competitionId = 5L;
     private static final long userId = 2L;
 
     @Override
-    public AssessmentPanelController supplyControllerUnderTest() {
-        return new AssessmentPanelController();
+    public ReviewPanelController supplyControllerUnderTest() {
+        return new ReviewPanelController();
     }
 
     @Test

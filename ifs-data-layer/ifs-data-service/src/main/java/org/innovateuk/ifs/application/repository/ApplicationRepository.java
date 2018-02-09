@@ -114,4 +114,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	List<Application> findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(long competitionId, State applicationState);
 	List<Application> findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(Competition competition, State applicationState);
+
+	@Query( "SELECT a FROM Application a " +
+            "WHERE " +
+            "  a.competition.id = :competitionId AND " +
+            "  a.applicationProcess.activityState.state = org.innovateuk.ifs.workflow.resource.State.SUBMITTED AND " +
+            "  NOT EXISTS (SELECT 1 FROM AssessmentInterviewPanelInvite i WHERE i.competition = a.competition )")
+    Page<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
 }

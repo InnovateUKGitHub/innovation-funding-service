@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 /**
  * Holder of model attributes for the Competition Assessment Panel dashboard
  */
-public class AssessmentPanelViewModel {
+public class ReviewPanelDashboardViewModel {
     private final long competitionId;
     private final String competitionName;
     private final CompetitionStatus competitionStatus;
@@ -15,13 +15,13 @@ public class AssessmentPanelViewModel {
     private final int assessorsAccepted;
     private final boolean pendingReviewNotifications;
 
-    public AssessmentPanelViewModel(long competitionId,
-                                    String competitionName,
-                                    CompetitionStatus competitionStatus,
-                                    int applicationsInPanel,
-                                    int assessorsInvited,
-                                    int assessorsAccepted,
-                                    boolean pendingReviewNotifications) {
+    public ReviewPanelDashboardViewModel(long competitionId,
+                                         String competitionName,
+                                         CompetitionStatus competitionStatus,
+                                         int applicationsInPanel,
+                                         int assessorsInvited,
+                                         int assessorsAccepted,
+                                         boolean pendingReviewNotifications) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;

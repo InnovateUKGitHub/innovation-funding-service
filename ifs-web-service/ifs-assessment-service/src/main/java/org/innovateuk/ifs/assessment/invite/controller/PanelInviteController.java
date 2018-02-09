@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.invite.controller;
 
 import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 public class PanelInviteController {
 
     @Autowired
-    private AssessmentPanelInviteRestService inviteRestService;
+    private ReviewPanelInviteRestService inviteRestService;
 
     @Autowired
     private RejectionReasonRestService rejectionReasonRestService;

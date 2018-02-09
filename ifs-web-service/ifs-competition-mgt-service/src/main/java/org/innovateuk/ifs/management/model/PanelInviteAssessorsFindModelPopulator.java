@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
@@ -18,29 +18,29 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Panel Find view.
  */
 @Component
-public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessorsModelPopulator<PanelInviteAssessorsFindViewModel> {
+public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessorsModelPopulator<ReviewPanelInviteAssessorsFindViewModel> {
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewPanelInviteRestService reviewPanelInviteRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public PanelInviteAssessorsFindViewModel populateModel(long competitionId,
-                                                           int page,
-                                                           String originQuery) {
+    public ReviewPanelInviteAssessorsFindViewModel populateModel(long competitionId,
+                                                                 int page,
+                                                                 String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        PanelInviteAssessorsFindViewModel model = super.populateModel(competition);
+        ReviewPanelInviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        AvailableAssessorPageResource pageResource = assessmentPanelInviteRestService.getAvailableAssessors(
+        AvailableAssessorPageResource pageResource = reviewPanelInviteRestService.getAvailableAssessors(
                 competition.getId(),
                 page)
                 .getSuccessObjectOrThrowException();
 
-        List<PanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+        List<ReviewPanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
@@ -49,8 +49,8 @@ public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessors
         return model;
     }
 
-    private PanelAvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource assessorInviteOverviewResource) {
-        return new PanelAvailableAssessorRowViewModel(
+    private ReviewPanelAvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource assessorInviteOverviewResource) {
+        return new ReviewPanelAvailableAssessorRowViewModel(
                 assessorInviteOverviewResource.getId(),
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
@@ -60,7 +60,7 @@ public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessors
     }
 
     @Override
-    protected PanelInviteAssessorsFindViewModel createModel() {
-        return new PanelInviteAssessorsFindViewModel();
+    protected ReviewPanelInviteAssessorsFindViewModel createModel() {
+        return new ReviewPanelInviteAssessorsFindViewModel();
     }
 }
