@@ -73,7 +73,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
 		filter.ifPresent(f -> params.set("filter", f));
 		fundingFilter.ifPresent(f -> params.set("fundingFilter", f.toString()));
-		inAssessmentReviewPanel.ifPresent(f -> params.set("inAssessmentPanel", f.toString()));
+		inAssessmentReviewPanel.ifPresent(f -> params.set("inAssessmentReviewPanel", f.toString()));
 
 		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
 		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);

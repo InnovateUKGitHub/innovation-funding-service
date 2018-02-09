@@ -59,7 +59,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
                 expected
         );
 
-        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page).getSuccessObjectOrThrowException();
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page).getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -75,7 +75,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
                 assessorItems
         );
 
-        List<Long> actual = service.getAvailableAssessorIds(competitionId).getSuccessObjectOrThrowException();
+        List<Long> actual = service.getAvailableAssessorIds(competitionId).getSuccess();
         assertEquals(assessorItems, actual);
     }
 
@@ -89,7 +89,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", restUrl, "getCreatedInvites", competitionId), AssessorCreatedInvitePageResource.class, expected);
 
-        AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, page).getSuccessObjectOrThrowException();
+        AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, page).getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -135,7 +135,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
                 .build();
 
         setupGetWithRestResultExpectations(format("%s/%s/%s%s", restUrl, "getAllInvitesToResend", competitionId, "?inviteIds=1,2"), AssessorInvitesToSendResource.class, expected);
-        AssessorInvitesToSendResource actual = service.getAllInvitesToResend(competitionId, inviteIds).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource actual = service.getAllInvitesToResend(competitionId, inviteIds).getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -148,7 +148,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
                 .build();
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class, expected);
-        AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -177,7 +177,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
         setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
 
         AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, Arrays.asList(ACCEPTED, PENDING))
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(expected, actual);
     }
@@ -194,7 +194,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesByUser", userId), ParameterizedTypeReferences.assessmentPanelParticipantResourceListType(), expected, OK);
 
-        List<AssessmentReviewPanelParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccessObjectOrThrowException();
+        List<AssessmentReviewPanelParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -203,7 +203,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
         AssessmentReviewPanelInviteResource expected = newAssessmentReviewPanelInviteResource().build();
         expected.setCompetitionName("my competition");
         setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "openInvite", "hash"), AssessmentReviewPanelInviteResource.class, null, expected, OK);
-        AssessmentReviewPanelInviteResource actual = service.openInvite("hash").getSuccessObjectOrThrowException();
+        AssessmentReviewPanelInviteResource actual = service.openInvite("hash").getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -232,7 +232,7 @@ public class ReviewPanelInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void checkExistingUser() {
         setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "checkExistingUser", "hash"), Boolean.class, TRUE);
-        assertTrue(service.checkExistingUser("hash").getSuccessObjectOrThrowException());
+        assertTrue(service.checkExistingUser("hash").getSuccess());
     }
 
     @Test

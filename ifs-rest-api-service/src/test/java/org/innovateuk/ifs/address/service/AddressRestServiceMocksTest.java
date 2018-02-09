@@ -32,7 +32,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
         setupGetWithRestResultAnonymousExpectations(expectedUrl, addressResourceListType(), returnedAddresses, HttpStatus.OK);
 
         // now run the method under test
-        List<AddressResource> addresses = service.doLookup(postcode).getSuccessObject();
+        List<AddressResource> addresses = service.doLookup(postcode).getSuccess();
         assertNotNull(addresses);
         assertEquals(returnedAddresses, addresses);
     }
@@ -43,7 +43,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
         String url = addressRestURL + "/" + addressResource.getId();
         setupGetWithRestResultExpectations(url, AddressResource.class, addressResource);
 
-        AddressResource returnedAddressResource = service.getById(addressResource.getId()).getSuccessObject();
+        AddressResource returnedAddressResource = service.getById(addressResource.getId()).getSuccess();
         assertNotNull(returnedAddressResource);
         Assert.assertEquals(returnedAddressResource, addressResource);
     }

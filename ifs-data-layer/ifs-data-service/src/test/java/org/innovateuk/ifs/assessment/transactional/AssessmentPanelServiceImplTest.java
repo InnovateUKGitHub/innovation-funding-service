@@ -191,7 +191,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         when(notificationSenderMock.sendNotification(expectedNotification)).thenReturn(ServiceResult.serviceSuccess(expectedNotification));
 
 
-        service.createAndNotifyReviews(competitionId).getSuccessObjectOrThrowException();
+        service.createAndNotifyReviews(competitionId).getSuccess();
 
 
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock, applicationRepositoryMock,
@@ -223,7 +223,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
 
-        assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
+        assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccess());
 
         verify(assessmentReviewRepositoryMock, only()).notifiable(competitionId);
     }
@@ -234,7 +234,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
 
-        assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
+        assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccess());
 
         verify(assessmentReviewRepositoryMock, only()).notifiable(competitionId);
     }
@@ -249,7 +249,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         when(assessmentReviewMapperMock.mapToResource(same(assessmentReviews.get(0)))).thenReturn(assessmentReviewResources.get(0));
         when(assessmentReviewMapperMock.mapToResource(same(assessmentReviews.get(1)))).thenReturn(assessmentReviewResources.get(1));
 
-        assertEquals(assessmentReviewResources, service.getAssessmentReviews(userId, competitionId).getSuccessObjectOrThrowException());
+        assertEquals(assessmentReviewResources, service.getAssessmentReviews(userId, competitionId).getSuccess());
 
         InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewMapperMock);
         inOrder.verify(assessmentReviewRepositoryMock).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
@@ -264,7 +264,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         when(assessmentReviewRepositoryMock.findOne(assessmentReview.getId())).thenReturn(assessmentReview);
         when(assessmentReviewWorkflowHandlerMock.acceptInvitation(assessmentReview)).thenReturn(true);
 
-        service.acceptAssessmentReview(assessmentReview.getId()).getSuccessObjectOrThrowException();
+        service.acceptAssessmentReview(assessmentReview.getId()).getSuccess();
 
         InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock);
         inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
@@ -314,7 +314,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         when(assessmentReviewWorkflowHandlerMock.rejectInvitation(assessmentReview, assessmentReviewRejectOutcome)).thenReturn(true);
         when(assessmentReviewRejectOutcomeMapperMock.mapToDomain(rejectOutcomeResource)).thenReturn(assessmentReviewRejectOutcome);
 
-        service.rejectAssessmentReview(assessmentReview.getId(), rejectOutcomeResource).getSuccessObjectOrThrowException();
+        service.rejectAssessmentReview(assessmentReview.getId(), rejectOutcomeResource).getSuccess();
 
         InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock, assessmentReviewRejectOutcomeMapperMock);
         inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
@@ -354,7 +354,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         when(assessmentReviewMapperMock.mapToResource(assessmentReview)).thenReturn(assessmentReviewResource);
 
         AssessmentReviewResource result = service.getAssessmentReview(assessmentReviewResource.getId())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(assessmentReviewResource, result);
 

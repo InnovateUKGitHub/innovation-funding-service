@@ -39,11 +39,11 @@ public class AssessorDashboardModelPopulator {
 
     public AssessorDashboardViewModel populateModel(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
-                .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccessObject();
+                .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccess();
 
-        UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccessObject();
+        UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccess();
 
-        List<AssessmentReviewPanelParticipantResource> assessmentReviewPanelParticipantResourceList = reviewPanelInviteRestService.getAllInvitesByUser(userId).getSuccessObject();
+        List<AssessmentReviewPanelParticipantResource> assessmentReviewPanelParticipantResourceList = reviewPanelInviteRestService.getAllInvitesByUser(userId).getSuccess();
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),

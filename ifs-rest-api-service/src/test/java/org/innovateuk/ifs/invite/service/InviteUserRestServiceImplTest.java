@@ -46,7 +46,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, RoleInviteResource.class, roleInviteResource);
         RestResult<RoleInviteResource> result = service.getInvite(inviteHash);
         assertTrue(result.isSuccess());
-        assertEquals(roleInviteResource, result.getSuccessObject());
+        assertEquals(roleInviteResource, result.getSuccess());
     }
 
     @Test
@@ -56,14 +56,14 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, Boolean.class, true);
         RestResult<Boolean> returnedResponse = service.checkExistingUser(inviteHash);
         assertTrue(returnedResponse.isSuccess());
-        assertTrue(returnedResponse.getSuccessObject());
+        assertTrue(returnedResponse.getSuccess());
     }
 
     @Test
     public void getPendingInternalUsers() throws Exception {
         RoleInvitePageResource expected = new RoleInvitePageResource();
         setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()), RoleInvitePageResource.class, expected, OK);
-        RoleInvitePageResource result = service.getPendingInternalUserInvites(0, 5).getSuccessObjectOrThrowException();
+        RoleInvitePageResource result = service.getPendingInternalUserInvites(0, 5).getSuccess();
         assertEquals(expected, result);
     }
 
@@ -75,7 +75,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
 
         List<ExternalInviteResource> expected = Collections.singletonList(new ExternalInviteResource());
         setupGetWithRestResultExpectations(inviteRestBaseUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType(), expected, OK);
-        List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
+        List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccess();
         assertEquals(expected, result);
     }
 }

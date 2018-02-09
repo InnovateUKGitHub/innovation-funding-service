@@ -36,7 +36,7 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         when(innovationAreaRepositoryMock.findAllByOrderByPriorityAsc()).thenReturn(innovationAreas);
         when(innovationAreaMapperMock.mapToResource(refEq(innovationAreas))).thenReturn(expectedInnovationAreaResources);
 
-        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreas().getSuccessObject();
+        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreas().getSuccess();
 
         assertEquals(expectedInnovationAreaResources, actualInnovationAreaResources);
 
@@ -54,7 +54,7 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         when(innovationSectorRepositoryMock.findAllByOrderByPriorityAsc()).thenReturn(innovationSectors);
         when(innovationSectorMapperMock.mapToResource(refEq(innovationSectors))).thenReturn(expectedInnovationSectorResources);
 
-        List<InnovationSectorResource> actualInnovationSectorResources = categoryService.getInnovationSectors().getSuccessObject();
+        List<InnovationSectorResource> actualInnovationSectorResources = categoryService.getInnovationSectors().getSuccess();
 
         assertEquals(expectedInnovationSectorResources, actualInnovationSectorResources);
 
@@ -72,7 +72,7 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         when(researchCategoryRepositoryMock.findAllByOrderByPriorityAsc()).thenReturn(researchCategories);
         when(researchCategoryMapperMock.mapToResource(refEq(researchCategories))).thenReturn(expectedResearchCategoryResources);
 
-        List<ResearchCategoryResource> actualResearchCategoryResources = categoryService.getResearchCategories().getSuccessObject();
+        List<ResearchCategoryResource> actualResearchCategoryResources = categoryService.getResearchCategories().getSuccess();
 
         assertEquals(expectedResearchCategoryResources, actualResearchCategoryResources);
 
@@ -96,7 +96,7 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         when(innovationSectorRepositoryMock.findOne(sectorId)).thenReturn(innovationSector);
         when(innovationAreaMapperMock.mapToResource(refEq(innovationAreas))).thenReturn(expectedInnovationAreaResources);
 
-        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreasBySector(sectorId).getSuccessObject();
+        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreasBySector(sectorId).getSuccess();
 
         assertEquals(expectedInnovationAreaResources, actualInnovationAreaResources);
 
@@ -125,7 +125,7 @@ public class CategoryServiceImplTest extends BaseUnitTestMocksTest {
         when(innovationAreaRepositoryMock.findAllByOrderByPriorityAsc()).thenReturn(allInnovationAreas);
         when(innovationAreaMapperMock.mapToResource(refEq(allInnovationAreas))).thenReturn(expectedInnovationAreaResources);
 
-        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreasBySector(sectorId).getSuccessObject();
+        List<InnovationAreaResource> actualInnovationAreaResources = categoryService.getInnovationAreasBySector(sectorId).getSuccess();
 
         assertEquals(expectedInnovationAreaResources, actualInnovationAreaResources);
 

@@ -78,7 +78,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(result.isSuccess());
 
-        CompetitionSummaryResource summaryResource = result.getSuccessObject();
+        CompetitionSummaryResource summaryResource = result.getSuccess();
 
         assertEquals(COMP_ID, summaryResource.getCompetitionId());
         assertEquals(competition.getName(), summaryResource.getCompetitionName());

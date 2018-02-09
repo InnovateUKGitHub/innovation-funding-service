@@ -36,7 +36,7 @@ public class PanelInviteAssessorsOverviewModelPopulator extends PanelInviteAsses
                                                                      String originQuery) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         ReviewPanelInviteAssessorsOverviewViewModel model = super.populateModel(competition);
 
@@ -44,7 +44,7 @@ public class PanelInviteAssessorsOverviewModelPopulator extends PanelInviteAsses
                 competition.getId(),
                 page,
                 asList(REJECTED, PENDING)
-        ).getSuccessObjectOrThrowException();
+        ).getSuccess();
 
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 

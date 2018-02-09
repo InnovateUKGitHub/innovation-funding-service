@@ -31,14 +31,14 @@ public class PanelInviteAssessorsFindModelPopulator extends PanelInviteAssessors
                                                                  String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         ReviewPanelInviteAssessorsFindViewModel model = super.populateModel(competition);
 
         AvailableAssessorPageResource pageResource = reviewPanelInviteRestService.getAvailableAssessors(
                 competition.getId(),
                 page)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<ReviewPanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 

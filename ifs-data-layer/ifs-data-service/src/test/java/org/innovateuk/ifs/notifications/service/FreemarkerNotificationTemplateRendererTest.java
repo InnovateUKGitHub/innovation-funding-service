@@ -53,7 +53,7 @@ public class FreemarkerNotificationTemplateRendererTest extends BaseServiceUnitT
 
         ServiceResult<String> renderResult = service.renderTemplate(from, to, "/path/to/template", asMap("arg1", "1", "arg2", 2L));
         assertTrue(renderResult.isSuccess());
-        assertEquals("", renderResult.getSuccessObject());
+        assertEquals("", renderResult.getSuccess());
 
         Map<String, Object> expectedTemplateArguments = asMap("notificationSource", from, "notificationTarget", to, "arg1", "1", "arg2", 2L);
         verify(freemarkerTemplateMock).process(eq(expectedTemplateArguments), isA(Writer.class));

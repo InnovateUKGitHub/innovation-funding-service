@@ -92,7 +92,7 @@ public class ProjectSpendProfileApprovalController {
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         String leadTechnologist = competition.getLeadTechnologist() != null ? userService.findById(competition.getLeadTechnologist()).getName() : "";
         ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(projectId);

@@ -57,7 +57,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
                                    @PathVariable("competitionId") long competitionId,
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
-        AssessorInvitesToSendResource invites = reviewPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource invites = reviewPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToPanelOverviewTab(competitionId);
@@ -113,7 +113,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             AssessorInvitesToSendResource invites = reviewPanelInviteRestService.getAllInvitesToResend(
                     competitionId,
-                    submittedSelectionForm.getSelectedInviteIds()).getSuccessObjectOrThrowException();
+                    submittedSelectionForm.getSelectedInviteIds()).getSuccess();
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),
                     invites.getCompetitionName(),

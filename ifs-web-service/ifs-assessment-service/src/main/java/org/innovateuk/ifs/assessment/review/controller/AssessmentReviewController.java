@@ -56,7 +56,7 @@ public class AssessmentReviewController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            AssessmentReviewResource assessmentReview = assessmentPanelRestService.getAssessmentReview(reviewId).getSuccessObjectOrThrowException();
+            AssessmentReviewResource assessmentReview = assessmentPanelRestService.getAssessmentReview(reviewId).getSuccess();
             final RestResult<Void> updateResult;
             if (form.getReviewAccept()) {
                 updateResult = assessmentPanelRestService.acceptAssessmentReview(reviewId);

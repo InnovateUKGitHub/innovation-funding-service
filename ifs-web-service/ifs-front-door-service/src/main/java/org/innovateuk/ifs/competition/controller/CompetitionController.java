@@ -57,13 +57,6 @@ public class CompetitionController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
         TermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
-
-        // if-else block here for ZDD support - to be removed next Sprint
-        if (termsAndConditions != null) {
-            return "competition/info/" + termsAndConditions.getTemplate();
-        } else {
-            return "Advanced Propulsion Centre".equals(competition.getCompetitionTypeName()) ?
-                    "competition/info/apc-terms-and-conditions" : "competition/info/default-terms-and-conditions";
-        }
+        return "competition/info/" + termsAndConditions.getTemplate();
     }
 }

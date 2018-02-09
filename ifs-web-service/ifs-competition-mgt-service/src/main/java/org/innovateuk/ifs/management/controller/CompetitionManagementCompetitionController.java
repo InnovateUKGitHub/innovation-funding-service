@@ -50,13 +50,13 @@ public class CompetitionManagementCompetitionController {
 
     @PostMapping("/{competitionId}/close-assessment")
     public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
-        competitionPostSubmissionRestService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.closeAssessment(competitionId).getSuccess();
         return "redirect:/competition/" + competitionId;
     }
 
     @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccess();
         return "redirect:/competition/" + competitionId;
     }
 

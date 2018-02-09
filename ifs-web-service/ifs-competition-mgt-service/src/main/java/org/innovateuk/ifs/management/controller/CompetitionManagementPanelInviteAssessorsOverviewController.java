@@ -160,6 +160,6 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
     }
 
     private List<Long> getAllInviteIds(long competitionId) {
-        return reviewPanelInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccessObjectOrThrowException();
+        return reviewPanelInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccess();
     }
 }
