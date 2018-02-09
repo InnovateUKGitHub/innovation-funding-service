@@ -28,6 +28,9 @@ public class LabourCostHandler extends FinanceRowHandler {
             String fieldValue = financeFormField.getValue();
             if(fieldValue != null) {
                 switch (financeFormField.getCostName()) {
+                    case "grossAnnualSalary": // added for zdd support - to be removed on next Sprint
+                        grossEmployeeCost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
+                        break;
                     case "grossEmployeeCost":
                         grossEmployeeCost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
                         break;
