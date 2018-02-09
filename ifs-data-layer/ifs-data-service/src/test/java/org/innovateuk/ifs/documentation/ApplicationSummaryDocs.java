@@ -33,7 +33,7 @@ public class ApplicationSummaryDocs {
             fieldWithPath("content[].innovationArea").description("The innovation area of the application"),
             fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent"),
             fieldWithPath("content[].ineligibleInformed").description("Whether the applicant has been informed the application is ineligible"),
-            fieldWithPath("content[].inAssessmentPanel").description("Whether the application has been chosen for assessment panel")
+            fieldWithPath("content[].inAssessmentPanel").description("Whether the application has been chosen for assessment review panel")
     };
 
     public static final ApplicationSummaryResourceBuilder APPLICATION_SUMMARY_RESOURCE_BUILDER =

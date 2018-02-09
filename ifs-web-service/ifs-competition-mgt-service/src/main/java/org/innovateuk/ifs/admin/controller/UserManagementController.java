@@ -102,13 +102,13 @@ public class UserManagementController extends AsyncAdaptor {
     private String view(Model model, String activeTab, int page, int size, String existingQueryString){
 
         CompletableFuture<UserPageResource> activeUsers = async(() ->
-                userRestService.getActiveInternalUsers(page, size).getSuccessObjectOrThrowException());
+                userRestService.getActiveInternalUsers(page, size).getSuccess());
 
         CompletableFuture<UserPageResource> inactiveUsers = async(() ->
-                userRestService.getInactiveInternalUsers(page, size).getSuccessObjectOrThrowException());
+                userRestService.getInactiveInternalUsers(page, size).getSuccess());
 
         CompletableFuture<RoleInvitePageResource> pendingUsers = async(() ->
-                inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccessObjectOrThrowException());
+                inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
 
         awaitAll(activeUsers, inactiveUsers, pendingUsers).thenAccept(
                 (activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {
@@ -138,7 +138,7 @@ public class UserManagementController extends AsyncAdaptor {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
                     model.addAttribute("model", new EditUserViewModel(user));
                     return "admin/user";
-        }).getSuccessObjectOrThrowException();
+        }).getSuccess();
     }
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
@@ -151,7 +151,7 @@ public class UserManagementController extends AsyncAdaptor {
 
     private String viewEditUser(Model model, Long userId, EditUserForm form) {
 
-        UserResource userResource = userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
+        UserResource userResource = userRestService.retrieveUserById(userId).getSuccess();
         form.setFirstName(userResource.getFirstName());
         form.setLastName(userResource.getLastName());
         // userResource.getRolesString() will return a single role for internal users
@@ -193,14 +193,14 @@ public class UserManagementController extends AsyncAdaptor {
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
     public String deactivateUser(@P("userId")@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@P("userId") @PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
     @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
@@ -256,7 +256,7 @@ public class UserManagementController extends AsyncAdaptor {
                     failNowOrSucceedWith(failureView, () -> {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "users");
-                                model.addAttribute("users", users.getSuccessObjectOrThrowException());
+                                model.addAttribute("users", users.getSuccess());
                                 return "admin/search-external-users";
                             }
                     );
@@ -272,7 +272,7 @@ public class UserManagementController extends AsyncAdaptor {
                     failNowOrSucceedWith(failureView, () -> {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "invites");
-                                model.addAttribute("invites", invites.getSuccessObjectOrThrowException());
+                                model.addAttribute("invites", invites.getSuccess());
                                 return "admin/search-external-users";
                             }
                     );

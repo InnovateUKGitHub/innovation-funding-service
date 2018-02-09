@@ -31,12 +31,12 @@ public class InnovationAreaAjaxController {
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
         if (CompetitionSpecialSectors.isOpenSector().test(innovationSectorId)) {
-            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccess();
             returningList.add(0, createAllInnovationArea());
 
             return returningList;
         } else {
-            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
+            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccess();
         }
     }
 

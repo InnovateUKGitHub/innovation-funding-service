@@ -139,7 +139,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         List<Long> innovationAreas = initialDetailsForm.getInnovationAreaCategoryIds();
 
         if (competition.getInnovationSector() != null) {
-            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+            List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
             List<Long> allInnovationAreasIds = getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toList());
             List<Long> newInnovationAreaIds = initialDetailsForm.getInnovationAreaCategoryIds();
 
@@ -172,7 +172,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 }
             }
         } else {
-            List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccessObjectOrThrowException();
+            List<InnovationAreaResource> children = categoryRestService.getInnovationAreasBySector(competition.getInnovationSector()).getSuccess();
             List<Long> childrenIds = children.stream().map(InnovationAreaResource::getId).collect(Collectors.toList());
 
             boolean foundNotMatchingId = innovationAreaIds.stream().anyMatch(areaId -> !childrenIds.contains(areaId));
@@ -245,9 +245,9 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
 	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
 
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccess();
         if(milestones.isEmpty()) {
-            milestones = competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionId).getSuccessObjectOrThrowException();
+            milestones = competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionId).getSuccess();
         }
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
 
@@ -304,7 +304,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
     }
 
     private Set<Long> getAllInnovationAreaIds() {
-        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+        List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
         return getAllInnovationAreaIds(allInnovationAreas).collect(Collectors.toSet());
     }
 

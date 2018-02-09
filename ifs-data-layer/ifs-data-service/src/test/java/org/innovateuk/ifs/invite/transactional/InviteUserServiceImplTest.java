@@ -330,7 +330,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(userRepositoryMock.findByEmail(roleInvite.getEmail())).thenReturn(Optional.of(newUser().build()));
         ServiceResult<Boolean> result = service.checkExistingUser("SomeInviteHash");
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
+        assertTrue(result.getSuccess());
     }
 
     @Test
@@ -357,7 +357,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
         assertTrue(result.isSuccess());
 
-        RoleInvitePageResource resultObject = result.getSuccessObject();
+        RoleInvitePageResource resultObject = result.getSuccess();
         assertEquals(5, resultObject.getSize());
         assertEquals(1, resultObject.getTotalPages());
         assertEquals(4, resultObject.getContent().size());
@@ -407,7 +407,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
         assertTrue(result.isSuccess());
 
-        RoleInvitePageResource resultObject = result.getSuccessObject();
+        RoleInvitePageResource resultObject = result.getSuccess();
 
         // Ensure they are sorted by name
         assertEquals(roleInviteResource2, resultObject.getContent().get(0));
@@ -651,21 +651,21 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     private void assertFindExternalInvites(ServiceResult<List<ExternalInviteResource>> result) {
         assertTrue(result.isSuccess());
-        assertEquals(5, result.getSuccessObject().size());
-        assertEquals("b@email.com", result.getSuccessObject().get(0).getEmail());
-        assertEquals("Columbia Data Products", result.getSuccessObject().get(0).getOrganisationName());
+        assertEquals(5, result.getSuccess().size());
+        assertEquals("b@email.com", result.getSuccess().get(0).getEmail());
+        assertEquals("Columbia Data Products", result.getSuccess().get(0).getOrganisationName());
 
-        assertEquals("u@email.com", result.getSuccessObject().get(1).getEmail());
-        assertEquals("Mutiny", result.getSuccessObject().get(1).getOrganisationName());
+        assertEquals("u@email.com", result.getSuccess().get(1).getEmail());
+        assertEquals("Mutiny", result.getSuccess().get(1).getOrganisationName());
 
-        assertEquals("x@email.com", result.getSuccessObject().get(2).getEmail());
-        assertEquals("Tesla", result.getSuccessObject().get(2).getOrganisationName());
+        assertEquals("x@email.com", result.getSuccess().get(2).getEmail());
+        assertEquals("Tesla", result.getSuccess().get(2).getOrganisationName());
 
-        assertEquals("z@email.com", result.getSuccessObject().get(3).getEmail());
-        assertEquals("Cardiff Electric", result.getSuccessObject().get(3).getOrganisationName());
+        assertEquals("z@email.com", result.getSuccess().get(3).getEmail());
+        assertEquals("Cardiff Electric", result.getSuccess().get(3).getOrganisationName());
 
         // The one without pre-exiting organisation has name set correctly
-        assertEquals("zz@email.com", result.getSuccessObject().get(4).getEmail());
-        assertEquals("Rolls Royce Plc", result.getSuccessObject().get(4).getOrganisationName());
+        assertEquals("zz@email.com", result.getSuccess().get(4).getEmail());
+        assertEquals("Rolls Royce Plc", result.getSuccess().get(4).getOrganisationName());
     }
 }

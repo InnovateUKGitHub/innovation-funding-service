@@ -80,7 +80,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         for (Long organisationId : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();
             for (Section section : sections) {
-                if (this.isSectionComplete(section, application.getId(), organisationId).getSuccessObject()) {
+                if (this.isSectionComplete(section, application.getId(), organisationId).getSuccess()) {
                     completedSections.add(section.getId());
                 }
             }
@@ -213,7 +213,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                             final ServiceResult<Boolean> sectionComplete = isSectionComplete(childSection, applicationId, organisationId);
                             if (sectionComplete.isFailure()) {
                                 return sectionComplete;
-                            } else if (!sectionComplete.getSuccessObject()) {
+                            } else if (!sectionComplete.getSuccess()) {
                                 return serviceSuccess(false);
                             }
 
@@ -232,7 +232,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 // if one of the questions is incomplete then the whole section is incomplete
                 if (markedAsComplete.isFailure()) {
                     return markedAsComplete;
-                } else if (!markedAsComplete.getSuccessObject()) {
+                } else if (!markedAsComplete.getSuccess()) {
                     return serviceSuccess(false);
                 }
             }
@@ -260,7 +260,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
         for (Section section : sections) {
             for (ApplicationFinance applicationFinance : applicationFinanceList) {
-                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId()).getSuccessObject()) {
+                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId()).getSuccess()) {
                     allSectionsWithSubsectionsAreComplete = false;
                     break;
                 }

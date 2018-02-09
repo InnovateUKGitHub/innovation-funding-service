@@ -2,29 +2,26 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
-import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.panel.domain.AssessmentReviewRejectOutcome;
-import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewRejectOutcomeMapper;
-import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
-import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
+import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.review.domain.AssessmentReviewRejectOutcome;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
-import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -38,7 +35,7 @@ import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
+import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_ACCEPT_FAILED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_REJECT_FAILED;
@@ -62,9 +59,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
-    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
-
-    @Autowired
     private AssessmentReviewWorkflowHandler workflowHandler;
 
     @Autowired
@@ -77,13 +71,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     private ActivityStateRepository activityStateRepository;
 
     @Autowired
-    private ProcessRoleRepository processsRoleRepository;
-
-    @Autowired
     private NotificationSender notificationSender;
-
-    @Autowired
-    private NotificationTemplateRenderer renderer;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -104,7 +92,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     @Override
     public ServiceResult<Void> assignApplicationToPanel(long applicationId) {
         return getApplication(applicationId)
-                .andOnSuccessReturnVoid(application -> application.setInAssessmentPanel(true));
+                .andOnSuccessReturnVoid(application -> application.setInAssessmentReviewPanel(true));
     }
 
     @Override
@@ -115,7 +103,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private ServiceResult<Application> unassignApplicationFromPanel(Application application) {
-        application.setInAssessmentPanel(false);
+        application.setInAssessmentReviewPanel(false);
         return serviceSuccess(application);
     }
 
@@ -184,31 +172,28 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> createAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
+    private ServiceResult<Void> createAssessmentReview(AssessmentReviewPanelParticipant assessor, Application application) {
         if (!assessmentReviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
-            final ProcessRole processRole = createProcessRoleForAssessmentReview(assessor, application);
-            AssessmentReview assessmentReview =  new AssessmentReview(application, processRole);
-            assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+            final Role panelAssessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
+            final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED);
+
+            AssessmentReview assessmentReview =  new AssessmentReview(application, assessor, panelAssessorRole);
+            assessmentReview.setActivityState(createdActivityState);
             assessmentReviewRepository.save(assessmentReview);
         }
         return serviceSuccess();
-    }
-
-    private ProcessRole createProcessRoleForAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
-        final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
-        return processsRoleRepository.save(new ProcessRole(assessor.getUser(), application.getId(), assessorRole, null));
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
     }
 
-    private List<AssessmentPanelParticipant> getAllAssessorsOnPanel(long competitionId) {
+    private List<AssessmentReviewPanelParticipant> getAllAssessorsOnPanel(long competitionId) {
         return assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));}
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
         return applicationRepository
-                .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {

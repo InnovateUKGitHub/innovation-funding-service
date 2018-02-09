@@ -37,7 +37,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void test_create() throws Exception {
-        final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null);
+        final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null, null, null);
         assertAccessDenied(
                 () -> classUnderTest.create(queryResource),
                 () -> {
@@ -63,7 +63,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         setLoggedInUser(null);
 
         ServiceResult<List<QueryResource>> results = classUnderTest.findAll(22L);
-        assertEquals(0, results.getSuccessObject().size());
+        assertEquals(0, results.getSuccess().size());
 
         verify(queryRules, times(2)).projectFinanceUsersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
         verify(queryRules, times(2)).projectPartnersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
@@ -75,7 +75,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     public void test_addPost() throws Exception {
         setLoggedInUser(null);
         when(queryLookupStrategy.findById(3L)).thenReturn(new QueryResource(3L, null, new ArrayList<PostResource>(),
-                null, null, false, null));
+                null, null, false, null, null, null));
 
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
@@ -91,19 +91,24 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         @Override
         public ServiceResult<List<QueryResource>> findAll(Long contextClassPk) {
             List<QueryResource> queries = new ArrayList<>();
-            queries.add(findOne(2L).getSuccessObject());
-            queries.add(findOne(3L).getSuccessObject());
+            queries.add(findOne(2L).getSuccess());
+            queries.add(findOne(3L).getSuccess());
             return ServiceResult.serviceSuccess(queries);
         }
 
         @Override
         public ServiceResult<QueryResource> findOne(Long id) {
             return ServiceResult.serviceSuccess(new QueryResource(id,
-                    null, null, null, null, false, null));
+                    null, null, null, null, false, null, null, null));
         }
 
         @Override
         public ServiceResult<Long> create(QueryResource QueryResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> close(Long queryId) {
             return null;
         }
 

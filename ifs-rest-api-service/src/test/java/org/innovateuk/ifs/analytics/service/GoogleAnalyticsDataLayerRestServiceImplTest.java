@@ -26,7 +26,7 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
                 expected
         );
 
-        String actual = service.getCompetitionNameForApplication(applicationId).getSuccessObject();
+        String actual = service.getCompetitionNameForApplication(applicationId).getSuccess();
 
         assertEquals(expected, actual);
     }
@@ -42,7 +42,7 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
                 expected
         );
 
-        String actual = service.getCompetitionName(competitionId).getSuccessObject();
+        String actual = service.getCompetitionName(competitionId).getSuccess();
 
         assertEquals(expected, actual);
     }
@@ -58,7 +58,7 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
                 expected
         );
 
-        String actual = service.getCompetitionNameForProject(projectId).getSuccessObject();
+        String actual = service.getCompetitionNameForProject(projectId).getSuccess();
 
         assertEquals(expected, actual);
     }
@@ -74,7 +74,7 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
                 expected
         );
 
-        String actual = service.getCompetitionNameForAssessment(assessmentId).getSuccessObject();
+        String actual = service.getCompetitionNameForAssessment(assessmentId).getSuccess();
 
         assertEquals(expected, actual);
     }

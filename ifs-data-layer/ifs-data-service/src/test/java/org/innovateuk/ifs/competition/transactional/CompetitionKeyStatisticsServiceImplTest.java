@@ -57,7 +57,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(competitionAssessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
 
-        CompetitionReadyToOpenKeyStatisticsResource response = service.getReadyToOpenKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
+        CompetitionReadyToOpenKeyStatisticsResource response = service.getReadyToOpenKeyStatisticsByCompetition(competitionId).getSuccess();
         assertEquals(keyStatisticsResource, response);
     }
 
@@ -86,7 +86,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateNotInAndCompletionGreaterThan(competitionId, SUBMITTED_AND_INELIGIBLE_STATES, limit)).thenReturn(keyStatisticsResource.getApplicationsPastHalf());
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_AND_INELIGIBLE_STATES)).thenReturn(keyStatisticsResource.getApplicationsSubmitted());
 
-        CompetitionOpenKeyStatisticsResource response = service.getOpenKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
+        CompetitionOpenKeyStatisticsResource response = service.getOpenKeyStatisticsByCompetition(competitionId).getSuccess();
         assertEquals(keyStatisticsResource, response);
     }
 
@@ -135,7 +135,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(competitionAssessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
 
-        CompetitionClosedKeyStatisticsResource response = service.getClosedKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
+        CompetitionClosedKeyStatisticsResource response = service.getClosedKeyStatisticsByCompetition(competitionId).getSuccess();
         assertEquals(keyStatisticsResource, response);
 
     }
@@ -173,7 +173,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(assessmentRepositoryMock.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId)).thenReturn(keyStatisticsResource.getAssessmentsStarted());
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(SUBMITTED, competitionId)).thenReturn(keyStatisticsResource.getAssessmentsSubmitted());
 
-        CompetitionInAssessmentKeyStatisticsResource response = service.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
+        CompetitionInAssessmentKeyStatisticsResource response = service.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccess();
         assertEquals(keyStatisticsResource, response);
     }
 
@@ -192,7 +192,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId)).thenReturn(applicationsNotifiedOfDecision);
         when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId)).thenReturn(applicationsAwaitingDecision);
 
-        CompetitionFundedKeyStatisticsResource response = service.getFundedKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
+        CompetitionFundedKeyStatisticsResource response = service.getFundedKeyStatisticsByCompetition(competitionId).getSuccess();
 
         assertEquals(3, response.getApplicationsSubmitted());
         assertEquals(1, response.getApplicationsFunded());

@@ -52,5 +52,4 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
         String url = PROJECT_INVITE_BASE_URL + GET_PROJECT_INVITE_LIST + projectId;
         return getWithRestResult(url, inviteProjectResourceListType());
     }
-
 }

@@ -70,7 +70,7 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
         long projectId = 1L;
         ServiceResult<List<InviteProjectResource>> invitesByProject = classUnderTest.getInvitesByProject(projectId);
         verify(projectInvitePermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).partnersOnProjectCanViewInvite(any(InviteProjectResource.class), any(UserResource.class));
-        assertTrue(invitesByProject.getSuccessObject().isEmpty());
+        assertTrue(invitesByProject.getSuccess().isEmpty());
     }
 
     @Override

@@ -52,7 +52,7 @@ public class FinanceOverviewController {
     }
 
     private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId) {
-        final List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccessObjectOrThrowException();
+        final List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationRestService.getProjectPartnerOrganisations(projectId).getSuccess();
         final PartnerOrganisationResource lead = simpleFindFirst(partnerOrgs, PartnerOrganisationResource::isLeadOrganisation).orElse(null);
         final List<PartnerOrganisationResource> sortedOrganisations
                 = new PrioritySorting<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
@@ -62,7 +62,7 @@ public class FinanceOverviewController {
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {
-        FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
+        FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccess();
         return new ProjectFinanceOverviewViewModel(financeCheckOverviewResource);
     }
 

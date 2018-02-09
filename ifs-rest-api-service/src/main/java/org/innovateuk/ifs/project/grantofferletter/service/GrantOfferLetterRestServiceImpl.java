@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -68,33 +68,13 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
-    public RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/is-send-grant-offer-letter-allowed", Boolean.class);
-    }
-
-    @Override
-    public RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/is-grant-offer-letter-already-sent", Boolean.class);
-    }
-
-    @Override
     public RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/" + approvalType, Void.class);
     }
 
     @Override
-    public RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval", Boolean.class);
-    }
-
-    @Override
-    public RestResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/is-rejected", Boolean.class);
-    }
-
-    @Override
-    public RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
-        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GrantOfferLetterState.class);
+    public RestResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/current-state", GrantOfferLetterStateResource.class);
     }
 
     @Override

@@ -7,8 +7,8 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -115,6 +115,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
         return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
+    }
+
+    @Override
+    public ServiceResult<List<AssessmentResource>> findByUserAndApplication(long userId, long applicationId) {
+        return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetId(userId, applicationId), assessmentMapper::mapToResource));
     }
 
     @Override

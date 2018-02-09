@@ -38,14 +38,14 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private BankDetailsRestService bankDetailsRestService;
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the competition management dashboard")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of live competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
@@ -54,7 +54,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "live";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of competitions in project setup")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
@@ -63,7 +63,7 @@ public class CompetitionManagementDashboardController {
         Long countBankDetails = 0L;
         boolean projectFinanceUser = isProjectFinanceUser(user);
         if (projectFinanceUser) {
-            countBankDetails = bankDetailsRestService.countPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
+            countBankDetails = bankDetailsRestService.countPendingBankDetailsApprovals().getSuccess();
         }
 
         model.addAttribute(MODEL_ATTR,
@@ -76,7 +76,7 @@ public class CompetitionManagementDashboardController {
         return SecurityRuleUtil.isProjectFinanceUser(user);
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, and support roles are allowed to view the list of upcoming competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/upcoming")
     public String upcoming(Model model, UserResource user) {
@@ -89,8 +89,8 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the list of previous competitions")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions(),
@@ -99,7 +99,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "previous";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, and support roles are allowed to view the list of non-IFS competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/non-ifs")
     public String nonIfs(Model model, UserResource user) {
@@ -107,7 +107,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "The competition admin, project finance, support, and innovation lead roles are allowed to view the search page for competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
@@ -120,11 +120,11 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "The competition admin and project finance roles are allowed to view the page for setting up new competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @GetMapping("/competition/create")
     public String create(){
-        CompetitionResource competition = competitionSetupRestService.create().getSuccessObjectOrThrowException();
+        CompetitionResource competition = competitionSetupRestService.create().getSuccess();
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
 

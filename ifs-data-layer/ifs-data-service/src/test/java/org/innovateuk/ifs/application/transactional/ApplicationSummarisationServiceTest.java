@@ -59,7 +59,7 @@ public class ApplicationSummarisationServiceTest {
 		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 		
 		assertTrue(result.isSuccess());
-		assertEquals(new BigDecimal("6.00"), result.getSuccessObject());
+		assertEquals(new BigDecimal("6.00"), result.getSuccess());
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class ApplicationSummarisationServiceTest {
 		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 		
 		assertTrue(result.isSuccess());
-		assertEquals(new BigDecimal("0.00"), result.getSuccessObject());
+		assertEquals(new BigDecimal("0.00"), result.getSuccess());
 		verifyNoMoreInteractions(financeRowService);
 	}
 	
@@ -88,7 +88,7 @@ public class ApplicationSummarisationServiceTest {
 		ServiceResult<BigDecimal> result = service.getTotalProjectCost(application);
 		
 		assertTrue(result.isSuccess());
-		assertEquals(new BigDecimal("10.00"), result.getSuccessObject());
+		assertEquals(new BigDecimal("10.00"), result.getSuccess());
 	}
 	
 	@Test
@@ -98,7 +98,7 @@ public class ApplicationSummarisationServiceTest {
 		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 		
 		assertTrue(result.isSuccess());
-		assertEquals(new BigDecimal("0.00"), result.getSuccessObject());
+		assertEquals(new BigDecimal("0.00"), result.getSuccess());
 		verifyNoMoreInteractions(financeRowService);
 	}
 }

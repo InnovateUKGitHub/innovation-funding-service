@@ -36,7 +36,7 @@ public class ProjectInviteRestServiceImplTest extends BaseRestServiceUnitTest<Pr
         setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + CHECK_EXISTING_USER_URL + inviteHash, Boolean.class, true);
         RestResult<Boolean> returnedResponse = service.checkExistingUser(inviteHash);
         assertTrue(returnedResponse.isSuccess());
-        assertTrue(returnedResponse.getSuccessObject());
+        assertTrue(returnedResponse.getSuccess());
     }
 
 
@@ -47,7 +47,7 @@ public class ProjectInviteRestServiceImplTest extends BaseRestServiceUnitTest<Pr
         setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_INVITE_BY_HASH + invite.getHash(), InviteProjectResource.class, invite);
         RestResult<InviteProjectResource> returnedResponse = service.getInviteByHash(invite.getHash());
         assertTrue(returnedResponse.isSuccess());
-        assertEquals(invite, returnedResponse.getSuccessObject());
+        assertEquals(invite, returnedResponse.getSuccess());
     }
 
     @Test
@@ -57,6 +57,6 @@ public class ProjectInviteRestServiceImplTest extends BaseRestServiceUnitTest<Pr
         setupGetWithRestResultAnonymousExpectations(PROJECT_INVITE_BASE_URL + GET_USER_BY_HASH_MAPPING + inviteHash, UserResource.class, user);
         RestResult<UserResource> returnedResponse = service.getUser(inviteHash);
         assertTrue(returnedResponse.isSuccess());
-        assertEquals(user, returnedResponse.getSuccessObject());
+        assertEquals(user, returnedResponse.getSuccess());
     }
 }

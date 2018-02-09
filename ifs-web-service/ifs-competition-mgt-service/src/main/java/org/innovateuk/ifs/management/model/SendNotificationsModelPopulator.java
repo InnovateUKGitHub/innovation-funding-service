@@ -33,7 +33,7 @@ public class SendNotificationsModelPopulator {
 
         ApplicationSummaryPageResource pagedApplications = applicationSummaryRestService
                 .getAllApplications(competitionId, null, 0, Integer.MAX_VALUE, empty())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<ApplicationSummaryResource> filteredApplications = pagedApplications.getContent().stream()
                 .filter(application -> applicationIds.contains(application.getId()) )

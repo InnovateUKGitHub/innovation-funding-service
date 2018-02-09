@@ -146,7 +146,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
         assertTrue(result.isSuccess());
-        assertEquals(expectedResult, result.getSuccessObject());
+        assertEquals(expectedResult, result.getSuccess());
 
         InOrder inOrder = inOrder(competitionTemplatePersistorMock);
         inOrder.verify(competitionTemplatePersistorMock).cleanByEntityId(competition.getId());
@@ -165,6 +165,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
                 .withSections(templateSections)
                 .withFullApplicationFinance(false)
                 .withTermsAndConditions(templateTermsAndConditions)
+                .withAcademicGrantPercentage(30)
                 .build();
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
@@ -188,6 +189,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         assertEquals(false, competition.isFullApplicationFinance());
         assertSame(templateTermsAndConditions, competition.getTermsAndConditions());
+        assertSame(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
     }
 
     @Test

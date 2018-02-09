@@ -70,8 +70,8 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
 
         if (applicationFinanceResource != null) {
-            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
-            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccessObjectOrThrowException();
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccess();
+            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccess();
             model.addAttribute("organisationFinance", applicationFinanceResource.getFinanceOrganisationDetails());
             model.addAttribute("organisationFinanceSize", applicationFinanceResource.getOrganisationSize());
             model.addAttribute("organisationType", organisationType);
@@ -101,8 +101,8 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
 
         if (applicationFinanceResource != null) {
-            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
-            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccessObjectOrThrowException();
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccess();
+            List<OrganisationSizeResource> organisationSizes = organisationDetailsRestService.getOrganisationSizes().getSuccess();
             financeViewModel.setOrganisationFinance(applicationFinanceResource.getFinanceOrganisationDetails());
             financeViewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
             financeViewModel.setOrganisationType(organisationType);
@@ -154,7 +154,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     }
 
     private FinanceRowType costTypeForQuestion(QuestionResource question) {
-    	List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
+    	List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccess();
     	if(formInputs.isEmpty()) {
     		return null;
     	}

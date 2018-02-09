@@ -20,6 +20,6 @@ public abstract class BaseCompetitionManagementAssessmentsController<T extends A
     private CompetitionRestService competitionService;
 
     protected CompetitionResource getCompetition(long competitionId) {
-        return competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        return competitionService.getCompetitionById(competitionId).getSuccess();
     }
 }

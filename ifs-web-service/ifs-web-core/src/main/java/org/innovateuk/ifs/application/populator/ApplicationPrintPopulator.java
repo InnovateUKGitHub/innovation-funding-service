@@ -62,7 +62,7 @@ public class ApplicationPrintPopulator {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
         model.addAttribute("currentApplication", application);
         model.addAttribute("currentCompetition", competition);

@@ -3,6 +3,8 @@ package org.innovateuk.ifs.thread.service;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -14,17 +16,21 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.builder.RoleBuilder;
+import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,9 +56,12 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
@@ -70,11 +79,11 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     public void test_findOne() throws Exception {
         Long queryId = 1L;
         Query query = new Query(queryId, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, null, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, null, null, null, null, false, null, null, null);
         when(queryRepositoryMock.findOne(queryId)).thenReturn(query);
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
 
-        QueryResource response = service.findOne(queryId).getSuccessObjectOrThrowException();
+        QueryResource response = service.findOne(queryId).getSuccess();
 
         assertEquals(queryResource, response);
     }
@@ -87,30 +96,30 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         List<Query> queries = asList(query1, query2);
 
         QueryResource queryResource1 = new QueryResource(1L, null, null, null,
-                null, false, null);
+                null, false, null, null, null);
         QueryResource queryResource2 = new QueryResource(2L, null, null, null,
-                null, false, null);
+                null, false, null, null, null);
         List<QueryResource> queryResources = asList(queryResource1, queryResource2);
 
         when(queryRepositoryMock.findAllByClassPkAndClassName(contextId, ProjectFinance.class.getName())).thenReturn(queries);
         when(queryMapper.mapToResource(query1)).thenReturn(queryResource1);
         when(queryMapper.mapToResource(query2)).thenReturn(queryResource2);
 
-        List<QueryResource> response = service.findAll(contextId).getSuccessObjectOrThrowException();
+        List<QueryResource> response = service.findAll(contextId).getSuccess();
 
         assertEquals(queryResources, response);
     }
 
     @Test
     public void test_create() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         User u = newUser().
@@ -143,7 +152,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
+        Long result = service.create(queryToCreate).getSuccess();
 
         assertEquals(result, Long.valueOf(1L));
 
@@ -152,14 +161,14 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNoFinanceContact() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         User u = newUser().
@@ -195,14 +204,14 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNotificationNotSent() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         User u = newUser().
@@ -241,14 +250,14 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNoProjectFinance() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(null);
@@ -261,6 +270,47 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void closeQueryWhenQueryNotFound() throws Exception {
+
+        Long queryId = 1L;
+
+        ServiceResult<Void> result = service.close(queryId);
+
+        assertTrue(result.isFailure());
+
+        List<Object> allArguments = new ArrayList<>();
+        allArguments.add(Thread.class.getSimpleName());
+        assertTrue(result.getFailure().is(new Error(CommonFailureKeys.GENERAL_NOT_FOUND, Thread.class.getSimpleName() + " not found", allArguments, NOT_FOUND)));
+    }
+
+    @Test
+    public void closeQuerySuccess() throws Exception {
+
+        Long queryId = 1L;
+        Long loggedInUserId = 18L;
+
+        Query queryInDB = new Query(queryId, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        User loggedInUser = UserBuilder.newUser()
+                .withFirstName("Lee")
+                .withLastName("Bowman")
+                .build();
+
+        when(queryRepositoryMock.findOne(queryId)).thenReturn(queryInDB);
+        when(userRepositoryMock.findOne(loggedInUserId)).thenReturn(loggedInUser);
+        setLoggedInUser(newUserResource().withId(loggedInUserId)
+                .withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+
+        assertNull(queryInDB.getClosedBy());
+        assertNull(queryInDB.getClosedDate());
+
+        ServiceResult<Void> result = service.close(queryId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(queryInDB.getClosedBy(), loggedInUser);
+        assertNotNull(queryInDB.getClosedDate());
+    }
+
+    @Test
     public void test_addPost() throws Exception {
         Long queryId = 1L;
 
@@ -268,7 +318,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 
@@ -321,7 +371,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
         User u = newUser().withEmailAddress("a@b.com").withFirstName("A").withLastName("B").build();
         User u2 = newUser().withEmailAddress("Z@Y.com").withFirstName("Z").withLastName("Y").build();
         Organisation o = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -369,7 +419,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 
@@ -415,7 +465,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 
@@ -460,4 +510,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertTrue(service.addPost(post, queryId).isFailure());
     }
 
+    protected void setLoggedInUser(UserResource loggedInUser) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(loggedInUser));
+    }
 }

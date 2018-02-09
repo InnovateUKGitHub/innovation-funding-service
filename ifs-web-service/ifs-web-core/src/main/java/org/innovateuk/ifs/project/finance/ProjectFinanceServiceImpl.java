@@ -26,12 +26,12 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
 
     @Override
     public List<ProjectFinanceResource> getProjectFinances(Long projectId) {
-        return projectFinanceRestService.getProjectFinances(projectId).getSuccessObjectOrThrowException();
+        return projectFinanceRestService.getProjectFinances(projectId).getSuccess();
     }
 
     @Override
     public ViabilityResource getViability(Long projectId, Long organisationId) {
-        return projectFinanceRestService.getViability(projectId, organisationId).getSuccessObjectOrThrowException();
+        return projectFinanceRestService.getViability(projectId, organisationId).getSuccess();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
 
     @Override
     public EligibilityResource getEligibility(Long projectId, Long organisationId) {
-        return projectFinanceRestService.getEligibility(projectId, organisationId).getSuccessObjectOrThrowException();
+        return projectFinanceRestService.getEligibility(projectId, organisationId).getSuccess();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
 
     @Override
     public boolean isCreditReportConfirmed(Long projectId, Long organisationId) {
-        return projectFinanceRestService.isCreditReportConfirmed(projectId, organisationId).getSuccessObjectOrThrowException();
+        return projectFinanceRestService.isCreditReportConfirmed(projectId, organisationId).getSuccess();
     }
 
     @Override
@@ -69,16 +69,16 @@ public class ProjectFinanceServiceImpl implements ProjectFinanceService {
 
     @Override
     public ProjectFinanceResource addProjectFinance(Long projectId, Long organisationId) {
-        return projectFinanceRestService.addProjectFinanceForOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
+        return projectFinanceRestService.addProjectFinanceForOrganisation(projectId, organisationId).getSuccess();
     }
 
     @Override
     public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId) {
-        return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccessObjectOrThrowException();
+        return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccess();
     }
 
     @Override
     public ValidationMessages addCost(Long projectFinanceId, Long questionId) {
-        return projectFinanceRowRestService.add(projectFinanceId, questionId, null).getSuccessObjectOrThrowException();
+        return projectFinanceRowRestService.add(projectFinanceId, questionId, null).getSuccess();
     }
 }

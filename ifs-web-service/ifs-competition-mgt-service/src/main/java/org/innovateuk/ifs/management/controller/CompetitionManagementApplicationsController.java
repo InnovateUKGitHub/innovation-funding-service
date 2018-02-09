@@ -120,7 +120,7 @@ public class CompetitionManagementApplicationsController {
     }
 
     @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can view the list of unsuccessful applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin', 'innovation_lead')")
     @GetMapping("/unsuccessful")
     public String unsuccessfulApplications(Model model,
                                            @PathVariable("competitionId") long competitionId,
@@ -138,7 +138,7 @@ public class CompetitionManagementApplicationsController {
     }
 
     @SecuredBySpring(value = "READ", description = "Comp Admins, Project Finance users, Support users and IFS Admins can navigate between different lists of applications to a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin', 'innovation_lead')")
     @GetMapping("/manage")
     public String manageApplications(Model model,
                                      @PathVariable("competitionId") long competitionId) {
@@ -154,8 +154,8 @@ public class CompetitionManagementApplicationsController {
                                               @PathVariable("competitionId") long competitionId,
                                               @PathVariable("applicationId") long applicationId)  {
 
-        applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccessObjectOrThrowException();
-        projectService.createProjectFromApplicationId(applicationId).getSuccessObjectOrThrowException();
+        applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
+        projectService.createProjectFromApplicationId(applicationId).getSuccess();
 
         return "redirect:/competition/{competitionId}/applications/unsuccessful";
     }

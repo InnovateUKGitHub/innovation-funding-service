@@ -30,7 +30,7 @@ public class OrganisationDetailsRestServiceImplTest extends BaseRestServiceUnitT
         List<OrganisationSizeResource> returnedResponse = new ArrayList<>();
 
         setupGetWithRestResultExpectations(organisationSizeUrl, organisationSizeListType(), returnedResponse);
-        List<OrganisationSizeResource> actual = service.getOrganisationSizes().getSuccessObject();
+        List<OrganisationSizeResource> actual = service.getOrganisationSizes().getSuccess();
         assertNotNull(actual);
         assertEquals(returnedResponse, actual);
     }
@@ -46,7 +46,7 @@ public class OrganisationDetailsRestServiceImplTest extends BaseRestServiceUnitT
         setupGetWithRestResultExpectations(expectedUrl, Long.TYPE, count);
 
         // now run the method under test
-        Long actualCount = service.getHeadCount(applicationId, organisationId).getSuccessObject();
+        Long actualCount = service.getHeadCount(applicationId, organisationId).getSuccess();
         assertEquals(actualCount, Long.valueOf(count));
     }
 
@@ -60,7 +60,7 @@ public class OrganisationDetailsRestServiceImplTest extends BaseRestServiceUnitT
         setupGetWithRestResultExpectations(expectedUrl, Long.TYPE, count);
 
         // now run the method under test
-        Long actualCount = service.getTurnover(applicationId, organisationId).getSuccessObject();
+        Long actualCount = service.getTurnover(applicationId, organisationId).getSuccess();
         assertEquals(actualCount, Long.valueOf(count));
     }
 

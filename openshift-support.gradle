@@ -53,6 +53,10 @@ processResources {
     filesMatching("mysql-client/*.*") {
         expand project.properties
     }
+
+    filesMatching("finance-data-service/*.*") {
+        expand project.properties
+    }
 }
 
 task osDeployProduction(type: Exec) {

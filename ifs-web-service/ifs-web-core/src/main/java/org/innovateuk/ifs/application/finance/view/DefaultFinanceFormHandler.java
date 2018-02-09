@@ -88,13 +88,13 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     @Override
     public ValidationMessages addCost(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-        return financeRowRestService.add(applicationFinance.getId(), questionId, null).getSuccessObjectOrThrowException();
+        return financeRowRestService.add(applicationFinance.getId(), questionId, null).getSuccess();
     }
 
     @Override
     public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-        return financeRowRestService.addWithoutPersisting(applicationFinance.getId(), questionId).getSuccessObjectOrThrowException();
+        return financeRowRestService.addWithoutPersisting(applicationFinance.getId(), questionId).getSuccess();
     }
 
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
@@ -106,7 +106,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
         if (requestParams.containsKey("remove_cost")) {
             String removeCostParam = request.getParameter("remove_cost");
-            financeRowRestService.delete(Long.valueOf(removeCostParam)).getSuccessObjectOrThrowException();
+            financeRowRestService.delete(Long.valueOf(removeCostParam)).getSuccess();
         }
     }
 
@@ -114,7 +114,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId, Long competitionId, Long userId) {
         List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
         if (!financePositionKeys.isEmpty()) {
-            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId).getSuccessObjectOrThrowException();
+            ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId).getSuccess();
 
             financePositionKeys.stream().forEach(k -> {
                 String values = request.getParameterValues(k)[0];
@@ -176,12 +176,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
                         if (costItem != null && fieldGroup.size() > 0) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
-                            ValidationMessages addResult = financeRowRestService.add(applicationFinanceId, questionId, costItem).getSuccessObjectOrThrowException();
+                            ValidationMessages addResult = financeRowRestService.add(applicationFinanceId, questionId, costItem).getSuccess();
                             Either<FinanceRowItem, ValidationMessages> either;
                             if(addResult.hasErrors()) {
                                 either = Either.right(addResult);
                             } else {
-                                FinanceRowItem added = financeRowRestService.findById(addResult.getObjectId()).getSuccessObjectOrThrowException();
+                                FinanceRowItem added = financeRowRestService.findById(addResult.getObjectId()).getSuccess();
                                 either = Either.left(added);
                             }
 
@@ -227,15 +227,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             return addFinanceRowItem(costItem, userId, applicationId, question);
         } else {
             RestResult<ValidationMessages> messages = financeRowRestService.update(costItem);
-            ValidationMessages validationMessages = messages.getSuccessObject();
+            ValidationMessages validationMessages = messages.getSuccess();
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
                 LOG.debug("no validation errors on cost items");
-                return messages.getSuccessObject();
+                return messages.getSuccess();
             } else {
-                messages.getSuccessObject().getErrors().stream()
+                messages.getSuccess().getErrors().stream()
                         .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
-                return messages.getSuccessObject();
+                return messages.getSuccess();
             }
         }
     }
@@ -245,7 +245,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            return financeRowRestService.add(applicationFinanceResource.getId(), questionId, costItem).getSuccessObjectOrThrowException();
+            return financeRowRestService.add(applicationFinanceResource.getId(), questionId, costItem).getSuccess();
         }
         return null;
     }

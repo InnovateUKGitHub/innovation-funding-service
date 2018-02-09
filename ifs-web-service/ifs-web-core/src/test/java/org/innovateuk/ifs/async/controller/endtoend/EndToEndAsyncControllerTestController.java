@@ -57,7 +57,7 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
             CompletableFuture<Void> aChildFutureToBeCancelled = async(EndToEndAsyncControllerIntegrationTest::sleepQuietlyForRandomInterval);
 
             awaitAll(childFuture).thenAccept(done ->
-                    async(() -> restFailure(forbiddenError()).getSuccessObjectOrThrowException()));
+                    async(() -> restFailure(forbiddenError()).getSuccess()));
         });
 
         return null;

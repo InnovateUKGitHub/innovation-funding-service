@@ -6,5 +6,6 @@ package org.innovateuk.ifs.invite.resource;
 public enum CompetitionParticipantRoleResource {
     INNOVATION_LEAD,
     ASSESSOR,
-    PANEL_ASSESSOR
+    PANEL_ASSESSOR,
+    INTERVIEW_ASSESSOR
 }

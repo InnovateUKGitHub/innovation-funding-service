@@ -115,7 +115,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             ApplicationFinanceResource applicationFinance =
                     financeRowService.getApplicationFinanceById(data.getApplicationFinance().getId()).
-                            getSuccessObjectOrThrowException();
+                            getSuccess();
 
             applicationFinance.setOrganisationSize(organsationSize);
 
@@ -151,7 +151,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
-            List<FinanceRowItem> existingItems = financeRowService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccessObjectOrThrowException();
+            List<FinanceRowItem> existingItems = financeRowService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccess();
             simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
         });
     }
@@ -164,7 +164,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
             QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
             financeRowService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
-                    getSuccessObjectOrThrowException();
+                    getSuccess();
         });
     }
 
@@ -198,8 +198,8 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     @Override
     protected void postProcess(int index, IndustrialCostData instance) {
         super.postProcess(index, instance);
-        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccessObjectOrThrowException();
-        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccessObjectOrThrowException();
+        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccess();
+        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccess();
         LOG.info("Created Industrial Costs for Application '{}', Organisation '{}'", application.getName(), organisation.getName());
     }
 }
