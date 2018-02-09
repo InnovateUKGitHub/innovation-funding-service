@@ -31,12 +31,12 @@ public class InterviewPanelInviteApplicationsFindModelPopulator  {
                                                                  String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         AvailableApplicationPageResource pageResource = interviewPanelInviteRestService.getAvailableApplications(
                 competition.getId(),
                 page)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<InterviewPanelApplicationRowViewModel> applications = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
