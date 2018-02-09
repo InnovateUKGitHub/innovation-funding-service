@@ -60,12 +60,12 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         when(assessmentInterviewPanelInviteServiceMock.getAvailableAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
-        mockMvc.perform(get("/interviewpanelinvite/getAvailableAssessors/{competitionId}", competitionId)
+        mockMvc.perform(get("/interview-panel-invite/get-available-assessors/{competitionId}", competitionId)
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "firstName,asc"))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -91,9 +91,9 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         when(assessmentInterviewPanelInviteServiceMock.getAvailableAssessorIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interviewpanelinvite/getAvailableAssessorIds/{competitionId}", competitionId))
+        mockMvc.perform(get("/interview-panel-invite/get-available-assessor-ids/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -111,12 +111,12 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
-        mockMvc.perform(get("/interviewpanelinvite/getCreatedInvites/{competitionId}", 1L)
+        mockMvc.perform(get("/interview-panel-invite/get-created-invites/{competitionId}", 1L)
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -142,11 +142,11 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interviewpanelinvite/inviteUsers")
+        mockMvc.perform(post("/interview-panel-invite/invite-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(existingUserStagedInviteListResource)))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         requestFields(
                                 fieldWithPath("invites[]").description("List of existing users to be invited to the interview panel")
                         ).andWithPrefix("invites[].", existingUserStagedInviteResourceFields)
@@ -162,11 +162,11 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
         when(assessmentInterviewPanelInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interviewpanelinvite/sendAllInvites/{competitionId}", competitionId)
+        mockMvc.perform(post("/interview-panel-invite/send-all-invites/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(assessorInviteSendResource)))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition to send assessor panel invites for")
                         ),
@@ -186,11 +186,11 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
-        mockMvc.perform(get("/interviewpanelinvite/getAllInvitesToSend/{competitionId}", competitionId))
+        mockMvc.perform(get("/interview-panel-invite/get-all-invites-to-send/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition to get assemment panel invites for")
+                                parameterWithName("competitionId").description("Id of the competition to get interview panel invites for")
                         ),
                         responseFields(assessorInvitesToSendResourceFields)
                 ));
@@ -204,11 +204,11 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         AssessmentInterviewPanelParticipantResource interviewPanelParticipantResource = newAssessmentInterviewPanelParticipantResource().build();
         when(assessmentInterviewPanelInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(interviewPanelParticipantResource)));
 
-        mockMvc.perform(get("/interviewpanelinvite/getAllInvitesByUser/{userId}", userId))
+        mockMvc.perform(get("/interview-panel-invite/get-all-invites-by-user/{userId}", userId))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
-                                parameterWithName("userId").description("ID of the user to get interview panel invites for")
+                                parameterWithName("userId").description("Id of the user to get interview panel invites for")
                         ),
                         responseFields(fieldWithPath("[]").description("List of interview panel invites belonging to the user"))
                 ));
@@ -222,10 +222,10 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
-        mockMvc.perform(get("/interviewpanelinvite/getAllInvitesToResend/{competitionId}", competitionId)
+        mockMvc.perform(get("/interview-panel-invite/get-all-invites-to-resend/{competitionId}", competitionId)
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition to get invites for")
                         ),
@@ -246,12 +246,12 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
         when(assessmentInterviewPanelInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interviewpanelinvite/resendInvites")
+        mockMvc.perform(post("/interview-panel-invite/resend-invites")
                 .param("inviteIds", simpleJoiner(inviteIds, ","))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         requestParameters(
                                 parameterWithName("inviteIds")
                                         .description("Ids of invites to resend")
@@ -275,13 +275,13 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         when(assessmentInterviewPanelInviteServiceMock.getInvitationOverview(competitionId, pageable, status))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/interviewpanelinvite/getInvitationOverview/{competitionId}", 1L)
+        mockMvc.perform(get("/interview-panel-invite/get-invitation-overview/{competitionId}", 1L)
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "invite.name,asc")
                 .param("statuses", "PENDING"))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -309,9 +309,9 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(interviewReviewPanelInviteResource));
 
-        mockMvc.perform(post("/interviewpanelinvite/openInvite/{hash}", hash))
+        mockMvc.perform(post("/interview-panel-invite/open-invite/{hash}", hash))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being opened")
                         ),
@@ -325,10 +325,10 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(get("/interviewpanelinvite/checkExistingUser/{hash}", hash))
+        mockMvc.perform(get("/interview-panel-invite/check-existing-user/{hash}", hash))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being checked")
                         )
@@ -342,9 +342,9 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         when(assessmentInterviewPanelInviteServiceMock.getNonAcceptedAssessorInviteIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interviewpanelinvite/getNonAcceptedAssessorInviteIds/{competitionId}", competitionId))
+        mockMvc.perform(get("/interview-panel-invite/get-non-accepted-assessor-invite-ids/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -361,11 +361,11 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/interviewpanelinvite/deleteInvite")
+        mockMvc.perform(delete("/interview-panel-invite/delete-invite")
                 .param("email", email)
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         requestParameters(
                                 parameterWithName("email").description("Email address of the invite"),
                                 parameterWithName("competitionId").description("Id of the competition")
@@ -381,10 +381,10 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
 
         when(assessmentInterviewPanelInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/interviewpanelinvite/deleteAllInvites")
+        mockMvc.perform(delete("/interview-panel-invite/delete-all-invites")
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
-                .andDo(document("interviewpanelinvite/{method-name}",
+                .andDo(document("interview-panel-invite/{method-name}",
                         requestParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         )

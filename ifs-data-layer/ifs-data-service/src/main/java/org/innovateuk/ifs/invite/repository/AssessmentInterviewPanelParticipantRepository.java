@@ -18,26 +18,26 @@ import java.util.List;
  */
 public interface AssessmentInterviewPanelParticipantRepository extends PagingAndSortingRepository<AssessmentInterviewPanelParticipant, Long> {
 
-    String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
-            "FROM AssessmentReviewPanelInvite invite " +
+    String USERS_WITH_INTERVIEW_PANEL_INVITE = "SELECT invite.user.id " +
+            "FROM AssessmentInterviewPanelInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 
-    String BY_COMP_AND_STATUS_ON_PANEL = "SELECT assessmentPanelParticipant " +
-            "FROM AssessmentReviewPanelParticipant assessmentPanelParticipant " +
-            "WHERE assessmentPanelParticipant.competition.id = :competitionId " +
-            "AND assessmentPanelParticipant.role = 'PANEL_ASSESSOR' " +
-            "AND assessmentPanelParticipant.status IN :status " +
-            "AND assessmentPanelParticipant.user.id IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+    String BY_COMP_AND_STATUS_ON_PANEL = "SELECT assessmentInterviewPanelParticipant " +
+            "FROM AssessmentInterviewPanelParticipant assessmentInterviewPanelParticipant " +
+            "WHERE assessmentInterviewPanelParticipant.competition.id = :competitionId " +
+            "AND assessmentInterviewPanelParticipant.role = org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR " +
+            "AND assessmentInterviewPanelParticipant.status IN :status " +
+            "AND assessmentInterviewPanelParticipant.user.id IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
 
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
-    Page<AssessmentInterviewPanelParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                                           @Param("status") List<ParticipantStatus> status,
-                                                                                           Pageable pageable);
+    Page<AssessmentInterviewPanelParticipant> getInterviewPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                                                       @Param("status") List<ParticipantStatus> status,
+                                                                                                       Pageable pageable);
 
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
-    List<AssessmentInterviewPanelParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                                           @Param("status") List<ParticipantStatus> status);
+    List<AssessmentInterviewPanelParticipant> getInterviewPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                                                       @Param("status") List<ParticipantStatus> status);
 
     @Override
     List<AssessmentInterviewPanelParticipant> findAll();

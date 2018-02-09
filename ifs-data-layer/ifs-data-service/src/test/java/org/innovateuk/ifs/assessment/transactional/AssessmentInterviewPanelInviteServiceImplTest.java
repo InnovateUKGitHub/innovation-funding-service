@@ -416,7 +416,6 @@ public class AssessmentInterviewPanelInviteServiceImplTest extends BaseServiceUn
         inOrder.verifyNoMoreInteractions();
     }
 
-
     @Test
     public void getAllInvitesToSend() throws Exception {
         List<String> emails = asList("john@email.com", "peter@email.com");
@@ -543,13 +542,13 @@ public class AssessmentInterviewPanelInviteServiceImplTest extends BaseServiceUn
 
         Page<AssessmentInterviewPanelParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
-        when(assessmentInterviewPanelParticipantRepositoryMock.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
+        when(assessmentInterviewPanelParticipantRepositoryMock.getInterviewPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
                 .thenReturn(pageResult);
         when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
 
         ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, singletonList(PENDING));
 
-        verify(assessmentInterviewPanelParticipantRepositoryMock).getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
+        verify(assessmentInterviewPanelParticipantRepositoryMock).getInterviewPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
         verify(participantStatusMapperMock, times(5)).mapToResource(PENDING);
 
         assertTrue(result.isSuccess());

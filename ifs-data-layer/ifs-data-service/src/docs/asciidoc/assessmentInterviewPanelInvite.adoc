@@ -66,7 +66,6 @@ include::{snippets}/interviewpanelinvite/get-all-invites-to-send/response-fields
 ==== Curl Example
 include::{snippets}/interviewpanelinvite/get-all-invites-to-send/curl-request.adoc[]
 
-
 === Get all panel invites for a particular user
 ==== Request
 include::{snippets}/interviewpanelinvite/get-all-invites-by-user/http-request.adoc[]
@@ -78,7 +77,6 @@ include::{snippets}/interviewpanelinvite/get-all-invites-by-user/response-fields
 
 ==== Curl Example
 include::{snippets}/interviewpanelinvite/get-all-invites-by-user/curl-request.adoc[]
-
 
 === Get all invites to resend
 ==== Request
@@ -113,28 +111,6 @@ include::{snippets}/interviewpanelinvite/open-invite/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/interviewpanelinvite/open-invite/curl-request.adoc[]
-
-=== Accept invite by hash
-==== Request
-include::{snippets}/interviewpanelinvite/accept-invite/http-request.adoc[]
-include::{snippets}/interviewpanelinvite/accept-invite/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/interviewpanelinvite/accept-invite/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/interviewpanelinvite/accept-invite/curl-request.adoc[]
-
-=== Reject invite by hash
-==== Request
-include::{snippets}/interviewpanelinvite/reject-invite/http-request.adoc[]
-include::{snippets}/interviewpanelinvite/reject-invite/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/interviewpanelinvite/reject-invite/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/interviewpanelinvite/reject-invite/curl-request.adoc[]
 
 === Check if existing user by hash
 ==== Request

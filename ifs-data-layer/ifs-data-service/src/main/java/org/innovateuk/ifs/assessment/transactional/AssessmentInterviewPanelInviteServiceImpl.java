@@ -69,7 +69,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
-
 /*
  * Service for managing {@link AssessmentInterviewPanelInvite}s.
  */
@@ -298,7 +297,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
                                                                                    List<ParticipantStatus> statuses) {
-        Page<AssessmentInterviewPanelParticipant> pagedResult = assessmentInterviewPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(
+        Page<AssessmentInterviewPanelParticipant> pagedResult = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                     competitionId,
                     statuses,
                     pageable);
@@ -349,7 +348,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
 
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
-        List<AssessmentInterviewPanelParticipant> participants = assessmentInterviewPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(
+        List<AssessmentInterviewPanelParticipant> participants = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                 competitionId,
                 asList(PENDING, REJECTED));
 

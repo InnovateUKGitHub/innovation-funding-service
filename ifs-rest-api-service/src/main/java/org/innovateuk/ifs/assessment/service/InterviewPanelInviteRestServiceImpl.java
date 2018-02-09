@@ -19,16 +19,16 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 @Service
 public class InterviewPanelInviteRestServiceImpl extends BaseRestService implements InterviewPanelInviteRestService {
 
-    private static final String interviewPanelInviteRestUrl = "/interviewpanelinvite";
+    private static final String interviewPanelInviteRestUrl = "/interview-panel-invite";
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class);
+        return getWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "get-all-invites-to-send", competitionId), AssessorInvitesToSendResource.class);
     }
 
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "getAllInvitesToResend", competitionId);
+        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-all-invites-to-resend", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("inviteIds", simpleJoiner(inviteIds, ","));
@@ -38,12 +38,12 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        return postWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "sendAllInvites", competitionId), assessorInviteSendResource, Void.class);
+        return postWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "send-all-invites", competitionId), assessorInviteSendResource, Void.class);
     }
 
     @Override
     public RestResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
-        String baseUrl = format("%s/%s", interviewPanelInviteRestUrl, "resendInvites");
+        String baseUrl = format("%s/%s", interviewPanelInviteRestUrl, "resend-invites");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("inviteIds", simpleJoiner(inviteIds, ","));
@@ -53,7 +53,7 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "getCreatedInvites", competitionId);
+        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-created-invites", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -63,12 +63,12 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<Void> inviteUsers(ExistingUserStagedInviteListResource existingUserStagedInvites) {
-        return postWithRestResult(format("%s/%s", interviewPanelInviteRestUrl, "inviteUsers"), existingUserStagedInvites, Void.class);
+        return postWithRestResult(format("%s/%s", interviewPanelInviteRestUrl, "invite-users"), existingUserStagedInvites, Void.class);
     }
 
     @Override
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page) {
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "getAvailableAssessors", competitionId);
+        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-available-assessors", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -78,7 +78,7 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "getAvailableAssessorIds", competitionId);
+        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-available-assessor-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl);
@@ -88,7 +88,7 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<List<AssessmentInterviewPanelParticipantResource>> getAllInvitesByUser(long userId) {
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "getAllInvitesByUser", userId);
+        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-all-invites-by-user", userId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl);
@@ -98,7 +98,7 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "getNonAcceptedAssessorInviteIds", competitionId);
+        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-non-accepted-assessor-invite-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl);
@@ -110,7 +110,7 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                 int page,
                                                                                 List<ParticipantStatusResource> participantStatuses) {
-        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "getInvitationOverview", competitionId);
+        String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-invitation-overview", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("page", page);
@@ -123,27 +123,27 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<AssessmentInterviewPanelInviteResource> openInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "openInvite", inviteHash), AssessmentInterviewPanelInviteResource.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "open-invite", inviteHash), AssessmentInterviewPanelInviteResource.class);
     }
 
     @Override
     public RestResult<Void> acceptInvite(String inviteHash) {
-        return postWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "acceptInvite", inviteHash), Void.class);
+        return postWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "accept-invite", inviteHash), Void.class);
     }
 
     @Override
     public RestResult<Void> rejectInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "rejectInvite", inviteHash), Void.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "reject-invite", inviteHash), Void.class);
     }
 
     @Override
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
-        return getWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "checkExistingUser", inviteHash), Boolean.class);
+        return getWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "check-existing-user", inviteHash), Boolean.class);
     }
 
     @Override
     public RestResult<Void> deleteInvite(String email, long competitionId) {
-        String baseUrl = format("%s/%s", interviewPanelInviteRestUrl, "deleteInvite");
+        String baseUrl = format("%s/%s", interviewPanelInviteRestUrl, "delete-invite");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("competitionId", competitionId)
@@ -154,7 +154,7 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<Void> deleteAllInvites(long competitionId) {
-        String baseUrl = format("%s/%s", interviewPanelInviteRestUrl, "deleteAllInvites");
+        String baseUrl = format("%s/%s", interviewPanelInviteRestUrl, "delete-all-invites");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
                 .queryParam("competitionId", competitionId);
