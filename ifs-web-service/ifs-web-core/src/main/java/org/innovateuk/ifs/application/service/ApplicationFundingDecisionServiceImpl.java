@@ -44,7 +44,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 
 		if(isAllowedFundingDecision(fundingDecision)) {
 			Map<Long, FundingDecision> applicationIdToFundingDecision = createSubmittedApplicationFundingDecisionMap(applicationIds, competitionId, fundingDecision);
-			applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
+			applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccess();
 		}
 		else {
 			return serviceFailure(new Error("Disallowed funding decision submitted", HttpStatus.BAD_REQUEST));
@@ -73,7 +73,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
 
 		ApplicationSummaryPageResource results = applicationSummaryRestService.getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())
-				.getSuccessObjectOrThrowException();
+				.getSuccess();
 
 		return simpleMap(results.getContent(), ApplicationSummaryResource::getId);
 	}

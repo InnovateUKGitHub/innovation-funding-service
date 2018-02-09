@@ -60,7 +60,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     }
 
     private List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications(long userId, long competitionId) {
-        List<AssessmentReviewResource> reviews = assessmentPanelRestService.getAssessmentReviews(userId, competitionId).getSuccessObject();
+        List<AssessmentReviewResource> reviews = assessmentPanelRestService.getAssessmentReviews(userId, competitionId).getSuccess();
         return simpleMap(reviews, review -> createApplicationViewModel(review));
     }
 
@@ -79,7 +79,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 }

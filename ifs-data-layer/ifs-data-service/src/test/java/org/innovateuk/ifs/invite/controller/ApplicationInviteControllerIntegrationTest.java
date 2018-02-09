@@ -97,7 +97,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         String testEmail = "jessica.doe@ludlow.co.uk";
         String testName = "Jessica Istesting";
 
-        int inviteSize = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size();
+        int inviteSize = controller.getInvitesByApplication(APPLICATION_ID).getSuccess().iterator().next().getInviteResources().size();
 
         RestResult<List<InviteOrganisationResource>> invitesResult = this.controller.getInvitesByApplication(APPLICATION_ID);
         assertTrue(invitesResult.isSuccess());
@@ -106,7 +106,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         List<ApplicationInviteResource> newInvites = createInviteResource(invitesResult, testName, testEmail, APPLICATION_ID);
         RestResult<UserResource> userResult = userController.findByEmail(testEmail);
         assertTrue(userResult.isSuccess());
-        UserResource user = userResult.getSuccessObject();
+        UserResource user = userResult.getSuccess();
         RestResult<InviteResultsResource> inviteResults = controller.saveInvites(newInvites);
         assertTrue(inviteResults.isSuccess());
 
@@ -114,7 +114,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         flushAndClearSession();
 
         // Check if the invite is created and we have a hash
-        assertEquals(inviteSize + 1, controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size());
+        assertEquals(inviteSize + 1, controller.getInvitesByApplication(APPLICATION_ID).getSuccess().iterator().next().getInviteResources().size());
 
         ApplicationInvite inviteCreated = getCreatedInvite(testEmail, APPLICATION_ID);
         assertNotNull(inviteCreated.getHash());
@@ -147,14 +147,14 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         List<ApplicationInviteResource> newInvites = createInviteResource(invitesResult, testName, testEmail, APPLICATION_ID);
         RestResult<UserResource> userResult = userController.findByEmail(testEmail);
         assertTrue(userResult.isSuccess());
-        UserResource user = userResult.getSuccessObject();
+        UserResource user = userResult.getSuccess();
         RestResult<InviteResultsResource> inviteResults = controller.saveInvites(newInvites);
         assertTrue(inviteResults.isSuccess());
 
         // Needed because test is running in one transaction
         flushAndClearSession();
 
-        List<InviteOrganisationResource> invitesBeforeRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
+        List<InviteOrganisationResource> invitesBeforeRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccess();
         List<ApplicationInviteResource> invites = invitesBeforeRemove.iterator().next().getInviteResources();
 
         Optional<ApplicationInviteResource> inviteToRemove = invites
@@ -167,13 +167,13 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         // Needed because test is running in one transaction
         flushAndClearSession();
 
-        List<InviteOrganisationResource> invitesAfterRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
+        List<InviteOrganisationResource> invitesAfterRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccess();
         assertTrue(!invitesAfterRemove.isEmpty());
         assertEquals(invites.size() - 1, invitesAfterRemove.iterator().next().getInviteResources().size());
     }
 
     private List<ApplicationInviteResource> createInviteResource(RestResult<List<InviteOrganisationResource>> invitesResult, String userName, String userMail, long applicationId) {
-        List<InviteOrganisationResource> invitesExisting = invitesResult.getSuccessObject();
+        List<InviteOrganisationResource> invitesExisting = invitesResult.getSuccess();
         InviteOrganisationResource inviteOrganisation = invitesExisting.iterator().next();
 
         ApplicationInviteResource inviteResource = new ApplicationInviteResource(userName, userMail, applicationId);
@@ -202,7 +202,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
 
 
     private ApplicationInviteResource getMatchingInviteResource(RestResult<List<InviteOrganisationResource>> invitesResult, String userEmail) {
-        List<InviteOrganisationResource> invitesOrganisations = invitesResult.getSuccessObject();
+        List<InviteOrganisationResource> invitesOrganisations = invitesResult.getSuccess();
         List<ApplicationInviteResource> inviteResources = invitesOrganisations.iterator().next().getInviteResources();
         ApplicationInviteResource inviteResourceMatiching = null;
 

@@ -51,7 +51,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         List<QuestionResource> questions = newQuestionResource().build(3);
         setupGetWithRestResultExpectations(questionRestURL + "/findByCompetition/1", questionResourceListType(), questions);
         // now run the method under test
-        List<QuestionResource> returnedQuestions = service.findByCompetition(1L).getSuccessObject();
+        List<QuestionResource> returnedQuestions = service.findByCompetition(1L).getSuccess();
         // verify
         assertEquals(questions, returnedQuestions);
     }
@@ -63,7 +63,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         setupGetWithRestResultExpectations(questionRestURL + "/id/1", QuestionResource.class, question);
 
         // now run the method under test
-        QuestionResource returnedQuestion = service.findById(1L).getSuccessObject();
+        QuestionResource returnedQuestion = service.findById(1L).getSuccess();
 
         // verify
         assertNotNull(returnedQuestion);
@@ -109,7 +109,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         QuestionResource question = new QuestionResource();
         setupGetWithRestResultExpectations(questionRestURL + "/getNextQuestion/1", QuestionResource.class, question);
 
-        QuestionResource nextQuestion = service.getNextQuestion(1L).getSuccessObject();
+        QuestionResource nextQuestion = service.getNextQuestion(1L).getSuccess();
         Assert.assertEquals(question, nextQuestion);
     }
 
@@ -118,7 +118,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         QuestionResource question = new QuestionResource();
         setupGetWithRestResultExpectations(questionRestURL + "/getPreviousQuestion/2", QuestionResource.class, question);
 
-        QuestionResource nextQuestion = service.getPreviousQuestion(2L).getSuccessObject();
+        QuestionResource nextQuestion = service.getPreviousQuestion(2L).getSuccess();
         Assert.assertEquals(question, nextQuestion);
     }
 
@@ -128,7 +128,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         setupGetWithRestResultExpectations(questionRestURL + "/getQuestionsBySectionIdAndType/1/COST", new ParameterizedTypeReference<List<QuestionResource>>() {
         }, questions);
 
-        List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST).getSuccessObject();
+        List<QuestionResource> result = service.getQuestionsBySectionIdAndType(1L, QuestionType.COST).getSuccess();
         assertEquals(questions, result);
     }
 
@@ -137,7 +137,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         QuestionResource questionResource = new QuestionResource();
         setupPutWithRestResultExpectations(questionRestURL + "/", QuestionResource.class, questionResource, questionResource);
 
-        QuestionResource result = service.save(questionResource).getSuccessObject();
+        QuestionResource result = service.save(questionResource).getSuccess();
         Assert.assertEquals(questionResource, result);
     }
 
@@ -151,7 +151,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
 
         RestResult<List<QuestionResource>> result = service.getQuestionsByAssessment(assessmentId);
         assertTrue(result.isSuccess());
-        Assert.assertEquals(questions, result.getSuccessObject());
+        Assert.assertEquals(questions, result.getSuccess());
     }
 
     @Test
@@ -162,7 +162,7 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         QuestionResource questionResource = newQuestionResource().build();
         setupGetWithRestResultExpectations(String.format("%s/getQuestionByIdAndAssessmentId/%s/%s", questionRestURL, questionId, assessmentId), QuestionResource.class, questionResource);
 
-        QuestionResource result = service.getByIdAndAssessmentId(questionId, assessmentId).getSuccessObject();
+        QuestionResource result = service.getByIdAndAssessmentId(questionId, assessmentId).getSuccess();
         assertEquals(questionResource, result);
     }
 }

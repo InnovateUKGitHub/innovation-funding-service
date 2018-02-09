@@ -76,7 +76,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     private boolean hasIncompleteSections(Long competitionId) {
         Map<CompetitionSetupSubsection, Optional<Boolean>> sectionSetupStatusAsMap = competitionSetupRestService
                 .getSubsectionStatuses(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         return asList(CompetitionSetupSubsection.APPLICATION_DETAILS, CompetitionSetupSubsection.FINANCES)
                 .stream()
@@ -86,7 +86,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     private boolean hasIncompleteQuestions(Long competitionId) {
         List<Long> allQuestions = getAllQuestionIds(competitionId);
-        Map<Long, Boolean> questionSetupStatuses = questionSetupRestService.getQuestionStatuses(competitionId, CompetitionSetupSection.APPLICATION_FORM).getSuccessObjectOrThrowException();
+        Map<Long, Boolean> questionSetupStatuses = questionSetupRestService.getQuestionStatuses(competitionId, CompetitionSetupSection.APPLICATION_FORM).getSuccess();
 
         boolean hasNotCompletedQuestion = allQuestions.stream()
                 .map(questionId -> questionSetupStatuses.getOrDefault(questionId, Boolean.FALSE))

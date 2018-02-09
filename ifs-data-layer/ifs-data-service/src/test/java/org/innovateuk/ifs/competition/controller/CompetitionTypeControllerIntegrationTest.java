@@ -34,7 +34,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
         RestResult<List<CompetitionTypeResource>> competitionTypesResult = controller.findAllTypes();
 
         assertThat(competitionTypesResult.isSuccess()).isTrue();
-        List<CompetitionTypeResource> competitionTypes = competitionTypesResult.getSuccessObject();
+        List<CompetitionTypeResource> competitionTypes = competitionTypesResult.getSuccess();
 
         // Test ordering.
         assertThat(competitionTypes)

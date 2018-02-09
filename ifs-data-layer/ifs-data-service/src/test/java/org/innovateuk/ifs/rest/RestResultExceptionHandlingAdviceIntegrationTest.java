@@ -77,7 +77,7 @@ public class RestResultExceptionHandlingAdviceIntegrationTest extends BaseIntegr
     private void assertSuccessfulRestResult(Supplier<RestResult<String>> restResultSupplier) {
         RestResult<String> result = restResultSupplier.get();
         assertTrue(result.isSuccess());
-        assertEquals("Success", result.getSuccessObject());
+        assertEquals("Success", result.getSuccess());
     }
 
     private void assertFailedRestResult(Supplier<RestResult<String>> restResultSupplier) {

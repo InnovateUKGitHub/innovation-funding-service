@@ -163,7 +163,7 @@ public class ApplicationAjaxController {
         } else {
             Long formInputId = Long.valueOf(inputIdentifier);
             ValidationMessages saveErrors = formInputResponseRestService.saveQuestionResponse(userId, applicationId,
-                    formInputId, value, false).getSuccessObjectOrThrowException();
+                    formInputId, value, false).getSuccess();
             List<String> lookedUpErrorMessages = lookupErrorMessageResourceBundleEntries(messageSource, saveErrors);
             return new StoreFieldResult(lookedUpErrorMessages);
         }
@@ -301,7 +301,7 @@ public class ApplicationAjaxController {
     @GetMapping("/remove_cost/{costId}")
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
-        financeRowRestService.delete(costId).getSuccessObjectOrThrowException();
+        financeRowRestService.delete(costId).getSuccess();
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);

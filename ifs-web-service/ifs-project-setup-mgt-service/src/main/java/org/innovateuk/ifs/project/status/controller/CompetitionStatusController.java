@@ -66,10 +66,10 @@ public class CompetitionStatusController {
         boolean isUserRoleProjectFinance = loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE);
 
         model.addAttribute("model",
-                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(),
+                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccess(),
                         loggedInUser,
-                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException() : 0L,
-                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException() : 0,
+                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess() : 0L,
+                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess() : 0,
                         isUserRoleProjectFinance).get());
         return "project/competition-status-all";
     }
@@ -80,10 +80,10 @@ public class CompetitionStatusController {
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new CompetitionOpenQueriesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
-                        competitionPostSubmissionRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
-                        competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException(),
-                        competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException(),
+                new CompetitionOpenQueriesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccess(),
+                        competitionPostSubmissionRestService.getCompetitionOpenQueries(competitionId).getSuccess(),
+                        competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess(),
+                        competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccess(),
                         true));
         return "project/competition-status-queries";
     }
@@ -94,11 +94,11 @@ public class CompetitionStatusController {
     public String viewPendingSpendProfiles(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
 
-        long openQueryCount = competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException();
-        List<SpendProfileStatusResource> pendingSpendProfiles = competitionPostSubmissionRestService.getPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException();
+        long openQueryCount = competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccess();
+        List<SpendProfileStatusResource> pendingSpendProfiles = competitionPostSubmissionRestService.getPendingSpendProfiles(competitionId).getSuccess();
 
         model.addAttribute("model",
-                new CompetitionPendingSpendProfilesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
+                new CompetitionPendingSpendProfilesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccess(),
                         pendingSpendProfiles,
                         openQueryCount,
                         pendingSpendProfiles.size(),
@@ -117,7 +117,7 @@ public class CompetitionStatusController {
         response.setContentType("text/csv");
         response.setHeader("Content-Transfer-Encoding", "binary");
         response.setHeader("Content-Disposition", "attachment;filename=" + filename);
-        final ByteArrayResource resource = bankDetailsRestService.downloadByCompetition(competitionId).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = bankDetailsRestService.downloadByCompetition(competitionId).getSuccess();
         IOUtils.copy(resource.getInputStream(), response.getOutputStream());
         response.flushBuffer();
     }

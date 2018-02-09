@@ -213,7 +213,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
         when(projectFinanceHandlerMock.getProjectOrganisationFinances(projectFinanceResourceId)).thenReturn(serviceSuccess(expected));
         ServiceResult<ProjectFinanceResource> result = service.financeChecksDetails(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject(), expected);
+        assertEquals(result.getSuccess(), expected);
 
         //unsuccessful test
         when(projectFinanceHandlerMock.getProjectOrganisationFinances(projectFinanceResourceId)).thenReturn(serviceFailure(notFoundError(ProjectFinanceResource.class)));

@@ -60,15 +60,15 @@ public class MoveFileTest {
     @Test
     public void testMoveFileNormal() throws IOException {
 
-        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
-        from.createFile(newFileEntry().with(id(124l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
-        from.createFile(newFileEntry().with(id(125l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccess();
+        from.createFile(newFileEntry().with(id(124l)).build(), tempFileWithContents).getSuccess();
+        from.createFile(newFileEntry().with(id(125l)).build(), tempFileWithContents).getSuccess();
 
         final List<String> namesFrom = from.all().stream().map(path -> path.getValue()).collect(toList());
         assertEquals(3, namesFrom.size());
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(from, to, false);
         assertTrue(listServiceResult.isSuccess());
-        assertEquals(3, listServiceResult.getSuccessObject().size());
+        assertEquals(3, listServiceResult.getSuccess().size());
         final List<String> namesTo = to.all().stream().map(path -> path.getValue()).collect(toList());
         assertEquals(namesFrom, namesTo);
     }
@@ -76,8 +76,8 @@ public class MoveFileTest {
     @Test
     public void testMoveFileAlreadyExists() throws IOException {
 
-        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
-        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccess();
+        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccess();
 
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(from, to, false);
         assertTrue(listServiceResult.isFailure());
@@ -88,7 +88,7 @@ public class MoveFileTest {
     public void testMoveAlreadyMovedFileWhenNotExpected() throws IOException {
         try {
 
-            to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+            to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccess();
 
             final FileStorageStrategy reportsNonExistentFile = new AllWaysReportsFile123EvenWhenItDoesNotExist(rootFolder + "reportsNonExistentFile", "BaseFolder");
             final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(reportsNonExistentFile, to, false);
@@ -104,14 +104,14 @@ public class MoveFileTest {
         // To represent an already move file we generate a file in the to location and get the from location to
         // report a file to move over to that location that does not exist. This simulates a move already having occurred
         // We also so a normal copy to ensure that that continues to work.
-        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccess();
 
         final FileStorageStrategy reportsNonExistentFile = new AllWaysReportsFile123EvenWhenItDoesNotExist(rootFolder + "reportsNonExistentFile", "BaseFolder");
         reportsNonExistentFile.createFile(newFileEntry().with(id(124l)).build(), tempFileWithContents); // A legit file
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(reportsNonExistentFile , to, true); // Ignore already moved errors
         assertTrue(listServiceResult.isSuccess());
-        assertEquals(1, listServiceResult.getSuccessObject().size());
-        assertEquals("124", listServiceResult.getSuccessObject().get(0).getName());
+        assertEquals(1, listServiceResult.getSuccess().size());
+        assertEquals("124", listServiceResult.getSuccess().get(0).getName());
     }
 
     private final class AllWaysReportsFile123EvenWhenItDoesNotExist extends FlatFolderFileStorageStrategy {

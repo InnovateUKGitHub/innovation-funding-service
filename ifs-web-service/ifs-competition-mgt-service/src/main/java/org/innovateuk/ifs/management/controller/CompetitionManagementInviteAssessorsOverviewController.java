@@ -219,6 +219,6 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
                                        Optional<Boolean> compliant) {
         List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
                 .orElseGet(() -> asList(REJECTED, PENDING));
-        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant).getSuccessObjectOrThrowException();
+        return competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant).getSuccess();
     }
 }

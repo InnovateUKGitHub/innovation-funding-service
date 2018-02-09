@@ -36,7 +36,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ServiceResult<ProcessRoleResource> result = service.getProcessRoleById(1L);
 
         assertTrue(result.isSuccess());
-        assertEquals(processRoleResource, result.getSuccessObject());
+        assertEquals(processRoleResource, result.getSuccess());
 
         verify(processRoleRepositoryMock, only()).findOne(1L);
     }
@@ -55,7 +55,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ServiceResult<List<ProcessRoleResource>> result = service.getProcessRolesByIds(new Long[]{1L, 2L});
 
         assertTrue(result.isSuccess());
-        assertEquals(processRoleResources, result.getSuccessObject());
+        assertEquals(processRoleResources, result.getSuccess());
 
         verify(processRoleRepositoryMock, only()).findAll(processRoleIds);
     }
@@ -73,7 +73,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ServiceResult<List<ProcessRoleResource>> result = service.getProcessRolesByApplicationId(1L);
 
         assertTrue(result.isSuccess());
-        assertEquals(processRoleResources, result.getSuccessObject());
+        assertEquals(processRoleResources, result.getSuccess());
 
         verify(processRoleRepositoryMock, only()).findByApplicationId(1L);
     }
@@ -91,7 +91,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ServiceResult<ProcessRoleResource> result = service.getProcessRoleByUserIdAndApplicationId(1L, 1L);
 
         assertTrue(result.isSuccess());
-        assertEquals(processRoleResource, result.getSuccessObject());
+        assertEquals(processRoleResource, result.getSuccess());
 
         verify(processRoleRepositoryMock, only()).findByUserIdAndApplicationId(1L, 1L);
     }
@@ -109,7 +109,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ServiceResult<List<ProcessRoleResource>> result = service.getProcessRolesByUserId(1L);
 
         assertTrue(result.isSuccess());
-        assertEquals(processRoleResources, result.getSuccessObject());
+        assertEquals(processRoleResources, result.getSuccess());
 
         verify(processRoleRepositoryMock, only()).findByUserId(1L);
     }
@@ -127,7 +127,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ServiceResult<List<ProcessRoleResource>> result = service.getAssignableProcessRolesByApplicationId(1L);
 
         assertTrue(result.isSuccess());
-        assertEquals(processRoleResources.size(), result.getSuccessObject().size());
+        assertEquals(processRoleResources.size(), result.getSuccess().size());
 
         verify(processRoleRepositoryMock, only()).findByApplicationId(1L);
     }
@@ -145,7 +145,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ServiceResult<List<ProcessRoleResource>> result = service.getAssignableProcessRolesByApplicationId(1L);
 
         assertTrue(result.isSuccess());
-        assertEquals(processRoleResources.size(), result.getSuccessObject().size());
+        assertEquals(processRoleResources.size(), result.getSuccess().size());
 
         verify(processRoleRepositoryMock, only()).findByApplicationId(1L);
     }

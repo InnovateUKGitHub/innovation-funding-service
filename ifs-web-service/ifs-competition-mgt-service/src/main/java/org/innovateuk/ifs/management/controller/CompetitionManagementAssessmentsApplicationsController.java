@@ -47,6 +47,6 @@ public class CompetitionManagementAssessmentsApplicationsController extends Base
     protected ApplicationCountSummaryPageResource getCounts(long competitionId, int page, String filter) {
         return applicationCountSummaryRestService
                 .getApplicationCountSummariesByCompetitionId(competitionId, page, PAGE_SIZE, filter)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 }

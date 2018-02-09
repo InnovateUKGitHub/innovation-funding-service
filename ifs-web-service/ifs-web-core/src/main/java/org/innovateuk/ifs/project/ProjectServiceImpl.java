@@ -34,7 +34,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(Long projectId) {
-        return projectRestService.getProjectUsersForProject(projectId).getSuccessObjectOrThrowException();
+        return projectRestService.getProjectUsersForProject(projectId).getSuccess();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ProjectServiceImpl implements ProjectService {
             return null;
         }
 
-        return projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+        return projectRestService.getProjectById(projectId).getSuccess();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         RestResult<ProjectResource> restResult = projectRestService.getByApplicationId(applicationId);
         if(restResult.isSuccess()){
-            return restResult.getSuccessObject();
+            return restResult.getSuccess();
         } else {
             return null;
         }
@@ -66,13 +66,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public OrganisationResource getLeadOrganisation(Long projectId) {
-        ProjectResource project = projectRestService.getProjectById(projectId).getSuccessObjectOrThrowException();
+        ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
         return applicationService.getLeadOrganisation(project.getApplication());
     }
 
     @Override
     public OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId) {
-        return projectRestService.getOrganisationByProjectAndUser(projectId, userId).getSuccessObjectOrThrowException();
+        return projectRestService.getOrganisationByProjectAndUser(projectId, userId).getSuccess();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<RestResult<OrganisationResource>> organisationResults = simpleMap(organisationIds, organisationRestService::getOrganisationById);
         RestResult<List<OrganisationResource>> organisationResultsCombined = aggregate(organisationResults);
 
-        return organisationResultsCombined.getSuccessObjectOrThrowException();
+        return organisationResultsCombined.getSuccess();
     }
 
     @Override
@@ -124,7 +124,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId) {
-        return projectRestService.getPartnerOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
+        return projectRestService.getPartnerOrganisation(projectId, organisationId).getSuccess();
     }
 
     @Override

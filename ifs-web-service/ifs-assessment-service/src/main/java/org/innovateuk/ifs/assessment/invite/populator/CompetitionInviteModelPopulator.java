@@ -17,7 +17,7 @@ public class CompetitionInviteModelPopulator extends InviteModelPopulator<Compet
 
     @Override
     public CompetitionInviteViewModel populateModel(String inviteHash, boolean userLoggedIn) {
-        CompetitionInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
+        CompetitionInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccess();
 
         return new CompetitionInviteViewModel(inviteHash, invite, userLoggedIn);
     }

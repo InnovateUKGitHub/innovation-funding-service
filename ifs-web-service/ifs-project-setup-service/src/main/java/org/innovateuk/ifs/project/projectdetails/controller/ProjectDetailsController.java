@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -214,7 +213,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         Optional<InviteProjectResource> existingInvite = projectDetailsService
                 .getInvitesByProject(projectId)
-                .getSuccessObjectOrThrowException()
+                .getSuccess()
                 .stream()
                 .filter(i -> id.equals(i.getId()))
                 .findFirst();
@@ -277,7 +276,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private Optional<InviteProjectResource> getSavedInvite(Long projectId, InviteProjectResource invite) {
 
-        return projectDetailsService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+        return projectDetailsService.getInvitesByProject(projectId).getSuccess().stream()
                 .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
     }
 
@@ -359,7 +358,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
             RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
             if (result.isSuccess()) {
-                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccessObject().getAddressType().getName()));
+                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccess().getAddressType().getName()));
             }
         }
         model.addAttribute("model", projectDetailsAddressViewModel);
@@ -524,7 +523,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             .filter(user -> leadOrganisation.getId().equals(user.getOrganisation()))
             .map(user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser()))
             .collect(toList());
-        List<ProjectUserInviteModel> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
+        List<ProjectUserInviteModel> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccess().stream()
             .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()) && invite.getStatus() != InviteStatus.OPENED)
             .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId()))
             .collect(toList());
@@ -567,7 +566,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 pu.getOrganisation().equals(financeContactForm.getOrganisation()));
 
         List<InviteProjectResource> inviteProjectResourceList =
-                projectDetailsService.getInvitesByProject(projectId).getSuccessObjectOrThrowException();
+                projectDetailsService.getInvitesByProject(projectId).getSuccess();
 
         Function<ProjectUserResource, ProjectUserInviteModel> financeContactModelMappingFn =
                 user -> new ProjectUserInviteModel(EXISTING, user.getUserName(), user.getUser());
