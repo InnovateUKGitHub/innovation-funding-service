@@ -36,12 +36,12 @@ import java.util.function.UnaryOperator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.ListenableFutureToCompletableFutureHelper.future;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -75,17 +75,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private static List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private static List<CsvUtils.InviteLine> inviteLines;
 
-    public List<CompletableFuture<List<ApplicationData>>> fillInAndCompleteApplication(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
-        return simpleMap(createCompetitionFutures, competition -> {
-
-            CompletableFuture<List<CompletableFuture<ApplicationData>>> competitionAndApplicationFutures =
-                    competition.thenApplyAsync(fillInAndCompleteApplications, taskExecutor);
-
-            return competitionAndApplicationFutures.thenCompose(applicationFutures ->
-                    CompletableFuture.completedFuture(simpleMap(applicationFutures, CompletableFuture::join)));
-        });
-    }
-
     private Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
 
         CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = future(taskExecutor.submitListenable(() ->
@@ -94,11 +83,14 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         CompletableFuture<List<ApplicationFinanceData>> applicationFinances = future(taskExecutor.submitListenable(() ->
                 createApplicationFinances(applicationData)));
 
-        CompletableFuture<ApplicationData> completeApplicationFuture = CompletableFuture.allOf(combineLists(questionResponses, applicationFinances).toArray(new CompletableFuture[]{})).thenAcceptAsync(done -> {
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
+
+        CompletableFuture<ApplicationData> completeApplicationFuture = allQuestionsAnswered.thenApplyAsync(done -> {
             List<ApplicationQuestionResponseData> responses = questionResponses.join();
             List<ApplicationFinanceData> finances = applicationFinances.join();
             completeApplication(applicationData, responses, finances);
-        }, taskExecutor).thenCompose(done -> CompletableFuture.supplyAsync(() -> applicationData));
+            return applicationData;
+        }, taskExecutor);
 
         return completeApplicationFuture;
     };
@@ -110,8 +102,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         List<CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFutures = simpleMap(applicationFutures, applicationFuture -> {
 
             CompletableFuture<ApplicationData> fillInAndCompleteApplicationFuture = applicationFuture.
-                    thenApplyAsync(fillInAndCompleteApplicationFn, taskExecutor).
-                    thenCompose(done -> CompletableFuture.completedFuture(applicationFuture.join()));
+                    thenComposeAsync(fillInAndCompleteApplicationFn, taskExecutor);
 
             return fillInAndCompleteApplicationFuture;
         });
@@ -126,12 +117,23 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
 
-
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
         applicationDataBuilder = newApplicationData(serviceLocator);
         competitionDataBuilder = newCompetitionData(serviceLocator);
         applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
+    }
+
+    public List<CompletableFuture<List<ApplicationData>>> fillInAndCompleteApplications(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+
+        return simpleMap(createCompetitionFutures, competition -> {
+
+            CompletableFuture<List<CompletableFuture<ApplicationData>>> competitionAndApplicationFutures =
+                    competition.thenApplyAsync(fillInAndCompleteApplications, taskExecutor);
+
+            return competitionAndApplicationFutures.thenApply(applicationFutures ->
+                    simpleMap(applicationFutures, CompletableFuture::join));
+        });
     }
 
     static List<CsvUtils.ApplicationQuestionResponseLine> readApplicationQuestionResponses() {

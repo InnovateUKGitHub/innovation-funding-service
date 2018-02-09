@@ -271,7 +271,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 competitionDataBuilderService.createCompetitions();
 
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
-                applicationDataBuilderService.fillInAndCompleteApplication(createCompetitionFutures);
+                applicationDataBuilderService.fillInAndCompleteApplications(createCompetitionFutures);
 
         waitForFuturesToComplete(createApplicationsFutures);
 
@@ -399,7 +399,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 basicCompetitionInformation.
                         moveCompetitionIntoFundersPanelStatus().
                         sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
-                        restoreOriginalMilestones().build();
+                        restoreOriginalMilestones().
+                        build();
             }
         });
     }
