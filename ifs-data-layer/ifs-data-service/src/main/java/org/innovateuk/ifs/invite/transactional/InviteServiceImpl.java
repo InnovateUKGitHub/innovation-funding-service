@@ -314,7 +314,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         application.removeProcessRoles(collaboratorProcessRoles);
 
         InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
-        List<ApplicationInvite> invites = inviteOrganisation.getInvites();
 
         if (isLastInvite(inviteOrganisation)) {
             inviteOrganisationRepository.delete(inviteOrganisation);
@@ -325,17 +324,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
                 inviteOrganisation.setOrganisation(null);
             }
-            invites.remove(applicationInvite);
+            inviteOrganisation.getInvites().remove(applicationInvite);
             inviteOrganisationRepository.save(inviteOrganisation);
         }
     }
 
     private boolean isRemovingTheLastActiveUserUnderOrganisation(long applicationId, List<ProcessRole> collaboratorProcessRoles) {
-
         if (collaboratorProcessRoles.isEmpty()) {
             return false;
         }
-
         List<ProcessRole> remainingOrganisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, collaboratorProcessRoles.get(0).getOrganisationId());
         remainingOrganisationRoles.removeAll(collaboratorProcessRoles);
 
