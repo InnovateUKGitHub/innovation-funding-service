@@ -145,6 +145,8 @@
                                                         data-minlength-errormessage=#{validation.standard.name.length.min(null,null,2)},
                                                         data-maxlength-errormessage=#{validation.standard.name.length.max(null,null,70)},
                                                         data-pattern-errormessage=#{validation.standard.name.invalid}"
+                                               th:name="invites[__${iterStat.index}__].name"
+                                               th:id="invites[__${iterStat.index}__].name"
                                                th:field="*{invites[__${iterStat.index}__].name}"
                                         />
                                     </td>
@@ -162,6 +164,8 @@
                                                         data-email-errormessage=#{validation.standard.email.format},
                                                         data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
                                                th:errorclass="form-control-error"
+                                               th:name="invites[__${iterStat.index}__].email"
+                                               th:id="invites[__${iterStat.index}__].email"
                                                th:field="*{invites[__${iterStat.index}__].email}"
                                         />
                                     </td>

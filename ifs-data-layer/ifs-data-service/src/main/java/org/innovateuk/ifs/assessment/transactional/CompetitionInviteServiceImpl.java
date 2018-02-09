@@ -416,7 +416,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                         .andOnSuccess(innovationArea ->
                                                 inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
                                         )
-                                        .andOnFailure(() -> ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, invite.getEmail()))
+                                        .andOnFailure(() -> serviceFailure(Error.fieldError(
+                                                "invites[" + index + "].innovationArea",
+                                                invite.getInnovationAreaId(),
+                                                "validation.competitionAssessmentInvite.create.innovationArea.required"
+                                                ))
                                         ),
                                 success -> serviceFailure(Error.fieldError(
                                         "invites[" + index + "].email",
