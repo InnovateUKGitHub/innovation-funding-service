@@ -21,7 +21,6 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     private static final String interviewPanelInviteRestUrl = "/interviewpanelinvite";
 
-
     @Override
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
         return getWithRestResult(format("%s/%s/%s", interviewPanelInviteRestUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class);

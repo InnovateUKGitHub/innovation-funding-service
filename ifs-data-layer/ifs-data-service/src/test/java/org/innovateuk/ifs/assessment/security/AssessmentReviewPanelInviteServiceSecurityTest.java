@@ -35,7 +35,6 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
     private AssessmentPanelParticipantPermissionRules assessmentPanelParticipantPermissionRules;
     private AssessmentPanelParticipantLookupStrategy assessmentPanelParticipantLookupStrategy;
 
-
     @Override
     protected Class<? extends AssessmentReviewPanelInviteService> getClassUnderTest() {
         return TestAssessmentReviewPanelInviteService.class;
