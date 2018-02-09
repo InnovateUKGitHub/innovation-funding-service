@@ -39,7 +39,7 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
                                                           String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         InviteAssessorsAcceptedViewModel model = super.populateModel(competition);
 
@@ -50,7 +50,7 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
                 singletonList(ACCEPTED),
                 empty()
         )
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 

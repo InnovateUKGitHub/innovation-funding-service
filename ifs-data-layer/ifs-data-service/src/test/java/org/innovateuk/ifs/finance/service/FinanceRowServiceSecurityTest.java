@@ -102,7 +102,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     public void testFindApplicationFinanceByApplication() {
         final Long applicationId = 1L;
         ServiceResult<List<ApplicationFinanceResource>> applicationFinanceByApplication = classUnderTest.findApplicationFinanceByApplication(applicationId);
-        assertTrue(applicationFinanceByApplication.getSuccessObject().isEmpty());
+        assertTrue(applicationFinanceByApplication.getSuccess().isEmpty());
         verifyApplicationFinanceResourceReadRulesCalled(ARRAY_SIZE_FOR_POST_FILTER_TESTS);
     }
 

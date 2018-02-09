@@ -40,7 +40,7 @@ public class UserSurveyServiceImplTest extends BaseServiceUnitTest<UserSurveySer
 
         when(notificationServiceMock.sendNotification(expectedNotification(user, DIVERSITY_SURVEY_APPLICANT), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
-        service.sendApplicantDiversitySurvey(user).getSuccessObjectOrThrowException();
+        service.sendApplicantDiversitySurvey(user).getSuccess();
 
         InOrder inOrder = inOrder(notificationServiceMock);
         inOrder.verify(notificationServiceMock).sendNotification(expectedNotification(user, DIVERSITY_SURVEY_APPLICANT), eq(NotificationMedium.EMAIL));
@@ -57,7 +57,7 @@ public class UserSurveyServiceImplTest extends BaseServiceUnitTest<UserSurveySer
 
         when(notificationServiceMock.sendNotification(expectedNotification(user, DIVERSITY_SURVEY_ASSESSOR), eq(NotificationMedium.EMAIL))).thenReturn(serviceSuccess());
 
-        service.sendAssessorDiversitySurvey(user).getSuccessObjectOrThrowException();
+        service.sendAssessorDiversitySurvey(user).getSuccess();
 
         InOrder inOrder = inOrder(notificationServiceMock);
         inOrder.verify(notificationServiceMock).sendNotification(expectedNotification(user, DIVERSITY_SURVEY_ASSESSOR), eq(NotificationMedium.EMAIL));

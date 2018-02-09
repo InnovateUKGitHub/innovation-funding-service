@@ -107,7 +107,7 @@ public class UserManagementController {
                                                     new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
                                                     new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString)));
                                     return "admin/users";
-                                }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
+                                }).getSuccess()).getSuccess()).getSuccess();
     }
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_INTERNAL_USER')")
@@ -116,7 +116,7 @@ public class UserManagementController {
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
                     model.addAttribute("model", new EditUserViewModel(user));
                     return "admin/user";
-        }).getSuccessObjectOrThrowException();
+        }).getSuccess();
     }
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
@@ -129,7 +129,7 @@ public class UserManagementController {
 
     private String viewEditUser(Model model, Long userId, EditUserForm form) {
 
-        UserResource userResource = userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
+        UserResource userResource = userRestService.retrieveUserById(userId).getSuccess();
         form.setFirstName(userResource.getFirstName());
         form.setLastName(userResource.getLastName());
         // userResource.getRolesString() will return a single role for internal users
@@ -171,14 +171,14 @@ public class UserManagementController {
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
     public String deactivateUser(@P("userId")@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
     public String reactivateUser(@P("userId") @PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
     @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
@@ -226,7 +226,7 @@ public class UserManagementController {
                     failNowOrSucceedWith(failureView, () -> {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "users");
-                                model.addAttribute("users", users.getSuccessObjectOrThrowException());
+                                model.addAttribute("users", users.getSuccess());
                                 return "admin/search-external-users";
                             }
                     );
@@ -242,7 +242,7 @@ public class UserManagementController {
                     failNowOrSucceedWith(failureView, () -> {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "invites");
-                                model.addAttribute("invites", invites.getSuccessObjectOrThrowException());
+                                model.addAttribute("invites", invites.getSuccess());
                                 return "admin/search-external-users";
                             }
                     );

@@ -45,7 +45,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
         loginCompAdmin();
         ApplicationAssessorPageResource applicationAssessorResources = controller
                 .getAvailableAssessors(1L, 0, 20, null)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(Collections.emptyList(), applicationAssessorResources.getContent());
     }
@@ -54,7 +54,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
         loginCompAdmin();
         List<ApplicationAssessorResource> applicationAssessorResources = controller
                 .getAssignedAssessors(1L)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(Collections.emptyList(), applicationAssessorResources);
     }
@@ -84,7 +84,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = controller
                 .getApplicationAssessmentSummary(application.getId())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(application.getId().longValue(), applicationAssessmentSummary.getId());
         assertEquals(application.getName(), applicationAssessmentSummary.getName());

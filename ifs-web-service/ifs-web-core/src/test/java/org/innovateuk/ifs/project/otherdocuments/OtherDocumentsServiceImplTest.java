@@ -45,7 +45,7 @@ public class OtherDocumentsServiceImplTest {
                 otherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class OtherDocumentsServiceImplTest {
                 otherDocumentsService.addExploitationPlanDocument(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
     }
 
     @Test

@@ -43,7 +43,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long assessmentId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s", assessmentRestURL, assessmentId), AssessmentResource.class, expected);
-        assertSame(expected, service.getById(assessmentId).getSuccessObject());
+        assertSame(expected, service.getById(assessmentId).getSuccess());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
         Long assessmentId = 1L;
         setupGetWithRestResultExpectations(format("%s/%s/assign", assessmentRestURL, assessmentId), AssessmentResource.class, expected);
-        assertSame(expected, service.getAssignableById(assessmentId).getSuccessObject());
+        assertSame(expected, service.getAssignableById(assessmentId).getSuccess());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long assessmentId = 1L;
         setupGetWithRestResultExpectations(format("%s/%s/rejectable", assessmentRestURL, assessmentId),
                 AssessmentResource.class, expected);
-        assertSame(expected, service.getRejectableById(assessmentId).getSuccessObject());
+        assertSame(expected, service.getRejectableById(assessmentId).getSuccess());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long competitionId = 2L;
 
         setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), assessmentResourceListType(), expected);
-        assertSame(expected, service.getByUserAndCompetition(userId, competitionId).getSuccessObject());
+        assertSame(expected, service.getByUserAndCompetition(userId, competitionId).getSuccess());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long applicationId = 2L;
 
         setupGetWithRestResultExpectations(format("%s/user/%s/application/%s", assessmentRestURL, userId, applicationId), assessmentResourceListType(), expected);
-        assertSame(expected, service.getByUserAndApplication(userId, applicationId).getSuccessObject());
+        assertSame(expected, service.getByUserAndApplication(userId, applicationId).getSuccess());
     }
 
     @Test
@@ -95,7 +95,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long competitionId = 2L;
 
         setupGetWithRestResultExpectations(format("%s/state/%s/competition/%s/count", assessmentRestURL, state, competitionId), Long.TYPE, expected);
-        assertSame(expected, service.countByStateAndCompetition(state, competitionId).getSuccessObject());
+        assertSame(expected, service.countByStateAndCompetition(state, competitionId).getSuccess());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         Long assessmentId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/score", assessmentRestURL, assessmentId), AssessmentTotalScoreResource.class, expected);
-        assertSame(expected, service.getTotalScore(assessmentId).getSuccessObject());
+        assertSame(expected, service.getTotalScore(assessmentId).getSuccess());
     }
 
     @Test

@@ -42,7 +42,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         )).thenReturn(nextSection);
         when(sectionMapper.mapToResource(any(Section.class))).thenReturn(nextSectionResource);
 
-        SectionResource returnSection = sectionService.getNextSection(section.getId()).getSuccessObject();
+        SectionResource returnSection = sectionService.getNextSection(section.getId()).getSuccess();
         assertEquals(nextSectionResource, returnSection);
     }
 
@@ -57,7 +57,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         )).thenReturn(previousSection);
         when(sectionMapper.mapToResource(any(Section.class))).thenReturn(previousSectionResource);
 
-        SectionResource returnSection = sectionService.getPreviousSection(section.getId()).getSuccessObject();
+        SectionResource returnSection = sectionService.getPreviousSection(section.getId()).getSuccess();
         assertEquals(previousSectionResource, returnSection);
     }
 
@@ -73,7 +73,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         )).thenReturn(siblingSection);
         when(sectionMapper.mapToResource(any(Section.class))).thenReturn(siblingSectionResource);
 
-        SectionResource returnSection = sectionService.getNextSection(section.getId()).getSuccessObject();
+        SectionResource returnSection = sectionService.getNextSection(section.getId()).getSuccess();
         assertEquals(siblingSectionResource, returnSection);
     }
 
@@ -89,7 +89,7 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
         )).thenReturn(siblingSection);
         when(sectionMapper.mapToResource(any(Section.class))).thenReturn(siblingSectionResource);
 
-        SectionResource returnSection = sectionService.getPreviousSection(section.getId()).getSuccessObject();
+        SectionResource returnSection = sectionService.getPreviousSection(section.getId()).getSuccess();
         assertEquals(siblingSectionResource, returnSection);
     }
 
@@ -106,6 +106,6 @@ public class SectionServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<List<SectionResource>> result = sectionService.getByCompetitionIdVisibleForAssessment(competitionId);
         assertTrue(result.isSuccess());
-        assertEquals(sectionResources, result.getSuccessObject());
+        assertEquals(sectionResources, result.getSuccess());
     }
 }

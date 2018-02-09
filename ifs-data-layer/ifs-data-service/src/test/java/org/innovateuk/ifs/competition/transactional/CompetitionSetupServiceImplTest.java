@@ -89,7 +89,7 @@ public class CompetitionSetupServiceImplTest {
                         .withCompleted(Boolean.TRUE)
                         .build(1)));
 
-        Map<CompetitionSetupSection, Optional<Boolean>> resultMap = service.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
+        Map<CompetitionSetupSection, Optional<Boolean>> resultMap = service.getSectionStatuses(competitionId).getSuccess();
 
         assertTrue(resultMap.containsKey(CompetitionSetupSection.HOME));
         assertEquals(Boolean.TRUE, resultMap.get(INITIAL_DETAILS).orElse(Boolean.FALSE));

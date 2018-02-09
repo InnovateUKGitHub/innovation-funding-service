@@ -84,7 +84,7 @@ public class AssessmentOverviewModelPopulator {
 
     private List<AssessmentOverviewSectionViewModel> getSections(AssessmentResource assessment,
                                                                  List<QuestionResource> questions) {
-        List<SectionResource> sections = sectionRestService.getByCompetitionIdVisibleForAssessment(assessment.getCompetition()).getSuccessObjectOrThrowException();
+        List<SectionResource> sections = sectionRestService.getByCompetitionIdVisibleForAssessment(assessment.getCompetition()).getSuccess();
 
         Map<Long, List<FormInputResource>> formInputs = getFormInputsByQuestion(assessment.getCompetition());
         Map<Long, AssessorFormInputResponseResource> responses = getResponsesByFormInput(assessment.getId());
@@ -126,7 +126,7 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private List<AssessmentOverviewAppendixViewModel> getAppendices(long applicationId, List<QuestionResource> questions) {
-        List<FormInputResponseResource> applicantResponses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> applicantResponses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
         return applicantResponses.stream()
                 .filter(formInputResponseResource -> formInputResponseResource.getFileEntry() != null)
@@ -135,13 +135,13 @@ public class AssessmentOverviewModelPopulator {
     }
 
     private Map<Long, List<FormInputResource>> getFormInputsByQuestion(long competitionId) {
-        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT).getSuccessObjectOrThrowException();
+        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(competitionId, ASSESSMENT).getSuccess();
         return formInputResources.stream().collect(groupingBy(FormInputResource::getQuestion));
     }
 
     private Map<Long, AssessorFormInputResponseResource> getResponsesByFormInput(long assessmentId) {
         List<AssessorFormInputResponseResource> responses = assessorFormInputResponseRestService
-                .getAllAssessorFormInputResponses(assessmentId).getSuccessObjectOrThrowException();
+                .getAllAssessorFormInputResponses(assessmentId).getSuccess();
         return simpleToMap(responses, AssessorFormInputResponseResource::getFormInput);
     }
 

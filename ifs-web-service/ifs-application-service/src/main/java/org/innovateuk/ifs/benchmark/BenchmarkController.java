@@ -58,7 +58,7 @@ public class BenchmarkController extends BaseRestService {
         String totalTimeMessage = "Overall took " + (System.currentTimeMillis() - start) + " milliseconds to process " +
                 "the web layer plus data layer benchmarking test";
 
-        return dataLayerResponse.getSuccessObject() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
+        return dataLayerResponse.getSuccess() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
     }
 
     @GetMapping("/to-data-layer-with-database")
@@ -78,7 +78,7 @@ public class BenchmarkController extends BaseRestService {
         String totalTimeMessage = "Overall took " + (System.currentTimeMillis() - start) + " milliseconds to process " +
                 "the web layer plus \"data layer and database\" benchmarking test";
 
-        return dataLayerResponse.getSuccessObject() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
+        return dataLayerResponse.getSuccess() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
     }
 
     @GetMapping("/to-data-layer-with-async-calls")
@@ -109,7 +109,7 @@ public class BenchmarkController extends BaseRestService {
             String totalTimeMessage = "Overall took " + (System.currentTimeMillis() - start) + " milliseconds to process " +
                     "the \"web layer plus data layer with async calls\" benchmarking test";
 
-            return dataLayerResponses.getSuccessObject() + "\n" + totalTimeMessage;
+            return dataLayerResponses.getSuccess() + "\n" + totalTimeMessage;
         });
 
         return asyncGenerator.awaitAll(totalResults).thenReturn();
@@ -145,7 +145,7 @@ public class BenchmarkController extends BaseRestService {
             String totalTimeMessage = "Overall took " + (System.currentTimeMillis() - start) + " milliseconds to process " +
                     "the web layer plus \"data layer and database with async calls\" benchmarking test";
 
-            return dataLayerResponses.getSuccessObject() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
+            return dataLayerResponses.getSuccess() + "\n" + thisLayerProcessingMessage + "\n" + totalTimeMessage;
         });
 
         return asyncGenerator.awaitAll(totalResults).thenReturn();

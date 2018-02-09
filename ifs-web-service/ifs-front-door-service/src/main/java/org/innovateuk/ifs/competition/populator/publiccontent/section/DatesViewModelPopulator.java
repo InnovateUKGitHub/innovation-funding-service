@@ -40,7 +40,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
 
     private List<DateViewModel> getMilestonesAsDatesViewModel(Long competitionId) {
         List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<DateViewModel> milestonesMapped = mapMilestoneToDateViewModel(milestones);
         return milestonesMapped;

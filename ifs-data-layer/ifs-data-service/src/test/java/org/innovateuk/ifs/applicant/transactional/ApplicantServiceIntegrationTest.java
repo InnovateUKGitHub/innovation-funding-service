@@ -36,7 +36,7 @@ public class ApplicantServiceIntegrationTest extends BaseAuthenticationAwareInte
         ServiceResult<ApplicantQuestionResource> result = applicantService.getQuestion(USER_ID, QUESTION_ID, APPLICATION_ID);
 
         assertThat(result.isSuccess(), equalTo(true));
-        ApplicantQuestionResource applicantQuestion = result.getSuccessObjectOrThrowException();
+        ApplicantQuestionResource applicantQuestion = result.getSuccess();
 
         assertThat(applicantQuestion.getQuestion().getId(), equalTo(QUESTION_ID));
         assertThat(applicantQuestion.getCurrentUser().getId(), equalTo(USER_ID));
@@ -53,7 +53,7 @@ public class ApplicantServiceIntegrationTest extends BaseAuthenticationAwareInte
         ServiceResult<ApplicantSectionResource> result = applicantService.getSection(USER_ID, FINANCES_SECTION_ID, APPLICATION_ID);
 
         assertThat(result.isSuccess(), equalTo(true));
-        ApplicantSectionResource applicantSection = result.getSuccessObjectOrThrowException();
+        ApplicantSectionResource applicantSection = result.getSuccess();
 
         assertThat(applicantSection.getSection().getId(), equalTo(FINANCES_SECTION_ID));
         assertThat(applicantSection.getCurrentUser().getId(), equalTo(USER_ID));

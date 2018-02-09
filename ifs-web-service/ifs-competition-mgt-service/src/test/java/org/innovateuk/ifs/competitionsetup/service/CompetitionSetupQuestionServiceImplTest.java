@@ -31,7 +31,7 @@ public class CompetitionSetupQuestionServiceImplTest {
         ServiceResult<CompetitionSetupQuestionResource> result = service.getQuestion(questionId);
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObjectOrThrowException(), resource);
+        assertEquals(result.getSuccess(), resource);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class CompetitionSetupQuestionServiceImplTest {
         ServiceResult<CompetitionSetupQuestionResource> result = service.createDefaultQuestion(competitionId);
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObjectOrThrowException(), resource);
+        assertEquals(result.getSuccess(), resource);
     }
 
     @Test

@@ -26,7 +26,7 @@ public class ApplicationResearchCategoryPopulator {
     public ResearchCategoryViewModel populate(ApplicationResource applicationResource, Long questionId) {
 
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
-        researchCategoryViewModel.setAvailableResearchCategories(categoryRestService.getResearchCategories().getSuccessObject());
+        researchCategoryViewModel.setAvailableResearchCategories(categoryRestService.getResearchCategories().getSuccess());
         researchCategoryViewModel.setQuestionId(questionId);
         researchCategoryViewModel.setApplicationId(applicationResource.getId());
         researchCategoryViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());

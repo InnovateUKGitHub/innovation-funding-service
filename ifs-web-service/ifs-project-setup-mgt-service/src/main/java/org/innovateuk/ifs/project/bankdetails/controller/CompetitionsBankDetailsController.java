@@ -29,7 +29,7 @@ public class CompetitionsBankDetailsController {
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewPendingBankDetailsApprovals(Model model, UserResource loggedInUser) {
 
-        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRestService.getPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
+        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRestService.getPendingBankDetailsApprovals().getSuccess();
 
         model.addAttribute("model", new CompetitionPendingBankDetailsApprovalsViewModel(pendingBankDetails));
         return "project/competition-pending-bank-details";

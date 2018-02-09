@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.junit.Assert.assertEquals;
@@ -40,7 +38,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, null, 6, 20, empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
     
     @Test
@@ -51,7 +49,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, "id", 6, 20, empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -62,7 +60,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, null, 6, 20, of("10"));
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
     @Test
     public void findByCompetitionWithFilterAndSort() {
@@ -72,7 +70,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, "id", 6, 20, of("10"));
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
     
     @Test
@@ -83,7 +81,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(123L, null, 6, 20, empty(), empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
     
     @Test
@@ -94,7 +92,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(123L, "id", 6, 20, empty(), empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -105,7 +103,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(123L, null, 6, 20, of("10"), of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -116,7 +114,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(123L, "id", 6, 20, of("10"), empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -127,7 +125,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, null, 6, 20, empty(), empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -138,7 +136,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, "id", 6, 20, empty(), empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -149,7 +147,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, null, 6, 20, of("10"), of(true));
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -160,7 +158,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getIneligibleApplications(123L, "id", 6, 20, of("10"), of(false));
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -171,7 +169,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getNonSubmittedApplications(123L, null, 6, 20, empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
     
     @Test
@@ -182,7 +180,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getNonSubmittedApplications(123L, "id", 6, 20, empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -193,7 +191,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getWithFundingDecisionApplications(123L, "id", 6, 20, of("filter"), Optional.of(false), Optional.of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccess());
     }
 
     @Test
@@ -209,7 +207,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<List<Long>> result = service.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(123L, of("filter"), Optional.of(false), Optional.of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(appIds, result.getSuccessObject());
+        assertEquals(appIds, result.getSuccess());
     }
 
     @Test
@@ -225,6 +223,6 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<List<Long>> result = service.getAllSubmittedApplicationIds(123L, of("filter"), Optional.of(UNFUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(appIds, result.getSuccessObject());
+        assertEquals(appIds, result.getSuccess());
     }
 }

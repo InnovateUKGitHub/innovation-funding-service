@@ -84,7 +84,7 @@ public class CompetitionSetupApplicationController {
 
         Function<CompetitionSetupQuestionResource, String> successViewFunction =
                 (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
-        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccessObjectOrThrowException());
+        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccess());
 
         return successView.get();
     }
@@ -383,7 +383,7 @@ public class CompetitionSetupApplicationController {
                     return questionView;
                 }).andOnFailure(() -> serviceSuccess("redirect:/non-ifs-competition/setup/" + questionId));
 
-        return view.getSuccessObjectOrThrowException();
+        return view.getSuccess();
     }
 
     private QuestionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable) {

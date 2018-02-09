@@ -89,7 +89,7 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
 
         ServiceResult<FileEntryResource> result = service.getFileDetails(contentGroupId);
 
-        assertThat(result.getSuccessObjectOrThrowException(), equalTo(fileEntryResource));
+        assertThat(result.getSuccess(), equalTo(fileEntryResource));
     }
 
     @Test
@@ -109,8 +109,8 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
 
         ServiceResult<FileAndContents> result = service.getFileContents(contentGroupId);
 
-        assertThat(result.getSuccessObjectOrThrowException().getFileEntry(), equalTo(fileEntryResource));
-        assertThat(result.getSuccessObjectOrThrowException().getContentsSupplier(), equalTo(inputStreamSupplier));
+        assertThat(result.getSuccess().getFileEntry(), equalTo(fileEntryResource));
+        assertThat(result.getSuccess().getContentsSupplier(), equalTo(inputStreamSupplier));
     }
 
     @Test
@@ -143,7 +143,7 @@ public class ContentGroupServiceImplTest extends BaseServiceUnitTest<ContentGrou
         when(contentGroupRepository.findOne(toDeleteContentGroup.getId())).thenReturn(toDeleteContentGroup);
         when(fileServiceMock.deleteFileIgnoreNotFound(fileEntryId)).thenReturn(serviceSuccess(toDelete));
 
-        service.saveContentGroups(publicContentResource, publicContent, type).getSuccessObjectOrThrowException();
+        service.saveContentGroups(publicContentResource, publicContent, type).getSuccess();
 
         verify(fileServiceMock).deleteFileIgnoreNotFound(fileEntryId);
         verify(contentGroupRepository).delete(toDeleteContentGroup.getId());

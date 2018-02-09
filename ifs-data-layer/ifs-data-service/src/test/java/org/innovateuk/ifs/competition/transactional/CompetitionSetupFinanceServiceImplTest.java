@@ -103,8 +103,8 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
 
         // Assertions
         assertTrue(compSetupFinanceRes.isSuccess());
-        assertEquals(isFullFinance, compSetupFinanceRes.getSuccessObject().isFullApplicationFinance());
-        assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccessObject().isIncludeGrowthTable());
+        assertEquals(isFullFinance, compSetupFinanceRes.getSuccess().isFullApplicationFinance());
+        assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccess().isIncludeGrowthTable());
     }
 
 }

@@ -29,7 +29,7 @@ public class RejectionReasonRestServiceImplTest extends BaseRestServiceUnitTest<
         List<RejectionReasonResource> expected = Arrays.asList(1,2).stream().map(i -> new RejectionReasonResource()).collect(Collectors.toList());
 
         setupGetWithRestResultAnonymousExpectations(format("%s/findAllActive", rejectionReasonRestUrl), rejectionReasonResourceListType(), expected, OK);
-        List<RejectionReasonResource> response = service.findAllActive().getSuccessObject();
+        List<RejectionReasonResource> response = service.findAllActive().getSuccess();
         assertSame(expected, response);
     }
 

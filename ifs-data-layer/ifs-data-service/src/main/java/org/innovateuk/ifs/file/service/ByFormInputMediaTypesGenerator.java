@@ -29,7 +29,7 @@ public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long>
     @Override
     public List<MediaType> apply(Long formInputId) {
 
-        FormInputResource formInput = formInputService.findFormInput(formInputId).getSuccessObjectOrThrowException();
+        FormInputResource formInput = formInputService.findFormInput(formInputId).getSuccess();
 
         List<FileTypeCategories> fileTypeCategories = getAllowableFileTypeCategoriesFromFormInput(formInput);
 
