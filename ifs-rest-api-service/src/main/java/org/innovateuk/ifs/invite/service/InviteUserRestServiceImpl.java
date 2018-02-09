@@ -55,6 +55,6 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
 
     @Override
     public RestResult<Void> resendInternalUserInvite(long inviteId) {
-        return putWithRestResult(inviteRestUrl + "/internal/pending/invite/" + inviteId + "/resend", Void.class);
+        return putWithRestResult(inviteRestUrl + "/internal/pending/" + inviteId + "/resend", Void.class);
     }
 }

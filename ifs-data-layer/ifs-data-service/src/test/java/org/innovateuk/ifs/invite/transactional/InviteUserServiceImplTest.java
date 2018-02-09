@@ -605,8 +605,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(loggedInUserSupplierMock.get()).thenReturn(loggedInUser);
 
         ServiceResult<Void> result = service.resendInternalUserInvite(123L);
-
-        // assert this was a success
         assertTrue(result.isSuccess());
 
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
@@ -619,6 +617,22 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertThat(existingInvite.getSentOn(), lessThanOrEqualTo(now()));
         assertThat(existingInvite.getSentOn().plus(50, MILLIS), greaterThan(now()));
 
+    }
+
+    @Test
+    public void resendInternalUserInviteButInviteNotFound() {
+
+        when(inviteRoleRepositoryMock.findOne(123L)).thenReturn(null);
+
+        ServiceResult<Void> result = service.resendInternalUserInvite(123L);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(RoleInvite.class, 123L)));
+
+        // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
+        // in this case to explicitly save, but is reused code with creating invites also)
+        verify(inviteRoleRepositoryMock).findOne(123L);
+        verifyNoMoreInteractions(inviteRoleRepositoryMock, roleMapperMock, emailService);
     }
 
     private List<ApplicationInvite> setUpMockingCreateApplicationInvites() {
