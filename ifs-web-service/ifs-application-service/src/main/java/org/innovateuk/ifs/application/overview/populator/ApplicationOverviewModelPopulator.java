@@ -98,7 +98,7 @@ public class ApplicationOverviewModelPopulator {
 
         int completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
 
-        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
+        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
 
         return new ApplicationOverviewViewModel(application, projectResource, competition, userOrganisation.orElse(null),
                 completedQuestionsPercentage, yourFinancesSectionId, userViewModel, assignableViewModel, completedViewModel, sectionViewModel,

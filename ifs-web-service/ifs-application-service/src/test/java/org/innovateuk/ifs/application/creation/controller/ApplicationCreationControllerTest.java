@@ -66,9 +66,9 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
 
-        MvcResult result = mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
+        MvcResult result = mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("create-application/check-eligibility"))
+                .andExpect(view().name("create-application/start-application"))
                 .andReturn();
 
         verify(registrationCookieService, times(1)).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
@@ -86,7 +86,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
 
-        mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
+        mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/search"));
 
@@ -105,7 +105,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
 
-        mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
+        mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/search"));
 
@@ -123,7 +123,7 @@ public class ApplicationCreationControllerTest extends BaseControllerMockMVCTest
                 .build();
         when(competitionService.getPublicContentOfCompetition(competitionId)).thenReturn(publicContentItem);
 
-        mockMvc.perform(get("/application/create/check-eligibility/{competitionId}", competitionId))
+        mockMvc.perform(get("/application/create/start-application/{competitionId}", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/search"));
 

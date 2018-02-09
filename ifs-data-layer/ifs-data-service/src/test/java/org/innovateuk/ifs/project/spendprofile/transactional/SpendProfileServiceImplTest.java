@@ -507,9 +507,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
 
-        assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_" + dateFormat.format(date)));
-        assertTrue(serviceResult.getSuccessObject().getCsvData().contains("Group Name"));
-        assertEquals(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+        assertTrue(serviceResult.getSuccess().getFileName().startsWith("TEST_Spend_Profile_" + dateFormat.format(date)));
+        assertTrue(serviceResult.getSuccess().getCsvData().contains("Group Name"));
+        assertEquals(Arrays.asList(serviceResult.getSuccess().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
                 && !s.contains("Month") && !s.contains("TOTAL")).count(), 3);
     }
 
@@ -545,9 +545,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         ServiceResult<SpendProfileCSVResource> serviceResult = service.getSpendProfileCSV(projectOrganisationCompositeId);
 
-        assertTrue(serviceResult.getSuccessObject().getFileName().startsWith("TEST_Spend_Profile_" + dateFormat.format(date)));
-        assertFalse(serviceResult.getSuccessObject().getCsvData().contains("Group Name"));
-        assertEquals(Arrays.asList(serviceResult.getSuccessObject().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
+        assertTrue(serviceResult.getSuccess().getFileName().startsWith("TEST_Spend_Profile_" + dateFormat.format(date)));
+        assertFalse(serviceResult.getSuccess().getCsvData().contains("Group Name"));
+        assertEquals(Arrays.asList(serviceResult.getSuccess().getCsvData().split("\n")).stream().filter(s -> s.contains("Group Name")
                 && !s.contains("Month") && !s.contains("TOTAL")).count(), 0);
     }
 
@@ -559,7 +559,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
-        assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+        assertEquals(ApprovalType.APPROVED, result.getSuccess());
     }
 
     @Test
@@ -570,7 +570,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
-        assertEquals(ApprovalType.REJECTED, result.getSuccessObject());
+        assertEquals(ApprovalType.REJECTED, result.getSuccess());
     }
 
     @Test
@@ -580,7 +580,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
-        assertEquals(ApprovalType.UNSET, result.getSuccessObject());
+        assertEquals(ApprovalType.UNSET, result.getSuccess());
     }
 
     @Test

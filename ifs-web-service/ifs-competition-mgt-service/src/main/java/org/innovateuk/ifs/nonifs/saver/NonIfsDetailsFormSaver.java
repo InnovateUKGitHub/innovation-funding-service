@@ -52,16 +52,16 @@ public class NonIfsDetailsFormSaver {
     }
 
     private List<MilestoneResource> getPublicMilestones(CompetitionResource competitionResource) {
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccess();
         if (milestones.isEmpty()) {
             createPublicMilestones(competitionResource.getId());
-            milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
+            milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccess();
         }
         return milestones;
     }
 
     private void createPublicMilestones(Long competitionId) {
-        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneRestService.create(type, competitionId).getSuccessObjectOrThrowException());
+        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneRestService.create(type, competitionId).getSuccess());
     }
 
     private void mapFormFields(NonIfsDetailsForm form, CompetitionResource competitionResource) {

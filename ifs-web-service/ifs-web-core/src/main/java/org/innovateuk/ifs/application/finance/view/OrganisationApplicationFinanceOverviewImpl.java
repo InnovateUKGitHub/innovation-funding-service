@@ -60,7 +60,7 @@ public class OrganisationApplicationFinanceOverviewImpl implements OrganisationF
         if(((ApplicationFinanceResource)orgFinance).getFinanceFileEntry() != null && ((ApplicationFinanceResource)orgFinance).getFinanceFileEntry() > 0L){
             RestResult<FileEntryResource> result = fileEntryService.findOne(((ApplicationFinanceResource)orgFinance).getFinanceFileEntry());
             if(result.isSuccess()){
-                return result.getSuccessObject();
+                return result.getSuccess();
             }
         }
         return null;

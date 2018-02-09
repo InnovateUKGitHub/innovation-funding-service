@@ -45,7 +45,7 @@ public class ApplicationCreationController {
     @Autowired
     private RegistrationCookieService registrationCookieService;
 
-    @GetMapping("/check-eligibility/{competitionId}")
+    @GetMapping("/start-application/{competitionId}")
     public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletResponse response) {
@@ -58,7 +58,7 @@ public class ApplicationCreationController {
         registrationCookieService.deleteAllRegistrationJourneyCookies(response);
         registrationCookieService.saveToCompetitionIdCookie(competitionId, response);
 
-        return "create-application/check-eligibility";
+        return "create-application/start-application";
     }
 
     private boolean isCompetitionReady(PublicContentItemResource publicContentItem) {

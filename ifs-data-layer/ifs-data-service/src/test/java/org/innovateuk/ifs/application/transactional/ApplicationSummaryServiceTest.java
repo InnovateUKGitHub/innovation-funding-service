@@ -104,7 +104,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, null, 6, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, null, 6, 20, empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -133,7 +133,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "id", 6, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -148,7 +148,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "name", 6, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -168,13 +168,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals(sum2, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum1, result.getSuccessObject().getContent().get(1));
-        assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(2, result.getSuccessObject().getTotalElements());
-        assertEquals(1, result.getSuccessObject().getTotalPages());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals(sum2, result.getSuccess().getContent().get(0));
+        assertEquals(sum1, result.getSuccess().getContent().get(1));
+        assertEquals(20, result.getSuccess().getSize());
+        assertEquals(2, result.getSuccess().getTotalElements());
+        assertEquals(1, result.getSuccess().getTotalPages());
     }
 
     @Test
@@ -194,13 +194,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals(sum2, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum1, result.getSuccessObject().getContent().get(1));
-        assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(2, result.getSuccessObject().getTotalElements());
-        assertEquals(1, result.getSuccessObject().getTotalPages());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals(sum2, result.getSuccess().getContent().get(0));
+        assertEquals(sum1, result.getSuccess().getContent().get(1));
+        assertEquals(20, result.getSuccess().getSize());
+        assertEquals(2, result.getSuccess().getTotalElements());
+        assertEquals(1, result.getSuccess().getTotalPages());
     }
 
     @Test
@@ -221,13 +221,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 1, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(1, result.getSuccessObject().getNumber());
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals("a20", result.getSuccessObject().getContent().get(0).getLead());
-        assertEquals("a21", result.getSuccessObject().getContent().get(1).getLead());
-        assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(22, result.getSuccessObject().getTotalElements());
-        assertEquals(2, result.getSuccessObject().getTotalPages());
+        assertEquals(1, result.getSuccess().getNumber());
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals("a20", result.getSuccess().getContent().get(0).getLead());
+        assertEquals("a21", result.getSuccess().getContent().get(1).getLead());
+        assertEquals(20, result.getSuccess().getSize());
+        assertEquals(22, result.getSuccess().getTotalElements());
+        assertEquals(2, result.getSuccess().getTotalPages());
     }
 
     @Test
@@ -246,9 +246,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals(sum1, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum2, result.getSuccessObject().getContent().get(1));
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals(sum1, result.getSuccess().getContent().get(0));
+        assertEquals(sum2, result.getSuccess().getContent().get(1));
     }
 
     @Test
@@ -270,10 +270,10 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
-        assertEquals(3, result.getSuccessObject().getContent().size());
-        assertEquals(sum1, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum3, result.getSuccessObject().getContent().get(1));
-        assertEquals(sum2, result.getSuccessObject().getContent().get(2));
+        assertEquals(3, result.getSuccess().getContent().size());
+        assertEquals(sum1, result.getSuccess().getContent().get(0));
+        assertEquals(sum3, result.getSuccess().getContent().get(1));
+        assertEquals(sum2, result.getSuccess().getContent().get(2));
     }
 
     @Test
@@ -293,13 +293,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals(sum2, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum1, result.getSuccessObject().getContent().get(1));
-        assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(2, result.getSuccessObject().getTotalElements());
-        assertEquals(1, result.getSuccessObject().getTotalPages());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals(sum2, result.getSuccess().getContent().get(0));
+        assertEquals(sum1, result.getSuccess().getContent().get(1));
+        assertEquals(20, result.getSuccess().getSize());
+        assertEquals(2, result.getSuccess().getTotalElements());
+        assertEquals(1, result.getSuccess().getTotalPages());
     }
 
     @Test
@@ -319,13 +319,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals(sum2, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum1, result.getSuccessObject().getContent().get(1));
-        assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(2, result.getSuccessObject().getTotalElements());
-        assertEquals(1, result.getSuccessObject().getTotalPages());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals(sum2, result.getSuccess().getContent().get(0));
+        assertEquals(sum1, result.getSuccess().getContent().get(1));
+        assertEquals(20, result.getSuccess().getSize());
+        assertEquals(2, result.getSuccess().getTotalElements());
+        assertEquals(1, result.getSuccess().getTotalPages());
     }
 
     @Test
@@ -346,13 +346,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 1, 20, of("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(1, result.getSuccessObject().getNumber());
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals("a20", result.getSuccessObject().getContent().get(0).getLeadApplicant());
-        assertEquals("a21", result.getSuccessObject().getContent().get(1).getLeadApplicant());
-        assertEquals(20, result.getSuccessObject().getSize());
-        assertEquals(22, result.getSuccessObject().getTotalElements());
-        assertEquals(2, result.getSuccessObject().getTotalPages());
+        assertEquals(1, result.getSuccess().getNumber());
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals("a20", result.getSuccess().getContent().get(0).getLeadApplicant());
+        assertEquals("a21", result.getSuccess().getContent().get(1).getLeadApplicant());
+        assertEquals(20, result.getSuccess().getSize());
+        assertEquals(22, result.getSuccess().getTotalElements());
+        assertEquals(2, result.getSuccess().getTotalPages());
     }
 
     @Test
@@ -371,9 +371,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
-        assertEquals(2, result.getSuccessObject().getContent().size());
-        assertEquals(sum1, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum2, result.getSuccessObject().getContent().get(1));
+        assertEquals(2, result.getSuccess().getContent().size());
+        assertEquals(sum1, result.getSuccess().getContent().get(0));
+        assertEquals(sum2, result.getSuccess().getContent().get(1));
     }
 
     @Test
@@ -395,10 +395,10 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
-        assertEquals(3, result.getSuccessObject().getContent().size());
-        assertEquals(sum1, result.getSuccessObject().getContent().get(0));
-        assertEquals(sum3, result.getSuccessObject().getContent().get(1));
-        assertEquals(sum2, result.getSuccessObject().getContent().get(2));
+        assertEquals(3, result.getSuccess().getContent().size());
+        assertEquals(sum1, result.getSuccess().getContent().get(0));
+        assertEquals(sum3, result.getSuccess().getContent().get(1));
+        assertEquals(sum2, result.getSuccess().getContent().get(2));
     }
 
     @Test
@@ -429,8 +429,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                         empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -460,8 +460,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                         empty());
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -491,8 +491,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                         of(true));
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -508,8 +508,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of("filter"), of(false), of(ON_HOLD));
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().getNumber());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(0, result.getSuccess().getNumber());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -525,7 +525,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(0, result.getSuccessObject().size());
+        assertEquals(0, result.getSuccess().size());
     }
 
     @Test
@@ -540,9 +540,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
 
         assertTrue(result.isSuccess());
-        assertEquals(2, result.getSuccessObject().size());
-        assertEquals(applications.get(0).getId(), result.getSuccessObject().get(0));
-        assertEquals(applications.get(1).getId(), result.getSuccessObject().get(1));
+        assertEquals(2, result.getSuccess().size());
+        assertEquals(applications.get(0).getId(), result.getSuccess().get(0));
+        assertEquals(applications.get(1).getId(), result.getSuccess().get(1));
     }
 
     @Test
@@ -556,9 +556,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
         assertTrue(result.isSuccess());
-        assertEquals(2, result.getSuccessObject().size());
-        assertEquals(applications.get(0).getId(), result.getSuccessObject().get(0));
-        assertEquals(applications.get(1).getId(), result.getSuccessObject().get(1));
+        assertEquals(2, result.getSuccess().size());
+        assertEquals(applications.get(0).getId(), result.getSuccess().get(0));
+        assertEquals(applications.get(1).getId(), result.getSuccess().get(1));
     }
 
     @Test
@@ -657,13 +657,13 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<ApplicationTeamResource> result = applicationSummaryService.getApplicationTeamByApplicationId(123L);
         assertTrue(result.isSuccess());
 
-        ApplicationTeamOrganisationResource leadOrganisation = result.getSuccessObject().getLeadOrganisation();
+        ApplicationTeamOrganisationResource leadOrganisation = result.getSuccess().getLeadOrganisation();
         assertTrue(leadOrganisation.getOrganisationName().equals("Lead"));
         assertTrue(leadOrganisation.getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));
         assertTrue(leadOrganisation.getOperatingAddress().getAddress().getAddressLine1().equals("2E"));
         assertTrue(leadOrganisation.getUsers().get(0).getName().equals("Lee Der"));
 
-        List<ApplicationTeamOrganisationResource> partnerOrganisations = result.getSuccessObject().getPartnerOrganisations();
+        List<ApplicationTeamOrganisationResource> partnerOrganisations = result.getSuccess().getPartnerOrganisations();
         assertEquals(2, partnerOrganisations.size());
         assertTrue(partnerOrganisations.get(0).getOrganisationName().equals("A"));
         assertTrue(partnerOrganisations.get(0).getRegisteredAddress().getAddress().getAddressLine1().equals("1E"));

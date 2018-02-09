@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.grantofferletter.resource;
 
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+
 /**
  * Events that can be triggered during the Grant Offer Letter process.
  */
@@ -24,5 +26,9 @@ public enum GrantOfferLetterEvent implements ProcessEvent {
     @Override
     public String getType() {
         return event;
+    }
+
+    public static GrantOfferLetterEvent getByType(String type) {
+        return simpleFindFirst(GrantOfferLetterEvent.values(), event -> event.getType().equals(type)).orElse(null);
     }
 }

@@ -58,7 +58,7 @@ public class MonitoringOfficerRestServiceImplTest extends BaseRestServiceUnitTes
 
         assertTrue(result.isSuccess());
 
-        Assert.assertEquals(expectedMonitoringOfficerResource, result.getSuccessObject());
+        Assert.assertEquals(expectedMonitoringOfficerResource, result.getSuccess());
 
     }
 }

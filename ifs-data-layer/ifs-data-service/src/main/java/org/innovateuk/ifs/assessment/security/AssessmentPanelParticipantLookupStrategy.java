@@ -2,15 +2,15 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
-import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
+import org.innovateuk.ifs.invite.mapper.AssessmentReviewPanelParticipantMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource;
+import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelParticipantResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Lookup strategy for {@link AssessmentPanelParticipant}, used for permissioning.
+ * Lookup strategy for {@link AssessmentReviewPanelParticipant}, used for permissioning.
  */
 @Component
 @PermissionEntityLookupStrategies
@@ -20,10 +20,10 @@ public class AssessmentPanelParticipantLookupStrategy {
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
-    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
+    private AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapper;
 
     @PermissionEntityLookupStrategy
-    public AssessmentPanelParticipantResource getAssessmentPanelParticipantResource(String inviteHash) {
-        return assessmentPanelParticipantMapper.mapToResource(assessmentPanelParticipantRepository.getByInviteHash(inviteHash));
+    public AssessmentReviewPanelParticipantResource getAssessmentPanelParticipantResource(String inviteHash) {
+        return assessmentReviewPanelParticipantMapper.mapToResource(assessmentPanelParticipantRepository.getByInviteHash(inviteHash));
     }
 }

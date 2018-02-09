@@ -47,7 +47,7 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
 
     @Test
     public void testViewGrantOfferLetterPage() {
-        assertSecured(() -> classUnderTest.viewGrantOfferLetterSend(projectCompositeId.id(), null, null));
+        assertSecured(() -> classUnderTest.viewGrantOfferLetterSend(projectCompositeId.id(), null));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
 
     @Test
     public void testRemoveGrantOfferLetterFile() {
-        assertSecured(() -> classUnderTest.removeGrantOfferLetterFile(projectCompositeId.id(), null, null, null, null));
+        assertSecured(() -> classUnderTest.removeGrantOfferLetterFile(projectCompositeId.id()));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
 
     @Test
     public void testApproceOrRejectSignedGrantOfferLetter() {
-        assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(projectCompositeId.id(), ApprovalType.APPROVED, null, null, null, null));
+        assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(projectCompositeId.id(), ApprovalType.APPROVED));
     }
 
     @Test

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;

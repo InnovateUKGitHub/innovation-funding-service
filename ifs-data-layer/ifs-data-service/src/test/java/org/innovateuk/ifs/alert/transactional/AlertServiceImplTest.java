@@ -45,7 +45,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
         when(alertMapperMock.mapToResource(same(alert1))).thenReturn(expected1);
         when(alertMapperMock.mapToResource(same(alert2))).thenReturn(expected2);
 
-        final List<AlertResource> found = alertService.findAllVisible().getSuccessObject();
+        final List<AlertResource> found = alertService.findAllVisible().getSuccess();
 
         assertSame(expected1, found.get(0));
         assertSame(expected2, found.get(1));
@@ -69,7 +69,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
         when(alertMapperMock.mapToResource(same(alert1))).thenReturn(expected1);
         when(alertMapperMock.mapToResource(same(alert2))).thenReturn(expected2);
 
-        final List<AlertResource> found = alertService.findAllVisibleByType(MAINTENANCE).getSuccessObject();
+        final List<AlertResource> found = alertService.findAllVisibleByType(MAINTENANCE).getSuccess();
 
         assertSame(expected1, found.get(0));
         assertSame(expected2, found.get(1));
@@ -85,7 +85,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
         when(alertRepositoryMock.findOne(9999L)).thenReturn(alert);
         when(alertMapperMock.mapToResource(same(alert))).thenReturn(expected);
 
-        assertSame(expected, alertService.findById(9999L).getSuccessObject());
+        assertSame(expected, alertService.findById(9999L).getSuccess());
         verify(alertRepositoryMock, only()).findOne(9999L);
     }
 
@@ -102,7 +102,7 @@ public class AlertServiceImplTest extends BaseUnitTestMocksTest {
         when(alertRepositoryMock.save(same(alert))).thenReturn(alert);
         when(alertMapperMock.mapToResource(same(alert))).thenReturn(expected);
 
-        assertSame(expected, alertService.create(alertResource).getSuccessObject());
+        assertSame(expected, alertService.create(alertResource).getSuccess());
         verify(alertRepositoryMock, only()).save(alert);
 
     }

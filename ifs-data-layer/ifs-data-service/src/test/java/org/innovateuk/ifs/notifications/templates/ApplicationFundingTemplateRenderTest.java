@@ -29,7 +29,7 @@ public class ApplicationFundingTemplateRenderTest extends BaseIntegrationTest {
                 getTemplatePath("application_funding_text_html.html"),
                 asMap("message", htmlMessage)
         )
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertThat(renderedTemplate).contains(htmlMessage);
     }
