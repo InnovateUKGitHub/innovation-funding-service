@@ -244,7 +244,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             return new RestResult<>((RestResult<R>) success);
         }
 
-        return restSuccess(success.getSuccessObject());
+        return restSuccess(success.getSuccess());
     }
 
     @Override

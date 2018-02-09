@@ -30,14 +30,14 @@ public class AssessorProfileAgreementController {
     @GetMapping
     public String getAgreement(Model model,
                                UserResource loggedInUser) {
-        ProfileAgreementResource profileAgreementResource = profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        ProfileAgreementResource profileAgreementResource = profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccess();
         return doViewAgreement(model, profileAgreementResource);
     }
 
     @PostMapping
     public String submitAgreement(Model model,
                                   UserResource loggedInUser) {
-        profileRestService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        profileRestService.updateProfileAgreement(loggedInUser.getId()).getSuccess();
         return "redirect:/assessor/dashboard";
     }
 

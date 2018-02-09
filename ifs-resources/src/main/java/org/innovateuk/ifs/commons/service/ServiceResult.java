@@ -96,7 +96,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
-        return serviceSuccess(success.getSuccessObject());
+        return serviceSuccess(success.getSuccess());
     }
 
     @Override
@@ -402,7 +402,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         ServiceResult<List<V>> overallResults = aggregate(flattenLists(new ArrayList<>(mapWithServiceResultLists.values())));
 
         return overallResults.andOnSuccessReturn(() -> simpleToMap(mapWithServiceResultLists.entrySet(),
-                Map.Entry::getKey, q -> aggregate(q.getValue()).getSuccessObject()));
+                Map.Entry::getKey, q -> aggregate(q.getValue()).getSuccess()));
     }
 
 

@@ -95,7 +95,7 @@ public class OrganisationTeamManagementServiceTest extends BaseServiceUnitTest<O
 
         when(inviteRestServiceMock.createInvitesByOrganisationForApplication(any(), any(), any())).thenReturn(RestResult.restSuccess(expectedInviteResultsResource));
 
-        InviteResultsResource result = service.executeStagedInvite(applicationId, organisationId, form).getSuccessObject();
+        InviteResultsResource result = service.executeStagedInvite(applicationId, organisationId, form).getSuccess();
 
         assertEquals(result, expectedInviteResultsResource);
         verify(inviteRestServiceMock, times(1)).createInvitesByOrganisationForApplication(applicationId, organisationId, Arrays.asList(expectedInviteResource));

@@ -51,7 +51,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
                                      @PathVariable("assessorId") long assessorId,
                                      @PathVariable("assessmentId") long assessmentId,
                                      @RequestParam(value = "sortField", defaultValue = "") String sortField) {
-        assessmentRestService.withdrawAssessment(assessmentId).getSuccessObjectOrThrowException();
+        assessmentRestService.withdrawAssessment(assessmentId).getSuccess();
         return format("redirect:/assessment/competition/%s/assessors/%s?sortField=%s", competitionId, assessorId, sortField);
     }
 
@@ -80,7 +80,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
 
         AssessmentCreateResource assessment = new AssessmentCreateResource(applicationId, assessorId);
         assessmentRestService.createAssessment(assessment).
-                getSuccessObjectOrThrowException();
+                getSuccess();
 
         return format("redirect:/assessment/competition/%s/assessors/%s", competitionId, assessorId);
     }

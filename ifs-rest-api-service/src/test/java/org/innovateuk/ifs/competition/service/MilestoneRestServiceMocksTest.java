@@ -35,7 +35,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         returnedResponse.add(getOpenDateMilestone());
 
         setupGetWithRestResultAnonymousExpectations(milestonesRestURL + "/" + competitionId + "/public", milestoneResourceListType(), returnedResponse, HttpStatus.OK);
-        List<MilestoneResource> response = service.getAllPublicMilestonesByCompetitionId(competitionId).getSuccessObject();
+        List<MilestoneResource> response = service.getAllPublicMilestonesByCompetitionId(competitionId).getSuccess();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }
@@ -46,7 +46,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         returnedResponse.add(getOpenDateMilestone());
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
-        List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccessObject();
+        List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccess();
         assertNotNull(response);
         assertEquals(returnedResponse, response);
     }
@@ -58,7 +58,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/getByType?type=" + type, MilestoneResource.class, returnedResponse);
 
-        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccessObject();
+        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccess();
 
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
@@ -75,7 +75,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
         setupPostWithRestResultExpectations(url, MilestoneResource.class, null, milestoneResource, CREATED);
 
-        MilestoneResource response = service.create(MilestoneType.OPEN_DATE, newCompetitionId).getSuccessObject();
+        MilestoneResource response = service.create(MilestoneType.OPEN_DATE, newCompetitionId).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(milestoneResource, response);
     }
@@ -87,7 +87,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         returnedResponse.add(getOpenDateMilestone());
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId, milestoneResourceListType(), returnedResponse);
-        List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccessObject();
+        List<MilestoneResource> response = service.getAllMilestonesByCompetitionId(competitionId).getSuccess();
 
         assertNotNull(response);
         assertEquals(returnedResponse, response);
@@ -108,7 +108,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         MilestoneType type = MilestoneType.BRIEFING_EVENT;
 
         setupGetWithRestResultExpectations(milestonesRestURL + "/" + competitionId + "/getByType?type=" + type, MilestoneResource.class, returnedResponse);
-        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccessObject();
+        MilestoneResource response = service.getMilestoneByTypeAndCompetitionId(type, competitionId).getSuccess();
 
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);

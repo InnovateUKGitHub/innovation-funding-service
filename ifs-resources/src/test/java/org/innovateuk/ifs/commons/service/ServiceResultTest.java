@@ -23,16 +23,16 @@ public class ServiceResultTest {
         final List<ServiceResult<String>> list = asList("1", "2", "3").stream().map(ServiceResult::serviceSuccess).collect(toList());
         final ServiceResult<List<String>> serviceResult = aggregate(list); // Method under test
         assertTrue(serviceResult.isSuccess());
-        assertFalse(serviceResult.getSuccessObject().isEmpty());
-        assertEquals(asList("1", "2", "3"), serviceResult.getSuccessObject());
+        assertFalse(serviceResult.getSuccess().isEmpty());
+        assertEquals(asList("1", "2", "3"), serviceResult.getSuccess());
     }
 
     @Test
     public void testAggregateVarargsSuccess() {
         final ServiceResult<List<String>> serviceResult = aggregate(serviceSuccess("1"), serviceSuccess("2"), serviceSuccess("3")); // Method under test
         assertTrue(serviceResult.isSuccess());
-        assertFalse(serviceResult.getSuccessObject().isEmpty());
-        assertEquals(asList("1", "2", "3"), serviceResult.getSuccessObject());
+        assertFalse(serviceResult.getSuccess().isEmpty());
+        assertEquals(asList("1", "2", "3"), serviceResult.getSuccess());
     }
 
     @Test
@@ -61,8 +61,8 @@ public class ServiceResultTest {
         final List<ServiceResult<String>> empty = new ArrayList();
         final ServiceResult<List<String>> serviceResult = aggregate(empty); // Method under test
         assertTrue(serviceResult.isSuccess());
-        assertNotNull(serviceResult.getSuccessObject());
-        assertTrue(serviceResult.getSuccessObject().isEmpty());
+        assertNotNull(serviceResult.getSuccess());
+        assertTrue(serviceResult.getSuccess().isEmpty());
     }
 
     @Test

@@ -25,6 +25,6 @@ public class MonitoringOfficerServiceImpl implements MonitoringOfficerService {
     @Override
     public Optional<MonitoringOfficerResource> getMonitoringOfficerForProject(Long projectId) {
         return monitoringOfficerRestService.getMonitoringOfficerForProject(projectId).toOptionalIfNotFound().
-                getSuccessObjectOrThrowException();
+                getSuccess();
     }
 }

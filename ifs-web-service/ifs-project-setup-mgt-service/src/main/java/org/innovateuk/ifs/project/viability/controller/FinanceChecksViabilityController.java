@@ -159,18 +159,18 @@ public class FinanceChecksViabilityController {
         Long headCount = null;
         RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(projectService.getById(projectId).getApplication(), organisationId);
         if (headCountResult.isSuccess()) {
-            headCount = headCountResult.getSuccessObject();
+            headCount = headCountResult.getSuccess();
         }
         Long turnover = null;
         RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(projectService.getById(projectId).getApplication(), organisationId);
         if (turnOverResult.isSuccess()) {
-            turnover = turnOverResult.getSuccessObject();
+            turnover = turnOverResult.getSuccess();
         }
 
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
 
-        List<OrganisationSizeResource> sizes = organisationDetailsService.getOrganisationSizes().getSuccessObjectOrThrowException();
+        List<OrganisationSizeResource> sizes = organisationDetailsService.getOrganisationSizes().getSuccess();
         Optional<OrganisationSizeResource> organisationSizeResource = sizes.stream().filter(size -> size.getId().equals(financesForOrganisation.getOrganisationSize())).findAny();
         String organisationSizeDescription = organisationSizeResource.map(OrganisationSizeResource::getDescription).orElse(null);
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,

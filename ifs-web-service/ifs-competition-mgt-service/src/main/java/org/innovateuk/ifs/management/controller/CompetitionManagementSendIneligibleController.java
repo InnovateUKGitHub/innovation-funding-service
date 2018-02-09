@@ -43,7 +43,7 @@ public class CompetitionManagementSendIneligibleController {
     public String getSendIneligible(Model model,
                                     @PathVariable("applicationId") long applicationId,
                                     @ModelAttribute("form") InformIneligibleForm form) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         if (applicationResource.getApplicationState() != INELIGIBLE) {
             return getRedirect(applicationResource);
         }
@@ -56,7 +56,7 @@ public class CompetitionManagementSendIneligibleController {
                             @PathVariable("applicationId") long applicationId,
                             @ModelAttribute("form") @Valid InformIneligibleForm form,
                             ValidationHandler validationHandler) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
 
         Supplier<String> failureView = () -> getSendIneligible(model, applicationId, form);
 

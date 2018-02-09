@@ -34,14 +34,14 @@ public class StatusRestServiceImplTest extends BaseRestServiceUnitTest<StatusRes
 
         assertTrue(result.isSuccess());
 
-        Assert.assertEquals(returnedResponse, result.getSuccessObject());
+        Assert.assertEquals(returnedResponse, result.getSuccess());
     }
 
     @Test
     public void testGetStatusByProjectId() {
         ProjectStatusResource returnedResponse = new ProjectStatusResource();
         setupGetWithRestResultExpectations(projectRestURL + "/123/status", ProjectStatusResource.class, returnedResponse);
-        ProjectStatusResource result = service.getProjectStatus(123L).getSuccessObject();
+        ProjectStatusResource result = service.getProjectStatus(123L).getSuccess();
         Assert.assertEquals(returnedResponse, result);
     }
 

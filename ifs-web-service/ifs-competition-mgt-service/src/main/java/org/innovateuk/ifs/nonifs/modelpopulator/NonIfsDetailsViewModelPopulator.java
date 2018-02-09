@@ -20,11 +20,11 @@ public class NonIfsDetailsViewModelPopulator {
 
     public NonIfsDetailsViewModel populate() {
         NonIfsDetailsViewModel viewModel = new NonIfsDetailsViewModel();
-        List<InnovationSectorResource> innovationSectorResourceList = categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
+        List<InnovationSectorResource> innovationSectorResourceList = categoryRestService.getInnovationSectors().getSuccess();
         removeOpenSector(innovationSectorResourceList);
 
         viewModel.setInnovationSectors(innovationSectorResourceList);
-        viewModel.setInnovationAreas(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException());
+        viewModel.setInnovationAreas(categoryRestService.getInnovationAreas().getSuccess());
         return viewModel;
     }
 

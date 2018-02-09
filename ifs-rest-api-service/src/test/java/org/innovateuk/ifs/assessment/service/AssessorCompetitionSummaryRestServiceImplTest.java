@@ -27,7 +27,7 @@ public class AssessorCompetitionSummaryRestServiceImplTest extends BaseRestServi
 
         setupGetWithRestResultExpectations(format("/assessor/%s/competition/%s/summary", assessorId, competitionId), AssessorCompetitionSummaryResource.class, expected);
 
-        AssessorCompetitionSummaryResource actual = service.getAssessorSummary(assessorId, competitionId).getSuccessObjectOrThrowException();
+        AssessorCompetitionSummaryResource actual = service.getAssessorSummary(assessorId, competitionId).getSuccess();
 
         assertEquals(expected, actual);
     }

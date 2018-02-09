@@ -41,7 +41,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
         when(milestoneRestService.create(any(MilestoneType.class), anyLong())).thenReturn(restSuccess(newMilestoneResource().with(
 				(integer, milestoneResource) -> milestoneResource.setType(MilestoneType.OPEN_DATE)).build()));
 
-		List<MilestoneResource> result = service.createMilestonesForIFSCompetition(123L).getSuccessObject();
+		List<MilestoneResource> result = service.createMilestonesForIFSCompetition(123L).getSuccess();
 
         result.forEach(milestoneResource -> assertEquals(MilestoneType.OPEN_DATE, milestoneResource.getType()));
 

@@ -265,7 +265,7 @@ public class ProjectFinanceChecksController {
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             if (result.isSuccess()) {
-                attachments.add(result.getSuccessObject().id);
+                attachments.add(result.getSuccess().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
             }
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
@@ -416,11 +416,12 @@ public class ProjectFinanceChecksController {
 
         List<Long> projectUserIds =
                 removeDuplicates(simpleMap(projectService.getProjectUsersForProject(projectId), ProjectUserResource::getUser));
+
         return queriesResult.handleSuccessOrFailure(
 
                 failure -> emptyMap(),
                 success -> {
-                    List<ThreadViewModel> queryThreads = threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccessObject(), user ->
+                    List<ThreadViewModel> queryThreads = threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
                             projectUserIds.contains(user.getId()) ?
                                     user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
                                     "Innovate UK - Finance team");

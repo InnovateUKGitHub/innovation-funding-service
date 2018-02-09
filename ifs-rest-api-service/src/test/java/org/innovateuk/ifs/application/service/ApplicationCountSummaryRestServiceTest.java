@@ -5,8 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResour
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Optional;
-
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -24,7 +22,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionId(1L, 2, 3, "filter").getSuccessObject();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionId(1L, 2, 3, "filter").getSuccess();
         Assert.assertEquals(pageResource, result);
     }
 
@@ -35,7 +33,7 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 10L,2, 3, ofNullable(4L), "filter", "").getSuccessObject();
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 10L,2, 3, ofNullable(4L), "filter", "").getSuccess();
         Assert.assertEquals(pageResource, result);
     }
 }

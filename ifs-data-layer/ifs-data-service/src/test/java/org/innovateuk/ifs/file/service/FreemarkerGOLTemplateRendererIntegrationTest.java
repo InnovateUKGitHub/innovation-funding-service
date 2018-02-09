@@ -57,7 +57,7 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
 
         ServiceResult<String> renderResult = renderer.renderTemplate(PATH_TO_GOL_HTML_TEMPLATE + templateName, templateArguments);
         assertTrue(renderResult.isSuccess());
-        String processedTemplate = renderResult.getSuccessObject();
+        String processedTemplate = renderResult.getSuccess();
 
         List<String> expectedMainLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource(PATH_TO_EXPECTED_GOL_HTML + EXPECTED_GOL_HTML_NAME).toURI()).toPath());
         expectedMainLines.replaceAll(line -> line.contains(DATE_PREFIX) ? DATE_TODAY : line);
