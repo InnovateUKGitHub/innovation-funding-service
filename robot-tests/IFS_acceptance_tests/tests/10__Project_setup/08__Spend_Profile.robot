@@ -70,7 +70,6 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-2016 Project Setup task management: Spend Profile
 ...
 ...               IFS-2221 Spend Profile Generation - Ensure Bank Details are approved or not required
-#Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
@@ -87,7 +86,8 @@ ${project_duration}    36
 Project Finance completes previous sections of the project
     [Documentation]  IFS-2221
     [Tags]
-    #Added a check in this keyword to ensure bank details are required before generating a spend profile
+    #Added a check in this keyword to ensure bank details are required before generating a spend profile.
+    #This needs to be kept as the FIRST test case in this suite.
     all previous sections of the project are completed
 
 Check if target start date can be changed until SP approval
