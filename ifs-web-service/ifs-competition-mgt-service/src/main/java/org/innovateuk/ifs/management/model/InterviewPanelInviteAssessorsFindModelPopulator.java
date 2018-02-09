@@ -33,14 +33,14 @@ public class InterviewPanelInviteAssessorsFindModelPopulator extends InterviewPa
                                                                      String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         InterviewPanelInviteAssessorsFindViewModel model = super.populateModel(competition);
 
         AvailableAssessorPageResource pageResource = interviewPanelInviteRestService.getAvailableAssessors(
                 competition.getId(),
                 page)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<InterviewPanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
