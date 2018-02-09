@@ -655,7 +655,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
         boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
 
-        if (!userIsAlreadyInvited || userExists.isPresent() || competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null) {
+        if (competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null || !userIsAlreadyInvited || userExists.isPresent()) {
             return ServiceResult.serviceSuccess();
         } else {
             return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
@@ -768,7 +768,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         }
     }
 
-    public ServiceResult<AssessorCreatedInvitePageResource> getInvitePageResource(long competitionId, Pageable pageable) {
+    private ServiceResult<AssessorCreatedInvitePageResource> getInvitePageResource(long competitionId, Pageable pageable) {
         Page<CompetitionAssessmentInvite> pagedResult = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
