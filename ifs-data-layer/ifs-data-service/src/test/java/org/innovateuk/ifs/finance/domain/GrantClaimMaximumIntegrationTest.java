@@ -160,7 +160,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
     private ApplicationFinanceResource getFinanceDetails(UserResource applicant, Long applicationId, Long organisationId) {
         setLoggedInUser(applicant);
-        return financeRowService.financeDetails(applicationId, organisationId).getSuccessObjectOrThrowException();
+        return financeRowService.financeDetails(applicationId, organisationId).getSuccess();
     }
 
     private ApplicationData createApcApplication(CompetitionData competitionData, UserResource applicant, Optional<Long> organisationSize, Organisation applicantOrganisation, boolean academic) {
@@ -191,7 +191,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
     }
 
     private UserResource getUser(String emailAddress) {
-        return userService.findByEmail(emailAddress).getSuccessObjectOrThrowException();
+        return userService.findByEmail(emailAddress).getSuccess();
     }
 
     private CompetitionData createApcCompetition(String researchCategory) {

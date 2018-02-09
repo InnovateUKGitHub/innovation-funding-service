@@ -63,7 +63,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         setLoggedInUser(null);
 
         ServiceResult<List<QueryResource>> results = classUnderTest.findAll(22L);
-        assertEquals(0, results.getSuccessObject().size());
+        assertEquals(0, results.getSuccess().size());
 
         verify(queryRules, times(2)).projectFinanceUsersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
         verify(queryRules, times(2)).projectPartnersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
@@ -91,8 +91,8 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         @Override
         public ServiceResult<List<QueryResource>> findAll(Long contextClassPk) {
             List<QueryResource> queries = new ArrayList<>();
-            queries.add(findOne(2L).getSuccessObject());
-            queries.add(findOne(3L).getSuccessObject());
+            queries.add(findOne(2L).getSuccess());
+            queries.add(findOne(3L).getSuccess());
             return ServiceResult.serviceSuccess(queries);
         }
 

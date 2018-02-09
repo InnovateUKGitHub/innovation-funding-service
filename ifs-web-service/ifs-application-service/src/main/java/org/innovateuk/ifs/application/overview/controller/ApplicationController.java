@@ -64,7 +64,7 @@ public class ApplicationController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
             return format("redirect:/application/%s/summary", application.getId());
@@ -86,7 +86,7 @@ public class ApplicationController {
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
         if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())
                 && userIsLeadApplicant(userResource.getId(), applicationResource.getId())) {
-            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
+            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccess();
         }
     }
 
@@ -110,7 +110,7 @@ public class ApplicationController {
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         if (!applicationResource.getCompetitionStatus().isFeedbackReleased()) {
             return "redirect:/application/" + applicationId + "/summary";
         }

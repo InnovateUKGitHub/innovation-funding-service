@@ -162,14 +162,14 @@ public class CompetitionManagementApplicationController {
             UserResource user) throws ExecutionException, InterruptedException {
         ProcessRoleResource processRole;
         if (isInternalUser(user)) {
-            long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
+            long processRoleId = formInputResponseRestService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccess().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
             processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         }
 
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
@@ -195,8 +195,8 @@ public class CompetitionManagementApplicationController {
                                          @ModelAttribute(name = "loggedInUser", binding = false) UserResource user,
                                          @RequestParam MultiValueMap<String, String> queryParams,
                                          Model model) {
-        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
-        ApplicationTeamResource teamResource = applicationSummaryRestService.getApplicationTeam(applicationId).getSuccessObjectOrThrowException();
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId).getSuccess();
+        ApplicationTeamResource teamResource = applicationSummaryRestService.getApplicationTeam(applicationId).getSuccess();
 
         String params = UriComponentsBuilder.newInstance()
                 .queryParams(queryParams)
@@ -208,7 +208,7 @@ public class CompetitionManagementApplicationController {
     }
 
     private String doReinstateIneligibleApplicationConfirm(final Model model, final long applicationId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         model.addAttribute("model", reinstateIneligibleApplicationModelPopulator.populateModel(applicationResource));
         return "application/reinstate-ineligible-application-confirm";
     }

@@ -31,7 +31,7 @@ public class AssessorProfileModelPopulator {
 
     public AssessorsProfileViewModel populateModel(long assessorId, long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccessObjectOrThrowException();
+        AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccess();
 
         UserResource user = assessorProfile.getUser();
         ProfileResource profile = assessorProfile.getProfile();

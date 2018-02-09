@@ -81,10 +81,10 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
 
     @Test
     public void testGetById() throws Exception {
-        SectionResource section = controller.getById(sectionId).getSuccessObject();
+        SectionResource section = controller.getById(sectionId).getSuccess();
         assertEquals("Project details", section.getName());
 
-        section = controller.getById(2L).getSuccessObject();
+        section = controller.getById(2L).getSuccess();
         assertEquals("Application questions", section.getName());
     }
 
@@ -99,20 +99,20 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
         assertEquals("Your project costs", section.getName());
         assertTrue(section.hasChildSections());
         assertEquals(7, section.getChildSections().size());
-        assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
-        assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccessObject().size());
+        assertTrue(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccess());
+        assertEquals(8, controller.getCompletedSections(applicationId, 3L).getSuccess().size());
 
         // Mark one question as incomplete.
         questionService.markAsInComplete(new QuestionApplicationCompositeId(28L, applicationId), leadApplicantProcessRole);
-	    Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccessObject();
-        assertFalse(questionService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccessObject());
+	    Question question = questionService.getQuestionById(21L).andOnSuccessReturn(questionMapper::mapToDomain).getSuccess();
+        assertFalse(questionService.isMarkedAsComplete(question, applicationId, leadApplicantOrganisationId).getSuccess());
 
-        assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccessObject());
-        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccessObject().size());
+        assertFalse(sectionService.childSectionsAreCompleteForAllOrganisations(section, applicationId, excludedSections).getSuccess());
+        assertEquals(7, controller.getCompletedSections(applicationId, leadApplicantOrganisationId).getSuccess().size());
 
         UserResource collaborator = newUserResource().withId(collaboratorIdOne).build();
         SecuritySetter.swapOutForUser(collaborator);
-        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccessObject().size());
+        assertEquals(8, controller.getCompletedSections(applicationId, collaboratorOneOrganisationId).getSuccess().size());
 
         section = sectionRepository.findOne(11L);
         assertEquals("Materials", section.getName());
@@ -124,7 +124,7 @@ public class SectionControllerIntegrationTest extends BaseControllerIntegrationT
     public void testMarkAsComplete(){
         RestResult<List<ValidationMessages>> result = controller.markAsComplete(fundingSection, applicationId, leadApplicantProcessRole);
         assertTrue(result.isSuccess());
-        List<ValidationMessages> validationMessages = result.getSuccessObject();
+        List<ValidationMessages> validationMessages = result.getSuccess();
         Optional<ValidationMessages> findMessage = validationMessages.stream().filter(m -> m.getObjectId().equals(35L)).findFirst();
         assertTrue("Could not find ValidationMessage object", findMessage.isPresent());
         ValidationMessages messages = findMessage.get();

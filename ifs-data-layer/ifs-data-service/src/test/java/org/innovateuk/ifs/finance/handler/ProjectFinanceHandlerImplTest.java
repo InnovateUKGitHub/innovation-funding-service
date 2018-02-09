@@ -85,7 +85,7 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
     public void testGetProjectOrganisationFinances(){
         ServiceResult<ProjectFinanceResource> result = handler.getProjectOrganisationFinances(projectFinanceResourceId);
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject(), projectFinanceResource);
+        assertEquals(result.getSuccess(), projectFinanceResource);
     }
 
     @Test

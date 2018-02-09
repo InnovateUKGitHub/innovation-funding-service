@@ -150,11 +150,11 @@ public abstract class BaseFinanceFormHandler {
             RestResult<ValidationMessages> messages = updatingFunction.apply(c);
             Optional<ValidationMessages> successObject = messages.getOptionalSuccessObject();
             if (successObject.isPresent() && successObject.get() != null &&
-                    messages.getSuccessObject().getErrors() != null &&
-                    !messages.getSuccessObject().getErrors().isEmpty()
+                    messages.getSuccess().getErrors() != null &&
+                    !messages.getSuccess().getErrors().isEmpty()
                     ) {
                 LOG.debug("got validation errors. " + c.getId());
-                validationMessagesMap.put(c.getId(), messages.getSuccessObject());
+                validationMessagesMap.put(c.getId(), messages.getSuccess());
             } else {
                 LOG.debug("No validation errors.");
             }

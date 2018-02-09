@@ -29,8 +29,8 @@ public class OverheadFileDownloaderController {
     @GetMapping(value = "/{overheadId}")
     public ResponseEntity<ByteArrayResource> downloadOverheadFile(
             @PathVariable("overheadId") final Long overheadId) throws ExecutionException, InterruptedException {
-        final ByteArrayResource resource = overheadFileRestService.getOverheadFileUsingProjectFinanceRowId(overheadId).getSuccessObjectOrThrowException();
-        final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetailsUsingProjectFinanceRowId(overheadId).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = overheadFileRestService.getOverheadFileUsingProjectFinanceRowId(overheadId).getSuccess();
+        final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetailsUsingProjectFinanceRowId(overheadId).getSuccess();
         return getFileResponseEntity(resource, fileEntryResource);
     }
 

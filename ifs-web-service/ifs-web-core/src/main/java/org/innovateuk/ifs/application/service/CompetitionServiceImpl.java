@@ -42,12 +42,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public CompetitionResource getById(Long competitionId){
-        return competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        return competitionRestService.getCompetitionById(competitionId).getSuccess();
     }
 
     @Override
     public List<UserResource> findInnovationLeads(Long competitionId){
-        return competitionRestService.findInnovationLeads(competitionId).getSuccessObjectOrThrowException();
+        return competitionRestService.findInnovationLeads(competitionId).getSuccess();
     }
 
     @Override
@@ -62,17 +62,17 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public CompetitionResource getPublishedById(Long competitionId){
-        return competitionRestService.getPublishedCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        return competitionRestService.getPublishedCompetitionById(competitionId).getSuccess();
     }
 
     @Override
     public List<CompetitionResource> getAllCompetitions() {
-        return competitionRestService.getAll().getSuccessObjectOrThrowException();
+        return competitionRestService.getAll().getSuccess();
     }
 
     @Override
     public List<CompetitionResource> getAllCompetitionsNotInSetup() {
-        List<CompetitionResource> competitions = competitionRestService.getAll().getSuccessObjectOrThrowException();
+        List<CompetitionResource> competitions = competitionRestService.getAll().getSuccess();
 
         return competitions
                 .stream()
@@ -82,31 +82,31 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public List<OrganisationTypeResource> getOrganisationTypes(long id) {
-        return competitionRestService.getCompetitionOrganisationType(id).getSuccessObjectOrThrowException();
+        return competitionRestService.getCompetitionOrganisationType(id).getSuccess();
     }
 
     @Override
     public List<CompetitionTypeResource> getAllCompetitionTypes() {
-        return competitionRestService.getCompetitionTypes().getSuccessObjectOrThrowException();
+        return competitionRestService.getCompetitionTypes().getSuccess();
     }
 
     @Override
     public List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId) {
-        return assessorCountOptionsRestService.findAllByCompetitionType(competitionTypeId).getSuccessObjectOrThrowException();
+        return assessorCountOptionsRestService.findAllByCompetitionType(competitionTypeId).getSuccess();
     }
 
     @Override
     public PublicContentItemResource getPublicContentOfCompetition(Long competitionId) {
-        return publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+        return publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccess();
     }
 
     @Override
     public ByteArrayResource downloadPublicContentAttachment(Long contentGroupId) {
-        return contentGroupRestService.getFileAnonymous(contentGroupId).getSuccessObjectOrThrowException();
+        return contentGroupRestService.getFileAnonymous(contentGroupId).getSuccess();
     }
 
     @Override
     public FileEntryResource getPublicContentFileDetails(Long contentGroupId) {
-        return contentGroupRestService.getFileDetailsAnonymous(contentGroupId).getSuccessObjectOrThrowException();
+        return contentGroupRestService.getFileDetailsAnonymous(contentGroupId).getSuccess();
     }
 }

@@ -60,7 +60,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(applicationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(expectedInnovationAreas, result.getSuccessObject());
+        assertEquals(expectedInnovationAreas, result.getSuccess());
     }
 
     @Test
@@ -233,8 +233,8 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         ServiceResult<ApplicationResource> result = service.setNoInnovationAreaApplies(applicationId);
 
         assertTrue(result.isSuccess());
-        assertNull(result.getSuccessObject().getInnovationArea());
-        assertEquals(true, result.getSuccessObject().getNoInnovationAreaApplicable());
+        assertNull(result.getSuccess().getInnovationArea());
+        assertEquals(true, result.getSuccess().getNoInnovationAreaApplicable());
 
         verify(applicationRepositoryMock, times(1)).save(any(Application.class));
     }

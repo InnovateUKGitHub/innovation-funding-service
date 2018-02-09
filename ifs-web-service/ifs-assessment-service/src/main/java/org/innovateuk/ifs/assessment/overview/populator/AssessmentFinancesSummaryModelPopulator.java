@@ -97,7 +97,7 @@ public class AssessmentFinancesSummaryModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 
@@ -110,7 +110,7 @@ public class AssessmentFinancesSummaryModelPopulator {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
                         || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .collect(Collectors.toCollection(supplier));
     }
 
@@ -137,7 +137,7 @@ public class AssessmentFinancesSummaryModelPopulator {
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
-        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
+        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess());
 
     }
 
@@ -163,7 +163,7 @@ public class AssessmentFinancesSummaryModelPopulator {
                 ));
 
         List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())

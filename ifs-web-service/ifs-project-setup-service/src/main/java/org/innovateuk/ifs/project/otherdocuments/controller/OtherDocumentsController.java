@@ -102,7 +102,7 @@ public class OtherDocumentsController {
     @PostMapping("/submit")
     public String submitPartnerDocuments(Model model, @P("projectId")@PathVariable("projectId") final Long projectId) {
         if (otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)) {
-            otherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
+            otherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccess();
         }
 
         return redirectToOtherDocumentsPage(projectId);

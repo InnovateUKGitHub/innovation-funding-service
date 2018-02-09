@@ -85,13 +85,13 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
 
     private void markAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
 
-        List<ProcessRoleResource> processRoles = usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        List<ProcessRoleResource> processRoles = usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).getSuccess();
 
         Set<Long> processRoleIds = processRoles.stream().filter(processRole -> processRole.getUser() != null).map(
                 processRole -> processRole.getId()).collect(Collectors.toSet());
 
         processRoleIds.stream().forEach(processRoleId ->
-                sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccessObjectOrThrowException().stream()
+                sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccess().stream()
                         .forEach(fundingSection ->
                                 sectionService.markSectionAsInComplete(fundingSection.getId(),
                                         applicationId, processRoleId))

@@ -54,7 +54,7 @@ public class QuestionSetupRestServiceTest extends BaseRestServiceUnitTest<Questi
         Map<Long, Boolean> resultToReturn = asMap(232L, TRUE, 487L, FALSE);
         setupGetWithRestResultExpectations(questionSetupRestURL + "/get-statuses/1/APPLICATION_FORM", longStatusMap(), resultToReturn);
 
-        Map<Long, Boolean> resultStatuses = service.getQuestionStatuses(1L, APPLICATION_FORM).getSuccessObject();
+        Map<Long, Boolean> resultStatuses = service.getQuestionStatuses(1L, APPLICATION_FORM).getSuccess();
 
         assertNotNull(resultStatuses);
         Assert.assertEquals(resultToReturn, resultStatuses);
