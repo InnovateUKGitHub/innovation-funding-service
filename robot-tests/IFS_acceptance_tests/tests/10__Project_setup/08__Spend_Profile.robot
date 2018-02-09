@@ -68,7 +68,9 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-2062 Row to be taken off from Query responses tab once SP is generated
 ...
 ...               IFS-2016 Project Setup task management: Spend Profile
-Suite Setup       all previous sections of the project are completed
+...
+...               IFS-2221 Spend Profile Generation - Ensure Bank Details are approved or not required
+#Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
@@ -82,6 +84,12 @@ ${project_duration}    36
 &{collaborator2_credentials_sp}   email=${PS_SP_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
+Project Finance completes previous sections of the project
+    [Documentation]  IFS-2221
+    [Tags]
+    #Added a check in this keyword to ensure bank details are required before generating a spend profile
+    all previous sections of the project are completed
+
 Check if target start date can be changed until SP approval
     [Documentation]    IFS-1576
     [Tags]
@@ -817,16 +825,21 @@ the user should see all spend profiles as complete
 all previous sections of the project are completed
     the user logs-in in new browser           &{lead_applicant_credentials}
     project partners submit finance contacts
+    project finance reviews Finance checks
+    project finance cannot generate spend profile without bank details
     partners submit bank details
     project finance approves bank details
     project manager submits other documents   ${PS_SP_APPLICATION_PM_EMAIL}  ${short_password}  ${PS_SP_APPLICATION_PROJECT}
     project finance approves other documents  ${PS_SP_APPLICATION_PROJECT}
-    project finance reviews Finance checks
 
 project partners submit finance contacts
     the partner submits their finance contact  ${Katz_Id}  ${PS_SP_APPLICATION_PROJECT}  &{lead_applicant_credentials_sp}
     the partner submits their finance contact  ${Meembee_Id}  ${PS_SP_APPLICATION_PROJECT}  &{collaborator1_credentials_sp}
     the partner submits their finance contact  ${Zooveo_Id}  ${PS_SP_APPLICATION_PROJECT}  &{collaborator2_credentials_sp}
+
+project finance cannot generate spend profile without bank details
+    the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check
+    the element should be disabled    jQuery=button:contains(Generate spend profile)
 
 partners submit bank details
     partner submits his bank details  ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${PS_SP_APPLICATION_PROJECT}  ${account_one}  ${sortCode_one}
