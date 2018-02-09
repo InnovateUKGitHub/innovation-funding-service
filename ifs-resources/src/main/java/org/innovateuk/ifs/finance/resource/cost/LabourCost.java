@@ -29,6 +29,7 @@ public class LabourCost extends AbstractFinanceRowItem {
     @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class, message = MAX_DIGITS_MESSAGE)
     private BigDecimal grossEmployeeCost;
+    private BigDecimal grossAnnualSalary; // for ZDD support- to be removed next sprint
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
     @Min.List({
@@ -88,7 +89,12 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     public BigDecimal getGrossEmployeeCost() {
-        return grossEmployeeCost;
+        if (grossEmployeeCost ==  null){  // if-else block for ZDD support - to be removed next sprint
+           return grossEmployeeCost = grossAnnualSalary;
+
+        } else {
+           return grossEmployeeCost;
+        }
     }
 
     public BigDecimal getRate(Integer workingDaysPerYear) {
@@ -141,6 +147,7 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     public void setGrossEmployeeCost(BigDecimal grossEmployeeCost) {
         this.grossEmployeeCost = grossEmployeeCost;
+        this.grossAnnualSalary = grossEmployeeCost; // for ZDD support - to be removed next sprint
     }
 
     public void setName(String name) {
