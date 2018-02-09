@@ -19,10 +19,10 @@ User navigates to the Manage interview panel
     Then the user clicks the button/link   jQuery=a:contains("Manage interview panel")
     And the user sees the Interview panel page and the Interview links
 
-compAdmin add assessors to inivte list
+CompAdmin can add an assessors to inivte list
     [Documentation]  IFS-2778
     Given the user clicks the button/link  link=Invite assessors
-    Then the comp admin invite assessors for the competition
+    Then the compAdmin invite assessors for the competition
 
 *** Keywords ***
 Custom Suite Setup
@@ -36,4 +36,4 @@ the user sees the Interview panel page and the Interview links
     And the user should see the element    jQuery=h1:contains("Manage interview panel")
     And the user should see the element    jQuery=a:contains("Assign applications")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
-    #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2647.
+    #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2783

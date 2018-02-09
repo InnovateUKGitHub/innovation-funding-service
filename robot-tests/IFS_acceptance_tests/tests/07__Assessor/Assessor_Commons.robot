@@ -6,10 +6,10 @@ ${assessor_ben}              Benjamin Nixon
 ${assessor_joel}             Joel George
 ${assessor_madeleine}        Madeleine Martin
 ${assessor_riley}            Riley Butler
-${panel_assessor_ben}        benjamin.nixon@gmail.com
-${panel_assessor_joel}       joel.george@gmail.com
-${panel_assessor_madeleine}  madeleine.martin@gmail.com
-${panel_assessor_riley}      riley.butler@gmail.com
+${assessor_ben_email}        benjamin.nixon@gmail.com
+${assessor_joel_email}       joel.george@gmail.com
+${assessor_madeleine_email}  madeleine.martin@gmail.com
+${assessor_riley_email}      riley.butler@gmail.com
 
 *** Keywords ***
 Invited guest user log in
@@ -32,16 +32,26 @@ the assessor adds score and feedback for every question
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link               jquery=button:contains("Save and return to assessment overview")
 
-the comp admin invite assessors for the competition
-    And the user clicks the button/link      jQuery=tr:contains("${assessor_ben}") label
-    And the user clicks the button/link      jQuery=tr:contains("${assessor_joel}") label
-    And the user clicks the button/link      jquery=tr:contains("${assessor_madeleine}") label
-    And the user clicks the button/link      jquery=tr:contains("${assessor_riley}") label
-    When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
-    Then the user should see the element     jQuery=td:contains("${assessor_ben}") + td:contains("${panel_assessor_ben}")
-    And the user should see the element      jQuery=td:contains("${assessor_joel}") + td:contains("${panel_assessor_joel}")
-    And the user should see the element      jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
-    And the user should see the element      jQuery=td:contains("${assessor_riley}") + td:contains("${panel_assessor_riley}")
+the compAdmin invite assessors for the competition
+    comAdmin select assessors to add in invite list
+    compAdmin add selected assessors in invite tab
+    comAdmin should not see invited assessors in find tab
+
+comAdmin select assessors to add in invite list
+#compAdmin selecting the assessor name checkboxs
+    the user clicks the button/link      jQuery=tr:contains("${assessor_ben}") label
+    the user clicks the button/link      jQuery=tr:contains("${assessor_joel}") label
+    the user clicks the button/link      jquery=tr:contains("${assessor_madeleine}") label
+    the user clicks the button/link      jquery=tr:contains("${assessor_riley}") label
+
+compAdmin add selected assessors in invite tab
+    the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
+    the user should see the element     jQuery=td:contains("${assessor_ben}") + td:contains("${assessor_ben_email}")
+    the user should see the element      jQuery=td:contains("${assessor_joel}") + td:contains("${assessor_joel_email}")
+    the user should see the element      jQuery=td:contains("${assessor_madeleine}") + td:contains("${assessor_madeleine_email}")
+    the user should see the element      jQuery=td:contains("${assessor_riley}") + td:contains("${assessor_riley_email}")
+
+comAdmin should not see invited assessors in find tab
     When the user clicks the button/link      link=Find
     Then the user should not see the element  jQuery=td:contains("${assessor_ben}")
     And the user should not see the element   jQuery=td:contains("${assessor_joel}")
