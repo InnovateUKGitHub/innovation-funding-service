@@ -275,25 +275,29 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         waitForFuturesToComplete(createApplicationsFutures);
 
-        Future<?> fundingDecisions = taskExecutor.submit(() -> createFundingDecisions(competitionLines));
+        CompletableFuture<Void> fundingDecisions = CompletableFuture.runAsync(() -> createFundingDecisions(competitionLines), taskExecutor);
 
-        taskExecutor.submit(this::updateQuestions);
-        taskExecutor.submit(this::createCompetitionFunders);
-        taskExecutor.submit(() -> {
+        CompletableFuture<Void> questionUpdateFutures = CompletableFuture.runAsync(this::updateQuestions);
+
+        CompletableFuture<Void> competitionFundersFutures = CompletableFuture.runAsync(this::createCompetitionFunders);
+
+        CompletableFuture<Void> publicContentFutures = CompletableFuture.runAsync(() -> {
             createPublicContentGroups();
             createPublicContentDates();
         });
-        taskExecutor.submit(() -> {
+
+        CompletableFuture<Void> assessorFutures = CompletableFuture.runAsync(() -> {
             assessmentDataBuilderService.createAssessors();
             assessmentDataBuilderService.createNonRegisteredAssessorInvites();
             assessmentDataBuilderService.createAssessments();
         });
 
-        fundingDecisions.get();
+        CompletableFuture<Void> projectsCreatedFuture = fundingDecisions.thenAcceptAsync(done ->
+                projectDataBuilderService.createProjects(), taskExecutor);
 
-        projectDataBuilderService.createProjects();
+        CompletableFuture<Void> competitionsFinalisedFuture = projectsCreatedFuture.thenAcceptAsync(done -> competitionDataBuilderService.moveCompetitionsToCorrectFinalState());
 
-        competitionDataBuilderService.moveCompetitionsToCorrectFinalState();
+        CompletableFuture.allOf(questionUpdateFutures, competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
 
         long after = System.currentTimeMillis();
 
