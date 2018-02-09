@@ -29,7 +29,7 @@ public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender{
         LOG.debug("Initiating sendAllFinanceTotals.");
 
         Stream<Application> applications = applicationService.getApplicationsByState(ApplicationState.submittedStates)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         applications.forEach(app -> applicationFinanceTotalsSender.sendFinanceTotalsForApplication(app.getId()));
 
         return ServiceResult.serviceSuccess();

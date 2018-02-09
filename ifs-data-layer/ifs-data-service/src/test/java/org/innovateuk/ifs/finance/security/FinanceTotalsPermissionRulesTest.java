@@ -54,7 +54,7 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application,
                 newUserResource().withRolesGlobal(
                         newRoleResource()
-                                .withName(UserRoleType.SYSTEM_REGISTRATION_USER.getName())
+                                .withName(UserRoleType.SYSTEM_MAINTAINER.getName())
                                 .build(1)
                 ).build());
 

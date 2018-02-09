@@ -30,7 +30,7 @@ public class CompetitionFinanceTotalsSenderImpl implements CompetitionFinanceTot
         LOG.debug("Initiating sendFinanceTotalsForCompetition for competitionId: {}", competitionId);
 
         List<Application> applications = applicationService.getApplicationsByCompetitionIdAndState(competitionId,
-                ApplicationState.submittedStates).getSuccessObjectOrThrowException();
+                ApplicationState.submittedStates).getSuccess();
         applications.forEach(app -> applicationFinanceTotalsSender.sendFinanceTotalsForApplication(app.getId()));
 
         return ServiceResult.serviceSuccess();

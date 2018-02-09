@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.sync.service.AllFinanceTotalsSender;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
 
 public class AllFinanceTotalsSenderSecurityTest extends BaseServiceSecurityTest<AllFinanceTotalsSender> {
     @Override
@@ -17,7 +17,7 @@ public class AllFinanceTotalsSenderSecurityTest extends BaseServiceSecurityTest<
     @Test
     public void testSendAllFinanceTotals_canOnlyBeRunBySystemRegistrar() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
-                classUnderTest.sendAllFinanceTotals(), SYSTEM_REGISTRATION_USER);
+                classUnderTest.sendAllFinanceTotals(), SYSTEM_MAINTAINER);
 
     }
 

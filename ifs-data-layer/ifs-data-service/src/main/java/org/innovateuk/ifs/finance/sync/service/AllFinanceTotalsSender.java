@@ -8,8 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
  * Interface for AllFinanceTotalsSenderImpl defining security rules.
  */
 public interface AllFinanceTotalsSender {
-    @PreAuthorize("hasAuthority('system_registrar')")
+    @PreAuthorize("hasAuthority('system_maintainer')")
     @SecuredBySpring(value = "SEND_APPLICATION_TOTALS",
-            description = "Only the system registrar can send all the totals.")
+            description = "Only the system maintainer can send all the totals.")
     ServiceResult<Void> sendAllFinanceTotals();
 }
