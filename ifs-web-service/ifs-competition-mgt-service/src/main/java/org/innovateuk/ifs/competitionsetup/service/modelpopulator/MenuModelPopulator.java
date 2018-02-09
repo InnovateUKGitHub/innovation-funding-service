@@ -34,7 +34,7 @@ public class MenuModelPopulator implements CompetitionSetupSectionModelPopulator
 	@Override
 	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
 		PublicContentResource publicContent = publicContentService.getCompetitionById(competitionResource.getId());
-		Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
+		Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccess();
 		return new MenuViewModel(generalViewModel, publicContent.getPublishDate(), isPublicContentPublished(publicContent), statuses);
 	}
 

@@ -53,7 +53,7 @@ public class FilesizeAndTypeFileValidator<MediaTypeContext> {
             return serviceFailure(payloadTooLargeError(maxFilesizeBytes));
         }
 
-        long length = validLongValue.getSuccessObject();
+        long length = validLongValue.getSuccess();
 
         if (length > maxFilesizeBytes) {
             return serviceFailure(payloadTooLargeError(maxFilesizeBytes));

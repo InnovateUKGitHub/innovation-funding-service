@@ -41,8 +41,8 @@ public class InitialDetailsModelPopulator implements CompetitionSetupSectionMode
 	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
 		return new InitialDetailsViewModel(generalViewModel,
                 userService.findUserByType(UserRoleType.COMP_ADMIN),
-				categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException(),
-				addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()),
+				categoryRestService.getInnovationSectors().getSuccess(),
+				addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccess()),
                 competitionService.getAllCompetitionTypes(),
                 userService.findUserByType(UserRoleType.INNOVATION_LEAD));
 	}

@@ -63,7 +63,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     private List<Error> returnErrorsFoundOnSave(LinkedMap<String, GenericMilestoneRowForm> milestoneEntries, CompetitionResource competition) {
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccess();
         Map<String, GenericMilestoneRowForm> filteredMilestoneEntries = milestoneEntries;
 
         //If competition is already set up only allow to save of future milestones.
@@ -108,14 +108,14 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         try {
             MilestoneResource milestone = milestoneRestService.getMilestoneByTypeAndCompetitionId(
                     MilestoneType.valueOf(getMilestoneTypeFromFieldName(fieldName)), competitionResource.getId())
-                    .getSuccessObjectOrThrowException();
+                    .getSuccess();
 
             errors.addAll(validateMilestoneDateOnAutosave(milestone, fieldName, value));
 
             if (!errors.isEmpty()) {
                 return errors;
             }
-            milestoneRestService.updateMilestone(milestone).getSuccessObjectOrThrowException();
+            milestoneRestService.updateMilestone(milestone).getSuccess();
         } catch (Exception ex) {
             LOG.error(ex.getMessage());
             return makeErrorList();

@@ -52,7 +52,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, ApplicationResource.class, response);
 
         // now run the method under test
-        ApplicationResource application = service.getApplicationById(123L).getSuccessObject();
+        ApplicationResource application = service.getApplicationById(123L).getSuccess();
         assertNotNull(application);
         Assert.assertEquals(response, application);
     }
@@ -65,7 +65,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
         // now run the method under test
-        List<ApplicationResource> applications = service.getApplicationsByCompetitionIdAndUserId(123L, 456L, APPLICANT).getSuccessObject();
+        List<ApplicationResource> applications = service.getApplicationsByCompetitionIdAndUserId(123L, 456L, APPLICANT).getSuccess();
         assertNotNull(applications);
         assertEquals(returnedApplications, applications);
     }
@@ -78,7 +78,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
         // now run the method under test
-        List<ApplicationResource> applications = service.getApplicationsByUserId(123L).getSuccessObject();
+        List<ApplicationResource> applications = service.getApplicationsByUserId(123L).getSuccess();
 
         assertNotNull(applications);
         assertEquals(returnedApplications, applications);
@@ -93,7 +93,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         when(mockAsyncRestTemplate.exchange(expectedUrl, HttpMethod.GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(settable(new ResponseEntity<>(returnedDetails, OK)));
 
         // now run the method under test
-        Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccessObject();
+        Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccess();
 
         assertNotNull(percentage);
         assertEquals(Double.valueOf(60.5), percentage);
@@ -131,7 +131,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupPostWithRestResultExpectations(expectedUrl, ApplicationResource.class, application, application, CREATED);
 
         // now run the method under test
-        ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123").getSuccessObject();
+        ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123").getSuccess();
         Assert.assertEquals(returnedResponse.getName(), application.getName());
     }
 
@@ -144,7 +144,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, ApplicationResource.class, application);
 
         // now run the method under test
-        ApplicationResource returnedResponse = service.findByProcessRoleId(processRoleId).getSuccessObject();
+        ApplicationResource returnedResponse = service.findByProcessRoleId(processRoleId).getSuccess();
         assertEquals(returnedResponse, application);
     }
 
@@ -158,7 +158,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, Integer.class, count);
 
         // now run the method under test
-        Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccessObject();
+        Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccess();
         assertEquals(actualCount, Integer.valueOf(count));
     }
 
@@ -179,6 +179,6 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
 
         setupPostWithRestResultExpectations(applicationRestURL + "/informIneligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
-        service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccessObjectOrThrowException();
+        service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccess();
     }
 }

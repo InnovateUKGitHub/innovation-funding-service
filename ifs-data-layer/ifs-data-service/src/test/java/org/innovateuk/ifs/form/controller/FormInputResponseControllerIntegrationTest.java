@@ -37,7 +37,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     public void test_findResponsesByApplication() {
         Long applicationId = 1L;
         Long formInputId = 1L;
-        List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
+        List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccess();
 
         assertThat(responses, hasSize(16));
 
@@ -65,7 +65,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION));
         loginSteveSmith();
-        List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
+        List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccess();
         Optional<FormInputResponseResource> response = responses.stream().filter(r -> r.getFormInput().equals(formInputId)).findFirst();
 
         assertTrue(response.isPresent());
@@ -83,7 +83,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("formInputId", 1);
         jsonObj.put("value", "");
 
-        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
+        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccess();
         assertThat(errors.getErrors(), hasSize(1));
         assertThat(errors.getErrors(), hasItem(fieldError("value", "", "validation.field.please.enter.some.text")));
     }
@@ -101,7 +101,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         jsonObj.put("value", value);
 
-        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
+        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccess();
         assertThat(errors.getErrors(), hasSize(1));
         assertThat(errors.getErrors(), hasItem(fieldError("value", value, "validation.field.max.word.count", "1", "400")));
     }
@@ -117,7 +117,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         jsonObj.put("markedAsComplete", 1);
         jsonObj.put("value", "Some text value...");
 
-        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
+        ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccess();
         assertThat(errors.getErrors(), hasSize(0));
     }
 
@@ -127,7 +127,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         String questionName = "Project summary";
 
         FormInputResponseResource formInputResponseResource = controller.findByApplicationIdAndQuestionName(applicationId,
-                questionName).getSuccessObject();
+                questionName).getSuccess();
 
         assertEquals(15L, formInputResponseResource.getId().longValue());
         assertTrue(formInputResponseResource.getValue().startsWith("The Project aims to identify,"));
@@ -138,7 +138,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         long applicationId = 1L;
         long questionId = 1L;
 
-        List<FormInputResponseResource> formInputResponseResource = controller.findByApplicationIdAndQuestionId(applicationId, questionId).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> formInputResponseResource = controller.findByApplicationIdAndQuestionId(applicationId, questionId).getSuccess();
         assertEquals(1, formInputResponseResource.size());
         assertEquals(1L, (long)formInputResponseResource.get(0).getId());
         assertTrue(formInputResponseResource.get(0).getValue().startsWith("Within the Industry one issue has caused progress"));

@@ -48,7 +48,7 @@ public class NonIfsCompetitionController {
     @GetMapping("/non-ifs-competition/create")
     public String create() {
         CompetitionResource competition = competitionSetupRestService.createNonIfs()
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         return String.format("redirect:/non-ifs-competition/setup/%s", competition.getId());
     }
 

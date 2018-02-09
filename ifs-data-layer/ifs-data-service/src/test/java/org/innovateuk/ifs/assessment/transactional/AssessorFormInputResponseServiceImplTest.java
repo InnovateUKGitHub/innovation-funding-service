@@ -71,7 +71,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         when(assessorFormInputResponseMapperMock.mapToResource(same(assessorFormInputResponses.get(0)))).thenReturn(assessorFormInputResponseResources.get(0));
         when(assessorFormInputResponseMapperMock.mapToResource(same(assessorFormInputResponses.get(1)))).thenReturn(assessorFormInputResponseResources.get(1));
 
-        List<AssessorFormInputResponseResource> found = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId).getSuccessObject();
+        List<AssessorFormInputResponseResource> found = assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId).getSuccess();
 
         assertEquals(assessorFormInputResponseResources, found);
         verify(assessorFormInputResponseRepositoryMock, only()).findByAssessmentId(assessmentId);
@@ -90,7 +90,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         when(assessorFormInputResponseMapperMock.mapToResource(same(assessorFormInputResponses.get(0)))).thenReturn(assessorFormInputResponseResources.get(0));
         when(assessorFormInputResponseMapperMock.mapToResource(same(assessorFormInputResponses.get(1)))).thenReturn(assessorFormInputResponseResources.get(1));
 
-        List<AssessorFormInputResponseResource> found = assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).getSuccessObject();
+        List<AssessorFormInputResponseResource> found = assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).getSuccess();
 
         assertEquals(assessorFormInputResponseResources, found);
         verify(assessorFormInputResponseRepositoryMock, only()).findByAssessmentIdAndFormInputQuestionId(assessmentId, questionId);
@@ -445,7 +445,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetId(applicationId)).thenReturn(assessorFormInputResponses);
 
-        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccessObjectOrThrowException();
+        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccess();
 
         assertTrue(scores.isScopeAssessed());
         assertEquals(2, scores.getTotalScope());
@@ -475,7 +475,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetId(applicationId)).thenReturn(assessorFormInputResponses);
 
-        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccessObjectOrThrowException();
+        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccess();
 
         assertFalse(scores.isScopeAssessed());
         assertEquals(0, scores.getTotalScope());
@@ -512,7 +512,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetIdAndFormInputQuestionId(applicationId, questionId)).thenReturn(assessorFormInputResponses);
 
-        AssessmentFeedbackAggregateResource feedback = assessorFormInputResponseService.getAssessmentAggregateFeedback(applicationId, questionId).getSuccessObjectOrThrowException();
+        AssessmentFeedbackAggregateResource feedback = assessorFormInputResponseService.getAssessmentAggregateFeedback(applicationId, questionId).getSuccess();
 
         assertEquals(new BigDecimal("3"), feedback.getAvgScore());
         assertEquals(2, feedback.getFeedback().size());

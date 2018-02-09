@@ -38,7 +38,7 @@ public class ApplicationQuestionNonFileSaver extends AbstractApplicationSaver {
         ValidationMessages allErrors = new ValidationMessages();
         questions.forEach(question ->
                 {
-                    List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
+                    List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccess();
                     formInputs
                             .stream()
                             .filter(formInput -> FILEUPLOAD != formInput.getType())
@@ -59,7 +59,7 @@ public class ApplicationQuestionNonFileSaver extends AbstractApplicationSaver {
             //TODO: IFS-346 - Can we use the parameter map, instead of trying to get every FormInput by key
             requestParameterPresent(formInputKey, request).ifPresent(value -> {
                 ValidationMessages errors = formInputResponseRestService.saveQuestionResponse(
-                        userId, applicationId, formInput.getId(), value, ignoreEmpty).getSuccessObjectOrThrowException();
+                        userId, applicationId, formInput.getId(), value, ignoreEmpty).getSuccess();
                 allErrors.addAll(errors, toField(formInputKey));
             });
         };

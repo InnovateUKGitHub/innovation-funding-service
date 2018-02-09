@@ -95,7 +95,7 @@ public class ApplicationSubmitController {
     @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccess();
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
@@ -104,16 +104,16 @@ public class ApplicationSubmitController {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles, Optional.of(Boolean.FALSE));
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccess();
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
 
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
         if (competition.getCompetitionStatus().isFeedbackReleased()) {
-            model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
+            model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccess());
             model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
-                    .getSuccessObjectOrThrowException()
+                    .getSuccess()
                     .getFeedback()
             );
 
@@ -176,7 +176,7 @@ public class ApplicationSubmitController {
             return "redirect:/application/" + applicationId + "/confirm-submit";
         }
 
-        applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccessObjectOrThrowException();
+        applicationRestService.updateApplicationState(applicationId, SUBMITTED).getSuccess();
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         applicationModelPopulator.addApplicationWithoutDetails(application, competition, model);
 

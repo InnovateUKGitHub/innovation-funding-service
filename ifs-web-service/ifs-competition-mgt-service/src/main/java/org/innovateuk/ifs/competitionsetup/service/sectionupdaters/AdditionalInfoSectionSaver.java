@@ -46,7 +46,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		setFieldsAllowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
 
 		try {
-			competitionSetupRestService.update(competition).getSuccessObjectOrThrowException();
+			competitionSetupRestService.update(competition).getSuccess();
 		} catch (RuntimeException e) {
 			LOG.error("Competition object not available");
 			return serviceFailure(asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST)));

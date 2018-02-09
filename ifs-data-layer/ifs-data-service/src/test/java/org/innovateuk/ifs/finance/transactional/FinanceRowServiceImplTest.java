@@ -122,7 +122,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         ServiceResult<ApplicationFinanceResource> result = service.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
         assertTrue(result.isSuccess());
-        assertEquals(expectedFinance, result.getSuccessObject());
+        assertEquals(expectedFinance, result.getSuccess());
     }
 
     @Test
@@ -146,7 +146,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         ServiceResult<List<ApplicationFinanceResource>> result = service.findApplicationFinanceByApplication(123L);
         assertTrue(result.isSuccess());
 
-        assertEquals(singletonList(expectedFinance), result.getSuccessObject());
+        assertEquals(singletonList(expectedFinance), result.getSuccess());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         ServiceResult<ApplicationFinanceResource> result = service.addCost(new ApplicationFinanceResourceId(123L, 456L));
         assertTrue(result.isSuccess());
-        assertEquals(expectedFinance, result.getSuccessObject());
+        assertEquals(expectedFinance, result.getSuccess());
     }
 
     @Test
@@ -224,7 +224,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         assertTrue(result.isSuccess());
 
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -319,6 +319,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         ServiceResult<List<ApplicationFinanceResource>> result = service.financeDetails(1L);
         assertTrue(result.isSuccess());
 
-        assertEquals(existingFinances, result.getSuccessObject());
+        assertEquals(existingFinances, result.getSuccess());
     }
 }
