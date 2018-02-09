@@ -275,8 +275,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         waitForFuturesToComplete(createApplicationsFutures);
 
-        competitionDataBuilderService.moveCompetitionsToCorrectFinalState();
-
         Future<?> fundingDecisions = taskExecutor.submit(() -> createFundingDecisions(competitionLines));
 
         taskExecutor.submit(this::updateQuestions);
@@ -294,6 +292,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         fundingDecisions.get();
 
         projectDataBuilderService.createProjects();
+
+        competitionDataBuilderService.moveCompetitionsToCorrectFinalState();
 
         long after = System.currentTimeMillis();
 
