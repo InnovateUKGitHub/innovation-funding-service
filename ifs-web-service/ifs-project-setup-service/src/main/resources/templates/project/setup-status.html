@@ -188,7 +188,7 @@
                            th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
                         <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
                     </h2>
-                    <p class="no-margin">Once all tasks are complete the Project Manager can review and accept the grant offer letter on behalf of the project.</p>
+                    <p class="no-margin">Once all tasks are complete the Project Manager can review, sign and submit the grant offer letter to Innovate UK.</p>
                 </div>
                 <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.grantOfferLetterStatus.getSectionStatus()})"
                           th:if="${model.grantOfferLetterSection.accessible}"/>
