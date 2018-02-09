@@ -643,7 +643,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
         ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
 
-        List<String> existingEmails = resource.getSuccessObjectOrThrowException().getContent().stream()
+        List<String> existingEmails = resource.getSuccess().getContent().stream()
                 .map(AssessorCreatedInviteResource::getEmail)
                 .collect(Collectors.toList());
 
