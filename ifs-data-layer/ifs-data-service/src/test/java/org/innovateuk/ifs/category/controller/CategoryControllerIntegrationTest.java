@@ -36,7 +36,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
     public void findInnovationAreas() {
         RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreas();
         assertTrue(categoriesResult.isSuccess());
-        List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
+        List<InnovationAreaResource> categories = categoriesResult.getSuccess();
 
         assertThat(categories, hasSize(47));
         assertThat(categories, everyItem(hasProperty("sector", notNullValue())));
@@ -46,7 +46,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
     public void findInnovationSectors() {
         RestResult<List<InnovationSectorResource>> categoriesResult = controller.findInnovationSectors();
         assertTrue(categoriesResult.isSuccess());
-        List<InnovationSectorResource> categories = categoriesResult.getSuccessObject();
+        List<InnovationSectorResource> categories = categoriesResult.getSuccess();
 
         assertThat(categories, hasSize(6));
         assertThat(categories, everyItem(hasProperty("children", notNullValue())));
@@ -56,7 +56,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
     public void findResearchCategories() {
         RestResult<List<ResearchCategoryResource>> categoriesResult = controller.findResearchCategories();
         assertTrue(categoriesResult.isSuccess());
-        List<ResearchCategoryResource> categories = categoriesResult.getSuccessObject();
+        List<ResearchCategoryResource> categories = categoriesResult.getSuccess();
 
         assertThat(categories, hasSize(3));
     }
@@ -65,7 +65,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
     public void findInnovationAreasBySector() {
         RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreasBySector(1L);
         assertTrue(categoriesResult.isSuccess());
-        List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
+        List<InnovationAreaResource> categories = categoriesResult.getSuccess();
 
         assertThat(categories, hasSize(10));
         assertThat(categories, everyItem(hasProperty("sector", equalTo(1L))));

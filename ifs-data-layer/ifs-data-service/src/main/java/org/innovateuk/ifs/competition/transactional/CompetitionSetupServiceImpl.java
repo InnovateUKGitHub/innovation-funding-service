@@ -203,7 +203,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(Long competitionId) {
         List<SetupStatusResource> setupStatuses = setupStatusService
-                .findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId).getSuccessObjectOrThrowException();
+                .findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId).getSuccess();
 
         return serviceSuccess(Arrays.stream(CompetitionSetupSection.values())
                 .collect(Collectors.toMap(section -> section, section -> findStatus(setupStatuses, section.getClass().getName(), section.getId()))));
@@ -212,7 +212,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId) {
         List<SetupStatusResource> setupStatuses = setupStatusService
-                .findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId).getSuccessObjectOrThrowException();
+                .findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId).getSuccess();
 
         return serviceSuccess(Arrays.stream(CompetitionSetupSubsection.values())
                 .collect(Collectors.toMap(subsection -> subsection, subsection -> findStatus(setupStatuses, subsection.getClass().getName(), subsection.getId()))));
@@ -280,7 +280,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
             newSetupStatusResource.setParentId(
                     parentSetupStatusOpt
-                        .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccessObjectOrThrowException())
+                        .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccess())
                         .getId()
             );
         });

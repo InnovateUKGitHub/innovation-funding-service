@@ -50,7 +50,7 @@ public class PublicContentMenuController {
                                     @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     HttpServletRequest request) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
@@ -67,7 +67,7 @@ public class PublicContentMenuController {
                           ValidationHandler validationHandler,
                           HttpServletRequest request) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();

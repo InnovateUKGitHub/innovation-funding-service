@@ -28,11 +28,11 @@ public class AllApplicationsPageModelPopulator {
     public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, Optional<String> filter, UserResource user) {
         CompetitionSummaryResource competitionSummaryResource = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         ApplicationSummaryPageResource applicationSummaryPageResource = applicationSummaryRestService
                 .getAllApplications(competitionId, sorting, page, 20, filter)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         return new AllApplicationsViewModel(
                 competitionSummaryResource.getCompetitionId(),

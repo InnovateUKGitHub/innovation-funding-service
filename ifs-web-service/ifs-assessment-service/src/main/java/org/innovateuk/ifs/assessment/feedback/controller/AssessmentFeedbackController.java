@@ -105,7 +105,7 @@ public class AssessmentFeedbackController {
             @RequestParam("value") String value) {
         try {
             assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value)
-                    .getSuccessObjectOrThrowException();
+                    .getSuccess();
             return createJsonObjectNode(true);
         } catch (Exception e) {
             return createJsonObjectNode(false);
@@ -151,7 +151,7 @@ public class AssessmentFeedbackController {
 
     private List<AssessorFormInputResponseResource> getAssessorResponses(long assessmentId, long questionId) {
         return assessorFormInputResponseRestService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(
-                assessmentId, questionId).getSuccessObjectOrThrowException();
+                assessmentId, questionId).getSuccess();
     }
 
     private Form populateQuestionForm(Form form, long assessmentId, long questionId) {
@@ -175,7 +175,7 @@ public class AssessmentFeedbackController {
 
     private List<FormInputResource> getAssessmentFormInputsForQuestion(long questionId) {
         return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 
     private String doViewQuestion(Model model, long assessmentId, QuestionResource question) {
@@ -207,7 +207,7 @@ public class AssessmentFeedbackController {
     }
 
     private List<FormInputResource> getApplicationFormInputs(long questionId) {
-        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccess();
     }
 
     private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {

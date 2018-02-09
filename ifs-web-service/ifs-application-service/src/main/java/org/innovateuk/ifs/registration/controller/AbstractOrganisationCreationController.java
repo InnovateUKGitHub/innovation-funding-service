@@ -149,7 +149,7 @@ public abstract class AbstractOrganisationCreationController {
      */
     protected OrganisationSearchResult addSelectedOrganisation(OrganisationCreationForm organisationForm, Model model) {
         if (!organisationForm.isManualEntry() && isNotBlank(organisationForm.getSearchOrganisationId())) {
-            OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationTypeId(), organisationForm.getSearchOrganisationId()).getSuccessObject();
+            OrganisationSearchResult organisationSearchResult = organisationSearchRestService.getOrganisation(organisationForm.getOrganisationTypeId(), organisationForm.getSearchOrganisationId()).getSuccess();
             organisationForm.setOrganisationName(organisationSearchResult.getName());
             model.addAttribute("selectedOrganisation", organisationSearchResult);
             return organisationSearchResult;

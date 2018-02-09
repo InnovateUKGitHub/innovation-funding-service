@@ -56,7 +56,7 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/feedback-released", competitionSearchResultItemListType(), returnedResponse);
 
-        List<CompetitionSearchResultItem> responses = service.findFeedbackReleasedCompetitions().getSuccessObject();
+        List<CompetitionSearchResultItem> responses = service.findFeedbackReleasedCompetitions().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -65,7 +65,7 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
     public void findOpenQueryCount() {
         setupGetWithRestResultExpectations(competitionsRestURL + "/" + 123L+ "/queries/open/count", Long.class, 13L);
 
-        Long responses = service.getCompetitionOpenQueriesCount(123L).getSuccessObject();
+        Long responses = service.getCompetitionOpenQueriesCount(123L).getSuccess();
         assertNotNull(responses);
         assertEquals(13L, responses.longValue());
     }
@@ -78,7 +78,7 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/" + 123L+ "/queries/open", competitionOpenQueryListType(), returnedResponse);
 
-        List<CompetitionOpenQueryResource> responses = service.getCompetitionOpenQueries(123L).getSuccessObject();
+        List<CompetitionOpenQueryResource> responses = service.getCompetitionOpenQueries(123L).getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -90,7 +90,7 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/pending-spend-profiles", spendProfileStatusResourceListType(), returnedResponse);
 
-        List<SpendProfileStatusResource> response = service.getPendingSpendProfiles(123L).getSuccessObject();
+        List<SpendProfileStatusResource> response = service.getPendingSpendProfiles(123L).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
@@ -102,7 +102,7 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/count-pending-spend-profiles", Long.class, returnedResponse);
 
-        Long response = service.countPendingSpendProfiles(123L).getSuccessObject();
+        Long response = service.countPendingSpendProfiles(123L).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
@@ -118,7 +118,7 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/unsuccessful-applications?page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
 
-        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccessObject();
+        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccess();
         assertNotNull(result);
         Assert.assertEquals(applicationPage, result);
     }

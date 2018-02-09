@@ -31,6 +31,6 @@ public class AddressServiceImplTest extends BaseServiceUnitTest<AddressServiceIm
         ServiceResult<AddressResource> serviceResult = service.getById(addressResource.getId());
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(addressResource, serviceResult.getSuccessObject());
+        assertEquals(addressResource, serviceResult.getSuccess());
     }
 }

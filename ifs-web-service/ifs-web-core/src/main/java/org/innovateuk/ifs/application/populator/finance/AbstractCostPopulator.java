@@ -24,7 +24,7 @@ public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> ext
 
     @Override
     protected void populate(AbstractApplicantResource resource, M viewModel) {
-        ApplicationFinanceResource organisationFinances = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccessObjectOrThrowException();
+        ApplicationFinanceResource organisationFinances = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccess();
         FinanceRowCostCategory category = organisationFinances.getFinanceOrganisationDetails(viewModel.getFinanceRowType());
         if (viewModel.getQuestion().getType().equals(QuestionType.COST)) {
             FinanceRowItem costItem = financeHandler.getFinanceFormHandler(resource.getCurrentApplicant().getOrganisation().getOrganisationType()).addCostWithoutPersisting(resource.getApplication().getId(), resource.getCurrentUser().getId(), viewModel.getQuestion().getId());

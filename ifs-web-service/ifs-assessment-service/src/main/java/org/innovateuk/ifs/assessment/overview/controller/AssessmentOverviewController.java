@@ -77,10 +77,10 @@ public class AssessmentOverviewController {
         ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
 
         final ByteArrayResource resource = formInputResponseRestService
-                .getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+                .getFile(formInputId, applicationId, processRole.getId()).getSuccess();
 
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService
-                .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+                .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
 
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }

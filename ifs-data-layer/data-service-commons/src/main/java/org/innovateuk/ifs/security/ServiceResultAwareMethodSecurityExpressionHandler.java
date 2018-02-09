@@ -25,7 +25,7 @@ public class ServiceResultAwareMethodSecurityExpressionHandler extends DefaultMe
                 return serviceResult;
             }
 
-            Object successObject = serviceResult.getSuccessObject();
+            Object successObject = serviceResult.getSuccess();
 
             if (successObject == null) {
                 return serviceResult;

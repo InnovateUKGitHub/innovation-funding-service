@@ -33,7 +33,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
         setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionResourceListType(), returnedResponse);
-        List<CompetitionResource> responses = service.getAll().getSuccessObject();
+        List<CompetitionResource> responses = service.getAll().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -45,7 +45,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/123", CompetitionResource.class, returnedResponse);
 
-        CompetitionResource response = service.getCompetitionById(123L).getSuccessObject();
+        CompetitionResource response = service.getCompetitionById(123L).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
@@ -57,7 +57,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/innovation-leads", userListType(), returnedResponse);
 
-        List<UserResource> response = service.findInnovationLeads(123L).getSuccessObject();
+        List<UserResource> response = service.findInnovationLeads(123L).getSuccess();
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
@@ -88,7 +88,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/getCompetitionsByUserId/" + userId, competitionResourceListType(), returnedResponse);
 
-        List<CompetitionResource> responses = service.getCompetitionsByUserId(userId).getSuccessObject();
+        List<CompetitionResource> responses = service.getCompetitionsByUserId(userId).getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -99,7 +99,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations("/competition-type/findAll", competitionTypeResourceListType(), returnedResponse);
 
-        List<CompetitionTypeResource> response = service.getCompetitionTypes().getSuccessObject();
+        List<CompetitionTypeResource> response = service.getCompetitionTypes().getSuccess();
         assertNotNull(response);
         assertEquals(2, response.size());
         assertEquals(returnedResponse, response);
@@ -112,7 +112,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionSearchResultItemListType(), returnedResponse);
 
-        List<CompetitionSearchResultItem> responses = service.findLiveCompetitions().getSuccessObject();
+        List<CompetitionSearchResultItem> responses = service.findLiveCompetitions().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -125,7 +125,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/project-setup", competitionSearchResultItemListType(), returnedResponse);
 
-        List<CompetitionSearchResultItem> responses = service.findProjectSetupCompetitions().getSuccessObject();
+        List<CompetitionSearchResultItem> responses = service.findProjectSetupCompetitions().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -138,7 +138,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
 
-        List<CompetitionSearchResultItem> responses = service.findUpcomingCompetitions().getSuccessObject();
+        List<CompetitionSearchResultItem> responses = service.findUpcomingCompetitions().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -151,7 +151,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType(), returnedResponse);
 
-        List<CompetitionSearchResultItem> responses = service.findNonIfsCompetitions().getSuccessObject();
+        List<CompetitionSearchResultItem> responses = service.findNonIfsCompetitions().getSuccess();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
@@ -162,7 +162,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/count", CompetitionCountResource.class, returnedResponse);
 
-        CompetitionCountResource responses = service.countCompetitions().getSuccessObject();
+        CompetitionCountResource responses = service.countCompetitions().getSuccess();
         assertNotNull(responses);
         Assert.assertEquals(returnedResponse, responses);
     }
@@ -176,7 +176,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class, returnedResponse);
 
-        CompetitionSearchResult responses = service.searchCompetitions(searchQuery, page, size).getSuccessObject();
+        CompetitionSearchResult responses = service.searchCompetitions(searchQuery, page, size).getSuccess();
         assertNotNull(responses);
         Assert.assertEquals(returnedResponse, responses);
     }

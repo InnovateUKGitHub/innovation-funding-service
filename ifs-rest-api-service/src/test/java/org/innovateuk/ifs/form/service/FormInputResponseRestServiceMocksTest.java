@@ -38,7 +38,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
         setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponsesByApplication/123", formInputResponseListType(), returnedResponses);
 
-        List<FormInputResponseResource> responses = service.getResponsesByApplicationId(123L).getSuccessObject();
+        List<FormInputResponseResource> responses = service.getResponsesByApplicationId(123L).getSuccess();
         assertEquals(returnedResponses, responses);
     }
 
@@ -56,7 +56,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
         setupPostWithRestResultExpectations(formInputResponseRestURL + "/saveQuestionResponse/", ValidationMessages.class, entityUpdates, validationMessages, OK);
 
-        ValidationMessages responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccessObject();
+        ValidationMessages responses = service.saveQuestionResponse(123L, 456L, 789L, "Very good answer!", false).getSuccess();
         Assert.assertEquals(returnedResponses, responses.getErrors());
     }
 
@@ -66,7 +66,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
         setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/456/123", formInputResponseListType(), returnedResponses);
 
-        List<FormInputResponseResource> responses = service.getByFormInputIdAndApplication(456L, 123L).getSuccessObject();
+        List<FormInputResponseResource> responses = service.getByFormInputIdAndApplication(456L, 123L).getSuccess();
         assertEquals(returnedResponses, responses);
     }
 
@@ -77,7 +77,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
         setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionName", applicationId, questionName), FormInputResponseResource.class, expected);
-        FormInputResponseResource actual = service.getByApplicationIdAndQuestionName(applicationId, questionName).getSuccessObject();
+        FormInputResponseResource actual = service.getByApplicationIdAndQuestionName(applicationId, questionName).getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -89,7 +89,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
         setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionId",
                 applicationId, questionId), formInputResponseListType(), expected);
-        List<FormInputResponseResource> actual = service.getByApplicationIdAndQuestionId(applicationId, questionId).getSuccessObject();
+        List<FormInputResponseResource> actual = service.getByApplicationIdAndQuestionId(applicationId, questionId).getSuccess();
         assertEquals(expected, actual);
     }
 }
