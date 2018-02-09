@@ -36,7 +36,7 @@ public class PublicContentServiceImpl implements PublicContentService {
 
     @Override
     public PublicContentResource getCompetitionById(Long id) {
-        return publicContentRestService.getByCompetitionId(id).getSuccessObjectOrThrowException();
+        return publicContentRestService.getByCompetitionId(id).getSuccess();
     }
 
     @Override
@@ -82,12 +82,12 @@ public class PublicContentServiceImpl implements PublicContentService {
 
     @Override
     public ByteArrayResource downloadAttachment(Long contentGroupId) {
-        return contentGroupRestService.getFile(contentGroupId).getSuccessObjectOrThrowException();
+        return contentGroupRestService.getFile(contentGroupId).getSuccess();
     }
 
     @Override
     public FileEntryResource getFileDetails(Long contentGroupId) {
-        return contentGroupRestService.getFileDetails(contentGroupId).getSuccessObjectOrThrowException();
+        return contentGroupRestService.getFileDetails(contentGroupId).getSuccess();
     }
 
 

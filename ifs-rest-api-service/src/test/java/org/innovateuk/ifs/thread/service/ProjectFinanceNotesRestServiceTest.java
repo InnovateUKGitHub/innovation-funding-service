@@ -29,7 +29,7 @@ public class ProjectFinanceNotesRestServiceTest extends BaseRestServiceUnitTest<
     public void test_findAll() throws Exception {
         final List<NoteResource> expected = asList(noteWithId(33L), noteWithId(92L));
         setupGetWithRestResultExpectations(serviceURL + "/all/22", noteResourceListType(), expected, OK);
-        final List<NoteResource> response = service.findAll(22L).getSuccessObject();
+        final List<NoteResource> response = service.findAll(22L).getSuccess();
         assertSame(expected, response);
     }
 
@@ -37,7 +37,7 @@ public class ProjectFinanceNotesRestServiceTest extends BaseRestServiceUnitTest<
     public void test_findOne() throws Exception {
         final NoteResource note1 = noteWithId(33L);
         setupGetWithRestResultExpectations(serviceURL + "/33", NoteResource.class, note1, OK);
-        final NoteResource response = service.findOne(33L).getSuccessObject();
+        final NoteResource response = service.findOne(33L).getSuccess();
         assertSame(note1, response);
     }
 
@@ -45,7 +45,7 @@ public class ProjectFinanceNotesRestServiceTest extends BaseRestServiceUnitTest<
     public void test_create() throws Exception {
         final NoteResource note1 = noteWithId(33L);
         setupPostWithRestResultExpectations(serviceURL, Long.class, note1, 33L, CREATED);
-        final Long response = service.create(note1).getSuccessObject();
+        final Long response = service.create(note1).getSuccess();
         assertSame(note1.id, response);
     }
 

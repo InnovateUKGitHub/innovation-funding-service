@@ -63,7 +63,7 @@ public class CompetitionManagementDashboardController {
         Long countBankDetails = 0L;
         boolean projectFinanceUser = isProjectFinanceUser(user);
         if (projectFinanceUser) {
-            countBankDetails = bankDetailsRestService.countPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
+            countBankDetails = bankDetailsRestService.countPendingBankDetailsApprovals().getSuccess();
         }
 
         model.addAttribute(MODEL_ATTR,
@@ -124,7 +124,7 @@ public class CompetitionManagementDashboardController {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @GetMapping("/competition/create")
     public String create(){
-        CompetitionResource competition = competitionSetupRestService.create().getSuccessObjectOrThrowException();
+        CompetitionResource competition = competitionSetupRestService.create().getSuccess();
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
 

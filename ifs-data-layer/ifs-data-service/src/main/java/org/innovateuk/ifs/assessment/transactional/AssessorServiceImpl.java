@@ -180,7 +180,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))
         );
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
 
         return notificationSender.sendEmailWithContent(notification, recipient, content).andOnSuccessReturnVoid();
     }

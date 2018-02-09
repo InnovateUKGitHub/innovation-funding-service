@@ -42,13 +42,13 @@ public class SectionServiceImpl implements SectionService {
     @Override
     public List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         LOG.debug(String.format("mark section as complete %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
-        return sectionRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccessObjectOrThrowException();
+        return sectionRestService.markAsComplete(sectionId, applicationId, markedAsCompleteById).getSuccess();
     }
 
     @Override
     public void markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         LOG.debug(String.format("mark section as not required %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
-        sectionRestService.markAsNotRequired(sectionId, applicationId, markedAsCompleteById).getSuccessObjectOrThrowException();
+        sectionRestService.markAsNotRequired(sectionId, applicationId, markedAsCompleteById).getSuccess();
     }
 
     @Override
@@ -59,27 +59,27 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public SectionResource getById(Long sectionId) {
-        return sectionRestService.getById(sectionId).getSuccessObjectOrThrowException();
+        return sectionRestService.getById(sectionId).getSuccess();
     }
 
     @Override
     public List<Long> getInCompleted(Long applicationId) {
-        return sectionRestService.getIncompletedSectionIds(applicationId).getSuccessObjectOrThrowException();
+        return sectionRestService.getIncompletedSectionIds(applicationId).getSuccess();
     }
 
     @Override
     public List<Long> getCompleted(Long applicationId, Long organisationId) {
-        return sectionRestService.getCompletedSectionIds(applicationId, organisationId).getSuccessObjectOrThrowException();
+        return sectionRestService.getCompletedSectionIds(applicationId, organisationId).getSuccess();
     }
 
     @Override
     public Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return sectionRestService.getCompletedSectionsByOrganisation(applicationId).getSuccessObjectOrThrowException();
+        return sectionRestService.getCompletedSectionsByOrganisation(applicationId).getSuccess();
     }
 
     @Override
     public Boolean allSectionsMarkedAsComplete(Long applicationId) {
-        return sectionRestService.allSectionsMarkedAsComplete(applicationId).getSuccessObjectOrThrowException();
+        return sectionRestService.allSectionsMarkedAsComplete(applicationId).getSuccess();
     }
 
     /**
@@ -100,7 +100,7 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public List<SectionResource> getAllByCompetitionId(final Long competitionId) {
-        return sectionRestService.getByCompetition(competitionId).getSuccessObjectOrThrowException();
+        return sectionRestService.getByCompetition(competitionId).getSuccess();
     }
 
     private List<SectionResource> getChildSections(List<SectionResource> sections, List<SectionResource>children) {
@@ -128,7 +128,7 @@ public class SectionServiceImpl implements SectionService {
     public void removeSectionsQuestionsWithType(SectionResource section, FormInputType type) {
         List<QuestionResource> questions = questionService.findByCompetition(section.getCompetition());
         List<SectionResource> sections = this.getAllByCompetitionId(section.getCompetition());
-        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(section.getCompetition(), APPLICATION).getSuccessObjectOrThrowException();
+        List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(section.getCompetition(), APPLICATION).getSuccess();
         filterByIdList(section.getChildSections(), sections).stream()
                 .forEach(
                 s -> s.setQuestions(
@@ -157,17 +157,17 @@ public class SectionServiceImpl implements SectionService {
 
     @Override
     public SectionResource getSectionByQuestionId(Long questionId) {
-        return sectionRestService.getSectionByQuestionId(questionId).getSuccessObjectOrThrowException();
+        return sectionRestService.getSectionByQuestionId(questionId).getSuccess();
     }
 
     @Override
     public Set<Long> getQuestionsForSectionAndSubsections(Long sectionId) {
-        return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccessObjectOrThrowException();
+        return sectionRestService.getQuestionsForSectionAndSubsections(sectionId).getSuccess();
     }
 
     @Override
 	public List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type) {
-		return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccessObjectOrThrowException();
+		return sectionRestService.getSectionsByCompetitionIdAndType(competitionId, type).getSuccess();
 	}
     
     @Override

@@ -52,8 +52,8 @@ public class ApplicationDownloadController {
             @PathVariable("formInputId") final Long formInputId,
             UserResource user) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
-        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = formInputResponseRestService.getFile(formInputId, applicationId, processRole.getId()).getSuccess();
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
@@ -62,8 +62,8 @@ public class ApplicationDownloadController {
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
 
-        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccessObjectOrThrowException();
-        final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = financeService.getFinanceDocumentByApplicationFinance(applicationFinanceId).getSuccess();
+        final FileEntryResource fileDetails = financeService.getFinanceEntryByApplicationFinanceId(applicationFinanceId).getSuccess();
         return getFileResponseEntity(resource, fileDetails);
     }
 }

@@ -41,7 +41,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         Long bankDetailsId = 1L;
         BankDetailsResource returnedResponse = newBankDetailsResource().build();
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?bankDetailsId=" + bankDetailsId, BankDetailsResource.class, returnedResponse);
-        BankDetailsResource response = service.getByProjectIdAndBankDetailsId(projectId, bankDetailsId).getSuccessObject();
+        BankDetailsResource response = service.getByProjectIdAndBankDetailsId(projectId, bankDetailsId).getSuccess();
         assertEquals(response, returnedResponse);
     }
     
@@ -51,7 +51,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         Long organisationId = 100L;
         BankDetailsResource returnedResponse = newBankDetailsResource().build();
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details?organisationId=" + organisationId, BankDetailsResource.class, returnedResponse);
-        BankDetailsResource response = service.getBankDetailsByProjectAndOrganisation(projectId, organisationId).getSuccessObject();
+        BankDetailsResource response = service.getBankDetailsByProjectAndOrganisation(projectId, organisationId).getSuccess();
         assertEquals(response, returnedResponse);
     }
     
@@ -90,7 +90,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/bank-details/status-summary", ProjectBankDetailsStatusSummary.class, projectBankDetailsStatusSummary, OK);
         RestResult<ProjectBankDetailsStatusSummary> response = service.getBankDetailsStatusSummaryByProject(projectId);
         assertTrue(response.isSuccess());
-        assertEquals(projectBankDetailsStatusSummary, response.getSuccessObject());
+        assertEquals(projectBankDetailsStatusSummary, response.getSuccess());
     }
     
     @Test
@@ -99,7 +99,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
         String url = competitionRestURL + "/" + competitionId + "/bank-details/export";
         setupGetWithRestResultExpectations(url, ByteArrayResource.class, returnedFileContents, OK);
-        ByteArrayResource retrievedFileEntry = service.downloadByCompetition(123L).getSuccessObject();
+        ByteArrayResource retrievedFileEntry = service.downloadByCompetition(123L).getSuccess();
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
 
@@ -110,7 +110,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/pending-bank-details-approvals", bankDetailsReviewResourceListType(), returnedResponse);
 
-        List<BankDetailsReviewResource> response = service.getPendingBankDetailsApprovals().getSuccessObject();
+        List<BankDetailsReviewResource> response = service.getPendingBankDetailsApprovals().getSuccess();
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
@@ -122,7 +122,7 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/count-pending-bank-details-approvals", Long.class, pendingBankDetailsCount);
 
-        Long response = service.countPendingBankDetailsApprovals().getSuccessObject();
+        Long response = service.countPendingBankDetailsApprovals().getSuccess();
         assertNotNull(response);
         Assert.assertEquals(pendingBankDetailsCount, response);
     }

@@ -34,12 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResource findById(Long userId) {
-        return userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
+        return userRestService.retrieveUserById(userId).getSuccess();
     }
 
     @Override
     public List<UserResource> getAssignable(Long applicationId) {
-        return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrThrowException();
+        return userRestService.findAssignableUsers(applicationId).getSuccess();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<UserResource> getAssignableUsers(ApplicationResource application) {
-        return userRestService.findAssignableUsers(application.getId()).andOnSuccessReturn(a -> new HashSet<>(a)).getSuccessObjectOrThrowException();
+        return userRestService.findAssignableUsers(application.getId()).andOnSuccessReturn(a -> new HashSet<>(a)).getSuccess();
     }
 
     @Override
@@ -110,24 +110,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long getUserOrganisationId(Long userId, Long applicationId) {
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
         return userApplicationRole.getOrganisationId();
     }
 
     @Override
     public List<UserResource> findUserByType(UserRoleType type) {
-        return userRestService.findByUserRoleType(type).getSuccessObjectOrThrowException();
+        return userRestService.findByUserRoleType(type).getSuccess();
     }
 
     @Override
     public Void verifyEmail(String hash) {
-        return userRestService.verifyEmail(hash).getSuccessObjectOrThrowException();
+        return userRestService.verifyEmail(hash).getSuccess();
     }
 
     @Override
     public void resendEmailVerificationNotification(String email) {
         try {
-            userRestService.resendEmailVerificationNotification(email).getSuccessObjectOrThrowException();
+            userRestService.resendEmailVerificationNotification(email).getSuccess();
         }
         catch (ObjectNotFoundException e) {
             // Do nothing. We don't want to reveal that the address was not recognised
@@ -137,12 +137,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean userHasApplicationForCompetition(Long userId, Long competitionId) {
-        return userRestService.userHasApplicationForCompetition(userId, competitionId).getSuccessObjectOrThrowException();
+        return userRestService.userHasApplicationForCompetition(userId, competitionId).getSuccess();
     }
 
     @Override
     public UserResource retrieveUserById(Long id) {
-        return userRestService.retrieveUserById(id).getSuccessObjectOrThrowException();
+        return userRestService.retrieveUserById(id).getSuccess();
     }
 
     @Override
@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Void checkPasswordResetHash(String hash) {
-        return userRestService.checkPasswordResetHash(hash).getSuccessObjectOrThrowException();
+        return userRestService.checkPasswordResetHash(hash).getSuccess();
     }
 
     @Override
@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        UserResource execUser = result.getSuccessObject();
+        UserResource execUser = result.getSuccess();
 
         return execUser != null && execUser.hasRole(role);
     }

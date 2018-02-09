@@ -16,11 +16,11 @@ public class ApplicantRestServiceImpl extends BaseRestService implements Applica
 
     @Override
     public ApplicantQuestionResource getQuestion(Long user, Long application, Long question) {
-        return getWithRestResult(format("%s/%d/%d/question/%d", applicantBaseUrl, user, application, question), ApplicantQuestionResource.class).getSuccessObjectOrThrowException();
+        return getWithRestResult(format("%s/%d/%d/question/%d", applicantBaseUrl, user, application, question), ApplicantQuestionResource.class).getSuccess();
     }
 
     @Override
     public ApplicantSectionResource getSection(Long user, Long application, Long section) {
-        return getWithRestResult(format("%s/%d/%d/section/%d", applicantBaseUrl, user, application, section), ApplicantSectionResource.class).getSuccessObjectOrThrowException();
+        return getWithRestResult(format("%s/%d/%d/section/%d", applicantBaseUrl, user, application, section), ApplicantSectionResource.class).getSuccess();
     }
 }

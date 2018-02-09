@@ -88,7 +88,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
-        File newFileResult = result.getSuccessObject().getKey();
+        File newFileResult = result.getSuccess().getKey();
         assertEquals("thefilename", newFileResult.getName());
 
         String expectedPath = pathElementsToPathString(fullPathToNewFile);
@@ -149,7 +149,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
-        File newFileResult = result.getSuccessObject().getKey();
+        File newFileResult = result.getSuccess().getKey();
         assertEquals("updatedfile", newFileResult.getName());
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
@@ -222,7 +222,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
-        File newFileResult = result.getSuccessObject().getKey();
+        File newFileResult = result.getSuccess().getKey();
         assertEquals("updatedfile", newFileResult.getName());
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
@@ -266,7 +266,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
-        File newFileResult = result.getSuccessObject().getKey();
+        File newFileResult = result.getSuccess().getKey();
         assertEquals("updatedfile", newFileResult.getName());
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());
@@ -313,7 +313,7 @@ public class FileServiceImplTest extends RootUnitTestMocksTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
 
-        File newFileResult = result.getSuccessObject().getKey();
+        File newFileResult = result.getSuccess().getKey();
         assertEquals("updatedfile", newFileResult.getName());
 
         assertEquals("/tmp/path/to/updatedfile", newFileResult.getPath());

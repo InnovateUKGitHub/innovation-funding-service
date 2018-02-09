@@ -20,7 +20,7 @@ public class OrganisationCreationSelectTypePopulator {
     private OrganisationTypeRestService organisationTypeRestService;
     
     public OrganisationCreationSelectTypeViewModel populate() {
-        List<OrganisationTypeResource> orgTypes = organisationTypeRestService.getAll().getSuccessObject()
+        List<OrganisationTypeResource> orgTypes = organisationTypeRestService.getAll().getSuccess()
                 .stream()
                 .filter(organisationTypeResource -> OrganisationTypeEnum.getFromId(organisationTypeResource.getId()) != null)
                 .collect(Collectors.toList());

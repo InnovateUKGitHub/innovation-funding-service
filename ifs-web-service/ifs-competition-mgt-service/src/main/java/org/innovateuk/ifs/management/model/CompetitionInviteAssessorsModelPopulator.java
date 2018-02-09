@@ -33,7 +33,7 @@ abstract class CompetitionInviteAssessorsModelPopulator<ViewModelType extends In
     }
 
     private void populateStatistics(ViewModelType model, CompetitionResource competitionResource) {
-        CompetitionInviteStatisticsResource competitionInviteStatisticsResource = competitionInviteRestService.getInviteStatistics(competitionResource.getId()).getSuccessObject();
+        CompetitionInviteStatisticsResource competitionInviteStatisticsResource = competitionInviteRestService.getInviteStatistics(competitionResource.getId()).getSuccess();
         model.setAssessorsInvited(competitionInviteStatisticsResource.getInvited());
         model.setAssessorsAccepted(competitionInviteStatisticsResource.getAccepted());
         model.setAssessorsDeclined(competitionInviteStatisticsResource.getDeclined());

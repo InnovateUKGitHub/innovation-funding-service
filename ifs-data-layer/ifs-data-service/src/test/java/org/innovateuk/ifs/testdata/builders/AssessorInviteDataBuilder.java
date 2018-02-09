@@ -71,22 +71,22 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
 
             UserResource assessor = retrieveUserByEmail(assessorEmail);
 
-            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccessObjectOrThrowException());
-            doAs(assessor, () -> competitionInviteService.acceptInvite(hash, assessor).getSuccessObjectOrThrowException());
+            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccess());
+            doAs(assessor, () -> competitionInviteService.acceptInvite(hash, assessor).getSuccess());
         });
     }
 
     public AssessorInviteDataBuilder rejectInvite(String hash, String rejectionReason, Optional<String> rejectionComment) {
         return with(data -> {
-            List<RejectionReasonResource> rejectionReasons = rejectionReasonService.findAllActive().getSuccessObjectOrThrowException();
+            List<RejectionReasonResource> rejectionReasons = rejectionReasonService.findAllActive().getSuccess();
 
             RejectionReasonResource rejectionReasonResource = rejectionReasons.stream()
                     .filter(reason -> reason.getReason().equals(rejectionReason))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid"));
 
-            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccessObjectOrThrowException());
-            doAs(systemRegistrar(), () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccessObjectOrThrowException());
+            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccess());
+            doAs(systemRegistrar(), () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccess());
         });
     }
 

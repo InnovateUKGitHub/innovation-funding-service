@@ -31,8 +31,6 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -56,7 +54,6 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -518,7 +515,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(projectId, 1L);
 
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
 
         assertThat(project.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
 
@@ -541,7 +538,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(projectId, 1L);
 
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
 
         assertThat(project.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
 
@@ -564,7 +561,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(projectId, 1L);
 
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
 
         assertThat(project.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
 
@@ -596,7 +593,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         ServiceResult<Boolean> result = getConditionFn.get();
 
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
 
     }
 
@@ -619,7 +616,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(projectId, 1L);
 
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
 
         assertThat(project.getOtherDocumentsApproved(), Matchers.equalTo(ApprovalType.UNSET));
 
@@ -652,7 +649,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         ServiceResult<Boolean> result = getConditionFn.get();
 
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
+        assertTrue(result.getSuccess());
 
     }
 
@@ -668,7 +665,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(123L, 1L);
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -704,7 +701,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         ServiceResult<Boolean> result = getConditionFn.get();
 
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
+        assertTrue(result.getSuccess());
 
     }
 

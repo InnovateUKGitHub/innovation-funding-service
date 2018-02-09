@@ -25,7 +25,7 @@ public class CompetitionSetupPopulator {
 
     public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         boolean editable = isSectionEditable(statuses, section, competitionResource);
 

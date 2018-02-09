@@ -197,7 +197,7 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         assertTrue(result.isSuccess());
 
-        AssessorCompetitionSummaryResource summaryResource = result.getSuccessObjectOrThrowException();
+        AssessorCompetitionSummaryResource summaryResource = result.getSuccess();
 
         assertEquals(competition.getId().longValue(), summaryResource.getCompetitionId());
         assertEquals(competition.getName(), summaryResource.getCompetitionName());

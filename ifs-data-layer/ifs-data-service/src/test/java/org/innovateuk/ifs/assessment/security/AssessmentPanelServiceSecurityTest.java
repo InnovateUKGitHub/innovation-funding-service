@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.panel.security.AssessmentReviewLookupStrategy;
-import org.innovateuk.ifs.assessment.panel.security.AssessmentReviewPermissionRules;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.security.AssessmentReviewLookupStrategy;
+import org.innovateuk.ifs.assessment.review.security.AssessmentReviewPermissionRules;
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;

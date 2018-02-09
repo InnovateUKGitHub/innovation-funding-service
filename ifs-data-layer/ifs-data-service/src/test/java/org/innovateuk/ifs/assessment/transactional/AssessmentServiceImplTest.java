@@ -6,8 +6,8 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -46,7 +46,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResou
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -82,7 +82,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
-        AssessmentResource found = assessmentService.findById(assessmentId).getSuccessObjectOrThrowException();
+        AssessmentResource found = assessmentService.findById(assessmentId).getSuccess();
 
         assertSame(expected, found);
 
@@ -107,7 +107,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
         AssessmentResource found = assessmentService.findAssignableById(assessmentId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertSame(expected, found);
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
@@ -151,7 +151,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
         AssessmentResource found = assessmentService.findRejectableById(assessmentId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertSame(expected, found);
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
@@ -192,7 +192,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
 
-        List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccessObject();
+        List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccess();
 
         assertEquals(expected, found);
         verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
@@ -209,7 +209,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(assessmentRepositoryMock.getTotalScore(assessmentId)).thenReturn(new AssessmentTotalScoreResource(55, 100));
 
-        assertEquals(expected, assessmentService.getTotalScore(assessmentId).getSuccessObject());
+        assertEquals(expected, assessmentService.getTotalScore(assessmentId).getSuccess());
 
         verify(assessmentRepositoryMock, only()).getTotalScore(assessmentId);
     }
@@ -290,7 +290,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         verify(assessmentRepositoryMock).findByTargetId(applicationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(expectedFeedbackResource, result.getSuccessObject());
+        assertEquals(expectedFeedbackResource, result.getSuccess());
     }
 
     @Test
@@ -615,7 +615,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObjectOrThrowException());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -684,7 +684,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObjectOrThrowException());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
 
@@ -764,7 +764,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObject());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -867,7 +867,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentPanelInvite> panelInvites = newAssessmentPanelInvite()
+        List<AssessmentReviewPanelInvite> panelInvites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -876,7 +876,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withUser(user)
                 .build(2);
 
-        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentPanelInvite::getId);
+        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentReviewPanelInvite::getId);
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
@@ -908,7 +908,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
 
-        AssessmentPanelKeyStatisticsResource result = serviceResult.getSuccessObject();
+        AssessmentPanelKeyStatisticsResource result = serviceResult.getSuccess();
         assertEquals(2, result.getApplicationsInPanel());
         assertEquals(1, result.getAssessorsAccepted());
         assertEquals(1, result.getAssessorsPending());
@@ -931,7 +931,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentPanelInvite> panelInvites = newAssessmentPanelInvite()
+        List<AssessmentReviewPanelInvite> panelInvites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -940,7 +940,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withUser(user)
                 .build(2);
 
-        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentPanelInvite::getId);
+        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentReviewPanelInvite::getId);
 
         when(assessmentPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(2);
         when(assessmentPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
@@ -962,7 +962,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
 
-        AssessmentPanelInviteStatisticsResource result = serviceResult.getSuccessObject();
+        AssessmentPanelInviteStatisticsResource result = serviceResult.getSuccess();
         assertEquals(2, result.getInvited());
         assertEquals(1, result.getAccepted());
         assertEquals(1, result.getDeclined());

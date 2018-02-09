@@ -95,9 +95,9 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
 
         ServiceResult<PublicContentResource> result = service.findByCompetitionId(COMPETITION_ID);
 
-        assertThat(result.getSuccessObjectOrThrowException(), equalTo(resource));
+        assertThat(result.getSuccess(), equalTo(resource));
         verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
-        assertTrue(isSortedByPriority(result.getSuccessObjectOrThrowException()));
+        assertTrue(isSortedByPriority(result.getSuccess()));
     }
 
 

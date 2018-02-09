@@ -164,7 +164,7 @@ public class MonitoringOfficerController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
         String projectManagerName = getProjectManagerName(projectResource);
 
         final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);

@@ -20,27 +20,27 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public AssessmentResource getById(Long id) {
-        return assessmentRestService.getById(id).getSuccessObjectOrThrowException();
+        return assessmentRestService.getById(id).getSuccess();
     }
 
     @Override
     public AssessmentResource getAssignableById(Long id) {
-        return assessmentRestService.getAssignableById(id).getSuccessObjectOrThrowException();
+        return assessmentRestService.getAssignableById(id).getSuccess();
     }
 
     @Override
     public AssessmentResource getRejectableById(Long id) {
-        return assessmentRestService.getRejectableById(id).getSuccessObjectOrThrowException();
+        return assessmentRestService.getRejectableById(id).getSuccess();
     }
 
     @Override
     public List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId) {
-        return assessmentRestService.getByUserAndCompetition(userId, competitionId).getSuccessObjectOrThrowException();
+        return assessmentRestService.getByUserAndCompetition(userId, competitionId).getSuccess();
     }
 
     @Override
     public AssessmentTotalScoreResource getTotalScore(Long assessmentId) {
-        return assessmentRestService.getTotalScore(assessmentId).getSuccessObjectOrThrowException();
+        return assessmentRestService.getTotalScore(assessmentId).getSuccess();
     }
 
     @Override
