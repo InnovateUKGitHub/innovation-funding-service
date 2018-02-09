@@ -180,7 +180,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         flushAndClearSession();
 
-        controller.notifyAssessors(competition.getId()).getSuccessObjectOrThrowException();
+        controller.notifyAssessors(competition.getId()).getSuccess();
 
         assertTrue(assessmentReviewRepository.existsByTargetCompetitionIdAndActivityStateState(competition.getId(), State.PENDING));
     }
@@ -235,7 +235,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         flushAndClearSession();
 
-        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccessObjectOrThrowException());
+        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccess());
     }
 
     @Test
@@ -305,7 +305,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         flushAndClearSession();
 
-        assertFalse(controller.isPendingReviewNotifications(competition.getId()).getSuccessObjectOrThrowException());
+        assertFalse(controller.isPendingReviewNotifications(competition.getId()).getSuccess());
     }
 
     @Test
@@ -375,12 +375,12 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         flushAndClearSession();
 
-        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccessObjectOrThrowException());
+        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccess());
     }
 
     @Test
     public void isPendingReviewNotifications_noneExist() {
-        assertFalse(controller.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
+        assertFalse(controller.isPendingReviewNotifications(competitionId).getSuccess());
     }
 
     @Test
@@ -449,7 +449,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         flushAndClearSession();
 
-        List<AssessmentReviewResource> reviews = controller.getAssessmentReviews(assessor.getId(), competition.getId()).getSuccessObjectOrThrowException();
+        List<AssessmentReviewResource> reviews = controller.getAssessmentReviews(assessor.getId(), competition.getId()).getSuccess();
 
         // Returned reviews ordered activity state id
         assertEquals(assessmentReviews.get(0).getId(), reviews.get(1).getId());
@@ -491,7 +491,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         flushAndClearSession();
 
-        controller.acceptInvitation(assessmentReview.getId()).getSuccessObjectOrThrowException();
+        controller.acceptInvitation(assessmentReview.getId()).getSuccess();
 
         assertEquals(AssessmentReviewState.ACCEPTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
     }
@@ -531,7 +531,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         flushAndClearSession();
 
-        controller.acceptInvitation(assessmentReview.getId()).getSuccessObjectOrThrowException();
+        controller.acceptInvitation(assessmentReview.getId()).getSuccess();
 
         assertEquals(AssessmentReviewState.ACCEPTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
     }
@@ -575,7 +575,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withReason("comment")
                 .build();
 
-        controller.rejectInvitation(assessmentReview.getId(), rejectOutcomeResource).getSuccessObjectOrThrowException();
+        controller.rejectInvitation(assessmentReview.getId(), rejectOutcomeResource).getSuccess();
 
         assertEquals(AssessmentReviewState.REJECTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
     }

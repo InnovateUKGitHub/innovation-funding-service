@@ -289,7 +289,7 @@ public class FinanceChecksNotesController {
         ServiceResult<List<NoteResource>> notesResult = financeCheckService.loadNotes(projectFinance.getId());
 
         if (notesResult.isSuccess()) {
-            return threadViewModelPopulator.threadViewModelListFromNotes(projectId, organisationId, notesResult.getSuccessObject());
+            return threadViewModelPopulator.threadViewModelListFromNotes(projectId, organisationId, notesResult.getSuccess());
         } else {
             return emptyList();
         }

@@ -46,7 +46,7 @@ public class AssessmentSummaryModelPopulator {
     }
 
     private List<AssessmentSummaryQuestionViewModel> getQuestionsViewModel(long assessmentId) {
-        final AssessmentDetailsResource assessmentDetailsResource = assessorFormInputResponseRestService.getAssessmentDetails(assessmentId).getSuccessObjectOrThrowException();
+        final AssessmentDetailsResource assessmentDetailsResource = assessorFormInputResponseRestService.getAssessmentDetails(assessmentId).getSuccess();
 
         return simpleMap(assessmentDetailsResource.getQuestions(), question -> {
             final List<FormInputResource> formInputsForQuestion = ofNullable(assessmentDetailsResource.getFormInputsForQuestion(question.getId())).orElse(emptyList());

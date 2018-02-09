@@ -75,7 +75,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
     protected String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
         CompetitionResource competition = competitionRestService.getCompetitionById(publicContent.getCompetitionId())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())) {
             return "redirect:/competition/setup/" + competition.getId();
@@ -92,7 +92,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
 
     protected String markAsComplete(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();

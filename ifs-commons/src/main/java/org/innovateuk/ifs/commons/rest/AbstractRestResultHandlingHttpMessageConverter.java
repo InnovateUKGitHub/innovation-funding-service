@@ -49,8 +49,8 @@ public class AbstractRestResultHandlingHttpMessageConverter extends MappingJacks
             super.writeInternal(new RestErrorResponse(errors), type, outputMessage);
         } else {
 
-            if (restResult.getSuccessObject() != null) {
-                super.writeInternal(restResult.getSuccessObject(), type, outputMessage);
+            if (restResult.getSuccess() != null) {
+                super.writeInternal(restResult.getSuccess(), type, outputMessage);
             }
         }
     }

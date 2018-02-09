@@ -19,11 +19,11 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId){
-        return statusRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccessObjectOrThrowException();
+        return statusRestService.getProjectTeamStatus(projectId, filterByUserId).getSuccess();
     }
 
     @Override
     public ProjectStatusResource getProjectStatus(Long projectId) {
-        return statusRestService.getProjectStatus(projectId).getSuccessObjectOrThrowException();
+        return statusRestService.getProjectStatus(projectId).getSuccess();
     }
 }

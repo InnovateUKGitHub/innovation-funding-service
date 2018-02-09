@@ -34,7 +34,7 @@ public class IneligibleApplicationsModelPopulator {
                                                          UserResource user) {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
                 .getIneligibleApplications(competitionId,
@@ -43,7 +43,7 @@ public class IneligibleApplicationsModelPopulator {
                         20,
                         Optional.of(filterForm.getFilterSearch()),
                         filterForm.getFilterInform())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         return new IneligibleApplicationsViewModel(
                 competitionSummary.getCompetitionId(),

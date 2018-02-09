@@ -47,12 +47,12 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
                                                                      String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         CompetitionInviteAssessorsOverviewViewModel model = super.populateModel(competition);
 
         List<InnovationAreaResource> innovationAreasOptions = categoryRestService.getInnovationAreas()
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<ParticipantStatusResource> statuses = status.map(Collections::singletonList)
                 .orElseGet(() -> asList(REJECTED, PENDING));
@@ -64,7 +64,7 @@ public class CompetitionInviteAssessorsOverviewModelPopulator extends Competitio
                 statuses,
                 compliant
         )
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 

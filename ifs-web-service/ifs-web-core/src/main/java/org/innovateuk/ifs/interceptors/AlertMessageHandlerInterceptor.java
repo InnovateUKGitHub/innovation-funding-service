@@ -39,7 +39,7 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
     private void addAlertMessages(ModelAndView modelAndView) {
         List<AlertResource> alerts;
         try {
-            alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccessObjectOrThrowException());
+            alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertRestService.findAllVisible().getSuccess());
         } catch (ExecutionException e) {
             alerts = emptyList();
         }

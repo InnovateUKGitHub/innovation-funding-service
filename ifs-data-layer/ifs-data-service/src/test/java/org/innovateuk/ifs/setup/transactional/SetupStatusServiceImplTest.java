@@ -57,7 +57,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
         ServiceResult<List<SetupStatusResource>> serviceResult = service.findByTargetClassNameAndTargetId(targetClassName, targetId);
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(setupStatusResource, serviceResult.getSuccessObject());
+        assertEquals(setupStatusResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
         ServiceResult<List<SetupStatusResource>> serviceResult = service.findByClassNameAndParentId(className, parentId);
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(setupStatusResources, serviceResult.getSuccessObject());
+        assertEquals(setupStatusResources, serviceResult.getSuccess());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
         ServiceResult<List<SetupStatusResource>> serviceResult = service.findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId);
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(setupStatusResources, serviceResult.getSuccessObject());
+        assertEquals(setupStatusResources, serviceResult.getSuccess());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
         ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatus(className, classPk);
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(setupStatusResource, serviceResult.getSuccessObject());
+        assertEquals(setupStatusResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -183,7 +183,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
         ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatusAndTarget(className, classPk, targetClassName, targetId);
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(setupStatusResource, serviceResult.getSuccessObject());
+        assertEquals(setupStatusResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -223,6 +223,6 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
         ServiceResult<SetupStatusResource> serviceResult = service.saveSetupStatus(setupStatusResource);
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(setupStatusResource, serviceResult.getSuccessObject());
+        assertEquals(setupStatusResource, serviceResult.getSuccess());
     }
 }

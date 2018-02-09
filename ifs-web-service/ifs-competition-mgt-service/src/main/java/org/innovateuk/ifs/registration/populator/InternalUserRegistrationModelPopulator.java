@@ -18,6 +18,6 @@ public class InternalUserRegistrationModelPopulator {
         return inviteUserRestService.getInvite(inviteHash).andOnSuccessReturn(
                 roleInviteResource -> new InternalUserRegistrationViewModel(roleInviteResource.getName(),
                         roleInviteResource.getRoleDisplayName(), roleInviteResource.getEmail())
-        ).getSuccessObjectOrThrowException();
+        ).getSuccess();
     }
 }

@@ -39,7 +39,7 @@ public class ManageFundingApplicationsModelPopulator {
         ApplicationSummaryPageResource results = applicationSummaryRestService.getWithFundingDecisionApplications(
                 competitionId, queryForm.getSortField(), queryForm.getPage(),
                 DEFAULT_PAGE_SIZE, Optional.of(queryForm.getStringFilter()),
-                queryForm.getSendFilter(), queryForm.getFundingFilter()).getSuccessObjectOrThrowException();
+                queryForm.getSendFilter(), queryForm.getFundingFilter()).getSuccess();
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);

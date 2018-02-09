@@ -39,7 +39,7 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 		ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
 
 		if(objectId.isPresent()) {
-			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccessObjectOrThrowException();
+			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccess();
 			competitionSetupForm.setQuestion(questionResource);
 
 			if(sectionContainsMoreThanOneQuestion(objectId.get())) {
