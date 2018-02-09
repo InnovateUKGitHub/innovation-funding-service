@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.model;
 
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
