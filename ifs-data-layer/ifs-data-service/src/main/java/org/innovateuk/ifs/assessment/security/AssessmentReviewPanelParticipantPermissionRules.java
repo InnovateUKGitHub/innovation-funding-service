@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PermissionRules
-public class AssessmentPanelParticipantPermissionRules extends BasePermissionRules {
+public class AssessmentReviewPanelParticipantPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ACCEPT", description = "only the same user can accept a panel invitation")
     public boolean userCanAcceptAssessmentPanelInvite(AssessmentReviewPanelParticipantResource assessmentPanelParticipant, UserResource user) {
@@ -32,10 +32,8 @@ public class AssessmentPanelParticipantPermissionRules extends BasePermissionRul
     }
 
     private static boolean isSameUser(AssessmentReviewPanelParticipantResource assessmentPanelParticipant, UserResource user) {
-        if (isSameParticipant(assessmentPanelParticipant, user)) {
-            return true;
-        } else return assessmentPanelParticipant.getUserId() == null &&
-                assessmentPanelParticipant.getInvite() != null &&
-                user.getEmail().equals(assessmentPanelParticipant.getInvite().getEmail());
+        return isSameParticipant(assessmentPanelParticipant, user) || assessmentPanelParticipant.getUserId() == null
+                && assessmentPanelParticipant.getInvite() != null
+                && user.getEmail().equals(assessmentPanelParticipant.getInvite().getEmail());
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PermissionEntityLookupStrategies
-public class AssessmentPanelParticipantLookupStrategy {
+public class AssessmentReviewPanelParticipantLookupStrategy {
 
     @Autowired
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;

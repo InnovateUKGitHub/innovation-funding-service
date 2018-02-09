@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.transactional.AssessmentReviewPanelInviteService;
+import org.innovateuk.ifs.assessment.transactional.AssessmentInterviewPanelInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -18,7 +18,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
+import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -26,28 +26,28 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
 
-public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentReviewPanelInviteService> {
+public class AssessmentInterviewPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentInterviewPanelInviteService> {
 
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
-    private AssessmentReviewPanelInvitePermissionRules assessmentReviewPanelInvitePermissionRules;
+    private AssessmentInterviewPanelInvitePermissionRules assessmentInterviewPanelInvitePermissionRules;
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
     private UserLookupStrategies userLookupStrategies;
-    private AssessmentReviewPanelParticipantPermissionRules assessmentReviewPanelParticipantPermissionRules;
-    private AssessmentReviewPanelParticipantLookupStrategy assessmentReviewPanelParticipantLookupStrategy;
+    private AssessmentInterviewPanelParticipantPermissionRules assessmentInterviewPanelParticipantPermissionRules;
+    private AssessmentInterviewPanelParticipantLookupStrategy assessmentInterviewPanelParticipantLookupStrategy;
 
     @Override
-    protected Class<? extends AssessmentReviewPanelInviteService> getClassUnderTest() {
-        return TestAssessmentReviewPanelInviteService.class;
+    protected Class<? extends AssessmentInterviewPanelInviteService> getClassUnderTest() {
+        return TestAssessmentInterviewPanelInviteService.class;
     }
 
     @Before
     public void setUp() throws Exception {
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
         competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
-        assessmentReviewPanelInvitePermissionRules = getMockPermissionRulesBean(AssessmentReviewPanelInvitePermissionRules.class);
+        assessmentInterviewPanelInvitePermissionRules = getMockPermissionRulesBean(AssessmentInterviewPanelInvitePermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
-        assessmentReviewPanelParticipantPermissionRules = getMockPermissionRulesBean(AssessmentReviewPanelParticipantPermissionRules.class);
-        assessmentReviewPanelParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentReviewPanelParticipantLookupStrategy.class);
+        assessmentInterviewPanelParticipantPermissionRules = getMockPermissionRulesBean(AssessmentInterviewPanelParticipantPermissionRules.class);
+        assessmentInterviewPanelParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentInterviewPanelParticipantLookupStrategy.class);
     }
 
     @Test
@@ -130,93 +130,8 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         assertAccessDenied(
                 () -> classUnderTest.getAllInvitesByUser(1L),
                 () -> {
-                    verify(assessmentReviewPanelInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
-                    verifyNoMoreInteractions(assessmentReviewPanelInvitePermissionRules);
-                }
-        );
-    }
-
-    @Test
-    public void acceptInvite() {
-        UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
-                ).build();
-        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
-
-        when(assessmentReviewPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
-                .thenReturn(assessmentReviewPanelParticipantResource);
-        when(assessmentReviewPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
-                .thenReturn(true);
-
-        setLoggedInUser(assessorUserResource);
-
-        classUnderTest.acceptInvite("hash");
-
-        verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-        verify(assessmentReviewPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
-    }
-
-    @Test
-    public void acceptInvite_notLoggedIn() {
-        setLoggedInUser(null);
-        assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash"),
-                () -> {
-                    verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-                    verifyZeroInteractions(assessmentReviewPanelParticipantPermissionRules);
-                }
-        );
-    }
-
-    @Test
-    public void acceptInvite_notSameUser() {
-        UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
-                ).build();
-        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
-        when(assessmentReviewPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
-                .thenReturn(assessmentReviewPanelParticipantResource);
-        when(assessmentReviewPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
-                .thenReturn(false);
-
-        setLoggedInUser(assessorUserResource);
-
-        assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash"),
-                () -> {
-                    verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-                    verify(assessmentReviewPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
-                }
-        );
-    }
-
-    @Test
-    public void acceptInvite_hashNotExists() {
-        UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
-                ).build();
-
-        when(assessmentReviewPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash not exists")).thenReturn(null);
-
-        setLoggedInUser(assessorUserResource);
-
-        assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash not exists"),
-                () -> {
-                    verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash not exists");
-                    verifyZeroInteractions(assessmentReviewPanelParticipantPermissionRules);
+                    verify(assessmentInterviewPanelInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(assessmentInterviewPanelInvitePermissionRules);
                 }
         );
     }
@@ -231,7 +146,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
-    public static class TestAssessmentReviewPanelInviteService implements AssessmentReviewPanelInviteService {
+    public static class TestAssessmentInterviewPanelInviteService implements AssessmentInterviewPanelInviteService {
 
         @Override
         public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
@@ -286,22 +201,12 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         }
 
         @Override
-        public ServiceResult<List<AssessmentReviewPanelParticipantResource>> getAllInvitesByUser(long userId) {
-            return serviceSuccess(singletonList(newAssessmentReviewPanelParticipantResource().withUser(1L).build()));
+        public ServiceResult<List<AssessmentInterviewPanelParticipantResource>> getAllInvitesByUser(long userId) {
+            return serviceSuccess(singletonList(newAssessmentInterviewPanelParticipantResource().withUser(1L).build()));
         }
 
         @Override
-        public ServiceResult<AssessmentReviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<AssessmentInterviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash) {
             return null;
         }
 
