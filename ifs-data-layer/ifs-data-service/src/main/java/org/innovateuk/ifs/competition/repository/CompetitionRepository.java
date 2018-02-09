@@ -143,6 +143,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                     " where c.id = :competitionId " +
                     " and a.competition = c.id " +
                     " and p.application_id = a.id " +
+
+                    // where all Viability is either Approved or Not Required
                     " and not exists (select v.id from process v " +
                                     " where v.process_type = 'ViabilityProcess' " +
                                     " and v.target_id in (select po.id from partner_organisation po " +
@@ -150,6 +152,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                                                         " ) " +
                                     " and v.event = 'project-created' " +
                                     " ) " +
+
+                    // and where all Eligibility is either Approved or Not Required
                     " and not exists (select e.id from process e " +
                                     " where e.process_type = 'EligibilityProcess' " +
                                     " and e.target_id in (select po.id from partner_organisation po " +
@@ -157,6 +161,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                                                         " ) " +
                                     " and e.event = 'project-created' " +
                                     " ) " +
+
+                    // and where Spend Profile is not yet generated
                     " and not exists (select sp.id from spend_profile sp " +
                                     " where sp.project_id = p.id) " +
                     " and p.id not in " +
@@ -164,6 +170,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                         " select result.project_id " +
                         " from " +
                         " ( " +
+                                // This is selection of all organisations which are seeking funding. In other words,
+                                // whose grant claim percentage is > 0
                                 " select po.* " +
                                 " from project p, partner_organisation po, application_finance af, finance_row fr " +
                                 " where po.project_id = p.id " +
@@ -174,8 +182,12 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                                 " and fr.name = 'grant-claim' " +
                                 " and fr.quantity > 0 " +
 
+                                // and this has to be combined with
                                 " union " +
 
+                                // This is a selection of all organisations which are Research Organisations.
+                                // Research Organisations always seek funding and their 'seeking funding' nature is not
+                                // determined by the grant claim percentage used in the previous query.
                                 " select po.* " +
                                 " from project p, partner_organisation po, organisation o, organisation_type ot " +
                                 " where po.project_id = p.id " +
@@ -183,6 +195,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
                                 " and ot.id = o.organisation_type_id " +
                                 " and ot.name = 'Research' " +
                         " ) as result " +
+
+                        // For the above selection of organisations, bank details are either expected to be manually approved
+                        // or automatically approved via Experian
                         " where not exists (select bd.id " +
                                             " from bank_details bd " +
                                             " where bd.project_id = result.project_id " +

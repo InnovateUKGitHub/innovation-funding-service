@@ -26,7 +26,7 @@ public interface AssessmentPanelInviteRestService {
 
     RestResult<List<Long>> getAvailableAssessorIds(long competitionId);
 
-    RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId);
+    RestResult<List<AssessmentReviewPanelParticipantResource>> getAllInvitesByUser(long userId);
 
     RestResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId);
 
@@ -34,7 +34,7 @@ public interface AssessmentPanelInviteRestService {
                                                                          int page,
                                                                          List<ParticipantStatusResource> participantStatus);
 
-    RestResult<AssessmentPanelInviteResource> openInvite(String inviteHash);
+    RestResult<AssessmentReviewPanelInviteResource> openInvite(String inviteHash);
 
     RestResult<Void> acceptInvite(String inviteHash);
 
