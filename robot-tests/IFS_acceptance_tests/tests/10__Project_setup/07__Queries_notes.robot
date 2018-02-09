@@ -156,16 +156,20 @@ Query Section dropdown filters the queries displayed
     # that means that the eligibility queries are not visible or any other.
     # Tried to catch with .query.eligibility-section[aria=hidden="true"], but without success
 
-Finance contact receives an email when new query is posted
-    [Documentation]    INFUND-4841
-    [Tags]    Email
-    Then the user reads his email    ${successful_applicant_credentials["email"]}    Query regarding your finances    We have raised a query around your project finances.
+Finance contact receives an email when new query is posted and can see a pending query
+    [Documentation]  INFUND-4841 IFS-2746
+    [Tags]  Email
+    [Setup]  log in as a different user   &{successful_applicant_credentials}
+    Given the user reads his email        ${successful_applicant_credentials["email"]}  Query regarding your finances  We have raised a query around your project finances.
+    When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
+    Then the user should see the element  jQuery=.warning-alert:contains("You have a pending finance query.")
 
 Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
     [Tags]
-    [Setup]  the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Given the user clicks the button/link     jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("View")
+    [Setup]  log in as a different user       &{internal_finance_credentials}
+    Given the user navigates to the page      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user clicks the button/link      jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("View")
     When the user clicks the button/link      css=a[id="post-new-query"]
     And the user enters text to a text field  id=queryTitle  a viability query's title
     And the user selects the option from the drop-down menu  VIABILITY    id=section
