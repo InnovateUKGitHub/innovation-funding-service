@@ -1698,23 +1698,39 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
                 .withCompetitionId(competition.getId())
                 .build(2);
 
+        List<CompetitionAssessmentInvite> pagedResult = newCompetitionAssessmentInvite()
+                .withId(1L,2L)
+                .withCompetition(competition, competition)
+                .withEmail(testEmail1,testEmail2)
+                .withHash("1dc914e2-d076-4b15-9fa6-99ee5b711613", "bddd15e6-9e9d-42e8-88b0-42f3abcbb26e")
+                .withName(testName1,testName2)
+                .withStatus(CREATED, CREATED)
+                .withInnovationArea(innovationArea, innovationArea)
+                .build(2);
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        Page<CompetitionAssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
+
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(competitionAssessmentInviteRepositoryMock.getByEmailAndCompetitionId(isA(String.class), isA(Long.class))).thenReturn(null);
         when(innovationAreaRepositoryMock.findOne(innovationArea.getId())).thenReturn(innovationArea);
         when(competitionAssessmentInviteRepositoryMock.save(isA(CompetitionAssessmentInvite.class))).thenReturn(new CompetitionAssessmentInvite());
+        when(competitionAssessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable)).thenReturn(pageResult);
+        when(userRepositoryMock.findByEmail(testEmail1)).thenReturn(null);
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
-        assertTrue(serviceResult.isSuccess());
+        assertFalse(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepositoryMock, competitionAssessmentInviteRepositoryMock, innovationAreaRepositoryMock);
+        InOrder inOrder = inOrder(competitionRepositoryMock, competitionAssessmentInviteRepositoryMock, userRepositoryMock, innovationAreaRepositoryMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionAssessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        inOrder.verify(userRepositoryMock).findByEmail(testEmail1);
         inOrder.verify(competitionAssessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail1, competition.getId());
-        inOrder.verify(innovationAreaRepositoryMock).findOne(innovationArea.getId());
-        inOrder.verify(competitionAssessmentInviteRepositoryMock).save(createInviteExpectations(testName1, testEmail1, CREATED, competition, innovationArea));
+        inOrder.verify(competitionAssessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        inOrder.verify(userRepositoryMock).findByEmail(testEmail2);
         inOrder.verify(competitionAssessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail2, competition.getId());
-        inOrder.verify(innovationAreaRepositoryMock).findOne(innovationArea.getId());
-        inOrder.verify(competitionAssessmentInviteRepositoryMock).save(createInviteExpectations(testName2, testEmail2, CREATED, competition, innovationArea));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1738,26 +1754,43 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
                 .withCompetitionId(competition.getId())
                 .build(2);
 
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        List<CompetitionAssessmentInvite> pagedResult = newCompetitionAssessmentInvite()
+                .withId(1L,2L)
+                .withCompetition(competition, competition)
+                .withEmail(testEmail1,testEmail2)
+                .withHash("1dc914e2-d076-4b15-9fa6-99ee5b711613", "bddd15e6-9e9d-42e8-88b0-42f3abcbb26e")
+                .withName(testName1,testName2)
+                .withStatus(CREATED, CREATED)
+                .withInnovationArea(innovationArea, innovationArea)
+                .build(2);
+
+        Page<CompetitionAssessmentInvite> pageResult = new PageImpl<>(pagedResult, pageable, 10);
+
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(competitionAssessmentInviteRepositoryMock.getByEmailAndCompetitionId(testEmail1, competition.getId()))
                 .thenReturn(new CompetitionAssessmentInvite());
         when(competitionAssessmentInviteRepositoryMock.getByEmailAndCompetitionId(testEmail2, competition.getId())).thenReturn(null);
-
         when(innovationAreaRepositoryMock.findOne(innovationArea.getId())).thenReturn(innovationArea);
         when(competitionAssessmentInviteRepositoryMock.save(isA(CompetitionAssessmentInvite.class))).thenReturn(new CompetitionAssessmentInvite());
+        when(userRepositoryMock.findByEmail(testEmail1)).thenReturn(null);
+        when(competitionAssessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable)).thenReturn(pageResult);
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
         assertFalse(serviceResult.isSuccess());
-        assertEquals(1, serviceResult.getErrors().size());
+        assertEquals(2, serviceResult.getErrors().size());
         assertEquals("test1@test.com", serviceResult.getErrors().get(0).getFieldRejectedValue());
 
-        InOrder inOrder = inOrder(competitionRepositoryMock, competitionAssessmentInviteRepositoryMock, innovationAreaRepositoryMock);
+        InOrder inOrder = inOrder(competitionRepositoryMock, competitionAssessmentInviteRepositoryMock, userRepositoryMock, innovationAreaRepositoryMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(competitionAssessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        inOrder.verify(userRepositoryMock).findByEmail(testEmail1);
         inOrder.verify(competitionAssessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail1, competition.getId());
+        inOrder.verify(competitionAssessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        inOrder.verify(userRepositoryMock).findByEmail(testEmail2);
         inOrder.verify(competitionAssessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail2, competition.getId());
-        inOrder.verify(innovationAreaRepositoryMock).findOne(innovationArea.getId());
-        inOrder.verify(competitionAssessmentInviteRepositoryMock).save(createInviteExpectations(testName2, testEmail2, CREATED, competition, innovationArea));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1835,7 +1868,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
         when(innovationAreaRepositoryMock.findOne(categoryId)).thenReturn(null);
         when(competitionAssessmentInviteRepositoryMock.save(isA(CompetitionAssessmentInvite.class))).thenReturn(new CompetitionAssessmentInvite());
         when(competitionAssessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable)).thenReturn(pageResult);
-        when(userRepositoryMock.findByEmail(testEmail1)).thenReturn(null);
+        when(userRepositoryMock.findByEmail(isA(String.class))).thenReturn(null);
 
         ServiceResult<Void> serviceResult = service.inviteNewUsers(newUserInvites, competition.getId());
 
@@ -1843,14 +1876,12 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
 
         InOrder inOrder = inOrder(competitionRepositoryMock, userRepositoryMock, competitionAssessmentInviteRepositoryMock, innovationAreaRepositoryMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
-        inOrder.verify(competitionAssessmentInviteRepositoryMock, times(1)).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        inOrder.verify(competitionAssessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
         inOrder.verify(userRepositoryMock).findByEmail(testEmail1);
         inOrder.verify(competitionAssessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail1, competition.getId());
-        inOrder.verify(innovationAreaRepositoryMock).findOne(categoryId);
-        inOrder.verify(competitionAssessmentInviteRepositoryMock, times(1)).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
-        inOrder.verify(userRepositoryMock).findByEmail(testEmail1);
+        inOrder.verify(competitionAssessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        inOrder.verify(userRepositoryMock).findByEmail(testEmail2);
         inOrder.verify(competitionAssessmentInviteRepositoryMock).getByEmailAndCompetitionId(testEmail2, competition.getId());
-        inOrder.verify(innovationAreaRepositoryMock).findOne(categoryId);
         inOrder.verifyNoMoreInteractions();
     }
 
