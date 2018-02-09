@@ -119,7 +119,11 @@ sonarqube {
 
 dockerCompose {
 
-    useComposeFiles = ['docker-compose.yml', 'docker-compose-dev.yml']
+    useComposeFiles = ['docker-compose.yml']
+
+    if (project.hasProperty('ifs.full-deployment.enabled') ? project.property('ifs.full-deployment.enabled').toBoolean() : true) {
+        useComposeFiles.add('docker-compose-full.yml')
+    }
 
     if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
         useComposeFiles.add('docker-compose-zipkin.yml')

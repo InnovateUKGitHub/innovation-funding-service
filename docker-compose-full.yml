@@ -1,19 +1,14 @@
 version: '3'
 services:
 
-  ldap:
-    links:
-      - mysql:ifs-database
-
-  registration-svc:
-    hostname: registration-svc
-    ports:
-      - "8088:8080"
-      - "9008:8000"
-    environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
-
   application-svc:
+    image: innovateuk/application-service
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
     hostname: application-svc
     ports:
       - "8089:8080"
@@ -21,7 +16,15 @@ services:
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
+
   assessment-svc:
+    image: innovateuk/assessment-service
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/assessment/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
     hostname: assessment-svc
     ports:
       - "8082:8080"
@@ -31,6 +34,13 @@ services:
 
 
   competition-mgt-svc:
+    image: innovateuk/competition-mgt-service
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/management/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
     hostname: competition-mgt-svc
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
@@ -39,6 +49,13 @@ services:
       - "9003:8000"
 
   project-setup-mgt-svc:
+    image: innovateuk/project-setup-mgt-service
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup-management/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
     hostname: project-setup-mgt-svc
     ports:
       - "8084:8080"
@@ -46,14 +63,31 @@ services:
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
+
   project-setup-svc:
+    image: innovateuk/project-setup-service
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
     hostname: project-setup-svc
     ports:
       - "8085:8080"
       - "9005:8000"
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+
+
   front-door-svc:
+    image: innovateuk/front-door-service
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      - ifs
     hostname: front-door-svc
     ports:
       - "8087:8080"
@@ -61,21 +95,16 @@ services:
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
-  data-service:
-    hostname: data-service
-    links:
-      - mail
-      - mysql:ifs-database
-      - sil-stub
-    volumes:
-      - ./robot-tests/upload_files/:/tmp/ifs-local
-    ports:
-      - "8086:8080"
-      - "9006:8000"
-    environment:
-      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
-
   finance-data-service:
+    image: innovateuk/finance-data-service
+    healthcheck:
+      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+      interval: 15s
+      timeout: 8s
+    networks:
+      ifs:
+        aliases:
+          - ifs-finance-data-service
     hostname: finance-data-service
     links:
       - mysql:ifs-database
@@ -85,31 +114,3 @@ services:
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
-  sil-stub:
-      hostname: sil-stub
-      links:
-        - mail
-      ports:
-        - "8091:8080"
-      environment:
-        - JAVA_OPTS=-Xmx300m
-
-  mail:
-    image: innovateuk/mail-sink
-    ports:
-      - "9876:8143"
-      - "8765:8080"
-    networks:
-      - ifs
-
-  mysql:
-    image: innovateuk/ifs-mysql:5.6.29
-    ports:
-      - "3306:3306"
-    command: [--character-set-server=utf8, --collation-server=utf8_bin]
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: ifs
-    restart: on-failure
-    networks:
-      - ifs
