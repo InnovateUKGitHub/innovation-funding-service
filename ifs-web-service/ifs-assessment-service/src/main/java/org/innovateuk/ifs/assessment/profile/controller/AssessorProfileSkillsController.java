@@ -46,7 +46,7 @@ public class AssessorProfileSkillsController {
     @GetMapping
     public String getReadonlySkills(Model model,
                                     UserResource loggedInUser) {
-        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccess();
         model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
         return "profile/skills";
     }
@@ -81,7 +81,7 @@ public class AssessorProfileSkillsController {
 
     private String doViewEditSkills(Model model, UserResource loggedInUser,
                                     AssessorProfileSkillsForm form, BindingResult bindingResult) {
-        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccess();
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(profileSkillsResource, form);
         }

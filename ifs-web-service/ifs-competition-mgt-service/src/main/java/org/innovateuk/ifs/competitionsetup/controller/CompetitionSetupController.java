@@ -115,7 +115,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        competitionSetupRestService.markSectionIncomplete(competitionId, section).getSuccessObjectOrThrowException();
+        competitionSetupRestService.markSectionIncomplete(competitionId, section).getSuccess();
         if (!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }
@@ -249,7 +249,7 @@ public class CompetitionSetupController {
         if (request.getParameterMap().containsKey("generate-code")) {
             if (competition.getStartDate() != null) {
                 String competitionCode = competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
                 competitionSetupForm.setCompetitionCode(competitionCode);
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
@@ -412,7 +412,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getStartDate() != null) {
             return this.createJsonObjectNode(true, competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
-                    .getSuccessObjectOrThrowException());
+                    .getSuccess());
         } else {
             return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
         }

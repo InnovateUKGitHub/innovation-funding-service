@@ -30,12 +30,12 @@ public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssesso
     public PanelInviteAssessorsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         PanelInviteAssessorsInviteViewModel model = super.populateModel(competition);
 
         AssessorCreatedInvitePageResource pageResource = assessmentPanelInviteRestService.getCreatedInvites(competition.getId(), page)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 

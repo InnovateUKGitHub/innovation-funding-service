@@ -4,10 +4,8 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -30,14 +28,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @Component
 public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
-    @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
-
-    @Autowired
-    private TestService testService;
-
-    @Autowired
-    private UserService userService;
+    private List<CsvUtils.AssessorResponseLine> assessorResponseLines;
+    private List<CsvUtils.AssessorUserLine> assessorUserLines;
+    private List<CsvUtils.InviteLine> inviteLines;
 
     @Autowired
     private UserRepository userRepository;
@@ -46,12 +39,6 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
     private GenericApplicationContext applicationContext;
 
     private List<CsvUtils.AssessmentLine> assessmentLines;
-
-    private static List<CsvUtils.AssessorResponseLine> assessorResponseLines;
-
-    private static List<CsvUtils.AssessorUserLine> assessorUserLines;
-
-    private static List<CsvUtils.InviteLine> inviteLines;
 
     private AssessmentDataBuilder assessmentBuilder;
     private AssessorDataBuilder assessorUserBuilder;

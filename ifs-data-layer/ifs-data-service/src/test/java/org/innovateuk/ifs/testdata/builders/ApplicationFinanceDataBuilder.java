@@ -69,7 +69,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
             ApplicationFinanceResource applicationFinance =
                     financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
-                            getSuccessObjectOrThrowException();
+                            getSuccess();
 
             IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
@@ -85,7 +85,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
             ApplicationFinanceResource applicationFinance =
                     financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
-                            getSuccessObjectOrThrowException();
+                            getSuccess();
 
             AcademicCostDataBuilder baseFinanceBuilder = newAcademicCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
@@ -100,7 +100,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
             if (markAsComplete) {
                 List<QuestionResource> questions = questionService
                         .findByCompetition(data.getCompetition().getId())
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
 
                 List<QuestionResource> questionsToComplete = simpleFilter(questions, QuestionResource::hasMultipleStatuses);
 
@@ -112,9 +112,9 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     boolean lastElement = i == questions.size() - 1;
 
                     if (lastElement && updateApplicationCompleteStatus) {
-                        questionService.markAsComplete(questionKey, processRoleId).getSuccessObjectOrThrowException();
+                        questionService.markAsComplete(questionKey, processRoleId).getSuccess();
                     } else {
-                        questionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccessObjectOrThrowException();
+                        questionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccess();
                     }
                 });
             }

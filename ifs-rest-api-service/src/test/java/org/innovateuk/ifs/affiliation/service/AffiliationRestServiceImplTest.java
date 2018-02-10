@@ -31,7 +31,7 @@ public class AffiliationRestServiceImplTest extends BaseRestServiceUnitTest<Affi
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getUserAffiliations", affiliationUrl, userId), affiliationResourceListType(), expected, OK);
 
-        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess();
         assertEquals(expected, response);
     }
 

@@ -467,7 +467,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     }
                     return readyForSubmit;
                 })
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     @Override
@@ -555,7 +555,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
 
         return notificationSender.sendEmailWithContent(notification, recipient, content);
     }
@@ -579,12 +579,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
                         .filter(Question::getMarkAsCompletedEnabled)
-                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccessObject()).count())
+                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccess()).count())
                 .sum();
 
         Long countSingleStatusQuestionsCompleted = questions.stream()
                 .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccessObject()).count();
+                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess()).count();
 
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 

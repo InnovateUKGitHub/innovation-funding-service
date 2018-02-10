@@ -48,7 +48,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             CompetitionResource newCompetition = competitionSetupService.
                     create().
-                    getSuccessObjectOrThrowException();
+                    getSuccess();
 
             updateCompetitionInCompetitionData(data, newCompetition.getId());
         });
@@ -60,7 +60,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             CompetitionResource newCompetition = competitionSetupService.
                     createNonIfs().
-                    getSuccessObjectOrThrowException();
+                    getSuccess();
 
             updateCompetitionInCompetitionData(data, newCompetition.getId());
         });
@@ -69,11 +69,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withExistingCompetition(Long competitionId) {
 
         return asCompAdmin(data -> {
-            CompetitionResource existingCompetition = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+            CompetitionResource existingCompetition = competitionService.getCompetitionById(competitionId).getSuccess();
             updateCompetitionInCompetitionData(data, existingCompetition.getId());
 
             publicContentService.findByCompetitionId(competitionId).andOnFailure(() ->
-                    publicContentService.initialiseByCompetitionId(competitionId).getSuccessObjectOrThrowException());
+                    publicContentService.initialiseByCompetitionId(competitionId).getSuccess());
         });
     }
 
@@ -151,11 +151,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     private void doCompetitionDetailsUpdate(CompetitionData data, Consumer<CompetitionResource> updateFn) {
 
         CompetitionResource competition =
-                competitionService.getCompetitionById(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+                competitionService.getCompetitionById(data.getCompetition().getId()).getSuccess();
 
         updateFn.accept(competition);
 
-        competitionSetupService.save(competition.getId(), competition).getSuccessObjectOrThrowException();
+        competitionSetupService.save(competition.getId(), competition).getSuccess();
 
         updateCompetitionInCompetitionData(data, competition.getId());
     }
@@ -167,7 +167,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             CompetitionResource competition = data.getCompetition();
 
             competitionSetupService.copyFromCompetitionTypeTemplate(competition.getId(), competition.getCompetitionType()).
-                    getSuccessObjectOrThrowException();
+                    getSuccess();
 
             updateCompetitionInCompetitionData(data, competition.getId());
         });
@@ -190,12 +190,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private void markSetupApplicationQuestionsAsComplete(CompetitionData data) {
-        List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccessObject();
+        List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccess();
 
         SectionResource applicationSection = competitionSections.stream().filter(section -> section.getName().equals("Application questions")).findFirst().get();
         SectionResource projectDetails = competitionSections.stream().filter(section -> section.getName().equals("Project details")).findFirst().get();
 
-        List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObject();
+        List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccess();
         questionResources.stream()
                 .filter(question -> question.getSection().equals(applicationSection.getId())
                         || question.getSection().equals(projectDetails.getId()))
@@ -229,19 +229,19 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             });
 
             applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
-                    getSuccessObjectOrThrowException();
+                    getSuccess();
             FundingNotificationResource fundingNotificationResource = new FundingNotificationResource("Body", pairsToMap(applicationIdAndDecisions));
             applicationFundingService.notifyApplicantsOfFundingDecisions(fundingNotificationResource).
-                    getSuccessObjectOrThrowException();
+                    getSuccess();
 
             doAs(projectFinanceUser(),
-                    () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException());
+                    () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccess());
 
         });
     }
 
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
-        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccess();
         MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
 
         ZonedDateTime now = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
@@ -257,7 +257,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         milestones.forEach(m -> {
             if (m.getDate() != null) {
                 m.setDate(m.getDate().plusDays(daysPassedSinceSubmissionEnded + 1));
-                milestoneService.updateMilestone(m).getSuccessObjectOrThrowException();
+                milestoneService.updateMilestone(m).getSuccess();
             }
         });
     }
@@ -269,11 +269,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 MilestoneResource amendedMilestone =
                         milestoneService.getMilestoneByTypeAndCompetitionId(original.getType(), data.getCompetition().getId()).
-                                getSuccessObjectOrThrowException();
+                                getSuccess();
 
                 amendedMilestone.setDate(original.getDate());
 
-                milestoneService.updateMilestone(amendedMilestone).getSuccessObjectOrThrowException();
+                milestoneService.updateMilestone(amendedMilestone).getSuccess();
             });
         });
     }
@@ -285,7 +285,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
-                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccessObjectOrThrowException(),
+                                failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccess(),
                                 success -> success
                         )
             )
@@ -368,7 +368,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             MilestoneResource milestone = milestoneService.getMilestoneByTypeAndCompetitionId(milestoneType, data.getCompetition().getId())
                     .handleSuccessOrFailure(
-                            failure -> milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException(),
+                            failure -> milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccess(),
                             success -> success
                     );
 
@@ -401,16 +401,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 publicContent.setKeywords(keywords);
                 publicContent.setInviteOnly(inviteOnly);
 
-                stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccessObjectOrThrowException());
+                stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccess());
 
-                publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+                publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccess();
             }
 
         }));
     }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
-        CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccess();
         competitionData.setCompetition(newCompetitionSaved);
     }
 

@@ -47,6 +47,6 @@ public class OrganisationSizeServiceImplTest extends BaseServiceUnitTest<Organis
         ServiceResult<List<OrganisationSizeResource>> actual = service.getOrganisationSizes();
 
         assertThat(actual.isSuccess(), equalTo(true));
-        assertThat(actual.getSuccessObject(), equalTo(organisationSizeResources));
+        assertThat(actual.getSuccess(), equalTo(organisationSizeResources));
     }
 }

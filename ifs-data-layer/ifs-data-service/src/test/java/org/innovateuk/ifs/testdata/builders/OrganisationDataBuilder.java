@@ -35,7 +35,7 @@ public class OrganisationDataBuilder extends BaseDataBuilder<OrganisationData, O
                         withName(organisationName).
                         withCompanyHouseNumber(companyRegistrationNumber).
                         withOrganisationType(organisationType.getId()).
-                        build()).getSuccessObjectOrThrowException();
+                        build()).getSuccess();
 
                 data.setOrganisation(created);
             });

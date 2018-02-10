@@ -29,10 +29,10 @@ public class UnsuccessfulApplicationsModelPopulator {
 
     public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, UserResource loggedInUser, String existingQueryString) {
 
-        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
         ApplicationPageResource unsuccessfulApplicationsPagedResult = competitionPostSubmissionRestService
                 .findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         boolean isIfsAdmin = userService.existsAndHasRole(loggedInUser.getId(), UserRoleType.IFS_ADMINISTRATOR);
 

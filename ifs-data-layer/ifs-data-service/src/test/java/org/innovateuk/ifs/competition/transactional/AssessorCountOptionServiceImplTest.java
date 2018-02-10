@@ -29,7 +29,7 @@ public class AssessorCountOptionServiceImplTest extends BaseUnitTestMocksTest {
 		when(assessorCountOptionMapperMock.mapToResource(same(options.get(1)))).thenReturn((expectedResponse.get(1)));
 		when(assessorCountOptionMapperMock.mapToResource(same(options.get(2)))).thenReturn((expectedResponse.get(2)));
 
-		List<AssessorCountOptionResource> actualResponse = assessorCountOptionService.findAllByCompetitionType(1L).getSuccessObject();
+		List<AssessorCountOptionResource> actualResponse = assessorCountOptionService.findAllByCompetitionType(1L).getSuccess();
 
 		assertEquals(expectedResponse, actualResponse);
 		verify(assessorCountOptionRepositoryMock, only()).findByCompetitionTypeId(1L);

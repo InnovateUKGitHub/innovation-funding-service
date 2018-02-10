@@ -30,22 +30,22 @@ public class SpendProfileServiceImpl implements SpendProfileService {
 
     @Override
     public ApprovalType getSpendProfileStatusByProjectId(Long projectId) {
-        return spendProfileRestService.getSpendProfileStatusByProjectId(projectId).getSuccessObjectOrThrowException();
+        return spendProfileRestService.getSpendProfileStatusByProjectId(projectId).getSuccess();
     }
 
     @Override
     public SpendProfileTableResource getSpendProfileTable(Long projectId, Long organisationId) {
-        return spendProfileRestService.getSpendProfileTable(projectId, organisationId).getSuccessObjectOrThrowException();
+        return spendProfileRestService.getSpendProfileTable(projectId, organisationId).getSuccess();
     }
 
     @Override
     public SpendProfileCSVResource getSpendProfileCSV(Long projectId, Long organisationId) {
-        return spendProfileRestService.getSpendProfileCSV(projectId, organisationId).getSuccessObjectOrThrowException();
+        return spendProfileRestService.getSpendProfileCSV(projectId, organisationId).getSuccess();
     }
 
     @Override
     public Optional<SpendProfileResource> getSpendProfile(Long projectId, Long organisationId) {
-        return spendProfileRestService.getSpendProfile(projectId, organisationId).toOptionalIfNotFound().getSuccessObjectOrThrowException();
+        return spendProfileRestService.getSpendProfile(projectId, organisationId).toOptionalIfNotFound().getSuccess();
     }
 
     @Override

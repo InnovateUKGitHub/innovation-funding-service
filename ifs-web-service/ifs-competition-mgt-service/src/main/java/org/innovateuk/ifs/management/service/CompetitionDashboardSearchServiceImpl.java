@@ -30,39 +30,39 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getLiveCompetitions() {
-        return mapToStatus(competitionRestService.findLiveCompetitions().getSuccessObjectOrThrowException());
+        return mapToStatus(competitionRestService.findLiveCompetitions().getSuccess());
     }
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
-        return mapToStatus(competitionRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException());
+        return mapToStatus(competitionRestService.findProjectSetupCompetitions().getSuccess());
     }
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
-        return mapToStatus(competitionRestService.findUpcomingCompetitions().getSuccessObjectOrThrowException());
+        return mapToStatus(competitionRestService.findUpcomingCompetitions().getSuccess());
     }
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getNonIfsCompetitions() {
-        return mapToStatus(competitionRestService.findNonIfsCompetitions().getSuccessObjectOrThrowException());
+        return mapToStatus(competitionRestService.findNonIfsCompetitions().getSuccess());
     }
 
     @Override
     public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions() {
-        return mapToStatus(competitionPostSubmissionRestService.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException());
+        return mapToStatus(competitionPostSubmissionRestService.findFeedbackReleasedCompetitions().getSuccess());
     }
 
     @Override
     public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
-        CompetitionSearchResult searchResult = competitionRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
+        CompetitionSearchResult searchResult = competitionRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccess();
         searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
         return searchResult;
     }
 
     @Override
     public CompetitionCountResource getCompetitionCounts() {
-        return competitionRestService.countCompetitions().getSuccessObjectOrThrowException();
+        return competitionRestService.countCompetitions().getSuccess();
     }
 
     private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {

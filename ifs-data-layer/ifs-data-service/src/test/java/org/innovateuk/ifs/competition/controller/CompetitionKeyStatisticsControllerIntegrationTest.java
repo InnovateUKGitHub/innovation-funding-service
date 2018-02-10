@@ -30,14 +30,14 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
 
     @Test
     public void getReadyToOpenKeyStatistics() throws Exception {
-        CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource = controller.getReadyToOpenKeyStatistics(1L).getSuccessObject();
+        CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource = controller.getReadyToOpenKeyStatistics(1L).getSuccess();
         assertEquals(0, keyStatisticsResource.getAssessorsAccepted());
         assertEquals(0, keyStatisticsResource.getAssessorsInvited());
     }
 
     @Test
     public void getOpenKeyStatistics() throws Exception {
-        CompetitionOpenKeyStatisticsResource keyStatisticsResource = controller.getOpenKeyStatistics(1L).getSuccessObject();
+        CompetitionOpenKeyStatisticsResource keyStatisticsResource = controller.getOpenKeyStatistics(1L).getSuccess();
         assertEquals(0, keyStatisticsResource.getAssessorsAccepted());
         assertEquals(0, keyStatisticsResource.getAssessorsInvited());
         assertEquals(2, keyStatisticsResource.getApplicationsStarted());
@@ -48,7 +48,7 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
 
     @Test
     public void getClosedKeyStatistics() throws Exception {
-        CompetitionClosedKeyStatisticsResource keyStatisticsResource = controller.getClosedKeyStatistics(1L).getSuccessObject();
+        CompetitionClosedKeyStatisticsResource keyStatisticsResource = controller.getClosedKeyStatistics(1L).getSuccess();
         assertEquals(0, keyStatisticsResource.getAssessorsAccepted());
         assertEquals(0, keyStatisticsResource.getAssessorsInvited());
         assertEquals(0, keyStatisticsResource.getApplicationsRequiringAssessors());
@@ -60,7 +60,7 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
     @Test
     public void getInAssessmentKeyStatistics() throws Exception {
 
-        CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = controller.getInAssessmentKeyStatistics(1L).getSuccessObject();
+        CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = controller.getInAssessmentKeyStatistics(1L).getSuccess();
         assertEquals(4, keyStatisticsResource.getAssessmentsStarted());
         assertEquals(9, keyStatisticsResource.getAssignmentCount());
         assertEquals(2, keyStatisticsResource.getAssessmentsSubmitted());
@@ -71,7 +71,7 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
     @Test
     public void getFundedKeyStatistics() throws Exception {
 
-        CompetitionFundedKeyStatisticsResource keyStatisticsResource = controller.getFundedKeyStatistics(1L).getSuccessObject();
+        CompetitionFundedKeyStatisticsResource keyStatisticsResource = controller.getFundedKeyStatistics(1L).getSuccess();
 
         assertEquals(5, keyStatisticsResource.getApplicationsSubmitted());
         assertEquals(0, keyStatisticsResource.getApplicationsFunded());

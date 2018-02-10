@@ -50,11 +50,11 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
                 ApplicationResource created = applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(
                         applicationName, data.getCompetition().getId(), leadApplicant.getId()).
-                        getSuccessObjectOrThrowException();
+                        getSuccess();
 
                 created.setResubmission(resubmission);
                 created = applicationService.saveApplicationDetails(created.getId(), created)
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
 
                 ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
                 applicationResearchCategoryService.setResearchCategory(created.getId(), category.getId());
@@ -72,7 +72,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 } else if (!innovationAreaName.isEmpty()) {
                     InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
                     applicationInnovationAreaService.setInnovationArea(data.getApplication().getId(), innovationArea.getId())
-                            .getSuccessObjectOrThrowException();
+                            .getSuccess();
                 }
             });
     }
@@ -83,14 +83,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 QuestionResource questionResource = simpleFindFirst(questionService.findByCompetition(data
                                 .getCompetition()
                                 .getId())
-                                .getSuccessObjectOrThrowException(),
+                                .getSuccess(),
                         x -> "Application details".equals(x.getName())).get();
 
                 questionService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
                                 .getId()),
                         retrieveLeadApplicant(data.getApplication().getId()).getId())
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
             }
         });
     }
@@ -148,17 +148,17 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
         return asLeadApplicant(data ->
                 applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.OPEN).
-                        getSuccessObjectOrThrowException());
+                        getSuccess());
     }
 
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
             applicationService.updateApplicationState(data.getApplication().getId(), ApplicationState.SUBMITTED).
-                    getSuccessObjectOrThrowException();
+                    getSuccess();
 
-            applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();
-            applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccessObjectOrThrowException();
+            applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), ZonedDateTime.now()).getSuccess();
+            applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccess();
         });
     }
 
@@ -196,9 +196,9 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         inviteService.createApplicationInvites(newInviteOrganisationResource().
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).
-                build(), Optional.of(data.getApplication().getId())).getSuccessObjectOrThrowException();
+                build(), Optional.of(data.getApplication().getId())).getSuccess();
 
-        List<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
+        List<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
 
         InviteOrganisationResource newInvite = simpleFindFirst(invites, i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
         ApplicationInviteResource usersInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(email)).get();
@@ -222,12 +222,12 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     private void doApplicationDetailsUpdate(ApplicationData data, Consumer<ApplicationResource> updateFn) {
 
         ApplicationResource application =
-                applicationService.getApplicationById(data.getApplication().getId()).getSuccessObjectOrThrowException();
+                applicationService.getApplicationById(data.getApplication().getId()).getSuccess();
 
         updateFn.accept(application);
 
         ApplicationResource updated = applicationService.saveApplicationDetails(application.getId(), application).
-                getSuccessObjectOrThrowException();
+                getSuccess();
 
         data.setApplication(updated);
     }
@@ -283,10 +283,10 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             testService.doWithinTransaction(() -> {
                 Application applicationFromRepository = applicationRepository.findByName(title).get(0);
                 long applicationId = applicationFromRepository.getId();
-                ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+                ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
                 data.setApplication(application);
-                data.setCompetition(competitionService.getCompetitionById(application.getCompetition()).getSuccessObjectOrThrowException());
-                data.setLeadApplicant(userService.findByEmail(applicationFromRepository.getLeadApplicant().getEmail()).getSuccessObjectOrThrowException());
+                data.setCompetition(competitionService.getCompetitionById(application.getCompetition()).getSuccess());
+                data.setLeadApplicant(userService.findByEmail(applicationFromRepository.getLeadApplicant().getEmail()).getSuccess());
             });
         });
     }

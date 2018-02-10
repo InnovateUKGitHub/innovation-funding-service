@@ -22,7 +22,7 @@ public class AssessorProfileDeclarationModelPopulator extends AssessorProfileDec
     private AffiliationRestService affiliationRestService;
 
     public AssessorProfileDeclarationViewModel populateModel(UserResource user) {
-        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccessObjectOrThrowException());
+        Map<AffiliationType, List<AffiliationResource>> affiliations = getAffiliationsMap(affiliationRestService.getUserAffiliations(user.getId()).getSuccess());
 
         Optional<AffiliationResource> principalEmployer = getPrincipalEmployer(affiliations);
 

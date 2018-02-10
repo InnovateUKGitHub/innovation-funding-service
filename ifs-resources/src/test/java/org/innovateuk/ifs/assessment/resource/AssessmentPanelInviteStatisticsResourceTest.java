@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.resource;
 
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

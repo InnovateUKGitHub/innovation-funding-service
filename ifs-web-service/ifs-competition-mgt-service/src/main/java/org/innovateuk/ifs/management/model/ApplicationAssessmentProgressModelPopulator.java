@@ -32,10 +32,10 @@ public class ApplicationAssessmentProgressModelPopulator {
 
     public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, Long filterInnovationArea, int page, String assessorOrigin) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
-                .getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
+                .getApplicationAssessmentSummary(applicationId).getSuccess();
 
-        List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccessObjectOrThrowException();
-        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, filterInnovationArea).getSuccessObjectOrThrowException();
+        List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccess();
+        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, filterInnovationArea).getSuccess();
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
@@ -55,7 +55,7 @@ public class ApplicationAssessmentProgressModelPopulator {
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {
-        return categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
+        return categoryRestService.getInnovationSectors().getSuccess();
     }
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> getAssignedAssessors(List<ApplicationAssessorResource> assessors) {

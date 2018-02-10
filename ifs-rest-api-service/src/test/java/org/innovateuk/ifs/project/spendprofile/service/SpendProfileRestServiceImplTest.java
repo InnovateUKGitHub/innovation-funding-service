@@ -129,6 +129,6 @@ public class SpendProfileRestServiceImplTest extends BaseRestServiceUnitTest<Spe
 
         RestResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
         assertTrue(result.isSuccess());
-        assertEquals(ApprovalType.APPROVED, result.getSuccessObject());
+        assertEquals(ApprovalType.APPROVED, result.getSuccess());
     }
 }

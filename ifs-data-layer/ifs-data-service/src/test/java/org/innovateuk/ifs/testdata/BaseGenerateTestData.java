@@ -26,7 +26,6 @@ import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
@@ -51,15 +50,12 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
-import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
@@ -86,7 +82,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(classes = GenerateTesttDataConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
@@ -114,9 +110,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     protected OrganisationRepository organisationRepository;
@@ -156,34 +149,16 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private ExternalUserDataBuilder externalUserBuilder;
     private InternalUserDataBuilder internalUserBuilder;
     private OrganisationDataBuilder organisationBuilder;
-    private AssessorDataBuilder assessorUserBuilder;
-    private AssessorInviteDataBuilder assessorInviteUserBuilder;
 
     private static List<OrganisationLine> organisationLines;
-
     private static List<CompetitionLine> competitionLines;
-
     private static List<QuestionLine> questionLines;
-
     private static List<CompetitionFunderLine> competitionFunderLines;
-
     private static List<PublicContentGroupLine> publicContentGroupLines;
-
     private static List<PublicContentDateLine> publicContentDateLines;
-
     private static List<ApplicationLine> applicationLines;
-
-    private static List<InviteLine> inviteLines;
-
     private static List<ExternalUserLine> externalUserLines;
-
-    private static List<AssessorUserLine> assessorUserLines;
-
     private static List<InternalUserLine> internalUserLines;
-
-    private static List<AssessmentLine> assessmentLines;
-
-    private static List<AssessorResponseLine> assessorResponseLines;
 
     @Before
     public void setup() throws Exception {
@@ -201,12 +176,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
         applicationLines = readApplications();
-        inviteLines = readInvites();
         externalUserLines = readExternalUsers();
         internalUserLines = readInternalUsers();
-        assessorUserLines = readAssessorUsers();
-        assessmentLines = readAssessments();
-        assessorResponseLines = readAssessorResponses();
     }
 
     @PostConstruct
@@ -248,8 +219,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
-        assessorUserBuilder = newAssessorData(serviceLocator);
-        assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
     }
@@ -273,24 +242,23 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 applicationDataBuilderService.fillInAndCompleteApplications(createCompetitionFutures);
 
-        CompletableFuture<Void> competitionsFinalisedFuture = waitForFutureList(createApplicationsFutures).thenComposeAsync(createdApplications -> {
+        CompletableFuture<Void> competitionsFinalisedFuture = waitForFutureList(createApplicationsFutures).thenComposeAsync(createdApplications ->
 
-            return CompletableFuture.
+            CompletableFuture.
                     runAsync(() -> createFundingDecisions(competitionLines), taskExecutor).
-                    thenAcceptAsync(done -> projectDataBuilderService.createProjects(), taskExecutor).
-                    thenAcceptAsync(done -> competitionDataBuilderService.moveCompetitionsToCorrectFinalState());
-        });
+                    thenRunAsync(() -> projectDataBuilderService.createProjects(), taskExecutor).
+                    thenRunAsync(() -> competitionDataBuilderService.moveCompetitionsToCorrectFinalState()), taskExecutor);
 
-        CompletableFuture<Void> questionUpdateFutures = waitForFutureList(createCompetitionFutures).thenAcceptAsync(done -> updateQuestions(), taskExecutor);
+        CompletableFuture<Void> questionUpdateFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(this::updateQuestions, taskExecutor);
 
-        CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenAcceptAsync(done -> createCompetitionFunders(), taskExecutor);
+        CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(this::createCompetitionFunders, taskExecutor);
 
-        CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenAcceptAsync(done -> {
+        CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() -> {
             createPublicContentGroups();
             createPublicContentDates();
         }, taskExecutor);
 
-        CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenAcceptAsync(done -> {
+        CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() -> {
             assessmentDataBuilderService.createAssessors();
             assessmentDataBuilderService.createNonRegisteredAssessorInvites();
             assessmentDataBuilderService.createAssessments();
@@ -355,42 +323,37 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createOrganisations() {
-        List<Future<?>> futures = simpleMap(organisationLines, line -> {
 
-            return taskExecutor.submit(() -> {
+        List<CompletableFuture<Void>> futures = simpleMap(organisationLines, line -> CompletableFuture.runAsync(() -> {
 
-                OrganisationDataBuilder organisation =
-                        organisationBuilder.createOrganisation(line.name, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
+            OrganisationDataBuilder organisation =
+                    organisationBuilder.createOrganisation(line.name, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
 
-                for (OrganisationAddressType organisationType : line.addressType) {
-                    organisation = organisation.withAddress(organisationType,
-                            line.addressLine1, line.addressLine2,
-                            line.addressLine3, line.town,
-                            line.postcode, line.county);
-                }
+            for (OrganisationAddressType organisationType : line.addressType) {
+                organisation = organisation.withAddress(organisationType,
+                        line.addressLine1, line.addressLine2,
+                        line.addressLine3, line.town,
+                        line.postcode, line.county);
+            }
 
-                organisation.build();
-            });
-        });
+            organisation.build();
+        }, taskExecutor));
 
-        waitForFuturesToComplete(futures);
+        waitForFutureList(futures).join();
     }
 
     private void createInternalUsers() {
 
-        internalUserLines.forEach(line -> {
+        internalUserLines.forEach(line -> testService.doWithinTransaction(() -> {
 
-            testService.doWithinTransaction(() -> {
+            setDefaultSystemRegistrar();
 
-                setDefaultSystemRegistrar();
+            List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
 
-                List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
+            InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
 
-                InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
-
-                createUser(baseBuilder, line);
-            });
-        });
+            createUser(baseBuilder, line);
+        }));
     }
 
     private void createFundingDecisions(List<CsvUtils.CompetitionLine> competitionLines) {
@@ -421,7 +384,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         try {
             cleanAndMigrateDatabaseWithPatches(locations.split(","));
         } catch (Exception e) {
-            fail("Exception thrown migrating with script directories: " + locations.split(",") + e.getMessage());
+            fail("Exception thrown migrating with script directories: " + Arrays.toString(locations.split(",")) + e.getMessage());
         }
     }
 
@@ -481,24 +444,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private void setDefaultSystemRegistrar() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
         );
     }
 
     private void setDefaultCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccess())
         );
-    }
-
-    private void waitForFuturesToComplete(List<? extends Future<?>> futures) {
-        futures.forEach(f -> {
-            try {
-                f.get();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 }
