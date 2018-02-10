@@ -404,7 +404,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private void updateApplicationCompleteStatus(Application application) {
-        BigDecimal completion = applicationService.getProgressPercentageBigDecimalByApplicationId(application.getId()).getSuccessObject();
+        BigDecimal completion = applicationService.getProgressPercentageBigDecimalByApplicationId(application.getId()).getSuccess();
         application.setCompletion(completion);
     }
 
