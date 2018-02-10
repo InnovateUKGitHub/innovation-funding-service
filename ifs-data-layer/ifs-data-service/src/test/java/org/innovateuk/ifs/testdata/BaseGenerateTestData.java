@@ -273,29 +273,28 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 applicationDataBuilderService.fillInAndCompleteApplications(createCompetitionFutures);
 
-        waitForFuturesToComplete(createApplicationsFutures);
+        CompletableFuture<Void> competitionsFinalisedFuture = waitForFutureList(createApplicationsFutures).thenComposeAsync(createdApplications -> {
 
-        CompletableFuture<Void> fundingDecisions = CompletableFuture.runAsync(() -> createFundingDecisions(competitionLines), taskExecutor);
-
-        CompletableFuture<Void> questionUpdateFutures = CompletableFuture.runAsync(this::updateQuestions);
-
-        CompletableFuture<Void> competitionFundersFutures = CompletableFuture.runAsync(this::createCompetitionFunders);
-
-        CompletableFuture<Void> publicContentFutures = CompletableFuture.runAsync(() -> {
-            createPublicContentGroups();
-            createPublicContentDates();
+            return CompletableFuture.
+                    runAsync(() -> createFundingDecisions(competitionLines), taskExecutor).
+                    thenAcceptAsync(done -> projectDataBuilderService.createProjects(), taskExecutor).
+                    thenAcceptAsync(done -> competitionDataBuilderService.moveCompetitionsToCorrectFinalState());
         });
 
-        CompletableFuture<Void> assessorFutures = CompletableFuture.runAsync(() -> {
+        CompletableFuture<Void> questionUpdateFutures = waitForFutureList(createCompetitionFutures).thenAcceptAsync(done -> updateQuestions(), taskExecutor);
+
+        CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenAcceptAsync(done -> createCompetitionFunders(), taskExecutor);
+
+        CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenAcceptAsync(done -> {
+            createPublicContentGroups();
+            createPublicContentDates();
+        }, taskExecutor);
+
+        CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenAcceptAsync(done -> {
             assessmentDataBuilderService.createAssessors();
             assessmentDataBuilderService.createNonRegisteredAssessorInvites();
             assessmentDataBuilderService.createAssessments();
-        });
-
-        CompletableFuture<Void> projectsCreatedFuture = fundingDecisions.thenAcceptAsync(done ->
-                projectDataBuilderService.createProjects(), taskExecutor);
-
-        CompletableFuture<Void> competitionsFinalisedFuture = projectsCreatedFuture.thenAcceptAsync(done -> competitionDataBuilderService.moveCompetitionsToCorrectFinalState());
+        }, taskExecutor);
 
         CompletableFuture.allOf(questionUpdateFutures, competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
 
@@ -303,6 +302,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+    }
+
+    private CompletableFuture<Void> waitForFutureList(List<? extends CompletableFuture<?>> createApplicationsFutures) {
+        return CompletableFuture.allOf(createApplicationsFutures.toArray(new CompletableFuture[] {}));
     }
 
     private void updateQuestions() {
