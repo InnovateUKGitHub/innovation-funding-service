@@ -146,7 +146,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
         assertTrue(result.isSuccess());
-        assertEquals(expectedResult, result.getSuccessObject());
+        assertEquals(expectedResult, result.getSuccess());
 
         InOrder inOrder = inOrder(competitionTemplatePersistorMock);
         inOrder.verify(competitionTemplatePersistorMock).cleanByEntityId(competition.getId());

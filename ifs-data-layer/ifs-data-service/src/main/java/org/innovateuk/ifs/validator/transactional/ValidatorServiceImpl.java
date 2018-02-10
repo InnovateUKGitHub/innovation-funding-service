@@ -92,7 +92,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
                                 validationUtil.validateCostItem(costItems, question)
                         )
                 )
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     @Override

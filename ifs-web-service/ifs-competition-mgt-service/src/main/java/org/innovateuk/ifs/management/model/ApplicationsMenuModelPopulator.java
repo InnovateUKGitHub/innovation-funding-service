@@ -18,7 +18,7 @@ public class ApplicationsMenuModelPopulator {
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     public ApplicationsMenuViewModel populateModel(Long competitionId, UserResource user) {
-        CompetitionSummaryResource summary = applicationSummaryRestService.getCompetitionSummary(competitionId).getSuccessObjectOrThrowException();
+        CompetitionSummaryResource summary = applicationSummaryRestService.getCompetitionSummary(competitionId).getSuccess();
 
         return new ApplicationsMenuViewModel(
                 summary.getCompetitionId(),

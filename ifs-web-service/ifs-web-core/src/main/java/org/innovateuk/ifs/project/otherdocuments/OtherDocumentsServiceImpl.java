@@ -20,12 +20,12 @@ public class OtherDocumentsServiceImpl implements OtherDocumentsService {
 
     @Override
     public Optional<ByteArrayResource> getCollaborationAgreementFile(Long projectId) {
-        return otherDocumentsRestService.getCollaborationAgreementFile(projectId).getSuccessObjectOrThrowException();
+        return otherDocumentsRestService.getCollaborationAgreementFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getCollaborationAgreementFileDetails(Long projectId) {
-        return otherDocumentsRestService.getCollaborationAgreementFileDetails(projectId).getSuccessObjectOrThrowException();
+        return otherDocumentsRestService.getCollaborationAgreementFileDetails(projectId).getSuccess();
     }
 
     @Override
@@ -40,12 +40,12 @@ public class OtherDocumentsServiceImpl implements OtherDocumentsService {
 
     @Override
     public Optional<ByteArrayResource> getExploitationPlanFile(Long projectId) {
-        return otherDocumentsRestService.getExploitationPlanFile(projectId).getSuccessObjectOrThrowException();
+        return otherDocumentsRestService.getExploitationPlanFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getExploitationPlanFileDetails(Long projectId) {
-        return otherDocumentsRestService.getExploitationPlanFileDetails(projectId).getSuccessObjectOrThrowException();
+        return otherDocumentsRestService.getExploitationPlanFileDetails(projectId).getSuccess();
     }
 
     @Override
@@ -65,7 +65,7 @@ public class OtherDocumentsServiceImpl implements OtherDocumentsService {
 
     @Override
     public Boolean isOtherDocumentSubmitAllowed(Long projectId) {
-        return otherDocumentsRestService.isOtherDocumentsSubmitAllowed(projectId).getSuccessObjectOrThrowException();
+        return otherDocumentsRestService.isOtherDocumentsSubmitAllowed(projectId).getSuccess();
     }
 
     @Override

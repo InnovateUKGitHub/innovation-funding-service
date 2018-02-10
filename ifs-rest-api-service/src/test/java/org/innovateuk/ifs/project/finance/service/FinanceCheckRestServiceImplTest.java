@@ -27,7 +27,7 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
         FinanceCheckEligibilityResource processStatus = new FinanceCheckEligibilityResource();
         setupGetWithRestResultExpectations("/project/123/partner-organisation/456/finance-check/eligibility", FinanceCheckEligibilityResource.class, processStatus);
 
-        Assert.assertEquals(processStatus, service.getFinanceCheckEligibilityDetails(123L, 456L).getSuccessObject());
+        Assert.assertEquals(processStatus, service.getFinanceCheckEligibilityDetails(123L, 456L).getSuccess());
     }
 
     @Test
@@ -35,6 +35,6 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
         FinanceCheckOverviewResource processStatus = new FinanceCheckOverviewResource();
         setupGetWithRestResultExpectations("/project/123/finance-check/overview", FinanceCheckOverviewResource.class, processStatus);
 
-        Assert.assertEquals(processStatus, service.getFinanceCheckOverview(123L).getSuccessObject());
+        Assert.assertEquals(processStatus, service.getFinanceCheckOverview(123L).getSuccess());
     }
 }

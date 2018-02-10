@@ -21,7 +21,7 @@ public class PublicContentGroupDataBuilder extends BaseDataBuilder<Void, PublicC
         return asCompAdmin(data -> {
             if (competitionName != null) {
                 Competition competition = retrieveCompetitionByName(competitionName);
-                PublicContentResource publicContent = publicContentService.findByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
+                PublicContentResource publicContent = publicContentService.findByCompetitionId(competition.getId()).getSuccess();
                 PublicContentSectionResource section = publicContent.getContentSections().stream().filter(filterSection -> type.equals(filterSection.getType())).findAny().get();
 
                 ContentGroupResource contentGroup = new ContentGroupResource();

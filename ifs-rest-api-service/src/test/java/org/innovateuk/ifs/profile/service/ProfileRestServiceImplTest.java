@@ -32,7 +32,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileSkills", profileUrl, userId), ProfileSkillsResource.class, expected, OK);
 
-        ProfileSkillsResource response = service.getProfileSkills(userId).getSuccessObjectOrThrowException();
+        ProfileSkillsResource response = service.getProfileSkills(userId).getSuccess();
         assertEquals(expected, response);
     }
 
@@ -54,7 +54,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getProfileAgreement", profileUrl, userId), ProfileAgreementResource.class, expected, OK);
 
-        ProfileAgreementResource response = service.getProfileAgreement(userId).getSuccessObjectOrThrowException();
+        ProfileAgreementResource response = service.getProfileAgreement(userId).getSuccess();
         assertEquals(expected, response);
     }
 
@@ -75,7 +75,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
 
         setupGetWithRestResultExpectations(format("%s/id/%s/getUserProfile", profileUrl, userId), UserProfileResource.class, expected, OK);
 
-        UserProfileResource response = service.getUserProfile(userId).getSuccessObjectOrThrowException();
+        UserProfileResource response = service.getUserProfile(userId).getSuccess();
         assertEquals(expected, response);
     }
 
@@ -97,7 +97,7 @@ public class ProfileRestServiceImplTest extends BaseRestServiceUnitTest<ProfileR
 
         setupGetWithRestResultExpectations(format("%s/id/%s/profileStatus", profileUrl, userId), UserProfileStatusResource.class, expected, OK);
 
-        UserProfileStatusResource response = service.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+        UserProfileStatusResource response = service.getUserProfileStatus(userId).getSuccess();
         assertEquals(expected, response);
     }
 }

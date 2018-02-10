@@ -31,7 +31,7 @@ public class RoleServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<RoleResource> result = roleService.findByUserRoleType(LEADAPPLICANT);
         assertTrue(result.isSuccess());
-        assertEquals(roleResource, result.getSuccessObject());
+        assertEquals(roleResource, result.getSuccess());
 
         verify(roleRepositoryMock, only()).findOneByName(LEADAPPLICANT.getName());
     }

@@ -28,7 +28,6 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -197,7 +196,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
-        assertEquals(newProjectResource, project.getSuccessObject());
+        assertEquals(newProjectResource, project.getSuccess());
 
         verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
         verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
@@ -222,7 +221,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
-        assertEquals(existingProjectResource, project.getSuccessObject());
+        assertEquals(existingProjectResource, project.getSuccess());
 
         verify(projectRepositoryMock).findOneByApplicationId(applicationId);
         verify(projectMapperMock).mapToResource(existingProject);
@@ -257,7 +256,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isSuccess());
 
-        assertEquals(result.getSuccessObject().size(), 1L);
+        assertEquals(result.getSuccess().size(), 1L);
     }
 
     @Test
@@ -435,8 +434,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<ProjectUserResource> foundProjectManager = service.getProjectManager(projectId);
         assertTrue(foundProjectManager.isSuccess());
-        assertTrue(foundProjectManager.getSuccessObject().getRoleName().equals(PROJECT_MANAGER.getName()));
-        assertTrue(foundProjectManager.getSuccessObject().getProject().equals(projectId));
+        assertTrue(foundProjectManager.getSuccess().getRoleName().equals(PROJECT_MANAGER.getName()));
+        assertTrue(foundProjectManager.getSuccess().getProject().equals(projectId));
     }
 
     @Override

@@ -121,7 +121,7 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
                 )
                 .build();
 
-        AssessorCompetitionSummaryResource actual = result.getSuccessObjectOrThrowException();
+        AssessorCompetitionSummaryResource actual = result.getSuccess();
 
         assertEquals(expected, actual);
     }

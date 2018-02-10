@@ -444,14 +444,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private void setDefaultSystemRegistrar() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
         );
     }
 
     private void setDefaultCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccess())
         );
     }
 }

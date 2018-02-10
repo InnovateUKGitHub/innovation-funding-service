@@ -144,12 +144,12 @@ public class ApplicationTeamManagementModelPopulator {
 
     private Optional<InviteOrganisationResource> getInviteOrganisationByOrganisationId(long applicationId, long organisationId) {
         return inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
-                .toOptionalIfNotFound().getSuccessObjectOrThrowException();
+                .toOptionalIfNotFound().getSuccess();
     }
 
     private InviteOrganisationResource getInviteOrganisationByInviteOrganisationId(long inviteOrganisationId) {
         return inviteOrganisationRestService.getById(inviteOrganisationId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {

@@ -90,7 +90,7 @@ public class CompetitionInviteController {
                         return format("redirect:/registration/%s/start", inviteHash);
                     }
                 })
-                .getSuccessObject();
+                .getSuccess();
     }
 
     /**
@@ -101,7 +101,7 @@ public class CompetitionInviteController {
     @SecuredBySpring(value= "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('assessor')")
     public String confirmAcceptInvite(@PathVariable("inviteHash") String inviteHash) {
-        inviteRestService.acceptInvite(inviteHash).getSuccessObjectOrThrowException();
+        inviteRestService.acceptInvite(inviteHash).getSuccess();
         return "redirect:/assessor/dashboard";
     }
 
@@ -128,6 +128,6 @@ public class CompetitionInviteController {
 
     @ModelAttribute("rejectionReasons")
     public List<RejectionReasonResource> populateRejectionReasons() {
-        return rejectionReasonRestService.findAllActive().getSuccessObjectOrThrowException();
+        return rejectionReasonRestService.findAllActive().getSuccess();
     }
 }

@@ -57,11 +57,11 @@ public abstract class BaseDataBuilderService {
     private FormInputService formInputService;
 
     UserResource retrieveUserByEmail(String emailAddress) {
-        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccess());
     }
 
     OrganisationResource retrieveOrganisationByUserId(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccess());
     }
 
     protected UserResource systemRegistrar() {
@@ -90,12 +90,12 @@ public abstract class BaseDataBuilderService {
 
     List<QuestionResource> retrieveCachedQuestionsByCompetitionId(Long competitionId) {
         return fromCache(competitionId, questionsByCompetitionId, () ->
-                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
+                questionService.findByCompetition(competitionId).getSuccess());
     }
 
     List<FormInputResource> retrieveCachedFormInputsByQuestionId(QuestionResource question) {
         return fromCache(question.getId(), formInputsByQuestionId, () ->
-                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
+                formInputService.findByQuestionId(question.getId()).getSuccess());
     }
 
     private <K, V> V fromCache(K key, Cache<K, V> cache, Callable<V> loadingFunction) {

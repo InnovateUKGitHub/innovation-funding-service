@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.security.access.method.P;
@@ -80,13 +81,15 @@ public interface GrantOfferLetterService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_SIGNED_GRANT_OFFER_LETTER')")
     ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_STATUS')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS')")
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_STATUS')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_REJECTED_STATUS')")
     ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
     ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
+    ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
 }

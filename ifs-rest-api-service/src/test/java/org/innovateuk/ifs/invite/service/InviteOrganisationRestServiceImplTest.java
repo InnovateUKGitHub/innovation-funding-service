@@ -27,7 +27,7 @@ public class InviteOrganisationRestServiceImplTest extends BaseRestServiceUnitTe
         InviteOrganisationResource expected = newInviteOrganisationResource().build();
 
         setupGetWithRestResultExpectations(format("%s/%s", restUrl, inviteOrganisationId), InviteOrganisationResource.class, expected);
-        InviteOrganisationResource actual = service.getById(inviteOrganisationId).getSuccessObjectOrThrowException();
+        InviteOrganisationResource actual = service.getById(inviteOrganisationId).getSuccess();
         assertEquals(expected, actual);
     }
 
@@ -38,7 +38,7 @@ public class InviteOrganisationRestServiceImplTest extends BaseRestServiceUnitTe
         InviteOrganisationResource expected = newInviteOrganisationResource().build();
 
         setupGetWithRestResultAnonymousExpectations(format("%s/%s", restUrl, inviteOrganisationId), InviteOrganisationResource.class, expected);
-        InviteOrganisationResource actual = service.getByIdForAnonymousUserFlow(inviteOrganisationId).getSuccessObjectOrThrowException();
+        InviteOrganisationResource actual = service.getByIdForAnonymousUserFlow(inviteOrganisationId).getSuccess();
 
         assertEquals(expected, actual);
     }
@@ -53,7 +53,7 @@ public class InviteOrganisationRestServiceImplTest extends BaseRestServiceUnitTe
         setupGetWithRestResultExpectations(format("%s/organisation/%s/application/%s", restUrl, organisationId, applicationId),
                 InviteOrganisationResource.class, expected);
         InviteOrganisationResource actual = service.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         assertEquals(expected, actual);
     }
 

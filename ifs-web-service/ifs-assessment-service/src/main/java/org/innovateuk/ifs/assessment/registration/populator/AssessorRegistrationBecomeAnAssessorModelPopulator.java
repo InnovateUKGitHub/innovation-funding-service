@@ -15,7 +15,7 @@ public class AssessorRegistrationBecomeAnAssessorModelPopulator {
     private CompetitionInviteRestService inviteRestService;
 
     public AssessorRegistrationBecomeAnAssessorViewModel populateModel(String inviteHash) {
-        inviteRestService.getInvite(inviteHash).getSuccessObjectOrThrowException();
+        inviteRestService.getInvite(inviteHash).getSuccess();
         return new AssessorRegistrationBecomeAnAssessorViewModel(inviteHash);
     }
 }

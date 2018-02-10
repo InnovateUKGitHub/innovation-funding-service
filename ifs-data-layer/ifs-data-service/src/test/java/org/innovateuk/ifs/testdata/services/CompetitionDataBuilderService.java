@@ -155,7 +155,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private void setDefaultCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccess())
         );
     }
 }

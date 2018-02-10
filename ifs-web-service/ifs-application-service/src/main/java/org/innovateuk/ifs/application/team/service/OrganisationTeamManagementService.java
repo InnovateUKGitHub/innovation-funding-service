@@ -46,7 +46,7 @@ public class OrganisationTeamManagementService extends AbstractTeamManagementSer
 
     public List<Long> getInviteIds(long applicationId, long organisationId) {
         List<ApplicationInviteResource> invites = inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
-                .getSuccessObjectOrThrowException()
+                .getSuccess()
                 .getInviteResources();
 
         if(invites != null) {

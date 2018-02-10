@@ -65,7 +65,7 @@ public class OrganisationDetailsModelPopulator {
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
-        return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(final List<ProcessRoleResource> userApplicationRoles, List<OrganisationResource> organisations) {

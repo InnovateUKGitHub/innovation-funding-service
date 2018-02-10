@@ -127,7 +127,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
 
     private Boolean isAssignableUser(Long applicationId, Long userId) {
-        return userService.findAssignableUsers(applicationId).getSuccessObjectOrThrowException().stream()
+        return userService.findAssignableUsers(applicationId).getSuccess().stream()
                 .map(UserResource::getId)
                 .anyMatch(allowedUserId -> allowedUserId.equals(userId));
     }

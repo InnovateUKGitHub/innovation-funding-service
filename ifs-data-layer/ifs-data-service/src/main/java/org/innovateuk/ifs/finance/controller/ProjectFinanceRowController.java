@@ -47,7 +47,7 @@ public class ProjectFinanceRowController {
             if (createResult.isFailure()) {
                 return restFailure(createResult.getFailure());
             } else {
-                validationMessages.setObjectId(createResult.getSuccessObject().getId());
+                validationMessages.setObjectId(createResult.getSuccess().getId());
                 return restSuccess(validationMessages, HttpStatus.CREATED);
             }
         }
