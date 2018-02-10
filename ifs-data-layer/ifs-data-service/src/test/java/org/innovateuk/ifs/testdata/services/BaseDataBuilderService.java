@@ -1,23 +1,24 @@
 package org.innovateuk.ifs.testdata.services;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
-import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.testdata.builders.TestService;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.getLoggedInUser;
@@ -30,29 +31,21 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_
  */
 public abstract class BaseDataBuilderService {
 
+    private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
+    private static Cache<Long, List<FormInputResource>> formInputsByQuestionId = CacheBuilder.newBuilder().build();
+
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
-    @Autowired
-    private RegistrationService registrationService;
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     protected OrganisationRepository organisationRepository;
 
     @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
-    private NotificationSender emailNotificationSender;
-
-    @Autowired
-    private BankDetailsService bankDetailsService;
 
     @Autowired
     protected CompetitionRepository competitionRepository;
@@ -63,25 +56,11 @@ public abstract class BaseDataBuilderService {
     @Autowired
     private FormInputService formInputService;
 
-    @Autowired
-    private TestService testService;
-
-    @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
-
-    protected UserResource compAdmin() {
-        return retrieveUserByEmail(COMP_ADMIN_EMAIL);
-    }
-
-    protected UserResource retrieveUserByEmail(String emailAddress) {
+    UserResource retrieveUserByEmail(String emailAddress) {
         return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
     }
 
-    protected OrganisationResource retrieveOrganisationById(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccessObjectOrThrowException());
-    }
-
-    protected OrganisationResource retrieveOrganisationByUserId(Long id) {
+    OrganisationResource retrieveOrganisationByUserId(Long id) {
         return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccessObjectOrThrowException());
     }
 
@@ -100,25 +79,30 @@ public abstract class BaseDataBuilderService {
         }
     }
 
-    private void doAs(UserResource user, Runnable action) {
-        UserResource currentUser = setLoggedInUser(user);
-        try {
-            action.run();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            setLoggedInUser(currentUser);
-        }
-    }
-
     /**
      * Set a user on the Spring Security ThreadLocals
-     *
-     * @param user
      */
     public static UserResource setLoggedInUser(UserResource user) {
         UserResource currentUser = getLoggedInUser();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
         return currentUser;
+    }
+
+    List<QuestionResource> retrieveCachedQuestionsByCompetitionId(Long competitionId) {
+        return fromCache(competitionId, questionsByCompetitionId, () ->
+                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
+    }
+
+    List<FormInputResource> retrieveCachedFormInputsByQuestionId(QuestionResource question) {
+        return fromCache(question.getId(), formInputsByQuestionId, () ->
+                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
+    }
+
+    private <K, V> V fromCache(K key, Cache<K, V> cache, Callable<V> loadingFunction) {
+        try {
+            return cache.get(key, loadingFunction);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Exception encountered whilst reading from Cache", e);
+        }
     }
 }

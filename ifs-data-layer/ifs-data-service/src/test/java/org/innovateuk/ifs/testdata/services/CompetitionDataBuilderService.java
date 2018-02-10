@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.testdata.ListenableFutureToCompletableFutureHelper.future;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplications;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -46,29 +44,19 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
     private List<CsvUtils.CompetitionLine> competitionLines;
 
-    private List<CsvUtils.ApplicationLine> applicationLines;
-
     @PostConstruct
     public void readCsvs() {
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionLines = readCompetitions();
-        applicationLines = readApplications();
     }
 
     public List<CompletableFuture<CompetitionData>> createCompetitions() {
 
-        List<CompletableFuture<CompetitionData>> futures = simpleMap(competitionLines, line -> {
-
-            return future(taskExecutor.submitListenable(() -> {
-
-                testService.doWithinTransaction(this::setDefaultCompAdmin);
-
-                return createCompetition(line);
-            }));
-        });
-
-        return futures;
+        return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() -> {
+            testService.doWithinTransaction(this::setDefaultCompAdmin);
+            return createCompetition(line);
+        }, taskExecutor));
     }
 
     public void moveCompetitionsToCorrectFinalState() {

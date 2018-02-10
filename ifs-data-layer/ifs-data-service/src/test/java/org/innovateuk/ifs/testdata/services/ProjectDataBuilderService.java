@@ -7,7 +7,6 @@ import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.testdata.builders.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -24,8 +23,7 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.readProjects;
 @Component
 public class ProjectDataBuilderService extends BaseDataBuilderService {
 
-    @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    private List<CsvUtils.ProjectLine> projectLines;
 
     @Autowired
     private TestService testService;
@@ -34,8 +32,6 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
     private GenericApplicationContext applicationContext;
 
     private ProjectDataBuilder projectDataBuilder;
-
-    private static List<CsvUtils.ProjectLine> projectLines;
 
     @PostConstruct
     public void setup() {

@@ -1,18 +1,13 @@
 package org.innovateuk.ifs.testdata.services;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.transactional.QuestionService;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
@@ -31,16 +26,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.testdata.ListenableFutureToCompletableFutureHelper.future;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
@@ -54,24 +46,15 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
-    private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
-
-    private static Cache<Long, List<FormInputResource>> formInputsByQuestionId = CacheBuilder.newBuilder().build();
+    private List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
+    private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
+    private List<CsvUtils.InviteLine> inviteLines;
 
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
 
     @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Autowired
     private GenericApplicationContext applicationContext;
-
-    @Autowired
-    private FormInputService formInputService;
-
-    @Autowired
-    private QuestionService questionService;
 
     private ApplicationDataBuilder applicationDataBuilder;
     private CompetitionDataBuilder competitionDataBuilder;
@@ -79,43 +62,31 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private QuestionResponseDataBuilder questionResponseDataBuilder;
 
     private List<CsvUtils.ApplicationLine> applicationLines;
-    private static List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
-    private static List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
-    private static List<CsvUtils.InviteLine> inviteLines;
 
     private Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
 
-        CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = future(taskExecutor.submitListenable(() ->
-                createApplicationQuestionResponses(applicationData)));
+        CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = CompletableFuture.supplyAsync(() ->
+                createApplicationQuestionResponses(applicationData), taskExecutor);
 
-        CompletableFuture<List<ApplicationFinanceData>> applicationFinances = future(taskExecutor.submitListenable(() ->
-                createApplicationFinances(applicationData)));
+        CompletableFuture<List<ApplicationFinanceData>> applicationFinances = CompletableFuture.supplyAsync(() ->
+                createApplicationFinances(applicationData), taskExecutor);
 
         CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
 
-        CompletableFuture<ApplicationData> completeApplicationFuture = allQuestionsAnswered.thenApplyAsync(done -> {
+        return allQuestionsAnswered.thenApplyAsync(done -> {
             List<ApplicationQuestionResponseData> responses = questionResponses.join();
             List<ApplicationFinanceData> finances = applicationFinances.join();
             completeApplication(applicationData, responses, finances);
             return applicationData;
         }, taskExecutor);
-
-        return completeApplicationFuture;
     };
 
     private Function<CompetitionData, List<CompletableFuture<ApplicationData>>> fillInAndCompleteApplications = competitionData -> {
 
         List<CompletableFuture<ApplicationData>> applicationFutures = createBasicApplicationDetails(competitionData);
 
-        List<CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFutures = simpleMap(applicationFutures, applicationFuture -> {
-
-            CompletableFuture<ApplicationData> fillInAndCompleteApplicationFuture = applicationFuture.
-                    thenComposeAsync(fillInAndCompleteApplicationFn, taskExecutor);
-
-            return fillInAndCompleteApplicationFuture;
-        });
-
-        return fillInAndCompleteApplicationFutures;
+        return simpleMap(applicationFutures, applicationFuture ->
+                applicationFuture.thenComposeAsync(fillInAndCompleteApplicationFn, taskExecutor));
     };
 
     @PostConstruct
@@ -144,7 +115,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         });
     }
 
-    static List<CsvUtils.ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
+    private static List<CsvUtils.ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
         return simpleMap(readCsvLines("application-questions"), CsvUtils.ApplicationQuestionResponseLine::new);
     }
 
@@ -163,14 +134,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         ApplicationDataBuilder applicationBuilder = applicationDataBuilder.withCompetition(competitionData.getCompetition());
 
-        List<CompletableFuture<ApplicationData>> createApplicationFutures = simpleMap(applicationsForCompetition, applicationLine -> {
-
-            return future(taskExecutor.submitListenable(() -> {
-                return createApplicationFromCsv(applicationBuilder, applicationLine);
-            }));
-        });
-
-        return createApplicationFutures;
+        return simpleMap(applicationsForCompetition, applicationLine -> CompletableFuture.supplyAsync(() ->
+                createApplicationFromCsv(applicationBuilder, applicationLine), taskExecutor));
     }
 
     private List<ApplicationQuestionResponseData> createApplicationQuestionResponses(ApplicationData applicationData) {
@@ -187,7 +152,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         // if we have specific answers for questions in the application-questions.csv file, fill them in here now
         if (!responsesForApplication.isEmpty()) {
 
-            List<QuestionResponseDataBuilder> responseBuilders = questionResponsesFromCsv(baseBuilder, applicationLine.leadApplicant, responsesForApplication, applicationData);
+            List<QuestionResponseDataBuilder> responseBuilders = questionResponsesFromCsv(baseBuilder, applicationLine.leadApplicant, responsesForApplication);
 
             return simpleMap(responseBuilders, BaseBuilder::build);
         }
@@ -220,7 +185,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 return responseBuilder;
             });
 
-            return simpleMap(responseBuilders, builder -> builder.build());
+            return simpleMap(responseBuilders, BaseBuilder::build);
         }
 
         return emptyList();
@@ -255,17 +220,17 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
             if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
-                if (organisationFinances.isPresent()) {
-                    return generateAcademicFinancesFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, applicationLine.markFinancesComplete);
-                } else {
-                    return generateAcademicFinances(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, applicationLine.markFinancesComplete);
-                }
+                return organisationFinances.map(suppliedFinances ->
+                    generateAcademicFinancesFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                ).orElseGet(() ->
+                    generateAcademicFinances(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                );
             } else {
-                if (organisationFinances.isPresent()) {
-                    return generateIndustrialCostsFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, organisationFinances.get(), applicationLine.markFinancesComplete);
-                } else {
-                    return generateIndustrialCosts(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, applicationLine.markFinancesComplete);
-                }
+                return organisationFinances.map(suppliedFinances ->
+                    generateIndustrialCostsFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, suppliedFinances)
+                ).orElseGet(() ->
+                    generateIndustrialCosts(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                );
             }
 
         });
@@ -316,8 +281,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationBuilder.build();
     }
 
-
-    private List<QuestionResponseDataBuilder> questionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication, ApplicationData applicationData) {
+    private List<QuestionResponseDataBuilder> questionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication) {
 
         return simpleMap(responsesForApplication, line -> {
 
@@ -375,7 +339,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     }
 
     private boolean isUniqueOrFirstDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
-        return organisationList.stream().filter(triple -> triple.getMiddle().equals(currentOrganisation.getMiddle())).findFirst().get().equals(currentOrganisation);
+        return simpleFindFirstMandatory(organisationList, triple -> triple.getMiddle().equals(currentOrganisation.getMiddle())).equals(currentOrganisation);
     }
 
     private IndustrialCostDataBuilder addFinanceRow(IndustrialCostDataBuilder builder, CsvUtils.ApplicationFinanceRow financeRow) {
@@ -419,7 +383,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         }
     }
 
-    private ApplicationFinanceDataBuilder generateIndustrialCostsFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName, CsvUtils.ApplicationOrganisationFinanceBlock organisationFinances, boolean markAsComplete) {
+    private ApplicationFinanceDataBuilder generateIndustrialCostsFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName, CsvUtils.ApplicationOrganisationFinanceBlock organisationFinances) {
 
         ApplicationFinanceDataBuilder finance = this.applicationFinanceDataBuilder.
                 withApplication(application).
@@ -445,7 +409,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withIndustrialCosts(costBuilder);
     }
 
-    private ApplicationFinanceDataBuilder generateIndustrialCosts(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
+    private ApplicationFinanceDataBuilder generateIndustrialCosts(ApplicationResource application, CompetitionResource competition, String user, String organisationName) {
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
@@ -454,7 +418,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withIndustrialCosts(costs -> costs.
                         withWorkingDaysPerYear(123).
                         withGrantClaim(30).
-                        withOtherFunding("Lottery", LocalDate.of(2016, 04, 01), bd("2468")).
+                        withOtherFunding("Lottery", LocalDate.of(2016, 4, 1), bd("2468")).
                         withLabourEntry("Role 1", 200, 200).
                         withLabourEntry("Role 2", 400, 300).
                         withLabourEntry("Role 3", 600, 365).
@@ -467,7 +431,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withOrganisationSize(1L));
     }
 
-    private ApplicationFinanceDataBuilder generateAcademicFinances(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
+    private ApplicationFinanceDataBuilder generateAcademicFinances(ApplicationResource application, CompetitionResource competition, String user, String organisationName) {
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
@@ -487,7 +451,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withUploadedJesForm());
     }
 
-    private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName, boolean markAsComplete) {
+    private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName) {
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
@@ -500,23 +464,5 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
-    }
-
-    protected List<QuestionResource> retrieveCachedQuestionsByCompetitionId(Long competitionId) {
-        return fromCache(competitionId, questionsByCompetitionId, () ->
-                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
-    }
-
-    protected List<FormInputResource> retrieveCachedFormInputsByQuestionId(QuestionResource question) {
-        return fromCache(question.getId(), formInputsByQuestionId, () ->
-                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
-    }
-
-    protected<K, V> V fromCache(K key, Cache<K, V> cache, Callable<V> loadingFunction) {
-        try {
-            return cache.get(key, loadingFunction);
-        } catch (ExecutionException e) {
-            throw new RuntimeException("Exception encountered whilst reading from Cache", e);
-        }
     }
 }
