@@ -15,14 +15,13 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplications;
-import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.testdata.ListenableFutureToCompletableFutureHelper.future;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readApplications;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -74,15 +73,29 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
     public void moveCompetitionsToCorrectFinalState() {
 
-        List<String> competitionsToAddApplicationsTo = removeDuplicates(simpleMap(applicationLines, line -> line.competitionName));
+        competitionLines.forEach(line -> {
 
-        competitionsToAddApplicationsTo.forEach(competitionName -> {
+            Long competitionId = competitionRepository.findByName(line.name).get(0).getId();
 
-            Long competitionId = competitionRepository.findByName(competitionName).get(0).getId();
-
-            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
-
-            basicCompetitionInformation.restoreOriginalMilestones().build();
+            competitionDataBuilder.
+                    withExistingCompetition(competitionId).
+                    withOpenDate(line.openDate).
+                    withBriefingDate(line.briefingDate).
+                    withSubmissionDate(line.submissionDate).
+                    withAllocateAssesorsDate(line.allocateAssessorDate).
+                    withAssessorBriefingDate(line.assessorBriefingDate).
+                    withAssessorAcceptsDate(line.assessorAcceptsDate).
+                    withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                    withAssessorEndDate(line.assessorEndDate).
+                    withAssessmentClosedDate(line.assessmentClosedDate).
+                    withLineDrawDate(line.drawLineDate).
+                    withAsessmentPanelDate(line.assessmentPanelDate).
+                    withPanelDate(line.panelDate).
+                    withFundersPanelDate(line.fundersPanelDate).
+                    withFundersPanelEndDate(line.fundersPanelEndDate).
+                    withReleaseFeedbackDate(line.releaseFeedback).
+                    withFeedbackReleasedDate(line.feedbackReleased).
+                    build();
         });
     }
 
