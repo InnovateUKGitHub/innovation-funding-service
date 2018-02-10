@@ -8,7 +8,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
  * TODO DW - document this class
  */
 @TestConfiguration
-public class GenerateTesttDataConfiguration {
+public class GenerateTestDataConfiguration {
 
     @Bean
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {

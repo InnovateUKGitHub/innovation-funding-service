@@ -82,7 +82,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@SpringBootTest(classes = GenerateTesttDataConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+@SpringBootTest(classes = GenerateTestDataConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
@@ -232,6 +232,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         System.out.println("Starting generating data...");
 
         fixUpDatabase();
+
         createOrganisations();
         createInternalUsers();
         createExternalUsers();
@@ -244,10 +245,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         CompletableFuture<Void> competitionsFinalisedFuture = waitForFutureList(createApplicationsFutures).thenComposeAsync(createdApplications ->
 
-            CompletableFuture.
-                    runAsync(() -> createFundingDecisions(competitionLines), taskExecutor).
-                    thenRunAsync(() -> projectDataBuilderService.createProjects(), taskExecutor).
-                    thenRunAsync(() -> competitionDataBuilderService.moveCompetitionsToCorrectFinalState()), taskExecutor);
+                CompletableFuture.
+                        runAsync(() -> createFundingDecisions(competitionLines), taskExecutor).
+                        thenRunAsync(() -> projectDataBuilderService.createProjects(), taskExecutor).
+                        thenRunAsync(() -> competitionDataBuilderService.moveCompetitionsToCorrectFinalState()), taskExecutor);
 
         CompletableFuture<Void> questionUpdateFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(this::updateQuestions, taskExecutor);
 
