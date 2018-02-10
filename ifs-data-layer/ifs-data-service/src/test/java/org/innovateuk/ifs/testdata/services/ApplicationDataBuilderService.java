@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.testdata.services;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -29,7 +31,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
@@ -49,6 +53,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  */
 @Component
 public class ApplicationDataBuilderService extends BaseDataBuilderService {
+
+    private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
+
+    private static Cache<Long, List<FormInputResource>> formInputsByQuestionId = CacheBuilder.newBuilder().build();
 
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
@@ -149,8 +157,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             return emptyList();
         }
 
-        Long competitionId = competitionRepository.findByName(competitionData.getCompetition().getName()).get(0).getId();
-        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionData);
+
         basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
 
         ApplicationDataBuilder applicationBuilder = applicationDataBuilder.withCompetition(competitionData.getCompetition());
@@ -186,8 +194,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         // otherwise provide a default set of marked as complete questions if the application is to be submitted
         else if (applicationLine.submittedDate != null) {
 
-            // TODO DW - this was cached in builder before
-            List<QuestionResource> competitionQuestions = questionService.findByCompetition(applicationData.getCompetition().getId()).getSuccessObjectOrThrowException();
+            List<QuestionResource> competitionQuestions = retrieveCachedQuestionsByCompetitionId(applicationData.getCompetition().getId());
 
             List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
                     q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
@@ -199,8 +206,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withAssignee(applicationData.getLeadApplicant().getEmail()).
                         withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", applicationData.getLeadApplicant().getEmail());
 
-                // TODO DW - this was cached in builder before
-                List<FormInputResource> formInputs = formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+                List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
 
                 if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
 
@@ -494,5 +500,23 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     private BigDecimal bd(String value) {
         return new BigDecimal(value);
+    }
+
+    protected List<QuestionResource> retrieveCachedQuestionsByCompetitionId(Long competitionId) {
+        return fromCache(competitionId, questionsByCompetitionId, () ->
+                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
+    }
+
+    protected List<FormInputResource> retrieveCachedFormInputsByQuestionId(QuestionResource question) {
+        return fromCache(question.getId(), formInputsByQuestionId, () ->
+                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
+    }
+
+    protected<K, V> V fromCache(K key, Cache<K, V> cache, Callable<V> loadingFunction) {
+        try {
+            return cache.get(key, loadingFunction);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Exception encountered whilst reading from Cache", e);
+        }
     }
 }

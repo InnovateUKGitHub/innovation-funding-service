@@ -403,7 +403,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 basicCompetitionInformation.
                         moveCompetitionIntoFundersPanelStatus().
                         sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
-                        restoreOriginalMilestones().
                         build();
             }
         });

@@ -77,6 +77,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder withExistingCompetition(CompetitionData competitionData) {
+
+        return with(data -> {
+            data.setCompetition(competitionData.getCompetition());
+            competitionData.getOriginalMilestones().forEach(data::addOriginalMilestone);
+        });
+    }
+
     public CompetitionDataBuilder withBasicData(String name, String competitionTypeName, List<String> innovationAreaNames,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
                                                 String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel, Boolean hasInterviewStage,
