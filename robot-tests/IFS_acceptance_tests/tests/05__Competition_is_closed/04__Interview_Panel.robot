@@ -22,7 +22,7 @@ User navigates to the Manage interview panel
 CompAdmin can add an assessors to inivte list
     [Documentation]  IFS-2778
     Given the user clicks the button/link  link=Invite assessors
-    Then the compAdmin invite assessors for the competition
+    Then the competition admin invite assessors for the competition
 
 *** Keywords ***
 Custom Suite Setup
