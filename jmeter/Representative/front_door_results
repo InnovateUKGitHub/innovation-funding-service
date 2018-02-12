@@ -1,0 +1,148 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,Latency,IdleTime,Connect
+1518423974375,121,Homepage ,200,OK,Competition Management 1-1,text,true,,7293,1573,1,1,55,0,52
+1518423974442,66,Login,200,OK,Competition Management 1-1,text,true,,11768,864,1,1,64,0,0
+1518423974856,413,Post Shibboleth Data,200,200,Competition Management 1-1,text,true,,9047,17242,1,1,20,0,0
+1518423987296,1874,Upcoming competitions,200,200,Competition Management 1-1,text,true,,6299,896,1,1,1844,0,5
+1518423993597,158,Create competition,200,200,Competition Management 1-1,text,true,,6508,1803,1,1,61,0,4
+1518423998071,271,Initial section,200,200,Competition Management 1-1,text,true,,7441,922,1,1,257,0,4
+1518424006665,121,Autosave competition title,200,200,Competition Management 1-1,text,true,,1334,1633,1,1,120,0,4
+1518424010323,64,Homepage ,200,OK,Competition Management 1-2,text,true,,7294,1575,2,2,26,0,23
+1518424010380,57,Login,200,OK,Competition Management 1-2,text,true,,11768,864,2,2,54,0,0
+1518424010665,284,Post Shibboleth Data,200,200,Competition Management 1-2,text,true,,9046,17242,2,2,19,0,0
+1518424013231,91,Autosave competition type,200,200,Competition Management 1-1,text,true,,1334,1365,2,2,90,0,3
+1518424019255,37,Get Innovation Area,200,200,Competition Management 1-1,text,true,,11873,860,2,2,37,0,4
+1518424019499,92,Autosave innovation sector category,200,200,Competition Management 1-1,text,true,,1333,1374,2,2,91,0,0
+1518424019565,59,Autosave Innovation Area,200,200,Competition Management 1-1,text,true,,1334,1372,2,2,59,0,0
+1518424022401,1171,Upcoming competitions,200,200,Competition Management 1-2,text,true,,6313,896,2,2,1152,0,3
+1518424028671,127,Create competition,200,200,Competition Management 1-2,text,true,,6508,1803,2,2,51,0,4
+1518424028941,87,Autosave Innovation Area,200,200,Competition Management 1-1,text,true,,1334,1374,2,2,87,0,5
+1518424032978,304,Autosave opening date,200,200,Competition Management 1-1,text,true,,1334,1367,2,2,304,0,6
+1518424033110,235,Initial section,200,200,Competition Management 1-2,text,true,,7443,922,2,2,227,0,3
+1518424037330,175,Autosave Innovation Lead,200,200,Competition Management 1-1,text,true,,1334,1369,2,2,175,0,4
+1518424041668,86,Autosave competition title,200,200,Competition Management 1-2,text,true,,1334,1633,2,2,86,0,3
+1518424042312,179,Autosave executive,200,200,Competition Management 1-1,text,true,,1334,1364,2,2,179,0,3
+1518424046381,120,Homepage ,200,OK,Competition Management 1-3,text,true,,7301,1577,3,3,57,0,53
+1518424046438,57,Login,200,OK,Competition Management 1-3,text,true,,11758,864,3,3,55,0,0
+1518424046724,285,Post Shibboleth Data,200,200,Competition Management 1-3,text,true,,9046,17242,3,3,18,0,0
+1518424046747,1137,Save initial section,200,200,Competition Management 1-1,text,true,,6996,2634,3,3,935,0,3
+1518424048224,81,Autosave competition type,200,200,Competition Management 1-2,text,true,,1334,1365,3,3,81,0,4
+1518424051690,112,Competition funding information section,200,200,Competition Management 1-1,text,true,,6216,941,3,3,105,0,4
+1518424054254,41,Get Innovation Area,200,200,Competition Management 1-2,text,true,,11873,860,3,3,41,0,4
+1518424054495,88,Autosave innovation sector category,200,200,Competition Management 1-2,text,true,,1333,1374,3,3,88,0,0
+1518424054571,68,Autosave Innovation Area,200,200,Competition Management 1-2,text,true,,1334,1372,3,3,67,0,0
+1518424058595,1301,Upcoming competitions,200,200,Competition Management 1-3,text,true,,6322,896,3,3,1286,0,4
+1518424061685,77,Autosave competition funder,200,200,Competition Management 1-1,text,true,,1334,1385,3,3,76,0,3
+1518424063953,95,Autosave Innovation Area,200,200,Competition Management 1-2,text,true,,1334,1374,3,3,95,0,3
+1518424064879,140,Create competition,200,200,Competition Management 1-3,text,true,,6508,1803,3,3,61,0,5
+1518424065821,97,Autosave competition funder budget,200,200,Competition Management 1-1,text,true,,1334,1386,3,3,97,0,4
+1518424067994,307,Autosave opening date,200,200,Competition Management 1-2,text,true,,1334,1367,3,3,307,0,5
+1518424069303,216,Initial section,200,200,Competition Management 1-3,text,true,,7438,922,3,3,209,0,4
+1518424072171,87,Autosave competition PAF number,200,200,Competition Management 1-1,text,true,,1334,1365,3,3,86,0,5
+1518424072326,156,Autosave Innovation Lead,200,200,Competition Management 1-2,text,true,,1334,1369,3,3,155,0,3
+1518424074407,93,Autosave competition funding budget code,200,200,Competition Management 1-1,text,true,,1334,1366,3,3,93,0,4
+1518424075567,84,Autosave competition funding activity code,200,200,Competition Management 1-1,text,true,,1333,1368,3,3,84,0,0
+1518424076777,134,Generate competition code,200,200,Competition Management 1-1,text,true,,1354,871,3,3,134,0,4
+1518424077295,166,Autosave executive,200,200,Competition Management 1-2,text,true,,1334,1364,3,3,165,0,3
+1518424077860,87,Autosave competition title,200,200,Competition Management 1-3,text,true,,1334,1633,3,3,87,0,4
+1518424078271,177,Save competition funding information section,200,200,Competition Management 1-1,text,true,,6985,2560,3,3,111,0,0
+1518424081403,808,Save initial section,200,200,Competition Management 1-2,text,true,,6994,2634,3,3,607,0,3
+1518424081518,91,Competition eligibility section,200,200,Competition Management 1-1,text,true,,6396,945,3,3,87,0,4
+1518424082332,65,Homepage ,200,OK,Competition Management 1-4,text,true,,7288,1571,4,4,23,0,21
+1518424082445,112,Login,200,OK,Competition Management 1-4,text,true,,11733,864,4,4,112,0,0
+1518424082738,292,Post Shibboleth Data,200,200,Competition Management 1-4,text,true,,9047,17242,4,4,18,0,0
+1518424084425,92,Autosave competition type,200,200,Competition Management 1-3,text,true,,1334,1365,4,4,91,0,4
+1518424084665,92,Autosave collaborative status of competition,200,200,Competition Management 1-1,text,true,,1334,1389,4,4,92,0,5
+1518424085375,85,Autosave research category,200,200,Competition Management 1-1,text,true,,1333,1375,4,4,84,0,0
+1518424086340,103,Competition funding information section,200,200,Competition Management 1-2,text,true,,6217,941,4,4,100,0,5
+1518424087060,87,Autosave lead applicant type,200,200,Competition Management 1-1,text,true,,1334,1374,4,4,87,0,4
+1518424090453,37,Get Innovation Area,200,200,Competition Management 1-3,text,true,,11873,860,4,4,37,0,3
+1518424090756,148,Autosave innovation sector category,200,200,Competition Management 1-3,text,true,,1333,1374,4,4,147,0,0
+1518424090856,91,Autosave Innovation Area,200,200,Competition Management 1-3,text,true,,1334,1372,4,4,90,0,0
+1518424092485,84,Autosave research participation amount,200,200,Competition Management 1-1,text,true,,1334,1385,4,4,84,0,4
+1518424094554,1250,Upcoming competitions,200,200,Competition Management 1-4,text,true,,6330,896,4,4,1225,0,3
+1518424096352,88,Autosave competition funder,200,200,Competition Management 1-2,text,true,,1334,1385,4,4,87,0,3
+1518424097424,88,Autosave resubmission allowed,200,200,Competition Management 1-1,text,true,,1334,1369,4,4,87,0,2
+1518424100239,97,Autosave Innovation Area,200,200,Competition Management 1-3,text,true,,1334,1374,4,4,97,0,4
+1518424100487,94,Autosave competition funder budget,200,200,Competition Management 1-2,text,true,,1334,1386,4,4,94,0,3
+1518424100565,106,Competition milestones section,200,200,Competition Management 1-1,text,true,,7711,945,4,4,94,0,3
+1518424100836,135,Create competition,200,200,Competition Management 1-4,text,true,,6507,1803,4,4,41,0,3
+1518424101116,156,Autosave open date,200,200,Competition Management 1-1,text,true,,1333,1407,4,4,155,0,0
+1518424104324,349,Autosave opening date,200,200,Competition Management 1-3,text,true,,1334,1367,4,4,348,0,4
+1518424105285,242,Initial section,200,200,Competition Management 1-4,text,true,,7440,922,4,4,235,0,4
+1518424106857,107,Autosave competition PAF number,200,200,Competition Management 1-2,text,true,,1334,1365,4,4,107,0,4
+1518424108663,160,Autosave Innovation Lead,200,200,Competition Management 1-3,text,true,,1334,1369,4,4,159,0,4
+1518424109085,87,Autosave competition funding budget code,200,200,Competition Management 1-2,text,true,,1334,1366,4,4,87,0,4
+1518424110246,88,Autosave competition funding activity code,200,200,Competition Management 1-2,text,true,,1333,1368,4,4,88,0,0
+1518424111483,163,Generate competition code,200,200,Competition Management 1-2,text,true,,1354,871,4,4,162,0,4
+1518424112976,174,Save competition funding information section,200,200,Competition Management 1-2,text,true,,6982,2560,4,4,112,0,0
+1518424113637,175,Autosave executive,200,200,Competition Management 1-3,text,true,,1334,1364,4,4,174,0,5
+1518424113843,87,Autosave competition title,200,200,Competition Management 1-4,text,true,,1334,1633,4,4,87,0,4
+1518424116235,98,Competition eligibility section,200,200,Competition Management 1-2,text,true,,6400,945,4,4,95,0,4
+1518424117208,121,Autosave briefing event date,200,200,Competition Management 1-1,text,true,,1334,1412,4,4,120,0,3
+1518424117675,737,Save initial section,200,200,Competition Management 1-3,text,true,,6996,2634,4,4,542,0,4
+1518424118375,106,Homepage ,200,OK,Competition Management 1-5,text,true,,7277,1565,5,5,45,0,43
+1518424118418,43,Login,200,OK,Competition Management 1-5,text,true,,11727,864,5,5,43,0,0
+1518424118707,288,Post Shibboleth Data,200,200,Competition Management 1-5,text,true,,9046,17242,5,5,21,0,0
+1518424119381,87,Autosave collaborative status of competition,200,200,Competition Management 1-2,text,true,,1334,1389,5,5,86,0,5
+1518424120088,83,Autosave research category,200,200,Competition Management 1-2,text,true,,1333,1375,5,5,82,0,0
+1518424120414,95,Autosave competition type,200,200,Competition Management 1-4,text,true,,1334,1365,5,5,94,0,5
+1518424121820,132,Autosave lead applicant type,200,200,Competition Management 1-2,text,true,,1334,1374,5,5,131,0,3
+1518424122617,110,Competition funding information section,200,200,Competition Management 1-3,text,true,,6216,941,5,5,107,0,4
+1518424126444,44,Get Innovation Area,200,200,Competition Management 1-4,text,true,,11873,860,5,5,44,0,3
+1518424126503,112,Autosave submission date,200,200,Competition Management 1-1,text,true,,1334,1413,5,5,111,0,4
+1518424126687,88,Autosave innovation sector category,200,200,Competition Management 1-4,text,true,,1333,1374,5,5,88,0,0
+1518424126765,69,Autosave Innovation Area,200,200,Competition Management 1-4,text,true,,1334,1372,5,5,69,0,0
+1518424127251,95,Autosave research participation amount,200,200,Competition Management 1-2,text,true,,1334,1385,5,5,95,0,4
+1518424130411,1134,Upcoming competitions,200,200,Competition Management 1-5,text,true,,6339,896,5,5,1128,0,4
+1518424131364,89,Autosave assessor allocation date,200,200,Competition Management 1-1,text,true,,1334,1416,5,5,89,0,4
+1518424132187,85,Autosave resubmission allowed,200,200,Competition Management 1-2,text,true,,1334,1369,5,5,85,0,4
+1518424132633,94,Autosave competition funder,200,200,Competition Management 1-3,text,true,,1334,1385,5,5,93,0,2
+1518424135306,83,Competition milestones section,200,200,Competition Management 1-2,text,true,,7713,945,5,5,78,0,4
+1518424135805,104,Autosave open date,200,200,Competition Management 1-2,text,true,,1333,1407,5,5,104,0,0
+1518424136128,78,Autosave Innovation Area,200,200,Competition Management 1-4,text,true,,1334,1374,5,5,77,0,2
+1518424136687,134,Create competition,200,200,Competition Management 1-5,text,true,,6507,1803,5,5,47,0,3
+1518424136784,116,Autosave competition funder budget,200,200,Competition Management 1-3,text,true,,1334,1386,5,5,116,0,4
+1518424136825,122,Autosave assessor briefing date,200,200,Competition Management 1-1,text,true,,1334,1415,5,5,122,0,5
+1518424140162,300,Autosave opening date,200,200,Competition Management 1-4,text,true,,1334,1367,5,5,299,0,8
+1518424141126,235,Initial section,200,200,Competition Management 1-5,text,true,,7439,922,5,5,231,0,4
+1518424142245,103,Autosave assessor acceptance date,200,200,Competition Management 1-1,text,true,,1334,1413,5,5,102,0,3
+1518424143131,89,Autosave competition PAF number,200,200,Competition Management 1-3,text,true,,1334,1365,5,5,88,0,3
+1518424144502,161,Autosave Innovation Lead,200,200,Competition Management 1-4,text,true,,1334,1369,5,5,160,0,4
+1518424145366,95,Autosave competition funding budget code,200,200,Competition Management 1-3,text,true,,1334,1366,5,5,94,0,4
+1518424146524,86,Autosave competition funding activity code,200,200,Competition Management 1-3,text,true,,1333,1368,5,5,86,0,0
+1518424147758,159,Generate competition code,200,200,Competition Management 1-3,text,true,,1354,871,5,5,159,0,4
+1518424147817,106,Autosave assessor deadline date,200,200,Competition Management 1-1,text,true,,1334,1414,5,5,105,0,3
+1518424149251,177,Save competition funding information section,200,200,Competition Management 1-3,text,true,,6985,2560,5,5,114,0,0
+1518424149483,178,Autosave executive,200,200,Competition Management 1-4,text,true,,1334,1364,5,5,177,0,5
+1518424149693,91,Autosave competition title,200,200,Competition Management 1-5,text,true,,1334,1633,5,5,90,0,4
+1518424151896,119,Autosave briefing event date,200,200,Competition Management 1-2,text,true,,1334,1412,5,5,119,0,4
+1518424152500,100,Assessor line draw date,200,200,Competition Management 1-1,text,true,,1334,1406,5,5,100,0,4
+1518424152519,109,Competition eligibility section,200,200,Competition Management 1-3,text,true,,6397,945,5,5,106,0,3
+1518424153495,710,Save initial section,200,200,Competition Management 1-4,text,true,,6996,2634,5,5,522,0,4
+1518424154330,55,Homepage ,200,OK,Competition Management 1-6,text,true,,7273,1563,6,6,24,0,22
+1518424154380,50,Login,200,OK,Competition Management 1-6,text,true,,11740,864,6,6,50,0,0
+1518424154656,275,Post Shibboleth Data,200,200,Competition Management 1-6,text,true,,9046,17242,6,6,19,0,0
+1518424155652,78,Autosave collaborative status of competition,200,200,Competition Management 1-3,text,true,,1334,1389,6,6,77,0,4
+1518424156271,105,Autosave competition type,200,200,Competition Management 1-5,text,true,,1334,1365,6,6,104,0,4
+1518424156356,79,Autosave research category,200,200,Competition Management 1-3,text,true,,1333,1375,6,6,78,0,0
+1518424158044,88,Autosave lead applicant type,200,200,Competition Management 1-3,text,true,,1334,1374,6,6,88,0,5
+1518424158437,110,Competition funding information section,200,200,Competition Management 1-4,text,true,,6215,941,6,6,107,0,6
+1518424159007,93,Autosave assessment panel date,200,200,Competition Management 1-1,text,true,,1334,1413,6,6,93,0,4
+1518424161177,101,Autosave submission date,200,200,Competition Management 1-2,text,true,,1334,1413,6,6,100,0,4
+1518424162295,35,Get Innovation Area,200,200,Competition Management 1-5,text,true,,11873,860,6,6,35,0,4
+1518424162541,92,Autosave innovation sector category,200,200,Competition Management 1-5,text,true,,1333,1374,6,6,92,0,0
+1518424162611,61,Autosave Innovation Area,200,200,Competition Management 1-5,text,true,,1334,1372,6,6,60,0,0
+1518424163478,95,Autosave research participation amount,200,200,Competition Management 1-3,text,true,,1334,1385,6,6,95,0,4
+1518424165024,95,Autosave panel date,200,200,Competition Management 1-1,text,true,,1334,1407,6,6,95,0,4
+1518424166054,108,Autosave assessor allocation date,200,200,Competition Management 1-2,text,true,,1334,1416,6,6,108,0,2
+1518424166433,1208,Upcoming competitions,200,200,Competition Management 1-6,text,true,,6346,896,6,6,1201,0,4
+1518424168413,89,Autosave resubmission allowed,200,200,Competition Management 1-3,text,true,,1334,1369,6,6,89,0,4
+1518424168440,80,Autosave competition funder,200,200,Competition Management 1-4,text,true,,1334,1385,6,6,80,0,2
+1518424170130,110,Autosave funders panel date,200,200,Competition Management 1-1,text,true,,1334,1410,6,6,110,0,4
+1518424171509,114,Autosave assessor briefing date,200,200,Competition Management 1-2,text,true,,1334,1415,6,6,113,0,3
+1518424171558,110,Competition milestones section,200,200,Competition Management 1-3,text,true,,7713,945,6,6,105,0,19
+1518424171987,90,Autosave Innovation Area,200,200,Competition Management 1-5,text,true,,1334,1374,6,6,90,0,4
+1518424172067,115,Autosave open date,200,200,Competition Management 1-3,text,true,,1333,1407,6,6,115,0,0
+1518424172564,85,Autosave competition funder budget,200,200,Competition Management 1-4,text,true,,1334,1386,6,6,84,0,4
+1518424172692,112,Create competition,200,200,Competition Management 1-6,text,true,,6507,1803,6,6,37,0,3
+151842
