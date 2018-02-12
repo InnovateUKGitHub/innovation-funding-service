@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -297,6 +298,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);
 
     @Query(value = COUNT_PENDING_SPEND_PROFILES, nativeQuery = true)
-    Object countPendingSpendProfiles(@Param("competitionId") Long competitionId);
+    BigDecimal countPendingSpendProfiles(@Param("competitionId") Long competitionId);
 
 }

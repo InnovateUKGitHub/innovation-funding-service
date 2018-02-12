@@ -420,6 +420,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
 
-        return serviceSuccess(((BigInteger)competitionRepository.countPendingSpendProfiles(competitionId)).longValue());
+        return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId).longValue());
     }
 }
