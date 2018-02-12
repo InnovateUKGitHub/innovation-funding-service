@@ -460,15 +460,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null)
                     .andOnSuccessReturn(allSectionsComplete -> {
                         Competition competition = application.getCompetition();
-                        BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(
-                                id);
+                        BigDecimal researchParticipation =
+                                applicationFinanceHandler.getResearchParticipationPercentage(id);
 
                         boolean readyForSubmit = false;
-                        if (allSectionsComplete &&
-                                progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                                researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
+
+                        if (allSectionsComplete
+                                && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+                                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
                             readyForSubmit = true;
                         }
+
                         return readyForSubmit;
                     });
         }).getSuccess();
