@@ -140,7 +140,7 @@ public class AcceptInviteServiceImpl extends BaseInviteService implements Accept
     private void updateApplicationProgress(Application application) {
         BigDecimal completion = applicationService
                 .getProgressPercentageBigDecimalByApplicationId(application.getId())
-                .getSuccessObject();
+                .getSuccess();
         application.setCompletion(completion);
     }
 }
