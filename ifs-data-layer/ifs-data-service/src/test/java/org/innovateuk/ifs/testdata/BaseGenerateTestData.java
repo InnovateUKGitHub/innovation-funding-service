@@ -64,7 +64,6 @@ import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newIn
 import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
-import static org.innovateuk.ifs.testdata.builders.QuestionDataBuilder.newQuestionData;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
@@ -144,7 +143,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private ProjectDataBuilderService projectDataBuilderService;
 
     private CompetitionDataBuilder competitionDataBuilder;
-    private QuestionDataBuilder questionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
     private PublicContentDateDataBuilder publicContentDateDataBuilder;
@@ -154,7 +152,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static List<OrganisationLine> organisationLines;
     private static List<CompetitionLine> competitionLines;
-    private static List<QuestionLine> questionLines;
     private static List<CompetitionFunderLine> competitionFunderLines;
     private static List<PublicContentGroupLine> publicContentGroupLines;
     private static List<PublicContentDateLine> publicContentDateLines;
@@ -173,7 +170,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     public void readCsvs() {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
-        questionLines = readQuestions();
         competitionFunderLines = readCompetitionFunders();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
@@ -217,7 +213,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
-        questionDataBuilder = newQuestionData(serviceLocator);
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
@@ -245,8 +240,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 applicationDataBuilderService.fillInAndCompleteApplications(createCompetitionFutures);
 
-        CompletableFuture<Void> questionUpdateFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(this::updateQuestions, taskExecutor);
-
         CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(this::createCompetitionFunders, taskExecutor);
 
         CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() -> {
@@ -266,7 +259,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             competitionDataBuilderService.moveCompetitionsToCorrectFinalState();
         }, taskExecutor);
 
-        CompletableFuture.allOf(questionUpdateFutures, competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
+        CompletableFuture.allOf(competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
 
         long after = System.currentTimeMillis();
 
@@ -278,23 +271,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         return CompletableFuture.allOf(createApplicationsFutures.toArray(new CompletableFuture[] {}));
     }
 
-    private void updateQuestions() {
-        questionLines.forEach(this::updateQuestion);
-    }
-
     private void createExternalUsers() {
         externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
-
-    private void updateQuestion(QuestionLine questionLine) {
-        this.questionDataBuilder.updateApplicationQuestionHeading(questionLine.ordinal,
-                questionLine.competitionName,
-                questionLine.heading,
-                questionLine.title,
-                questionLine.subtitle).build();
-    }
-
-
 
     private void createCompetitionFunders() {
         competitionFunderLines.forEach(this::createCompetitionFunder);

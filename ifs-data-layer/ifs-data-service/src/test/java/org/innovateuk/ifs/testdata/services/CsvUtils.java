@@ -100,10 +100,6 @@ public class CsvUtils {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
 
-    public static List<QuestionLine> readQuestions() {
-        return simpleMap(readCsvLines("questions"), QuestionLine::new);
-    }
-
     public static class ProjectLine {
 
         public String name;
