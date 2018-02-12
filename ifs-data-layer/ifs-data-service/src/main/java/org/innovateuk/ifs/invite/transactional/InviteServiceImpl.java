@@ -295,7 +295,7 @@ public class InviteServiceImpl extends BaseInviteService implements InviteServic
                 applicationFinanceRepository.delete(finance);
             }
         }
-        updateApplicationProgress(application);
+        applicationService.updateApplicationProgress(application.getId());
     }
 
     private InviteResultsResource sendInvites(List<ApplicationInvite> invites) {
@@ -316,7 +316,6 @@ public class InviteServiceImpl extends BaseInviteService implements InviteServic
         if (inviteOrganisationResource.getOrganisation() != null && applicationId.isPresent()) {
             return eitherFindExistingInviteOrganisationOrCreateNewInviteOrganisationForOrganisation(inviteOrganisationResource, applicationId.get());
         } else {
-
             return serviceSuccess(buildNewInviteOrganisation(inviteOrganisationResource));
         }
     }
@@ -405,12 +404,5 @@ public class InviteServiceImpl extends BaseInviteService implements InviteServic
                         .andOnSuccess(inviteOrganisation -> serviceSuccess(inviteOrganisation))
                         .andOnFailure(() -> serviceSuccess(buildNewInviteOrganisationForOrganisation(inviteOrganisationResource, organisation)))
                 );
-    }
-
-    private void updateApplicationProgress(Application application) {
-        BigDecimal completion = applicationService
-                .getProgressPercentageBigDecimalByApplicationId(application.getId())
-                .getSuccess();
-        application.setCompletion(completion);
     }
 }

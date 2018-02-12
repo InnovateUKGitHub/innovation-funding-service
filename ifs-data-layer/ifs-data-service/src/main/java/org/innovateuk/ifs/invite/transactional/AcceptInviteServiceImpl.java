@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -134,13 +133,6 @@ public class AcceptInviteServiceImpl extends BaseInviteService implements Accept
         processRoleRepository.save(processRole);
         application.addProcessRole(processRole);
 
-        updateApplicationProgress(application);
-    }
-
-    private void updateApplicationProgress(Application application) {
-        BigDecimal completion = applicationService
-                .getProgressPercentageBigDecimalByApplicationId(application.getId())
-                .getSuccess();
-        application.setCompletion(completion);
+        applicationService.updateApplicationProgress(application.getId());
     }
 }

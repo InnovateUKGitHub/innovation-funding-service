@@ -70,7 +70,7 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
 
-        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
@@ -105,7 +105,7 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
 
-        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
@@ -127,7 +127,7 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
         ))
                 .thenReturn(Optional.empty());
 
-        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
@@ -163,7 +163,7 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
         );
 
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(expectedProcessRole);
-        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(invite.getTarget().getId()))
+        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());

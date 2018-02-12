@@ -437,7 +437,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
+        public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
             return null;
         }
 

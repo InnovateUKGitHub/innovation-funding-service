@@ -514,7 +514,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId()))
                 .thenReturn(applicationFinance);
-        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(application.getId()))
+        when(applicationServiceMock.updateApplicationProgress(application.getId()))
                 .thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInviteToDelete.getId());

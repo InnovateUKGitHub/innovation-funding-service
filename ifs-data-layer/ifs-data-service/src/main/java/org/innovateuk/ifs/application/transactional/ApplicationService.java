@@ -86,8 +86,8 @@ public interface ApplicationService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
+    ServiceResult<BigDecimal> updateApplicationProgress(Long applicationId);
 
     @SecuredBySpring(value = "NOTIFY_APPLICANTS_OF_FEEDBACK",
             description = "Comp admins and project finance users can notify applicants that their feedback is released")
