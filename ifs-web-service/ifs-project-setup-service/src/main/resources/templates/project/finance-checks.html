@@ -27,16 +27,19 @@
         <div class="success-alert extra-margin-bottom">
             The finance checks have been completed and your finances approved.
         </div>
+        <p> Review <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">your finances</a>
+            or your <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">project finance overview</a>.
+        </p>
     </th:block>
     <th:block>
-        <p>
-            <th:block th:text="${model.isApproved()} ? 'Innovate UK has approved' : 'Innovate UK is reviewing'"/>
-            <th:block th:unless="${model.isAcademic()}">
+        <th:block th:unless="${model.isApproved()}">
+            <p>Innovate UK is reviewing
+                <th:block th:unless="${model.isAcademic()}">
                 <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">your finances</a>.
-            </th:block>
-            <th:block th:if="${model.isAcademic()}">
+                </th:block>
+                <th:block th:if="${model.isAcademic()}">
                 your finances.
-            </th:block>
+                </th:block>
             You can also view the <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">project finance overview</a>.
         </p>
     </th:block>
