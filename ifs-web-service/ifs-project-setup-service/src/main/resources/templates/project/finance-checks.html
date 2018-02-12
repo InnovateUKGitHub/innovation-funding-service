@@ -28,8 +28,9 @@
             The finance checks have been completed and your finances approved.
         </div>
     </th:block>
-    <th:block th:unless="${model.isApproved()}">
-        <p>Innovate UK is reviewing
+    <th:block>
+        <p>
+            <th:block th:text="${model.isApproved()} ? 'Innovate UK has approved' : 'Innovate UK is reviewing'"/>
             <th:block th:unless="${model.isAcademic()}">
                 <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">your finances</a>.
             </th:block>
