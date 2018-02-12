@@ -11,14 +11,14 @@ services:
       ifs:
         aliases:
           - ifs-finance-data-service
-  hostname: finance-data-service
-      links:
-        - mysql-finance-totals:ifs-finance-database
-      ports:
-        - "8092:8080"
-        - "9012:8000"
-      environment:
-        - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+    hostname: finance-data-service
+    links:
+      - mysql-finance-totals:ifs-finance-database
+    ports:
+      - "8092:8080"
+      - "9012:8000"
+    environment:
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   mysql-finance-totals:
     image: innovateuk/ifs-mysql:5.6.29
