@@ -34,7 +34,7 @@ public class AgreementServiceImplTest extends BaseServiceUnitTest<AgreementServi
 
         ServiceResult<AgreementResource> result = agreementService.getCurrent();
         assertTrue(result.isSuccess());
-        assertEquals(agreementResource, result.getSuccessObject());
+        assertEquals(agreementResource, result.getSuccess());
 
         verify(agreementRepositoryMock, only()).findByCurrentTrue();
         verify(agreementMapperMock, only()).mapToResource(same(agreement));

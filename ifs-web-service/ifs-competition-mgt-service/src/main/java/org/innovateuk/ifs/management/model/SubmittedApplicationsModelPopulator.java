@@ -26,11 +26,11 @@ public class SubmittedApplicationsModelPopulator {
     public SubmittedApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, Optional<String> filter) {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
                 .getSubmittedApplications(competitionId, sorting, page, 20, filter, Optional.empty())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         return new SubmittedApplicationsViewModel(
                 competitionSummary.getCompetitionId(),

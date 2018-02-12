@@ -142,6 +142,24 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     }
 
     @Test
+    public void findByUserAndApplication() throws Exception {
+        List<AssessmentResource> expected = newAssessmentResource()
+                .build(2);
+
+        Long userId = 1L;
+        Long applicationId = 2L;
+
+        when(assessmentServiceMock.findByUserAndApplication(userId, applicationId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/user/{userId}/application/{applicationId}", userId, applicationId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(assessmentServiceMock, only()).findByUserAndApplication(userId, applicationId);
+    }
+
+    @Test
     public void getTotalScore() throws Exception {
         Long assessmentId = 1L;
 

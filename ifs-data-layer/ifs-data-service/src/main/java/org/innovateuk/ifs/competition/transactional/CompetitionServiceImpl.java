@@ -160,7 +160,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
+        List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccess();
         List<Long> competitionIdsForUser = userApplications.stream()
                 .map(ApplicationResource::getCompetition)
                 .distinct()
@@ -300,7 +300,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         ZonedDateTime openDate;
         ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, c.getId());
         if (openDateMilestone.isSuccess()) {
-            openDate = openDateMilestone.getSuccessObject().getDate();
+            openDate = openDateMilestone.getSuccess().getDate();
         } else {
             openDate = null;
         }
@@ -315,10 +315,10 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 c.getCompetitionStatus(),
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
                 projectRepository.findByApplicationCompetitionId(c.getId()).size(),
-                publicContentService.findByCompetitionId(c.getId()).getSuccessObjectOrThrowException().getPublishDate(),
+                publicContentService.findByCompetitionId(c.getId()).getSuccess().getPublishDate(),
                 isSupport(currentUser) ? "/competition/" + c.getId() + "/applications/all" : "/competition/" + c.getId(),
                 openDate
-        ))).getSuccessObjectOrThrowException();
+        ))).getSuccess();
     }
 
     @Override
@@ -329,32 +329,29 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         getLiveCount(),
                         getPSCount(),
                         competitionRepository.countUpcoming(),
-                        competitionRepository.countFeedbackReleased(),
+                        getFeedbackReleasedCount(),
                         competitionRepository.countNonIfs()));
     }
 
     private Long getLiveCount(){
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
-            Long count;
-            if(isInnovationLead(user)) {
-                count = competitionRepository.countLiveForInnovationLead(user.getId());
-            } else {
-                count = competitionRepository.countLive();
-            }
-            return count;
-        }).getSuccessObject();
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
+                isInnovationLead(user) ?
+                        competitionRepository.countLiveForInnovationLead(user.getId()) : competitionRepository.countLive()
+        ).getSuccess();
     }
 
     private Long getPSCount(){
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
-            Long count;
-            if(isInnovationLead(user)) {
-                count = competitionRepository.countProjectSetupForInnovationLead(user.getId());
-            } else {
-                count = competitionRepository.countProjectSetup();
-            }
-            return count;
-        }).getSuccessObject();
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
+                isInnovationLead(user) ?
+                        competitionRepository.countProjectSetupForInnovationLead(user.getId()) : competitionRepository.countProjectSetup()
+        ).getSuccess();
+    }
+
+    private Long getFeedbackReleasedCount(){
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
+                isInnovationLead(user) ?
+                        competitionRepository.countFeedbackReleasedForInnovationLead(user.getId()) : competitionRepository.countFeedbackReleased()
+        ).getSuccess();
     }
 
     @Override
@@ -378,7 +375,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> releaseFeedback(long competitionId) {
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
             competition.releaseFeedback(ZonedDateTime.now());
@@ -393,7 +390,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> manageInformState(long competitionId) {
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
             competition.setFundersPanelEndDate(ZonedDateTime.now());

@@ -43,7 +43,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
-        return financeCheckRestService.getByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()).getSuccessObjectOrThrowException();
+        return financeCheckRestService.getByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()).getSuccess();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
-        return financeCheckRestService.getFinanceCheckEligibilityDetails(projectId, organisationId).getSuccessObjectOrThrowException();
+        return financeCheckRestService.getFinanceCheckEligibilityDetails(projectId, organisationId).getSuccess();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public ByteArrayResource downloadFile(Long fileId) {
-        return attachmentRestService.download(fileId).getSuccessObjectOrThrowException();
+        return attachmentRestService.download(fileId).getSuccess();
     }
 
     @Override
@@ -83,7 +83,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public FileEntryResource getAttachmentInfo(Long attachmentId) {
-        AttachmentResource attachmentResource = attachmentRestService.find(attachmentId).getSuccessObjectOrThrowException();
+        AttachmentResource attachmentResource = attachmentRestService.find(attachmentId).getSuccess();
         return new FileEntryResource(attachmentResource.name, attachmentResource.mediaType, attachmentResource.sizeInBytes);
     }
 
@@ -100,6 +100,11 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     @Override
     public ServiceResult<Void> saveQueryPost(PostResource post, long threadId) {
         return queryService.addPost(post, threadId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> closeQuery(Long queryId) {
+        return queryService.close(queryId).toServiceResult();
     }
 
     @Override

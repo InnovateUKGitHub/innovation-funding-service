@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementCompetitionController.class)
+@SecuredBySpring(value = "Controller", description = "Comp Admins, Project Finance users and Innovation Leads can view the competition dashboard", securedType = CompetitionManagementCompetitionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance','innovation_lead')")
 public class CompetitionManagementCompetitionController {
 
@@ -50,13 +50,13 @@ public class CompetitionManagementCompetitionController {
 
     @PostMapping("/{competitionId}/close-assessment")
     public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
-        competitionPostSubmissionRestService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.closeAssessment(competitionId).getSuccess();
         return "redirect:/competition/" + competitionId;
     }
 
     @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccess();
         return "redirect:/competition/" + competitionId;
     }
 

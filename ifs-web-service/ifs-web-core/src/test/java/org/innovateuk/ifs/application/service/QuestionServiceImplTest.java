@@ -226,7 +226,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         ServiceResult<QuestionResource> result = service.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA);
 
         assertTrue(result.isSuccess());
-        assertEquals(question, result.getSuccessObject());
+        assertEquals(question, result.getSuccess());
     }
 
     @Test

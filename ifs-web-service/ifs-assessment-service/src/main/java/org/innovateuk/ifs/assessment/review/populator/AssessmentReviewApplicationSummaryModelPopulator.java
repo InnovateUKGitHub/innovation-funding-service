@@ -6,10 +6,15 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,6 +25,9 @@ import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Build the model for the Application under review view.
@@ -43,13 +51,23 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
     private ProcessRoleService processRoleService;
 
     @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+
+    @Autowired
+    private FormInputRestService formInputRestService;
+
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
+    @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
 
     @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     public void populateModel(Model model, ApplicationForm form, UserResource user, long applicationId) {
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> responses = formInputResponseRestService
+                .getResponsesByApplicationId(applicationId).getSuccess();
         model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
         ApplicationResource application = applicationService.getById(applicationId);
@@ -60,14 +78,72 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
 
         form.setAdminMode(true);
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, null);
+
+        addAssessmentDetails(userApplicationRoles, user, model, applicationId);
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, final Model model, final ApplicationForm form, List<ProcessRoleResource> userApplicationRoles, final Optional<Boolean> markAsCompleteEnabled) {
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
+    private void addApplicationAndSectionsInternalWithOrgDetails(ApplicationResource application,
+                                                                 CompetitionResource competition,
+                                                                 UserResource user,
+                                                                 Model model,
+                                                                 ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 Optional<Boolean> markAsCompleteEnabled) {
+
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, empty(), empty(), model, form, userApplicationRoles, markAsCompleteEnabled);
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final UserResource user, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form, List<ProcessRoleResource> userApplicationRoles, final Optional<Boolean> markAsCompleteEnabled) {
+    private void addApplicationAndSectionsInternalWithOrgDetails(ApplicationResource application,
+                                                                 CompetitionResource competition,
+                                                                 UserResource user,
+                                                                 Optional<SectionResource> section,
+                                                                 Optional<Long> currentQuestionId,
+                                                                 Model model,
+                                                                 ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles,
+                                                                 Optional<Boolean> markAsCompleteEnabled) {
+
         organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
         applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles, markAsCompleteEnabled);
+    }
+
+    private void addAssessmentDetails(List<ProcessRoleResource> userApplicationRoles,
+                                      UserResource user,
+                                      Model model,
+                                      long applicationId) {
+        List<ProcessRoleResource> processRoleResources = userApplicationRoles
+                .stream()
+                .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
+                .filter(processRoleResource -> processRoleResource.getRoleName().equals("assessor"))
+                .collect(toList());
+
+        if (!processRoleResources.isEmpty()){
+
+            List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService
+                    .getAllAssessorFormInputResponsesForPanel(processRoleResources.get(0).getId())
+                    .getSuccess();
+
+            if(!inputResponse.isEmpty()) {
+
+                List<AssessorFormInputResponseResource> questionScore = inputResponse
+                        .stream()
+                        .filter(response -> formInputRestService.getById(response.getFormInput())
+                                .getSuccess().getDescription().equals("Question score"))
+                        .collect(toList());
+
+                List<AssessorFormInputResponseResource> questionFeedback = inputResponse
+                        .stream()
+                        .filter(response -> formInputRestService.getById(response.getFormInput())
+                                .getSuccess().getDescription().equals("Feedback"))
+                        .collect(toList());
+
+                List<AssessmentResource> feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(),
+                        applicationId).getSuccess();
+
+                model.addAttribute("feedback", questionFeedback);
+                model.addAttribute("score", questionScore);
+                model.addAttribute("feedbackSummary", feedbackSummary);
+            }
+        }
     }
 }

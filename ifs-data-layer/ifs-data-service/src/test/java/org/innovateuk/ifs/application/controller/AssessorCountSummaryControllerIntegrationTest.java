@@ -120,7 +120,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
 
         assessmentRepository.save(assessment);
 
-        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), 0,3).getSuccessObject();
+        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), 0,3).getSuccess();
 
         assertEquals(2, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

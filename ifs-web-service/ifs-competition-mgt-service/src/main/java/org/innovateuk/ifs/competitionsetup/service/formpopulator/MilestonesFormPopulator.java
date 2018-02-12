@@ -38,9 +38,9 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        List<MilestoneResource> milestonesByCompetition = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
+        List<MilestoneResource> milestonesByCompetition = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccess();
         if (milestonesByCompetition.isEmpty()) {
-            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
+            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionResource.getId()).getSuccess());
         } else {
             milestonesByCompetition.sort(Comparator.comparing(MilestoneResource::getType));
         }

@@ -6,6 +6,17 @@ include::{snippets}/project/finance/queries/create/request-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/finance/queries/create/curl-request.adoc[]
 
+=== Close a Query
+==== Request
+include::{snippets}/project/finance/queries/close/http-request.adoc[]
+include::{snippets}/project/finance/queries/close/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/finance/queries/close/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/queries/close/curl-request.adoc[]
+
 === Find all queries under a project finance
 ==== Request
 include::{snippets}/project/finance/queries/find-all/http-request.adoc[]

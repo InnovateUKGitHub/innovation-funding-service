@@ -72,7 +72,7 @@ public class RestSilEmailEndpointTest extends BaseUnitTestMocksTest {
         ServiceResult<SilEmailMessage> sendMailResult = service.sendEmail(silEmail);
 
         assertTrue(sendMailResult.isSuccess());
-        assertEquals(silEmail, sendMailResult.getSuccessObject());
+        assertEquals(silEmail, sendMailResult.getSuccess());
     }
 
     @Test

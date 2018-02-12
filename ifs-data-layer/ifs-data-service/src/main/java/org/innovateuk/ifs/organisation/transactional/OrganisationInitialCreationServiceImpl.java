@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  */
 @Service
 public class OrganisationInitialCreationServiceImpl extends BaseTransactionalService implements OrganisationInitialCreationService {
+
     @Autowired
     private OrganisationMapper organisationMapper;
 
@@ -34,55 +35,99 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     private InviteService inviteService;
 
     @Autowired
-    private InviteOrganisationRepository inviteOrganisationRespository;
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> createOrMatch(final OrganisationResource organisationToCreate) {
-        Optional<Organisation> matchedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate);
-        Organisation resultingOrganisation;
+    public ServiceResult<OrganisationResource> createOrMatch(OrganisationResource organisationToCreate) {
+        Optional<Organisation> matchedOrganisation =
+                organisationMatchingService.findOrganisationMatch(organisationToCreate);
 
-        if (matchedOrganisation.isPresent()) {
-            resultingOrganisation = matchedOrganisation.get();
-        } else {
-            resultingOrganisation = createNewOrganisation(organisationToCreate);
-        }
+        Organisation resultingOrganisation =
+                matchedOrganisation.orElseGet(() -> createNewOrganisation(organisationToCreate));
 
         return serviceSuccess(organisationMapper.mapToResource(resultingOrganisation));
     }
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> createAndLinkByInvite(final OrganisationResource organisationToCreate, String inviteHash) {
-        ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccessObjectOrThrowException();
+    public ServiceResult<OrganisationResource> createAndLinkByInvite(
+            OrganisationResource organisationToCreate,
+            String inviteHash
+    ) {
+        ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccess();
 
-        InviteOrganisation foundInviteOrganisation = invite.getInviteOrganisation();
+        InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();
 
         if (linkedOrganisation == null) {
-            linkedOrganisation = createOrganisationAndLinkToInviteOrganisation(organisationToCreate, foundInviteOrganisation);
+            linkedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate)
+                    .filter(match -> isNotExistingCollaboratorOrLeadOrganisation(match, invite))
+                    .map(match -> linkOrganisation(invite.getInviteOrganisation(), match).getOrganisation())
+                    .orElseGet(() -> createOrganisationAndLinkToInviteOrganisation(
+                            organisationToCreate,
+                            inviteOrganisation
+                    ));
         }
 
         return serviceSuccess(organisationMapper.mapToResource(linkedOrganisation));
     }
 
-    private Organisation createOrganisationAndLinkToInviteOrganisation(OrganisationResource organisationResource, InviteOrganisation inviteOrganisation) {
+    /**
+     * This may seem counter-intuitive, but we need to avoid a
+     * new collaborator being able to add themselves to any other
+     * existing organisations that are collaborating on the
+     * application or even the lead organisation.
+     *
+     * We should only link the {@link ApplicationInvite#inviteOrganisation}
+     * to the matched organisation if neither of these criteria
+     * are met. Otherwise we create a new organisation and link
+     * that instead.
+     */
+    private boolean isNotExistingCollaboratorOrLeadOrganisation(
+            Organisation organisationMatch,
+            ApplicationInvite invite
+    ) {
+        // Check the lead organisation directly from the
+        // `ApplicationInvite` as this information won't exist
+        // in an `InviteOrganisation`.
+        if (organisationMatch.getId().equals(invite.getTarget().getLeadOrganisationId())) {
+            return false;
+        }
+
+        Optional<InviteOrganisation> existingCollaboratorInviteOrganisation =
+                inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(
+                        organisationMatch.getId(),
+                        invite.getTarget().getId()
+                );
+
+        return !existingCollaboratorInviteOrganisation.isPresent();
+    }
+
+    private Organisation createOrganisationAndLinkToInviteOrganisation(
+            OrganisationResource organisationResource,
+            InviteOrganisation inviteOrganisation
+    ) {
         Organisation createdOrganisation = createNewOrganisation(organisationResource);
+        return linkOrganisation(inviteOrganisation, createdOrganisation).getOrganisation();
+    }
 
-        inviteOrganisation.setOrganisation(createdOrganisation);
-        inviteOrganisationRespository.save(inviteOrganisation);
-
-        return createdOrganisation;
+    private InviteOrganisation linkOrganisation(
+            InviteOrganisation inviteOrganisation,
+            Organisation organisation
+    ) {
+        inviteOrganisation.setOrganisation(organisation);
+        return inviteOrganisationRepository.save(inviteOrganisation);
     }
 
     private Organisation createNewOrganisation(OrganisationResource organisationResource) {
         Organisation mappedOrganisation = organisationMapper.mapToDomain(organisationResource);
 
         //Add organisation to addresses to persist reference
-        mappedOrganisation.getAddresses().stream().forEach(address -> address.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getAddresses().forEach(address -> address.setOrganisation(mappedOrganisation));
 
         return organisationRepository.save(mappedOrganisation);
     }

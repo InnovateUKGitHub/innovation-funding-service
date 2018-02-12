@@ -51,7 +51,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
                                                            Long processRoleId) {
         ValidationMessages allErrors = new ValidationMessages();
         questions.forEach(question -> {
-            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
+            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccess();
             formInputs.stream()
                     .filter(formInput1 -> FILEUPLOAD == formInput1.getType() && request instanceof MultipartHttpServletRequest)
                     .forEach(formInput ->
@@ -98,7 +98,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
     }
 
     private ValidationMessages removeUploadedFile(Long formInputId, Long applicationId, Long processRoleId) {
-        formInputResponseRestService.removeFileEntry(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
+        formInputResponseRestService.removeFileEntry(formInputId, applicationId, processRoleId).getSuccess();
         return noErrors();
     }
 }

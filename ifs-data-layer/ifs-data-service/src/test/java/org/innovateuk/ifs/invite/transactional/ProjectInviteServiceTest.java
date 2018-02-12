@@ -97,7 +97,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(of(user));
         ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
+        assertTrue(result.getSuccess());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
         ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
 
@@ -195,6 +195,6 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         when(organisationRepositoryMock.findOne(anyLong())).thenReturn(inviteProject.getOrganisation());
         ServiceResult<List<InviteProjectResource>> invitesByProject = inviteProjectService.getInvitesByProject(project.getId());
         assertTrue(invitesByProject.isSuccess());
-        assertEquals(asList(inviteProjectResource), invitesByProject.getSuccessObject());
+        assertEquals(asList(inviteProjectResource), invitesByProject.getSuccess());
     }
 }

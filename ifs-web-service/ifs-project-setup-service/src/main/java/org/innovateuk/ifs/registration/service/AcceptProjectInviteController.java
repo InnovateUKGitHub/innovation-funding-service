@@ -7,7 +7,6 @@ import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +78,7 @@ public class AcceptProjectInviteController {
         if (result.isFailure()) {
             return ACCEPT_INVITE_FAILURE;
         } else {
-            return result.getSuccessObject();
+            return result.getSuccess();
         }
     }
 
@@ -117,7 +116,7 @@ public class AcceptProjectInviteController {
                     japvm.setProjectName(invite.getProjectName());
                     model.addAttribute("model", japvm);
                     return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);
-                }).getSuccessObjectOrThrowException();
+                }).getSuccess();
     }
 
     //======================================================
@@ -139,7 +138,7 @@ public class AcceptProjectInviteController {
                             RedirectUtils.redirectToApplicationService(request, "/applicant/dashboard"));
 
                 }
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
 

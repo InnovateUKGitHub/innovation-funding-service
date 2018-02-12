@@ -40,7 +40,7 @@ public class AssessorCountOptionsRestServiceImplTest extends BaseRestServiceUnit
 
 
         setupGetWithRestResultExpectations(COMPETITION_TYPE_ASSESSOR_OPTION_URL + "/1", assessorCountOptionResourceListType(), expectedList);
-        List<AssessorCountOptionResource> responseList = service.findAllByCompetitionType(1L).getSuccessObject();
+        List<AssessorCountOptionResource> responseList = service.findAllByCompetitionType(1L).getSuccess();
         assertSame(expectedList, responseList);
     }
 

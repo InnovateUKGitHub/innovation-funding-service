@@ -14,17 +14,15 @@ import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CookieUtil;
+import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +40,6 @@ import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -68,13 +65,13 @@ public class FinanceChecksNotesController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private CookieUtil cookieUtil;
     @Autowired
     private ProjectFinanceService projectFinanceService;
     @Autowired
     private FinanceCheckService financeCheckService;
+    @Autowired
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping
@@ -287,38 +284,15 @@ public class FinanceChecksNotesController {
 
     private List<ThreadViewModel> loadNoteModel(Long projectId, Long organisationId) {
 
-        List<ThreadViewModel> noteModel = new LinkedList<>();
-
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        financeCheckService.loadNotes(projectFinance.getId()).ifSuccessful(notes -> {
-            // order notes by most recent comment
-            List<NoteResource> sortedQueries = notes.stream().
-                    flatMap(t -> t.posts.stream()
-                            .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
-                    .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
-                    .map(m -> m.getKey())
-                    .distinct()
-                    .collect(Collectors.toList());
 
-            for (NoteResource note : sortedQueries) {
-                List<ThreadPostViewModel> posts = new LinkedList<>();
-                for (PostResource p : note.posts) {
-                    UserResource user = userService.findById(p.author.getId());
-                    ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
-                    post.setUsername(user.getName() + " - Innovate UK" + (user.hasRole(UserRoleType.PROJECT_FINANCE) ? " (Finance team)" : ""));
-                    posts.add(post);
-                }
-                ThreadViewModel detail = new ThreadViewModel();
-                detail.setViewModelPosts(posts);
-                detail.setCreatedOn(note.createdOn);
-                detail.setTitle(note.title);
-                detail.setId(note.id);
-                detail.setProjectId(projectId);
-                detail.setOrganisationId(organisationId);
-                noteModel.add(detail);
-            }
-        });
-        return noteModel;
+        ServiceResult<List<NoteResource>> notesResult = financeCheckService.loadNotes(projectFinance.getId());
+
+        if (notesResult.isSuccess()) {
+            return threadViewModelPopulator.threadViewModelListFromNotes(projectId, organisationId, notesResult.getSuccess());
+        } else {
+            return emptyList();
+        }
     }
 
     private FinanceChecksNotesViewModel populateNoteViewModel(Long projectId, Long organisationId, Long noteId, List<Long> attachments) {

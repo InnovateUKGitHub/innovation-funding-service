@@ -46,37 +46,37 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
-        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
+        ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
 
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
         if(processRole.getOrganisationId()!=null && competitionResource.isOpen()) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisationId()).getSuccessObjectOrThrowException();
+            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisationId()).getSuccess();
         }
         return null;
     }
 
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisationId()).getSuccessObjectOrThrowException();
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
+        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisationId()).getSuccess();
     }
 
     @Override
     public ApplicationFinanceResource getApplicationFinanceByApplicationIdAndOrganisationId(Long applicationId, Long organisationId) {
-        return applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccessObjectOrThrowException();
+        return applicationFinanceRestService.getApplicationFinance(applicationId, organisationId).getSuccess();
     }
 
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId) {
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccess();
         return getApplicationFinanceDetails(userId, applicationId, userApplicationRole.getOrganisationId());
     }
 
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId, Long organisationId) {
-        return applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccessObjectOrThrowException();
+        return applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccess();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public ValidationMessages addCost(Long applicationFinanceId, Long questionId) {
-        return financeRowRestService.add(applicationFinanceId, questionId, null).getSuccessObjectOrThrowException();
+        return financeRowRestService.add(applicationFinanceId, questionId, null).getSuccess();
     }
 
     @Override

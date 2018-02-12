@@ -344,8 +344,11 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
+
 the user should see the dates in full format
-    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${monthWord} ${nextyear}")
+    ${today} =    Get time
+    ${tomorrowMonthWord} =    Add time To Date    ${today}    1 day    result_format=%B    exclude_millis=true
+    the user should see the element   jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${tomorrowMonthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")

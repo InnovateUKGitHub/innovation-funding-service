@@ -81,7 +81,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         user.setProfileId(profile.getId());
         userRepository.save(user);
 
-        ProfileSkillsResource response = controller.getProfileSkills(userId).getSuccessObjectOrThrowException();
+        ProfileSkillsResource response = controller.getProfileSkills(userId).getSuccess();
         assertEquals(userId, response.getUser());
         assertEquals(1, response.getInnovationAreas().size());
         assertEquals("Innovation area", response.getInnovationAreas().get(0).getName());
@@ -151,7 +151,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         user.setProfileId(profile.getId());
         userRepository.save(user);
 
-        UserProfileResource response = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
+        UserProfileResource response = controller.getUserProfile(userId).getSuccess();
         assertEquals(address.getAddressLine1(), response.getAddress().getAddressLine1());
         assertEquals(address.getTown(), response.getAddress().getTown());
     }
@@ -166,7 +166,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         user.setDisability(Disability.NO);
         userRepository.save(user);
 
-        UserProfileResource saveResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
+        UserProfileResource saveResponse = controller.getUserProfile(userId).getSuccess();
         assertEquals("12345678", saveResponse.getPhoneNumber());
         assertEquals(Disability.NO, saveResponse.getDisability());
 
@@ -179,7 +179,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         RestResult<Void> restResult = controller.updateUserProfile(userId, profileDetails);
         assertTrue(restResult.isSuccess());
 
-        UserProfileResource updateResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
+        UserProfileResource updateResponse = controller.getUserProfile(userId).getSuccess();
         assertEquals("87654321", updateResponse.getPhoneNumber());
         assertEquals(Disability.YES, updateResponse.getDisability());
     }
@@ -212,7 +212,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         userRepository.save(user);
         flushAndClearSession();
 
-        UserProfileStatusResource profileStatus = controller.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+        UserProfileStatusResource profileStatus = controller.getUserProfileStatus(userId).getSuccess();
 
         UserProfileStatusResource expectedUserProfileStatus = newUserProfileStatusResource()
                 .withUser(user.getId())

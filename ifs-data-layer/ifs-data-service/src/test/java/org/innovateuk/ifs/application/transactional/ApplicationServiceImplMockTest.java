@@ -251,7 +251,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ApplicationResource created =
                 service.createApplicationByApplicationNameForUserIdAndCompetitionId("testApplication",
-                        competition.getId(), user.getId()).getSuccessObject();
+                        competition.getId(), user.getId()).getSuccess();
 
         verify(applicationRepositoryMock, times(2)).save(isA(Application.class));
         verify(processRoleRepositoryMock).save(isA(ProcessRole.class));
@@ -280,7 +280,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isSuccess());
-        FormInputResponseFileEntryResource resultParts = result.getSuccessObject();
+        FormInputResponseFileEntryResource resultParts = result.getSuccess();
         assertEquals(Long.valueOf(999), resultParts.getFileEntryResource().getId());
 
         verify(formInputResponseRepositoryMock).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
@@ -319,7 +319,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<FormInputResponseFileEntryResource> result =
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
-        FormInputResponseFileEntryResource resultParts = result.getSuccessObject();
+        FormInputResponseFileEntryResource resultParts = result.getSuccess();
         assertEquals(Long.valueOf(987), resultParts.getFileEntryResource().getId());
 
         verify(formInputResponseRepositoryMock, times(3)).findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L);
@@ -362,7 +362,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.createFormInputResponseFileUpload(fileEntry, inputStreamSupplier);
 
         assertTrue(result.isSuccess());
-        FormInputResponseFileEntryResource resultParts = result.getSuccessObject();
+        FormInputResponseFileEntryResource resultParts = result.getSuccess();
         assertEquals(Long.valueOf(999), resultParts.getFileEntryResource().getId());
 
         assertEquals(newFileEntry, existingFormInputResponse.getFileEntry());
@@ -522,7 +522,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
 
         assertTrue(result.isSuccess());
-        assertEquals(unlinkedFormInputFileEntry, result.getSuccessObject());
+        assertEquals(unlinkedFormInputFileEntry, result.getSuccess());
         assertNull(existingFormInputResponse.getFileEntry());
         verify(formInputResponseRepositoryMock, times(2)).findByApplicationIdAndFormInputId(456L, 123L);
         verify(formInputResponseRepositoryMock).save(existingFormInputResponse);
@@ -605,10 +605,10 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
                 service.getFormInputResponseFileUpload(new FormInputResponseFileEntryId(123L, 456L, 789L));
 
         assertTrue(result.isSuccess());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
+        assertEquals(inputStreamSupplier, result.getSuccess().getContentsSupplier());
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(321L)).build();
-        FormInputResponseFileEntryResource formInputResponseFile = result.getSuccessObject().getFormInputResponseFileEntry();
+        FormInputResponseFileEntryResource formInputResponseFile = result.getSuccess().getFormInputResponseFileEntry();
 
         assertEquals(fileEntryResource.getId(), formInputResponseFile.getFileEntryResource().getId());
         assertEquals(123L, formInputResponseFile.getCompoundId().getFormInputId());
@@ -678,10 +678,10 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Organisation organisation1 = new Organisation(1L, "test organisation 1");
         Organisation organisation2 = new Organisation(2L, "test organisation 2");
 
-        ProcessRole testProcessRole1 = new ProcessRole(0L, testUser1, testApplication1.getId(), new Role(), organisation1.getId());
-        ProcessRole testProcessRole2 = new ProcessRole(1L, testUser1, testApplication2.getId(), new Role(), organisation1.getId());
-        ProcessRole testProcessRole3 = new ProcessRole(2L, testUser2, testApplication2.getId(), new Role(), organisation2.getId());
-        ProcessRole testProcessRole4 = new ProcessRole(3L, testUser2, testApplication3.getId(), new Role(), organisation2.getId());
+        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(new Role()).withOrganisationId( organisation1.getId()).build();
+        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(new Role()).withOrganisationId( organisation1.getId()).build();
+        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(new Role()).withOrganisationId( organisation2.getId()).build();
+        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(new Role()).withOrganisationId( organisation2.getId()).build();
 
         when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
         when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
@@ -704,12 +704,12 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(applicationMapperMock.mapToResource(testApplication2)).thenReturn(testApplication2Resource);
         when(applicationMapperMock.mapToResource(testApplication3)).thenReturn(testApplication3Resource);
 
-        List<ApplicationResource> applicationsForUser1 = service.findByUserId(testUser1.getId()).getSuccessObject();
+        List<ApplicationResource> applicationsForUser1 = service.findByUserId(testUser1.getId()).getSuccess();
         assertEquals(2, applicationsForUser1.size());
         assertEquals(testApplication1Resource.getId(), applicationsForUser1.get(0).getId());
         assertEquals(testApplication2Resource.getId(), applicationsForUser1.get(1).getId());
 
-        List<ApplicationResource> applicationsForUser2 = service.findByUserId(testUser2.getId()).getSuccessObject();
+        List<ApplicationResource> applicationsForUser2 = service.findByUserId(testUser2.getId()).getSuccess();
         assertEquals(2, applicationsForUser1.size());
         assertEquals(testApplication2Resource.getId(), applicationsForUser2.get(0).getId());
         assertEquals(testApplication3Resource.getId(), applicationsForUser2.get(1).getId());
@@ -758,7 +758,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED)).thenReturn(new ActivityState(ActivityType.APPLICATION, State.CREATED));
 
-        ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccessObject();
+        ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccess();
         assertEquals(newApplication, created);
     }
 
@@ -1211,7 +1211,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject() == Boolean.TRUE);
+        assertTrue(result.getSuccess() == Boolean.TRUE);
     }
 
     @Test
@@ -1227,7 +1227,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -1242,7 +1242,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -1257,7 +1257,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Boolean> result = service.applicationReadyForSubmit(app.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -1406,7 +1406,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);
 
         assertTrue(serviceResult.isSuccess());
-        assertTrue(serviceResult.getSuccessObject());
+        assertTrue(serviceResult.getSuccess());
     }
 
     @Test

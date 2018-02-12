@@ -46,7 +46,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
 
         assertTrue(result.isSuccess());
 
-        assertThat(publicContent.getId(), equalTo(result.getSuccessObjectOrThrowException().getId()));
+        assertThat(publicContent.getId(), equalTo(result.getSuccess().getId()));
     }
 
     @Test

@@ -40,14 +40,14 @@ public class CompetitionInviteAssessorsFindModelPopulator extends CompetitionInv
                                                                  String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         CompetitionInviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        List<InnovationSectorResource> innovationSectors = categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
+        List<InnovationSectorResource> innovationSectors = categoryRestService.getInnovationSectors().getSuccess();
 
         AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<CompetitionAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 

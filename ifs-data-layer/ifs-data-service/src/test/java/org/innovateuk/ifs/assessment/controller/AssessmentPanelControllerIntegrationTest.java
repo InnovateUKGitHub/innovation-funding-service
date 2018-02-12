@@ -3,12 +3,12 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
-import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
+import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -16,8 +16,8 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -39,8 +39,8 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuilder.newAssessmentReview;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
@@ -108,26 +108,26 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
     public void assignApplication() throws Exception {
         application = newApplication()
                 .withId(applicationId)
-                .withAssessmentPanelStatus(false)
+                .withAssessmentReviewPanelStatus(false)
                 .build();
         applicationRepository.save(application);
         RestResult<Void> result = controller.assignApplication(application.getId());
         assertTrue(result.isSuccess());
         application = applicationRepository.findOne(applicationId);
-        assertTrue(application.isInAssessmentPanel());
+        assertTrue(application.isInAssessmentReviewPanel());
     }
 
     @Test
     public void unAssignApplication() throws Exception {
         application = newApplication()
                 .withId(applicationId)
-                .withAssessmentPanelStatus(true)
+                .withAssessmentReviewPanelStatus(true)
                 .build();
         applicationRepository.save(application);
         RestResult<Void> result = controller.unAssignApplication(application.getId());
         assertTrue(result.isSuccess());
         application = applicationRepository.findOne(applicationId);
-        assertFalse(application.isInAssessmentPanel());
+        assertFalse(application.isInAssessmentReviewPanel());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -162,25 +162,25 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentPanelInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
 
         flushAndClearSession();
 
-        controller.notifyAssessors(competition.getId()).getSuccessObjectOrThrowException();
+        controller.notifyAssessors(competition.getId()).getSuccess();
 
         assertTrue(assessmentReviewRepository.existsByTargetCompetitionIdAndActivityStateState(competition.getId(), State.PENDING));
     }
@@ -208,7 +208,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -217,25 +217,25 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentPanelInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
 
         flushAndClearSession();
 
-        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccessObjectOrThrowException());
+        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccess());
     }
 
     @Test
@@ -261,7 +261,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -270,18 +270,18 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentPanelInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -300,12 +300,12 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
 
-        assertFalse(controller.isPendingReviewNotifications(competition.getId()).getSuccessObjectOrThrowException());
+        assertFalse(controller.isPendingReviewNotifications(competition.getId()).getSuccess());
     }
 
     @Test
@@ -331,7 +331,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentPanelInvite competitionAssessmentInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite competitionAssessmentInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -342,16 +342,16 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         assessmentPanelInviteRepository.save(competitionAssessmentInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(competitionAssessmentInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(competitionAssessmentInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -370,17 +370,17 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.WITHDRAWN));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.WITHDRAWN));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
 
-        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccessObjectOrThrowException());
+        assertTrue(controller.isPendingReviewNotifications(competition.getId()).getSuccess());
     }
 
     @Test
     public void isPendingReviewNotifications_noneExist() {
-        assertFalse(controller.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
+        assertFalse(controller.isPendingReviewNotifications(competitionId).getSuccess());
     }
 
     @Test
@@ -402,7 +402,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         User assessor = userMapper.mapToDomain(getLoggedInUser());
 
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser()
@@ -411,18 +411,18 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentPanelInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(assessor);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(assessor);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -442,14 +442,14 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                         .withTarget(application)
                         .build(2);
 
-        assessmentReviews.get(0).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.ACCEPTED));
-        assessmentReviews.get(1).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReviews.get(0).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.ACCEPTED));
+        assessmentReviews.get(1).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
         assessmentReviewRepository.save(assessmentReviews.get(0));
         assessmentReviewRepository.save(assessmentReviews.get(1));
 
         flushAndClearSession();
 
-        List<AssessmentReviewResource> reviews = controller.getAssessmentReviews(assessor.getId(), competition.getId()).getSuccessObjectOrThrowException();
+        List<AssessmentReviewResource> reviews = controller.getAssessmentReviews(assessor.getId(), competition.getId()).getSuccess();
 
         // Returned reviews ordered activity state id
         assertEquals(assessmentReviews.get(0).getId(), reviews.get(1).getId());
@@ -468,7 +468,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -486,12 +486,12 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
 
-        controller.acceptInvitation(assessmentReview.getId()).getSuccessObjectOrThrowException();
+        controller.acceptInvitation(assessmentReview.getId()).getSuccess();
 
         assertEquals(AssessmentReviewState.ACCEPTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
     }
@@ -508,7 +508,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -526,12 +526,12 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.REJECTED));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.REJECTED));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
 
-        controller.acceptInvitation(assessmentReview.getId()).getSuccessObjectOrThrowException();
+        controller.acceptInvitation(assessmentReview.getId()).getSuccess();
 
         assertEquals(AssessmentReviewState.ACCEPTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
     }
@@ -548,7 +548,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -566,7 +566,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
         assessmentReviewRepository.save(assessmentReview);
 
         flushAndClearSession();
@@ -575,7 +575,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withReason("comment")
                 .build();
 
-        controller.rejectInvitation(assessmentReview.getId(), rejectOutcomeResource).getSuccessObjectOrThrowException();
+        controller.rejectInvitation(assessmentReview.getId(), rejectOutcomeResource).getSuccess();
 
         assertEquals(AssessmentReviewState.REJECTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
     }

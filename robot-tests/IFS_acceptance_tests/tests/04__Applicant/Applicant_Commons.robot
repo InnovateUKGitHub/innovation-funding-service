@@ -386,10 +386,11 @@ Lead Applicant applies to the new created competition
 the user navigates to the eligibility of the competition
     [Arguments]  ${competition}
     ${competitionId} =  get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
+    the user navigates to the page   ${server}/application/create/start-application/${competitionId}
 
 the applicant submits the application
     the user clicks the button/link                    link=Review and submit
+    the user should not see the element                jQuery=.task-status-incomplete
     the user clicks the button/link                    jQuery=.button:contains("Submit application")
     the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
     the user should be redirected to the correct page  submit

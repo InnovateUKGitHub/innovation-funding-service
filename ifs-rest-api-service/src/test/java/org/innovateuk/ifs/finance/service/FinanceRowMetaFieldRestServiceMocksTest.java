@@ -33,7 +33,7 @@ public class FinanceRowMetaFieldRestServiceMocksTest extends BaseRestServiceUnit
 
         setupGetWithRestResultExpectations(costFieldRestURL + "/findAll/", financeRowMetaFieldResourceListType(), returnedResponse);
 
-        List<FinanceRowMetaFieldResource> costFields = service.getFinanceRowMetaFields().getSuccessObject();
+        List<FinanceRowMetaFieldResource> costFields = service.getFinanceRowMetaFields().getSuccess();
         assertNotNull(costFields);
         assertEquals(returnedResponse, costFields);
     }

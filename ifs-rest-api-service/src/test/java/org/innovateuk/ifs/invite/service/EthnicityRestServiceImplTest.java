@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.junit.Test;
 
@@ -31,7 +30,7 @@ public class EthnicityRestServiceImplTest extends BaseRestServiceUnitTest<Ethnic
         List<EthnicityResource> expected = Arrays.asList(1,2,3).stream().map(i -> new EthnicityResource()).collect(Collectors.toList());
 
         setupGetWithRestResultAnonymousExpectations(format("%s/findAllActive", ethnicityRestUrl), ethnicityResourceListType(), expected, OK);
-        List<EthnicityResource> response = service.findAllActive().getSuccessObject();
+        List<EthnicityResource> response = service.findAllActive().getSuccess();
         assertSame(expected, response);
     }
 }
