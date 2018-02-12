@@ -37,10 +37,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -50,6 +50,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
@@ -127,7 +128,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private TestService testService;
 
     @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    @Qualifier("generateTestDataExecutor")
+    private Executor taskExecutor;
 
     @Autowired
     private CompetitionDataBuilderService competitionDataBuilderService;

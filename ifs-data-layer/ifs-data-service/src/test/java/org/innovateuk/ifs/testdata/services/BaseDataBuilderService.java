@@ -37,7 +37,6 @@ public abstract class BaseDataBuilderService {
     public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
-
     @Autowired
     private UserService userService;
 
