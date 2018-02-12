@@ -25,9 +25,9 @@
 
     <th:block th:if="${model.isApproved()}">
         <div class="success-alert extra-margin-bottom">
-            The finance checks have been completed and your finances approved.
+            The checks have been completed and your finances approved.
         </div>
-        <p> Review <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">your finances</a>
+        <p> Review your <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">finances</a>
             or your <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}">project finance overview</a>.
         </p>
     </th:block>
