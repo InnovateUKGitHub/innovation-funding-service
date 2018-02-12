@@ -269,7 +269,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 PAGE_SIZE,
                 fundingDecisionFilterForm.getStringFilter(),
                 fundingDecisionFilterForm.getFundingFilter())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 
     private String populateSubmittedModel(Model model, long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
@@ -278,7 +278,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
         boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());

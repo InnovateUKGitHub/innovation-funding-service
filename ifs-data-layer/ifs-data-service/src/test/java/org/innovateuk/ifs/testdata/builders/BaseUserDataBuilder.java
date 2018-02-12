@@ -64,7 +64,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
     }
 
     private void updateUserInUserData(T data, Long userId) {
-        UserResource user = baseUserService.getUserById(userId).getSuccessObjectOrThrowException();
+        UserResource user = baseUserService.getUserById(userId).getSuccess();
         data.setUser(user);
     }
 
@@ -81,7 +81,7 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                 withRolesGlobal(simpleMap(roles, r -> newRoleResource().withId(r.getId()).build())).
                 withPassword("Passw0rd").
                 build()).
-                getSuccessObjectOrThrowException();
+                getSuccess();
 
         registrationService.sendUserVerificationEmail(created, empty());
 

@@ -26,7 +26,7 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
         List<FinanceRowItem> returnedResponse = new ArrayList<>();
 
         setupGetWithRestResultExpectations(costRestURL + "/get/123", costItemListType(), returnedResponse);
-        List<FinanceRowItem> costs = service.getCosts(123L).getSuccessObject();
+        List<FinanceRowItem> costs = service.getCosts(123L).getSuccess();
         assertNotNull(costs);
         assertEquals(returnedResponse, costs);
     }
@@ -38,7 +38,7 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
 
         setupGetWithRestResultExpectations(costRestURL + "/123", FinanceRowItem.class, returnedResponse);
 
-        FinanceRowItem cost = service.findById(123L).getSuccessObject();
+        FinanceRowItem cost = service.findById(123L).getSuccess();
         assertNotNull(cost);
         Assert.assertEquals(returnedResponse, cost);
     }
@@ -48,7 +48,7 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
         LabourCost costToUpdate = new LabourCost();
         String expectedUrl = costRestURL + "/add/123/456";
         setupPostWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages(), HttpStatus.OK);
-        service.add(123L, 456L, costToUpdate).getSuccessObject();
+        service.add(123L, 456L, costToUpdate).getSuccess();
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
         LabourCost costToUpdate = new LabourCost();
         String expectedUrl = costRestURL + "/update/" + costToUpdate.getId();
         setupPutWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages());
-        service.update(costToUpdate).getSuccessObject();
+        service.update(costToUpdate).getSuccess();
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTe
         setupPostWithRestResultExpectations(expectedUrl, FinanceRowItem.class, null, costToUpdate, HttpStatus.OK);
         RestResult<FinanceRowItem> financeRowItem = service.addWithoutPersisting(123L, 456L);
         assertTrue(financeRowItem.isSuccess());
-        assertEquals(costToUpdate, financeRowItem.getSuccessObject());
+        assertEquals(costToUpdate, financeRowItem.getSuccess());
     }
 
     @Override

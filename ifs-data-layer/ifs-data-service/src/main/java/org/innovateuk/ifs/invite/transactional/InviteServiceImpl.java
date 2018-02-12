@@ -381,7 +381,7 @@ public class InviteServiceImpl extends BaseInviteService implements InviteServic
     }
 
     private Set<String> getUniqueEmailAddressesForApplicationInvites(long applicationId) {
-        List<InviteOrganisationResource> inviteOrganisationResources = getInvitesByApplication(applicationId).getSuccessObject();
+        List<InviteOrganisationResource> inviteOrganisationResources = getInvitesByApplication(applicationId).getSuccess();
         return inviteOrganisationResources.stream().flatMap(inviteOrganisationResource ->
                 inviteOrganisationResource.getInviteResources().stream().map(ApplicationInviteResource::getEmail)).collect(Collectors.toSet());
     }
@@ -410,7 +410,7 @@ public class InviteServiceImpl extends BaseInviteService implements InviteServic
     private void updateApplicationProgress(Application application) {
         BigDecimal completion = applicationService
                 .getProgressPercentageBigDecimalByApplicationId(application.getId())
-                .getSuccessObject();
+                .getSuccess();
         application.setCompletion(completion);
     }
 }

@@ -80,7 +80,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         long applicationId = 1L;
         final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanViewAnyInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
-        assertTrue(results.getSuccessObject().isEmpty());
+        assertTrue(results.getSuccess().isEmpty());
     }
 
     @Test

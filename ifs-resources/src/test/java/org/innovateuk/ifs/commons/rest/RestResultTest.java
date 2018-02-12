@@ -22,8 +22,8 @@ public class RestResultTest {
         final List<RestResult<String>> list = asList("1", "2", "3").stream().map(RestResult::restSuccess).collect(toList());
         final RestResult<List<String>> RestResult = aggregate(list); // Method under test
         assertTrue(RestResult.isSuccess());
-        assertFalse(RestResult.getSuccessObject().isEmpty());
-        assertEquals(asList("1", "2", "3"), RestResult.getSuccessObject());
+        assertFalse(RestResult.getSuccess().isEmpty());
+        assertEquals(asList("1", "2", "3"), RestResult.getSuccess());
     }
 
     @Test
@@ -52,8 +52,8 @@ public class RestResultTest {
         final List<RestResult<String>> empty = new ArrayList();
         final RestResult<List<String>> RestResult = aggregate(empty); // Method under test
         assertTrue(RestResult.isSuccess());
-        assertNotNull(RestResult.getSuccessObject());
-        assertTrue(RestResult.getSuccessObject().isEmpty());
+        assertNotNull(RestResult.getSuccess());
+        assertTrue(RestResult.getSuccess().isEmpty());
     }
 
 }

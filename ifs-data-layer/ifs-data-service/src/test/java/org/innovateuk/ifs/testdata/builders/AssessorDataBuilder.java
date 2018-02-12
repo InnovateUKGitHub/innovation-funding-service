@@ -62,9 +62,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     withRoles(singletonList(getAssessorRoleResource())).
                     build();
 
-            assessorService.registerAssessorByHash(hash, registration).getSuccessObjectOrThrowException();
+            assessorService.registerAssessorByHash(hash, registration).getSuccess();
 
-            data.setUser(userService.findByEmail(data.getEmail()).getSuccessObjectOrThrowException());
+            data.setUser(userService.findByEmail(data.getEmail()).getSuccess());
             data.setEmail(emailAddress);
         }));
     }
@@ -112,7 +112,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                 userRepository.save(user);
             });
 
-            UserResource userResource = doAs(systemRegistrar(), () -> userService.findByEmail(data.getEmail()).getSuccessObjectOrThrowException());
+            UserResource userResource = doAs(systemRegistrar(), () -> userService.findByEmail(data.getEmail()).getSuccess());
 
             data.setUser(userResource);
         });
@@ -255,7 +255,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     }
 
     private RoleResource getAssessorRoleResource() {
-        return roleService.findByUserRoleType(ASSESSOR).getSuccessObjectOrThrowException();
+        return roleService.findByUserRoleType(ASSESSOR).getSuccess();
     }
 
 

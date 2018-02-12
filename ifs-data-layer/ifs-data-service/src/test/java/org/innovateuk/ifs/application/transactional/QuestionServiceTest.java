@@ -75,7 +75,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
 
         // Method under test
-        assertEquals(nextQuestionResource, questionService.getNextQuestion(question.getId()).getSuccessObject());
+        assertEquals(nextQuestionResource, questionService.getNextQuestion(question.getId()).getSuccess());
     }
 
     @Test
@@ -91,7 +91,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
 
         // Method under test
-        assertEquals(previousQuestionResource, questionService.getPreviousQuestion(question.getId()).getSuccessObject());
+        assertEquals(previousQuestionResource, questionService.getPreviousQuestion(question.getId()).getSuccess());
     }
 
     @Test
@@ -109,7 +109,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
 
         // Method under test
-        assertEquals(nextQuestionResource, questionService.getNextQuestion(question.getId()).getSuccessObject());
+        assertEquals(nextQuestionResource, questionService.getNextQuestion(question.getId()).getSuccess());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
 
         // Method under test
-        assertEquals(previousQuestionResource, questionService.getPreviousQuestion(question.getId()).getSuccessObject());
+        assertEquals(previousQuestionResource, questionService.getPreviousQuestion(question.getId()).getSuccess());
 
     }
 
@@ -151,7 +151,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         // Method under test
         when(questionMapperMock.mapToResource(previousSectionQuestion)).thenReturn(previousSectionQuestionResource);
 
-        assertEquals(previousSectionQuestionResource, questionService.getPreviousQuestionBySection(currentSection.getId()).getSuccessObject());
+        assertEquals(previousSectionQuestionResource, questionService.getPreviousQuestionBySection(currentSection.getId()).getSuccess());
     }
 
     @Test
@@ -187,10 +187,10 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<List<QuestionResource>> result = questionService.getQuestionsBySectionIdAndType(1L, QuestionType.COST);
 
         assertTrue(result.isSuccess());
-        assertEquals(3, result.getSuccessObject().size());
-        assertTrue(result.getSuccessObject().contains(questionResource1));
-        assertTrue(result.getSuccessObject().contains(questionResource2));
-        assertTrue(result.getSuccessObject().contains(questionResource3));
+        assertEquals(3, result.getSuccess().size());
+        assertTrue(result.getSuccess().contains(questionResource1));
+        assertTrue(result.getSuccess().contains(questionResource2));
+        assertTrue(result.getSuccess().contains(questionResource3));
     }
 
     @Test
@@ -205,7 +205,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<QuestionResource> result = questionService.save(questionResource);
 
         assertTrue(result.isSuccess());
-        assertEquals(questionResource, result.getSuccessObject());
+        assertEquals(questionResource, result.getSuccess());
     }
 
     @Test
@@ -270,7 +270,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<QuestionResource> result = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId);
 
         assertTrue(result.isSuccess());
-        assertEquals(questionResource, result.getSuccessObject());
+        assertEquals(questionResource, result.getSuccess());
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, questionRepositoryMock, questionMapperMock);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
@@ -411,7 +411,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         List<QuestionResource> expectedQuestions = concat(questionResourcesForSection1.stream(), questionResourcesForSection2.stream()).collect(toList());
 
         assertTrue(result.isSuccess());
-        assertEquals(expectedQuestions, result.getSuccessObject());
+        assertEquals(expectedQuestions, result.getSuccess());
     }
 
     @Test
@@ -431,7 +431,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.TEXTAREA);
 
         assertThat(question.isSuccess(), is(equalTo(true)));
-        assertThat(question.getSuccessObject(), is(equalTo(matchingQuestion)));
+        assertThat(question.getSuccess(), is(equalTo(matchingQuestion)));
     }
 
     @Test

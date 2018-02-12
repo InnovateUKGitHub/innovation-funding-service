@@ -389,7 +389,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
 
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessors_to_assessors_panel_text.txt",
-                arguments).getSuccessObject();
+                arguments).getSuccess();
     }
 
     private String getInvitePreviewContent(Competition competition) {

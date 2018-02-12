@@ -26,7 +26,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class, expected);
 
-        CompetitionSetupQuestionResource response = service.getByQuestionId(questionId).getSuccessObject();
+        CompetitionSetupQuestionResource response = service.getByQuestionId(questionId).getSuccess();
 
         assertNotNull(response);
         Assert.assertEquals(expected, response);

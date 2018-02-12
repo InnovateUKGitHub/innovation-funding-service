@@ -181,7 +181,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     }
 
     private List<Long> getAllAssessorIds(long competitionId) {
-        return assessmentPanelInviteRestService.getAvailableAssessorIds(competitionId).getSuccessObjectOrThrowException();
+        return assessmentPanelInviteRestService.getAvailableAssessorIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -257,7 +257,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                                              @RequestParam(name = "remove") String email,
                                              @RequestParam(defaultValue = "0") int page,
                                              @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        deleteInvite(email, competitionId).getSuccess();
         return redirectToInvite(competitionId, page);
     }
 
@@ -266,7 +266,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                                                  @PathVariable("competitionId") long competitionId,
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteAllInvites(competitionId).getSuccessObjectOrThrowException();
+        deleteAllInvites(competitionId).getSuccess();
         return redirectToInvite(competitionId, page);
     }
 

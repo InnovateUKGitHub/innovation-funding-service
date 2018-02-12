@@ -100,7 +100,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationInvite> result = inviteService.findOneByHash(hash);
 
-        assertThat(result.getSuccessObjectOrThrowException()).isEqualTo(applicationInvite);
+        assertThat(result.getSuccess()).isEqualTo(applicationInvite);
     }
 
     @Test
@@ -474,7 +474,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(expectedInviteOrganisationResource);
 
         InviteOrganisationResource inviteOrganisationResource =
-                inviteService.getInviteOrganisationByHash("an organisation hash").getSuccessObject();
+                inviteService.getInviteOrganisationByHash("an organisation hash").getSuccess();
 
         assertThat(expectedInviteOrganisationResource).isEqualTo(inviteOrganisationResource);
     }

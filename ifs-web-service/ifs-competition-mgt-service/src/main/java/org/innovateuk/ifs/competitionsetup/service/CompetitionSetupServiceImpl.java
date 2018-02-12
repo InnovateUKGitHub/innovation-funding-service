@@ -265,7 +265,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Override
     public boolean isInitialDetailsCompleteOrTouched(Long competitionId) {
-        Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
+        Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionId).getSuccess();
         return statuses.get(CompetitionSetupSection.INITIAL_DETAILS).isPresent();
     }
 
@@ -275,7 +275,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			return false;
 		}
 
-        Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
+        Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccess();
 
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream()
                 .filter(section -> isNotDoneSection(statuses, section))

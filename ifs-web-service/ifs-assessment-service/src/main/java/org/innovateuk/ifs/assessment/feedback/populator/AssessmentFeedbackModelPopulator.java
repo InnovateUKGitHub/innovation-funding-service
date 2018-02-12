@@ -63,7 +63,7 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                 applicationFormInputs);
         List<FormInputResource> assessmentFormInputs = getAssessmentFormInputs(question.getId());
         List<ResearchCategoryResource> researchCategories = hasFormInputWithType(assessmentFormInputs, ASSESSOR_RESEARCH_CATEGORY)
-                ? categoryRestService.getResearchCategories().getSuccessObjectOrThrowException()
+                ? categoryRestService.getResearchCategories().getSuccess()
                 : null;
 
         String applicantResponseValue = getApplicantResponseValue(applicationFormInputs, applicantResponses);
@@ -112,11 +112,11 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
     }
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {
-        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccess();
     }
 
     private List<FormInputResource> getAssessmentFormInputs(Long questionId) {
-        return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT).getSuccessObjectOrThrowException();
+        return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT).getSuccess();
     }
 
     private Map<Long, FormInputResponseResource> getApplicantResponses(Long applicationId, List<FormInputResource> applicationFormInputs) {
@@ -125,7 +125,7 @@ public class AssessmentFeedbackModelPopulator extends AssessmentModelPopulator<A
                 .map(formInput -> formInputResponseRestService.getByFormInputIdAndApplication(formInput.getId(), applicationId))
                 .collect(toList()));
         return simpleToMap(
-                flattenLists(applicantResponses.getSuccessObjectOrThrowException()),
+                flattenLists(applicantResponses.getSuccess()),
                 FormInputResponseResource::getFormInput
         );
     }

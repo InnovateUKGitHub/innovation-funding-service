@@ -51,13 +51,13 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
             validator.validate(form, bindingResult);
         }
 
-        if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
-            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();
+        if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
+            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
             types = types.stream()
                         .filter(t -> t.getParentOrganisationType() == null)
                         .collect(Collectors.toList());
             model.addAttribute("form", form);
-            model.addAttribute("model", new OrganisationCreationViewModel(types, invite.getSuccessObject()));
+            model.addAttribute("model", new OrganisationCreationViewModel(types, invite.getSuccess()));
         } else {
             return "redirect:/login";
         }

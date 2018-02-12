@@ -274,7 +274,7 @@ public class CompetitionManagementFundingNotificationsController extends Competi
     private List<Long> getAllApplicationIdsByFilters(long competitionId, FundingNotificationFilterForm filterForm) {
         return applicationSummaryRestService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(
                 competitionId, filterForm.getStringFilter().isEmpty() ? empty() : of(filterForm.getStringFilter()),
-                filterForm.getSendFilter(), filterForm.getFundingFilter()).getSuccessObjectOrThrowException();
+                filterForm.getSendFilter(), filterForm.getFundingFilter()).getSuccess();
 
     }
 

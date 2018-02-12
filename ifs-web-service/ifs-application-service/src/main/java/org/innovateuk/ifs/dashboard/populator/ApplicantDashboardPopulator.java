@@ -56,7 +56,7 @@ public class ApplicantDashboardPopulator {
     public ApplicantDashboardViewModel populate(Long userId) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
-        List<ProjectResource> projectsInSetup = projectService.findByUser(userId).getSuccessObjectOrThrowException();
+        List<ProjectResource> projectsInSetup = projectService.findByUser(userId).getSuccess();
 
         Map<Long, ApplicationState> applicationStatusMap = createApplicationStateMap(allApplications);
         List<ApplicationResource> inProgress = simpleFilter(allApplications, this::applicationInProgress);
@@ -88,7 +88,7 @@ public class ApplicantDashboardPopulator {
                 .collect(toList());
 
         return applicationRestService.getApplicationsByUserId(userId)
-                .getSuccessObjectOrThrowException()
+                .getSuccess()
                 .stream()
                 .filter(applicationResource -> usersProcessRolesApplicationIds.contains(applicationResource.getId()))
                 .collect(toList());
@@ -112,7 +112,7 @@ public class ApplicantDashboardPopulator {
             if (entry.getValue().isPresent()
                     && !UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().get().getRoleName())) {
                 int count = applicationRestService.getAssignedQuestionsCount(entry.getKey(), entry.getValue().get().getId())
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
                 return count != 0;
             } else {
                 return false;
@@ -175,7 +175,7 @@ public class ApplicantDashboardPopulator {
 
     @SafeVarargs
     private final Map<Long, CompetitionResource> createCompetitionMap(Long userId, List<ApplicationResource>... resources) {
-        List<CompetitionResource> allUserCompetitions = competitionRestService.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
+        List<CompetitionResource> allUserCompetitions = competitionRestService.getCompetitionsByUserId(userId).getSuccess();
 
         return combineLists(resources).stream()
                 .collect(
