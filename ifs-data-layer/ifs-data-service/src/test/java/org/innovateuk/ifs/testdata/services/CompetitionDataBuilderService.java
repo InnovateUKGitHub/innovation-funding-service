@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -21,6 +22,7 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -53,7 +55,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         competitionLines = readCompetitions();
     }
 
-    public List<CompletableFuture<CompetitionData>> createCompetitions() {
+    public List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
 
         return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() -> {
             testService.doWithinTransaction(this::setDefaultCompAdmin);
@@ -61,14 +63,15 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         }, taskExecutor));
     }
 
-    public void moveCompetitionsToCorrectFinalState() {
+    public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {
 
-        competitionLines.forEach(line -> {
+        competitions.forEach(competition -> {
 
-            Long competitionId = competitionRepository.findByName(line.name).get(0).getId();
+            CsvUtils.CompetitionLine line = simpleFindFirstMandatory(competitionLines, l ->
+                    Objects.equals(l.name, competition.getCompetition().getName()));
 
             competitionDataBuilder.
-                    withExistingCompetition(competitionId).
+                    withExistingCompetition(competition).
                     withOpenDate(line.openDate).
                     withBriefingDate(line.briefingDate).
                     withSubmissionDate(line.submissionDate).

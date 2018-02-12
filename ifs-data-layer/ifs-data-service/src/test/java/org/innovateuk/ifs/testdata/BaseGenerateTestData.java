@@ -51,6 +51,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
@@ -70,8 +71,7 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -86,6 +86,15 @@ import static org.mockito.Mockito.when;
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
+
+    private static final Predicate<CompetitionLine> ALL_COMPETITIONS_PREDICATE =
+            competitionLine -> true;
+
+    private static final Predicate<CompetitionLine> SPECIFIC_COMPETITIONS_PREDICATE =
+            competitionLine -> "Rolling stock future developments".equals(competitionLine.name);
+
+    private static final Predicate<CompetitionLine> COMPETITIONS_FILTER =
+            ALL_COMPETITIONS_PREDICATE;
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -235,28 +244,40 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createExternalUsers();
 
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
-                competitionDataBuilderService.createCompetitions();
+                competitionDataBuilderService.createCompetitions(simpleFilter(competitionLines, SPECIFIC_COMPETITIONS_PREDICATE));
 
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 applicationDataBuilderService.fillInAndCompleteApplications(createCompetitionFutures);
 
-        CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(this::createCompetitionFunders, taskExecutor);
+        CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() -> {
+            List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+            createCompetitionFunders(competitions);
+        }, taskExecutor);
 
         CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() -> {
-            createPublicContentGroups();
-            createPublicContentDates();
+            List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+            createPublicContentGroups(competitions);
+            createPublicContentDates(competitions);
         }, taskExecutor);
 
         CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() -> {
-            assessmentDataBuilderService.createAssessors();
-            assessmentDataBuilderService.createNonRegisteredAssessorInvites();
-            assessmentDataBuilderService.createAssessments();
+
+            List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+            List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
+
+            assessmentDataBuilderService.createAssessors(competitions);
+            assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions);
+            assessmentDataBuilderService.createAssessments(applications);
         }, taskExecutor);
 
         CompletableFuture<Void> competitionsFinalisedFuture = assessorFutures.thenRunAsync(() -> {
-            createFundingDecisions(competitionLines);
-            projectDataBuilderService.createProjects();
-            competitionDataBuilderService.moveCompetitionsToCorrectFinalState();
+
+            List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+            List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
+
+            createFundingDecisions(competitions);
+            projectDataBuilderService.createProjects(applications);
+            competitionDataBuilderService.moveCompetitionsToCorrectFinalState(competitions);
         }, taskExecutor);
 
         CompletableFuture.allOf(competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
@@ -275,22 +296,45 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
     }
 
-    private void createCompetitionFunders() {
-        competitionFunderLines.forEach(this::createCompetitionFunder);
+    private void createCompetitionFunders(List<CompetitionData> competitions) {
+        competitions.forEach(this::createCompetitionFunder);
     }
 
-    private void createPublicContentGroups() {
+    private void createPublicContentGroups(List<CompetitionData> competitions) {
+
         testService.doWithinTransaction(this::setDefaultCompAdmin);
-        publicContentGroupLines.forEach(this::createPublicContentGroup);
+
+        competitions.forEach(competition -> {
+
+            Optional<PublicContentGroupLine> publicContentLine = simpleFindFirst(publicContentGroupLines, l ->
+                    Objects.equals(competition.getCompetition().getName(), l.competitionName));
+
+            publicContentLine.ifPresent(this::createPublicContentGroup);
+        });
     }
 
-    private void createPublicContentDates() {
-        publicContentDateLines.forEach(this::createPublicContentDate);
+    private void createPublicContentDates(List<CompetitionData> competitions) {
+
+        testService.doWithinTransaction(this::setDefaultCompAdmin);
+
+        competitions.forEach(competition -> {
+
+            Optional<PublicContentDateLine> publicContentLine = simpleFindFirst(publicContentDateLines, l ->
+                    Objects.equals(competition.getCompetition().getName(), l.competitionName));
+
+            publicContentLine.ifPresent(this::createPublicContentDate);
+        });
     }
 
-    private void createCompetitionFunder(CompetitionFunderLine line) {
-        competitionFunderDataBuilder.withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder)
-                .build();
+    private void createCompetitionFunder(CompetitionData competition) {
+
+        Optional<CompetitionFunderLine> funderLine = simpleFindFirst(competitionFunderLines, l ->
+                Objects.equals(competition.getCompetition().getName(), l.competitionName));
+
+        funderLine.ifPresent(line ->
+            competitionFunderDataBuilder.
+                    withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder).
+                    build());
     }
 
     private void createPublicContentGroup(PublicContentGroupLine line) {
@@ -337,19 +381,20 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         }));
     }
 
-    private void createFundingDecisions(List<CsvUtils.CompetitionLine> competitionLines) {
+    private void createFundingDecisions(List<CompetitionData> competitions) {
 
-        competitionLines.forEach(line -> {
+        competitions.forEach(competition -> {
 
-            Long competitionId = competitionRepository.findByName(line.name).get(0).getId();
+            CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
+                    Objects.equals(l.name, competition.getCompetition().getName()));
 
-            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
 
-            if (line.fundersPanelEndDate != null && line.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
+            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
 
                 basicCompetitionInformation.
                         moveCompetitionIntoFundersPanelStatus().
-                        sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
+                        sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name)).
                         build();
             }
         });
