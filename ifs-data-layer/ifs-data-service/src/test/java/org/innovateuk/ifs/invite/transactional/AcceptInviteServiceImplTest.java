@@ -70,15 +70,11 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
 
-        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
-                .thenReturn(serviceSuccess(BigDecimal.ONE));
-
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
 
         InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, applicationInviteRepositoryMock);
         inOrder.verify(inviteOrganisationRepositoryMock).saveAndFlush(inviteOrganisationToBeReplaced);
         inOrder.verify(inviteOrganisationRepositoryMock).delete(inviteOrganisationToBeReplaced);
-        inOrder.verify(applicationInviteRepositoryMock).save(invite);
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getInviteOrganisation())
@@ -105,9 +101,6 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
         ))
                 .thenReturn(Optional.of(collaboratorInviteOrganisation));
 
-        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
-                .thenReturn(serviceSuccess(BigDecimal.ONE));
-
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
 
         verify(inviteOrganisationRepositoryMock, never()).delete(inviteOrganisationToBeReplaced);
@@ -127,12 +120,7 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
         ))
                 .thenReturn(Optional.empty());
 
-        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
-                .thenReturn(serviceSuccess(BigDecimal.ONE));
-
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
-
-        verify(applicationInviteRepositoryMock).save(invite);
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getInviteOrganisation().getOrganisation())
@@ -140,7 +128,7 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
     }
 
     @Test
-    public void acceptInvite_processRoleIsInitialisedCorrectly() {
+    public void acceptInvite_processRoleIsCreatedAndApplicationProgressIsUpdated() {
         ApplicationInvite invite = createAndExpectInvite(newInviteOrganisation().build());
         User user = createAndExpectInviteUser();
         Organisation usersCurrentOrganisation = createAndExpectUsersCurrentOrganisation(user);
@@ -168,8 +156,8 @@ public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInvit
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
 
-        verify(applicationInviteRepositoryMock).save(invite);
         verify(processRoleRepositoryMock).save(expectedProcessRole);
+        verify(applicationServiceMock).updateApplicationProgress(invite.getTarget().getId());
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getTarget().getProcessRoles())
