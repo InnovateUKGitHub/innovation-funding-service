@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
-import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -37,9 +36,6 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 public class AcceptInviteServiceImpl extends BaseInviteService implements AcceptInviteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AcceptInviteServiceImpl.class);
-
-    @Autowired
-    private ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
@@ -99,7 +95,6 @@ public class AcceptInviteServiceImpl extends BaseInviteService implements Accept
             replaceInviteOrganisationOnInvite(invite, existingCollaboratorInviteOrganisation.get());
         } else {
             invite.getInviteOrganisation().setOrganisation(organisation);
-            applicationInviteRepository.save(invite);
         }
     }
 
@@ -110,8 +105,6 @@ public class AcceptInviteServiceImpl extends BaseInviteService implements Accept
         unlinkOldInviteOrganisation(invite);
 
         invite.setInviteOrganisation(newInviteOrganisation);
-
-        applicationInviteRepository.save(invite);
     }
 
     private void unlinkOldInviteOrganisation(ApplicationInvite invite) {
