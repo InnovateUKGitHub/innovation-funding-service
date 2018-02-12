@@ -17,8 +17,8 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
@@ -51,7 +52,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private List<CsvUtils.InviteLine> inviteLines;
 
     @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    @Qualifier("generateTestDataExecutor")
+    private Executor taskExecutor;
 
     @Autowired
     private GenericApplicationContext applicationContext;

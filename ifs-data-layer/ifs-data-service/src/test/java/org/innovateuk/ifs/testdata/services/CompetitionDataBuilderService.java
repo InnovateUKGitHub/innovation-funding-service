@@ -6,13 +6,14 @@ import org.innovateuk.ifs.testdata.builders.TestService;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
@@ -29,7 +30,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
     @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    @Qualifier("generateTestDataExecutor")
+    private Executor taskExecutor;
 
     @Autowired
     private TestService testService;
