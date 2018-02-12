@@ -72,4 +72,8 @@ public class InviteOrganisation {
         }
         this.invites = invites;
     }
+
+    public boolean isOnLastInvite() {
+        return invites.size() == 1;
+    }
 }

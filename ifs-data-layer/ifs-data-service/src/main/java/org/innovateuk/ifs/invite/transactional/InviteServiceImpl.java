@@ -306,24 +306,35 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private void removeApplicationInvite(ApplicationInvite applicationInvite) {
         Application application = applicationInvite.getTarget();
 
-        List<ProcessRole> collaboratorProcessRoles = processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
-        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(application.getId(), collaboratorProcessRoles, application.getLeadApplicantProcessRole());
+        List<ProcessRole> collaboratorProcessRoles =
+                processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
 
-        boolean isLastActiveUser = isRemovingTheLastActiveUserUnderOrganisation(application.getId(), collaboratorProcessRoles);
+        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(
+                application.getId(),
+                collaboratorProcessRoles,
+                application.getLeadApplicantProcessRole()
+        );
+
         processRoleRepository.delete(collaboratorProcessRoles);
         application.removeProcessRoles(collaboratorProcessRoles);
 
         InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
-        if (isLastInvite(inviteOrganisation)) {
+        if (inviteOrganisation.isOnLastInvite()) {
             inviteOrganisationRepository.delete(inviteOrganisation);
             deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
 
         } else {
+            boolean isLastActiveUser = isRemovingTheLastActiveUserUnderOrganisation(
+                    application.getId(),
+                    collaboratorProcessRoles
+            );
+
             if (isLastActiveUser) {
                 deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
                 inviteOrganisation.setOrganisation(null);
             }
+
             inviteOrganisation.getInvites().remove(applicationInvite);
             inviteOrganisationRepository.save(inviteOrganisation);
         }
@@ -333,7 +344,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if (collaboratorProcessRoles.isEmpty()) {
             return false;
         }
-        List<ProcessRole> remainingOrganisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, collaboratorProcessRoles.get(0).getOrganisationId());
+
+        List<ProcessRole> remainingOrganisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(
+                applicationId,
+                collaboratorProcessRoles.get(0).getOrganisationId()
+        );
+
         remainingOrganisationRoles.removeAll(collaboratorProcessRoles);
 
         return remainingOrganisationRoles.isEmpty();
@@ -347,10 +363,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             }
         }
         updateApplicationProgress(application);
-    }
-
-    private boolean isLastInvite(InviteOrganisation inviteOrganisation) {
-        return inviteOrganisation.getInvites().size() < 2;
     }
 
     private Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {

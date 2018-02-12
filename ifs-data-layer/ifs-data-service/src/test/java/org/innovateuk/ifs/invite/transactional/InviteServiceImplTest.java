@@ -522,15 +522,25 @@ public class InviteServiceImplTest {
 
         when(applicationInviteMapper.mapIdToDomain(applicationInviteToDelete.getId())).thenReturn(applicationInviteToDelete);
         when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
-        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(newProcessRole().withOrganisationId(1L).build(1));
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId()))
+                .thenReturn(newProcessRole().withOrganisationId(1L).build(1));
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInviteToDelete.getId());
 
         InviteOrganisation expectedApplicationInvite = inviteOrganisation;
         expectedApplicationInvite.getInvites().remove(applicationInviteToDelete);
 
-        InOrder inOrder = inOrder(questionReassignmentServiceMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock, applicationFinanceRepositoryMock);
-        inOrder.verify(questionReassignmentServiceMock).reassignCollaboratorResponsesAndQuestionStatuses(applicationInviteToDelete.getTarget().getId(), inviteProcessRoles, applicationInviteToDelete.getTarget().getLeadApplicantProcessRole());
+        InOrder inOrder = inOrder(
+                questionReassignmentServiceMock,
+                processRoleRepositoryMock,
+                inviteOrganisationRepositoryMock,
+                applicationFinanceRepositoryMock
+        );
+        inOrder.verify(questionReassignmentServiceMock).reassignCollaboratorResponsesAndQuestionStatuses(
+                applicationInviteToDelete.getTarget().getId(),
+                inviteProcessRoles,
+                applicationInviteToDelete.getTarget().getLeadApplicantProcessRole()
+        );
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
         inOrder.verify(inviteOrganisationRepositoryMock).save(expectedApplicationInvite);
         inOrder.verifyNoMoreInteractions();
