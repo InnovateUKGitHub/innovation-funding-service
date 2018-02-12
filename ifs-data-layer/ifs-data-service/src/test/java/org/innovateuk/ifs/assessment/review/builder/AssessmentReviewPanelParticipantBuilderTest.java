@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
-import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
