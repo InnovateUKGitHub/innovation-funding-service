@@ -147,6 +147,7 @@
                                                         data-pattern-errormessage=#{validation.standard.name.invalid}"
                                                th:name="invites[__${iterStat.index}__].name"
                                                th:id="invites[__${iterStat.index}__].name"
+                                               th:field="*{invites[__${iterStat.index}__].name}"
                                         />
                                     </td>
                                     <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? 'form-group-error'">
@@ -165,6 +166,7 @@
                                                th:errorclass="form-control-error"
                                                th:name="invites[__${iterStat.index}__].email"
                                                th:id="invites[__${iterStat.index}__].email"
+                                               th:field="*{invites[__${iterStat.index}__].email}"
                                         />
                                     </td>
                                     <td class="alignright width-20-percent">
