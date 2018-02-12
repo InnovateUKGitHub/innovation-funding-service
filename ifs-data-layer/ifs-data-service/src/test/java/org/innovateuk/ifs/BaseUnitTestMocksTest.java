@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
 import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -188,13 +189,22 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentPanelInviteRepository assessmentPanelInviteRepositoryMock;
 
     @Mock
-    protected AssessmentPanelInviteService assessmentPanelInviteServiceMock;
+    protected AssessmentInterviewPanelInviteRepository assessmentInterviewPanelInviteRepositoryMock;
+
+    @Mock
+    protected AssessmentReviewPanelInviteService assessmentReviewPanelInviteServiceMock;
 
     @Mock
     protected AssessmentPanelService assessmentPanelServiceMock;
 
     @Mock
     protected AssessmentPanelParticipantRepository assessmentPanelParticipantRepositoryMock;
+
+    @Mock
+    protected AssessmentInterviewPanelParticipantRepository assessmentInterviewPanelParticipantRepositoryMock;
+
+    @Mock
+    protected AssessmentInterviewPanelInviteService assessmentInterviewPanelInviteServiceMock;
 
     @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
@@ -341,6 +351,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentReviewPanelInviteMapper assessmentReviewPanelInviteMapperMock;
 
     @Mock
+    protected AssessmentInterviewPanelInviteMapper assessmentInterviewPanelInviteMapperMock;
+
+    @Mock
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
@@ -357,6 +370,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapperMock;
+
+    @Mock
+    protected AssessmentInterviewPanelParticipantMapper assessmentInterviewPanelParticipantMapperMock;
 
     @Mock
     protected InviteProjectRepository inviteProjectRepositoryMock;
