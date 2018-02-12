@@ -148,7 +148,7 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
         when(setupStatusService.findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSectionStatus.getId()))
                 .thenReturn(serviceSuccess(foundStatuses));
 
-        Map<Long, Boolean> result = service.getQuestionStatuses(competitionId, parentSection).getSuccessObjectOrThrowException();
+        Map<Long, Boolean> result = service.getQuestionStatuses(competitionId, parentSection).getSuccess();
 
         verify(setupStatusService, times(1)).findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSectionStatus.getId());
         verify(setupStatusService, times(1)).findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId);

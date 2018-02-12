@@ -30,7 +30,7 @@ public class GrantOfferLetterModelPopulator {
         Optional<FileEntryResource> additionalContractFile = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
         boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-        GrantOfferLetterStateResource state = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccessObjectOrThrowException();
+        GrantOfferLetterStateResource state = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
         return new GrantOfferLetterModel(projectId, project.getName(),
                 leadPartner,

@@ -92,7 +92,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
 
-        SpendProfileCostCategorySummaries summaries = result.getSuccessObject();
+        SpendProfileCostCategorySummaries summaries = result.getSuccess();
         assertEquals(costCategoryType, summaries.getCostCategoryType());
         assertEquals(2, summaries.getCosts().size());
 
@@ -169,7 +169,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
 
-        SpendProfileCostCategorySummaries summaries = result.getSuccessObject();
+        SpendProfileCostCategorySummaries summaries = result.getSuccess();
         assertEquals(costCategoryType, summaries.getCostCategoryType());
         assertEquals(4, summaries.getCosts().size());
 

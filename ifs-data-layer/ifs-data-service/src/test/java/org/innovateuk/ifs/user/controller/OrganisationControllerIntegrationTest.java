@@ -42,11 +42,11 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void findByIdShouldReturnOrganisation() throws Exception {
-        OrganisationResource org = controller.findById(2L).getSuccessObject();
+        OrganisationResource org = controller.findById(2L).getSuccess();
         assertEquals("Worth Internet Systems", org.getName());
 
         loginPeteTom();
-        org = controller.findById(6L).getSuccessObject();
+        org = controller.findById(6L).getSuccess();
         assertEquals("EGGS", org.getName());
     }
 
@@ -54,13 +54,13 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Test
     public void testOrganisationType() throws Exception {
 
-        OrganisationResource org = controller.findById(2L).getSuccessObject();
+        OrganisationResource org = controller.findById(2L).getSuccess();
         OrganisationType organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
 
         assertEquals("Business", organisationType.getName());
 
         loginPeteTom();
-        org = controller.findById(6L).getSuccessObject();
+        org = controller.findById(6L).getSuccess();
         organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
         assertEquals("Research", organisationType.getName());
     }
@@ -68,17 +68,17 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
     @Rollback
     @Test
     public void testFindByApplicationId() throws Exception {
-        Set<OrganisationResource> organisations = controller.findByApplicationId(1L).getSuccessObject();
+        Set<OrganisationResource> organisations = controller.findByApplicationId(1L).getSuccess();
         assertEquals("There should be 4 organisation in this application", 4, organisations.size());
 
-        OrganisationResource organisation = controller.findById(3L).getSuccessObject();
+        OrganisationResource organisation = controller.findById(3L).getSuccess();
         assertTrue("One of the organisations should be Empire Ltd", simpleMap(organisations, OrganisationResource::getId).contains(organisation.getId()));
     }
 
     private OrganisationResource createOrganisation(){
         OrganisationResource organisation = newOrganisationResource().
                 withName(companyName).withCompanyHouseNumber(companyHouseId).build();
-        return controller.create(organisation).getSuccessObject();
+        return controller.create(organisation).getSuccess();
     }
 
     @Rollback
@@ -92,7 +92,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         assertEquals(companyHouseId, organisationResource.getCompanyHouseNumber());
         assertEquals(companyName, organisationResource.getName());
 
-        OrganisationResource org = controller.findById(organisationResource.getId()).getSuccessObject();
+        OrganisationResource org = controller.findById(organisationResource.getId()).getSuccess();
         assertEquals(companyHouseId, org.getCompanyHouseNumber());
         assertEquals(companyName, org.getName());
     }
@@ -107,14 +107,14 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
                 withName(companyName).withCompanyHouseNumber(companyHouseId).
                 build();
 
-        OrganisationResource organisationResource = controller.create(organisation).getSuccessObject();
+        OrganisationResource organisationResource = controller.create(organisation).getSuccess();
 
         flushAndClearSession();
 
         assertEquals(companyHouseId, organisationResource.getCompanyHouseNumber());
         assertEquals(companyName, organisationResource.getName());
 
-        OrganisationResource org = controller.findById(organisationResource.getId()).getSuccessObject();
+        OrganisationResource org = controller.findById(organisationResource.getId()).getSuccess();
         assertEquals(companyHouseId, org.getCompanyHouseNumber());
         assertEquals(companyName, org.getName());
     }
@@ -131,7 +131,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
         flushAndClearSession();
 
-        OrganisationResource updatedOrganisation = controller.findById(organisationResource.getId()).getSuccessObject();
+        OrganisationResource updatedOrganisation = controller.findById(organisationResource.getId()).getSuccess();
 
         assertEquals("Vitruvius Stonework Limited", updatedOrganisation.getName());
         assertEquals("60674010", updatedOrganisation.getCompanyHouseNumber());

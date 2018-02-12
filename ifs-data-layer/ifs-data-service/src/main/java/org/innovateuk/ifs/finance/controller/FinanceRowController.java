@@ -38,7 +38,7 @@ public class FinanceRowController {
         if(createResult.isFailure()){
             return RestResult.restFailure(createResult.getFailure());
         }else{
-            FinanceRowItem costItem = createResult.getSuccessObject();
+            FinanceRowItem costItem = createResult.getSuccess();
             ValidationMessages validationMessages = validationUtil.validateCostItem(costItem);
             return RestResult.restSuccess(validationMessages, HttpStatus.CREATED);
         }
@@ -66,7 +66,7 @@ public class FinanceRowController {
         if(updateResult.isFailure()){
             return RestResult.restFailure(updateResult.getFailure());
         }else{
-            FinanceRowItem costItem = updateResult.getSuccessObject();
+            FinanceRowItem costItem = updateResult.getSuccess();
             ValidationMessages validationMessages = validationUtil.validateCostItem(costItem);
             return RestResult.restSuccess(validationMessages);
         }

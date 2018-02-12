@@ -62,7 +62,7 @@ public class ProfileController {
                                   UserResource userResource) {
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
-        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
+        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccess()));
         return "profile/user-profile";
     }
 
@@ -133,7 +133,7 @@ public class ProfileController {
     }
 
     private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+        return ethnicityRestService.findAllActive().getSuccess();
     }
 
     private void setFormActionURL(UserDetailsForm userDetailsForm) {

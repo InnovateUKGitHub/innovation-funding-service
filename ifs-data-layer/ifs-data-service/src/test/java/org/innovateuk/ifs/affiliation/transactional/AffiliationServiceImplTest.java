@@ -50,7 +50,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
 
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObject();
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess();
         assertEquals(affiliationResources, response);
 
         InOrder inOrder = inOrder(userRepositoryMock, affiliationMapperMock);
@@ -82,7 +82,7 @@ public class AffiliationServiceImplTest extends BaseServiceUnitTest<AffiliationS
 
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
 
-        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccessObject();
+        List<AffiliationResource> response = service.getUserAffiliations(userId).getSuccess();
         assertTrue(response.isEmpty());
 
         verify(userRepositoryMock, only()).findOne(userId);

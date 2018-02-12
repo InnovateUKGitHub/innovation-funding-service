@@ -48,7 +48,7 @@ public class EmailNotificationSender implements NotificationSender {
 
         return handlingErrors(new Error(EMAILS_NOT_SENT_MULTIPLE), () -> {
 
-            Map<NotificationTarget, EmailContent> templates = renderTemplates(notification).getSuccessObject();
+            Map<NotificationTarget, EmailContent> templates = renderTemplates(notification).getSuccess();
 
             List<ServiceResult<List<EmailAddress>>> results = new ArrayList<>();
 
@@ -65,9 +65,9 @@ public class EmailNotificationSender implements NotificationSender {
         Map<NotificationTarget, EmailContent> contents = new HashMap<>();
 
         for (NotificationTarget recipient : notification.getTo()) {
-            String subject = getSubject(notification, recipient).getSuccessObject();
-            String plainTextBody = getPlainTextBody(notification, recipient).getSuccessObject();
-            String htmlBody = getHtmlBody(notification, recipient).getSuccessObject();
+            String subject = getSubject(notification, recipient).getSuccess();
+            String plainTextBody = getPlainTextBody(notification, recipient).getSuccess();
+            String htmlBody = getHtmlBody(notification, recipient).getSuccess();
 
             contents.put(recipient, new EmailContent(subject, plainTextBody, htmlBody));
         }

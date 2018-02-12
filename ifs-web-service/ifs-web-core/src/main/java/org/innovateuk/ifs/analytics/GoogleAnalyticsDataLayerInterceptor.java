@@ -82,7 +82,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
     private static void setCompetitionNameFromRestService(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<String>> f, final Map pathVariables, String pathVariable) {
         final long id = parseLong((String) pathVariables.get(pathVariable));
-        final String competitionName = f.apply(id).getSuccessObjectOrThrowException();
+        final String competitionName = f.apply(id).getSuccess();
         if (competitionName != null) {
             dl.setCompetitionName(fromJson(competitionName, String.class));
         }

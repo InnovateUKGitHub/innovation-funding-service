@@ -25,7 +25,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
                 expectedUrl, FileEntryResource.class, "New content", "text/plain", 1000L, returnedFileEntry, OK);
 
         FileEntryResource createdFileEntry =
-                service.updateOverheadCalculationFile(123L, "text/plain", 1000L, "original.pdf", "New content".getBytes()).getSuccessObject();
+                service.updateOverheadCalculationFile(123L, "text/plain", 1000L, "original.pdf", "New content".getBytes()).getSuccess();
 
         Assert.assertEquals(returnedFileEntry, createdFileEntry);
     }
@@ -38,7 +38,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
 
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 
-        FileEntryResource retrievedFileEntry = service.getOverheadFileDetails(123L).getSuccessObject();
+        FileEntryResource retrievedFileEntry = service.getOverheadFileDetails(123L).getSuccess();
 
         Assert.assertEquals(returnedFileEntry, retrievedFileEntry);
     }
@@ -51,7 +51,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
 
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 
-        FileEntryResource retrievedFileEntry = service.getOverheadFileDetailsUsingProjectFinanceRowId(123L).getSuccessObject();
+        FileEntryResource retrievedFileEntry = service.getOverheadFileDetailsUsingProjectFinanceRowId(123L).getSuccess();
 
         Assert.assertEquals(returnedFileEntry, retrievedFileEntry);
     }
@@ -64,7 +64,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource retrievedFileEntry = service.getOverheadFile(123L).getSuccessObject();
+        ByteArrayResource retrievedFileEntry = service.getOverheadFile(123L).getSuccess();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
@@ -77,7 +77,7 @@ public class OverheadFileRestServiceMocksTest extends BaseRestServiceUnitTest<Ov
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource retrievedFileEntry = service.getOverheadFileUsingProjectFinanceRowId(123L).getSuccessObject();
+        ByteArrayResource retrievedFileEntry = service.getOverheadFileUsingProjectFinanceRowId(123L).getSuccess();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }

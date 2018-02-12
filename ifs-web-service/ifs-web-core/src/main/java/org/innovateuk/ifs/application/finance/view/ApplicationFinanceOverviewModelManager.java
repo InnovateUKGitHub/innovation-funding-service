@@ -73,7 +73,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute(
                 "researchParticipationPercentage",
-                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException()
+                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
         );
         model.addAttribute("isApplicant", true);
     }
@@ -103,7 +103,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                 competitionId,
                 APPLICATION
         )
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
@@ -141,7 +141,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         viewModel.setTotalContribution(organisationFinanceOverview.getTotalContribution());
         viewModel.setTotalOtherFunding(organisationFinanceOverview.getTotalOtherFunding());
         viewModel.setResearchParticipationPercentage(
-                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException()
+                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
         );
 
         return viewModel;
@@ -172,7 +172,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                 competitionId,
                 APPLICATION
         )
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())

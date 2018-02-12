@@ -141,7 +141,7 @@ public class RegistrationController {
     }
 
     private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+        return ethnicityRestService.findAllActive().getSuccess();
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
@@ -171,8 +171,8 @@ public class RegistrationController {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
             RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash.get());
-            if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
-                ApplicationInviteResource inviteResource = invite.getSuccessObject();
+            if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
+                ApplicationInviteResource inviteResource = invite.getSuccess();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);
                 return true;

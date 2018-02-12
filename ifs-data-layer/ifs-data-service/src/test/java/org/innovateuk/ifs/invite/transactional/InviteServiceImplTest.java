@@ -141,7 +141,7 @@ public class InviteServiceImplTest {
 
         ServiceResult<ApplicationInvite> result = inviteService.findOneByHash(hash);
 
-        assertEquals(applicationInvite, result.getSuccessObjectOrThrowException());
+        assertEquals(applicationInvite, result.getSuccess());
     }
 
     @Test
@@ -454,7 +454,7 @@ public class InviteServiceImplTest {
         when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
         when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(expectedInviteOrganisationResoucr);
 
-        InviteOrganisationResource inviteOrganisationResource = inviteService.getInviteOrganisationByHash("an organisation hash").getSuccessObject();
+        InviteOrganisationResource inviteOrganisationResource = inviteService.getInviteOrganisationByHash("an organisation hash").getSuccess();
 
         assertEquals(expectedInviteOrganisationResoucr, inviteOrganisationResource);
     }

@@ -162,7 +162,7 @@ public class FinanceChecksEligibilityController {
         } else {
             ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
             if (applicationFinanceResource.getFinanceFileEntry() != null) {
-                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
+                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
                 jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
             }
         }
@@ -209,7 +209,7 @@ public class FinanceChecksEligibilityController {
     String removeCostRow(@P("projectId")@PathVariable("projectId") Long projectId,
                          @PathVariable("organisationId") Long organisationId,
                          @PathVariable("costId") final Long costId) throws JsonProcessingException {
-        projectFinanceRowRestService.delete(projectId, organisationId, costId).getSuccessObjectOrThrowException();
+        projectFinanceRowRestService.delete(projectId, organisationId, costId).getSuccess();
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);

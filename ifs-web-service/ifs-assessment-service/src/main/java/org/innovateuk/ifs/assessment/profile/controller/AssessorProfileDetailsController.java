@@ -91,7 +91,7 @@ public class AssessorProfileDetailsController {
 
     private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
-            UserProfileResource profileDetails = profileRestService.getUserProfile(loggedInUser.getId()).getSuccessObjectOrThrowException();
+            UserProfileResource profileDetails = profileRestService.getUserProfile(loggedInUser.getId()).getSuccess();
             form.setFirstName(profileDetails.getFirstName());
             form.setLastName(profileDetails.getLastName());
             form.setPhoneNumber(profileDetails.getPhoneNumber());
