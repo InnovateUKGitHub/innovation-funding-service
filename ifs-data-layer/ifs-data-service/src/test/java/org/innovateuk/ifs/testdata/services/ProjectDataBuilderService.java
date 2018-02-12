@@ -5,17 +5,20 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.testdata.builders.ProjectDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.testdata.builders.TestService;
+import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readProjects;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * TODO DW - document this class
@@ -42,8 +45,15 @@ public class ProjectDataBuilderService extends BaseDataBuilderService {
         projectDataBuilder = newProjectData(serviceLocator);
     }
 
-    public void createProjects() {
-        projectLines.forEach(this::createProject);
+    public void createProjects(List<ApplicationData> applications) {
+
+        applications.forEach(application -> {
+
+            Optional<CsvUtils.ProjectLine> projectForApplication = simpleFindFirst(projectLines, l ->
+                    l.name.equals(application.getApplication().getName()));
+
+            projectForApplication.ifPresent(this::createProject);
+        });
     }
 
     private void createProject(CsvUtils.ProjectLine line) {
