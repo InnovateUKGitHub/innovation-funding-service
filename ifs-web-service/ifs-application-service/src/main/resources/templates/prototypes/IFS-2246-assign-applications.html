@@ -54,45 +54,62 @@
 		</li>
 	</ul>
 
-    <div class="grid-row sorting extra-margin">
-        <div class="column-half">
-            <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-                <span class="heading-xlarge no-margin">60</span>
-                <span class="heading-small">applications in competition</span>
-            </th:block>
-            <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                <span class="heading-xlarge no-margin">23</span>
-                <span class="heading-small">applications assigned</span>
-            </th:block>
-        </div>
-    </div>
-
-    <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-        <div class="grid-row sorting">
-            <div class="column-half select-all">
-                <div class="multiple-choice">
-                    <input type="checkbox" data-select-all="" id="select-all-check">
-                    <label for="select-all-check">
-                        Select all applications
-                    </label>
-                </div>
-                <span class="form-hint">
-                          <span data-count-selected="" class="applications-selected">0</span> applications selected
-                      </span>
-            </div>
-            <div class="column-half select-all alignright">
-                <form method="get">
-                    <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-2246-review-send">
-                        Add selected to invite list
-                    </button>
-                </form>
-            </div>
-        </div>
+    <th:block th:if="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
+        <p>There are no applications on the invite list.</p>
     </th:block>
 
-    <div class="table-overflow">
-        <table>
-            <thead>
+    <th:block th:unless="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
+        <div class="grid-row sorting extra-margin">
+            <div class="column-half">
+                <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
+                    <span class="heading-xlarge no-margin">60</span>
+                    <span class="heading-small">applications in competition</span>
+                </th:block>
+                <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
+                    <span class="heading-xlarge no-margin">4</span>
+                    <span class="heading-small">applications on invite list</span>
+                </th:block>
+                <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
+                    <span class="heading-xlarge no-margin">23</span>
+                    <span class="heading-small">applications assigned</span>
+                </th:block>
+            </div>
+            <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
+                <div class="column-half alignright" th:unless="${param.tab != null and param.tab[0] == 'invite'} and ${param.status != null and param.status[0] == 'removeAll'}">
+                    <a href="/prototypes/IFS-2246-review-send" class="button">
+                        Review and send invites
+                    </a>
+                </div>
+            </th:block>
+        </div>
+
+        <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
+            <div class="grid-row sorting">
+                <div class="column-half select-all">
+                    <div class="multiple-choice">
+                        <input type="checkbox" data-select-all="" id="select-all-check">
+                        <label for="select-all-check">
+                            Select all applications
+                        </label>
+                    </div>
+                    <span class="form-hint">
+                        <span data-count-selected="" class="applications-selected">0</span> applications selected
+                    </span>
+                </div>
+                <div class="column-half select-all alignright">
+                    <form method="get" th:action="${#httpServletRequest.requestURI}">
+                        <input type="hidden" name="tab" value="invite"/>
+                        <button class="button" name="addSelected" data-submit-el="" disabled="disabled">
+                            Add selected to invite list
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </th:block>
+
+        <div class="table-overflow">
+            <table>
+                <thead>
                 <tr>
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                         <th class="width-small">Select</th>
@@ -100,17 +117,21 @@
                     <th class="width-small">Application number</th>
                     <th>Project title</th>
                     <th>Lead organisation</th>
-                    <th:block th:if="${param.tab != null and param.tab[0] == 'find'}">
+                    <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <th colspan="2">Status</th>
                     </th:block>
+                    <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
+                        <td class="alignright"><a th:href="${'?tab=invite&#38;status=removeAll'}">Remove all</a></td>
+                    </th:block>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <tr>
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                         <td>
                             <div class="multiple-choice">
-                                <input type="checkbox" id="assessor-row-1" value="205" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                                <input type="checkbox" id="assessor-row-1" value="205" name="selectedAssessorIds"><input
+                                type="hidden" name="_selectedAssessorIds" value="on">
                                 <label for="assessor-row-1">
                                     <span class="invisible">Add</span>
                                 </label>
@@ -122,14 +143,19 @@
                     <td>Ooba</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        </td>
+                    </th:block>
+                    <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
+                        <td class="alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
                 <tr>
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                         <td>
                             <div class="multiple-choice">
-                                <input type="checkbox" id="assessor-row-2" value="205" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                                <input type="checkbox" id="assessor-row-2" value="205" name="selectedAssessorIds"><input
+                                type="hidden" name="_selectedAssessorIds" value="on">
                                 <label for="assessor-row-2">
                                     <span class="invisible">Add</span>
                                 </label>
@@ -141,14 +167,19 @@
                     <td>Empire Ltd</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td>Awaiting response</td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        </td>
+                    </th:block>
+                    <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
+                        <td class="alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
                 <tr>
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                         <td>
                             <div class="multiple-choice">
-                                <input type="checkbox" id="assessor-row-3" value="205" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                                <input type="checkbox" id="assessor-row-3" value="205" name="selectedAssessorIds"><input
+                                type="hidden" name="_selectedAssessorIds" value="on">
                                 <label for="assessor-row-3">
                                     <span class="invisible">Add</span>
                                 </label>
@@ -160,14 +191,19 @@
                     <td>Ideas</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td>Awaiting response</td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        </td>
+                    </th:block>
+                    <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
+                        <td class="alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
                 <tr>
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                         <td>
                             <div class="multiple-choice">
-                                <input type="checkbox" id="assessor-row-4" value="205" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                                <input type="checkbox" id="assessor-row-4" value="205" name="selectedAssessorIds"><input
+                                type="hidden" name="_selectedAssessorIds" value="on">
                                 <label for="assessor-row-4">
                                     <span class="invisible">Add</span>
                                 </label>
@@ -179,14 +215,19 @@
                     <td>Wordpedia</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        </td>
+                    </th:block>
+                    <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
+                        <td class="alignright"><a href="#">Remove</a></td>
                     </th:block>
                 </tr>
-                <tr>
+                <tr th:unless="${param.tab != null and param.tab[0] == 'invite'}">
                     <th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
                         <td>
                             <div class="multiple-choice">
-                                <input type="checkbox" id="assessor-row-5" value="205" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                                <input type="checkbox" id="assessor-row-5" value="205" name="selectedAssessorIds"><input
+                                type="hidden" name="_selectedAssessorIds" value="on">
                                 <label for="assessor-row-5">
                                     <span class="invisible">Add</span>
                                 </label>
@@ -198,12 +239,14 @@
                     <td>Innovation</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                         <td><span class="yes">Responded to feedback</span></td>
-                        <td><a href="#/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
+                        <td><a href="#/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a>
+                        </td>
                     </th:block>
                 </tr>
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

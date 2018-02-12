@@ -14,14 +14,43 @@
 <main id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
 
-  <th:block th:unless="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assign applications to interview panel'}, ${'/prototypes/IFS-2246-assign-applications?tab=assign'})" />
+  <th:block th:unless="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assign applications to interview panel'}, ${'/prototypes/IFS-2246-assign-applications?tab=invite'})" />
   <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assign applications to interview panel'}, ${'/prototypes/IFS-2246-assign-applications?tab=view'})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${(param.status != null and param.status[0] == 'resendInvites' ? 'Resend invites to interview panel' : 'Send invites to interview panel' )}, ${null})" />
 
+    <th:block th:if="${param.status != null and param.status[0] == 'error'}">
+        <div class="error-summary" role="alert" aria-labelledby="error-upload-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-upload-heading">
+                There is a problem on this page.
+            </h2>
+            <ul class="error-summary-list">
+                <li>
+                    <a href="#">Your upload must be a PDF.</a>
+                </li>
+            </ul>
+        </div>
+    </th:block>
+
     <p>Upload additional assessment feedback for applicants, edit the email and click send. The applications will then be assigned to this interview panel.</p>
+
+    <details>
+        <summary><span class="summary">Additional feedback guidance</span></summary>
+        <div class="panel">
+            <p>You may upload additional assessment feedback per application, if available. The applicant can download this
+            along with their overall feedback document which is sent out automatically.</p>
+
+            <p>The feedback document should be:</p>
+
+            <ul class="list list-bullet">
+                <li>a portable document format (.pdf)</li>
+                <li>readable with 100% magnification</li>
+                <li>less than 100mb in size</li>
+            </ul>
+        </div>
+    </details>
 
     <th:block th:if="${param.status == null or param.status[0] != 'resendInvites'}">
         <div class="grid-row sorting extra-margin">
@@ -40,7 +69,6 @@
                         <th class="width-small">Application number</th>
                         <th>Project title</th>
                         <th>Lead organisation</th>
-                        <th>Edit</th>
                         <th>Additional feedback</th>
                     </tr>
                     </thead>
@@ -49,36 +77,75 @@
                         <td><a href="#">114</a></td>
                         <td>Electronics, sensors &#38; photonics, Materials</td>
                         <td>Ooba</td>
-                        <td><a href="#">Remove</a></td>
-                        <td><a href="#" class="button button-secondary">+ Upload</a></td>
+                        <td>
+                            <div class="upload-section">
+                                <input type="file" id="file-upload-1" class="inputfile">
+                                <label for="file-upload-1" class="button-secondary">
+                                    + Upload
+                                </label>
+                                <button name="upload_file" class="button-secondary" type="submit" data-for-file-upload="formInput-1">Save</button>
+                                <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td><a href="#">269</a></td>
                         <td>Healthcare, Regentative medicine, Stratified medicine</td>
                         <td>Empire Ltd</td>
-                        <td><a href="#">Remove</a></td>
-                        <td><a href="#" class="button button-secondary">+ Upload</a></td>
+                        <td>
+                            <div class="upload-section">
+                                <div th:class="${param.status != null and param.status[0] == 'error'} ? 'form-group-error'">
+                                    <th:block th:if="${param.status != null and param.status[0] == 'error'}">
+                                        <span class="error-message">Your upload must be a PDF.</span>
+                                        <p class="uploaded-file">No file currently uploaded</p>
+                                    </th:block>
+                                    <button class="button-secondary" th:formaction="${#httpServletRequest.requestURI}">+ Upload</button>
+                                    <input type="hidden" name="status" value="error" />
+                                    <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td><a href="#">171</a></td>
                         <td>Healthcare, Analytical science</td>
                         <td>Ideas</td>
-                        <td><a href="#">Remove</a></td>
-                        <td><a href="#" class="button button-secondary">+ Upload</a></td>
+                        <td>
+                            <div class="upload-section">
+                                <input type="file" id="file-upload-3" class="inputfile">
+                                <label for="file-upload-3" class="button-secondary">
+                                    + Upload
+                                </label>
+                                <button name="upload_file" class="button-secondary" type="submit" data-for-file-upload="formInput-3">Save</button>
+                                <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td><a href="#">265</a></td>
                         <td>Architectures and operating systems</td>
                         <td>Wordpedia</td>
-                        <td><a href="#">Remove</a></td>
-                        <td><a href="#" class="button button-secondary">+ Upload</a></td>
+                        <td>
+                            <div class="upload-section">
+                                <div class="grid-row">
+                                    <div class="column-two-thirds">
+                                        <a class="uploaded-file-1" href="#" target="_blank">Uploaded-file.pdf</a>
+                                        <p class="form-hint">(opens in a new window)</p>
+                                    </div>
+                                   <div class="column-third">
+                                       <button name="remove_uploaded_file" value="" class="button button-clear" type="submit">Remove</button>
+                                   </div>
+                                </div>
+                                <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </th:block>
 
             <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}">
-                <table>
+                <table class="extra-margin">
                     <thead>
                     <tr>
                         <th class="width-small">Application number</th>
@@ -94,7 +161,20 @@
                         <td>Electronics, sensors &#38; photonics, Materials</td>
                         <td>Ooba</td>
                         <td>01/09/2017</td>
-                        <td><a href="#">114-feedback.pdf</a> (opens in a new window)</td>
+                        <td>
+                            <div class="upload-section">
+                                <div class="grid-row">
+                                    <div class="column-two-thirds">
+                                        <a class="uploaded-file-1" href="#" target="_blank">Uploaded-file.pdf</a>
+                                        <p class="form-hint">(opens in a new window)</p>
+                                    </div>
+                                    <div class="column-third">
+                                        <button name="remove_uploaded_file" value="" class="button button-clear" type="submit">Remove</button>
+                                    </div>
+                                </div>
+                                <!-- WE WILL NEED TO ADD CSS TO PRODUCTION CODE TO GET THIS LOOKING RIGHT. -->
+                            </div>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

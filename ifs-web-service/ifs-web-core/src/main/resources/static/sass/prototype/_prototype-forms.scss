@@ -225,6 +225,20 @@ select.form-control{
   }
 }*/
 
+.upload-section{
+
+  td &{
+    padding: 0;
+    margin: 0;
+    background: none;
+
+    .inputfile+label{
+      margin-top: 8px;
+    }
+  }
+}
+
+
 /*----- Search / filtering ----*/
 
 .search-filters{
