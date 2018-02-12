@@ -17,6 +17,8 @@ Documentation
 ...               IFS-1882 Project Setup internal project dashboard: Query responses
 ...
 ...               IFS-1987 Queries: close a conversation. See also IFS-2638, IFS-2639
+...
+...               IFS-2746 External queries redesign: query statuses and banner messages
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -38,28 +40,27 @@ Queries section is linked from eligibility and this selects eligibility on the q
     [Tags]  HappyPath
     [Setup]  finance contacts are selected and bank details are approved
     Given log in as a different user      &{internal_finance_credentials}
-    When the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
-    And the user clicks the button/link    jQuery=.button:contains("Queries")
-    Then the user should see the text in the page    Raise finance queries to the organisation in this section
-    When the user clicks the button/link    jQuery=.button:contains("Post a new query")
-    Then the user should see the dropdown option selected    Eligibility    section
+    When the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
+    And the user clicks the button/link   jQuery=.button:contains("Queries")
+    Then the user should see the element  jQuery=h2:contains("Queries")
+    When the user clicks the button/link  jQuery=.button:contains("Post a new query")
+    Then the user should see the dropdown option selected  Eligibility  section
 
 Queries section is linked from viability and this selects viability on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]
-    [Setup]  the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Given the user clicks the button/link    jQuery=table.table-progress th:contains("Lead") + td a
-    When the user clicks the button/link    jQuery=.button:contains("Queries")
-    Then the user should see the text in the page    Raise finance queries to the organisation in this section
-    When the user clicks the button/link    jQuery=.button:contains("Post a new query")
+    When the user clicks the button/link     jQuery=.button:contains("Queries")
+    And the user clicks the button/link      jQuery=.button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability    section
 
 Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
     [Tags]
-    [Setup]  the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
-    Then the user should see the text in the page    Raise finance queries to the organisation in this section
+    [Setup]  the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user clicks the button/link     css=table.table-progress tr:nth-child(1) td:nth-child(6)
+    Then the user should see the element     jQuery=h2:contains("Queries")
 
 Queries section contains finance contact name, email and telephone
     [Documentation]    INFUND-4840
@@ -75,24 +76,11 @@ Viability and eligibility sections both available
     Then the user should see the option in the drop-down menu    Viability    section
     And the user should see the option in the drop-down menu    Eligibility    section
 
-Large pdf uploads not allowed
-    [Documentation]    INFUND-4840
-    [Tags]
-    When the user uploads the file     name=attachment    ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes back to the previous page
-
-Non pdf uploads not allowed
-    [Documentation]    INFUND-4840
-    [Tags]
-    When the user uploads the file      name=attachment    ${text_file}
-    Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
     [Tags]
-    Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the text in the page    ${valid_pdf}
+    When the user uploads the file        name=attachment  ${valid_pdf}
+    Then the user should see the element  jQuery=h3:contains("Supporting documentation") + ul:contains("testing.pdf") .buttonlink:contains("Remove")
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
@@ -102,32 +90,11 @@ Project finance can remove the file
     Then the user should not see the text in the page    ${valid_pdf}
     And the user should not see an error in the page
 
-
-Project finance can re-upload the file
-    [Documentation]    INFUND-4840
-    [Tags]
-    When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf}
-
-
-Project finance user can view the file
-    [Documentation]    INFUND-4840
-    [Tags]
-    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
-
-Project finance user can upload more than one file
+Project finance user can upload more than one file and remove it
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
-
-Project finance user can still view and delete both files
-    [Documentation]    INFUND-4840
-    [Tags]
-    When the user should see the element  jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
-    Then the user clicks the button/link  css=button[name='removeAttachment']:nth-last-of-type(1)
-    When the user should see the element  jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
-    Then the user clicks the button/link  css=button[name='removeAttachment']:nth-last-of-type(1)
+    Then the user clicks the button/link  jQuery=h3:contains("Supporting documentation") ~ ul:contains("testing.pdf") .buttonlink:contains("Remove")
 
 Post new query server side validations
     [Documentation]    INFUND-4840
@@ -149,10 +116,10 @@ Post new query client side validations
 Word count validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
-    Then the user should see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
-    When the user enters text to a text field    css=.editor    this is some query text
-    Then the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
+    When the user enters text to a text field  css=.editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
+    When the user enters text to a text field  css=.editor  this is some query text
+    Then the user should not see the element   jQuery=.error-message:contains("Maximum word count exceeded.")
 
 New query can be cancelled
     [Documentation]    INFUND-4840
@@ -189,16 +156,20 @@ Query Section dropdown filters the queries displayed
     # that means that the eligibility queries are not visible or any other.
     # Tried to catch with .query.eligibility-section[aria=hidden="true"], but without success
 
-Finance contact receives an email when new query is posted
-    [Documentation]    INFUND-4841
-    [Tags]    Email
-    Then the user reads his email    ${successful_applicant_credentials["email"]}    Query regarding your finances    We have raised a query around your project finances.
+Finance contact receives an email when new query is posted and can see a pending query
+    [Documentation]  INFUND-4841 IFS-2746
+    [Tags]  Email
+    [Setup]  log in as a different user   &{successful_applicant_credentials}
+    Given the user reads his email        ${successful_applicant_credentials["email"]}  Query regarding your finances  We have raised a query around your project finances.
+    When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
+    Then the user should see the element  jQuery=.warning-alert:contains("You have a pending finance query.")
 
 Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
     [Tags]
-    [Setup]  the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Given the user clicks the button/link     jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("View")
+    [Setup]  log in as a different user       &{internal_finance_credentials}
+    Given the user navigates to the page      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user clicks the button/link      jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("View")
     When the user clicks the button/link      css=a[id="post-new-query"]
     And the user enters text to a text field  id=queryTitle  a viability query's title
     And the user selects the option from the drop-down menu  VIABILITY    id=section
@@ -216,7 +187,7 @@ Queries show in reverse chronological order
     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/queries
     Then the user should see the element   jQuery=p:contains("There are no outstanding queries.")
 
-Finance contact can view query
+Applicant - Finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
     Given log in as a different user      &{successful_applicant_credentials}
@@ -224,23 +195,25 @@ Finance contact can view query
     Then the user should see the element  jQuery=h2:contains("an eligibility query's title")
     And the user should see the element   jQuery=h2:contains("a viability query's title")
 
-Finance contact can view the project finance user's uploads
+Applicant - Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
     [Tags]
     When the user downloads the file  ${successful_applicant_credentials["email"]}  ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/finance-checks/attachment/4  ${DOWNLOAD_FOLDER}/${valid_pdf}
     Then remove the file from the operating system  testing.pdf
 
-Response to query server side validations
-    [Documentation]    INFUND-4843
+Applicant - Response to query server side validations
+    [Documentation]  INFUND-4843 IFS-2746
     [Tags]
-    Given the user expands the section      an eligibility query's title
-    When the user clicks the button/link    jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id="post-new-response"]
+    Given the user should see the element   jQuery=.warning-alert:contains("You have pending finance queries.")
+    When the user should see the element    jQuery=h2:contains("an eligibility") .section-incomplete
+    Then the user expands the section       an eligibility query's title
+    When the user clicks the button/link    jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     And the user clicks the button/link     jQuery=.button:contains("Post response")
     Then the user should see a field error  This field cannot be left blank.
 #    TODO commmented due to IFS-2622
 #    And the user should see a summary error            This field cannot be left blank.
 
-Response to query client side validations
+Applicant - Response to query client side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user enters text to a text field          css=.editor  this is some response text
@@ -249,7 +222,7 @@ Response to query client side validations
     When the user uploads the file                     name=attachment  ${valid_pdf}
     Then the user should see the element               jQuery=a:contains("testing.pdf") + button:contains("Remove")
 
-Word count validations for response
+Applicant - Word count validations for response
     [Documentation]    INFUND-4843
     When the user enters text to a text field  css=.editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
     And the user moves focus to the element    jQuery=.button:contains("Post response")
@@ -258,21 +231,32 @@ Word count validations for response
     When the user enters text to a text field  css=.editor  This is some response text
     Then the user should not see an error in the page
 
-Query response can be posted
+Applicant - Query response can be posted
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Post response")
-    Then the user should not see the element   jQuery=.button:contains("Post response")
-    And the user should see the element  jQuery=.heading-small:contains("Sarah Peacock") small:contains("${today}")
-    And the user should see the element  jQuery=.heading-small:contains("Sarah Peacock") ~ .heading-small:contains("Supporting documentation")
+    When the user clicks the button/link      jQuery=.button:contains("Post response")
+    Then the user should not see the element  jQuery=.button:contains("Post response")
+    And the user should see the element       jQuery=h2:contains("an eligibility") .section-awaiting
+    And the user should see the element       jQuery=.heading-small:contains("Sarah Peacock") small:contains("${today}")
+    And the user should see the element       jQuery=.heading-small:contains("Sarah Peacock") ~ .heading-small:contains("Supporting documentation")
 
-Respond to older query
+Applicant - Respond to older query
     [Documentation]    INFUND-4843
     [Tags]
-    Given the user clicks the button/link      jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id="post-new-response"]
+    Given the user clicks the button/link      jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
     When the user enters text to a text field  css=.editor    one more response to the eligibility query
     Then the user clicks the button/link       jQuery=.button:contains("Post response")
     And the user should see the element        jQuery=.panel + .panel:contains("Sarah ")  #is the 2nd response
+
+Applicant - Repond to Viability query
+    [Documentation]  IFS-2746
+    [Tags]
+    Given the user expands the section        a viability query's title
+    When the user clicks the button/link      jQuery=h2:contains("viability") + [id^="finance-checks-query"] a:contains("Respond")
+    And the user enters text to a text field  css=.editor  This is applicant's response to the Viability query.
+    And the user clicks the button/link       jQuery=.button:contains("Post response")
+    Then the user should see the element      jQuery=h2:contains("viability") .section-awaiting
+    And the user should see the element       jQuery=.assigned-alert:contains("Your response has been sent and will be reviewed by Innovate UK.")
 
 IFS Admin can see queries raised column updates to 'view'
     [Documentation]    INFUND-4843, IFS-603
@@ -323,7 +307,7 @@ Finance contact can view the new response
     Given log in as a different user      &{successful_applicant_credentials}
     When the user clicks the button/link  jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user clicks the button/link   link=Finance checks
-    Then the user should see the text in the page  This is a response to a response
+    Then the user should see the element  jQuery=.heading-small:contains("Finance team") + .wysiwyg-styles:contains("This is a response to a response")
 
 Project Finance user is able to mark a query discussion as complete
     [Documentation]  IFS-1987
@@ -336,59 +320,44 @@ Project Finance user is able to mark a query discussion as complete
     [Teardown]  the user collapses the section      an eligibility query's title
 
 Applicant can see the the queries resolved
-    [Documentation]  IFS-1987
+    [Documentation]  IFS-1987 IFS-2746
     [Tags]
     Given log in as a different user      &{successful_applicant_credentials}
     When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
-    Then the user should see the element  jQuery=h2:contains("an eligibility query's title") .yes
-    And the user should see the element   jQuery=h2:contains("a viability query's title") .yes
+    Then the user should see the element  jQuery=h2:contains("an eligibility query's title") .section-complete
+    And the user should see the element   jQuery=h2:contains("a viability query's title") .section-complete
     And the user should not be able to respond to resolved queries
+    And the user should see the element   jQuery=.success-alert:contains("All queries have been resolved.")
 
 Link to notes from viability section
     [Documentation]    INFUND-4845
     [Tags]
-    Given log in as a different user     &{internal_finance_credentials}
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(2)
-    And the user clicks the button/link    jQuery=.button:contains("Notes")
-    Then the user should see the text in the page    Use this section to make notes related to the finance checks
-    And the user should see the element    jQuery=.button:contains("Create a new note")
+    Given log in as a different user      &{internal_finance_credentials}
+    When the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(2)
+    And the user clicks the button/link   jQuery=.button:contains("Notes")
+    Then the user should see the element  jQuery=h2:contains("Review notes")
+    And the user should see the element   jQuery=.button:contains("Create a new note")
 
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
-    And the user clicks the button/link    jQuery=.button:contains("Notes")
-    Then the user should see the text in the page    Use this section to make notes related to the finance checks
-    And the user should see the element    jQuery=.button:contains("Create a new note")
+    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
+    And the user clicks the button/link   jQuery=.button:contains("Notes")
+    Then the user should see the element  jQuery=.button:contains("Create a new note")
 
 Link to notes from main finance checks summary page
     [Documentation]    INFUND-4845
     [Tags]
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(7)
-    Then the user should see the text in the page    Use this section to make notes related to the finance checks
-    And the user should see the element    jQuery=.button:contains("Create a new note")
-
-Large pdf uploads not allowed for notes
-    [Documentation]    INFUND-4845
-    [Tags]
-    Given the user clicks the button/link    jQuery=.button:contains("Create a new note")
-    When the user uploads the file     name=attachment    ${too_large_pdf}
-    Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes back to the previous page
-
-Non pdf uploads not allowed for notes
-    [Documentation]    INFUND-4845
-    [Tags]
-    When the user uploads the file      name=attachment    ${text_file}
-    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+    When the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(7)
 
 Project finance can upload a pdf file to notes
     [Documentation]    INFUND-4845
     [Tags]
-    Then the user uploads the file      name=attachment   ${valid_pdf}
-    And the user should see the text in the page    ${valid_pdf}
+    Given the user clicks the button/link  jQuery=.button:contains("Create a new note")
+    When the user uploads the file         name=attachment  ${valid_pdf}
+    Then the user should see the element   jQuery=h2:contains("Supporting documentation") + ul:contains("${valid_pdf} ${opens_in_new_window}")
 
 Project finance can remove the file from notes
     [Documentation]    INFUND-4845
@@ -441,10 +410,10 @@ Create new note client side validations
 Word count validations for notes
     [Documentation]    INFUND-4845
     [Tags]
-    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
-    Then the user should see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
-    When the user enters text to a text field    css=.editor    this is some note text
-    Then the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
+    When the user enters text to a text field  css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
+    When the user enters text to a text field  css=.editor    this is some note text
+    Then the user should not see the element   jQuery=.error-message:contains("Maximum word count exceeded.")
 
 New note can be cancelled
     [Documentation]    INFUND-4845
@@ -544,19 +513,18 @@ Note comments server side validations
 Note comments client side validations
     [Documentation]    INFUND-7756
     [Tags]
-    When the user enters text to a text field    css=.editor    this is some comment text
+    When the user enters text to a text field    css=.editor  this is some comment text
     And the user moves focus to the element    jQuery=.button:contains("Save comment")
     Then the user should not see the element    jQuery=label[for="comment"] .error-message:contains("This field cannot be left blank.")
 
 Word count validations for note comments
     [Documentation]    INFUND-7756
-    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    When the user enters text to a text field  css=.editor  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
     And the user moves focus to the element    jQuery=.button:contains("Save comment")
-    Then the user should see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.    # subject to change of course
-    And the user should see the text in the page    This field cannot contain more than 4,000 characters.
-    When the user enters text to a text field    css=.editor    this is some comment text
-    Then the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.    # subject to change of course
-    And the user should not see the text in the page    This field cannot contain more than 4,000 characters.
+    Then the user should see a field error     Maximum word count exceeded. Please reduce your word count to 400.
+    And the user should see a field error      This field cannot contain more than 4,000 characters.
+    When the user enters text to a text field  css=.editor  this is some comment text
+    Then the user should not see the element   jQuery=.error-message:contains("4,000")
 
 Note comment can be posted
     [Documentation]    INFUND-7756
@@ -580,5 +548,5 @@ The query conversation can be resolved by
     the user should see the element  jQuery=.message-alert:contains("${today}")
 
 the user should not be able to respond to resolved queries
-    the user should not see the element  jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id="post-new-response"]
-    the user should not see the element  jQuery=h2:contains("viability") + [id^="finance-checks-query"] a[id="post-new-response"]
+    the user should not see the element  jQuery=h2:contains("eligibility") + [id^="finance-checks-query"] a[id^="post-new-response"]
+    the user should not see the element  jQuery=h2:contains("viability") + [id^="finance-checks-query"] a[id^="post-new-response"]
