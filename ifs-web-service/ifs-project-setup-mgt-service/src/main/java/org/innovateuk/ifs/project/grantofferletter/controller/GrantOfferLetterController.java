@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApprovalForm;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
@@ -55,6 +57,7 @@ public class GrantOfferLetterController {
     private GrantOfferLetterService grantOfferLetterService;
 
     private static final String FORM_ATTR = "form";
+    private static final String APPROVAL_FORM_ATTR = "approvalForm";
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -85,9 +88,11 @@ public class GrantOfferLetterController {
 
     private String doViewGrantOfferLetterSend(Long projectId, Model model, GrantOfferLetterLetterForm form) {
         GrantOfferLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
+        GrantOfferLetterApprovalForm approvalForm = new GrantOfferLetterApprovalForm();
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
+        model.addAttribute(APPROVAL_FORM_ATTR, approvalForm);
 
         return "project/grant-offer-letter-send";
     }
@@ -122,11 +127,25 @@ public class GrantOfferLetterController {
     @PostMapping("/signed")
     public String signedGrantOfferLetterApproval(
             @P("projectId")@PathVariable("projectId") final Long projectId,
-            @RequestParam(value = "approvalType") ApprovalType approvalType) {
+            @ModelAttribute(APPROVAL_FORM_ATTR) GrantOfferLetterApprovalForm approvalForm) {
 
-        grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
+        if (validateApprovalOrRejection(approvalForm)) {
+            grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalForm.getApprovalType()).toPostResponse();
+        }
 
         return redirectToGrantOfferLetterPage(projectId);
+    }
+
+    private boolean validateApprovalOrRejection(GrantOfferLetterApprovalForm approvalForm) {
+        if (approvalForm.getApprovalType().equals(ApprovalType.REJECTED)) {
+            if (approvalForm.getRejectionReason() != null && StringUtils.trim(approvalForm.getRejectionReason()).length() > 0) {
+                return true;
+            }
+        } else if (approvalForm.getApprovalType().equals(ApprovalType.APPROVED)) {
+            return true;
+        }
+
+        return false;
     }
 
     private String performActionOrBindErrorsToField(Long projectId, ValidationHandler validationHandler, Model model, String fieldName, GrantOfferLetterLetterForm form, Supplier<FailingOrSucceedingResult<?, ?>> actionFn) {
