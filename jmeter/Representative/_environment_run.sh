@@ -18,9 +18,9 @@ function test_deviations() {
 # work out the spread of user journeys to run
 function user_journeys() {
     if [[ ${high_load} -eq 1 ]]; then
-        echo "-Jinvite_user=0 -Japplicant_users=600 -Jregistration_users=0 -Jfront_door_users=600"
+        echo "-Jinvite_user=0 -Japplicant_users=600 -Jregistration_users=0 -Jfront_door_users=600 -Jcompetition_management_users=20"
     else
-        echo "-Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -Jfront_door_users=10"
+        echo "-Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -Jfront_door_users=10 -Jcompetition_management_users=10"
     fi
 }
 
