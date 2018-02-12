@@ -87,9 +87,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
 
+    @SuppressWarnings("unused")
     private static final Predicate<CompetitionLine> ALL_COMPETITIONS_PREDICATE =
             competitionLine -> true;
 
+    @SuppressWarnings("unused")
     private static final Predicate<CompetitionLine> SPECIFIC_COMPETITIONS_PREDICATE =
             competitionLine -> "Rolling stock future developments".equals(competitionLine.name);
 
@@ -243,8 +245,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
 
+        List<CompetitionLine> competitionsToProcess = simpleFilter(BaseGenerateTestData.competitionLines, COMPETITIONS_FILTER);
+
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
-                competitionDataBuilderService.createCompetitions(simpleFilter(competitionLines, SPECIFIC_COMPETITIONS_PREDICATE));
+                competitionDataBuilderService.createCompetitions(competitionsToProcess);
 
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 applicationDataBuilderService.fillInAndCompleteApplications(createCompetitionFutures);
