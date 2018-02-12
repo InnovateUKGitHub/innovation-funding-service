@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
+import org.innovateuk.ifs.assessment.transactional.AssessmentReviewPanelInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -26,18 +26,17 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
 
-public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelInviteService> {
+public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentReviewPanelInviteService> {
 
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
-    private AssessmentPanelInvitePermissionRules assessmentPanelInvitePermissionRules;
+    private AssessmentReviewPanelInvitePermissionRules assessmentReviewPanelInvitePermissionRules;
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
     private UserLookupStrategies userLookupStrategies;
-    private AssessmentPanelParticipantPermissionRules assessmentPanelParticipantPermissionRules;
-    private AssessmentPanelParticipantLookupStrategy assessmentPanelParticipantLookupStrategy;
-
+    private AssessmentReviewPanelParticipantPermissionRules assessmentReviewPanelParticipantPermissionRules;
+    private AssessmentReviewPanelParticipantLookupStrategy assessmentReviewPanelParticipantLookupStrategy;
 
     @Override
-    protected Class<? extends AssessmentPanelInviteService> getClassUnderTest() {
+    protected Class<? extends AssessmentReviewPanelInviteService> getClassUnderTest() {
         return TestAssessmentReviewPanelInviteService.class;
     }
 
@@ -45,10 +44,10 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
     public void setUp() throws Exception {
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
         competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
-        assessmentPanelInvitePermissionRules = getMockPermissionRulesBean(AssessmentPanelInvitePermissionRules.class);
+        assessmentReviewPanelInvitePermissionRules = getMockPermissionRulesBean(AssessmentReviewPanelInvitePermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
-        assessmentPanelParticipantPermissionRules = getMockPermissionRulesBean(AssessmentPanelParticipantPermissionRules.class);
-        assessmentPanelParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentPanelParticipantLookupStrategy.class);
+        assessmentReviewPanelParticipantPermissionRules = getMockPermissionRulesBean(AssessmentReviewPanelParticipantPermissionRules.class);
+        assessmentReviewPanelParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentReviewPanelParticipantLookupStrategy.class);
     }
 
     @Test
@@ -131,8 +130,8 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         assertAccessDenied(
                 () -> classUnderTest.getAllInvitesByUser(1L),
                 () -> {
-                    verify(assessmentPanelInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
-                    verifyNoMoreInteractions(assessmentPanelInvitePermissionRules);
+                    verify(assessmentReviewPanelInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(assessmentReviewPanelInvitePermissionRules);
                 }
         );
     }
@@ -148,17 +147,17 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
                 ).build();
         AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
 
-        when(assessmentPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
+        when(assessmentReviewPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
                 .thenReturn(assessmentReviewPanelParticipantResource);
-        when(assessmentPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
+        when(assessmentReviewPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
                 .thenReturn(true);
 
         setLoggedInUser(assessorUserResource);
 
         classUnderTest.acceptInvite("hash");
 
-        verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-        verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
+        verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
+        verify(assessmentReviewPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
     }
 
     @Test
@@ -167,8 +166,8 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         assertAccessDenied(
                 () -> classUnderTest.acceptInvite("hash"),
                 () -> {
-                    verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-                    verifyZeroInteractions(assessmentPanelParticipantPermissionRules);
+                    verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
+                    verifyZeroInteractions(assessmentReviewPanelParticipantPermissionRules);
                 }
         );
     }
@@ -183,9 +182,9 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
                         )
                 ).build();
         AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
-        when(assessmentPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
+        when(assessmentReviewPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
                 .thenReturn(assessmentReviewPanelParticipantResource);
-        when(assessmentPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
+        when(assessmentReviewPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
                 .thenReturn(false);
 
         setLoggedInUser(assessorUserResource);
@@ -193,8 +192,8 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         assertAccessDenied(
                 () -> classUnderTest.acceptInvite("hash"),
                 () -> {
-                    verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-                    verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
+                    verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
+                    verify(assessmentReviewPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
                 }
         );
     }
@@ -209,15 +208,15 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
                         )
                 ).build();
 
-        when(assessmentPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash not exists")).thenReturn(null);
+        when(assessmentReviewPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash not exists")).thenReturn(null);
 
         setLoggedInUser(assessorUserResource);
 
         assertAccessDenied(
                 () -> classUnderTest.acceptInvite("hash not exists"),
                 () -> {
-                    verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash not exists");
-                    verifyZeroInteractions(assessmentPanelParticipantPermissionRules);
+                    verify(assessmentReviewPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash not exists");
+                    verifyZeroInteractions(assessmentReviewPanelParticipantPermissionRules);
                 }
         );
     }
@@ -232,7 +231,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
-    public static class TestAssessmentReviewPanelInviteService implements AssessmentPanelInviteService {
+    public static class TestAssessmentReviewPanelInviteService implements AssessmentReviewPanelInviteService {
 
         @Override
         public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {

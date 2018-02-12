@@ -277,7 +277,6 @@ public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceS
             return null;
         }
 
-
         @Override
         public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                        Pageable pageable,
