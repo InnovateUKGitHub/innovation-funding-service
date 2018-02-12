@@ -5,9 +5,9 @@ set -e
 cd "$(dirname "$0")"
 
 reset_db () {
-    mysql -uroot -ppassword -hifs-database -e "drop database ifs";
+    mysql -uroot -ppassword -hifs-database -e "drop database if exists ifs";
     mysql -uroot -ppassword -hifs-database -e "create database ifs";
-    mysql -uroot -ppassword -hifs-database -e "drop database ifs_test";
+    mysql -uroot -ppassword -hifs-database -e "drop database if exists ifs_test";
     mysql -uroot -ppassword -hifs-database -e "create database ifs_test";
 
     ./gradlew flywayClean flywayMigrate
@@ -41,23 +41,10 @@ do_baseline () {
     # create baseline dump
     setup-files/scripts/create-baseline-dump.sh ${newversion}
 
-    # ignore generator test class
-    sed -i -e '/import/i \
-    import org.junit.Ignore;\
-    ' $generate_test_class
-
-    sed -i -e '/public class/i \
-     @Ignore\
-    ' $generate_test_class
-
     reset_db
 
     #verify correct build
-    ./gradlew clean build buildDocker
-
-    reset_db
-
-    ./gradlew composeUp syncShib
+    ./gradlew clean buildDocker initDB composeUp syncShib -x test
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
