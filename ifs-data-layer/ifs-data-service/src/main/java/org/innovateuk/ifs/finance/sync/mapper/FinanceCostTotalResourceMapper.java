@@ -27,7 +27,7 @@ public class FinanceCostTotalResourceMapper {
         return simpleMap(applicationFinanceResource.getFinanceOrganisationDetails().entrySet(), cat ->
                 buildFinanceCostTotalResource(cat.getKey(),
                         cat.getValue(),
-                        FinanceType.APPLICATION.toString(),
+                        FinanceType.APPLICATION.name(),
                         applicationFinanceResource.getId()));
     }
 

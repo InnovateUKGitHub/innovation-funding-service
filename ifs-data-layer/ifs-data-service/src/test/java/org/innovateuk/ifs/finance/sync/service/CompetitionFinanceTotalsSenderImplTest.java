@@ -42,9 +42,8 @@ public class CompetitionFinanceTotalsSenderImplTest {
     @Test
     public void sendFinanceTotalsForCompetitionId() {
         Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
-        FinanceRowType financeRowType = FinanceRowType.LABOUR;
         FinanceRowCostCategory financeRowCostCategory = newDefaultCostCategory().build();
-        costs.put(financeRowType, financeRowCostCategory);
+        costs.put(FinanceRowType.LABOUR, financeRowCostCategory);
 
         List<Application> applicationsCompsStream = newApplication()
                 .withId(1L)

@@ -24,7 +24,7 @@ public class ApplicationFinanceTotalsSenderSecurityTest extends BaseServiceSecur
 
 
     @Before
-    public void instantiateThoseThings() {
+    public void setUp() {
         financeTotalsPermissionRules = getMockPermissionRulesBean(FinanceTotalsPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
