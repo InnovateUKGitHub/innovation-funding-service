@@ -25,7 +25,6 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     FINANCE("finance", "Finance"),
     OTHER_FUNDING("other_funding", "Other Funding"),
     ACADEMIC("academic");
-
     enum FinanceRowOptions {
         INCLUDE_IN_SPEND_PROFILE
     }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -71,6 +72,9 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
     protected SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    protected FinanceRowCostsService financeRowCostsService;
 
     @Autowired
     protected FinanceRowService financeRowService;

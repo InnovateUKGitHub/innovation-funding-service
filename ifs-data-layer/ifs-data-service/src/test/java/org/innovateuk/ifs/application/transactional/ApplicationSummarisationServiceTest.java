@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSummarisationServiceTest {
@@ -32,6 +33,9 @@ public class ApplicationSummarisationServiceTest {
 	@InjectMocks
 	private ApplicationSummarisationServiceImpl service;
 	
+	@Mock
+	private FinanceRowCostsService financeRowCostsService;
+
 	@Mock
 	private FinanceRowService financeRowService;
 	
@@ -70,7 +74,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		assertTrue(result.isSuccess());
 		assertEquals(new BigDecimal("0.00"), result.getSuccess());
-		verifyNoMoreInteractions(financeRowService);
+		verifyNoMoreInteractions(financeRowCostsService);
 	}
 	
 	@Test
@@ -99,6 +103,6 @@ public class ApplicationSummarisationServiceTest {
 		
 		assertTrue(result.isSuccess());
 		assertEquals(new BigDecimal("0.00"), result.getSuccess());
-		verifyNoMoreInteractions(financeRowService);
+		verifyNoMoreInteractions(financeRowCostsService);
 	}
 }

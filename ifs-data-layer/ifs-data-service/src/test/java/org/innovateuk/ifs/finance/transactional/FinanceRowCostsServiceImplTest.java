@@ -55,7 +55,7 @@ import static org.mockito.Mockito.*;
 /**
  *
  */
-public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowServiceImpl> {
+public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceRowCostsServiceImpl> {
 
     @Mock
     private OrganisationFinanceHandler organisationFinanceHandlerMock;
@@ -67,8 +67,8 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
     private SubContractingCostHandler subContractingCostHandler;
 
     @Override
-    protected FinanceRowServiceImpl supplyServiceUnderTest() {
-        return new FinanceRowServiceImpl();
+    protected FinanceRowCostsServiceImpl supplyServiceUnderTest() {
+        return new FinanceRowCostsServiceImpl();
     }
 
     private FinanceRowItem newFinanceRowItem;
@@ -102,52 +102,52 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
     @Mock
     private ApplicationFinanceHandler applicationFinanceHandlerMock;
 
-    @Test
-    public void testFindApplicationFinanceByApplicationIdAndOrganisation() {
+//    @Test
+//    public void testFindApplicationFinanceByApplicationIdAndOrganisation() {
+//
+//        Organisation organisation = newOrganisation().build();
+//        Application application = newApplication().build();
+//
+//        ApplicationFinance existingFinance = newApplicationFinance().withOrganisationSize(organisation).withApplication(application).build();
+//        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
+//
+//        ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
+//                with(id(existingFinance.getId())).
+//                withOrganisation(organisation.getId()).
+//                withApplication(application.getId()).
+//                build();
+//
+//        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
+//        when(applicationFinanceMapperMock.mapToResource(existingFinance)).thenReturn(expectedFinance);
+//
+//        ServiceResult<ApplicationFinanceResource> result = service.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
+//        assertTrue(result.isSuccess());
+//        assertEquals(expectedFinance, result.getSuccess());
+//    }
 
-        Organisation organisation = newOrganisation().build();
-        Application application = newApplication().build();
-
-        ApplicationFinance existingFinance = newApplicationFinance().withOrganisationSize(organisation).withApplication(application).build();
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
-
-        ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
-                with(id(existingFinance.getId())).
-                withOrganisation(organisation.getId()).
-                withApplication(application.getId()).
-                build();
-
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(123L, 456L)).thenReturn(existingFinance);
-        when(applicationFinanceMapperMock.mapToResource(existingFinance)).thenReturn(expectedFinance);
-
-        ServiceResult<ApplicationFinanceResource> result = service.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
-        assertTrue(result.isSuccess());
-        assertEquals(expectedFinance, result.getSuccess());
-    }
-
-    @Test
-    public void testFindApplicationFinanceByApplicationId() {
-
-        Organisation organisation = newOrganisation().build();
-        Application application = newApplication().build();
-
-        ApplicationFinance existingFinance = newApplicationFinance().withOrganisationSize(organisation).withApplication(application).build();
-        when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
-
-        ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
-                with(id(existingFinance.getId())).
-                withOrganisation(organisation.getId()).
-                withApplication(application.getId()).
-                build();
-
-        when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
-        when(applicationFinanceMapperMock.mapToResource(existingFinance)).thenReturn(expectedFinance);
-
-        ServiceResult<List<ApplicationFinanceResource>> result = service.findApplicationFinanceByApplication(123L);
-        assertTrue(result.isSuccess());
-
-        assertEquals(singletonList(expectedFinance), result.getSuccess());
-    }
+//    @Test
+//    public void testFindApplicationFinanceByApplicationId() {
+//
+//        Organisation organisation = newOrganisation().build();
+//        Application application = newApplication().build();
+//
+//        ApplicationFinance existingFinance = newApplicationFinance().withOrganisationSize(organisation).withApplication(application).build();
+//        when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
+//
+//        ApplicationFinanceResource expectedFinance = newApplicationFinanceResource().
+//                with(id(existingFinance.getId())).
+//                withOrganisation(organisation.getId()).
+//                withApplication(application.getId()).
+//                build();
+//
+//        when(applicationFinanceRepositoryMock.findByApplicationId(123L)).thenReturn(singletonList(existingFinance));
+//        when(applicationFinanceMapperMock.mapToResource(existingFinance)).thenReturn(expectedFinance);
+//
+//        ServiceResult<List<ApplicationFinanceResource>> result = service.findApplicationFinanceByApplication(123L);
+//        assertTrue(result.isSuccess());
+//
+//        assertEquals(singletonList(expectedFinance), result.getSuccess());
+//    }
 
     @Test
     public void testAddCost() {
@@ -191,41 +191,41 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.COMPETITION_NOT_OPEN));
     }
-
-    @Test
-    public void testOrganisationSeeksFunding(){
-        Long competitionId = 1L;
-        Long applicationId = 1L;
-        Long organisationId = 1L;
-        Long projectId = 1L;
-
-        Competition competition = newCompetition().withId(competitionId).build();
-
-        Application application = newApplication().withId(applicationId).withCompetition(competition).build();
-
-        Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
-        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
-
-        ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).build();
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(applicationFinance);
-
-        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withOrganisation(organisationId).withGrantClaimPercentage(20).build();
-        when(applicationFinanceMapperMock.mapToResource(applicationFinance)).thenReturn(applicationFinanceResource);
-
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisation.getOrganisationType().getId())).thenReturn(organisationFinanceDefaultHandlerMock);
-
-        Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
-
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId(), competition)).thenReturn(costs);
-
-        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance, null)));
-
-        ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
-
-        assertTrue(result.isSuccess());
-
-        assertFalse(result.getSuccess());
-    }
+//
+//    @Test
+//    public void testOrganisationSeeksFunding(){
+//        Long competitionId = 1L;
+//        Long applicationId = 1L;
+//        Long organisationId = 1L;
+//        Long projectId = 1L;
+//
+//        Competition competition = newCompetition().withId(competitionId).build();
+//
+//        Application application = newApplication().withId(applicationId).withCompetition(competition).build();
+//
+//        Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
+//        when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
+//
+//        ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).build();
+//        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(applicationFinance);
+//
+//        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withOrganisation(organisationId).withGrantClaimPercentage(20).build();
+//        when(applicationFinanceMapperMock.mapToResource(applicationFinance)).thenReturn(applicationFinanceResource);
+//
+//        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisation.getOrganisationType().getId())).thenReturn(organisationFinanceDefaultHandlerMock);
+//
+//        Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
+//
+//        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId(), competition)).thenReturn(costs);
+//
+//        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance, null)));
+//
+//        ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
+//
+//        assertTrue(result.isSuccess());
+//
+//        assertFalse(result.getSuccess());
+//    }
 
     @Test
     public void testAlreadyExistingMetaValueShouldBeUpdated() {
@@ -310,15 +310,15 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         verify(financeRowMetaValueRepositoryMock, times(0)).save(any(FinanceRowMetaValue.class));
     }
 
-    @Test
-    public void testFindApplicationFinanceDetailsByApplicationId() {
-
-        List<ApplicationFinanceResource> existingFinances = newApplicationFinanceResource().withApplication(1L).build(3);
-        when(applicationFinanceHandlerMock.getApplicationFinances(1L)).thenReturn(existingFinances);
-
-        ServiceResult<List<ApplicationFinanceResource>> result = service.financeDetails(1L);
-        assertTrue(result.isSuccess());
-
-        assertEquals(existingFinances, result.getSuccess());
-    }
+//    @Test
+//    public void testFindApplicationFinanceDetailsByApplicationId() {
+//
+//        List<ApplicationFinanceResource> existingFinances = newApplicationFinanceResource().withApplication(1L).build(3);
+//        when(applicationFinanceHandlerMock.getApplicationFinances(1L)).thenReturn(existingFinances);
+//
+//        ServiceResult<List<ApplicationFinanceResource>> result = service.financeDetails(1L);
+//        assertTrue(result.isSuccess());
+//
+//        assertEquals(existingFinances, result.getSuccess());
+//    }
 }

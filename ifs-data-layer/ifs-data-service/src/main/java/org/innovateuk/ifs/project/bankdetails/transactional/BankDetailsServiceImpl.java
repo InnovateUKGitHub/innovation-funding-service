@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.bankdetails.transactional;
 
 import org.innovateuk.ifs.address.domain.AddressType;
-import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -9,6 +8,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
@@ -72,8 +72,6 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Autowired
     private OrganisationAddressMapper organisationAddressMapper;
 
-    @Autowired
-    private AddressMapper addressMapper;
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
@@ -95,6 +93,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
 
     @Autowired
     private ProjectUsersHelper projectUsersHelper;
+
+    @Autowired
+    private FinanceRowCostsService financeRowCostsService;
 
     @Autowired
     private FinanceRowService financeRowService;

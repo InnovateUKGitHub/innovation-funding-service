@@ -10,6 +10,7 @@ import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,6 +39,9 @@ public class ApplicationFinanceController {
 
     @Value("${ifs.data.service.file.storage.applicationfinance.valid.media.types}")
     private List<String> validMediaTypesForApplicationFinance;
+
+    @Autowired
+    private FinanceRowCostsService financeRowCostsService;
 
     @Autowired
     private FinanceRowService financeRowService;
@@ -80,7 +84,7 @@ public class ApplicationFinanceController {
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
 
-        return financeRowService.addCost(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
+        return financeRowCostsService.addCost(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
     }
 
     @GetMapping("/getById/{applicationFinanceId}")
@@ -90,7 +94,7 @@ public class ApplicationFinanceController {
 
     @PostMapping("/update/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
-        return financeRowService.updateCost(applicationFinanceId, applicationFinance).toPutWithBodyResponse();
+        return financeRowCostsService.updateCost(applicationFinanceId, applicationFinance).toPutWithBodyResponse();
     }
 
     @GetMapping("/financeDetails/{applicationId}/{organisationId}")

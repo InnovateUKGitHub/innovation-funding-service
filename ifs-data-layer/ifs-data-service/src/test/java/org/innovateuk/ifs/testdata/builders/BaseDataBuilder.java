@@ -31,6 +31,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
@@ -132,7 +133,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectService projectService;
     protected ProjectDetailsService projectDetailsService;
     protected MonitoringOfficerService monitoringOfficerService;
-    protected FinanceRowService financeRowService;
+    protected FinanceRowCostsService financeRowCostsService;
     protected SectionService sectionService;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
@@ -166,6 +167,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected AssessorFormInputResponseService assessorFormInputResponseService;
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
+    protected FinanceRowService financeRowService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -212,6 +214,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectService = serviceLocator.getBean(ProjectService.class);
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
         monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
+        financeRowCostsService = serviceLocator.getBean(FinanceRowCostsService.class);
         financeRowService = serviceLocator.getBean(FinanceRowService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
