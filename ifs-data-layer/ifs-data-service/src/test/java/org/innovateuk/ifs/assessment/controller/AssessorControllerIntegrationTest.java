@@ -88,7 +88,7 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 )
                 .build();
 
-        AssessorProfileResource actualAssessorProfileResource = controller.getAssessorProfile(3L).getSuccessObjectOrThrowException();
+        AssessorProfileResource actualAssessorProfileResource = controller.getAssessorProfile(3L).getSuccess();
 
         // We can be certain of how everything should be, with the exception of the modified time on the user which
         // we don't know.

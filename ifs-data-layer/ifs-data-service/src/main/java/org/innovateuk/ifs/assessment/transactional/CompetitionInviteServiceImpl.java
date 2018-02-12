@@ -646,12 +646,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
-                arguments).getSuccessObject();
+                arguments).getSuccess();
     }
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_preview_text.txt",
-                arguments).getSuccessObject();
+                arguments).getSuccess();
     }
 
     private ServiceResult<CompetitionAssessmentInvite> getByEmailAndCompetition(String email, long competitionId) {

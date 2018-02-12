@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.builder;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;

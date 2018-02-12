@@ -16,6 +16,6 @@ public class AssessorProfileDetailsModelPopulator {
     ProfileRestService profileRestService;
 
     public AssessorProfileDetailsViewModel populateModel(UserResource user) {
-        return new AssessorProfileDetailsViewModel(profileRestService.getUserProfile(user.getId()).getSuccessObjectOrThrowException());
+        return new AssessorProfileDetailsViewModel(profileRestService.getUserProfile(user.getId()).getSuccess());
     }
 }

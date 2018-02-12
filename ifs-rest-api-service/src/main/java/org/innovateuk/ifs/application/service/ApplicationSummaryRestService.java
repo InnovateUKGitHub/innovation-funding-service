@@ -28,7 +28,7 @@ public interface ApplicationSummaryRestService {
                                                                         int pageSize,
                                                                         Optional<String> filter,
                                                                         Optional<FundingDecision> fundingFilter,
-                                                                        Optional<Boolean> inAssessmentPanel);
+                                                                        Optional<Boolean> inAssessmentReviewPanel);
 
     RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId,
                                                          Optional<String> filter,

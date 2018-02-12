@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  */
 public interface FailingOrSucceedingResult<SuccessType, FailureType> extends ErrorHolder {
 
-    SuccessType getSuccessObject();
+    SuccessType getSuccess();
 
     boolean isSuccess();
 

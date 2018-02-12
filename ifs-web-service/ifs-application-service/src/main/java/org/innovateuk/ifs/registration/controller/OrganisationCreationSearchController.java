@@ -80,7 +80,7 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         model.addAttribute("isLeadApplicant", checkOrganisationIsLead(request));
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
@@ -132,8 +132,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject(), checkOrganisationIsLead(request)));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -161,8 +161,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject(), checkOrganisationIsLead(request)));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {
             return TEMPLATE_PATH + "/" + ADD_ADDRESS_DETAILS;
@@ -188,8 +188,8 @@ public class OrganisationCreationSearchController extends AbstractOrganisationCr
         registrationCookieService.saveToOrganisationCreationCookie(organisationForm, response);
 
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject(), checkOrganisationIsLead(request)));
-        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccessObject());
+        model.addAttribute(MODEL, new OrganisationAddressViewModel(organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess(), checkOrganisationIsLead(request)));
+        model.addAttribute("organisationType", organisationTypeRestService.findOne(organisationForm.getOrganisationTypeId()).getSuccess());
 
 
         if (OrganisationTypeEnum.RESEARCH.getId().equals(organisationForm.getOrganisationTypeId())) {

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
@@ -33,7 +33,7 @@ abstract class PanelInviteAssessorsModelPopulator<ViewModelType extends InviteAs
     }
 
     private void populateStatistics(ViewModelType model, CompetitionResource competitionResource) {
-        AssessmentPanelInviteStatisticsResource statisticsResource = competitionKeyStatisticsRestService.getAssessmentPanelInviteStatisticsByCompetition(competitionResource.getId()).getSuccessObject();
+        AssessmentPanelInviteStatisticsResource statisticsResource = competitionKeyStatisticsRestService.getAssessmentPanelInviteStatisticsByCompetition(competitionResource.getId()).getSuccess();
         model.setAssessorsInvited(statisticsResource.getInvited());
         model.setAssessorsAccepted(statisticsResource.getAccepted());
         model.setAssessorsDeclined(statisticsResource.getDeclined());

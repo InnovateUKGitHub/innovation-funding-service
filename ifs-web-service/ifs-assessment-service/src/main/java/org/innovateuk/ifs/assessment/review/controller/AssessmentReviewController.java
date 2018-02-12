@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.review.form.AssessmentReviewForm;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
@@ -56,7 +56,7 @@ public class AssessmentReviewController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            AssessmentReviewResource assessmentReview = assessmentPanelRestService.getAssessmentReview(reviewId).getSuccessObjectOrThrowException();
+            AssessmentReviewResource assessmentReview = assessmentPanelRestService.getAssessmentReview(reviewId).getSuccess();
             final RestResult<Void> updateResult;
             if (form.getReviewAccept()) {
                 updateResult = assessmentPanelRestService.acceptAssessmentReview(reviewId);

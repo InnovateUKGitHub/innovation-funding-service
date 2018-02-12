@@ -38,13 +38,13 @@ public class CompetitionSearchPopulator {
 
     public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber) {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
-        viewModel.setInnovationAreas(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException());
+        viewModel.setInnovationAreas(categoryRestService.getInnovationAreas().getSuccess());
 
         PublicContentItemPageResource pageResource = publicContentItemRestService.getByFilterValues(
                 innovationAreaId,
                 keywords,
                 pageNumber,
-                CompetitionSearchViewModel.PAGE_SIZE).getSuccessObjectOrThrowException();
+                CompetitionSearchViewModel.PAGE_SIZE).getSuccess();
 
         innovationAreaId.ifPresent(viewModel::setSelectedInnovationAreaId);
         keywords.ifPresent(viewModel::setSearchKeywords);

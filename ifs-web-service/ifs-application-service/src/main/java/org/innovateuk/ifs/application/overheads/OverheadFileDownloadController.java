@@ -34,8 +34,8 @@ public class OverheadFileDownloadController {
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("overheadId") final Long overheadId) throws ExecutionException {
 
-        final ByteArrayResource resource = overheadFileRestService.getOverheadFile(overheadId).getSuccessObjectOrThrowException();
-        final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetails(overheadId).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = overheadFileRestService.getOverheadFile(overheadId).getSuccess();
+        final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetails(overheadId).getSuccess();
         return getFileResponseEntity(resource, fileEntryResource);
     }
 }
