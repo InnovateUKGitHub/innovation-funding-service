@@ -41,6 +41,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -848,7 +849,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void countPendingSpendProfiles() throws Exception {
 
-        final BigInteger pendingSpendProfileCount = BigInteger.TEN;
+        final BigDecimal pendingSpendProfileCount = BigDecimal.TEN;
         when(competitionRepositoryMock.countPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfileCount);
 
         ServiceResult<Long> result = service.countPendingSpendProfiles(competitionId);
