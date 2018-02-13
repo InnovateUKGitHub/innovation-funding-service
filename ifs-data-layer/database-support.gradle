@@ -4,7 +4,6 @@ ext.dockerComposeFile = "docker-compose.yml"
 
 task startMySql(type: Exec) {
     workingDir '../../'
-    println workingDir
     doFirst {
         commandLine 'docker-compose', '-f', dockerComposeFile, 'up', '-d', sqlContainer
     }
