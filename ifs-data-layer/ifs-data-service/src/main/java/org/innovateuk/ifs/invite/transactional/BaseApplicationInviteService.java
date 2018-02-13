@@ -11,7 +11,15 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-abstract class BaseInviteService extends BaseTransactionalService {
+/**
+ * Base service for dealing with {@link ApplicationInvite}.
+ *
+ * This should be refactored to generalise for all implementations of
+ * {@link org.innovateuk.ifs.invite.domain.Invite}.
+ *
+ * TODO: IFS-2875 - Refactor Invite service code.
+ */
+abstract class BaseApplicationInviteService extends BaseTransactionalService {
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;

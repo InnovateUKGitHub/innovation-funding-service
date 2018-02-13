@@ -39,7 +39,6 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
@@ -61,7 +60,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class InviteServiceImpl extends BaseInviteService implements InviteService {
+public class InviteServiceImpl extends BaseApplicationInviteService implements InviteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(InviteServiceImpl.class);
 

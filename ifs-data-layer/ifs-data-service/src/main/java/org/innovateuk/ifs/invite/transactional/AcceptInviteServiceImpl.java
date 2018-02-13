@@ -33,7 +33,7 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
  * and initialising their state on the application correctly.
  */
 @Service
-public class AcceptInviteServiceImpl extends BaseInviteService implements AcceptInviteService {
+public class AcceptInviteServiceImpl extends BaseApplicationInviteService implements AcceptInviteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AcceptInviteServiceImpl.class);
 
