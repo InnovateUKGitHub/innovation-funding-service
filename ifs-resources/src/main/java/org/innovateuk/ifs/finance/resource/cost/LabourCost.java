@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 
 import javax.validation.constraints.*;
 import javax.validation.groups.Default;
@@ -29,7 +29,6 @@ public class LabourCost extends AbstractFinanceRowItem {
     @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class, message = MAX_DIGITS_MESSAGE)
     private BigDecimal grossEmployeeCost;
-    private BigDecimal grossAnnualSalary; // for ZDD support- to be removed next sprint
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
     @Min.List({
@@ -89,12 +88,11 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     public BigDecimal getGrossEmployeeCost() {
-        if (grossEmployeeCost ==  null){  // if-else block for ZDD support - to be removed next sprint
-           return grossEmployeeCost = grossAnnualSalary;
+        return grossEmployeeCost;
+    }
 
-        } else {
-           return grossEmployeeCost;
-        }
+    public BigDecimal getGrossAnnualSalary(){   // ZDD support to be removed on next Sprint
+        return grossEmployeeCost;
     }
 
     public BigDecimal getRate(Integer workingDaysPerYear) {
@@ -147,7 +145,10 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     public void setGrossEmployeeCost(BigDecimal grossEmployeeCost) {
         this.grossEmployeeCost = grossEmployeeCost;
-        this.grossAnnualSalary = grossEmployeeCost; // for ZDD support - to be removed next sprint
+    }
+
+    public void setGrossAnnualSalary(BigDecimal grossEmployeeCost){
+        this.grossEmployeeCost = grossEmployeeCost;    // zdd support to be removed next Sprint
     }
 
     public void setName(String name) {
