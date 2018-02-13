@@ -98,21 +98,21 @@ public class ApplicationFinancePermissionRules {
     }
 
     private boolean isAConsortiumMemberOnApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository, roleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), COLLABORATOR, processRoleRepository, roleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), COLLABORATOR, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;
     }
 
     private boolean isAConsortiumMemberOnApplication(final Long applicationId, final UserResource user) {
-        final boolean isLeadApplicant = checkProcessRole(user, applicationId, LEADAPPLICANT, processRoleRepository, roleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationId, COLLABORATOR, processRoleRepository, roleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationId, LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationId, COLLABORATOR, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;
     }
 
     private boolean isAConsortiumMemberOnApplicationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository, roleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository);
         final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;

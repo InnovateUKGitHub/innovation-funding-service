@@ -46,6 +46,7 @@ import java.net.URLEncoder;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -79,7 +80,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(organisationId).build();
 
     RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
-    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(Arrays.asList(financeTeamRole)).build();
+    UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(asList(financeTeamRole)).build();
     UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
 
     ProjectUserResource financeContactProjectUser = newProjectUserResource().withOrganisation(organisationId).withUserName("User1").withUser(financeContactUser.getId()).withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
@@ -122,21 +123,21 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(financeContactProjectUser));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(financeContactProjectUser));
 
-        PostResource firstPost = new PostResource(null, financeTeamUser, "Question", Arrays.asList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
+        PostResource firstPost = new PostResource(null, financeTeamUser, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
         PostResource firstResponse = new PostResource(null, financeContactUser, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
-        thread = new QueryResource(1L, projectFinanceId, Arrays.asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now(), null, null);
+        thread = new QueryResource(1L, projectFinanceId, asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now(), null, null);
 
-        PostResource firstPost2 = new PostResource(null, financeTeamUser, "Question2", new ArrayList<>(), ZonedDateTime.now().plusMinutes(15L));
-        thread2 = new QueryResource(3L, projectFinanceId, Arrays.asList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now(), null, null);
+        PostResource firstPost2 = new PostResource(null, financeTeamUser, "Question2", new ArrayList<>(), ZonedDateTime.now().minusMinutes(15L));
+        thread2 = new QueryResource(3L, projectFinanceId, singletonList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now(), null, null);
 
         PostResource firstPost1 = new PostResource(null, financeTeamUser, "Question3", new ArrayList<>(), ZonedDateTime.now());
         PostResource firstResponse1 = new PostResource(null, financeContactUser, "Response3", new ArrayList<>(), ZonedDateTime.now().plusMinutes(10L));
 
-        thread3 = new QueryResource(5L, projectFinanceId, Arrays.asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now(), null, null);
+        thread3 = new QueryResource(5L, projectFinanceId, asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now(), null, ZonedDateTime.now().minusDays(5L));
 
-        queries = Arrays.asList(thread2, thread, thread3);
+        queries = asList(thread2, thread, thread3);
     }
 
     @Test
@@ -159,11 +160,11 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(partnerOrganisation.getId(), model.getOrganisationId());
         assertEquals(project.getName(), model.getProjectName());
-        assertEquals(Collections.emptyList(), model.getQueries());
+        assertEquals(Collections.emptyList(), model.getAwaitingResponseQueries());
+        assertEquals(Collections.emptyList(), model.getPendingQueries());
+        assertEquals(Collections.emptyList(), model.getClosedQueries());
         assertFalse(model.isApproved());
-
     }
-
 
     @Test
     public void testViewFinanceChecksWithQueries() throws Exception {
@@ -188,53 +189,56 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertFalse(model.isApproved());
         assertEquals(organisationId, model.getOrganisationId());
         assertEquals(projectId, model.getProjectId());
-        assertEquals(3, model.getQueries().size());
-        assertEquals("Query title", model.getQueries().get(0).getTitle());
-        assertEquals(false, model.getQueries().get(0).isAwaitingResponse());
-        assertEquals(organisationId, model.getQueries().get(0).getOrganisationId());
-        assertEquals(projectId, model.getQueries().get(0).getProjectId());
-        assertEquals(1L, model.getQueries().get(0).getId().longValue());
-        assertEquals(2, model.getQueries().get(0).getViewModelPosts().size());
-        assertEquals("Question", model.getQueries().get(0).getViewModelPosts().get(0).body);
-        assertEquals(financeTeamUser.getId(), model.getQueries().get(0).getViewModelPosts().get(0).author.getId());
-        assertEquals("Innovate UK - Finance team", model.getQueries().get(0).getViewModelPosts().get(0).getUsername());
-        assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(model.getQueries().get(0).getViewModelPosts().get(0).createdOn));
-        assertEquals(1, model.getQueries().get(0).getViewModelPosts().get(0).attachments.size());
-        assertEquals(23L, model.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).id.longValue());
-        assertEquals("file1.txt", model.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).name);
-        assertEquals("Response", model.getQueries().get(0).getViewModelPosts().get(1).body);
-        assertEquals(financeContactUser.getId(), model.getQueries().get(0).getViewModelPosts().get(1).author.getId());
-        assertEquals("B Z - Org1", model.getQueries().get(0).getViewModelPosts().get(1).getUsername());
-        assertTrue(ZonedDateTime.now().plusMinutes(20L).isAfter(model.getQueries().get(0).getViewModelPosts().get(1).createdOn));
-        assertEquals(0, model.getQueries().get(0).getViewModelPosts().get(1).attachments.size());
-        assertEquals("Query2 title", model.getQueries().get(1).getTitle());
-        assertEquals(true, model.getQueries().get(1).isAwaitingResponse());
-        assertEquals(organisationId, model.getQueries().get(1).getOrganisationId());
-        assertEquals(projectId, model.getQueries().get(1).getProjectId());
-        assertEquals(3L, model.getQueries().get(1).getId().longValue());
-        assertEquals(1, model.getQueries().get(1).getViewModelPosts().size());
-        assertEquals("Question2", model.getQueries().get(1).getViewModelPosts().get(0).body);
-        assertEquals(financeTeamUser.getId(), model.getQueries().get(1).getViewModelPosts().get(0).author.getId());
-        assertEquals("Innovate UK - Finance team", model.getQueries().get(1).getViewModelPosts().get(0).getUsername());
-        assertTrue(ZonedDateTime.now().plusMinutes(15L).isAfter(model.getQueries().get(1).getViewModelPosts().get(0).createdOn));
-        assertEquals(0, model.getQueries().get(1).getViewModelPosts().get(0).attachments.size());
+        assertEquals(1, model.getAwaitingResponseQueries().size());
+        assertEquals("Query title", model.getAwaitingResponseQueries().get(0).getTitle());
+        assertEquals(true, model.getAwaitingResponseQueries().get(0).isLastPostByExternalUser());
+        assertEquals(organisationId, model.getAwaitingResponseQueries().get(0).getOrganisationId());
+        assertEquals(projectId, model.getAwaitingResponseQueries().get(0).getProjectId());
+        assertEquals(1L, model.getAwaitingResponseQueries().get(0).getId().longValue());
+        assertEquals(2, model.getAwaitingResponseQueries().get(0).getViewModelPosts().size());
+        assertEquals("Question", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).body);
+        assertEquals(financeTeamUser.getId(), model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).author.getId());
+        assertEquals("Innovate UK - Finance team", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).getUsername());
+        assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).createdOn));
+        assertEquals(1, model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).attachments.size());
+        assertEquals(23L, model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).attachments.get(0).id.longValue());
+        assertEquals("file1.txt", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(0).attachments.get(0).name);
+        assertEquals("Response", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).body);
+        assertEquals(financeContactUser.getId(), model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).author.getId());
+        assertEquals("B Z - Org1", model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).getUsername());
+        assertTrue(ZonedDateTime.now().plusMinutes(20L).isAfter(model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).createdOn));
+        assertEquals(0, model.getAwaitingResponseQueries().get(0).getViewModelPosts().get(1).attachments.size());
 
-        assertEquals("Query title3", model.getQueries().get(2).getTitle());
-        assertEquals(false, model.getQueries().get(2).isAwaitingResponse());
-        assertEquals(organisationId, model.getQueries().get(2).getOrganisationId());
-        assertEquals(projectId, model.getQueries().get(2).getProjectId());
-        assertEquals(5L, model.getQueries().get(2).getId().longValue());
-        assertEquals(2, model.getQueries().get(2).getViewModelPosts().size());
-        assertEquals("Question3", model.getQueries().get(2).getViewModelPosts().get(0).body);
-        assertEquals(financeTeamUser.getId(), model.getQueries().get(2).getViewModelPosts().get(0).author.getId());
-        assertEquals("Innovate UK - Finance team", model.getQueries().get(2).getViewModelPosts().get(0).getUsername());
-        assertTrue(ZonedDateTime.now().isAfter(model.getQueries().get(2).getViewModelPosts().get(0).createdOn));
-        assertEquals(0, model.getQueries().get(2).getViewModelPosts().get(0).attachments.size());
-        assertEquals("Response3", model.getQueries().get(2).getViewModelPosts().get(1).body);
-        assertEquals(financeContactUser.getId(), model.getQueries().get(2).getViewModelPosts().get(1).author.getId());
-        assertEquals("B Z - Org1", model.getQueries().get(2).getViewModelPosts().get(1).getUsername());
-        assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(model.getQueries().get(2).getViewModelPosts().get(1).createdOn));
-        assertEquals(0, model.getQueries().get(2).getViewModelPosts().get(1).attachments.size());
+        assertEquals(1, model.getClosedQueries().size());
+        assertEquals("Query title3", model.getClosedQueries().get(0).getTitle());
+        assertEquals(true, model.getClosedQueries().get(0).isClosed());
+        assertEquals(organisationId, model.getClosedQueries().get(0).getOrganisationId());
+        assertEquals(projectId, model.getClosedQueries().get(0).getProjectId());
+        assertEquals(5L, model.getClosedQueries().get(0).getId().longValue());
+        assertEquals(2, model.getClosedQueries().get(0).getViewModelPosts().size());
+        assertEquals("Question3", model.getClosedQueries().get(0).getViewModelPosts().get(0).body);
+        assertEquals("Response3", model.getClosedQueries().get(0).getViewModelPosts().get(1).body);
+        assertEquals(financeTeamUser.getId(), model.getClosedQueries().get(0).getViewModelPosts().get(0).author.getId());
+        assertEquals("Innovate UK - Finance team", model.getClosedQueries().get(0).getViewModelPosts().get(0).getUsername());
+        assertTrue(ZonedDateTime.now().plusMinutes(15L).isAfter(model.getClosedQueries().get(0).getViewModelPosts().get(0).createdOn));
+        assertEquals(0, model.getClosedQueries().get(0).getViewModelPosts().get(0).attachments.size());
+        assertEquals(financeContactUser.getId(), model.getClosedQueries().get(0).getViewModelPosts().get(1).author.getId());
+        assertEquals("B Z - Org1", model.getClosedQueries().get(0).getViewModelPosts().get(1).getUsername());
+        assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(model.getClosedQueries().get(0).getViewModelPosts().get(1).createdOn));
+        assertEquals(0, model.getClosedQueries().get(0).getViewModelPosts().get(1).attachments.size());
+
+        assertEquals(1, model.getPendingQueries().size());
+        assertEquals("Query2 title", model.getPendingQueries().get(0).getTitle());
+        assertEquals(false, model.getPendingQueries().get(0).isLastPostByExternalUser());
+        assertEquals(organisationId, model.getPendingQueries().get(0).getOrganisationId());
+        assertEquals(projectId, model.getPendingQueries().get(0).getProjectId());
+        assertEquals(3, model.getPendingQueries().get(0).getId().longValue());
+        assertEquals(1, model.getPendingQueries().get(0).getViewModelPosts().size());
+        assertEquals("Question2", model.getPendingQueries().get(0).getViewModelPosts().get(0).body);
+        assertEquals(financeTeamUser.getId(), model.getPendingQueries().get(0).getViewModelPosts().get(0).author.getId());
+        assertEquals("Innovate UK - Finance team", model.getPendingQueries().get(0).getViewModelPosts().get(0).getUsername());
+        assertTrue(ZonedDateTime.now().isAfter(model.getPendingQueries().get(0).getViewModelPosts().get(0).createdOn));
+        assertEquals(0, model.getPendingQueries().get(0).getViewModelPosts().get(0).attachments.size());
 
     }
 
