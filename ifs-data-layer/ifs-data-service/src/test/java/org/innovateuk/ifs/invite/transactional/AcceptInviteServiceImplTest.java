@@ -1,15 +1,25 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -26,14 +36,28 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.mockito.Mockito.*;
 
-public class AcceptInviteServiceImplTest extends BaseServiceUnitTest<AcceptInviteServiceImpl> {
+@RunWith(MockitoJUnitRunner.class)
+public class AcceptInviteServiceImplTest {
+
+    @Mock
+    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
+    @Mock
+    private ApplicationInviteRepository applicationInviteRepositoryMock;
+    @Mock
+    private UserRepository userRepositoryMock;
+    @Mock
+    private RoleRepository roleRepositoryMock;
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+    @Mock
+    private ApplicationService applicationServiceMock;
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @InjectMocks
+    private AcceptInviteServiceImpl service = new AcceptInviteServiceImpl();
 
     private final String testInviteHash = "abcdef";
-
-    @Override
-    protected AcceptInviteServiceImpl supplyServiceUnderTest() {
-        return new AcceptInviteServiceImpl();
-    }
 
     @Test
     public void acceptInvite_failsOnEmailAddressMismatch() {
