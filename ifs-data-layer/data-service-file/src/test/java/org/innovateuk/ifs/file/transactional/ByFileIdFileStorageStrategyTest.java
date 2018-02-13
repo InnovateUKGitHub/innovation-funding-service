@@ -114,8 +114,8 @@ public class ByFileIdFileStorageStrategyTest extends BaseFileStorageStrategyTest
             ServiceResult<File> createdFile2Result = strategy.createFile(fileEntry2, tempFileWithContents2);
             assertTrue(createdFile2Result.isSuccess());
 
-            File createdFile1 = createdFile1Result.getSuccessObject();
-            File createdFile2 = createdFile2Result.getSuccessObject();
+            File createdFile1 = createdFile1Result.getSuccess();
+            File createdFile2 = createdFile2Result.getSuccess();
 
             assertTrue(createdFile1.exists());
             assertTrue(createdFile2.exists());

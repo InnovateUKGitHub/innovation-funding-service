@@ -31,7 +31,7 @@ public class FormInputControllerIntegrationTest extends BaseControllerIntegratio
     public void testFindByQuestionId() {
         Long questionId = 1L;
         Long formInputId = 1L;
-        List<FormInputResource> formInputs = controller.findByQuestionId(questionId).getSuccessObject();
+        List<FormInputResource> formInputs = controller.findByQuestionId(questionId).getSuccess();
 
         assertThat(formInputs, hasSize(3));
 
@@ -45,7 +45,7 @@ public class FormInputControllerIntegrationTest extends BaseControllerIntegratio
     public void testFindByQuestionIdAndScope() {
         Long questionId = 1L;
         Long formInputId = 1L;
-        List<FormInputResource> formInputs = controller.findByQuestionIdAndScope(questionId, APPLICATION).getSuccessObject();
+        List<FormInputResource> formInputs = controller.findByQuestionIdAndScope(questionId, APPLICATION).getSuccess();
 
         assertThat(formInputs, hasSize(1));
 
@@ -58,7 +58,7 @@ public class FormInputControllerIntegrationTest extends BaseControllerIntegratio
     @Test
     public void testFindByCompetitionIdAndScope() {
         Long competitionId = 1L;
-        List<FormInputResource> formInputs = controller.findByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObject();
+        List<FormInputResource> formInputs = controller.findByCompetitionIdAndScope(competitionId, APPLICATION).getSuccess();
 
         assertThat(formInputs, hasSize(38));
 

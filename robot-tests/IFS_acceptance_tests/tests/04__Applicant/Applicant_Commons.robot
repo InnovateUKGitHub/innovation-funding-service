@@ -386,7 +386,7 @@ Lead Applicant applies to the new created competition
 the user navigates to the eligibility of the competition
     [Arguments]  ${competition}
     ${competitionId} =  get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
+    the user navigates to the page   ${server}/application/create/start-application/${competitionId}
 
 the applicant submits the application
     the user clicks the button/link                    link=Review and submit

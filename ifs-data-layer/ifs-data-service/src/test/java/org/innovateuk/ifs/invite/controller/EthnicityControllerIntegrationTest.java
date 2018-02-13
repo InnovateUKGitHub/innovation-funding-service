@@ -45,7 +45,7 @@ public class EthnicityControllerIntegrationTest extends BaseControllerIntegratio
                 .withPriority(1, 2, 3)
                 .build(3);
 
-        List<EthnicityResource> found = controller.findAllActive().getSuccessObjectOrThrowException();
+        List<EthnicityResource> found = controller.findAllActive().getSuccess();
         assertEquals(expected, found);
     }
 }

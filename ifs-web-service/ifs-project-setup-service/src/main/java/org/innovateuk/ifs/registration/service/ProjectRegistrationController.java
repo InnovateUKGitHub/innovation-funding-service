@@ -59,7 +59,7 @@ public class ProjectRegistrationController {
                     model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     @PostMapping(REGISTER_MAPPING)
@@ -92,7 +92,7 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-        }).getSuccessObject();
+        }).getSuccess();
     }
 
     private boolean emailExists(String email) {

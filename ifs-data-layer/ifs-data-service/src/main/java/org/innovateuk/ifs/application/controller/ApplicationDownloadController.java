@@ -65,7 +65,7 @@ public class ApplicationDownloadController {
         
         List<Application> applications;
         if(applicationsResult.isSuccess()) {
-        	applications = applicationsResult.getSuccessObject();
+        	applications = applicationsResult.getSuccess();
         } else {
         	LOG.error("failed call to get application summaries by competition and status for the download");
         	return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -140,8 +140,8 @@ public class ApplicationDownloadController {
         	BigDecimal fundingSought;
         	
         	if(totalResult.isSuccess() && fundingSoughtResult.isSuccess()) {
-        		total = totalResult.getSuccessObject();
-        		fundingSought = fundingSoughtResult.getSuccessObject();
+        		total = totalResult.getSuccess();
+        		fundingSought = fundingSoughtResult.getSuccess();
         	} else {
         		throw new SummaryDataUnavailableException();
         	}

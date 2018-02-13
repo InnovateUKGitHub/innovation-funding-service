@@ -66,7 +66,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
+        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccess();
     }
 
     @GetMapping("/accept-invite/confirm-invited-organisation")
@@ -92,6 +92,6 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObject();
+        return view.getSuccess();
     }
 }

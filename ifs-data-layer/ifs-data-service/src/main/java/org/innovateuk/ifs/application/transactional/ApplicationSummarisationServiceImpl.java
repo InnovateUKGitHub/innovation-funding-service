@@ -30,7 +30,7 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 
 		BigDecimal total;
 		if (financeTotalsResult.isSuccess()) {
-			total = financeTotalsResult.getSuccessObject().stream().map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
+			total = financeTotalsResult.getSuccess().stream().map(t -> t.getTotal()).reduce(BigDecimal.ZERO, BigDecimal::add);
 		} else {
 			total = BigDecimal.ZERO;
 		}
@@ -49,7 +49,7 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 
 		BigDecimal fundingSought;
 		if (financeTotalsResult.isSuccess()) {
-			fundingSought = financeTotalsResult.getSuccessObject().stream()
+			fundingSought = financeTotalsResult.getSuccess().stream()
 					.filter(of -> of != null && of.getGrantClaimPercentage() != null)
 					.map(of -> of.getTotalFundingSought()).reduce(BigDecimal.ZERO, BigDecimal::add);
 		} else {

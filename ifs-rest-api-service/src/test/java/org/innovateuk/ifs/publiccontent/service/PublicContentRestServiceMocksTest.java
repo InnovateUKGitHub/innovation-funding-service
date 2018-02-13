@@ -30,7 +30,7 @@ public class PublicContentRestServiceMocksTest extends BaseRestServiceUnitTest<P
         PublicContentResource toUpdate = newPublicContentResource().build();
         PublicContentSectionType type  = PublicContentSectionType.ELIGIBILITY;
         setupPostWithRestResultExpectations(PUBLIC_CONTENT_URL + "/update-section/" + type.name() + "/" + toUpdate.getId(), toUpdate, HttpStatus.OK);
-        service.updateSection(toUpdate, type).getSuccessObjectOrThrowException();
+        service.updateSection(toUpdate, type).getSuccess();
     }
 
 
@@ -39,7 +39,7 @@ public class PublicContentRestServiceMocksTest extends BaseRestServiceUnitTest<P
         PublicContentResource toUpdate = newPublicContentResource().build();
         PublicContentSectionType type  = PublicContentSectionType.ELIGIBILITY;
         setupPostWithRestResultExpectations(PUBLIC_CONTENT_URL + "/mark-section-as-complete/" + type.name() + "/" + toUpdate.getId(), toUpdate, HttpStatus.OK);
-        service.markSectionAsComplete(toUpdate, type).getSuccessObjectOrThrowException();
+        service.markSectionAsComplete(toUpdate, type).getSuccess();
     }
 
 
@@ -47,7 +47,7 @@ public class PublicContentRestServiceMocksTest extends BaseRestServiceUnitTest<P
     public void test_getByCompetitionId() {
         PublicContentResource expectedResponse = newPublicContentResource().build();
         setupGetWithRestResultExpectations(PUBLIC_CONTENT_URL + "/find-by-competition-id/" + COMPETITION_ID, PublicContentResource.class, expectedResponse);
-        PublicContentResource response = service.getByCompetitionId(COMPETITION_ID).getSuccessObjectOrThrowException();
+        PublicContentResource response = service.getByCompetitionId(COMPETITION_ID).getSuccess();
         assertThat(response, equalTo(expectedResponse));
     }
 

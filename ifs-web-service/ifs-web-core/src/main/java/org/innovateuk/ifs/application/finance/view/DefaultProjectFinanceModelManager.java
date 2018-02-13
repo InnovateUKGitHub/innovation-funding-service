@@ -58,7 +58,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
         ProjectFinanceResource projectFinanceResource = getOrganisationFinances(projectId, userId, organisationId);
 
         if (projectFinanceResource != null) {
-            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(projectFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(projectFinanceResource.getOrganisation()).getSuccess();
             model.addAttribute("organisationFinance", projectFinanceResource.getFinanceOrganisationDetails());
             model.addAttribute("organisationFinanceSize", projectFinanceResource.getOrganisationSize());
             model.addAttribute("organisationType", organisationType);
@@ -85,7 +85,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
         ProjectFinanceResource projectFinanceResource = getOrganisationFinances(projectId, userId, organisationId);
 
         if (projectFinanceResource != null) {
-            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(projectFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(projectFinanceResource.getOrganisation()).getSuccess();
             financeViewModel.setOrganisationFinance(projectFinanceResource.getFinanceOrganisationDetails());
             financeViewModel.setOrganisationFinanceSize(projectFinanceResource.getOrganisationSize());
             financeViewModel.setOrganisationType(organisationType);

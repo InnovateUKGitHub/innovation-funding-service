@@ -52,6 +52,6 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
     private AssessorCountSummaryPageResource getCounts(long competitionId, Long innovationSectorId, BusinessType businessType, int page) {
         return applicationCountSummaryRestService
                 .getAssessorCountSummariesByCompetitionId(competitionId, Optional.ofNullable(innovationSectorId), Optional.ofNullable(businessType), page, PAGE_SIZE)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 }

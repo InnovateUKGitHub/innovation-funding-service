@@ -64,7 +64,7 @@ public class BankDetailsManagementController {
             UserResource loggedInUser) {
         model.addAttribute("isCompAdminUser", loggedInUser.hasRole(UserRoleType.COMP_ADMIN));
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
     }
 
@@ -77,7 +77,7 @@ public class BankDetailsManagementController {
             UserResource loggedInUser) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
-        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccess();
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, new ApproveBankDetailsForm());
     }
 
@@ -95,7 +95,7 @@ public class BankDetailsManagementController {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
-                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+                projectId, organisationResource.getId()).getSuccess();
         if(bankDetailsResource.isManualApproval()) {
             return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
         }
@@ -110,7 +110,7 @@ public class BankDetailsManagementController {
                 faliureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
                 () -> {
-                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccessObjectOrThrowException();
+                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccess();
                     return serviceSuccess(result);
                 }
         );
@@ -127,7 +127,7 @@ public class BankDetailsManagementController {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
-                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+                projectId, organisationResource.getId()).getSuccess();
         bankDetailsReviewModelPopulator.populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
         return doViewChangeBankDetailsNotUpdated(organisationResource, project, bankDetailsResource, model);
     }
@@ -145,7 +145,7 @@ public class BankDetailsManagementController {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
-                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+                projectId, organisationResource.getId()).getSuccess();
 
         Supplier<String> failureView = () -> doViewChangeBankDetailsNotUpdated(organisationResource, project, existingBankDetails, model);
 

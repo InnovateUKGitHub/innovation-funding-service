@@ -279,11 +279,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
         return fromCache(emailAddress, usersByEmailAddress, () ->
-                doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException()));
+                doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccess()));
     }
 
     protected UserResource retrieveUserById(Long id) {
-        return fromCache(id, usersById, () -> doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccessObjectOrThrowException()));
+        return fromCache(id, usersById, () -> doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccess()));
     }
 
     protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {
@@ -291,7 +291,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             UserResource user = retrieveUserByEmail(emailAddress);
             return doAs(user, () ->
                     usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).
-                            getSuccessObjectOrThrowException());
+                            getSuccess());
         });
     }
 
@@ -300,7 +300,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(applicationId, leadApplicantsByApplicationId, () ->
                 doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccessObjectOrThrowException(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get()));
+                        getSuccess(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
@@ -317,18 +317,18 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
         return fromCache(competitionId, questionsByCompetitionId, () ->
-                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
+                questionService.findByCompetition(competitionId).getSuccess());
     }
 
     protected List<FormInputResource> retrieveFormInputsByQuestionId(QuestionResource question) {
         return fromCache(question.getId(), formInputsByQuestionId, () ->
-                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
+                formInputService.findByQuestionId(question.getId()).getSuccess());
     }
 
     protected OrganisationResource retrieveOrganisationResourceByName(String organisationName) {
         return fromCache(organisationName, organisationsByName, () -> doAs(systemRegistrar(), () -> {
             Organisation organisation = retrieveOrganisationByName(organisationName);
-            return organisationService.findById(organisation.getId()).getSuccessObjectOrThrowException();
+            return organisationService.findById(organisation.getId()).getSuccess();
         }));
     }
 

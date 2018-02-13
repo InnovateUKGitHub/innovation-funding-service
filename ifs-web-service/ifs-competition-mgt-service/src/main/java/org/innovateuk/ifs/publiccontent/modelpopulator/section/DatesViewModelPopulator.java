@@ -37,12 +37,12 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
     @Override
     protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section) {
         boolean nonIfs = competitionRestService.getCompetitionById(publicContentResource.getCompetitionId())
-                .getSuccessObjectOrThrowException()
+                .getSuccess()
                 .isNonIfs();
 
         List<MilestoneResource> milestones = milestoneRestService
                 .getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId())
-                .getSuccessObjectOrThrowException()
+                .getSuccess()
                 .stream()
                 .filter(milestoneResource -> isNonIFSCompAndIsNonIfsMilestoneOnly(nonIfs, milestoneResource))
                 .collect(toList());

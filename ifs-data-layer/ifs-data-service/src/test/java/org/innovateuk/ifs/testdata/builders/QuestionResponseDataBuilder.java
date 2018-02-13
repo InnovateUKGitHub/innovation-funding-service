@@ -119,7 +119,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
         FormInputResponseCommand updateRequest = new FormInputResponseCommand(
                 applicantFormInput.getId(), data.getApplication().getId(), user.getId(), value);
 
-        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccessObjectOrThrowException();
+        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccess();
         formInputResponseRepository.save(response);
     }
 
@@ -128,7 +128,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
 
         return fromCache(Pair.of(competitionId, questionName), formInputsByCompetitionIdAndQuestionName, () -> {
             QuestionResource question = retrieveQuestionByCompetitionAndName(questionName, competitionId);
-            return formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException();
+            return formInputService.findByQuestionId(question.getId()).getSuccess();
         });
     }
 

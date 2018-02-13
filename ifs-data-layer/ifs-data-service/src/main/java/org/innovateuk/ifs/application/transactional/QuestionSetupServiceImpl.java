@@ -65,7 +65,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
     private List<SetupStatusResource> getSetupStatusByTargetAndParentId(Long competitionId, Long parentSectionStatus) {
         return setupStatusService
                     .findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSectionStatus)
-                    .getSuccessObjectOrThrowException();
+                    .getSuccess();
     }
 
     private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, Long questionId, CompetitionSetupSection parentSection) {
@@ -85,7 +85,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
 
         return parentStatusOpt
                 .orElseGet(() -> competitionSetupService.markSectionIncomplete(competitionId, parentSection)
-                        .getSuccessObjectOrThrowException())
+                        .getSuccess())
                 .getId();
     }
 }

@@ -252,7 +252,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withProfile(profileResource)
                 .build();
 
-        AssessorProfileResource actualAssessorProfileResource = assessorService.getAssessorProfile(assessorId).getSuccessObjectOrThrowException();
+        AssessorProfileResource actualAssessorProfileResource = assessorService.getAssessorProfile(assessorId).getSuccess();
 
         assertEquals(expectedAssessorProfileResource, actualAssessorProfileResource);
 

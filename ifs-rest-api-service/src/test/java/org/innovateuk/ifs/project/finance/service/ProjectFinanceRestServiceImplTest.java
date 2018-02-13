@@ -39,7 +39,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         RestResult<List<ProjectFinanceResource>> result = service.getProjectFinances(projectId);
 
-        assertEquals(results, result.getSuccessObject());
+        assertEquals(results, result.getSuccess());
     }
 
     @Test
@@ -51,8 +51,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         RestResult<ViabilityResource> results = service.getViability(123L, 456L);
 
-        assertEquals(Viability.APPROVED, results.getSuccessObject().getViability());
-        assertEquals(ViabilityRagStatus.GREEN, results.getSuccessObject().getViabilityRagStatus());
+        assertEquals(Viability.APPROVED, results.getSuccess().getViability());
+        assertEquals(ViabilityRagStatus.GREEN, results.getSuccess().getViabilityRagStatus());
     }
 
     @Test
@@ -79,8 +79,8 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         RestResult<EligibilityResource> results = service.getEligibility(123L, 456L);
 
-        assertEquals(Eligibility.APPROVED, results.getSuccessObject().getEligibility());
-        assertEquals(EligibilityRagStatus.GREEN, results.getSuccessObject().getEligibilityRagStatus());
+        assertEquals(Eligibility.APPROVED, results.getSuccess().getEligibility());
+        assertEquals(EligibilityRagStatus.GREEN, results.getSuccess().getEligibilityRagStatus());
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/credit-report", Boolean.class, true);
         RestResult<Boolean> results = service.isCreditReportConfirmed(123L, 456L);
-        assertTrue(results.getSuccessObject());
+        assertTrue(results.getSuccess());
     }
 
     @Test
@@ -131,6 +131,6 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         RestResult<ProjectFinanceResource> result = service.getProjectFinance(projectId, organisationId);
 
-        assertEquals(expectedResult, result.getSuccessObject());
+        assertEquals(expectedResult, result.getSuccess());
     }
 }

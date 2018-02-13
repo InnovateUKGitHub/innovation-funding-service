@@ -68,7 +68,7 @@ public class GrantOfferLetterServiceImplTest {
                 grantOfferLetterService.addSignedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class GrantOfferLetterServiceImplTest {
                 grantOfferLetterService.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
     }
 
     @Test
@@ -141,7 +141,7 @@ public class GrantOfferLetterServiceImplTest {
                 grantOfferLetterService.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
 
         verify(grantOfferLetterRestService).addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
     }
@@ -184,7 +184,7 @@ public class GrantOfferLetterServiceImplTest {
         ServiceResult<GrantOfferLetterStateResource> result = grantOfferLetterService.getGrantOfferLetterState(projectId);
 
         assertTrue(result.isSuccess());
-        assertSame(state, result.getSuccessObject());
+        assertSame(state, result.getSuccess());
 
         verify(grantOfferLetterRestService).getGrantOfferLetterState(projectId);
 

@@ -45,7 +45,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
                 service.addCollaborationAgreementDocument(123L, "text/plain", 17, "filename.txt", fileContent);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(response, result.getSuccessObject());
+        Assert.assertEquals(response, result.getSuccess());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         FileEntryResource returnedFileEntry = new FileEntryResource();
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
         // now run the method under test
-        FileEntryResource retrievedFileEntry = service.getCollaborationAgreementFileDetails(123L).getSuccessObject().get();
+        FileEntryResource retrievedFileEntry = service.getCollaborationAgreementFileDetails(123L).getSuccess().get();
         Assert.assertEquals(returnedFileEntry, retrievedFileEntry);
     }
 
@@ -63,7 +63,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         String expectedUrl = projectRestURL + "/123/collaboration-agreement/details";
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, null, NOT_FOUND);
         // now run the method under test
-        Optional<FileEntryResource> retrievedFileEntry = service.getCollaborationAgreementFileDetails(123L).getSuccessObject();
+        Optional<FileEntryResource> retrievedFileEntry = service.getCollaborationAgreementFileDetails(123L).getSuccess();
         assertFalse(retrievedFileEntry.isPresent());
     }
 
@@ -86,7 +86,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
         // now run the method under test
-        ByteArrayResource retrievedFileEntry = service.getCollaborationAgreementFile(123L).getSuccessObject().get();
+        ByteArrayResource retrievedFileEntry = service.getCollaborationAgreementFile(123L).getSuccess().get();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
@@ -99,7 +99,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
 
         // now run the method under test
-        Optional<ByteArrayResource> retrievedFileEntry = service.getCollaborationAgreementFile(123L).getSuccessObject();
+        Optional<ByteArrayResource> retrievedFileEntry = service.getCollaborationAgreementFile(123L).getSuccess();
 
         assertFalse(retrievedFileEntry.isPresent());
     }
@@ -146,7 +146,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
                 service.addExploitationPlanDocument(123L, "text/plain", 17, "filename.txt", fileContent);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(response, result.getSuccessObject());
+        Assert.assertEquals(response, result.getSuccess());
     }
 
     @Test
@@ -158,7 +158,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 
         // now run the method under test
-        FileEntryResource retrievedFileEntry = service.getExploitationPlanFileDetails(123L).getSuccessObject().get();
+        FileEntryResource retrievedFileEntry = service.getExploitationPlanFileDetails(123L).getSuccess().get();
 
         Assert.assertEquals(returnedFileEntry, retrievedFileEntry);
     }
@@ -171,7 +171,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, null, NOT_FOUND);
 
         // now run the method under test
-        Optional<FileEntryResource> retrievedFileEntry = service.getExploitationPlanFileDetails(123L).getSuccessObject();
+        Optional<FileEntryResource> retrievedFileEntry = service.getExploitationPlanFileDetails(123L).getSuccess();
 
         assertFalse(retrievedFileEntry.isPresent());
     }
@@ -198,7 +198,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
         // now run the method under test
-        ByteArrayResource retrievedFileEntry = service.getExploitationPlanFile(123L).getSuccessObject().get();
+        ByteArrayResource retrievedFileEntry = service.getExploitationPlanFile(123L).getSuccess().get();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
@@ -211,7 +211,7 @@ public class OtherDocumentsRestServiceImplTest extends BaseRestServiceUnitTest<O
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
 
         // now run the method under test
-        Optional<ByteArrayResource> retrievedFileEntry = service.getExploitationPlanFile(123L).getSuccessObject();
+        Optional<ByteArrayResource> retrievedFileEntry = service.getExploitationPlanFile(123L).getSuccess();
 
         assertFalse(retrievedFileEntry.isPresent());
     }

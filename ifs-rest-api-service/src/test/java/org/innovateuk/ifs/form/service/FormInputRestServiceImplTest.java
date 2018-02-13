@@ -2,10 +2,8 @@ package org.innovateuk.ifs.form.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,7 +15,6 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResourceListType;
 
-import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static java.lang.String.format;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -43,7 +40,7 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
         FormInputScope scope = FormInputScope.APPLICATION;
 
         setupGetWithRestResultExpectations(String.format("%s/findByQuestionId/%s/scope/%s", formInputRestUrl, questionId, scope), formInputResourceListType(), expected, OK);
-        List<FormInputResource> response = service.getByQuestionIdAndScope(questionId, scope).getSuccessObject();
+        List<FormInputResource> response = service.getByQuestionIdAndScope(questionId, scope).getSuccess();
         assertSame(expected, response);
     }
 
@@ -55,7 +52,7 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
         FormInputScope scope = FormInputScope.APPLICATION;
 
         setupGetWithRestResultExpectations(String.format("%s/findByCompetitionId/%s/scope/%s", formInputRestUrl, competitionId, scope), formInputResourceListType(), expected, OK);
-        List<FormInputResource> response = service.getByCompetitionIdAndScope(competitionId, scope).getSuccessObject();
+        List<FormInputResource> response = service.getByCompetitionIdAndScope(competitionId, scope).getSuccess();
         assertSame(expected, response);
     }
 
@@ -66,7 +63,7 @@ public class FormInputRestServiceImplTest extends BaseRestServiceUnitTest<FormIn
         setupPutWithRestResultExpectations(formInputRestUrl + "/", FormInputResource.class, expected, expected);
         RestResult<FormInputResource> result = service.save(expected);
         assertTrue(result.isSuccess());
-        Assert.assertEquals(expected, result.getSuccessObject());
+        Assert.assertEquals(expected, result.getSuccess());
     }
 
     @Test

@@ -10,7 +10,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.Participant;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
@@ -38,7 +39,9 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +52,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -62,15 +66,16 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
  * Service for managing {@link CompetitionAssessmentInvite}s.
@@ -285,33 +290,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-        Page<CompetitionAssessmentInvite> pagedResult = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
-
-        List<AssessorCreatedInviteResource> createdInvites = simpleMap(
-                pagedResult.getContent(),
-                competitionInvite -> {
-                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
-                    assessorCreatedInvite.setName(competitionInvite.getName());
-                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
-                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
-                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
-                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
-
-                    if (competitionInvite.getUser() != null) {
-                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
-                    }
-
-                    return assessorCreatedInvite;
-                }
-        );
-
-        return serviceSuccess(new AssessorCreatedInvitePageResource(
-                pagedResult.getTotalElements(),
-                pagedResult.getTotalPages(),
-                createdInvites,
-                pagedResult.getNumber(),
-                pagedResult.getSize()
-        ));
+        return getInvitePageResource(competitionId, pageable);
     }
 
     @Override
@@ -422,7 +401,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         )
                         .andOnSuccessReturn(competitionInviteMapper::mapToResource),
                 success -> serviceFailure(Error.globalError(
-                        "validation.competitionInvite.create.email.exists",
+                        "validation.competitionAssessmentInvite.create.email.exists",
                         singletonList(stagedInvite.getEmail())
                 ))
         );
@@ -432,7 +411,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
         return getCompetition(competitionId).andOnSuccessReturn(competition ->
                 mapWithIndex(newUserStagedInvites, (index, invite) ->
-                        getByEmailAndCompetition(invite.getEmail(), competitionId).handleSuccessOrFailure(
+                        getByEmailAndCompetitionWithValidation(invite.getEmail(), competitionId).handleSuccessOrFailure(
                                 failure -> getInnovationArea(invite.getInnovationAreaId())
                                         .andOnSuccess(innovationArea ->
                                                 inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
@@ -440,13 +419,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                         .andOnFailure(() -> serviceFailure(Error.fieldError(
                                                 "invites[" + index + "].innovationArea",
                                                 invite.getInnovationAreaId(),
-                                                "validation.competitionInvite.create.innovationArea.required"
+                                                "validation.competitionAssessmentInvite.create.innovationArea.required"
                                                 ))
                                         ),
                                 success -> serviceFailure(Error.fieldError(
                                         "invites[" + index + "].email",
                                         invite.getEmail(),
-                                        "validation.competitionInvite.create.email.exists"
+                                        "validation.competitionAssessmentInvite.create.email.exists"
                                 ))
                         )
                 ))
@@ -646,17 +625,42 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
-                arguments).getSuccessObject();
+                arguments).getSuccess();
     }
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_preview_text.txt",
-                arguments).getSuccessObject();
+                arguments).getSuccess();
     }
 
     private ServiceResult<CompetitionAssessmentInvite> getByEmailAndCompetition(String email, long competitionId) {
         return find(competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
     }
+
+    private ServiceResult<Void> getByEmailAndCompetitionWithValidation(String email, long competitionId) {
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
+
+        List<String> existingEmails = resource.getSuccess().getContent().stream()
+                .map(AssessorCreatedInviteResource::getEmail)
+                .collect(Collectors.toList());
+
+        List<String> userIsAlreadyInvitedList = existingEmails.stream()
+                    .filter(e -> e.equals(email))
+                    .collect(Collectors.toList());
+
+        Optional<User> userExists = userRepository.findByEmail(email);
+
+        boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
+
+        if (competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null || !userIsAlreadyInvited || userExists.isPresent()) {
+            return ServiceResult.serviceSuccess();
+        } else {
+            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
+        }
+}
 
     private ServiceResult<Void> deleteInvite(CompetitionAssessmentInvite invite) {
         if (invite.getStatus() != CREATED) {
@@ -762,5 +766,35 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     .map(innovationAreaMapper::mapToResource)
                     .collect(toList());
         }
+    }
+
+    private ServiceResult<AssessorCreatedInvitePageResource> getInvitePageResource(long competitionId, Pageable pageable) {
+        Page<CompetitionAssessmentInvite> pagedResult = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
+
+        List<AssessorCreatedInviteResource> createdInvites = simpleMap(
+                pagedResult.getContent(),
+                competitionInvite -> {
+                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
+                    assessorCreatedInvite.setName(competitionInvite.getName());
+                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
+                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
+                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
+                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
+
+                    if (competitionInvite.getUser() != null) {
+                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
+                    }
+
+                    return assessorCreatedInvite;
+                }
+        );
+
+        return serviceSuccess(new AssessorCreatedInvitePageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                createdInvites,
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
     }
 }

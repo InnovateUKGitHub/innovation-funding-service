@@ -155,7 +155,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         InviteOrganisationResource inviteOrganisationResource = inviteOrganisationMapper.mapToResource(inviteOrganisation);
 
         assertTrue(controller.put(inviteOrganisationResource).isSuccess());
-        InviteOrganisationResource found = controller.getById(inviteOrganisation.getId()).getSuccessObjectOrThrowException();
+        InviteOrganisationResource found = controller.getById(inviteOrganisation.getId()).getSuccess();
 
         InviteOrganisationResource expectedOrganisationResource = inviteOrganisationResource;
         expectedOrganisationResource.getInviteResources().get(0).setSentOn(null);
@@ -259,7 +259,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     private void assertInviteOrganisationIsFound(InviteOrganisation expectedInviteOrganisation,
                                                  Organisation expectedOrganisation,
                                                  Supplier<RestResult<InviteOrganisationResource>> inviteOrganisationSupplier) {
-        InviteOrganisationResource found = inviteOrganisationSupplier.get().getSuccessObjectOrThrowException();
+        InviteOrganisationResource found = inviteOrganisationSupplier.get().getSuccess();
 
         assertEquals(expectedInviteOrganisation.getId(), found.getId());
         assertEquals(expectedInviteOrganisation.getOrganisationName(), found.getOrganisationName());

@@ -61,7 +61,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void test_findByEmailAddress() {
         loginSteveSmith();
-        UserResource user = controller.findByEmail("steve.smith@empire.com").getSuccessObject();
+        UserResource user = controller.findByEmail("steve.smith@empire.com").getSuccess();
         assertEquals(EMAIL, user.getEmail());
     }
 
@@ -69,7 +69,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     public void test_findAll() {
 
         loginCompAdmin();
-        List<UserResource> users = controller.findAll().getSuccessObject();
+        List<UserResource> users = controller.findAll().getSuccess();
         assertEquals(USER_COUNT, users.size());
 
         //
@@ -84,7 +84,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     public void test_findByRole() {
 
         loginCompAdmin();
-        List<UserResource> users = controller.findByRole(UserRoleType.COMP_ADMIN).getSuccessObject();
+        List<UserResource> users = controller.findByRole(UserRoleType.COMP_ADMIN).getSuccess();
         assertTrue(users.size() > 0);
     }
 
@@ -169,7 +169,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void testUpdateUserDetails() {
         loginCompAdmin();
-        UserResource userOne = controller.getUserById(1L).getSuccessObject();
+        UserResource userOne = controller.getUserById(1L).getSuccess();
         setLoggedInUser(userOne);
 
         userOne.setFirstName("Some");
@@ -195,7 +195,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         RestResult<UserResource> restResult = controller.createUser(1L, 1L, userResource);
         assertTrue(restResult.isSuccess());
 
-        UserResource user = restResult.getSuccessObject();
+        UserResource user = restResult.getSuccess();
         assertEquals("email@Nope.com", user.getEmail());
         assertEquals(UserStatus.INACTIVE, user.getStatus());
     }

@@ -50,6 +50,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -389,9 +390,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
-        if (Collections.singletonList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
+        if (ApplicationState.SUBMITTED.equals(state) && !applicationReadyToSubmit(id)) {
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
+
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
@@ -467,13 +469,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     }
                     return readyForSubmit;
                 })
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
-        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
+        return serviceSuccess(applicationResults);
+    }
+
+    @Override
+    public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
+        Stream<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
         return serviceSuccess(applicationResults);
     }
 
@@ -555,7 +564,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
 
         return notificationSender.sendEmailWithContent(notification, recipient, content);
     }
@@ -579,12 +588,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
                         .filter(Question::getMarkAsCompletedEnabled)
-                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccessObject()).count())
+                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccess()).count())
                 .sum();
 
         Long countSingleStatusQuestionsCompleted = questions.stream()
                 .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccessObject()).count();
+                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess()).count();
 
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 

@@ -44,7 +44,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
         final List<AlertResource> expected = asList(expected1, expected2);
 
         setupGetWithRestResultAnonymousExpectations(alertRestURL + "/findAllVisible", alertResourceListType(), expected, OK);
-        final List<AlertResource> response = service.findAllVisible().getSuccessObject();
+        final List<AlertResource> response = service.findAllVisible().getSuccess();
         assertSame(expected, response);
     }
 
@@ -59,7 +59,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
         final List<AlertResource> expected = asList(expected1, expected2);
 
         setupGetWithRestResultAnonymousExpectations(alertRestURL + "/findAllVisible/MAINTENANCE", alertResourceListType(), expected, OK);
-        final List<AlertResource> response = service.findAllVisibleByType(AlertType.MAINTENANCE).getSuccessObject();
+        final List<AlertResource> response = service.findAllVisibleByType(AlertType.MAINTENANCE).getSuccess();
         assertSame(expected, response);
     }
 
@@ -69,7 +69,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
         expected.setId(9999L);
 
         setupGetWithRestResultExpectations(alertRestURL + "/9999", AlertResource.class, expected, OK);
-        final AlertResource response = service.getAlertById(9999L).getSuccessObject();
+        final AlertResource response = service.getAlertById(9999L).getSuccess();
         Assert.assertEquals(expected, response);
     }
 
@@ -78,7 +78,7 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
         final AlertResource alertResource = sampleAlert();
 
         setupPostWithRestResultExpectations(alertRestURL + "/", AlertResource.class, alertResource, alertResource, CREATED);
-        final AlertResource created = service.create(alertResource).getSuccessObject();
+        final AlertResource created = service.create(alertResource).getSuccess();
         setupPostWithRestResultVerifications(alertRestURL + "/", AlertResource.class, alertResource);
         Assert.assertEquals("Sample message", created.getMessage());
     }

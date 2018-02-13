@@ -52,9 +52,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder.newAssessmentReviewPanelInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
-import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuilder.newAssessmentReview;
-import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewPanelParticipantBuilder.newAssessmentPanelParticipant;
+import static org.innovateuk.ifs.assessment.transactional.AssessmentReviewPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_PANEL_INVITE_EXPIRED;
@@ -90,14 +90,14 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentPanelInviteServiceImpl> {
+public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentReviewPanelInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
     private Role assessorRole;
 
     @Override
-    protected AssessmentPanelInviteServiceImpl supplyServiceUnderTest() {
-        return new AssessmentPanelInviteServiceImpl();
+    protected AssessmentReviewPanelInviteServiceImpl supplyServiceUnderTest() {
+        return new AssessmentReviewPanelInviteServiceImpl();
     }
 
     @Before
@@ -204,16 +204,16 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
 
         Page<CompetitionAssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
-        when(competitionParticipantRepositoryMock.findParticipantsNotOnPanel(competitionId, pageable))
+        when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
         when(profileRepositoryMock.findOne(assessors.get(0).getProfileId())).thenReturn(profile.get(0));
         when(profileRepositoryMock.findOne(assessors.get(1).getProfileId())).thenReturn(profile.get(1));
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResources.get(0));
 
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
-        verify(competitionParticipantRepositoryMock).findParticipantsNotOnPanel(competitionId, pageable);
+        verify(competitionParticipantRepositoryMock).findParticipantsNotOnAssessmentPanel(competitionId, pageable);
         verify(profileRepositoryMock).findOne(assessors.get(0).getProfileId());
         verify(profileRepositoryMock).findOne(assessors.get(1).getProfileId());
         verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
@@ -235,13 +235,13 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
 
         Page<CompetitionAssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(competitionParticipantRepositoryMock.findParticipantsNotOnPanel(competitionId, pageable))
+        when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(assessorPage);
 
         AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
-        verify(competitionParticipantRepositoryMock).findParticipantsNotOnPanel(competitionId, pageable);
+        verify(competitionParticipantRepositoryMock).findParticipantsNotOnAssessmentPanel(competitionId, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());
@@ -285,13 +285,13 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
                 .withUser(assessorUsers.get(0), assessorUsers.get(1))
                 .build(2);
 
-        when(competitionParticipantRepositoryMock.findParticipantsNotOnPanel(competitionId))
+        when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId))
                 .thenReturn(participants);
 
         List<Long> actualAssessorIds = service.getAvailableAssessorIds(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
-        verify(competitionParticipantRepositoryMock).findParticipantsNotOnPanel(competitionId);
+        verify(competitionParticipantRepositoryMock).findParticipantsNotOnAssessmentPanel(competitionId);
 
         assertEquals(expectedAssessorIds, actualAssessorIds);
     }
@@ -387,7 +387,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         when(profileRepositoryMock.findOne(profile3.getId())).thenReturn(profile3);
         when(profileRepositoryMock.findOne(profile4.getId())).thenReturn(profile4);
 
-        AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, pageable).getSuccessObjectOrThrowException();
+        AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, pageable).getSuccess();
         assertEquals(totalElements, actual.getTotalElements());
         assertEquals(5, actual.getTotalPages());
         assertEquals(expectedInvites, actual.getContent());
@@ -550,7 +550,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
                 .withRecipients(names)
                 .build();
 
-        AssessorInvitesToSendResource result = service.getAllInvitesToSend(competition.getId()).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource result = service.getAllInvitesToSend(competition.getId()).getSuccess();
         assertEquals(expectedAssessorInviteToSendResource, result);
 
         InOrder inOrder = inOrder(competitionRepositoryMock, assessmentPanelInviteRepositoryMock, notificationTemplateRendererMock);
@@ -605,7 +605,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
                 .withRecipients(names)
                 .build();
 
-        AssessorInvitesToSendResource result = service.getAllInvitesToResend(competition.getId(), inviteIds).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource result = service.getAllInvitesToResend(competition.getId(), inviteIds).getSuccess();
         assertEquals(expectedAssessorInviteToSendResource, result);
 
         InOrder inOrder = inOrder(competitionRepositoryMock, assessmentPanelInviteRepositoryMock, notificationTemplateRendererMock);
@@ -709,7 +709,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
 
         assertTrue(result.isSuccess());
 
-        AssessorInviteOverviewPageResource pageResource = result.getSuccessObjectOrThrowException();
+        AssessorInviteOverviewPageResource pageResource = result.getSuccess();
 
         assertEquals(0, pageResource.getNumber());
         assertEquals(5, pageResource.getSize());
@@ -771,7 +771,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         when(assessmentReviewPanelParticipantMapperMock.mapToResource(assessmentReviewPanelParticipants.get(1))).thenReturn(expected.get(1));
         when(assessmentReviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(1L, competition.getId())).thenReturn(assessmentReviews);
 
-        List<AssessmentReviewPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
+        List<AssessmentReviewPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
         assertEquals(actual.get(0), expected.get(0));
         assertEquals(actual.get(1), expected.get(1));
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock);
@@ -815,7 +815,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         when(assessmentReviewPanelParticipantMapperMock.mapToResource(assessmentReviewPanelParticipants.get(0))).thenReturn(expected.get(0));
         when(assessmentReviewPanelParticipantMapperMock.mapToResource(assessmentReviewPanelParticipants.get(1))).thenReturn(expected.get(1));
 
-        List<AssessmentReviewPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
+        List<AssessmentReviewPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
         assertTrue(actual.isEmpty());
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock);
         inOrder.verify(assessmentPanelParticipantRepositoryMock).findByUserIdAndRole(1L, PANEL_ASSESSOR);
@@ -833,7 +833,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
 
         when(assessmentPanelInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentReviewPanelInvite);
 
-        service.deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        service.deleteInvite(email, competitionId).getSuccess();
 
         InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock);
         inOrder.verify(assessmentPanelInviteRepositoryMock).getByEmailAndCompetitionId(email, competitionId);
@@ -895,7 +895,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         ServiceResult<AssessmentReviewPanelInviteResource> inviteServiceResult = service.openInvite(INVITE_HASH);
 
         assertTrue(inviteServiceResult.isSuccess());
-        AssessmentReviewPanelInviteResource assessmentReviewPanelInviteResource = inviteServiceResult.getSuccessObjectOrThrowException();
+        AssessmentReviewPanelInviteResource assessmentReviewPanelInviteResource = inviteServiceResult.getSuccess();
         assertEquals("my competition", assessmentReviewPanelInviteResource.getCompetitionName());
 
         InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock, assessmentReviewPanelInviteMapperMock);
@@ -942,7 +942,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
                 .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
 
-        service.acceptInvite(openedInviteHash).getSuccessObjectOrThrowException();
+        service.acceptInvite(openedInviteHash).getSuccess();
 
         assertEquals(ParticipantStatus.ACCEPTED, assessmentReviewPanelParticipant.getStatus());
 
@@ -972,7 +972,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING))
                 .thenReturn(new ActivityState(ActivityType.ASSESSMENT_REVIEW, expectedAssessmentReviewState));
 
-        service.acceptInvite(openedInviteHash).getSuccessObjectOrThrowException();
+        service.acceptInvite(openedInviteHash).getSuccess();
 
         assertEquals(ParticipantStatus.ACCEPTED, assessmentReviewPanelParticipant.getStatus());
 
