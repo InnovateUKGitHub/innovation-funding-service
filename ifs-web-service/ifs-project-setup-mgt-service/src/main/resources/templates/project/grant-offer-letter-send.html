@@ -128,15 +128,24 @@
                             Accept documents
                         </label>
                     </div>
-                    <div class="multiple-choice">
+                    <div class="multiple-choice" data-target="reject-gol">
                         <input id="rejectGOL" value="REJECTED" type="radio" name="approvalType" required="required"
                                data-switches-button-status="#submit-button"
                                data-switches-modal-target="#submit-button"
                                data-switches-modal-target-value="modal-reject-signed-gol"
+
                         />
                         <label for="rejectGOL">
                             Reject documents
                         </label>
+                    </div>
+                    <div class="panel js-hidden" id="reject-gol">
+                        <div class="form-group">
+                            <label for="gol-reject-reason" class="form-label">
+                                Reason for rejection (this will not be seen by the project team)
+                            </label>
+                            <input type="text" class="form-control width-full" id="gol-reject-reason" name="GOLRejectReason" required="required" />
+                        </div>
                     </div>
                 </fieldset>
             </div>
