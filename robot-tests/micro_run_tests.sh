@@ -29,6 +29,7 @@ function section() {
 }
 
 function clearDownFileRepository() {
+function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
     docker exec innovationfundingservice_data-service_1  rm -rf ${storedFileFolder}
@@ -89,7 +90,7 @@ function buildAndDeploy() {
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
 
-    ./gradlew -Pcloud=development composeUp -Pifs.full-deployment.enabled=true
+    ./gradlew -Pcloud=development composeUp -Pifs.full-deployment.enabled=true -Pifs.finance-totals.enabled=false
 }
 
 function injectRobotParameters() {
