@@ -4,7 +4,6 @@ import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -40,7 +40,7 @@ public class ThreadViewModelPopulator {
         List<ThreadPostViewModel> posts = addPosts(query.posts, userToUsernameFn);
 
         return new ThreadViewModel(posts, query.section,
-                query.title, query.awaitingResponse, query.createdOn, query.id,
+                query.title, query.createdOn, query.id,
                 organisationId, projectId, query.closedBy, query.closedDate);
     }
 
@@ -60,12 +60,12 @@ public class ThreadViewModelPopulator {
     public ThreadViewModel threadViewModelFromNote(long projectId, long organisationId, NoteResource note) {
 
         List<ThreadPostViewModel> posts = addPosts(note.posts, user ->
-            user.hasRole(UserRoleType.PROJECT_FINANCE) ?
+            user.hasRole(PROJECT_FINANCE) ?
                 user.getName() + " - Innovate UK (Finance team)" :
                 user.getName() + " - Innovate UK");
 
         return new ThreadViewModel(posts, null,
-                note.title, false, note.createdOn, note.id,
+                note.title, note.createdOn, note.id,
                 organisationId, projectId, null, null);
     }
 
