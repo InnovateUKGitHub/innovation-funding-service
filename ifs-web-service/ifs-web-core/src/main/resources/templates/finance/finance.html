@@ -661,7 +661,7 @@
                         <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
                     </ul>
                 </div>
-                <div class="upload-section extra-margin">
+                <div class="upload-section extra-margin" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')} ? 'form-group-error'">
                     <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
                     <div class="form-group">
                         <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
