@@ -82,7 +82,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
-        AssessmentResource found = assessmentService.findById(assessmentId).getSuccessObjectOrThrowException();
+        AssessmentResource found = assessmentService.findById(assessmentId).getSuccess();
 
         assertSame(expected, found);
 
@@ -107,7 +107,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
         AssessmentResource found = assessmentService.findAssignableById(assessmentId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertSame(expected, found);
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
@@ -151,7 +151,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
         AssessmentResource found = assessmentService.findRejectableById(assessmentId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertSame(expected, found);
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
@@ -192,7 +192,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(expected.get(0));
         when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(expected.get(1));
 
-        List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccessObject();
+        List<AssessmentResource> found = assessmentService.findByUserAndCompetition(userId, competitionId).getSuccess();
 
         assertEquals(expected, found);
         verify(assessmentRepositoryMock, only()).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
@@ -209,7 +209,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(assessmentRepositoryMock.getTotalScore(assessmentId)).thenReturn(new AssessmentTotalScoreResource(55, 100));
 
-        assertEquals(expected, assessmentService.getTotalScore(assessmentId).getSuccessObject());
+        assertEquals(expected, assessmentService.getTotalScore(assessmentId).getSuccess());
 
         verify(assessmentRepositoryMock, only()).getTotalScore(assessmentId);
     }
@@ -290,7 +290,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         verify(assessmentRepositoryMock).findByTargetId(applicationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(expectedFeedbackResource, result.getSuccessObject());
+        assertEquals(expectedFeedbackResource, result.getSuccess());
     }
 
     @Test
@@ -615,7 +615,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObjectOrThrowException());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -684,7 +684,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObjectOrThrowException());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
 
@@ -764,7 +764,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObject());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -908,7 +908,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
 
-        AssessmentPanelKeyStatisticsResource result = serviceResult.getSuccessObject();
+        AssessmentPanelKeyStatisticsResource result = serviceResult.getSuccess();
         assertEquals(2, result.getApplicationsInPanel());
         assertEquals(1, result.getAssessorsAccepted());
         assertEquals(1, result.getAssessorsPending());
@@ -962,7 +962,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
 
-        AssessmentPanelInviteStatisticsResource result = serviceResult.getSuccessObject();
+        AssessmentPanelInviteStatisticsResource result = serviceResult.getSuccess();
         assertEquals(2, result.getInvited());
         assertEquals(1, result.getAccepted());
         assertEquals(1, result.getDeclined());

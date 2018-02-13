@@ -201,7 +201,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
 
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
+        assertTrue(result.getSuccess());
     }
 
 
@@ -220,7 +220,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
 
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
+        assertTrue(result.getSuccess());
     }
 
     @Test
@@ -232,7 +232,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
 
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test

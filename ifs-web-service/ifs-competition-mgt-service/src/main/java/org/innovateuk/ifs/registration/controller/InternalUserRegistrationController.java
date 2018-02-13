@@ -96,7 +96,7 @@ public class InternalUserRegistrationController {
             else {
                 return "registration/account-created";
             }
-        }).getSuccessObjectOrThrowException();
+        }).getSuccess();
     }
 
     private String doViewYourDetails(Model model, String inviteHash, UserResource loggedInUser) {

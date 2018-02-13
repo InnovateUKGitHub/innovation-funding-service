@@ -76,7 +76,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 getPaulPlum().getId(),
                 CompetitionParticipantRoleResource.ASSESSOR
         )
-                .getSuccessObject();
+                .getSuccess();
 
         assertEquals(2, participants.size());
 
@@ -99,7 +99,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 getPaulPlum().getId(),
                 CompetitionParticipantRoleResource.ASSESSOR
         )
-                .getSuccessObject();
+                .getSuccess();
 
         assertTrue(participants.isEmpty());
     }
@@ -127,7 +127,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 getPaulPlum().getId(),
                 CompetitionParticipantRoleResource.ASSESSOR
         )
-                .getSuccessObject();
+                .getSuccess();
 
         assertEquals(2, participants.size());
 
@@ -155,7 +155,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 getPaulPlum().getId(),
                 CompetitionParticipantRoleResource.ASSESSOR
         )
-                .getSuccessObject();
+                .getSuccess();
 
         assertEquals(0, participants.size());
     }
@@ -179,7 +179,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                 getPaulPlum().getId(),
                 CompetitionParticipantRoleResource.ASSESSOR
         )
-                .getSuccessObject();
+                .getSuccess();
 
         assertEquals(0, participants.size());
     }

@@ -18,7 +18,7 @@ public class PostcoderWebTest extends BaseUnitTestMocksTest {
     @Test
     public void testEmptyLookup() {
         ServiceResult<List<AddressResource>> lookupResult = postcoderWeb.doLookup("");
-        List<AddressResource> addressResources = lookupResult.getSuccessObject();
+        List<AddressResource> addressResources = lookupResult.getSuccess();
         assertEquals(0, addressResources.size());
     }
 
@@ -27,7 +27,7 @@ public class PostcoderWebTest extends BaseUnitTestMocksTest {
         String postcode = "BS348XU";
 
         ServiceResult<List<AddressResource>> lookupResult = postcoderWeb.doLookup(postcode);
-        List<AddressResource> addressResources = lookupResult.getSuccessObject();
+        List<AddressResource> addressResources = lookupResult.getSuccess();
         assertEquals(2, addressResources.size());
     }
 }

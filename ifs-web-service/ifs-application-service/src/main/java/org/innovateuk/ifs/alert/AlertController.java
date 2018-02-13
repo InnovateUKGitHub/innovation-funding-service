@@ -27,6 +27,6 @@ public class AlertController {
     public
     @ResponseBody
     List<AlertResource> getAlertByTypeJSON(@PathVariable("type") AlertType type) {
-        return alertRestService.findAllVisibleByType(type).getSuccessObjectOrThrowException();
+        return alertRestService.findAllVisibleByType(type).getSuccess();
     }
 }

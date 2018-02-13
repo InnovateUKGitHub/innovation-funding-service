@@ -27,7 +27,7 @@ public class ProjectFinanceQueriesRestServiceTest extends BaseRestServiceUnitTes
     public void test_findAll() throws Exception {
         final List<QueryResource> expected = asList(queryWithId(33L), queryWithId(92L));
         setupGetWithRestResultExpectations(serviceURL + "/all/22", queryResourceListType(), expected, OK);
-        final List<QueryResource> response = service.findAll(22L).getSuccessObject();
+        final List<QueryResource> response = service.findAll(22L).getSuccess();
         assertSame(expected, response);
     }
 
@@ -39,7 +39,7 @@ public class ProjectFinanceQueriesRestServiceTest extends BaseRestServiceUnitTes
     public void test_findOne() throws Exception {
         final QueryResource query1 = queryWithId(33L);
         setupGetWithRestResultExpectations(serviceURL + "/33", QueryResource.class, query1, OK);
-        final QueryResource response = service.findOne(33L).getSuccessObject();
+        final QueryResource response = service.findOne(33L).getSuccess();
         assertSame(query1, response);
     }
 
@@ -47,7 +47,7 @@ public class ProjectFinanceQueriesRestServiceTest extends BaseRestServiceUnitTes
     public void test_create() throws Exception {
         final QueryResource query1 = queryWithId(33L);
         setupPostWithRestResultExpectations(serviceURL, Long.class, query1, 33L, CREATED);
-        final Long response = service.create(query1).getSuccessObject();
+        final Long response = service.create(query1).getSuccess();
         assertSame(query1.id, response);
     }
 

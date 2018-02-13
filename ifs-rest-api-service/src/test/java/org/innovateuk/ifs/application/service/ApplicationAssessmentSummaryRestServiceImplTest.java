@@ -38,7 +38,7 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
                 applicationAssessmentSummaryRestUrl, applicationId, page,
                 size, filterInnovationArea), ApplicationAssessorPageResource.class, expected);
 
-        assertSame(expected, service.getAvailableAssessors(applicationId, page, size, filterInnovationArea).getSuccessObject());
+        assertSame(expected, service.getAvailableAssessors(applicationId, page, size, filterInnovationArea).getSuccess());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
                 format("%s/%s/assignedAssessors", applicationAssessmentSummaryRestUrl, applicationId),
                 ParameterizedTypeReferences.applicationAssessorResourceListType(), expected);
 
-        assertSame(expected, service.getAssignedAssessors(applicationId).getSuccessObject());
+        assertSame(expected, service.getAssignedAssessors(applicationId).getSuccess());
     }
 
     @Test
@@ -64,6 +64,6 @@ public class ApplicationAssessmentSummaryRestServiceImplTest extends BaseRestSer
                 format("%s/%s", applicationAssessmentSummaryRestUrl, applicationId),
                 ApplicationAssessmentSummaryResource.class, expected);
 
-        assertSame(expected, service.getApplicationAssessmentSummary(applicationId).getSuccessObject());
+        assertSame(expected, service.getApplicationAssessmentSummary(applicationId).getSuccess());
     }
 }

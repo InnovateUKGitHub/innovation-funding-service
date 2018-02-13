@@ -41,7 +41,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
         final Token expected = new Token(VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, recentTokenDate(), JsonNodeFactory.instance.objectNode());
         when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName())).thenReturn(of(expected));
 
-        final Token token = tokenService.getEmailToken(hash).getSuccessObject();
+        final Token token = tokenService.getEmailToken(hash).getSuccess();
         assertEquals(expected, token);
 
         verify(tokenRepositoryMock, only()).findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName());
@@ -56,7 +56,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
         expected.setUpdated(recentTokenDate());
         when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName())).thenReturn(of(expected));
 
-        final Token token = tokenService.getEmailToken(hash).getSuccessObject();
+        final Token token = tokenService.getEmailToken(hash).getSuccess();
         assertEquals(expected, token);
 
         verify(tokenRepositoryMock, only()).findByHashAndTypeAndClassName(hash, VERIFY_EMAIL_ADDRESS, User.class.getName());
@@ -95,7 +95,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
         final Token expected = new Token(RESET_PASSWORD, User.class.getName(), 1L, hash, expiredTokenDate(), JsonNodeFactory.instance.objectNode());
         when(tokenRepositoryMock.findByHashAndTypeAndClassName(hash, RESET_PASSWORD, User.class.getName())).thenReturn(of(expected));
 
-        final Token token = tokenService.getPasswordResetToken(hash).getSuccessObject();
+        final Token token = tokenService.getPasswordResetToken(hash).getSuccess();
         assertEquals(expected, token);
 
         verify(tokenRepositoryMock, only()).findByHashAndTypeAndClassName(hash, RESET_PASSWORD, User.class.getName());

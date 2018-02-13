@@ -71,11 +71,11 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         ServiceResult<FileEntryResource> result = service.createFileEntry(overheadId, fileEntryToCreate, inputStreamSupplier);
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFileEntryResource, result.getSuccessObject());
+        assertEquals(createdFileEntryResource, result.getSuccess());
 
         verify(fileServiceMock).createFile(fileEntryToCreate, inputStreamSupplier);
 
-        FinanceRowMetaValue expectedFinanceRowMetaValue = new FinanceRowMetaValue(overhead, financeRowMetaField, successfulFileCreationResult.getSuccessObject().getValue().getId().toString());
+        FinanceRowMetaValue expectedFinanceRowMetaValue = new FinanceRowMetaValue(overhead, financeRowMetaField, successfulFileCreationResult.getSuccess().getValue().getId().toString());
 
         ArgumentCaptor<FinanceRowMetaValue> metaValueArgumentCaptor = ArgumentCaptor.forClass(FinanceRowMetaValue.class);
         verify(financeRowMetaValueRepositoryMock).save(metaValueArgumentCaptor.capture());
@@ -114,12 +114,12 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         ServiceResult<FileAndContents> result = service.getFileEntryContents(overheadId);
 
         assertTrue(result.isSuccess());
-        assertThat(result.getSuccessObject(), is(instanceOf(BasicFileAndContents.class)));
+        assertThat(result.getSuccess(), is(instanceOf(BasicFileAndContents.class)));
 
         verify(fileServiceMock).getFileByFileEntryId(fileEntry.getId());
 
-        assertEquals(fileEntry.getId(), result.getSuccessObject().getFileEntry().getId());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
+        assertEquals(fileEntry.getId(), result.getSuccess().getFileEntry().getId());
+        assertEquals(inputStreamSupplier, result.getSuccess().getContentsSupplier());
     }
 
     @Test
@@ -154,12 +154,12 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         ServiceResult<FileAndContents> result = service.getProjectFileEntryContents(projectOverheadId);
 
         assertTrue(result.isSuccess());
-        assertThat(result.getSuccessObject(), is(instanceOf(BasicFileAndContents.class)));
+        assertThat(result.getSuccess(), is(instanceOf(BasicFileAndContents.class)));
 
         verify(fileServiceMock).getFileByFileEntryId(fileEntry.getId());
 
-        assertEquals(fileEntry.getId(), result.getSuccessObject().getFileEntry().getId());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
+        assertEquals(fileEntry.getId(), result.getSuccess().getFileEntry().getId());
+        assertEquals(inputStreamSupplier, result.getSuccess().getContentsSupplier());
     }
 
     @Test
@@ -184,7 +184,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         ServiceResult<FileEntryResource> result = service.getFileEntryDetails(overheadId);
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject(), retrievedFileEntryResource);
+        assertEquals(result.getSuccess(), retrievedFileEntryResource);
 
         verify(fileEntryRepositoryMock).findOne(fileEntry.getId());
     }
@@ -215,7 +215,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         ServiceResult<FileEntryResource> result = service.getProjectFileEntryDetails(projectOverheadId);
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject(), retrievedFileEntryResource);
+        assertEquals(result.getSuccess(), retrievedFileEntryResource);
 
         verify(fileEntryRepositoryMock).findOne(fileEntry.getId());
     }
@@ -245,7 +245,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         ServiceResult<FileEntryResource> result = service.createFileEntry(overheadId, fileEntryToCreate, inputStreamSupplier);
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFileEntryResource, result.getSuccessObject());
+        assertEquals(createdFileEntryResource, result.getSuccess());
 
         verify(fileServiceMock).updateFile(fileEntryToCreate, inputStreamSupplier);
 

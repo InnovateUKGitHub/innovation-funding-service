@@ -29,6 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -147,6 +148,21 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 ));
 
         verify(inviteUserServiceMock).findExternalInvites(searchString, searchCategory);
+    }
+
+    @Test
+    public void resendInternalUserInvite() throws Exception {
+
+        when(inviteUserServiceMock.resendInternalUserInvite(123L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/inviteUser/internal/pending/{inviteId}/resend", 123L))
+                .andExpect(status().isOk())
+                .andDo(document("inviteUser/internal/pending/inviteId/{method-name}",
+                        pathParameters(
+                                parameterWithName("inviteId").description("The id of the pre-existing invite to resend")
+                        )));
+
+        verify(inviteUserServiceMock).resendInternalUserInvite(123L);
     }
 
     private RoleInvitePageResource buildRoleInvitePageResource() {

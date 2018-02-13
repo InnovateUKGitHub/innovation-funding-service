@@ -1000,11 +1000,9 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Setup]    log in as a different user   &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user should see the element     css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    And the user should see the element     css=ul li.complete:nth-child(2)
+    And the user should see the element     css=ul li.complete:nth-child(3)
     And the user should see the element     css=ul li.complete:nth-child(4)
-    And the user should see the element     css=ul li.complete:nth-child(5)
-    And the user should see the element     css=ul li.read-only:nth-child(6)
+    And the user should see the element     css=ul li.read-only:nth-child(5)
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
@@ -1031,8 +1029,8 @@ Finance contact can access the external view of the finance checks page
     [Tags]
     [Setup]    Log in as a different user   &{successful_applicant_credentials}
     Given the user clicks the button/link   jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     Then the user should not see an error in the page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
@@ -1065,8 +1063,8 @@ Academic user can view Finance checks page
     [Tags]
     Given log in as a different user        &{collaborator2_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page   The finance checks have been completed and your finances approved.
     And the user should not see the text in the page    View finances
@@ -1078,8 +1076,8 @@ Non Lead Partner can view finance checks page
     [Tags]
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
@@ -1422,5 +1420,5 @@ check finance checks status on dashboard
     [Arguments]  ${selector}  ${status}
     the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_TITLE}
     the user should see the element    link=Finance checks
-    the user should see the element     jQuery=ul li.${selector}:nth-of-type(5):contains("We will review your financial information.")
-    the user should see the element     jQuery=ul li.${selector}:nth-of-type(5):contains(${status})
+    the user should see the element     jQuery=ul li.${selector}:nth-of-type(4):contains("We will review your financial information.")
+    the user should see the element     jQuery=ul li.${selector}:nth-of-type(4):contains(${status})

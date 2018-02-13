@@ -70,7 +70,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceSuccess());
         when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(ServiceResult.serviceSuccess("mypassword"));
 
-        service.changePassword("myhash", "mypassword").getSuccessObjectOrThrowException();
+        service.changePassword("myhash", "mypassword").getSuccess();
 
         verify(tokenRepositoryMock).delete(token);
     }
@@ -128,7 +128,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         final ServiceResult<UserResource> result = service.findInactiveByEmail(email);
         assertTrue(result.isSuccess());
-        assertSame(userResource, result.getSuccessObject());
+        assertSame(userResource, result.getSuccess());
         verify(userRepositoryMock, only()).findByEmailAndStatus(email, UserStatus.INACTIVE);
     }
 
@@ -143,7 +143,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(notificationServiceMock.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
-        service.sendPasswordResetNotification(user).getSuccessObjectOrThrowException();
+        service.sendPasswordResetNotification(user).getSuccess();
 
         verify(notificationServiceMock).sendNotification(notificationArgumentCaptor.capture(), eq(NotificationMedium.EMAIL));
 
@@ -196,7 +196,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.of(new Token()));
         when(registrationServiceMock.resendUserVerificationEmail(user)).thenReturn(ServiceResult.serviceSuccess());
 
-        service.sendPasswordResetNotification(user).getSuccessObjectOrThrowException();
+        service.sendPasswordResetNotification(user).getSuccess();
 
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
     }
@@ -427,9 +427,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(UserRoleType.internalRoles(), pageable);
 
         assertTrue(result.isSuccess());
-        assertEquals(5, result.getSuccessObject().getSize());
-        assertEquals(2, result.getSuccessObject().getTotalPages());
-        assertEquals(6, result.getSuccessObject().getContent().size());
+        assertEquals(5, result.getSuccess().getSize());
+        assertEquals(2, result.getSuccess().getTotalPages());
+        assertEquals(6, result.getSuccess().getContent().size());
     }
 
     @Test
@@ -470,7 +470,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(UserRoleType.internalRoles(), pageable);
 
         assertTrue(result.isSuccess());
-        UserPageResource resultObject = result.getSuccessObject();
+        UserPageResource resultObject = result.getSuccess();
         assertEquals(userResource2, resultObject.getContent().get(0));
         assertEquals(userResource1, resultObject.getContent().get(1));
     }
@@ -489,9 +489,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<UserPageResource> result = service.findInactiveByProcessRoles(UserRoleType.internalRoles(), pageable);
 
         assertTrue(result.isSuccess());
-        assertEquals(5, result.getSuccessObject().getSize());
-        assertEquals(1, result.getSuccessObject().getTotalPages());
-        assertEquals(4, result.getSuccessObject().getContent().size());
+        assertEquals(5, result.getSuccess().getSize());
+        assertEquals(1, result.getSuccess().getTotalPages());
+        assertEquals(4, result.getSuccess().getContent().size());
     }
 
     @Test
@@ -533,7 +533,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         assertTrue(result.isSuccess());
 
-        UserPageResource resultObject = result.getSuccessObject();
+        UserPageResource resultObject = result.getSuccess();
         assertEquals(userResource2, resultObject.getContent().get(0));
         assertEquals(userResource1, resultObject.getContent().get(1));
     }
@@ -619,9 +619,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isSuccess());
-        assertEquals(2, result.getSuccessObject().size());
-        assertEquals("Aaron Powell", result.getSuccessObject().get(0).getName());
-        assertEquals("David Wellington", result.getSuccessObject().get(1).getName());
+        assertEquals(2, result.getSuccess().size());
+        assertEquals("Aaron Powell", result.getSuccess().get(0).getName());
+        assertEquals("David Wellington", result.getSuccess().get(1).getName());
 
         verify(userOrganisationRepositoryMock).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
@@ -661,9 +661,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isSuccess());
-        assertEquals(2, result.getSuccessObject().size());
-        assertEquals("Guitar Gods Ltd", result.getSuccessObject().get(0).getOrganisationName());
-        assertEquals("Engine Equations Ltd", result.getSuccessObject().get(1).getOrganisationName());
+        assertEquals(2, result.getSuccess().size());
+        assertEquals("Guitar Gods Ltd", result.getSuccess().get(0).getOrganisationName());
+        assertEquals("Engine Equations Ltd", result.getSuccess().get(1).getOrganisationName());
 
         verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
@@ -683,9 +683,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isSuccess());
-        assertEquals(2, result.getSuccessObject().size());
-        assertEquals("aaron.powell@example.com", result.getSuccessObject().get(0).getEmail());
-        assertEquals("david.wellington@load.example.com", result.getSuccessObject().get(1).getEmail());
+        assertEquals(2, result.getSuccess().size());
+        assertEquals("aaron.powell@example.com", result.getSuccess().get(0).getEmail());
+        assertEquals("david.wellington@load.example.com", result.getSuccess().get(1).getEmail());
 
         verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());

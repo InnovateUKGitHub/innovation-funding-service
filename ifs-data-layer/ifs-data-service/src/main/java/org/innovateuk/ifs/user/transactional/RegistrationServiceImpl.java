@@ -358,7 +358,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             return roleService.findByUserRoleType(PROJECT_FINANCE).andOnSuccessReturn(finResource -> {
                 roleResources.add(finResource);
                 return serviceSuccess(roleResources);
-            }).getSuccessObject();
+            }).getSuccess();
         });
     }
 

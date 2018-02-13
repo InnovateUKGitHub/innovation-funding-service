@@ -49,7 +49,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     public void testFindByApplicationId() {
 
         ServiceResult<Set<OrganisationResource>> results = classUnderTest.findByApplicationId(1L);
-        assertEquals(0, results.getSuccessObject().size());
+        assertEquals(0, results.getSuccess().size());
 
         verify(rules, times(2)).systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
         verify(rules, times(2)).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
@@ -121,7 +121,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     public void testSearchAcademic() {
 
         ServiceResult<List<OrganisationSearchResult>> results = classUnderTest.searchAcademic("Univer", 10);
-        assertEquals(0, results.getSuccessObject().size());
+        assertEquals(0, results.getSuccess().size());
 
         verify(rules, times(2)).systemRegistrationUserCanSeeOrganisationSearchResults(isA(OrganisationSearchResult.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(rules);

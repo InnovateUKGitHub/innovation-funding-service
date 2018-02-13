@@ -30,7 +30,7 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());// newQuestionStatusResource().build(3);
         setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionAndApplication/1/2", questionStatusResourceListType(), questionStatuses);
 
-        List<QuestionStatusResource> returnedQuestionStatuses = service.findQuestionStatusesByQuestionAndApplicationId(1L, 2L).getSuccessObject();
+        List<QuestionStatusResource> returnedQuestionStatuses = service.findQuestionStatusesByQuestionAndApplicationId(1L, 2L).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);
     }
 
@@ -44,7 +44,7 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());;
         setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
 
-        List<QuestionStatusResource> returnedQuestionStatuses = service.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccessObject();
+        List<QuestionStatusResource> returnedQuestionStatuses = service.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);
     }
 
@@ -56,7 +56,7 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());
         setupGetWithRestResultExpectations(questionStatusRestURL + "/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
 
-        List<QuestionStatusResource> returnedQuestionStatuses = service.findByApplicationAndOrganisation(applicationId, organisationId).getSuccessObject();
+        List<QuestionStatusResource> returnedQuestionStatuses = service.findByApplicationAndOrganisation(applicationId, organisationId).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);
     }
 
@@ -67,7 +67,7 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         QuestionStatusResource questionStatus = new QuestionStatusResource();
         setupGetWithRestResultExpectations(questionStatusRestURL + "/" + id, QuestionStatusResource.class, questionStatus);
 
-        QuestionStatusResource returnedQuestionStatus = service.findQuestionStatusById(id).getSuccessObject();
+        QuestionStatusResource returnedQuestionStatus = service.findQuestionStatusById(id).getSuccess();
         Assert.assertEquals(questionStatus, returnedQuestionStatus);
     }
 
@@ -80,7 +80,7 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
         List<QuestionStatusResource> questionStatuses = Arrays.asList(1,2,3).stream().map(i -> new QuestionStatusResource()).collect(Collectors.toList());
         setupGetWithRestResultExpectations(questionStatusRestURL + "/findByQuestionIdsAndApplicationIdAndOrganisationId/" + simpleJoiner(questionIds, ",") + "/" + applicationId + "/" + organisationId, questionStatusResourceListType(), questionStatuses);
 
-        List<QuestionStatusResource> returnedQuestionStatuses = service.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObject();
+        List<QuestionStatusResource> returnedQuestionStatuses = service.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccess();
         assertEquals(questionStatuses, returnedQuestionStatuses);
     }
 

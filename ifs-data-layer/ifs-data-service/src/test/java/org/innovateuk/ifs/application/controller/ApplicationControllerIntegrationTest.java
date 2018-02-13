@@ -76,7 +76,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     public void testFindAll() {
         RestResult<List<ApplicationResource>> all = controller.findAll();
-        assertEquals(6, all.getSuccessObject().size());
+        assertEquals(6, all.getSuccess().size());
     }
 
     @Test
@@ -84,13 +84,13 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         String originalTitle= "A novel solution to an old problem";
         String newTitle = "A new title";
 
-        ApplicationResource application = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        ApplicationResource application = controller.getApplicationById(APPLICATION_ID).getSuccess();
         assertEquals(originalTitle, application.getName());
 
         application.setName(newTitle);
         controller.saveApplicationDetails(APPLICATION_ID, application);
 
-        ApplicationResource updated = controller.getApplicationById(APPLICATION_ID).getSuccessObject();
+        ApplicationResource updated = controller.getApplicationById(APPLICATION_ID).getSuccess();
         assertEquals(newTitle, updated.getName());
 
     }
@@ -100,14 +100,14 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
      */
     @Test
     public void testGetProgressPercentageByApplicationId() throws Exception {
-        CompletedPercentageResource response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
+        CompletedPercentageResource response = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccess();
         BigDecimal completedPercentage = response.getCompletedPercentage();
         double delta = 0.10;
         assertEquals(33.8709677418, completedPercentage.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
 
         questionController.markAsInComplete(28L, APPLICATION_ID, leadApplicantProcessRole);
 
-        CompletedPercentageResource response2  = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccessObject();
+        CompletedPercentageResource response2  = controller.getProgressPercentageByApplicationId(APPLICATION_ID).getSuccess();
         BigDecimal completedPercentage2 = response2.getCompletedPercentage();
         assertEquals(32.258064516, completedPercentage2.doubleValue(), delta); //Changed after enabling mark as complete on some more questions for INFUND-446
     }
@@ -118,7 +118,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.APPROVED);
-        assertEquals(ApplicationState.APPROVED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject().getApplicationState());
+        assertEquals(ApplicationState.APPROVED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess().getApplicationState());
     }
 
     @Test
@@ -126,7 +126,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     public void testUpdateApplicationStateSubmittedNotPossible() throws Exception {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.SUBMITTED);
-        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
+        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
     }
 
     @Rollback
@@ -135,25 +135,25 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.OPEN);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.REJECTED);
-        assertEquals(ApplicationState.REJECTED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject().getApplicationState());
+        assertEquals(ApplicationState.REJECTED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess().getApplicationState());
     }
 
     @Test
     public void testUpdateApplicationStateOpened() throws Exception {
         controller.updateApplicationState(APPLICATION_ID, ApplicationState.OPEN);
-        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccessObject().getApplicationState());
+        assertEquals(ApplicationState.OPEN, controller.getApplicationById(APPLICATION_ID).getSuccess().getApplicationState());
     }
 
     @Rollback
     @Test
     public void testUpdateApplicationStateSubmitted() throws Exception {
-        ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject();
+        ApplicationResource applicationBefore = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess();
         assertNull(applicationBefore.getSubmittedDate());
 
         controller.updateApplicationState(APPLICATION_SUBMITTABLE_ID, ApplicationState.SUBMITTED);
-        assertEquals(ApplicationState.SUBMITTED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject().getApplicationState());
+        assertEquals(ApplicationState.SUBMITTED, controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess().getApplicationState());
 
-        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject();
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess();
         assertNotNull(applicationAfter.getSubmittedDate());
     }
 
@@ -162,7 +162,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         Long competitionId = 1L;
         Long userId = 1L ;
         UserRoleType role = UserRoleType.LEADAPPLICANT;
-        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).getSuccessObject();
+        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).getSuccess();
 
         assertEquals(6, applications.size());
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();
@@ -182,7 +182,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
                 .build();
 
         controller.markAsIneligible(APPLICATION_SUBMITTABLE_ID, reason);
-        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccessObject();
+        ApplicationResource applicationAfter = controller.getApplicationById(APPLICATION_SUBMITTABLE_ID).getSuccess();
         assertEquals(ApplicationState.INELIGIBLE, applicationAfter.getApplicationState());
         assertEquals(reason.getReason(), applicationAfter.getIneligibleOutcome().getReason());
     }

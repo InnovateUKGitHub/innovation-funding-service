@@ -45,8 +45,6 @@ Links to other sections in Project setup dependent on project details for partne
     [Documentation]    INFUND-4428
     [Tags]    HappyPath
     When the user navigates to the page           ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    And the user should see the element           css=ul li.complete:nth-child(1)
-    And the user should see the text in the page  Successful application
     Then the user should see the element          link = Monitoring Officer
     And the user should see the element       link = Finance checks
     And the user should not see the element       link= Spend profile
@@ -67,8 +65,8 @@ Bank details page
     [Tags]    HappyPath
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link=${PS_BD_APPLICATION_TITLE}
-    Then the user should see the element    css=ul li.require-action:nth-child(4)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=ul li.require-action:nth-child(3)
+    When the user clicks the button/link    link=View the status of partners
     Then the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element     css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
@@ -157,8 +155,8 @@ Bank details submission
     And the user clicks the button/link               jquery=button:contains("Submit")
     And the user should see the text in the page      The bank account details below are being reviewed
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    And the user should see the element               jQuery=ul li.waiting:nth-child(4)
-    When the user clicks the button/link              link=status of my partners
+    And the user should see the element               jQuery=ul li.waiting:nth-child(3)
+    When the user clicks the button/link              link=View the status of partners
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page      Project team status
     And the user should see the element               css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
@@ -173,7 +171,7 @@ Submission of bank details for academic user
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     When the user clicks the button/link           jQuery=.projects-in-setup a:contains("${PS_BD_APPLICATION_TITLE}")
     Then the user should see the element           jQuery=li.require-action:contains("Bank details")
-    When the user clicks the button/link           link=status of my partners
+    When the user clicks the button/link           link=View the status of partners
     Then the user should be redirected to the correct page  ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the element            jQuery=h1:contains("Project team status")
     And the user should see the element            css=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
@@ -197,8 +195,8 @@ Submission of bank details for academic user
     And the user clicks the button/link            jquery=button:contains("Submit")
     And the user should see the text in the page   The bank account details below are being reviewed
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    And the user should see the element            jQuery=ul li.complete:nth-child(2)
-    When the user clicks the button/link           link=status of my partners
+    And the user should see the element            jQuery=ul li.complete:nth-child(1)
+    When the user clicks the button/link           link=View the status of partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
     And the user should see the element            css=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
@@ -245,8 +243,8 @@ Non lead partner submits bank details
     And the user clicks the button/link            jQuery=.button:contains("Submit")
     And the user should see the element            jQuery=p:contains("The bank account details below are being reviewed")
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
-    And the user should see the element            css=ul li.complete:nth-child(2)
-    When the user clicks the button/link           link=status of my partners
+    And the user should see the element            css=ul li.complete:nth-child(1)
+    When the user clicks the button/link           link=View the status of partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
     And the user should see the element            css=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
