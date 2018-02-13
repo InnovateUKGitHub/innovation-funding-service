@@ -31,7 +31,7 @@
 <!-- confirm submit application modal -->
 
 <th:block th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, submittedText, cancelText)">
-    <form method="post" th:action="${submitLink}">
+    <form id="submit-application-summary-form" method="post" th:action="${submitLink}">
         <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
             <th:block th:insert="fragments/modals :: close-button" />
             <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>

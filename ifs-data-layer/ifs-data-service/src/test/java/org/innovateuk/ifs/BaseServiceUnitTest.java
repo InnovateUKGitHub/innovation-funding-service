@@ -50,8 +50,8 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
 
         ServiceResult<FileAndContents> result = getFileContentsFn.get();
         assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject().getFileEntry());
-        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
+        assertEquals(fileResourceToGet, result.getSuccess().getFileEntry());
+        assertEquals(inputStreamSupplier, result.getSuccess().getContentsSupplier());
     }
 
     protected void assertCreateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<FileEntryResource>> createFileFn) {
@@ -67,7 +67,7 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
 
         ServiceResult<FileEntryResource> result = createFileFn.apply(fileToCreate, inputStreamSupplier);
         assertTrue(result.isSuccess());
-        assertEquals(createdFileResource, result.getSuccessObject());
+        assertEquals(createdFileResource, result.getSuccess());
         assertEquals(createdFile, fileGetter.get());
     }
 
@@ -101,8 +101,8 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
 
         ServiceResult<FileEntryResource> result = generateFileFn.apply(fileEntryResource);
         assertTrue(result.isSuccess());
-        assertEquals(fileEntryResource, result.getSuccessObject());
-        assertEquals(result.getSuccessObject().getName(), "grant_offer_letter");
+        assertEquals(fileEntryResource, result.getSuccess());
+        assertEquals(result.getSuccess().getName(), "grant_offer_letter");
     }
 
     protected void assertGetFileDetails(Consumer<FileEntry> fileSetter, Supplier<ServiceResult<FileEntryResource>> getFileDetailsFn) {
@@ -115,7 +115,7 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
 
         ServiceResult<FileEntryResource> result = getFileDetailsFn.get();
         assertTrue(result.isSuccess());
-        assertEquals(fileResourceToGet, result.getSuccessObject());
+        assertEquals(fileResourceToGet, result.getSuccess());
     }
 
     protected void assertUpdateFile(Supplier<FileEntry> fileGetter, BiFunction<FileEntryResource, Supplier<InputStream>, ServiceResult<Void>> updateFileFn) {

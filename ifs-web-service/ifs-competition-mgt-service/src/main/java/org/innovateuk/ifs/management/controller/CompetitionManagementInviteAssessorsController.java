@@ -6,10 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
@@ -208,7 +205,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
     }
 
     private List<Long> getAllAssessorIds(long competitionId, Optional<Long> innovationArea) {
-        return competitionInviteRestService.getAvailableAssessorIds(competitionId, innovationArea).getSuccessObjectOrThrowException();
+        return competitionInviteRestService.getAvailableAssessorIds(competitionId, innovationArea).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -270,7 +267,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                              @RequestParam(name = "remove") String email,
                                              @RequestParam(defaultValue = "0") int page,
                                              @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        deleteInvite(email, competitionId).getSuccess();
         return redirectToInvite(competitionId, page);
     }
 
@@ -279,7 +276,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                                  @PathVariable("competitionId") long competitionId,
                                                  @RequestParam(defaultValue = "0") int page,
                                                  @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteAllInvites(competitionId).getSuccessObjectOrThrowException();
+        deleteAllInvites(competitionId).getSuccess();
         return redirectToInvite(competitionId, page);
     }
 

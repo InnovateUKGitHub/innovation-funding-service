@@ -13,11 +13,11 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class AssessmentReviewPanelParticipantPermissionRulesTest extends BasePermissionRulesTest<AssessmentPanelParticipantPermissionRules> {
+public class AssessmentReviewPanelParticipantPermissionRulesTest extends BasePermissionRulesTest<AssessmentReviewPanelParticipantPermissionRules> {
 
     @Override
-    protected AssessmentPanelParticipantPermissionRules supplyPermissionRulesUnderTest() {
-        return new AssessmentPanelParticipantPermissionRules();
+    protected AssessmentReviewPanelParticipantPermissionRules supplyPermissionRulesUnderTest() {
+        return new AssessmentReviewPanelParticipantPermissionRules();
     }
 
     @Test

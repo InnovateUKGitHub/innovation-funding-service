@@ -72,7 +72,7 @@ public abstract class BaseFileStorageStrategyTest {
             // Create a file to try and move over.
             ServiceResult<File> file = strategy.createFile(fileEntry, tempFileWithContents);
             assertTrue(file.isSuccess());
-            assertTrue(file.getSuccessObject().exists());
+            assertTrue(file.getSuccess().exists());
             // Try to move over the existing file.
             final ServiceResult<File> fileServiceResult = strategy.moveFile(fileEntry.getId(), tempFileWithContents);
             assertTrue(fileServiceResult.isFailure());
@@ -95,7 +95,7 @@ public abstract class BaseFileStorageStrategyTest {
             // Create a file to try and move over.
             ServiceResult<File> file = strategy.createFile(fileEntry, tempFileWithContents);
             assertTrue(file.isSuccess());
-            assertTrue(file.getSuccessObject().exists());
+            assertTrue(file.getSuccess().exists());
             // Try to move over the with the non existing file.
             final ServiceResult<File> fileServiceResult = strategy.moveFile(fileEntry.getId(), new File("/does/not/exist"));
             assertTrue(fileServiceResult.isFailure());
@@ -163,7 +163,7 @@ public abstract class BaseFileStorageStrategyTest {
 
             ServiceResult<File> getFileResults = strategy.getFile(fileEntry);
             assertTrue(getFileResults.isSuccess());
-            assertEquals(existingFile.toPath(), getFileResults.getSuccessObject().toPath());
+            assertEquals(existingFile.toPath(), getFileResults.getSuccess().toPath());
 
         } finally {
             FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
@@ -194,7 +194,7 @@ public abstract class BaseFileStorageStrategyTest {
 
             ServiceResult<File> createdFileResult = strategy.createFile(fileEntry, tempFileWithContents);
             assertTrue(createdFileResult.isSuccess());
-            File createdFile = createdFileResult.getSuccessObject();
+            File createdFile = createdFileResult.getSuccess();
 
             assertTrue(createdFile.exists());
             assertEquals(pathElementsToPath(expectedFilePath), createdFile.toPath());
@@ -218,8 +218,8 @@ public abstract class BaseFileStorageStrategyTest {
             Files.write("Original content", tempFileWithContents, defaultCharset());
             ServiceResult<File> movedFileResult = strategy.moveFile(fileEntry.getId(), tempFileWithContents);
             assertTrue(movedFileResult.isSuccess());
-            assertTrue(movedFileResult.getSuccessObject().exists());
-            File movedFile = movedFileResult.getSuccessObject();
+            assertTrue(movedFileResult.getSuccess().exists());
+            File movedFile = movedFileResult.getSuccess();
             assertTrue(movedFile.exists());
             assertEquals(pathElementsToPath(expectedFilePath), movedFile.toPath());
             assertEquals("Original content", Files.readFirstLine(movedFile, defaultCharset()));
@@ -269,8 +269,8 @@ public abstract class BaseFileStorageStrategyTest {
             ServiceResult<File> updatedFileResult = strategy.updateFile(fileEntry, tempFileWithContents);
             assertTrue(updatedFileResult.isSuccess());
 
-            File updatedFile = updatedFileResult.getSuccessObject();
-            assertEquals(createdFile.getSuccessObject().toPath(), updatedFile.toPath());
+            File updatedFile = updatedFileResult.getSuccess();
+            assertEquals(createdFile.getSuccess().toPath(), updatedFile.toPath());
             assertEquals("Updated content", Files.readFirstLine(updatedFile, defaultCharset()));
         } finally {
             FileUtils.deleteDirectory(pathElementsToFile(combineLists(tempFolderPathAsString, "BaseFolder")));
@@ -359,8 +359,8 @@ public abstract class BaseFileStorageStrategyTest {
             ServiceResult<File> createdFile2Result = strategy.createFile(fileEntry2, tempFileWithContents2);
             assertTrue(createdFile2Result.isSuccess());
 
-            File createdFile1 = createdFile1Result.getSuccessObject();
-            File createdFile2 = createdFile2Result.getSuccessObject();
+            File createdFile1 = createdFile1Result.getSuccess();
+            File createdFile2 = createdFile2Result.getSuccess();
 
             assertTrue(createdFile1.exists());
             assertTrue(createdFile2.exists());
@@ -399,7 +399,7 @@ public abstract class BaseFileStorageStrategyTest {
             assertTrue(createdFile2Result.isFailure());
             assertTrue(createdFile2Result.getFailure().is(new Error(FILES_DUPLICATE_FILE_CREATED)));
 
-            File createdFile1 = createdFile1Result.getSuccessObject();
+            File createdFile1 = createdFile1Result.getSuccess();
             assertTrue(createdFile1.exists());
 
             assertEquals("Original content 1", Files.readFirstLine(createdFile1, defaultCharset()));

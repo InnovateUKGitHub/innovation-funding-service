@@ -40,7 +40,7 @@ public abstract class ApplicationSummaryMapper {
 
         ServiceResult<CompletedPercentageResource> percentageResult = applicationService.getProgressPercentageByApplicationId(source.getId());
         if (percentageResult.isSuccess()) {
-            result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage().intValue());
+            result.setCompletedPercentage(percentageResult.getSuccess().getCompletedPercentage().intValue());
         }
 
         result.setStatus(status(source, result.getCompletedPercentage()));
@@ -105,7 +105,7 @@ public abstract class ApplicationSummaryMapper {
         if (totalCostResult.isFailure()) {
             return BigDecimal.ZERO;
         }
-        return totalCostResult.getSuccessObject();
+        return totalCostResult.getSuccess();
     }
 
     private BigDecimal getGrantRequested(Application source) {
@@ -113,7 +113,7 @@ public abstract class ApplicationSummaryMapper {
         if (fundingSoughtResult.isFailure()) {
             return BigDecimal.ZERO;
         }
-        return fundingSoughtResult.getSuccessObject();
+        return fundingSoughtResult.getSuccess();
     }
 
     public Iterable<ApplicationSummaryResource> mapToResource(Iterable<Application> source) {

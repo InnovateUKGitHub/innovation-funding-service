@@ -35,12 +35,12 @@ public class CompetitionInviteAssessorsInviteModelPopulator extends CompetitionI
     public CompetitionInviteAssessorsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         CompetitionInviteAssessorsInviteViewModel model = super.populateModel(competition);
 
         AssessorCreatedInvitePageResource pageResource = competitionInviteRestService.getCreatedInvites(competition.getId(), page)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
@@ -53,7 +53,7 @@ public class CompetitionInviteAssessorsInviteModelPopulator extends CompetitionI
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {
-        return categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException();
+        return categoryRestService.getInnovationSectors().getSuccess();
     }
 
 

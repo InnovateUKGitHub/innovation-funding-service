@@ -36,7 +36,7 @@ public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulato
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource) {
-        final List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+        final List<InnovationAreaResource> allInnovationAreas = categoryRestService.getInnovationAreas().getSuccess();
 	    InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
 
 		competitionSetupForm.setCompetitionTypeId(competitionResource.getCompetitionType());

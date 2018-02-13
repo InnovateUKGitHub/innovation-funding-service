@@ -55,7 +55,7 @@ public class SilEmailServiceTest extends BaseServiceUnitTest<SilEmailService> {
 
         ServiceResult<List<EmailAddress>> emailResult = service.sendEmail(from, to, "A subject", "Some plain text", "Some HTML");
         assertTrue(emailResult.isSuccess());
-        assertEquals(to, emailResult.getSuccessObject());
+        assertEquals(to, emailResult.getSuccess());
 
         verify(endpointMock).sendEmail(expectedMessageToSend);
     }

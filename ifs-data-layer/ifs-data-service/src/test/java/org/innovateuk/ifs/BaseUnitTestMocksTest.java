@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
+import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
 import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
@@ -125,6 +126,7 @@ import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
+import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
@@ -143,6 +145,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AlertService alertServiceMock;
+
+    @Mock
+    protected AuthenticationHelper authenticationHelperMock;
 
     @Mock
     protected AlertRepository alertRepositoryMock;
@@ -187,13 +192,22 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentPanelInviteRepository assessmentPanelInviteRepositoryMock;
 
     @Mock
-    protected AssessmentPanelInviteService assessmentPanelInviteServiceMock;
+    protected AssessmentInterviewPanelInviteRepository assessmentInterviewPanelInviteRepositoryMock;
+
+    @Mock
+    protected AssessmentReviewPanelInviteService assessmentReviewPanelInviteServiceMock;
 
     @Mock
     protected AssessmentPanelService assessmentPanelServiceMock;
 
     @Mock
     protected AssessmentPanelParticipantRepository assessmentPanelParticipantRepositoryMock;
+
+    @Mock
+    protected AssessmentInterviewPanelParticipantRepository assessmentInterviewPanelParticipantRepositoryMock;
+
+    @Mock
+    protected AssessmentInterviewPanelInviteService assessmentInterviewPanelInviteServiceMock;
 
     @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
@@ -340,6 +354,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentReviewPanelInviteMapper assessmentReviewPanelInviteMapperMock;
 
     @Mock
+    protected AssessmentInterviewPanelInviteMapper assessmentInterviewPanelInviteMapperMock;
+
+    @Mock
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
@@ -356,6 +373,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapperMock;
+
+    @Mock
+    protected AssessmentInterviewPanelParticipantMapper assessmentInterviewPanelParticipantMapperMock;
 
     @Mock
     protected InviteProjectRepository inviteProjectRepositoryMock;

@@ -53,8 +53,8 @@ public class ApplicationFundingDecisionController {
 
     private boolean isCompetitionTypeEOI(Map<Long, FundingDecision> fundingDecisions) {
         return fundingDecisions.keySet().stream().findFirst().map(applicationId -> {
-            ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccessObject();
-            CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccessObject();
+            ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
+            CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccess();
             return ("Expression of interest").equals(competition.getCompetitionTypeName());
         }).orElse(false);
     }
