@@ -18,6 +18,7 @@ import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Transactional and secure service for Application processing work
@@ -85,6 +86,10 @@ public interface ApplicationService {
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the applications")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
+
+    @SecuredBySpring(value = "READ", description = "Only system registrar should be using this function")
+    @PreAuthorize("hasAuthority('system_registrar')")
+    ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<BigDecimal> updateApplicationProgress(Long applicationId);
