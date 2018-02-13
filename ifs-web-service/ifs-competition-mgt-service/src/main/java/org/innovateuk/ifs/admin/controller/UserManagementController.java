@@ -4,16 +4,20 @@ import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.async.util.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -30,6 +34,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
@@ -41,7 +46,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin")
-public class UserManagementController {
+public class UserManagementController extends AsyncAdaptor {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
@@ -58,8 +63,10 @@ public class UserManagementController {
     @Autowired
     private InternalUserService internalUserService;
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewActive() method",
+            description = "Only IFS administrators can view active internal users")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
                              HttpServletRequest request,
@@ -68,8 +75,10 @@ public class UserManagementController {
         return view(model, "active", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewInactive() method",
+            description = "Only IFS administrators can view active internal users")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
                                HttpServletRequest request,
@@ -78,8 +87,10 @@ public class UserManagementController {
         return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewPending() method",
+            description = "Only IFS administrators can view pending internal user invites")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
                                HttpServletRequest request,
@@ -89,25 +100,36 @@ public class UserManagementController {
     }
 
     private String view(Model model, String activeTab, int page, int size, String existingQueryString){
-        return userRestService.getActiveInternalUsers(page, size)
-                .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
-                        .andOnSuccessReturn(inactiveInternalUsers -> inviteUserRestService.getPendingInternalUserInvites(page, size)
-                                .andOnSuccessReturn(pendingInternalUserInvites ->
-                                {
-                                    model.addAttribute("model",
-                                            new UserListViewModel(
-                                                    activeTab,
-                                                    activeInternalUsers.getContent(),
-                                                    inactiveInternalUsers.getContent(),
-                                                    pendingInternalUserInvites.getContent(),
-                                                    activeInternalUsers.getTotalElements(),
-                                                    inactiveInternalUsers.getTotalElements(),
-                                                    pendingInternalUserInvites.getTotalElements(),
-                                                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
-                                                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
-                                                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString)));
-                                    return "admin/users";
-                                }).getSuccess()).getSuccess()).getSuccess();
+
+        CompletableFuture<UserPageResource> activeUsers = async(() ->
+                userRestService.getActiveInternalUsers(page, size).getSuccess());
+
+        CompletableFuture<UserPageResource> inactiveUsers = async(() ->
+                userRestService.getInactiveInternalUsers(page, size).getSuccess());
+
+        CompletableFuture<RoleInvitePageResource> pendingUsers = async(() ->
+                inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
+
+        awaitAll(activeUsers, inactiveUsers, pendingUsers).thenAccept(
+                (activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {
+
+            UserListViewModel viewModel = new UserListViewModel(
+                    activeTab,
+                    activeInternalUsers.getContent(),
+                    inactiveInternalUsers.getContent(),
+                    pendingInternalUserInvites.getContent(),
+                    activeInternalUsers.getTotalElements(),
+                    inactiveInternalUsers.getTotalElements(),
+                    pendingInternalUserInvites.getTotalElements(),
+                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
+                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
+                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString));
+
+            model.addAttribute("model",
+                    viewModel);
+        });
+
+        return "admin/users";
     }
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_INTERNAL_USER')")
@@ -215,6 +237,14 @@ public class UserManagementController {
         } else {
             return findExternalUsers(form, validationHandler, model);
         }
+    }
+
+    @SecuredBySpring(value = "RESEND_INTERNAL_USER_INVITE", description = "Only the IFS Administrators can resend invites to internal users")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PostMapping("/users/pending/resend-invite")
+    public String resendInvite(@RequestParam("inviteId") long inviteId) {
+        inviteUserRestService.resendInternalUserInvite(inviteId).getSuccess();
+        return "redirect:/admin/users/pending";
     }
 
     private String findExternalUsers(SearchExternalUsersForm form, ValidationHandler validationHandler, Model model) {
