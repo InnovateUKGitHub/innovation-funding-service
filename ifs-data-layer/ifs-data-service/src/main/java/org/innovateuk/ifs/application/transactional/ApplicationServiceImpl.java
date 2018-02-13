@@ -495,12 +495,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
-        return getApplication(applicationId)
-                .andOnSuccessReturn(application -> {
-                    BigDecimal percentageProgress = calculateApplicationProgress(application);
-                    application.setCompletion(percentageProgress);
-                    return percentageProgress;
-                });
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
+            BigDecimal percentageProgress = calculateApplicationProgress(application);
+            application.setCompletion(percentageProgress);
+            return percentageProgress;
+        });
     }
 
     @Override
