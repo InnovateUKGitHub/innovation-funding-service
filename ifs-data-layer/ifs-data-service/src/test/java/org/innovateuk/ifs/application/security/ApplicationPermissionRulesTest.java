@@ -19,10 +19,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -172,40 +169,16 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testProjectFinanceUserCanSeeApplicationFinanceTotals() {
-
+    public void testInternalUsersCanSeeApplicationFinanceTotals() {
         ApplicationResource applicationResource = newApplicationResource().build();
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
-                assertTrue(rules.projectFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user));
+            if (user.hasRole(UserRoleType.COMP_ADMIN) ||
+                    user.hasRole(UserRoleType.PROJECT_FINANCE) ||
+                    user.hasRole(UserRoleType.SUPPORT) ||
+                    user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+                assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
-                assertFalse(rules.projectFinanceUserCanSeeApplicationFinancesTotals(applicationResource, user));
-            }
-        });
-    }
-
-    @Test
-    public void testSupportUserCanSeeApplicationFinanceTotals() {
-
-        ApplicationResource applicationResource = newApplicationResource().build();
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(supportUser())) {
-                assertTrue(rules.supportUserCanSeeApplicationFinancesTotals(applicationResource, user));
-            } else {
-                assertFalse(rules.supportUserCanSeeApplicationFinancesTotals(applicationResource, user));
-            }
-        });
-    }
-
-    @Test
-    public void testInnovationLeadUserCanSeeApplicationFinanceTotals() {
-
-        ApplicationResource applicationResource = newApplicationResource().build();
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(innovationLeadUser())) {
-                assertTrue(rules.innovationLeadCanSeeApplicationFinancesTotals(applicationResource, user));
-            } else {
-                assertFalse(rules.innovationLeadCanSeeApplicationFinancesTotals(applicationResource, user));
+                assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             }
         });
     }

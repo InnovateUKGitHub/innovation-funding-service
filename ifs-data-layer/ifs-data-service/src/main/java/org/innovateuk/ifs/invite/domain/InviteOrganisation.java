@@ -76,4 +76,14 @@ public class InviteOrganisation {
     public boolean isOnLastInvite() {
         return invites.size() == 1;
     }
+
+    public void addInvite(ApplicationInvite invite) {
+        invite.setInviteOrganisation(this);
+        invites.add(invite);
+    }
+
+    public void removeInvite(ApplicationInvite invite) {
+        invite.setInviteOrganisation(null);
+        invites.remove(invite);
+    }
 }

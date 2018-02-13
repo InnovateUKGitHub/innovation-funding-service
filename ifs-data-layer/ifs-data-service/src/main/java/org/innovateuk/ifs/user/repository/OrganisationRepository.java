@@ -7,15 +7,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * This interface is used to generate Spring Data Repositories.
- * For more info:
- * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
- */
 public interface OrganisationRepository extends PagingAndSortingRepository<Organisation, Long> {
+
     Organisation findByProcessRoles(@Param("processRoles") ProcessRole processRole);
     Organisation findOneByName(String name);
+    Optional<Organisation> findFirstByUsers(User user);
     List<Organisation> findByUsers(User user);
     List<Organisation> findByUsersId(Long userId);
     List<Organisation> findByNameOrderById(String name);

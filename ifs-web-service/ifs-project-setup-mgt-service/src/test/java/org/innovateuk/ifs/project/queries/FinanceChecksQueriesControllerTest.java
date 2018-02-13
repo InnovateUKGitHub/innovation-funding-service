@@ -156,7 +156,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(3, queryViewModel.getQueries().size());
         assertEquals("Query title", queryViewModel.getQueries().get(0).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(0).getSectionType());
-        assertEquals(false, queryViewModel.getQueries().get(0).isAwaitingResponse());
+        assertEquals(false, queryViewModel.getQueries().get(0).isLastPostByInternalUser());
         assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(0).getOrganisationId());
         assertEquals(projectId, queryViewModel.getQueries().get(0).getProjectId());
         assertEquals(1L, queryViewModel.getQueries().get(0).getId().longValue());
@@ -175,7 +175,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(0, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).attachments.size());
         assertEquals("Query2 title", queryViewModel.getQueries().get(1).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(1).getSectionType());
-        assertEquals(true, queryViewModel.getQueries().get(1).isAwaitingResponse());
+        assertEquals(true, queryViewModel.getQueries().get(1).isLastPostByInternalUser());
         assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(1).getOrganisationId());
         assertEquals(projectId, queryViewModel.getQueries().get(1).getProjectId());
         assertEquals(3L, queryViewModel.getQueries().get(1).getId().longValue());
@@ -188,7 +188,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         assertEquals("Query title3", queryViewModel.getQueries().get(2).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(2).getSectionType());
-        assertEquals(false, queryViewModel.getQueries().get(2).isAwaitingResponse());
+        assertEquals(false, queryViewModel.getQueries().get(2).isLastPostByInternalUser());
         assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(2).getOrganisationId());
         assertEquals(projectId, queryViewModel.getQueries().get(2).getProjectId());
         assertEquals(5L, queryViewModel.getQueries().get(2).getId().longValue());
@@ -203,6 +203,24 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(1).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).attachments.size());
+    }
+
+    @Test
+    public void testThreadState() throws Exception {
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
+                .andExpect(view().name("project/financecheck/queries"))
+                .andReturn();
+
+        FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(true, queryViewModel.getQueries().get(0).isLastPostByExternalUser());
+        assertEquals(true, queryViewModel.getQueries().get(1).isLastPostByInternalUser());
+        assertEquals(true, queryViewModel.getQueries().get(2).isLastPostByExternalUser());
+
     }
 
     @Test

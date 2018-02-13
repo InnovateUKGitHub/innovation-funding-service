@@ -2,12 +2,10 @@ package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.time.ZonedDateTime;
 
 @Entity
 @DiscriminatorValue("ROLE")
@@ -36,5 +34,9 @@ public class RoleInvite extends Invite<Role, RoleInvite> {
     @Override
     public void setTarget(final Role role) {
         this.role = role;
+    }
+
+    public RoleInvite sendOrResend(User sentBy, ZonedDateTime sentOn) {
+        return doSend(sentBy, sentOn);
     }
 }
