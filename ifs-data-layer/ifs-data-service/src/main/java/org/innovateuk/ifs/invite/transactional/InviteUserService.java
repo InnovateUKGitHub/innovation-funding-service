@@ -23,7 +23,7 @@ public interface InviteUserService {
     ServiceResult<Void> saveUserInvite(UserResource invitedUser, UserRoleType adminRoleType);
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "GET_EXISTNG_INVITE_FOR_HASH", description = "The System Registration user can get invite using hash to process registration")
+    @SecuredBySpring(value = "GET_EXISTING_INVITE_FOR_HASH", description = "The System Registration user can get invite using hash to process registration")
     ServiceResult<RoleInviteResource> getInvite(String inviteHash);
 
     @PreAuthorize("hasAuthority('system_registrar')")
@@ -36,4 +36,8 @@ public interface InviteUserService {
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @SecuredBySpring(value = "READ_ALL_EXTERNAL_USER_INVITES", description = "Only the support user or IFS Admin can access external user invites")
     ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory);
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "RESEND_INTERNAL_USER_INVITES", description = "Only the IFS Administrators can resend internal user invites")
+    ServiceResult<Void> resendInternalUserInvite(long inviteId);
 }
