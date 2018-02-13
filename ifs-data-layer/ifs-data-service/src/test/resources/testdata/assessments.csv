@@ -1,16 +1,16 @@
 Assessor email,Application name,Reject Reason,Reject Comment,State,Feedback,Recommend Comment
-paul.plum@gmail.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N
-felix.wilson@gmail.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N
+connected1@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N
+connected2@example.com,Security for the Internet of Things,\N,\N,PENDING,\N,\N
 paul.plum@gmail.com,Park living,\N,\N,PENDING,\N,\N
 felix.wilson@gmail.com,Intelligent water system,\N,\N,PENDING,\N,\N
-paul.plum@gmail.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N
-felix.wilson@gmail.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N
+connected1@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N
+connected2@example.com,Using natural gas to heat homes,\N,\N,ACCEPTED,\N,\N
 paul.plum@gmail.com,Intelligent water system,\N,\N,ACCEPTED,\N,\N
 felix.wilson@gmail.com,Park living,\N,\N,ACCEPTED,\N,\N
-paul.plum@gmail.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-felix.wilson@gmail.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Innovative solution with great promise, recommended",Excellent application
-paul.plum@gmail.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,I am recommending this application for funding,This application demonstrated all the qualities I wanted to see
-felix.wilson@gmail.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,"Stellar application, I would recommend",Great application
+connected1@example.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+connected2@example.com,A new innovative solution,\N,\N,READY_TO_SUBMIT,"Innovative solution with great promise, recommended",Excellent application
+connected1@example.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,I am recommending this application for funding,This application demonstrated all the qualities I wanted to see
+connected2@example.com,Mobile Phone Data for Logistics Analytics,\N,\N,SUBMITTED,"Stellar application, I would recommend",Great application
 paul.plum@gmail.com,Intelligent Building,\N,\N,ACCEPTED,\N,\N
 paul.plum@gmail.com,Products and Services Personalised,\N,\N,ACCEPTED,\N,\N
 felix.wilson@gmail.com,Intelligent Building,\N,\N,ACCEPTED,\N,\N
@@ -22,21 +22,21 @@ felix.wilson@gmail.com,Low power air purification systems,\N,\N,PENDING,\N,\N
 paul.plum@gmail.com,Molecular tree breeding,\N,\N,PENDING,\N,\N
 felix.wilson@gmail.com,Molecular tree breeding,\N,\N,PENDING,\N,\N
 maureen.moore@gmail.com,Intelligent water system,\N,\N,SUBMITTED,This was a fantastic application,"Very good application, quite pleased"
-sally.zimmerman@gmail.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,I have no problem recommending this application,Top quality application
-mabel.robinson@gmail.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"Very good, but could have been better in areas","Could have tried a bit harder in parts, but overall good"
-maureen.moore@gmail.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"I enjoyed reading this application, well done",High quality application that should be recommended
-paul.plum@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-felix.wilson@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
+integrated1@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,I have no problem recommending this application,Top quality application
+integrated2@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"Very good, but could have been better in areas","Could have tried a bit harder in parts, but overall good"
+integrated3@example.com,High Performance Gasoline Stratified,\N,\N,SUBMITTED,"I enjoyed reading this application, well done",High quality application that should be recommended
+madeleine.martin@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+joel.george@gmail.com,Neural networks to optimise freight train routing,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
 mabel.robinson@gmail.com,Computer vision and machine learning for transport networks,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
 maureen.moore@gmail.com,Computer vision and machine learning for transport networks,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-paul.plum@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-felix.wilson@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
+mabel.robinson@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+maureen.moore@gmail.com,Crowd sourced cycling navigator,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
 mabel.robinson@gmail.com,Artificial Intelligence in transportation IOT devices,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
 maureen.moore@gmail.com,Artificial Intelligence in transportation IOT devices,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-sally.zimmerman@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-maureen.moore@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
-paul.plum@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
-felix.wilson@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
+madeleine.martin@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+joel.george@gmail.com,Machine learning applied to the traveler experience,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
+benjamin.nixon@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
+paige.godfrey@gmail.com,Machine learning for driverless cars,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
 paul.plum@gmail.com,Living with Virtual Reality,\N,\N,SUBMITTED,"Amazing application, would recommend","Top tier application, you should definitely fund them"
 felix.wilson@gmail.com,Living with Augmented Reality,\N,\N,SUBMITTED,"Innovative solution with great promise, recommended",Excellent application
 load-assessor1@load.test,Application for load 1,\N,\N,ACCEPTED,\N,\N
