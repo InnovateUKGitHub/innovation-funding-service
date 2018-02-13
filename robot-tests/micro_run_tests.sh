@@ -29,7 +29,6 @@ function section() {
 }
 
 function clearDownFileRepository() {
-function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
     docker exec innovationfundingservice_data-service_1  rm -rf ${storedFileFolder}
