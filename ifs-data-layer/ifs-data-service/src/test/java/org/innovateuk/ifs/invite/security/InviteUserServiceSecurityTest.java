@@ -57,6 +57,13 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
                 });
     }
 
+    @Test
+    public void testResendPendingInternalUserInvites() {
+
+        assertRolesCanPerform(() -> classUnderTest.resendInternalUserInvite(123L),
+                UserRoleType.IFS_ADMINISTRATOR);
+    }
+
     @Override
     protected Class<? extends InviteUserService> getClassUnderTest() {
         return InviteUserServiceSecurityTest.TestInviteUserService.class;
@@ -86,6 +93,11 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
 
         @Override
         public ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> resendInternalUserInvite(long inviteId) {
             return null;
         }
     }
