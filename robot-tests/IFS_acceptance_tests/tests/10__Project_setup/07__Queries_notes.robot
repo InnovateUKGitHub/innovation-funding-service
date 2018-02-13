@@ -350,7 +350,7 @@ Link to notes from main finance checks summary page
     [Documentation]    INFUND-4845
     [Tags]
     When the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(7)
+    And the user clicks the button/link   css=table.table-progress tr:nth-child(1) td:nth-child(7)  # View Notes of Empire Ltd
 
 Project finance can upload a pdf file to notes
     [Documentation]    INFUND-4845
