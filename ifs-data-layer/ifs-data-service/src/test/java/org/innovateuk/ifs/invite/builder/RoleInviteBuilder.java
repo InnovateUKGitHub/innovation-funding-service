@@ -37,4 +37,9 @@ public class RoleInviteBuilder extends BaseInviteBuilder<Role, RoleInvite, RoleI
     public RoleInviteBuilder withRole(Role... roles) {
         return withTarget(roles);
     }
+
+    @Override
+    public RoleInviteBuilder withTarget(Role... targets) {
+        return super.withTarget(targets);
+    }
 }
