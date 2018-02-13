@@ -14,15 +14,18 @@ public class AvailableApplicationResource {
 
     private final long id;
     private final String name;
+    private final String leadOrganisation;
 
     public AvailableApplicationResource() {
-        this.id=-1;
-        this.name=null;
+        this.id = -1;
+        this.name = null;
+        this.leadOrganisation = null;
     }
 
-    public AvailableApplicationResource(long id, String name) {
+    public AvailableApplicationResource(long id, String name, String leadOrganisation) {
         this.id = id;
         this.name = name;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public long getId() {
@@ -31,6 +34,10 @@ public class AvailableApplicationResource {
 
     public String getName() {
         return name;
+    }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
     }
 
     @Override
@@ -44,6 +51,7 @@ public class AvailableApplicationResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(name, that.name)
+                .append(leadOrganisation, that.leadOrganisation)
                 .isEquals();
     }
 
@@ -52,6 +60,7 @@ public class AvailableApplicationResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(name)
+                .append(leadOrganisation)
                 .toHashCode();
     }
 }

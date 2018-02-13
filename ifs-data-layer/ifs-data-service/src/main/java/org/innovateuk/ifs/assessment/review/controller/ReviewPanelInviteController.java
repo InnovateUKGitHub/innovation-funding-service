@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
-import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;

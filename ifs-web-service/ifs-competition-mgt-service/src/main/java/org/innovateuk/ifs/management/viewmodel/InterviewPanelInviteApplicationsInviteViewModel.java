@@ -3,37 +3,35 @@ package org.innovateuk.ifs.management.viewmodel;
 import java.util.List;
 
 /**
- * Holder of model attributes for the Invite assessors for Assessment Interview Panel 'Find' view.
+ * Holder of model attributes for the Invite assessors for Assessment Interview Panel 'Invite' view.
  */
-public class InterviewPanelInviteApplicationsFindViewModel {
+public class InterviewPanelInviteApplicationsInviteViewModel {
 
     private final long competitionId;
     private final String competitionName;
-    private final List<InterviewPanelApplicationRowViewModel> applications;
+    private final List<InterviewPanelApplicationInviteRowViewModel> applications;
+
     private final String innovationSector;
     private final String innovationArea;
+
     private final PaginationViewModel pagination;
     private final String originQuery;
 
-    private final boolean selectAllDisabled;
-
-    public InterviewPanelInviteApplicationsFindViewModel(
+    public InterviewPanelInviteApplicationsInviteViewModel(
             long competitionId,
             String competitionName,
-            String innovationArea,
             String innovationSector,
-            List<InterviewPanelApplicationRowViewModel> applications,
+            String innovationArea,
+            List<InterviewPanelApplicationInviteRowViewModel> applications,
             PaginationViewModel pagination,
-            String originQuery,
-            boolean selectAllDisabled) {
+            String originQuery) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-        this.innovationArea = innovationArea;
-        this.innovationSector = innovationSector;
         this.applications = applications;
         this.pagination = pagination;
         this.originQuery = originQuery;
-        this.selectAllDisabled = selectAllDisabled;
+        this.innovationSector = innovationSector;
+        this.innovationArea = innovationArea;
     }
 
     public long getCompetitionId() {
@@ -52,11 +50,7 @@ public class InterviewPanelInviteApplicationsFindViewModel {
         return originQuery;
     }
 
-    public boolean isSelectAllDisabled() {
-        return selectAllDisabled;
-    }
-
-    public List<InterviewPanelApplicationRowViewModel> getApplications() {
+    public List<InterviewPanelApplicationInviteRowViewModel> getApplications() {
         return applications;
     }
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -43,6 +44,8 @@ public class InterviewPanelInviteApplicationsFindModelPopulator  {
         return new InterviewPanelInviteApplicationsFindViewModel(
                 competitionId,
                 competition.getName(),
+                competition.getInnovationSectorName(),
+                StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 applications,
                 new PaginationViewModel(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
 
@@ -51,7 +54,8 @@ public class InterviewPanelInviteApplicationsFindModelPopulator  {
     private InterviewPanelApplicationRowViewModel getRowViewModel(AvailableApplicationResource availableApplicationResource) {
         return new InterviewPanelApplicationRowViewModel(
                 availableApplicationResource.getId(),
-                availableApplicationResource.getName()
+                availableApplicationResource.getName(),
+                availableApplicationResource.getLeadOrganisation()
         );
     }
 }

@@ -6,15 +6,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Holder of model attributes for the available assessors shown in the 'Find' tab of the Assessment Panel Invite Assessors view.
  */
-public class InterviewPanelApplicationRowViewModel {
+public class InterviewPanelApplicationInviteRowViewModel {
 
     private final long id;
-    private final String name;
+    private final long applicationId;
+    private final String applicationName;
     private final String leadOrganisation;
 
-    public InterviewPanelApplicationRowViewModel(long id, String name, String leadOrganisation) {
+    public InterviewPanelApplicationInviteRowViewModel(long id, long applicationId, String applicationName, String leadOrganisation) {
         this.id = id;
-        this.name = name;
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
         this.leadOrganisation = leadOrganisation;
     }
 
@@ -22,8 +24,12 @@ public class InterviewPanelApplicationRowViewModel {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
     }
 
     public String getLeadOrganisation() {
@@ -36,11 +42,12 @@ public class InterviewPanelApplicationRowViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewPanelApplicationRowViewModel that = (InterviewPanelApplicationRowViewModel) o;
+        InterviewPanelApplicationInviteRowViewModel that = (InterviewPanelApplicationInviteRowViewModel) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)
-                .append(name, that.name)
+                .append(applicationId, that.applicationId)
+                .append(applicationName, that.applicationName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .isEquals();
     }
@@ -49,7 +56,8 @@ public class InterviewPanelApplicationRowViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(name)
+                .append(applicationId)
+                .append(applicationName)
                 .append(leadOrganisation)
                 .toHashCode();
     }

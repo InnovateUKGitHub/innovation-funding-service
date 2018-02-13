@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.repository;
+package org.innovateuk.ifs.assessment.review.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;

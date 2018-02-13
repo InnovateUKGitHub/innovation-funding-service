@@ -10,10 +10,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.longsListType;
 
 /**
- * REST service for managing
+ * REST service for managing interview panel invites.
  */
 @Service
 public class InterviewPanelInviteRestServiceImpl extends BaseRestService implements InterviewPanelInviteRestService {
@@ -22,11 +22,33 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
 
     @Override
     public RestResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, int page) {
-        String baseUrl = format("%s/%s/%s", REST_URL, "get-available-applications", competitionId);
+        String baseUrl = format("%s/%s/%s", REST_URL, "available-applications", competitionId);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
-                .queryParam("page", page);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl).queryParam("page", page);
 
         return getWithRestResult(builder.toUriString(), AvailableApplicationPageResource.class);
+    }
+
+    @Override
+    public RestResult<List<Long>> getAvailableApplicationIds(long competitionId) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "available-application-ids", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), longsListType());
+    }
+
+    @Override
+    public RestResult<Void> assignApplications(ExistingUserStagedInviteListResource existingUserStagedInviteListResource) {
+        return postWithRestResult(format("%s/%s", REST_URL, "assign-applications"), existingUserStagedInviteListResource, Void.class);
+    }
+
+    @Override
+    public RestResult<InterviewPanelCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "invited-applications", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl).queryParam("page", page);
+
+        return getWithRestResult(builder.toUriString(), InterviewPanelCreatedInvitePageResource.class);
     }
 }

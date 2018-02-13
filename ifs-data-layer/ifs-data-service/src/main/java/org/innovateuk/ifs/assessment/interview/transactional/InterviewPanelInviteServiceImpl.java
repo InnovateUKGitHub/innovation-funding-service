@@ -3,6 +3,10 @@ package org.innovateuk.ifs.assessment.interview.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterviewPanel;
+import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewPanelRepository;
+import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
+import org.innovateuk.ifs.assessment.interview.workflow.configuration.AssessmentInterviewPanelWorkflowHandler;
 import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
@@ -10,6 +14,7 @@ import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -30,8 +35,12 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -77,59 +86,11 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  * Service for managing {@link AssessmentInterviewPanelInvite}s.
  */
 @Service
-@Transactional
+@Transactional()
 public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteService {
-
-    private static final String WEB_CONTEXT = "/assessment";
-    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
-
-    @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
-
-    @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
-
-    @Autowired
-    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
-
-    @Autowired
-    private CompetitionRepository competitionRepository;
-
-    @Autowired
-    private InnovationAreaMapper innovationAreaMapper;
-
-    @Autowired
-    private AssessmentReviewPanelInviteMapper assessmentReviewPanelInviteMapper;
-
-    @Autowired
-    private ParticipantStatusMapper participantStatusMapper;
-
-    @Autowired
-    private AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapper;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private NotificationSender notificationSender;
-
-    @Autowired
-    private NotificationTemplateRenderer renderer;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private AssessmentReviewRepository assessmentReviewRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -137,15 +98,18 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
+    @Autowired
+    private AssessmentInterviewPanelRepository assessmentInterviewPanelRepository;
+
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Override
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
 
             final Page<Application> pagedResult =
                     applicationRepository.findSubmittedApplicationsNotOnInterviewPanel(competitionId, pageable);
-
-            // applications where submitted and not exists InterviewPanelInvite in created or notified for that competition.
-        // we're going to need a withdrawn state on InterviewInvite
 
             return serviceSuccess(new AvailableApplicationPageResource(
                     pagedResult.getTotalElements(),
@@ -156,7 +120,81 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
             ));
         }
 
+    @Override
+    @Transactional
+    public ServiceResult<InterviewPanelCreatedInvitePageResource> getCreatedApplications(long competitionId, Pageable pageable) {
+        final Page<AssessmentInterviewPanel> pagedResult =
+                assessmentInterviewPanelRepository.findByTargetCompetitionIdAndActivityStateState(
+                        competitionId, AssessmentInterviewPanelState.CREATED.getBackingState(), pageable);
+
+
+        return serviceSuccess(new InterviewPanelCreatedInvitePageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                simpleMap(pagedResult.getContent(), this::mapToPanelCreatedInviteResource),
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
+        return serviceSuccess(
+                simpleMap(
+                        applicationRepository.findSubmittedApplicationsNotOnInterviewPanel(competitionId),
+                        Application::getId
+                )
+        );
+    }
+
+    @Override
+    public ServiceResult<Void> assignApplications(List<ExistingUserStagedInviteResource> stagedInvites) {
+        stagedInvites.forEach(invite -> getApplication(invite.getUserId()).andOnSuccess(this::assignApplicationToCompetition));
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Application> getApplication(long applicationId) {
+        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
+    }
+
     private AvailableApplicationResource mapToAvailableApplicationResource(Application application) {
-        return new AvailableApplicationResource(application.getId(), application.getName());
+        final Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
+
+        return getOrganisation(application.getLeadOrganisationId())
+                .andOnSuccessReturn(
+                        organisation ->
+                                new AvailableApplicationResource(application.getId(), application.getName(), leadOrganisation.getName()
+                        )
+                ).getSuccess();
+    }
+
+    private InterviewPanelCreatedInviteResource mapToPanelCreatedInviteResource(AssessmentInterviewPanel panelInvite) {
+        final Application application = panelInvite.getTarget();
+
+        return getOrganisation(application.getLeadOrganisationId())
+                .andOnSuccessReturn(leadOrganisation ->
+                        new InterviewPanelCreatedInviteResource(
+                                panelInvite.getId(),
+                                application.getId(),
+                                application.getName(),
+                                leadOrganisation.getName()
+                        )
+                ).getSuccess();
+    }
+
+    private ServiceResult<Organisation> getOrganisation(long organisationId) {
+        return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
+    }
+
+    private ServiceResult<AssessmentInterviewPanel> assignApplicationToCompetition(Application application) {
+        final Role leadApplicantRole = roleRepository.findOneByName(UserRoleType.LEADAPPLICANT.getName());
+        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), leadApplicantRole);
+        final AssessmentInterviewPanel panel = new AssessmentInterviewPanel(application, pr);
+
+        panel.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, AssessmentInterviewPanelState.CREATED.getBackingState()));
+        assessmentInterviewPanelRepository.save(panel);
+
+        return serviceSuccess(panel);
     }
 }

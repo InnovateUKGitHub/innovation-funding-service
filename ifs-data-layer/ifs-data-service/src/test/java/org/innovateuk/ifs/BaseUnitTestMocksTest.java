@@ -22,6 +22,8 @@ import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelInviteService;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.assessment.review.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;

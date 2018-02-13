@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.transactional;
+package org.innovateuk.ifs.assessment.review.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.review.domain.AssessmentReviewRejectOutcome
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelServiceImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -40,7 +41,7 @@ import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelPartic
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuilder.newAssessmentReview;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewRejectOutcomeBuilder.newAssessmentReviewRejectOutcome;
 import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.CREATED;
-import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelServiceImpl.INVITE_DATE_FORMAT;
+import static org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelServiceImpl.INVITE_DATE_FORMAT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;

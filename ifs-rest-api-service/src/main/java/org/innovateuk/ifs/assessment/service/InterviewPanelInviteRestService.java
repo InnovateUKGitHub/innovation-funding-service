@@ -11,4 +11,11 @@ import java.util.List;
 public interface InterviewPanelInviteRestService {
 
     RestResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, int page);
+
+    RestResult<List<Long>> getAvailableApplicationIds(long competitionId);
+
+    // TODO rename the resource or create a new one?
+    RestResult<Void> assignApplications(ExistingUserStagedInviteListResource existingUserStagedInviteListResource);
+
+    RestResult<InterviewPanelCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 }

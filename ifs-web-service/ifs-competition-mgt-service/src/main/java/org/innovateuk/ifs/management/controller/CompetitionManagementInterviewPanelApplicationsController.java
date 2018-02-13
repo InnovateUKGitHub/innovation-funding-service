@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -12,8 +13,9 @@ import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorPro
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.PanelSelectionForm;
 import org.innovateuk.ifs.management.model.InterviewPanelInviteApplicationsFindModelPopulator;
+import org.innovateuk.ifs.management.model.InterviewPanelInviteApplicationsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
-import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelInviteApplicationsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,13 +32,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static java.lang.String.format;
+import static org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.INTERVIEW_PANEL_INVITE;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
- * This controller will handle all Competition Management requests related to inviting assessors to an Assessment Panel.
+ * This controller will handle all Competition Management requests related to inviting assessors to an interview Panel.
  */
 @Controller
 @RequestMapping("/assessment/interview-panel/competition/{competitionId}/applications")
@@ -44,25 +46,32 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementInterviewPanelApplicationsController extends CompetitionManagementCookieController<PanelSelectionForm> {
 
-    private static final String SELECTION_FORM = "assessorPanelSelectionForm";
+    private static final String SELECTION_FORM = "interviewPanelApplicationSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private ReviewPanelInviteRestService reviewPanelInviteRestService;
 
     @Autowired
+    private InterviewPanelInviteRestService interviewPanelInviteRestService;
+
+    @Autowired
     private InterviewPanelInviteApplicationsFindModelPopulator interviewPanelInviteApplicationsFindModelPopulator;
 
     @Autowired
-    private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
+    private InterviewPanelInviteApplicationsInviteModelPopulator interviewPanelInviteApplicationsInviteModelPopulator;
+
+
 
     @Autowired
     private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
+    @Override
     protected String getCookieName() {
         return SELECTION_FORM;
     }
 
+    @Override
     protected Class<PanelSelectionForm> getFormType() {
         return PanelSelectionForm.class;
     }
@@ -82,7 +91,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
                        HttpServletRequest request,
                        HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_FIND, queryParams);
+        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
 
         InterviewPanelInviteApplicationsFindViewModel interviewPanelInviteAssessorsFindViewModel =
@@ -164,37 +173,37 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
                                               HttpServletRequest request,
                                               HttpServletResponse response) {
         try {
-            PanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
+    PanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
 
             if (addAll) {
-                selectionForm.setSelectedIds(getAllAssessorIds(competitionId));
-                selectionForm.setAllSelected(true);
-            } else {
-                selectionForm.getSelectedIds().clear();
-                selectionForm.setAllSelected(false);
-            }
-
-            saveFormToCookie(response, competitionId, selectionForm);
-
-            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
-        } catch (Exception e) {
-            return createFailureResponse();
-        }
+        selectionForm.setSelectedIds(getAllAssessorIds(competitionId));
+        selectionForm.setAllSelected(true);
+    } else {
+        selectionForm.getSelectedIds().clear();
+        selectionForm.setAllSelected(false);
     }
 
+    saveFormToCookie(response, competitionId, selectionForm);
+
+            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
+} catch (Exception e) {
+        return createFailureResponse();
+        }
+        }
+
     private List<Long> getAllAssessorIds(long competitionId) {
-        return reviewPanelInviteRestService.getAvailableAssessorIds(competitionId).getSuccess();
+        return interviewPanelInviteRestService.getAvailableApplicationIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
-    public String addSelectedAssessorsToInviteList(Model model,
-                                                   @PathVariable("competitionId") long competitionId,
-                                                   @RequestParam(defaultValue = "0") int page,
-                                                   @RequestParam Optional<Long> innovationArea,
-                                                   @ModelAttribute(SELECTION_FORM) PanelSelectionForm selectionForm,
-                                                   ValidationHandler validationHandler,
-                                                   HttpServletRequest request,
-                                                   HttpServletResponse response) {
+    public String addSelectedApplicationsToInviteList(Model model,
+                                                      @PathVariable("competitionId") long competitionId,
+                                                      @RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam Optional<Long> innovationArea,
+                                                      @ModelAttribute(SELECTION_FORM) PanelSelectionForm selectionForm,
+                                                      ValidationHandler validationHandler,
+                                                      HttpServletRequest request,
+                                                      HttpServletResponse response) {
 
         PanelSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
                 .filter(form -> !form.getSelectedIds().isEmpty())
@@ -202,7 +211,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> restResult = reviewPanelInviteRestService.inviteUsers(
+            RestResult<Void> restResult = interviewPanelInviteRestService.assignApplications(
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)
@@ -229,12 +238,13 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam MultiValueMap<String, String> queryParams) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_INVITE, queryParams);
+        String originQuery = buildOriginQueryString(INTERVIEW_PANEL_INVITE, queryParams);
 
-        model.addAttribute("model", panelInviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
-        model.addAttribute("originQuery", originQuery);
+        model.addAttribute("model", interviewPanelInviteApplicationsInviteModelPopulator
+                .populateModel(competitionId, page, originQuery));
+        model.addAttribute("originQuery", originQuery); // TODO do we need this for assigning to interview?
 
-        return "assessors/panel-invite";
+        return "assessors/interview-panel-invite";
     }
 
     @GetMapping("/accepted")
@@ -281,7 +291,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
     }
 
     private String redirectToInvite(long competitionId, int page) {
-        return "redirect:" + UriComponentsBuilder.fromPath("/assessment/panel/competition/{competitionId}/assessors/invite")
+        return "redirect:" + UriComponentsBuilder.fromPath("/assessment/interview-panel/competition/{competitionId}/applications/invite")
                 .queryParam("page", page)
                 .buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();
