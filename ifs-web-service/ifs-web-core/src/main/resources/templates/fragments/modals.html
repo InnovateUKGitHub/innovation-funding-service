@@ -415,7 +415,7 @@
         <hr />
         <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
             <input type="hidden" name="approvalType" value="REJECTED" />
-            <input type="hidden" name="GOLRejectReason" data-mirror="#gol-reject-reason" value="" />
+            <input type="hidden" name="rejectionReason" data-mirror="#gol-reject-reason" value="" />
             <div>
                 <button class="button" type="submit">Reject signed grant offer letter</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
