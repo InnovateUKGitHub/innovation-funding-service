@@ -1,7 +1,12 @@
-task startMySql(type:Exec) {
-    workingDir '../'
-    println workingDir
-    commandLine 'docker-compose', '-f', 'docker-compose.yml', 'up', '-d', 'mysql'
+ext.sqlContainer = "mysql"
+ext.testSchema = "ifs_test"
+ext.dockerComposeFile = "docker-compose.yml"
+
+task startMySql(type: Exec) {
+    workingDir '../../'
+    doFirst {
+        commandLine 'docker-compose', '-f', dockerComposeFile, 'up', '-d', sqlContainer
+    }
     doLast {
         exec {
             //wait for sql container to start.
@@ -12,8 +17,16 @@ task startMySql(type:Exec) {
     }
 }
 
-task createTestSchema(type:Exec) {
-    workingDir '../'
-    commandLine 'docker-compose', '-f', 'docker-compose.yml',  'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs_test'
-    commandLine 'docker-compose', '-f', 'docker-compose.yml',  'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs_finance_test'
+task createTestSchema(type: Exec) {
+    workingDir '../../'
+    doFirst {
+        commandLine 'docker-compose', '-f', dockerComposeFile, 'exec', '-T', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
+    }
+}
+
+task initDB {
+    createTestSchema.mustRunAfter startMySql
+
+    dependsOn startMySql
+    dependsOn createTestSchema
 }
