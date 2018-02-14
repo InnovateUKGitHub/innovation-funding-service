@@ -19,8 +19,13 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
+    /* This exists for ZDD purposes. We need a way to recognize on the data-service
+     * to see if we need to save the new fileUploadGuidance as it will be sent as null
+     * by the old ifs-competition-mgt-service. This should be removed as part of IFS-xxxx.
+     */
+    private boolean updated;
+
     private Long questionId;
 
     private CompetitionSetupQuestionType type;
@@ -44,8 +49,8 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private String fileUploadGuidance;
     private List<String> allowedFileTypes;
+    private String fileUploadGuidance;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -61,8 +66,6 @@ public class CompetitionSetupQuestionResource {
 
     private Boolean researchCategoryQuestion;
     private Boolean scope;
-
-
 
     public Long getQuestionId() {
         return questionId;
@@ -302,5 +305,13 @@ public class CompetitionSetupQuestionResource {
 
     public void setFileUploadGuidance(String fileUploadGuidance) {
         this.fileUploadGuidance = fileUploadGuidance;
+    }
+
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Boolean updated) {
+        this.updated = updated;
     }
 }
