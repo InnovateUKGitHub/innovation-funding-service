@@ -60,7 +60,7 @@ public class ApplicationFinanceController {
 
     @GetMapping("/getResearchParticipationPercentage/{applicationId}")
     public RestResult<Double> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
-        return financeRowService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> percentage).toGetResponse();
+        return financeRowService.getResearchParticipationPercentage(applicationId).toGetResponse();
     }
 
     @PostMapping("/add/{applicationId}/{organisationId}")
