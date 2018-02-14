@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApprovalForm;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -130,18 +131,18 @@ public class GrantOfferLetterController {
             @ModelAttribute(APPROVAL_FORM_ATTR) GrantOfferLetterApprovalForm approvalForm) {
 
         if (validateApprovalOrRejection(approvalForm)) {
-            grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalForm.getApprovalType()).toPostResponse();
+            grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, new GrantOfferLetterApprovalResource(approvalForm.getApprovalType(), approvalForm.getRejectionReason())).toPostResponse();
         }
 
         return redirectToGrantOfferLetterPage(projectId);
     }
 
     private boolean validateApprovalOrRejection(GrantOfferLetterApprovalForm approvalForm) {
-        if (approvalForm.getApprovalType().equals(ApprovalType.REJECTED)) {
+        if (ApprovalType.REJECTED.equals(approvalForm.getApprovalType())) {
             if (approvalForm.getRejectionReason() != null && StringUtils.trim(approvalForm.getRejectionReason()).length() > 0) {
                 return true;
             }
-        } else if (approvalForm.getApprovalType().equals(ApprovalType.APPROVED)) {
+        } else if (ApprovalType.APPROVED.equals(approvalForm.getApprovalType())) {
             return true;
         }
 
@@ -240,7 +241,8 @@ public class GrantOfferLetterController {
                 grantOfferFileDetails.isPresent(),
                 additionalContractFile.isPresent(),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
-                golState);
+                golState,
+                project.getGrantOfferLetterRejectionReason());
     }
 
     private ResponseEntity<ByteArrayResource> returnFileIfFoundOrThrowNotFoundException(Optional<ByteArrayResource> content, Optional<FileEntryResource> fileDetails) {
