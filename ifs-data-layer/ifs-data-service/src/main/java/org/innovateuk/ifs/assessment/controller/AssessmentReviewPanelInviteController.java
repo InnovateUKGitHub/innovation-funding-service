@@ -18,8 +18,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = {
-        "/assessmentpanelinvite",    // TODO IFS-2850 zdd contract
-        "/assessment-panel-invite"}) // TODO IFS-2850 zdd expand
+        "/assessment-panel-invite"})
 public class AssessmentReviewPanelInviteController {
 
     private static final int DEFAULT_PAGE_SIZE = 20;
@@ -28,16 +27,14 @@ public class AssessmentReviewPanelInviteController {
     private AssessmentReviewPanelInviteService assessmentReviewPanelInviteService;
 
     @GetMapping({
-            "/getAllInvitesToSend/{competitionId}",    // TODO IFS-2850 zdd contract
-            "/get-all-invites-to-send/{competitionId}" // TODO IFS-2850 zdd expand
+            "/get-all-invites-to-send/{competitionId}"
     })
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(@PathVariable long competitionId) {
         return assessmentReviewPanelInviteService.getAllInvitesToSend(competitionId).toGetResponse();
     }
 
     @GetMapping({
-            "/getAllInvitesToResend/{competitionId}",     // TODO IFS-2850 zdd contract
-            "/get-all-invites-to-resend/{competitionId}"  // TODO IFS-2850 zdd expand
+            "/get-all-invites-to-resend/{competitionId}"
     })
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(@PathVariable long competitionId,
                                                                            @RequestParam List<Long> inviteIds) {
@@ -45,8 +42,7 @@ public class AssessmentReviewPanelInviteController {
     }
 
     @PostMapping({
-            "/sendAllInvites/{competitionId}",  // TODO IFS-2850 zdd contract
-            "/send-all-invites/{competitionId}" // TODO IFS-2850 zdd expand
+            "/send-all-invites/{competitionId}"
     })
     public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
                                            @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
@@ -54,8 +50,7 @@ public class AssessmentReviewPanelInviteController {
     }
 
     @PostMapping({
-            "/resendInvites",  // TODO IFS-2850 zdd contract
-            "/resend-invites"  // TODO IFS-2850 zdd expand
+            "/resend-invites"
     })
     public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds,
                                           @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
@@ -63,8 +58,7 @@ public class AssessmentReviewPanelInviteController {
     }
 
     @GetMapping({
-            "/getCreatedInvites/{competitionId}",  // TODO IFS-2850 zdd contract
-            "/get-created-invites/{competitionId}" // TODO IFS-2850 zdd expand
+            "/get-created-invites/{competitionId}"
     })
     public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(
             @PathVariable long competitionId,
@@ -74,16 +68,14 @@ public class AssessmentReviewPanelInviteController {
     }
 
     @PostMapping({
-            "/inviteUsers",  // TODO IFS-2850 zdd contract
-            "/invite-users"  // TODO IFS-2850 zdd expand
+            "/invite-users"
     })
     public RestResult<Void> inviteUsers(@Valid @RequestBody ExistingUserStagedInviteListResource existingUserStagedInvites) {
         return assessmentReviewPanelInviteService.inviteUsers(existingUserStagedInvites.getInvites()).toPostWithBodyResponse();
     }
 
     @GetMapping({
-            "/getAvailableAssessors/{competitionId}",   // TODO IFS-2850 zdd contract
-            "/get-available-assessors/{competitionId}"  // TODO IFS-2850 zdd expand
+            "/get-available-assessors/{competitionId}"
     })
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(
             @PathVariable long competitionId,
@@ -92,32 +84,28 @@ public class AssessmentReviewPanelInviteController {
     }
 
     @GetMapping({
-            "/getAvailableAssessorIds/{competitionId}",    // TODO IFS-2850 zdd contract
-            "/get-available-assessor-ids/{competitionId}"  // TODO IFS-2850 zdd expand
+            "/get-available-assessor-ids/{competitionId}"
     })
     public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable long competitionId) {
         return assessmentReviewPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
 
     @GetMapping({
-            "/getAllInvitesByUser/{userId}",    // TODO IFS-2850 zdd contract
-            "/get-all-invites-by-user/{userId}" // TODO IFS-2850 zdd expand
+            "/get-all-invites-by-user/{userId}"
     })
     public RestResult<List<AssessmentReviewPanelParticipantResource>> getAllInvitesByUser(@PathVariable long userId) {
         return assessmentReviewPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
 
     @GetMapping({
-            "/getNonAcceptedAssessorInviteIds/{competitionId}",     // TODO IFS-2850 zdd contract
-            "/get-non-accepted-assessor-invite-ids/{competitionId}" // TODO IFS-2850 zdd expand
+            "/get-non-accepted-assessor-invite-ids/{competitionId}"
     })
     public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(@PathVariable long competitionId) {
         return assessmentReviewPanelInviteService.getNonAcceptedAssessorInviteIds(competitionId).toGetResponse();
     }
 
     @GetMapping({
-            "/getInvitationOverview/{competitionId}",   // TODO IFS-2850 zdd contract
-            "/get-invitation-overview/{competitionId}"  // TODO IFS-2850 zdd expand
+            "/get-invitation-overview/{competitionId}"
     })
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(
             @PathVariable long competitionId,
@@ -127,48 +115,42 @@ public class AssessmentReviewPanelInviteController {
     }
 
     @PostMapping({
-            "/openInvite/{inviteHash}",   // TODO IFS-2850 zdd contract
-            "/open-invite/{inviteHash}"   // TODO IFS-2850 zdd expand
+            "/open-invite/{inviteHash}"
     })
     public RestResult<AssessmentReviewPanelInviteResource> openInvite(@PathVariable String inviteHash) {
         return assessmentReviewPanelInviteService.openInvite(inviteHash).toPostWithBodyResponse();
     }
 
     @PostMapping({
-            "/acceptInvite/{inviteHash}",  // TODO IFS-2850 zdd contract
-            "/accept-invite/{inviteHash}"  // TODO IFS-2850 zdd expand
+            "/accept-invite/{inviteHash}"
     })
     public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
         return assessmentReviewPanelInviteService.acceptInvite(inviteHash).toPostResponse();
     }
 
     @PostMapping({
-            "/rejectInvite/{inviteHash}",   // TODO IFS-2850 zdd contract
-            "/reject-invite/{inviteHash}"   // TODO IFS-2850 zdd expand
+            "/reject-invite/{inviteHash}"
     })
     public RestResult<Void> rejectInvite(@PathVariable String inviteHash) {
         return assessmentReviewPanelInviteService.rejectInvite(inviteHash).toPostResponse();
     }
 
     @GetMapping({
-            "/checkExistingUser/{inviteHash}",  // TODO IFS-2850 zdd contract
-            "/check-existing-user/{inviteHash}" // TODO IFS-2850 zdd expand
+            "/check-existing-user/{inviteHash}"
     })
     public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
         return assessmentReviewPanelInviteService.checkExistingUser(inviteHash).toGetResponse();
     }
 
     @DeleteMapping({
-            "/deleteInvite",  // TODO IFS-2850 zdd contract
-            "/delete-invite"  // TODO IFS-2850 zdd expand
+            "/delete-invite"
     })
     public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam long competitionId) {
         return assessmentReviewPanelInviteService.deleteInvite(email, competitionId).toDeleteResponse();
     }
 
     @DeleteMapping({
-            "/deleteAllInvites",   // TODO IFS-2850 zdd contract
-            "/delete-all-invites"  // TODO IFS-2850 zdd expand
+            "/delete-all-invites"
     })
     public RestResult<Void> deleteAllInvites(@RequestParam long competitionId) {
         return assessmentReviewPanelInviteService.deleteAllInvites(competitionId).toDeleteResponse();
