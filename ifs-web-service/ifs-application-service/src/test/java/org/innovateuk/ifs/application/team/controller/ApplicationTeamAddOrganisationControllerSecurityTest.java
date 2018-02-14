@@ -24,7 +24,7 @@ public class ApplicationTeamAddOrganisationControllerSecurityTest extends BaseAp
     }
 
     @Before
-    public void lookupPermissionRules(){
+    public void lookupPermissionRules() {
         applicationLookupStrategies = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
 

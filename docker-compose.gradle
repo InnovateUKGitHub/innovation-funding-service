@@ -13,8 +13,6 @@ buildscript {
 
 apply plugin: com.avast.gradle.dockercompose.DockerComposePlugin
 
-
-
 dockerCompose {
 
     useComposeFiles = ['docker-compose.yml']
@@ -33,6 +31,10 @@ dockerCompose {
 
     if (project.hasProperty('ifs.fractal.enabled') ? project.property('ifs.fractal.enabled').toBoolean() : false) {
         useComposeFiles.add('docker-compose-fractal.yml')
+    }
+
+    if (project.property('ifsFinanceTotalsEnabled').toBoolean()) {
+        useComposeFiles.add('docker-compose-finance-totals.yml')
     }
 
     removeContainers = false

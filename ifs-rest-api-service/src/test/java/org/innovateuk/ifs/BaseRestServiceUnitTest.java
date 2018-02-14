@@ -285,6 +285,10 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(requestBody), responseType);
     }
 
+    protected <T> void setupPutWithRestResultVerifications(String nonBaseUrl) {
+        verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, PUT, httpEntityForRestCall(), Void.class);
+    }
+
     protected void setupDeleteWithRestResultVerifications(String nonBaseUrl) {
         verify(mockRestTemplate).exchange(dataServicesUrl + nonBaseUrl, DELETE, httpEntityForRestCall(), Void.class);
     }

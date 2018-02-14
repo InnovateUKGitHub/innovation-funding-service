@@ -72,4 +72,14 @@ public class InviteOrganisation {
         }
         this.invites = invites;
     }
+
+    public void addInvite(ApplicationInvite invite) {
+        invite.setInviteOrganisation(this);
+        invites.add(invite);
+    }
+
+    public void removeInvite(ApplicationInvite invite) {
+        invite.setInviteOrganisation(null);
+        invites.remove(invite);
+    }
 }
