@@ -50,9 +50,9 @@ items:
           - name: JAVA_OPTS
             value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-project-setup-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-project-setup-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
-            value: "<<NEWRELIC-LICENCE-KEY>>"
+            value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           ports:

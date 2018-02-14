@@ -46,9 +46,9 @@ items:
           - name: JAVA_OPTS
             value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-idp-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-idp-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
-            value: "<<NEWRELIC-LICENCE-KEY>>"
+            value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           - name: IDP_PROXY_CERTIFICATE
