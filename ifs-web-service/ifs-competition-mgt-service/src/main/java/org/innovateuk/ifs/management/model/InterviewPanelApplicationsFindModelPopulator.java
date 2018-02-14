@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.InterviewPanelInviteApplicationsFindViewModel;
+import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationsFindViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,10 +18,10 @@ import static org.innovateuk.ifs.management.controller.CompetitionManagementCook
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Build the model for the Invite assessors for Assessment Panel Find view.
+ * Build the model for the Invite assessors for Assessment Interview Panel Find view.
  */
 @Component
-public class InterviewPanelInviteApplicationsFindModelPopulator  {
+public class InterviewPanelApplicationsFindModelPopulator {
 
     @Autowired
     private InterviewPanelRestService interviewPanelRestService;
@@ -29,7 +29,7 @@ public class InterviewPanelInviteApplicationsFindModelPopulator  {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public InterviewPanelInviteApplicationsFindViewModel populateModel(long competitionId,
+    public InterviewPanelApplicationsFindViewModel populateModel(long competitionId,
                                                                  int page,
                                                                  String originQuery) {
         CompetitionResource competition = competitionRestService
@@ -43,7 +43,7 @@ public class InterviewPanelInviteApplicationsFindModelPopulator  {
 
         List<InterviewPanelApplicationRowViewModel> applications = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
-        return new InterviewPanelInviteApplicationsFindViewModel(
+        return new InterviewPanelApplicationsFindViewModel(
                 competitionId,
                 competition.getName(),
                 competition.getInnovationSectorName(),

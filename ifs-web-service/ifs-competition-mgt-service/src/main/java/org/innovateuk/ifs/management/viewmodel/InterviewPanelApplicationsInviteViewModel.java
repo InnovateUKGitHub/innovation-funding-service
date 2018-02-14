@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the Invite assessors for Assessment Interview Panel 'Invite' view.
  */
-public class InterviewPanelInviteApplicationsInviteViewModel {
+public class InterviewPanelApplicationsInviteViewModel {
 
     private final long competitionId;
     private final String competitionName;
@@ -17,7 +17,7 @@ public class InterviewPanelInviteApplicationsInviteViewModel {
     private final PaginationViewModel pagination;
     private final String originQuery;
 
-    public InterviewPanelInviteApplicationsInviteViewModel(
+    public InterviewPanelApplicationsInviteViewModel(
             long competitionId,
             String competitionName,
             String innovationSector,

@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInviteResource;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationInviteRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.InterviewPanelInviteApplicationsInviteViewModel;
+import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationsInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Interview Panel Invite view.
  */
 @Component
-public class InterviewPanelInviteApplicationsInviteModelPopulator {
+public class InterviewPanelApplicationsInviteModelPopulator {
 
     @Autowired
     private InterviewPanelRestService interviewPanelRestService;
@@ -27,7 +27,7 @@ public class InterviewPanelInviteApplicationsInviteModelPopulator {
     private CompetitionRestService competitionRestService;
 
 
-    public InterviewPanelInviteApplicationsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
+    public InterviewPanelApplicationsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -36,7 +36,7 @@ public class InterviewPanelInviteApplicationsInviteModelPopulator {
                 .getCreatedInvites(competition.getId(), page)
                 .getSuccess();
 
-        return new InterviewPanelInviteApplicationsInviteViewModel(
+        return new InterviewPanelApplicationsInviteViewModel(
                 competitionId,
                 competition.getName(),
                 competition.getInnovationSectorName(),

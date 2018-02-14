@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the Invite assessors for Assessment Interview Panel 'Find' view.
  */
-public class InterviewPanelInviteApplicationsFindViewModel {
+public class InterviewPanelApplicationsFindViewModel {
 
     private final long competitionId;
     private final String competitionName;
@@ -18,7 +18,7 @@ public class InterviewPanelInviteApplicationsFindViewModel {
     private final int applicationsInPanel;
     private final boolean selectAllDisabled;
 
-    public InterviewPanelInviteApplicationsFindViewModel(
+    public InterviewPanelApplicationsFindViewModel(
             long competitionId,
             String competitionName,
             String innovationArea,

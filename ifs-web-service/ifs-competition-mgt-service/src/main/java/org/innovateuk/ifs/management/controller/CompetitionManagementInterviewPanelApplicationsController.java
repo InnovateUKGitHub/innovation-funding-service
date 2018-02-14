@@ -1,23 +1,17 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
-import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.PanelSelectionForm;
-import org.innovateuk.ifs.management.model.InterviewPanelInviteApplicationsFindModelPopulator;
-import org.innovateuk.ifs.management.model.InterviewPanelInviteApplicationsInviteModelPopulator;
-import org.innovateuk.ifs.management.model.AssessmentPanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.InterviewPanelApplicationsFindModelPopulator;
+import org.innovateuk.ifs.management.model.InterviewPanelApplicationsInviteModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
-import org.innovateuk.ifs.management.viewmodel.InterviewPanelInviteApplicationsFindViewModel;
+import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -53,10 +47,10 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
     private InterviewPanelRestService interviewPanelRestService;
 
     @Autowired
-    private InterviewPanelInviteApplicationsFindModelPopulator interviewPanelInviteApplicationsFindModelPopulator;
+    private InterviewPanelApplicationsFindModelPopulator interviewPanelApplicationsFindModelPopulator;
 
     @Autowired
-    private InterviewPanelInviteApplicationsInviteModelPopulator interviewPanelInviteApplicationsInviteModelPopulator;
+    private InterviewPanelApplicationsInviteModelPopulator interviewPanelApplicationsInviteModelPopulator;
 
     @Override
     protected String getCookieName() {
@@ -82,8 +76,8 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
 
-        InterviewPanelInviteApplicationsFindViewModel interviewPanelInviteAssessorsFindViewModel =
-                interviewPanelInviteApplicationsFindModelPopulator.populateModel(competitionId, page, originQuery);
+        InterviewPanelApplicationsFindViewModel interviewPanelInviteAssessorsFindViewModel =
+                interviewPanelApplicationsFindModelPopulator.populateModel(competitionId, page, originQuery);
 
         model.addAttribute("model", interviewPanelInviteAssessorsFindViewModel);
         model.addAttribute("originQuery", originQuery);
@@ -228,7 +222,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
 
         String originQuery = buildOriginQueryString(INTERVIEW_PANEL_INVITE, queryParams);
 
-        model.addAttribute("model", interviewPanelInviteApplicationsInviteModelPopulator
+        model.addAttribute("model", interviewPanelApplicationsInviteModelPopulator
                 .populateModel(competitionId, page, originQuery));
         model.addAttribute("originQuery", originQuery); // TODO do we need this for assigning to interview?
 
