@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.invite.controller;
 
-import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
-import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.invite.form.ReviewPanelInviteForm;
+import org.innovateuk.ifs.assessment.invite.populator.ReviewPanelInviteModelPopulator;
+import org.innovateuk.ifs.assessment.service.AssessmentReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -31,26 +31,26 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * Controller to manage Invites to an Assessment Panel.
  */
 @Controller
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = PanelInviteController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewPanelInviteController.class)
 @PreAuthorize("permitAll")
-public class PanelInviteController {
+public class ReviewPanelInviteController {
 
     @Autowired
-    private AssessmentPanelInviteRestService inviteRestService;
+    private AssessmentReviewPanelInviteRestService inviteRestService;
 
     @Autowired
     private RejectionReasonRestService rejectionReasonRestService;
 
     @Autowired
-    private PanelInviteModelPopulator panelInviteModelPopulator;
+    private ReviewPanelInviteModelPopulator reviewPanelInviteModelPopulator;
 
     @GetMapping("/invite/panel/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
-                             @ModelAttribute(name = "form", binding = false) PanelInviteForm form,
+                             @ModelAttribute(name = "form", binding = false) ReviewPanelInviteForm form,
                              UserResource loggedInUser,
                              Model model) {
         boolean userLoggedIn = loggedInUser != null;
-        model.addAttribute("model", panelInviteModelPopulator.populateModel(inviteHash, userLoggedIn));
+        model.addAttribute("model", reviewPanelInviteModelPopulator.populateModel(inviteHash, userLoggedIn));
 
         return "assessor-panel-invite";
     }
@@ -59,7 +59,7 @@ public class PanelInviteController {
     public String handleDecision(Model model,
                                  @PathVariable("inviteHash") String inviteHash,
                                  UserResource loggedInUser,
-                                 @Valid @ModelAttribute("form") PanelInviteForm form,
+                                 @Valid @ModelAttribute("form") ReviewPanelInviteForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler) {
 
@@ -83,7 +83,7 @@ public class PanelInviteController {
         return inviteRestService.checkExistingUser(inviteHash)
                 .andOnSuccessReturn(userExists -> {
                     if (userExists) {
-                        model.addAttribute("model", panelInviteModelPopulator.populateModel(inviteHash, false));
+                        model.addAttribute("model", reviewPanelInviteModelPopulator.populateModel(inviteHash, false));
                         return "assessor-panel-accept-user-exists-but-not-logged-in";
                     } else {
                         return format("redirect:/registration/%s/start", inviteHash);
@@ -106,7 +106,7 @@ public class PanelInviteController {
 
     private String doRejectInvite(Model model,
                                   String inviteHash,
-                                  PanelInviteForm form,
+                                  ReviewPanelInviteForm form,
                                   UserResource loggedInUser,
                                   ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> openInvite(inviteHash, form, loggedInUser, model);

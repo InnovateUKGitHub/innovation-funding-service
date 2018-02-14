@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Build the model for the Invite assessors view.
  */
 @Component
-abstract class AssessmentPanelInviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
+abstract class AssessmentReviewPanelInviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
 
     @Autowired
     private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;

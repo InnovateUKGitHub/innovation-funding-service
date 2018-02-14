@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -33,14 +33,14 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/panel/competition/{competitionId}/assessors/invite")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentPanelSendInviteController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentReviewPanelSendInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class AssessmentPanelSendInviteController extends CompetitionManagementCookieController<AssessmentPanelOverviewSelectionForm> {
+public class AssessmentReviewPanelSendInviteController extends CompetitionManagementCookieController<AssessmentPanelOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private AssessmentReviewPanelInviteRestService assessmentReviewPanelInviteRestService;
 
     @Override
     protected String getCookieName() {
@@ -57,7 +57,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
                                    @PathVariable("competitionId") long competitionId,
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
-        AssessorInvitesToSendResource invites = assessmentPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
+        AssessorInvitesToSendResource invites = assessmentReviewPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToPanelOverviewTab(competitionId);
@@ -86,7 +86,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
         Supplier<String> failureView = () -> getInvitesToSend(model, competitionId, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> sendResult = assessmentPanelInviteRestService
+            ServiceResult<Void> sendResult = assessmentReviewPanelInviteRestService
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
 
@@ -111,7 +111,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
         Supplier<String> failureView = () -> redirectToOverview(competitionId, page);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            AssessorInvitesToSendResource invites = assessmentPanelInviteRestService.getAllInvitesToResend(
+            AssessorInvitesToSendResource invites = assessmentReviewPanelInviteRestService.getAllInvitesToResend(
                     competitionId,
                     submittedSelectionForm.getSelectedInviteIds()).getSuccess();
             model.addAttribute("model", new SendInvitesViewModel(
@@ -137,7 +137,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
         Supplier<String> failureView = () -> redirectToResendView(competitionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> resendResult = assessmentPanelInviteRestService.resendInvites(form.getInviteIds(),
+            ServiceResult<Void> resendResult = assessmentReviewPanelInviteRestService.resendInvites(form.getInviteIds(),
                     new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
             removeCookie(response, competitionId);

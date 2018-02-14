@@ -9,11 +9,11 @@ import java.time.ZonedDateTime;
 /**
  * ViewModel of an AssessmentPanelInvite.
  */
-public class PanelInviteViewModel extends BaseInviteViewModel {
+public class ReviewPanelInviteViewModel extends BaseInviteViewModel {
 
     private ZonedDateTime panelDate;
 
-    public PanelInviteViewModel(String panelInviteHash, AssessmentReviewPanelInviteResource invite, boolean userLoggedIn) {
+    public ReviewPanelInviteViewModel(String panelInviteHash, AssessmentReviewPanelInviteResource invite, boolean userLoggedIn) {
         super(panelInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
         this.panelDate = invite.getPanelDate();
     }
@@ -32,7 +32,7 @@ public class PanelInviteViewModel extends BaseInviteViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PanelInviteViewModel that = (PanelInviteViewModel) o;
+        ReviewPanelInviteViewModel that = (ReviewPanelInviteViewModel) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

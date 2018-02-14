@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.AssessmentPanelOverviewSelectionForm;
-import org.innovateuk.ifs.management.model.AssessmentPanelInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,17 +25,17 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementAssessmentPanelInviteAssessorsOverviewController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementAssessmentPanelInviteAssessorsOverviewController extends CompetitionManagementCookieController<AssessmentPanelOverviewSelectionForm> {
+public class CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewController extends CompetitionManagementCookieController<AssessmentPanelOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private AssessmentReviewPanelInviteRestService assessmentReviewPanelInviteRestService;
 
     @Autowired
-    private AssessmentPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
 
     @Override
     protected String getCookieName() {
@@ -160,6 +160,6 @@ public class CompetitionManagementAssessmentPanelInviteAssessorsOverviewControll
     }
 
     private List<Long> getAllInviteIds(long competitionId) {
-        return assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccess();
+        return assessmentReviewPanelInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccess();
     }
 }
