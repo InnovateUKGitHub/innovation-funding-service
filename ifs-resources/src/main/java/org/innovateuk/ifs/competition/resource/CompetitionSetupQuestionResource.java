@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     /* This exists for ZDD purposes. We need a way to recognize on the data-service
      * to see if we need to save the new fileUploadGuidance as it will be sent as null
