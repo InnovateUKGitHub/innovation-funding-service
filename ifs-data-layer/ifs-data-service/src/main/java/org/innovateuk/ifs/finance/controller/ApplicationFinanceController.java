@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
-import static org.innovateuk.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -65,18 +62,9 @@ public class ApplicationFinanceController {
         return financeRowService.findApplicationFinanceByApplication(applicationId).toGetResponse();
     }
 
-    // TODO DW - INFUND-1555 - remove ObjectNode usage
     @GetMapping("/getResearchParticipationPercentage/{applicationId}")
-    public RestResult<ObjectNode> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
-
-        ServiceResult<ObjectNode> result = financeRowService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode node = mapper.createObjectNode();
-            node.put(RESEARCH_PARTICIPATION_PERCENTAGE, percentage);
-            return node;
-        });
-
-        return result.toGetResponse();
+    public RestResult<Double> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
+        return financeRowService.getResearchParticipationPercentage(applicationId).toGetResponse();
     }
 
     @PostMapping("/add/{applicationId}/{organisationId}")
