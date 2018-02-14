@@ -31,7 +31,7 @@ build.enabled = false
 
 if (!isNamedEnv()) {
     println "AJB: ************ Non named env "
-    apply from: rootProject.file("shib-openshift-non-named-env-properties.gradle")
+    apply from: rootProject.file("non-named-env-properties.gradle")
 } else {
         println "AJB: ************  named env "
 }
