@@ -127,6 +127,7 @@ import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
+import org.innovateuk.ifs.util.AuthenticationHelper;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
@@ -145,6 +146,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AlertService alertServiceMock;
+
+    @Mock
+    protected AuthenticationHelper authenticationHelperMock;
 
     @Mock
     protected AlertRepository alertRepositoryMock;

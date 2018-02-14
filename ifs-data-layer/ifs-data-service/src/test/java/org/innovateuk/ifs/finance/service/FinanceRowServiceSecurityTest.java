@@ -104,10 +104,9 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         assertAccessDenied(
                 () -> classUnderTest.financeTotals(applicationId),
                 () -> {
-                    verify(applicationRules).compAdminCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).internalUserCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).consortiumCanSeeTheApplicationFinanceTotals(isA(ApplicationResource.class), isA(UserResource.class));
                     verify(applicationRules).assessorCanSeeTheApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
-                    verify(applicationRules).projectFinanceUserCanSeeApplicationFinancesTotals(isA(ApplicationResource.class), isA(UserResource.class));
                 });
     }
 

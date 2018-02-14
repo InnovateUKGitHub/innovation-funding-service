@@ -40,6 +40,7 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.transactional.AcceptInviteService;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -123,6 +124,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected TokenRepository tokenRepository;
     protected TokenService tokenService;
     protected InviteService inviteService;
+    protected AcceptInviteService acceptInviteService;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected QuestionService questionService;
@@ -204,6 +206,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         tokenRepository = serviceLocator.getBean(TokenRepository.class);
         tokenService = serviceLocator.getBean(TokenService.class);
         inviteService = serviceLocator.getBean(InviteService.class);
+        acceptInviteService = serviceLocator.getBean(AcceptInviteService.class);
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);

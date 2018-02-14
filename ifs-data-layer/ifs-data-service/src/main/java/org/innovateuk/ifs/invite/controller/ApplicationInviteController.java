@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
+import org.innovateuk.ifs.invite.transactional.AcceptInviteService;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
@@ -27,6 +28,9 @@ public class ApplicationInviteController {
 
     @Autowired
     private InviteService inviteService;
+
+    @Autowired
+    private AcceptInviteService acceptInviteService;
 
     @PostMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
@@ -60,7 +64,7 @@ public class ApplicationInviteController {
 
     @PutMapping("/acceptInvite/{hash}/{userId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
-        return inviteService.acceptInvite(hash, userId).toPutResponse();
+        return acceptInviteService.acceptInvite(hash, userId).toPutResponse();
     }
 
     @DeleteMapping("/removeInvite/{inviteId}")

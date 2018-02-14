@@ -413,6 +413,7 @@ public final class CollectionFunctions {
         return collection.stream().map(mappingFn).collect(toList());
     }
 
+
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code.
      *
