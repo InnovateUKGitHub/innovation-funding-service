@@ -456,20 +456,26 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private boolean applicationReadyToSubmit(Long id) {
-        return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
-                sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
-                    Competition competition = application.getCompetition();
-                    BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
+        return find(application(id)).andOnSuccess(application -> {
+            BigDecimal progressPercentage = calculateApplicationProgress(application);
 
-                    boolean readyForSubmit = false;
-                    if (allSectionsComplete &&
-                            progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                            researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
-                        readyForSubmit = true;
-                    }
-                    return readyForSubmit;
-                })
-        ).getSuccess();
+            return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null)
+                    .andOnSuccessReturn(allSectionsComplete -> {
+                        Competition competition = application.getCompetition();
+                        BigDecimal researchParticipation =
+                                applicationFinanceHandler.getResearchParticipationPercentage(id);
+
+                        boolean readyForSubmit = false;
+
+                        if (allSectionsComplete
+                                && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+                                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
+                            readyForSubmit = true;
+                        }
+
+                        return readyForSubmit;
+                    });
+        }).getSuccess();
     }
 
     @Override
@@ -487,8 +493,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
-        return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
+    @Transactional
+    public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
+            BigDecimal percentageProgress = calculateApplicationProgress(application);
+            application.setCompletion(percentageProgress);
+            return percentageProgress;
+        });
     }
 
     @Override
@@ -569,7 +580,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return notificationSender.sendEmailWithContent(notification, recipient, content);
     }
 
-    private BigDecimal progressPercentageForApplication(Application application) {
+    private BigDecimal calculateApplicationProgress(Application application) {
         List<Section> sections = application.getCompetition().getSections();
 
         List<Question> questions = sections.stream()
