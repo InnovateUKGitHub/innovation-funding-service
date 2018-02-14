@@ -99,21 +99,21 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}"></span>
                             </th:block>
                         </legend>
-                            <div class="multiple-choice" data-target="toggle-appointments">
-                                <input value="yes" type="radio" th:field="*{hasAppointments}"
-                                       data-repeatable-rowcontainer="#position-table tbody"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
-                                       data-conditionally-add-required="input.appointment-field" />
-                                <label th:for="${#ids.prev('hasAppointments')}">Yes</label>
-                            </div>
-                            <div class="multiple-choice">
-                                <input value="no" type="radio" th:field="*{hasAppointments}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
-                                       data-conditionally-remove-required="input.appointment-field" />
-                                <label th:for="${#ids.prev('hasAppointments')}">No</label>
-                            </div>
+                        <div class="multiple-choice" data-target="toggle-appointments">
+                            <input value="yes" type="radio" th:field="*{hasAppointments}"
+                                   data-repeatable-rowcontainer="#position-table tbody"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
+                                   data-conditionally-add-required="input.appointment-field" />
+                            <label th:for="${#ids.prev('hasAppointments')}">Yes</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input value="no" type="radio" th:field="*{hasAppointments}"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
+                                   data-conditionally-remove-required="input.appointment-field" />
+                            <label th:for="${#ids.prev('hasAppointments')}">No</label>
+                        </div>
                     </fieldset>
 
                     <div class="panel js-hidden" id="toggle-appointments">
