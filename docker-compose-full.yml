@@ -79,22 +79,3 @@ services:
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
-  finance-data-service:
-    image: innovateuk/finance-data-service
-    healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
-      interval: 15s
-      timeout: 8s
-    networks:
-      ifs:
-        aliases:
-          - ifs-finance-data-service
-    hostname: finance-data-service
-    links:
-      - mysql:ifs-database
-    ports:
-      - "8092:8080"
-      - "9012:8000"
-    environment:
-      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
-
