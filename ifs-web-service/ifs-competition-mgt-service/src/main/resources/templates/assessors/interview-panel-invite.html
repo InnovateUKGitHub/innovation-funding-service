@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="column-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
-                        <a th:href="@{/interview-panel/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                        <a aria-disabled="true" class="button disabled">Review and send invites</a>
                     </div>
                 </div>
 
@@ -59,12 +59,14 @@
                             <th scope="col" class="width-small">Application number</th>
                             <th scope="col">Project title</th>
                             <th scope="col">Lead organisation</th>
+<!--/*
                             <td scope="col" class="alignright">
                                 <button name="removeAll" class="buttonlink alignright"
                                         th:if="${!#lists.isEmpty(model.applications)}">
                                     Remove all
                                 </button>
                             </td>
+*/-->
                         </tr>
                         </thead>
                         <tbody>
@@ -76,11 +78,13 @@
                             </td>
                             <td th:text="${app.applicationName}">Application name</td>
                             <td th:text="${app.leadOrganisation}">Lead organisation</td>
+<!--/*
                             <td class="alignright">
                                 <button class="buttonlink alignright" name="remove" th:value="${app.id}">
                                     <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
                                 </button>
                             </td>
+*/-->
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.applications)}">
                             <td colspan="5">There are no applications to be invited to this panel.</td>
