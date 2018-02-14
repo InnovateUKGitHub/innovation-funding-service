@@ -32,7 +32,7 @@ public class AssessorCountOptionsControllerIntegrationTest extends BaseControlle
     public void testGetAllByCompetitionType() {
         RestResult<List<AssessorCountOptionResource>> optionsResult = controller.getAllByCompetitionType(1L);
         assertTrue(optionsResult.isSuccess());
-        List<AssessorCountOptionResource> competitionTypeAssessorOptions = optionsResult.getSuccessObject();
+        List<AssessorCountOptionResource> competitionTypeAssessorOptions = optionsResult.getSuccess();
 
         // Check if all the expected options are here.
         assertEquals(3, competitionTypeAssessorOptions.size());

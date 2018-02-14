@@ -57,7 +57,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
                                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                            @PathVariable("contentGroupId") long contentGroupId) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             throw new IllegalStateException("The competition 'Initial Details' section should be completed first.");
@@ -70,7 +70,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
 
     protected String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler, Supplier<ServiceResult<Void>> action) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();

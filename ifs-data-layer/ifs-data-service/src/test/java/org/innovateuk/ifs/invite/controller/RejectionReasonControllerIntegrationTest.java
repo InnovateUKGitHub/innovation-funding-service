@@ -28,7 +28,7 @@ public class RejectionReasonControllerIntegrationTest extends BaseControllerInte
                 .withPriority(1, 2, 3)
                 .build(3);
 
-        List<RejectionReasonResource> found = controller.findAllActive().getSuccessObjectOrThrowException();
+        List<RejectionReasonResource> found = controller.findAllActive().getSuccess();
         assertEquals(expected, found);
     }
 }

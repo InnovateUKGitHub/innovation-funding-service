@@ -39,7 +39,7 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
 
         setupGetWithRestResultAnonymousExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources, HttpStatus.OK);
 
-        List<InnovationAreaResource> categoryResources = service.getInnovationAreas().getSuccessObjectOrThrowException();
+        List<InnovationAreaResource> categoryResources = service.getInnovationAreas().getSuccess();
 
         assertNotNull(categoryResources);
         assertEquals(returnedCategoryResources, categoryResources);
@@ -52,7 +52,7 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
 
         setupGetWithRestResultExpectations(expectedUrl, innovationSectorResourceListType(), returnedCategoryResources);
 
-        List<InnovationSectorResource> categoryResources = service.getInnovationSectors().getSuccessObjectOrThrowException();
+        List<InnovationSectorResource> categoryResources = service.getInnovationSectors().getSuccess();
 
         assertNotNull(categoryResources);
         assertEquals(returnedCategoryResources, categoryResources);
@@ -65,7 +65,7 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
 
         setupGetWithRestResultExpectations(expectedUrl, researchCategoryResourceListType(), returnedCategoryResources);
 
-        List<ResearchCategoryResource> categoryResources = service.getResearchCategories().getSuccessObjectOrThrowException();
+        List<ResearchCategoryResource> categoryResources = service.getResearchCategories().getSuccess();
 
         assertNotNull(categoryResources);
         assertEquals(returnedCategoryResources, categoryResources);
@@ -77,7 +77,7 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
         List<InnovationAreaResource> returnedCategoryResources = newInnovationAreaResource().build(3);
         setupGetWithRestResultExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources);
 
-        List<InnovationAreaResource> categoryResources = service.getInnovationAreasBySector(1L).getSuccessObjectOrThrowException();
+        List<InnovationAreaResource> categoryResources = service.getInnovationAreasBySector(1L).getSuccess();
 
         assertNotNull(categoryResources);
         assertEquals(returnedCategoryResources, categoryResources);

@@ -66,7 +66,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObject();
+        return view.getSuccess();
     }
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation/confirm")
@@ -82,12 +82,12 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
                     // Success
-                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccessObjectOrThrowException();
+                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccess();
                     clearDownInviteFlowCookies(response);
                     return "redirect:/application/" + invite.getApplication();
                 })
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObject();
+        return view.getSuccess();
     }
 
     private OrganisationResource getInviteOrganisationOrElseUserOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {

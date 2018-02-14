@@ -52,4 +52,9 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
     public RestResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
         return getWithRestResult(inviteRestUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType());
     }
+
+    @Override
+    public RestResult<Void> resendInternalUserInvite(long inviteId) {
+        return putWithRestResult(inviteRestUrl + "/internal/pending/" + inviteId + "/resend", Void.class);
+    }
 }

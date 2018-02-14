@@ -73,7 +73,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetQuestionById() throws Exception {
-        questionResource= controller.getQuestionById(questionId).getSuccessObject();
+        questionResource= controller.getQuestionById(questionId).getSuccess();
 
         assertNotNull(questionResource);
         assertEquals("How does your project align with the scope of this competition?", questionResource.getName());
@@ -95,7 +95,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         formInputRepository.save(activeFormInput);
         flushAndClearSession();
 
-        questionResource = controller.getQuestionById(questionId).getSuccessObject();
+        questionResource = controller.getQuestionById(questionId).getSuccess();
 
         assertFalse(questionResource.getFormInputs().contains(inactiveFormInput.getId()));
         assertTrue(questionResource.getFormInputs().contains(activeFormInput.getId()));
@@ -145,19 +145,19 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
     @Test
     public void testGetMarkedAsComplete() throws Exception {
         // Start with zero completed
-        Set<Long> markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccessObject();
+        Set<Long> markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
         assertEquals(7, markedAsComplete.size());
 
         // Complete one section
         controller.markAsComplete(questionId, applicationId, userId);
-        markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccessObject();
+        markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
         assertEquals(8, markedAsComplete.size());
 
         // Mark section as incomplete again.
         controller.markAsInComplete(questionId, applicationId, userId);
-        markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccessObject();
+        markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
         assertNotNull(markedAsComplete);
         assertEquals(7, markedAsComplete.size());
     }
@@ -179,7 +179,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testFindByCompetition() throws Exception {
-        List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccessObject();
+        List<QuestionResource> questions = controller.findByCompetition(competitionId).getSuccess();
 
         assertNotNull(questions);
         assertTrue(questions.size() > 5);
@@ -187,14 +187,14 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetNextQuestion() throws Exception {
-        QuestionResource nextQuestion = controller.getNextQuestion(9L).getSuccessObject();
+        QuestionResource nextQuestion = controller.getNextQuestion(9L).getSuccess();
         assertNotNull(nextQuestion);
         assertEquals(new Long(11L), nextQuestion.getId());
     }
 
     @Test
     public void testGetPreviousQuestion() throws Exception {
-        QuestionResource previousQuestion = controller.getPreviousQuestion(11L).getSuccessObject();
+        QuestionResource previousQuestion = controller.getPreviousQuestion(11L).getSuccess();
 
         assertNotNull(previousQuestion);
         assertEquals(new Long(9L), previousQuestion.getId());
@@ -202,7 +202,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetPreviousQuestionBySection() throws Exception {
-        QuestionResource previousQuestion = controller.getPreviousQuestionBySection(10L).getSuccessObject();
+        QuestionResource previousQuestion = controller.getPreviousQuestionBySection(10L).getSuccess();
         assertNotNull(previousQuestion);
         assertNotNull(previousQuestion.getId());
         assertEquals(16L , previousQuestion.getId().longValue());
@@ -210,7 +210,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetNextQuestionBySection() throws Exception {
-        QuestionResource nextQuestion = controller.getNextQuestionBySection(10L).getSuccessObject();
+        QuestionResource nextQuestion = controller.getNextQuestionBySection(10L).getSuccess();
         assertNotNull(nextQuestion);
         assertNotNull(nextQuestion.getId());
         assertEquals(40L, nextQuestion.getId().longValue());
@@ -218,25 +218,25 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testIsMarkedAsComplete() throws Exception {
-        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject());
+        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
 
         controller.markAsComplete(questionId, applicationId, userId);
 
-        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject());
+        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
     }
 
     @Test
     public void testIsMarkedAsCompleteMultiple() throws Exception {
         question = questionRepository.findOne(QUESTION_ID_WITH_MULTIPLE);
 
-        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject());
+        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
 
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 2L);
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 8L);
         controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 9L);
 
-        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccessObject());
+        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
     }
 
     @Test
@@ -245,7 +245,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         Long questionId = 1L;
         Long assessmentId = 7L;
 
-        QuestionResource question = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId).getSuccessObject();
+        QuestionResource question = questionService.getQuestionByIdAndAssessmentId(questionId, assessmentId).getSuccess();
         assertEquals(questionId, question.getId());
     }
 
@@ -254,7 +254,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         loginFelixWilson();
         Long assessmentId = 7L;
 
-        List<QuestionResource> questions = questionService.getQuestionsByAssessmentId(assessmentId).getSuccessObject();
+        List<QuestionResource> questions = questionService.getQuestionsByAssessmentId(assessmentId).getSuccess();
         // Since the assessment is for an application of competition 1, expect all of the questions of this competition that are visible for assessment
         assertEquals(asList(9L, 11L, 12L, 13L, 1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 15L, 16L),
                 simpleMap(questions, QuestionResource::getId));

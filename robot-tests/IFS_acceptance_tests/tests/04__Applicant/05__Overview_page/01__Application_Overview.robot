@@ -61,14 +61,10 @@ User can print the application
     When the user navigates to the page without the usual headers    ${SERVER}/application/9/print?noprint    #This URL its only for testing purposes
     Then the user should see the element    jQuery=.button:contains("Print your application")
     And The user navigates to the overview page of the Robot test application
-    And the user clicks the button/link    link= Print your application
-    Then the user should get a new print window
+    And the user should see the element     link=Print your application
 
 *** Keywords ***
 the applicant can see the overview page divided in three sections
     the user should see the element  jQuery=section h2:contains("Project details")
     the user should see the element  jQuery=section h2:contains("Application questions")
     the user should see the element  jQuery=section h2:contains("Finances")
-
-the user should get a new print window
-    Select Window    Title=Print Application - Innovation Funding Service

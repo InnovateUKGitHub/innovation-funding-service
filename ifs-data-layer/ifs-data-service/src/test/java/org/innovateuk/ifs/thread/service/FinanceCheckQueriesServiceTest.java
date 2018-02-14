@@ -83,7 +83,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         when(queryRepositoryMock.findOne(queryId)).thenReturn(query);
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
 
-        QueryResource response = service.findOne(queryId).getSuccessObjectOrThrowException();
+        QueryResource response = service.findOne(queryId).getSuccess();
 
         assertEquals(queryResource, response);
     }
@@ -105,7 +105,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         when(queryMapper.mapToResource(query1)).thenReturn(queryResource1);
         when(queryMapper.mapToResource(query2)).thenReturn(queryResource2);
 
-        List<QueryResource> response = service.findAll(contextId).getSuccessObjectOrThrowException();
+        List<QueryResource> response = service.findAll(contextId).getSuccess();
 
         assertEquals(queryResources, response);
     }
@@ -152,7 +152,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
-        Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
+        Long result = service.create(queryToCreate).getSuccess();
 
         assertEquals(result, Long.valueOf(1L));
 
@@ -296,7 +296,8 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(queryInDB);
-        when(userRepositoryMock.findOne(loggedInUserId)).thenReturn(loggedInUser);
+        when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
+
         setLoggedInUser(newUserResource().withId(loggedInUserId)
                 .withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
 

@@ -56,7 +56,7 @@ public class AbstractPublicContentFormSaverTest {
 
         when(publicContentService.updateSection(contentResource, TEST_TYPE)).thenReturn(serviceSuccess());
 
-        target.save(form, contentResource).getSuccessObjectOrThrowException();
+        target.save(form, contentResource).getSuccess();
 
         assertThat(contentSection.getContentGroups().get(0).getContent(), equalTo(form.getContentGroups().get(0).getContent()));
         assertThat(contentSection.getContentGroups().get(0).getHeading(), equalTo(form.getContentGroups().get(0).getHeading()));
@@ -76,7 +76,7 @@ public class AbstractPublicContentFormSaverTest {
 
         when(publicContentService.markSectionAsComplete(contentResource, TEST_TYPE)).thenReturn(serviceSuccess());
 
-        target.markAsComplete(form, contentResource).getSuccessObjectOrThrowException();
+        target.markAsComplete(form, contentResource).getSuccess();
 
         assertThat(contentSection.getContentGroups().get(0).getContent(), equalTo(form.getContentGroups().get(0).getContent()));
         assertThat(contentSection.getContentGroups().get(0).getHeading(), equalTo(form.getContentGroups().get(0).getHeading()));

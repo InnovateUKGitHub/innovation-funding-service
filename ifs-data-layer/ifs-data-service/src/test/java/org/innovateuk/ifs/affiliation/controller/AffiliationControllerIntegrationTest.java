@@ -48,7 +48,7 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
                 .build(2));
         userRepository.save(user);
 
-        List<AffiliationResource> response = controller.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+        List<AffiliationResource> response = controller.getUserAffiliations(userId).getSuccess();
         assertEquals(2, response.size());
 
         assertEquals(EMPLOYER, response.get(0).getAffiliationType());
@@ -71,7 +71,7 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
                 .build(2));
         userRepository.save(user);
 
-        List<AffiliationResource> getAfterSaveResponse = controller.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+        List<AffiliationResource> getAfterSaveResponse = controller.getUserAffiliations(userId).getSuccess();
         assertEquals(2, getAfterSaveResponse.size());
 
         RestResult<Void> updateResponse = controller.updateUserAffiliations(userId, newAffiliationResource()
@@ -83,7 +83,7 @@ public class AffiliationControllerIntegrationTest extends BaseControllerIntegrat
 
         assertTrue(updateResponse.isSuccess());
 
-        List<AffiliationResource> getAfterUpdateResponse = controller.getUserAffiliations(userId).getSuccessObjectOrThrowException();
+        List<AffiliationResource> getAfterUpdateResponse = controller.getUserAffiliations(userId).getSuccess();
         assertEquals(2, getAfterUpdateResponse.size());
         assertEquals(PROFESSIONAL, getAfterUpdateResponse.get(0).getAffiliationType());
         assertEquals(FAMILY_FINANCIAL, getAfterUpdateResponse.get(1).getAffiliationType());

@@ -46,7 +46,7 @@ Non-lead partner cannot upload either document
     [Tags]
     Given Log in as a different user   &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
     And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -57,7 +57,7 @@ Lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
     And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -121,8 +121,8 @@ Lead partner can view both documents
     When the user opens the link in new window   ${valid_pdf}
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    link=status of my partners
-    When the user clicks the button/link    link=status of my partners
+    And the user should see the element    link=View the status of partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
@@ -144,15 +144,15 @@ Non-lead partner can view both documents
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css=ul li:nth-child(7)
-    And the user should see the element   css=#content ul > li:nth-child(7) .msg-progress
+    Then the user moves focus to the element  css=ul li:nth-child(6)
+    And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -175,7 +175,7 @@ PM can view both documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -225,8 +225,8 @@ Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should not see the element    css=ul li.complete:nth-child(7)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should not see the element    css=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
@@ -244,9 +244,9 @@ Mandatory document submission
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.waiting:nth-child(7)
+    And the user should see the element    css=ul li.waiting:nth-child(6)
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -301,7 +301,7 @@ Non-lead partner can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
@@ -365,7 +365,7 @@ After rejection, lead partner cannot upload either document
     [Tags]    HappyPath
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
     And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -380,8 +380,8 @@ After rejection, lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    link=status of my partners
-    When the user clicks the button/link    link=status of my partners
+    And the user should see the element    link=View the status of partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
@@ -397,15 +397,15 @@ After rejection, non-lead partner cannot view both documents
     [Tags]    HappyPath
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  css=ul li:nth-child(7)
-    And the user should see the element   css=#content ul > li:nth-child(7) .msg-progress
+    Then the user moves focus to the element  css=ul li:nth-child(6)
+    And the user should see the element   css=#content ul > li:nth-child(6) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     When the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 
@@ -413,8 +413,8 @@ After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]    HappyPath
     When the user clicks the button/link    link=Project setup status
-    Then the user should not see the element    css=ul li.complete:nth-child(7)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should not see the element    css=ul li.complete:nth-child(6)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Project Manager can remove the offending documents
@@ -432,7 +432,7 @@ After rejection, non-lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(6)
     And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -500,9 +500,9 @@ After rejection, mandatory document submission
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.waiting:nth-child(7)
+    And the user should see the element    css=ul li.waiting:nth-child(6)
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
 
 
 Project Finance is able to Approve and Reject
@@ -634,7 +634,7 @@ Sole applicant can see documents approval
     [Tags]
     [Setup]  log in as a different user   ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
     When the user navigates to the page   ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
-    Then the user should see the element  css=ul li.complete:nth-child(7)
+    Then the user should see the element  css=ul li.complete:nth-child(6)
     When the user clicks the button/link  link=Other documents
     Then the user should see the element  jQuery=.success-alert h2:contains("This document has been approved by Innovate UK.")
 

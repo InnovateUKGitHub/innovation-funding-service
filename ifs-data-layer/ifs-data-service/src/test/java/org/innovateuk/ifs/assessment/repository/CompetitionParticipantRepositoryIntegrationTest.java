@@ -8,8 +8,9 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.*;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
@@ -56,9 +57,9 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -1010,12 +1011,12 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         );
         unavailableParticipant.acceptAndAssignUser(assessor);
 
-        AssessmentPanelInvite invite = new AssessmentPanelInvite(userMapper.mapToDomain(getFelixWilson()), "hash", competition);
+        AssessmentReviewPanelInvite invite = new AssessmentReviewPanelInvite(userMapper.mapToDomain(getFelixWilson()), "hash", competition);
         assessmentPanelInviteRepository.save(invite);
 
         flushAndClearSession();
 
-        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.findParticipantsNotOnPanel(competition.getId());
+        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.findParticipantsNotOnAssessmentPanel(competition.getId());
         assertEquals(1, retrievedParticipants.size());
         assertEqualParticipants(availableParticipant, retrievedParticipants.get(0));
     }

@@ -89,7 +89,7 @@ public class PanelInviteController {
                         return format("redirect:/registration/%s/start", inviteHash);
                     }
                 })
-                .getSuccessObject();
+                .getSuccess();
     }
 
     /**
@@ -100,7 +100,7 @@ public class PanelInviteController {
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('assessor')")
     public String confirmAcceptInvite(@PathVariable("inviteHash") String inviteHash) {
-        inviteRestService.acceptInvite(inviteHash).getSuccessObjectOrThrowException();
+        inviteRestService.acceptInvite(inviteHash).getSuccess();
         return "redirect:/assessor/dashboard";
     }
 
@@ -127,6 +127,6 @@ public class PanelInviteController {
 
     @ModelAttribute("rejectionReasons")
     public List<RejectionReasonResource> populateRejectionReasons() {
-        return rejectionReasonRestService.findAllActive().getSuccessObjectOrThrowException();
+        return rejectionReasonRestService.findAllActive().getSuccess();
     }
 }

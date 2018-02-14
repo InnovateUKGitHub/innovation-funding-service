@@ -5,17 +5,13 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -54,15 +50,5 @@ public abstract class UserTransactionalService {
 
     protected ServiceResult<Role> getRole(String roleName) {
         return find(roleRepository.findOneByName(roleName), notFoundError(Role.class, roleName));
-    }
-
-    protected ServiceResult<User> getCurrentlyLoggedInUser() {
-        UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-
-        if (currentUser == null) {
-            return serviceFailure(forbiddenError());
-        }
-
-        return getUser(currentUser.getId());
     }
 }

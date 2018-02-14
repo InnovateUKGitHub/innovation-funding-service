@@ -2,7 +2,7 @@ package org.innovateuk.ifs.management.model;
 
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
@@ -29,11 +29,11 @@ public class AssessmentPanelModelPopulator {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessmentPanelKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService
                 .getAssessmentPanelKeyStatisticsByCompetition(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         boolean pendingReviewNotifications = assessmentPanelRestService
                 .isPendingReviewNotifications(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         return new AssessmentPanelViewModel(
                 competition.getId(),

@@ -65,15 +65,15 @@ public class CompanyHouseApiServiceImplTest {
 		
 		verify(adapter).restGetEntity(searchUrlPath, JsonNode.class, searchVariables);
 		assertTrue(result.isSuccess());
-		assertEquals(1, result.getSuccessObject().size());
-		assertEquals("company name", result.getSuccessObject().get(0).getName());
-		assertEquals("1234", result.getSuccessObject().get(0).getOrganisationSearchId());
-		assertEquals("line1", result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine1());
-		assertEquals("line2", result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine2());
-		assertEquals("line3", result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine3());
-		assertEquals("loc", result.getSuccessObject().get(0).getOrganisationAddress().getTown());
-		assertEquals("reg", result.getSuccessObject().get(0).getOrganisationAddress().getCounty());
-		assertEquals("ba1", result.getSuccessObject().get(0).getOrganisationAddress().getPostcode());
+		assertEquals(1, result.getSuccess().size());
+		assertEquals("company name", result.getSuccess().get(0).getName());
+		assertEquals("1234", result.getSuccess().get(0).getOrganisationSearchId());
+		assertEquals("line1", result.getSuccess().get(0).getOrganisationAddress().getAddressLine1());
+		assertEquals("line2", result.getSuccess().get(0).getOrganisationAddress().getAddressLine2());
+		assertEquals("line3", result.getSuccess().get(0).getOrganisationAddress().getAddressLine3());
+		assertEquals("loc", result.getSuccess().get(0).getOrganisationAddress().getTown());
+		assertEquals("reg", result.getSuccess().get(0).getOrganisationAddress().getCounty());
+		assertEquals("ba1", result.getSuccess().get(0).getOrganisationAddress().getPostcode());
 	}
 
 	@Test
@@ -89,15 +89,15 @@ public class CompanyHouseApiServiceImplTest {
 		
 		verify(adapter).restGetEntity(searchUrlPath, JsonNode.class, searchVariables);
 		assertTrue(result.isSuccess());
-		assertEquals(1, result.getSuccessObject().size());
-		assertEquals("company name", result.getSuccessObject().get(0).getName());
-		assertEquals("1234", result.getSuccessObject().get(0).getOrganisationSearchId());
-		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine1());
-		assertEquals("line2", result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine2());
-		assertEquals("line3", result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine3());
-		assertEquals("loc", result.getSuccessObject().get(0).getOrganisationAddress().getTown());
-		assertEquals("reg", result.getSuccessObject().get(0).getOrganisationAddress().getCounty());
-		assertEquals("ba1", result.getSuccessObject().get(0).getOrganisationAddress().getPostcode());
+		assertEquals(1, result.getSuccess().size());
+		assertEquals("company name", result.getSuccess().get(0).getName());
+		assertEquals("1234", result.getSuccess().get(0).getOrganisationSearchId());
+		assertNull(result.getSuccess().get(0).getOrganisationAddress().getAddressLine1());
+		assertEquals("line2", result.getSuccess().get(0).getOrganisationAddress().getAddressLine2());
+		assertEquals("line3", result.getSuccess().get(0).getOrganisationAddress().getAddressLine3());
+		assertEquals("loc", result.getSuccess().get(0).getOrganisationAddress().getTown());
+		assertEquals("reg", result.getSuccess().get(0).getOrganisationAddress().getCounty());
+		assertEquals("ba1", result.getSuccess().get(0).getOrganisationAddress().getPostcode());
 	}
 	
 	@Test
@@ -113,15 +113,15 @@ public class CompanyHouseApiServiceImplTest {
 		
 		verify(adapter).restGetEntity(searchUrlPath, JsonNode.class, searchVariables);
 		assertTrue(result.isSuccess());
-		assertEquals(1, result.getSuccessObject().size());
-		assertEquals("company name", result.getSuccessObject().get(0).getName());
-		assertEquals("1234", result.getSuccessObject().get(0).getOrganisationSearchId());
-		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine1());
-		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine2());
-		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getAddressLine3());
-		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getTown());
-		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getCounty());
-		assertNull(result.getSuccessObject().get(0).getOrganisationAddress().getPostcode());
+		assertEquals(1, result.getSuccess().size());
+		assertEquals("company name", result.getSuccess().get(0).getName());
+		assertEquals("1234", result.getSuccess().get(0).getOrganisationSearchId());
+		assertNull(result.getSuccess().get(0).getOrganisationAddress().getAddressLine1());
+		assertNull(result.getSuccess().get(0).getOrganisationAddress().getAddressLine2());
+		assertNull(result.getSuccess().get(0).getOrganisationAddress().getAddressLine3());
+		assertNull(result.getSuccess().get(0).getOrganisationAddress().getTown());
+		assertNull(result.getSuccess().get(0).getOrganisationAddress().getCounty());
+		assertNull(result.getSuccess().get(0).getOrganisationAddress().getPostcode());
 	}
 	
 	@Test
@@ -136,14 +136,14 @@ public class CompanyHouseApiServiceImplTest {
 		
 		verify(adapter).restGetEntity("baseurl/company/123", JsonNode.class);
 		assertTrue(result.isSuccess());
-		assertEquals("company name", result.getSuccessObject().getName());
-		assertEquals("1234", result.getSuccessObject().getOrganisationSearchId());
-		assertEquals("line1", result.getSuccessObject().getOrganisationAddress().getAddressLine1());
-		assertEquals("line2", result.getSuccessObject().getOrganisationAddress().getAddressLine2());
-		assertEquals("line3", result.getSuccessObject().getOrganisationAddress().getAddressLine3());
-		assertEquals("loc", result.getSuccessObject().getOrganisationAddress().getTown());
-		assertEquals("reg", result.getSuccessObject().getOrganisationAddress().getCounty());
-		assertEquals("ba1", result.getSuccessObject().getOrganisationAddress().getPostcode());
+		assertEquals("company name", result.getSuccess().getName());
+		assertEquals("1234", result.getSuccess().getOrganisationSearchId());
+		assertEquals("line1", result.getSuccess().getOrganisationAddress().getAddressLine1());
+		assertEquals("line2", result.getSuccess().getOrganisationAddress().getAddressLine2());
+		assertEquals("line3", result.getSuccess().getOrganisationAddress().getAddressLine3());
+		assertEquals("loc", result.getSuccess().getOrganisationAddress().getTown());
+		assertEquals("reg", result.getSuccess().getOrganisationAddress().getCounty());
+		assertEquals("ba1", result.getSuccess().getOrganisationAddress().getPostcode());
 	}
 	
 	@Test
@@ -159,14 +159,14 @@ public class CompanyHouseApiServiceImplTest {
 		
 		verify(adapter).restGetEntity("baseurl/company/123", JsonNode.class);
 		assertTrue(result.isSuccess());
-		assertEquals("company name", result.getSuccessObject().getName());
-		assertEquals("1234", result.getSuccessObject().getOrganisationSearchId());
-		assertNull(result.getSuccessObject().getOrganisationAddress().getAddressLine1());
-		assertNull(result.getSuccessObject().getOrganisationAddress().getAddressLine2());
-		assertNull(result.getSuccessObject().getOrganisationAddress().getAddressLine3());
-		assertNull(result.getSuccessObject().getOrganisationAddress().getTown());
-		assertNull(result.getSuccessObject().getOrganisationAddress().getCounty());
-		assertNull(result.getSuccessObject().getOrganisationAddress().getPostcode());
+		assertEquals("company name", result.getSuccess().getName());
+		assertEquals("1234", result.getSuccess().getOrganisationSearchId());
+		assertNull(result.getSuccess().getOrganisationAddress().getAddressLine1());
+		assertNull(result.getSuccess().getOrganisationAddress().getAddressLine2());
+		assertNull(result.getSuccess().getOrganisationAddress().getAddressLine3());
+		assertNull(result.getSuccess().getOrganisationAddress().getTown());
+		assertNull(result.getSuccess().getOrganisationAddress().getCounty());
+		assertNull(result.getSuccess().getOrganisationAddress().getPostcode());
 	}
 
 	private Map<String, Object> companyResultMap() {

@@ -34,17 +34,17 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (applicationId == null) {
             return null;
         }
-        return applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        return applicationRestService.getApplicationById(applicationId).getSuccess();
     }
 
     @Override
     public ApplicationResource createApplication(Long competitionId, Long userId, String applicationName) {
-        return applicationRestService.createApplication(competitionId, userId, applicationName).getSuccessObjectOrThrowException();
+        return applicationRestService.createApplication(competitionId, userId, applicationName).getSuccess();
     }
 
     @Override
     public Boolean isApplicationReadyForSubmit(Long applicationId) {
-        return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccessObjectOrThrowException();
+        return applicationRestService.isApplicationReadyForSubmit(applicationId).getSuccess();
     }
 
     @Override
@@ -71,6 +71,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Override
     public Boolean showApplicationTeam(Long applicationId, Long userId) {
-        return applicationRestService.showApplicationTeam(applicationId, userId).getSuccessObjectOrThrowException();
+        return applicationRestService.showApplicationTeam(applicationId, userId).getSuccess();
     }
 }

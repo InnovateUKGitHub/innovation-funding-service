@@ -4,6 +4,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -23,26 +24,20 @@ public class GrantOfferLetterModelPopulator {
 
     public GrantOfferLetterModel populateGrantOfferLetterViewModel(Long projectId, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
-        boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
         Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
         Optional<FileEntryResource> additionalContractFile = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
+        boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
         boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-        boolean grantOfferLetterApproved = grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).getSuccessObjectOrThrowException();
-        boolean grantOfferLetterSent = grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).getSuccessObjectOrThrowException();
-        boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
+        GrantOfferLetterStateResource state = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccess();
 
         return new GrantOfferLetterModel(projectId, project.getName(),
                 leadPartner,
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                project.getOfferSubmittedDate(),
                 projectManager,
-                grantOfferLetterApproved,
-                grantOfferLetterSent,
-                grantOfferLetterRejected);
+                state);
     }
-
 }

@@ -31,7 +31,7 @@ public class EthnicityServiceImplTest extends BaseUnitTestMocksTest {
         when(ethnicityMapperMock.mapToResource(same(ethnicities.get(0)))).thenReturn(ethnicityResources.get(0));
         when(ethnicityMapperMock.mapToResource(same(ethnicities.get(1)))).thenReturn(ethnicityResources.get(1));
 
-        List<EthnicityResource> found = ethnicityService.findAllActive().getSuccessObjectOrThrowException();
+        List<EthnicityResource> found = ethnicityService.findAllActive().getSuccess();
         assertEquals(ethnicityResources, found);
 
         InOrder inOrder = inOrder(ethnicityRepositoryMock, ethnicityMapperMock);
