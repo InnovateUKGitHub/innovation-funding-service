@@ -39,12 +39,6 @@ public class LabourCostTest {
     }
 
     @Test
-    public void constructorShouldReturnNewInstance(){
-        new LabourCost();
-        new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
-    }
-
-    @Test
     public void getRatePerDayShouldNotFailOnInfiniteDivisions(){
         grossEmployeeCost = new BigDecimal(10);
         labourDays = 3;
@@ -68,11 +62,6 @@ public class LabourCostTest {
     @Test
     public void getRatePerDayShouldReturnZeroWhenWorkingDaysIsZero(){
         Assert.assertEquals(BigDecimal.ZERO, labourCost.getRate(0));
-    }
-
-    //@Test
-    public void getRateShouldNotRecalculateRateWhenArgumentIsNull(){
-        Assert.assertEquals(rate, labourCost.getRate(null));
     }
 
     @Test
@@ -104,11 +93,6 @@ public class LabourCostTest {
     @Test
     public void setGrossAnnualSalaryShouldNotThrowAnErrorOnNull(){
         labourCost.setGrossEmployeeCost(null);
-    }
-
-    @Test
-    public void setRoleShouldNotThrowAnErrorOnString(){
-        labourCost.setRole("new role");
     }
 
     @Test
