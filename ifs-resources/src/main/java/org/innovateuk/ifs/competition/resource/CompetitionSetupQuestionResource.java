@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
@@ -41,7 +42,10 @@ public class CompetitionSetupQuestionResource {
     @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
+
     private Boolean appendix;
+    private String fileUploadGuidance;
+    private List<String> allowedFileTypes;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -58,7 +62,7 @@ public class CompetitionSetupQuestionResource {
     private Boolean researchCategoryQuestion;
     private Boolean scope;
 
-    private List<String> allowedFileTypes;
+
 
     public Long getQuestionId() {
         return questionId;
@@ -290,5 +294,13 @@ public class CompetitionSetupQuestionResource {
                 .append(scope)
                 .append(allowedFileTypes)
                 .toHashCode();
+    }
+
+    public String getFileUploadGuidance() {
+        return fileUploadGuidance;
+    }
+
+    public void setFileUploadGuidance(String fileUploadGuidance) {
+        this.fileUploadGuidance = fileUploadGuidance;
     }
 }

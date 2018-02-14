@@ -52,6 +52,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     private static String subTitle = "subTitle";
     private static String guidanceTitle = "guidanceTitle";
     private static String guidance = "guidance";
+    private static String fileUploadGuidance = "fileUploadGuidance";
     private static Integer maxWords = 1;
     private static String assessmentGuidanceAnswer = "assessmentGuidance";
     private static String assessmentGuidanceTitle = "assessmentGuidanceTitle";
@@ -82,6 +83,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
+                                .withGuidanceAnswer(fileUploadGuidance)
                                 .build(),
                         newFormInput()
                                 .withType(FormInputType.TEXTAREA)
@@ -150,6 +152,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
         assertEquals(resource.getShortTitleEditable(), false);
+        assertEquals(resource.getFileUploadGuidance(), fileUploadGuidance);
 
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
@@ -217,6 +220,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(question.getShortName(), shortTitle);
 
         assertEquals(appendixFormInput.getActive(), false);
+        assertEquals(appendixFormInput.getGuidanceAnswer(), null);
 
         assertEquals(researchCategoryQuestionFormInput.getActive(), true);
         assertEquals(scopeQuestionFormInput.getActive(), true);

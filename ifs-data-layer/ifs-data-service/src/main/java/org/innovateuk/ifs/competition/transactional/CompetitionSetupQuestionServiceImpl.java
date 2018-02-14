@@ -89,6 +89,8 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
                 setupResource.setAllowedFileTypes(asList(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())));
+                setupResource.setFileUploadGuidance(formInput.getGuidanceAnswer());
+
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
@@ -174,6 +176,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
             appendixFormInput.setAllowedFileTypes(StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
+            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
         }
     }
 
