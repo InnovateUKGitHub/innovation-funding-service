@@ -49,8 +49,9 @@ public class InterviewPanelInviteApplicationsFindModelPopulator  {
                 competition.getInnovationSectorName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 applications,
+                0,
+                0,
                 new PaginationViewModel(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
-
     }
 
     private InterviewPanelApplicationRowViewModel getRowViewModel(AvailableApplicationResource availableApplicationResource) {

@@ -42,6 +42,8 @@ public class InterviewPanelInviteApplicationsInviteModelPopulator {
                 competition.getInnovationSectorName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
+                0,
+                0,
                 new PaginationViewModel(pageResource, originQuery),
                 originQuery
         );

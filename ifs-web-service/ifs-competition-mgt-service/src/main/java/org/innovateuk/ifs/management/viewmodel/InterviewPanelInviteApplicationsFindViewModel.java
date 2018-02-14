@@ -14,7 +14,8 @@ public class InterviewPanelInviteApplicationsFindViewModel {
     private final String innovationArea;
     private final PaginationViewModel pagination;
     private final String originQuery;
-
+    private final int applicationsInCompetition;
+    private final int applicationsInPanel;
     private final boolean selectAllDisabled;
 
     public InterviewPanelInviteApplicationsFindViewModel(
@@ -23,6 +24,8 @@ public class InterviewPanelInviteApplicationsFindViewModel {
             String innovationArea,
             String innovationSector,
             List<InterviewPanelApplicationRowViewModel> applications,
+            int applicationsInCompetition,
+            int applicationsInPanel,
             PaginationViewModel pagination,
             String originQuery,
             boolean selectAllDisabled) {
@@ -34,6 +37,8 @@ public class InterviewPanelInviteApplicationsFindViewModel {
         this.pagination = pagination;
         this.originQuery = originQuery;
         this.selectAllDisabled = selectAllDisabled;
+        this.applicationsInCompetition = applicationsInCompetition;
+        this.applicationsInPanel = applicationsInPanel;
     }
 
     public long getCompetitionId() {
@@ -66,5 +71,13 @@ public class InterviewPanelInviteApplicationsFindViewModel {
 
     public String getInnovationArea() {
         return innovationArea;
+    }
+
+    public int getApplicationsInCompetition() {
+        return applicationsInCompetition;
+    }
+
+    public int getApplicationsInPanel() {
+        return applicationsInPanel;
     }
 }

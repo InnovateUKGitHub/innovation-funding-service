@@ -10,10 +10,10 @@ public class InterviewPanelInviteApplicationsInviteViewModel {
     private final long competitionId;
     private final String competitionName;
     private final List<InterviewPanelApplicationInviteRowViewModel> applications;
-
     private final String innovationSector;
     private final String innovationArea;
-
+    private final int applicationsInCompetition;
+    private final int applicationsInPanel;
     private final PaginationViewModel pagination;
     private final String originQuery;
 
@@ -23,6 +23,8 @@ public class InterviewPanelInviteApplicationsInviteViewModel {
             String innovationSector,
             String innovationArea,
             List<InterviewPanelApplicationInviteRowViewModel> applications,
+            int applicationsInCompetition,
+            int applicationsInPanel,
             PaginationViewModel pagination,
             String originQuery) {
         this.competitionId = competitionId;
@@ -32,6 +34,8 @@ public class InterviewPanelInviteApplicationsInviteViewModel {
         this.originQuery = originQuery;
         this.innovationSector = innovationSector;
         this.innovationArea = innovationArea;
+        this.applicationsInCompetition = applicationsInCompetition;
+        this.applicationsInPanel = applicationsInPanel;
     }
 
     public long getCompetitionId() {
@@ -60,5 +64,13 @@ public class InterviewPanelInviteApplicationsInviteViewModel {
 
     public String getInnovationArea() {
         return innovationArea;
+    }
+
+    public int getApplicationsInCompetition() {
+        return applicationsInCompetition;
+    }
+
+    public int getApplicationsInPanel() {
+        return applicationsInPanel;
     }
 }

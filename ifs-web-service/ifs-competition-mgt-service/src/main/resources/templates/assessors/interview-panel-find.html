@@ -16,6 +16,23 @@
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
 
+    <h2 class="heading-medium">Key statistics</h2>
+
+    <div class="grid-row">
+        <div class="column-quarter">
+            <div class="highlight-panel highlight-panel-padded">
+                <span class="heading-large" th:text="${model.applicationsInCompetition}">45</span><br/>
+                <small>Applications in competition</small>
+            </div>
+        </div>
+        <div class="column-quarter">
+            <div class="highlight-panel highlight-panel-padded">
+                <span class="heading-large" th:text="${model.applicationsInPanel}">23</span><br/>
+                <small>Assigned to interview panel</small>
+            </div>
+        </div>
+    </div>
+
     <dl class="standard-definition-list extra-margin">
         <dt>Innovation sector</dt>
         <dd th:text="${model.innovationSector}">Health and life sciences</dd>
@@ -25,6 +42,7 @@
     </dl>
 
     <div><br></div>
+
     <ul class="inline-nav">
         <li class="selected">
             <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
@@ -32,11 +50,9 @@
         <li class="not-selected">
             <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
-        <!-- /*
         <li class="not-selected">
-            <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/overview(competitionId=${model.competitionId})}">View status</a>
+            <a aria-disabled="true" class="buttonlink disabled">View status</a>
         </li>
-        */ -->
     </ul>
 
     <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">

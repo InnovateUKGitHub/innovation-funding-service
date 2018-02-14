@@ -15,6 +15,23 @@
             <th:block th:insert="fragments/layout :: page-title"
                       th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
 
+            <h2 class="heading-medium">Key statistics</h2>
+
+            <div class="grid-row">
+                <div class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-large" th:text="${model.applicationsInCompetition}">45</span><br/>
+                        <small>Applications in competition</small>
+                    </div>
+                </div>
+                <div class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-large" th:text="${model.applicationsInPanel}">23</span><br/>
+                        <small>Assigned to interview panel</small>
+                    </div>
+                </div>
+            </div>
+
             <dl class="standard-definition-list extra-margin">
                 <dt>Innovation sector</dt>
                 <dd th:text="${model.innovationSector}">Health and life sciences</dd>
@@ -32,11 +49,9 @@
                 <li class="selected">
                     <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
-                <!-- /*
                 <li class="not-selected">
-                    <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/overview(competitionId=${model.competitionId})}">View status</a>
+                    <a aria-disabled="true" class="buttonlink disabled">View status</a>
                 </li>
-                */ -->
             </ul>
 
             <form method="POST" th:action="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
@@ -59,14 +74,12 @@
                             <th scope="col" class="width-small">Application number</th>
                             <th scope="col">Project title</th>
                             <th scope="col">Lead organisation</th>
-<!--/*
                             <td scope="col" class="alignright">
-                                <button name="removeAll" class="buttonlink alignright"
+                                <button name="removeAll" class="buttonlink alignright disabled" aria-disabled="true"
                                         th:if="${!#lists.isEmpty(model.applications)}">
                                     Remove all
                                 </button>
                             </td>
-*/-->
                         </tr>
                         </thead>
                         <tbody>
@@ -78,13 +91,11 @@
                             </td>
                             <td th:text="${app.applicationName}">Application name</td>
                             <td th:text="${app.leadOrganisation}">Lead organisation</td>
-<!--/*
                             <td class="alignright">
-                                <button class="buttonlink alignright" name="remove" th:value="${app.id}">
+                                <button class="buttonlink alignright disabled" name="remove" th:value="${app.id}" aria-disabled="true">
                                     <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
                                 </button>
                             </td>
-*/-->
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.applications)}">
                             <td colspan="5">There are no applications to be invited to this panel.</td>
