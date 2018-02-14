@@ -29,6 +29,9 @@ ext.LDAP_BASEDN="dc=nodomain"
 ext.LDAP_BINDDN="cn=admin,dc=nodomain"
 ext.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
 
+ext.SHIBBOLETH_LDAP_PORT="389"
+ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
+
 
 ext.NEW_RELIC_LICENCE_KEY=""
 // we can use openshiftEnv in place of NEWRELIC_ENVIRONMENT

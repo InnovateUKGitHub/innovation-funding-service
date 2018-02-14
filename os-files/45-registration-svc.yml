@@ -56,13 +56,13 @@ items:
           - name: LDAP_URL
             value: ${LDAP_URL}
           - name: SHIBBOLETH_LDAP_PORT
-            value: "<<SHIBBOLETH_LDAP_PORT>>"
+            value: "${SHIBBOLETH_LDAP_PORT}"
           - name: SHIBBOLETH_LDAP_BASE_DN
-            value: "<<SHIBBOLETH_LDAP_BASE_DN>>"
+            value: "${LDAP_BASEDN}"
           - name: SHIBBOLETH_LDAP_USER
-            value: "<<SHIBBOLETH_LDAP_USER>>"
+            value: "${SHIBBOLETH_LDAP_USER}"
           - name: LDAP_PASSWORD
-            value: ${LDAP_PASSWORD}
+            value: "${LDAP_PASSWORD}"
           - name: SHIBBOLETH_API_KEYS
             value: "1234567890"
           ports:

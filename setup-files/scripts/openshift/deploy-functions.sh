@@ -267,7 +267,7 @@ function tailorAppInstance() {
 #    substituteOptionalEnvVariable SHIBBOLETH_IDP_MEMORY_REQUEST "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
 #    substituteMandatoryEnvVariable SHIBBOLETH_IDP_MEMORY_LIMIT "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
 #    substituteOptionalEnvVariable GA_TRACKING_ID "<<GA-TRACKING-ID>>"
-#    substituteMandatoryEnvVariable LDAP_USESSL "<<LDAP_USESSL>>"
+#    substituteMandatoryEnvVariable LDAP_USESSL "450<<LDAP_USESSL>>"
 #    substituteMandatoryEnvVariable LDAP_BASEDN "<<LDAP_BASEDN>>"
 #    substituteMandatoryEnvVariable LDAP_BINDDN "<<LDAP_BINDDN>>"
 #    substituteMandatoryEnvVariable LDAP_AUTHENTICATOR "<<LDAP_AUTHENTICATOR>>"
@@ -277,17 +277,17 @@ function tailorAppInstance() {
 
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
-    if $(isNamedEnvironment ${TARGET}); then
-
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
-
-    else
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
-    fi
+#    if $(isNamedEnvironment ${TARGET}); then
+#
+#        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
+#        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
+#        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
+#
+#    else
+#        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
+#        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
+#        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
+#    fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
