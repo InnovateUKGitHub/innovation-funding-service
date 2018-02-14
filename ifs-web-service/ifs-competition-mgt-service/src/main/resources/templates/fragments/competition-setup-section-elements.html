@@ -25,12 +25,18 @@
                 <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
                     <dt class="column-third">Appendix</dt>
-                    <dd class="column-two-thirds" th:if="${question.appendix}">
-                        <ul th:each="fileType : ${question.allowedFileTypes}">
-                            <li th:text="${fileType}"></li>
-                        </ul>
-                    </dd>
+                    <dd class="column-two-thirds" th:if="${question.appendix}">Yes</dd>
                     <dd class="column-two-thirds" th:unless="${question.appendix}">No</dd>
+                    <th:block th:if="${question.appendix}">
+                        <dt class="column-third">Accepted appendix file types</dt>
+                        <dd class="column-two-thirds">
+                            <ul th:each="fileType : ${question.allowedFileTypes}">
+                                <li th:text="${fileType}"></li>
+                            </ul>
+                        </dd>
+                        <dt class="column-third">Appendix guidance</dt>
+                        <dd class="column-two-thirds wysiwyg-styles" ifs:utext="${question.fileUploadGuidance}"></dd>
+                    </th:block>
                 </th:block>
             </dl>
         </fieldset>
@@ -213,11 +219,11 @@
                     </div>
                 </fieldset>
             </div>
-            <div  id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}" th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
-                <div class="form-group">
+            <div  id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
                     <fieldset>
                         <legend id="question.allowedFileTypes">
-                            <span class="form-label-bold">Appendix file type</span>
+                            <span class="form-label-bold">Accepted appendix file types</span>
                             <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypes')}" th:text="${err}" ></span>
                             </th:block>
