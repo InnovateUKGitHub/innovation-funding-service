@@ -68,21 +68,21 @@ items:
           - name: HTTP_PORT
             value: "9080"
           - name: MEMCACHE_ENDPOINT
-            value: ${SHIBBOLETH_MEMCACHE_ENDPOINT}
+            value: "${SHIBBOLETH_MEMCACHE_ENDPOINT}"
           - name: LDAP_URL
-            value: ${LDAP_URL}
+            value: "${LDAP_URL}"
           - name: LDAP_PORT
             value: "389"
           - name: LDAP_USESTARTTLS
             value: "false"
           - name: LDAP_USESSL
-            value: ${LDAP_USESSL}
+            value: "${LDAP_USESSL}"
           - name: LDAP_BASEDN
-            value: ${LDAP_BASEDN}
+            value: "${LDAP_BASEDN}"
           - name: LDAP_BINDDN
-            value: ${LDAP_BINDDN}
+            value: "${LDAP_BINDDN}"
           - name: LDAP_BINDDNCREDENTIAL
-            value: ${LDAP_PASSWORD}
+            value: "${LDAP_PASSWORD}"
           - name: LDAP_USERFILTER
             value: "(&(mail={user})(!(employeeType=inactive)))"
           - name: LDAP_ATTRIBUTE_SEARCHFILTER
@@ -90,15 +90,15 @@ items:
           - name: LDAP_RETURNATTRIBUTES
             value: "mail,uid"
           - name: LDAP_AUTHENTICATOR
-            value: ${LDAP_AUTHENTICATOR}
+            value: "${LDAP_AUTHENTICATOR}"
           - name: GOOGLEANALYTICS_TRACKINGID
-            value: ${GA_TRACKING_ID}
+            value: "${GA_TRACKING_ID}"
           ports:
           - containerPort: 9443
           - containerPort: 9080
           resources:
             requests:
-              memory:${SHIBBOLETH_IDP_MEMORY_REQUEST}
+              memory: ${SHIBBOLETH_IDP_MEMORY_REQUEST}
             limits:
               memory: ${SHIBBOLETH_IDP_MEMORY_LIMIT}
           test: false

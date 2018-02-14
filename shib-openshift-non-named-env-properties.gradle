@@ -13,7 +13,7 @@ ext.SHIBBOLETH_SP_MEMORY_REQUEST="300Mi"
 ext.SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
 
 // For shib and idp
-ext.SHIBBOLETH_MEMCACHE_ENDPOINT="\"\" "
+ext.SHIBBOLETH_MEMCACHE_ENDPOINT=""
 
 
 ext.LDAP_URL="ldaps://ldap:389"
@@ -23,12 +23,12 @@ ext.LDAP_PASSWORD="default"
 
 ext.SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
-ext.GA_TRACKING_ID= "\"\" "
+ext.GA_TRACKING_ID=""
 ext.LDAP_USESSL="true"
 ext.LDAP_BASEDN="dc=nodomain"
 ext.LDAP_BINDDN="cn=admin,dc=nodomain"
 ext.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
 
 
-ext.NEW_RELIC_LICENCE_KEY="\"\""
+ext.NEW_RELIC_LICENCE_KEY=""
 // we can use openshiftEnv in place of NEWRELIC_ENVIRONMENT

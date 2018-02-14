@@ -57,21 +57,21 @@ items:
           - name: HTTP_PORT
             value: "9080"
           - name: MPM_STARTSERVERS
-            value: ${SHIBBOLETH_SP_MPM_STARTSERVERS}
+            value: "${SHIBBOLETH_SP_MPM_STARTSERVERS}"
           - name: MPM_MINSPARETHREADS
-            value: ${SHIBBOLETH_SP_MPM_MINSPARETHREADS}
+            value: "${SHIBBOLETH_SP_MPM_MINSPARETHREADS}"
           - name: MPM_MAXSPARETHREADS
-            value: ${SHIBBOLETH_SP_MPM_MAXSPARETHREADS}
+            value: "${SHIBBOLETH_SP_MPM_MAXSPARETHREADS}"
           - name: MPM_THREADLIMIT
-            value: ${SHIBBOLETH_SP_MPM_THREADLIMIT}
+            value: "${SHIBBOLETH_SP_MPM_THREADLIMIT}"
           - name: MPM_THREADSPERCHILD
-            value: ${SHIBBOLETH_SP_MPM_THREADSPERCHILD}
+            value: "${SHIBBOLETH_SP_MPM_THREADSPERCHILD}"
           - name: MPM_MAXREQUESTWORKERS
-            value: ${SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS}
+            value: "${SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS}"
           - name: MPM_MAXCONNECTIONSPERCHILD
-            value: ${SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD}
+            value: "${SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD}"
           - name: MEMCACHE_ENDPOINT
-            value: ${SHIBBOLETH_MEMCACHE_ENDPOINT}
+            value: "${SHIBBOLETH_MEMCACHE_ENDPOINT}"
           ports:
           - containerPort: 9443
           - containerPort: 9080
