@@ -6,13 +6,13 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A Builder for Form Inputs.  By default this builder will assign unique ids and descriptions based upon the ids.
@@ -64,7 +64,7 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 
-    public FormInputResourceBuilder withAllowedFileTypes(List<FileTypeCategories>... fileTypes) {
-        return withArray((types, formInput) -> formInput.setAllowedFileTypes(simpleJoiner(simpleMap(types, FileTypeCategories::getDisplayName), ",")), fileTypes);
+    public FormInputResourceBuilder withAllowedFileTypes(Collection<FileTypeCategories>... fileTypes) {
+        return withArray((types, formInput) -> setField("allowedFileTypes", newHashSet(types), formInput), fileTypes);
     }
 }
