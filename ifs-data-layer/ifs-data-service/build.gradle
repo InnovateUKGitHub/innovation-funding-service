@@ -5,6 +5,7 @@ apply from: targetBuild + "-build.gradle"
 
 apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'
+apply from: "../database-support.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
@@ -184,13 +185,6 @@ task generateMainMapperClasses(type: JavaCompile) {
 task syncShib(type:Exec) {
     workingDir '../'
     commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
-}
-
-task initDB() {
-    flywayMigrate.mustRunAfter flywayClean
-
-    dependsOn flywayClean
-    dependsOn flywayMigrate
 }
 
 compileJava.dependsOn generateMainMapperClasses

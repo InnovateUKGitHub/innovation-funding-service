@@ -6,6 +6,9 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * View model to back the Finance Checks page.
@@ -14,7 +17,9 @@ public class ProjectFinanceChecksViewModel {
     private Long projectId;
     private Long organisationId;
     private String projectName;
-    private List<ThreadViewModel> queries;
+    private List<ThreadViewModel> pendingQueries;
+    private List<ThreadViewModel> awaitingResponseQueries;
+    private List<ThreadViewModel> closedQueries;
     private boolean approved;
     private Map<Long, String> newAttachmentLinks;
     private int maxQueryWords;
@@ -24,7 +29,10 @@ public class ProjectFinanceChecksViewModel {
     private boolean isAcademic;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
-                                         List<ThreadViewModel> queries, boolean approved,
+                                         List<ThreadViewModel> pendingQueries,
+                                         List<ThreadViewModel> awaitingResponseQueries,
+                                         List<ThreadViewModel> closedQueries,
+                                         boolean approved,
                                          Map<Long, String> newAttachmentLinks,
                                          int maxQueryWords,
                                          int maxQueryCharacters,
@@ -34,7 +42,9 @@ public class ProjectFinanceChecksViewModel {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
-        this.queries = queries;
+        this.pendingQueries = pendingQueries;
+        this.awaitingResponseQueries = awaitingResponseQueries;
+        this.closedQueries = closedQueries;
         this.approved = approved;
         this.newAttachmentLinks = newAttachmentLinks;
         this.maxQueryWords = maxQueryWords;
@@ -68,12 +78,28 @@ public class ProjectFinanceChecksViewModel {
         this.projectName = projectName;
     }
 
-    public List<ThreadViewModel> getQueries() {
-        return queries;
+    public List<ThreadViewModel> getPendingQueries() {
+        return pendingQueries;
     }
 
-    public void setQueries(List<ThreadViewModel> queries) {
-        this.queries = queries;
+    public void setPendingQueries(List<ThreadViewModel> queries) {
+        this.pendingQueries = pendingQueries;
+    }
+
+    public List<ThreadViewModel> getAwaitingResponseQueries() {
+        return awaitingResponseQueries;
+    }
+
+    public void setAwaitingResponseQueries(List<ThreadViewModel> queries) {
+        this.awaitingResponseQueries = awaitingResponseQueries;
+    }
+
+    public List<ThreadViewModel> getClosedQueries() {
+        return closedQueries;
+    }
+
+    public void setClosedQueries(List<ThreadViewModel> queries) {
+        this.closedQueries = closedQueries;
     }
 
     public boolean isApproved() {
@@ -134,6 +160,26 @@ public class ProjectFinanceChecksViewModel {
     }
 
     public boolean isSingleQuery() {
-        return queries.size() == 1;
+        return combineLists(pendingQueries, awaitingResponseQueries, closedQueries).size() == 1;
+    }
+
+    public boolean noQueries() {
+        return pendingQueries.isEmpty() && awaitingResponseQueries.isEmpty() && closedQueries.isEmpty();
+    }
+
+    public boolean onlyClosedQueries() {
+        return !noQueries() && pendingQueries.isEmpty() && awaitingResponseQueries.isEmpty();
+    }
+
+    public boolean anyPendingQueries() {
+        return !pendingQueries.isEmpty();
+    }
+
+    public boolean onePendingQuery() {
+        return pendingQueries.size() == 1;
+    }
+
+    public boolean noPendingAndAnyAwaitingResponseQueries() {
+        return pendingQueries.isEmpty() && !awaitingResponseQueries.isEmpty();
     }
 }
