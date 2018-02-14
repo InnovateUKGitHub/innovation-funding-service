@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +15,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 public class ApplicationSummarisationServiceImpl implements ApplicationSummarisationService {
-
-	@Autowired
-	private FinanceRowCostsService financeRowCostsService;
 
 	@Autowired
 	private FinanceRowService financeRowService;

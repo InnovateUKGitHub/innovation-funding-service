@@ -11,8 +11,6 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
-import org.innovateuk.ifs.finance.handler.item.SubContractingCostHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -52,13 +50,7 @@ import static org.mockito.Mockito.*;
 public class FinanceRowCostsServiceImplTest extends BaseServiceUnitTest<FinanceRowCostsServiceImpl> {
 
     @Mock
-    private OrganisationFinanceHandler organisationFinanceHandlerMock;
-
-    @Mock
     private OrganisationFinanceDefaultHandler organisationFinanceDefaultHandlerMock;
-
-    @Mock
-    private SubContractingCostHandler subContractingCostHandler;
 
     @Override
     protected FinanceRowCostsServiceImpl supplyServiceUnderTest() {
