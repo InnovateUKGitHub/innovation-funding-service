@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInviteResource;
-import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationInviteRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.InterviewPanelInviteApplicationsInviteViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class InterviewPanelInviteApplicationsInviteModelPopulator {
 
     @Autowired
-    private InterviewPanelInviteRestService interviewPanelInviteRestService;
+    private InterviewPanelRestService interviewPanelRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -30,7 +32,7 @@ public class InterviewPanelInviteApplicationsInviteModelPopulator {
                 .getCompetitionById(competitionId)
                 .getSuccess();
 
-        InterviewPanelCreatedInvitePageResource pageResource = interviewPanelInviteRestService
+        InterviewPanelCreatedInvitePageResource pageResource = interviewPanelRestService
                 .getCreatedInvites(competition.getId(), page)
                 .getSuccess();
 

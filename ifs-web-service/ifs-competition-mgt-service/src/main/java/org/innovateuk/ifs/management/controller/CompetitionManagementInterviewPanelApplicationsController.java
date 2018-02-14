@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
 import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
@@ -14,7 +15,7 @@ import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.PanelSelectionForm;
 import org.innovateuk.ifs.management.model.InterviewPanelInviteApplicationsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewPanelInviteApplicationsInviteModelPopulator;
-import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentPanelInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelInviteApplicationsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,24 +48,15 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 public class CompetitionManagementInterviewPanelApplicationsController extends CompetitionManagementCookieController<PanelSelectionForm> {
 
     private static final String SELECTION_FORM = "interviewPanelApplicationSelectionForm";
-    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private ReviewPanelInviteRestService reviewPanelInviteRestService;
-
-    @Autowired
-    private InterviewPanelInviteRestService interviewPanelInviteRestService;
+    private InterviewPanelRestService interviewPanelRestService;
 
     @Autowired
     private InterviewPanelInviteApplicationsFindModelPopulator interviewPanelInviteApplicationsFindModelPopulator;
 
     @Autowired
     private InterviewPanelInviteApplicationsInviteModelPopulator interviewPanelInviteApplicationsInviteModelPopulator;
-
-
-
-    @Autowired
-    private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
     @Override
     protected String getCookieName() {
@@ -76,10 +68,6 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         return PanelSelectionForm.class;
     }
 
-//    @GetMapping
-//    public String applications(@PathVariable("competitionId") long competitionId) {
-//        return format("redirect:/competition/%s/applications/panel-find", competitionId);
-//    }
 
     @GetMapping("/find")
     public String find(Model model,
@@ -192,7 +180,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         }
 
     private List<Long> getAllAssessorIds(long competitionId) {
-        return interviewPanelInviteRestService.getAvailableApplicationIds(competitionId).getSuccess();
+        return interviewPanelRestService.getAvailableApplicationIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -211,7 +199,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> restResult = interviewPanelInviteRestService.assignApplications(
+            RestResult<Void> restResult = interviewPanelRestService.assignApplications(
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)
@@ -245,49 +233,6 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         model.addAttribute("originQuery", originQuery); // TODO do we need this for assigning to interview?
 
         return "assessors/interview-panel-invite";
-    }
-
-    @GetMapping("/accepted")
-    public String accepted(Model model,
-                           @PathVariable("competitionId") long competitionId,
-                           @RequestParam(defaultValue = "0") int page,
-                           @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
-
-        model.addAttribute("model", panelInviteAssessorsAcceptedModelPopulator.populateModel(
-                competitionId,
-                page,
-                originQuery
-        ));
-
-        return "assessors/panel-accepted";
-    }
-
-    @PostMapping(value = "/invite", params = {"remove"})
-    public String removeInviteFromInviteView(Model model,
-                                             @PathVariable("competitionId") long competitionId,
-                                             @RequestParam(name = "remove") String email,
-                                             @RequestParam(defaultValue = "0") int page,
-                                             @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteInvite(email, competitionId).getSuccess();
-        return redirectToInvite(competitionId, page);
-    }
-
-    @PostMapping(value = "/invite", params = {"removeAll"})
-    public String removeAllInvitesFromInviteView(Model model,
-                                                 @PathVariable("competitionId") long competitionId,
-                                                 @RequestParam(defaultValue = "0") int page,
-                                                 @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
-        deleteAllInvites(competitionId).getSuccess();
-        return redirectToInvite(competitionId, page);
-    }
-
-    private ServiceResult<Void> deleteInvite(String email, long competitionId) {
-        return reviewPanelInviteRestService.deleteInvite(email, competitionId).toServiceResult();
-    }
-
-    private ServiceResult<Void> deleteAllInvites(long competitionId) {
-        return reviewPanelInviteRestService.deleteAllInvites(competitionId).toServiceResult();
     }
 
     private String redirectToInvite(long competitionId, int page) {

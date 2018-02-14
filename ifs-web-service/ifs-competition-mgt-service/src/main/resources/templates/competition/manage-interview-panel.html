@@ -35,7 +35,7 @@
     <ul class="link-list extra-margin">
         <li><a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Assign applications</a></li>
 
-        <li><a class="disabled" aria-disabled="true">Invite assessors</a></li>
+        <li><a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors</a></li>
 
         <li><p class="extra-margin">You can allocate applications to assessors once they have responded.</p></li>
 

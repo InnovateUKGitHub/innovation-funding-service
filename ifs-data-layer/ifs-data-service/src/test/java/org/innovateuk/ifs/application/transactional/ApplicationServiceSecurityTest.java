@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
@@ -340,6 +341,18 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         );
     }
 
+    @Test
+    public void updateApplicationProgress() {
+        when(applicationLookupStrategy.getApplicationResource(1L)).thenReturn(newApplicationResource().build());
+
+        assertAccessDenied(
+                () -> classUnderTest.updateApplicationProgress(1L),
+                () -> verify(applicationRules).applicantCanUpdateApplicationResource(
+                        isA(ApplicationResource.class),
+                        isA(UserResource.class)
+                ));
+    }
+
     @Override
     protected Class<? extends ApplicationService> getClassUnderTest() {
         return TestApplicationService.class;
@@ -432,12 +445,17 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
+        public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
             return null;
         }
 
         @Override
-        public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
+        public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
             return null;
         }
 

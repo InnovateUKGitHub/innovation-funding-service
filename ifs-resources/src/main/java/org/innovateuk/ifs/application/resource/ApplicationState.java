@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
-
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
@@ -17,8 +18,13 @@ public enum ApplicationState implements ProcessState {
     REJECTED(State.REJECTED),
     OPEN(State.OPEN),
     IN_PANEL(State.IN_PANEL);
-
     final State backingState;
+
+    public static final ImmutableSet<ApplicationState> submittedStates = Sets.immutableEnumSet(ApplicationState.SUBMITTED,
+            ApplicationState.INELIGIBLE,
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.INELIGIBLE_INFORMED);
 
     ApplicationState(State backingState) {
         this.backingState = backingState;

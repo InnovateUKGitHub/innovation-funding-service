@@ -16,10 +16,8 @@ import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.ZonedDateTime;
@@ -27,6 +25,7 @@ import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,7 +36,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
-@RunWith(MockitoJUnitRunner.class)
 public class UserManagementControllerTest extends BaseControllerMockMVCTest<UserManagementController>{
 
     private UserPageResource userPageResource;
@@ -139,7 +137,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void updateUserSuccess() throws Exception {
 
         when(internalUserServiceMock.editInternalUser(Mockito.any()))
-                .thenReturn(ServiceResult.serviceSuccess());
+                .thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                 param("firstName", "First").
@@ -342,6 +340,19 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .andExpect(model().attribute("tab", "invites"))
                 .andExpect(model().attribute("mode", "search"))
                 .andExpect(model().attribute("invites", emptyList()));
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
+
+        when(inviteUserRestServiceMock.resendInternalUserInvite(123L)).
+                thenReturn(restSuccess());
+
+        mockMvc.perform(post("/admin/users/pending/resend-invite?inviteId=" + 123L))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/admin/users/pending"));
+
+        verify(inviteUserRestServiceMock).resendInternalUserInvite(123L);
     }
 
     @Override
