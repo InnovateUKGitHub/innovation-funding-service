@@ -37,7 +37,7 @@ public class ValidationHandler {
     }
 
     private ValidationHandler addAnyErrors(List<Error> errors, ErrorToObjectErrorConverter converter, ErrorToObjectErrorConverter... otherConverters) {
-        errors.stream().distinct().forEach(e -> {
+        errors.forEach(e -> {
             List<Optional<ObjectError>> optionalConversionsForThisError = simpleMap(combineLists(converter, otherConverters), fn -> fn.apply(e));
             Optional<Optional<ObjectError>> successfullyConvertedErrorList = simpleFindFirst(optionalConversionsForThisError, Optional::isPresent);
 

@@ -500,7 +500,7 @@ public class AssessmentInterviewPanelInviteServiceImplTest extends BaseServiceUn
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_assessors_panel_text.txt";
+        String templatePath = "invite_assessors_to_interview_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(assessmentInterviewPanelInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
