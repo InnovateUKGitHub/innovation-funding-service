@@ -25,6 +25,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
@@ -506,19 +507,32 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
 
-        return getProject(projectId).andOnSuccess(project -> {
-            if (golWorkflowHandler.isReadyToApprove(project)) {
-                if (ApprovalType.APPROVED == approvalType) {
-                    return approveGOL(project)
-                            .andOnSuccess(() -> moveProjectToLiveState(project));
-                } else if (ApprovalType.REJECTED == approvalType) {
-                    return rejectGOL(project);
+        return validateApprovalOrRejection(grantOfferLetterApprovalResource).andOnSuccess(() ->
+            getProject(projectId).andOnSuccess(project -> {
+                if (golWorkflowHandler.isReadyToApprove(project)) {
+                    if (ApprovalType.APPROVED == grantOfferLetterApprovalResource.getApprovalType()) {
+                        return approveGOL(project)
+                                .andOnSuccess(() -> moveProjectToLiveState(project));
+                    } else if (ApprovalType.REJECTED == grantOfferLetterApprovalResource.getApprovalType()) {
+                        return rejectGOL(project, grantOfferLetterApprovalResource.getRejectionReason());
+                    }
                 }
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
+        }));
+    }
+
+    private ServiceResult<Void> validateApprovalOrRejection(GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
+        if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+            if (grantOfferLetterApprovalResource.getRejectionReason() != null && org.apache.commons.lang3.StringUtils.trim(grantOfferLetterApprovalResource.getRejectionReason()).length() > 0) {
+                return serviceSuccess();
             }
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
-        });
+        } else if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+            return serviceSuccess();
+        }
+
+        return serviceFailure(GENERAL_INVALID_ARGUMENT);
     }
 
     private ServiceResult<Void> moveProjectToLiveState(Project project) {
@@ -545,12 +559,13 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         });
     }
 
-    private ServiceResult<Void> rejectGOL(Project project) {
+    private ServiceResult<Void> rejectGOL(Project project, String golRejectionReason) {
 
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
 
             if (golWorkflowHandler.grantOfferLetterRejected(project, user)) {
                 project.setOfferSubmittedDate(null);
+                project.setGrantOfferLetterRejectionReason(golRejectionReason);
                 return serviceSuccess();
             } else {
                 LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
