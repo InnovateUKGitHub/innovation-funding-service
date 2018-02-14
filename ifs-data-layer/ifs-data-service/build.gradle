@@ -41,7 +41,6 @@ tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":late
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
-ext.ifsFinanceTotalsEnabled=true
 
 sourceSets {
     client {
