@@ -16,8 +16,8 @@ import java.util.List;
  * Controller for managing Invites to Assessment Panels.
  */
 @RestController
-@RequestMapping("/interview-panel-invite")
-public class InterviewPanelInviteController {
+@RequestMapping("/interview-panel")
+public class InterviewPanelController {
 
     private static final int DEFAULT_PAGE_SIZE = 20;
 

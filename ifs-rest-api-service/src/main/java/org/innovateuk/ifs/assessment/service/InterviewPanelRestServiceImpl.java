@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
 @Service
 public class InterviewPanelRestServiceImpl extends BaseRestService implements InterviewPanelRestService {
 
-    private static final String REST_URL = "/interview-panel-invite"; // TODO needs changing
+    private static final String REST_URL = "/interview-panel";
 
     @Override
     public RestResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, int page) {
