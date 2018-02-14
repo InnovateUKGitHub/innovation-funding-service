@@ -17,8 +17,15 @@
               <ul class="error-summary-list">
                   <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
                       <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
-                      <!--/* Add a 1 to accurateAccount field name as it is a checkbox which increments the id's*/-->
-                      <a th:if="${err.fieldName}" th:href="|#${err.fieldName == 'accurateAccount' ? 'accurateAccount1' : err.fieldName}|" th:text="${err.message}">The error message</a>
+                      <!--/* Add a 1 to radio button and checkbox inputs for error message links*/-->
+                      <div th:switch="${err.fieldName}">
+                          <a th:case="'accurateAccount'" th:href="|#accurateAccount1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasAppointments'" th:href="|#hasAppointments1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasFinancialInterests'" th:href="|#hasFinancialInterests1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasFamilyAffiliations'" th:href="|#hasFamilyAffiliations1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasFamilyFinancialInterests'" th:href="|#hasFamilyFinancialInterests1|" th:text="${err.message}">The error message</a>
+                          <a th:case="*" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                      </div>
                   </li>
               </ul>
             </div>
@@ -92,21 +99,21 @@
                                 <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}"></span>
                             </th:block>
                         </legend>
-                        <div class="multiple-choice" data-target="toggle-appointments">
-                            <input value="yes" type="radio" th:field="*{hasAppointments}"
-                                   data-repeatable-rowcontainer="#position-table tbody"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
-                                   data-conditionally-add-required="input.appointment-field" />
-                            <label th:for="${#ids.prev('hasAppointments')}">Yes</label>
-                        </div>
-                        <div class="multiple-choice">
-                            <input value="no" type="radio" th:field="*{hasAppointments}"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
-                                   data-conditionally-remove-required="input.appointment-field" />
-                            <label th:for="${#ids.prev('hasAppointments')}">No</label>
-                        </div>
+                            <div class="multiple-choice" data-target="toggle-appointments">
+                                <input value="yes" type="radio" th:field="*{hasAppointments}"
+                                       data-repeatable-rowcontainer="#position-table tbody"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
+                                       data-conditionally-add-required="input.appointment-field" />
+                                <label th:for="${#ids.prev('hasAppointments')}">Yes</label>
+                            </div>
+                            <div class="multiple-choice">
+                                <input value="no" type="radio" th:field="*{hasAppointments}"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.hasAppointments.required}"
+                                       data-conditionally-remove-required="input.appointment-field" />
+                                <label th:for="${#ids.prev('hasAppointments')}">No</label>
+                            </div>
                     </fieldset>
 
                     <div class="panel js-hidden" id="toggle-appointments">
