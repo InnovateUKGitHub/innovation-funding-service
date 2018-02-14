@@ -28,6 +28,7 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -534,38 +535,49 @@ public class InviteServiceImplTest {
     }
 
     @Test
-    public void removeApplicationInvite_deletesInviteOrganisationAndOrganisationApplicationDataOnLastInvite() throws Exception {
+    public void removeApplicationInvite_deletesInviteOrganisationAndOrganisationOnLastInvite() throws Exception {
         User user = newUser().build();
-        Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();
-        ApplicationInvite applicationInviteToDelete = newApplicationInvite()
-                .withId(24521L)
-                .withUser(user)
-                .withApplication(application)
-                .withInviteOrganisation(newInviteOrganisation().withOrganisation(organisation).build())
+
+        List<ProcessRole> inviteProcessRoles = newProcessRole()
+                .withOrganisationId(organisation.getId())
+                .withRole(UserRoleType.COLLABORATOR)
+                .build(1);
+
+        Application application = newApplication()
+                .withProcessRoles(inviteProcessRoles.get(0))
                 .build();
 
-        List<ProcessRole> inviteProcessRoles = newProcessRole().withOrganisationId(1L).build(1);
-        ApplicationFinance applicationFinance = newApplicationFinance().build();
+        InviteOrganisation inviteOrganisation = newInviteOrganisation()
+                .withOrganisation(organisation)
+                .build();
 
-        when(applicationInviteMapper.mapIdToDomain(applicationInviteToDelete.getId())).thenReturn(applicationInviteToDelete);
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId()))
-                .thenReturn(applicationFinance);
+        ApplicationInvite invite = newApplicationInvite()
+                .withUser(user)
+                .withApplication(application)
+                .withInviteOrganisation(inviteOrganisation)
+                .build();
+
+        when(applicationInviteMapper.mapIdToDomain(invite.getId())).thenReturn(invite);
+        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId()))
+                .thenReturn(inviteProcessRoles);
         when(applicationServiceMock.updateApplicationProgress(application.getId()))
                 .thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
 
-        ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInviteToDelete.getId());
+        ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(invite.getId());
 
-        InOrder inOrder = inOrder(questionReassignmentServiceMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock, applicationFinanceRepositoryMock);
+        InOrder inOrder = inOrder(
+                questionReassignmentServiceMock,
+                processRoleRepositoryMock,
+                inviteOrganisationRepositoryMock
+        );
         inOrder.verify(questionReassignmentServiceMock).reassignCollaboratorResponsesAndQuestionStatuses(
-                applicationInviteToDelete.getTarget().getId(),
+                invite.getTarget().getId(),
                 inviteProcessRoles,
-                applicationInviteToDelete.getTarget().getLeadApplicantProcessRole()
+                invite.getTarget().getLeadApplicantProcessRole()
         );
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
-        inOrder.verify(inviteOrganisationRepositoryMock).delete(applicationInviteToDelete.getInviteOrganisation());
-        inOrder.verify(applicationFinanceRepositoryMock).delete(applicationFinance);
+        inOrder.verify(inviteOrganisationRepositoryMock).delete(invite.getInviteOrganisation());
         inOrder.verifyNoMoreInteractions();
 
         assertThat(applicationInviteResult.isSuccess()).isTrue();
@@ -574,10 +586,20 @@ public class InviteServiceImplTest {
     @Test
     public void removeApplicationInvite_deletesInviteFromInviteOrganisationButNotOrganisationFinanceData() throws Exception {
         User user = newUser().build();
-        Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();
+
+        List<ProcessRole> inviteProcessRoles = newProcessRole()
+                .withOrganisationId(organisation.getId())
+                .withRole(UserRoleType.COLLABORATOR)
+                .build(1);
+
+        Application application = newApplication()
+                .withProcessRoles(inviteProcessRoles.get(0))
+                .build();
+
         InviteOrganisation inviteOrganisation = newInviteOrganisation()
-                .withOrganisation(organisation).build();
+                .withOrganisation(organisation)
+                .build();
 
         List<ApplicationInvite> applicationInvites = newApplicationInvite()
                 .withUser(user)
@@ -588,43 +610,43 @@ public class InviteServiceImplTest {
         ApplicationInvite applicationInviteToDelete = applicationInvites.get(0);
         inviteOrganisation.setInvites(applicationInvites);
 
-        List<ProcessRole> inviteProcessRoles = newProcessRole().withOrganisationId(organisation.getId()).build(1);
+        when(applicationInviteMapper.mapIdToDomain(applicationInviteToDelete.getId()))
+                .thenReturn(applicationInviteToDelete);
+        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId()))
+                .thenReturn(inviteProcessRoles);
 
-        when(applicationInviteMapper.mapIdToDomain(applicationInviteToDelete.getId())).thenReturn(applicationInviteToDelete);
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
-        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId()))
-                .thenReturn(newProcessRole().withOrganisationId(1L).build(1));
+        ServiceResult<Void> applicationInviteResult =
+                inviteService.removeApplicationInvite(applicationInviteToDelete.getId());
 
-        ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInviteToDelete.getId());
-
-        InviteOrganisation expectedApplicationInvite = inviteOrganisation;
-        expectedApplicationInvite.getInvites().remove(applicationInviteToDelete);
-
-        InOrder inOrder = inOrder(
-                questionReassignmentServiceMock,
-                processRoleRepositoryMock,
-                inviteOrganisationRepositoryMock,
-                applicationFinanceRepositoryMock
-        );
+        InOrder inOrder = inOrder(questionReassignmentServiceMock, processRoleRepositoryMock);
         inOrder.verify(questionReassignmentServiceMock).reassignCollaboratorResponsesAndQuestionStatuses(
                 applicationInviteToDelete.getTarget().getId(),
                 inviteProcessRoles,
                 applicationInviteToDelete.getTarget().getLeadApplicantProcessRole()
         );
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
-        inOrder.verify(inviteOrganisationRepositoryMock).save(expectedApplicationInvite);
         inOrder.verifyNoMoreInteractions();
 
         assertThat(applicationInviteResult.isSuccess()).isTrue();
     }
 
     @Test
-    public void removeApplicationInvite_deletesInviteFromInviteOrganisationAndOrganisationFinanceData() throws Exception {
+    public void removeApplicationInvite_deletesInviteFromInviteOrganisationAndOrganisationFinanceDataIfLastActiveUser() {
         User user = newUser().build();
-        Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();
+
+        List<ProcessRole> inviteProcessRoles = newProcessRole()
+                .withOrganisationId(organisation.getId())
+                .withRole(UserRoleType.COLLABORATOR)
+                .build(1);
+
+        Application application = newApplication()
+                .withProcessRoles(inviteProcessRoles.get(0))
+                .build();
+
         InviteOrganisation inviteOrganisation = newInviteOrganisation()
-                .withOrganisation(organisation).build();
+                .withOrganisation(organisation)
+                .build();
 
         List<ApplicationInvite> applicationInvites = newApplicationInvite()
                 .withUser(user)
@@ -635,23 +657,28 @@ public class InviteServiceImplTest {
         ApplicationInvite applicationInviteToDelete = applicationInvites.get(0);
         inviteOrganisation.setInvites(applicationInvites);
 
-        List<ProcessRole> inviteProcessRoles = newProcessRole().withOrganisationId(organisation.getId()).build(1);
         ApplicationFinance applicationFinance = newApplicationFinance().build();
 
-        when(applicationInviteMapper.mapIdToDomain(applicationInviteToDelete.getId())).thenReturn(applicationInviteToDelete);
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
-        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(inviteProcessRoles);
-        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(applicationFinance);
-        when(applicationServiceMock.updateApplicationProgress(application.getId())).thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
+        when(applicationInviteMapper.mapIdToDomain(applicationInviteToDelete.getId()))
+                .thenReturn(applicationInviteToDelete);
+        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId()))
+                .thenReturn(inviteProcessRoles);
+        when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(
+                application.getId(),
+                organisation.getId()
+        ))
+                .thenReturn(applicationFinance);
+        when(applicationServiceMock.updateApplicationProgress(application.getId()))
+                .thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
 
-        ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInviteToDelete.getId());
+        ServiceResult<Void> applicationInviteResult =
+                inviteService.removeApplicationInvite(applicationInviteToDelete.getId());
 
         inviteOrganisation.getInvites().remove(applicationInviteToDelete);
 
         InOrder inOrder = inOrder(
                 questionReassignmentServiceMock,
                 processRoleRepositoryMock,
-                inviteOrganisationRepositoryMock,
                 applicationFinanceRepositoryMock
         );
         inOrder.verify(questionReassignmentServiceMock).reassignCollaboratorResponsesAndQuestionStatuses(
@@ -660,8 +687,11 @@ public class InviteServiceImplTest {
                 applicationInviteToDelete.getTarget().getLeadApplicantProcessRole()
         );
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(applicationFinanceRepositoryMock).findByApplicationIdAndOrganisationId(
+                application.getId(),
+                organisation.getId()
+        );
         inOrder.verify(applicationFinanceRepositoryMock).delete(applicationFinance);
-        inOrder.verify(inviteOrganisationRepositoryMock).save(inviteOrganisation);
         inOrder.verifyNoMoreInteractions();
 
         assertThat(applicationInviteResult.isSuccess()).isTrue();

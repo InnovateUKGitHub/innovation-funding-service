@@ -55,8 +55,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -283,39 +282,30 @@ public class InviteServiceImpl extends BaseApplicationInviteService implements I
 
         InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
+        if (isRemovingLastActiveCollaboratorUser(application, inviteOrganisation)) {
+            deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
+            inviteOrganisation.setOrganisation(null);
+        }
+
         if (inviteOrganisation.isOnLastInvite()) {
             inviteOrganisationRepository.delete(inviteOrganisation);
-            deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
-
         } else {
-            boolean isLastActiveUser = isRemovingTheLastActiveUserUnderOrganisation(
-                    application.getId(),
-                    collaboratorProcessRoles
-            );
-
-            if (isLastActiveUser) {
-                deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
-                inviteOrganisation.setOrganisation(null);
-            }
-
             inviteOrganisation.getInvites().remove(applicationInvite);
-            inviteOrganisationRepository.save(inviteOrganisation);
         }
     }
 
-    private boolean isRemovingTheLastActiveUserUnderOrganisation(long applicationId, List<ProcessRole> collaboratorProcessRoles) {
-        if (collaboratorProcessRoles.isEmpty()) {
+    private boolean isRemovingLastActiveCollaboratorUser(
+            Application application,
+            InviteOrganisation inviteOrganisation
+    ) {
+        if (inviteOrganisation.getOrganisation() == null) {
             return false;
         }
 
-        List<ProcessRole> remainingOrganisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(
-                applicationId,
-                collaboratorProcessRoles.get(0).getOrganisationId()
+        return !simpleAnyMatch(
+                application.getProcessRoles(),
+                processRole -> processRole.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId())
         );
-
-        remainingOrganisationRoles.removeAll(collaboratorProcessRoles);
-
-        return remainingOrganisationRoles.isEmpty();
     }
 
     private void deleteOrganisationFinanceData(Organisation organisation, Application application) {
