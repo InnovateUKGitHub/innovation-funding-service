@@ -148,6 +148,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         CsvUtils.ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
                 l.title.equals(applicationData.getApplication().getName()));
 
+        if (!applicationLine.createFinances) {
+            return emptyList();
+        }
+
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r -> r.competitionName.equals(applicationLine.competitionName) && r.applicationName.equals(applicationLine.title));
 
@@ -197,6 +201,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
         CsvUtils.ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
                 l.title.equals(applicationData.getApplication().getName()));
+
+        if (!applicationLine.createFinances) {
+            return emptyList();
+        }
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 

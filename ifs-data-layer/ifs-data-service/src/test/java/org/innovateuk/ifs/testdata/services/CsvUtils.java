@@ -326,6 +326,7 @@ public class CsvUtils {
         public List<String> collaborators;
         public ZonedDateTime submittedDate;
         public ApplicationState status;
+        public boolean createFinances;
         public boolean markFinancesComplete;
         public String researchCategory;
         public String innovationArea;
@@ -344,6 +345,7 @@ public class CsvUtils {
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
             status = ApplicationState.valueOf(line.get(i++).toUpperCase());
+            createFinances = nullableBoolean(line.get(i++));
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
