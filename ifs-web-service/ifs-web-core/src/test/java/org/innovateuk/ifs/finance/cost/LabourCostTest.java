@@ -81,17 +81,17 @@ public class LabourCostTest {
     }
 
     @Test
-    public void setGrossAnnualSalaryShouldNotThrowAnError(){
+    public void setGrossEmployeeCostShouldNotThrowAnError(){
         labourCost.setGrossEmployeeCost(new BigDecimal(123));
     }
 
     @Test
-    public void setGrossAnnualSalaryShouldNotThrowAnErrorOnNegativeValue(){
+    public void setGrossEmployeeCostShouldNotThrowAnErrorOnNegativeValue(){
         labourCost.setGrossEmployeeCost(new BigDecimal(-123));
     }
 
     @Test
-    public void setGrossAnnualSalaryShouldNotThrowAnErrorOnNull(){
+    public void setGrossEmployeeCostShouldNotThrowAnErrorOnNull(){
         labourCost.setGrossEmployeeCost(null);
     }
 

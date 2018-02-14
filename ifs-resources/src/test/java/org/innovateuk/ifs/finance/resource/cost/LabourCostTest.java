@@ -62,7 +62,7 @@ public class LabourCostTest {
     }
 
     @Test
-    public void getRateWithoutGrossAnnualSalaryTest() throws Exception {
+    public void getRateWithoutGrossEmployeeCost() throws Exception {
         int workingDaysPerYear = 50;
         labourCost.setGrossEmployeeCost(BigDecimal.ZERO);
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);

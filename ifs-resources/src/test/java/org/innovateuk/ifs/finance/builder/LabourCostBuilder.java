@@ -33,7 +33,7 @@ public class LabourCostBuilder extends BaseBuilder<LabourCost, LabourCostBuilder
         return withArraySetFieldByReflection("role", value);
     }
 
-    public LabourCostBuilder withGrossAnnualSalary(BigDecimal... value) {
+    public LabourCostBuilder withGrossEmployeeCost(BigDecimal... value) {
         return withArraySetFieldByReflection("grossEmployeeCost", value);
     }
 
