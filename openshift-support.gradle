@@ -25,6 +25,14 @@ bootRepackage.enabled = false
 build.enabled = false
 // End workaround
 
+
+//TODO need some logic to apply this for other environments
+// Currently these is the WRONG parameters for the named envs.
+
+//if (isNamedEnv) {}
+apply from: rootProject.file("shib-openshift-non-named-env-properties.gradle")
+
+
 processResources {
 
     from('os-files') {
