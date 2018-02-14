@@ -6,12 +6,14 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static org.innovateuk.ifs.thread.viewmodel.ThreadState.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+
 public class ThreadViewModel {
 
     private List<ThreadPostViewModel> viewModelPosts;
     private FinanceChecksSectionType sectionType;
     private String title;
-    private boolean awaitingResponse;
     private ZonedDateTime createdOn;
     private Long id;
     private Long organisationId;
@@ -20,13 +22,12 @@ public class ThreadViewModel {
     private ZonedDateTime closedDate;
 
     public ThreadViewModel(List<ThreadPostViewModel> viewModelPosts, FinanceChecksSectionType sectionType,
-                           String title, boolean awaitingResponse, ZonedDateTime createdOn,
+                           String title, ZonedDateTime createdOn,
                            Long id, Long organisationId, Long projectId,
                            UserResource closedBy, ZonedDateTime closedDate) {
         this.viewModelPosts = viewModelPosts;
         this.sectionType = sectionType;
         this.title = title;
-        this.awaitingResponse = awaitingResponse;
         this.createdOn = createdOn;
         this.id = id;
         this.organisationId = organisationId;
@@ -45,10 +46,6 @@ public class ThreadViewModel {
 
     public String getTitle() {
         return title;
-    }
-
-    public boolean isAwaitingResponse() {
-        return awaitingResponse;
     }
 
     public ZonedDateTime getCreatedOn() {
@@ -75,7 +72,31 @@ public class ThreadViewModel {
         return closedDate;
     }
 
+    public ThreadState getState() {
+        if (closedDate != null) {
+            return CLOSED;
+        } else if (isLastPostProjectFinance()) {
+            return LAST_POST_BY_INTERNAL_USER;
+        }
+        return LAST_POST_BY_EXTERNAL_USER;
+    }
+
+
     public boolean isClosed() {
-        return closedDate != null;
+        return getState().equals(CLOSED);
+    }
+
+    public boolean isLastPostByInternalUser() {
+        return getState().equals(LAST_POST_BY_INTERNAL_USER);
+    }
+
+    public boolean isLastPostByExternalUser() {
+        return getState().equals(LAST_POST_BY_EXTERNAL_USER);
+    }
+
+    private boolean isLastPostProjectFinance() {
+        return viewModelPosts
+                .get(viewModelPosts.size() -1)
+                .author.hasRole(PROJECT_FINANCE);
     }
 }

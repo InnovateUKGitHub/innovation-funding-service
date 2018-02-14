@@ -137,11 +137,6 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<ApplicationInviteResource> getInviteByHash(String hash) {
             return null;
         }
