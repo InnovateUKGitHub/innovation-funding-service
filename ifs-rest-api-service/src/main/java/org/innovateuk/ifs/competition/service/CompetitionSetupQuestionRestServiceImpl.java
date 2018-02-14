@@ -26,6 +26,8 @@ public class CompetitionSetupQuestionRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        // ZDD indicator should be removed as part of IFS-xxxx after deployment
+        competitionSetupQuestionResource.setUpdated(true);
         return putWithRestResult(competitionsSetupRestURL + "/save", competitionSetupQuestionResource, Void.class);
     }
 

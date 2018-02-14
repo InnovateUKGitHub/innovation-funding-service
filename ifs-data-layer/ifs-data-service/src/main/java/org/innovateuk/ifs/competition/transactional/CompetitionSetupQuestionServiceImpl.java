@@ -176,7 +176,15 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
             appendixFormInput.setAllowedFileTypes(StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
-            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
+
+            /* This exception exists for ZDD purposes. If the resource is updated
+             * we should be saving the value of fileUploadGuidance. Otherwise ignore
+             * it - because it would be null and overriding the default value.
+             * The exception should be removed after deploy as part of IFS-xxxx.
+             */
+            if(competitionSetupQuestionResource.isUpdated()) {
+                appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
+            }
         }
     }
 
