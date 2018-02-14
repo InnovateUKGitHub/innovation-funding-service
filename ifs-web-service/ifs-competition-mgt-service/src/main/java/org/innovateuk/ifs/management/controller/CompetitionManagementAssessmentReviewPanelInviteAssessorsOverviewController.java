@@ -5,7 +5,7 @@ import org.innovateuk.ifs.assessment.service.AssessmentReviewPanelInviteRestServ
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.AssessmentPanelOverviewSelectionForm;
-import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsOverviewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,7 +35,7 @@ public class CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewCo
     private AssessmentReviewPanelInviteRestService assessmentReviewPanelInviteRestService;
 
     @Autowired
-    private AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private AssessmentReviewPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
 
     @Override
     protected String getCookieName() {

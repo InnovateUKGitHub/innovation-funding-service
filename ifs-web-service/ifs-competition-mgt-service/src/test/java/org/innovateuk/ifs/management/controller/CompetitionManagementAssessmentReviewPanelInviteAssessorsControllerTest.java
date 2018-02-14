@@ -12,9 +12,9 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.AssessmentReviewPanelSelectionForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsAcceptedModelPopulator;
-import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsFindModelPopulator;
-import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -78,11 +78,11 @@ public class CompetitionManagementAssessmentReviewPanelInviteAssessorsController
 
     @Spy
     @InjectMocks
-    private AssessmentReviewReviewPanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
+    private AssessmentReviewPanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
 
     @Spy
     @InjectMocks
-    private AssessmentReviewReviewPanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
+    private AssessmentReviewPanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
     @Spy
     @InjectMocks
@@ -90,7 +90,7 @@ public class CompetitionManagementAssessmentReviewPanelInviteAssessorsController
 
     @Spy
     @InjectMocks
-    private AssessmentReviewReviewPanelInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
+    private AssessmentReviewPanelInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
 
     private CompetitionResource competition;
 

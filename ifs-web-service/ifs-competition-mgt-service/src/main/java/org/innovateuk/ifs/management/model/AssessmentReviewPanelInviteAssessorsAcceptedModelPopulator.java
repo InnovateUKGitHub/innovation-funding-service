@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors 'Accepted' view.
  */
 @Component
-public class AssessmentReviewReviewPanelInviteAssessorsAcceptedModelPopulator extends AssessmentReviewPanelInviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
+public class AssessmentReviewPanelInviteAssessorsAcceptedModelPopulator extends AssessmentReviewPanelInviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
 
     @Autowired
     private AssessmentReviewPanelInviteRestService assessmentReviewPanelInviteRestService;

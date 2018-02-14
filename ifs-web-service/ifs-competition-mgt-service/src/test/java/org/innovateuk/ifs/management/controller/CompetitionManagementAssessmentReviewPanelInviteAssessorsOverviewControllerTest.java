@@ -8,7 +8,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
-import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
@@ -50,7 +50,7 @@ public class CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewCo
 
     @Spy
     @InjectMocks
-    private AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private AssessmentReviewPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
 
     @Override
     protected CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewController supplyControllerUnderTest() {

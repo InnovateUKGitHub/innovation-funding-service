@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Panel Find view.
  */
 @Component
-public class AssessmentReviewReviewPanelInviteAssessorsFindModelPopulator extends AssessmentReviewPanelInviteAssessorsModelPopulator<AssessmentPanelInviteAssessorsFindViewModel> {
+public class AssessmentReviewPanelInviteAssessorsFindModelPopulator extends AssessmentReviewPanelInviteAssessorsModelPopulator<AssessmentPanelInviteAssessorsFindViewModel> {
 
     @Autowired
     private AssessmentReviewPanelInviteRestService assessmentReviewPanelInviteRestService;
