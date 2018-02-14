@@ -1,3 +1,6 @@
+
+
+// THESE PROPERTIES ARE SPECIFIC TO NON NAMED ENVS
 // for shib
 ext.SHIBBOLETH_SP_MPM_STARTSERVERS="2"
 ext.SHIBBOLETH_SP_MPM_MINSPARETHREADS="25"
@@ -25,3 +28,7 @@ ext.LDAP_USESSL="true"
 ext.LDAP_BASEDN="dc=nodomain"
 ext.LDAP_BINDDN="cn=admin,dc=nodomain"
 ext.LDAP_AUTHENTICATOR="anonSearchAuthenticator"
+
+
+ext.NEW_RELIC_LICENCE_KEY=""
+// we can use openshiftEnv in place of NEWRELIC_ENVIRONMENT
