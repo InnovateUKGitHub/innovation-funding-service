@@ -41,6 +41,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -93,7 +94,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 /**
  * Tests for {@link ApplicationServiceImpl}
  */
-public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
+public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationService> {
 
     private static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(
             ApplicationState.APPROVED,
@@ -1418,4 +1419,61 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getErrors().get(0).getErrorKey().equals(GENERAL_NOT_FOUND.getErrorKey()));
     }
+
+    @Test
+    public void updateApplicationProgress_notCompletedAllSingleStatusQuestions() {
+        List<Question> questions = newQuestion()
+                .withMarksAsCompleteEnabled(true)
+                .withMultipleStatuses(false)
+                .build(2);
+
+        setQuestionsOnApplication(questions);
+
+        when(questionServiceMock.isMarkedAsComplete(questions.get(0), app.getId(), 0L))
+                .thenReturn(serviceSuccess(true));
+        when(questionServiceMock.isMarkedAsComplete(questions.get(1), app.getId(), 0L))
+                .thenReturn(serviceSuccess(false));
+
+        ServiceResult<BigDecimal> result = service.updateApplicationProgress(app.getId());
+
+        verify(applicationRepositoryMock).findOne(app.getId());
+
+        assertTrue(result.isSuccess());
+        assertEquals(BigDecimal.valueOf(50).setScale(2, RoundingMode.UNNECESSARY), result.getSuccess());
+    }
+
+    @Test
+    public void updateApplicationProgress_completedAllSingleStatusQuestions() {
+        List<Question> questions = newQuestion()
+                .withMarksAsCompleteEnabled(true)
+                .withMultipleStatuses(false)
+                .build(2);
+
+        setQuestionsOnApplication(questions);
+
+        when(questionServiceMock.isMarkedAsComplete(questions.get(0), app.getId(), 0L))
+                .thenReturn(serviceSuccess(true));
+        when(questionServiceMock.isMarkedAsComplete(questions.get(1), app.getId(), 0L))
+                .thenReturn(serviceSuccess(true));
+
+        ServiceResult<BigDecimal> result = service.updateApplicationProgress(app.getId());
+
+        verify(applicationRepositoryMock).findOne(app.getId());
+
+        assertTrue(result.isSuccess());
+        assertEquals(BigDecimal.valueOf(100).setScale(2, RoundingMode.UNNECESSARY), result.getSuccess());
+    }
+
+    private void setQuestionsOnApplication(List<Question> questions) {
+        app.setCompetition(
+                newCompetition()
+                        .withSections(
+                                newSection()
+                                        .withQuestions(questions)
+                                        .build(2)
+                        )
+                        .build()
+        );
+    }
+
 }
