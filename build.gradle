@@ -10,6 +10,7 @@ allprojects {
 
 }
 
+ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
 
 apply from: "openshift-support.gradle"
 apply from: "zipkin-support.gradle"
@@ -116,6 +117,7 @@ sonarqube {
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }
+
 
 
 task wrapper(type: Wrapper) {

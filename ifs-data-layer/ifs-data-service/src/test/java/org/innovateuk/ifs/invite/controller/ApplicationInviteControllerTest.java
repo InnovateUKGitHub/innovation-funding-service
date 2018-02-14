@@ -6,6 +6,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
+import org.innovateuk.ifs.invite.transactional.AcceptInviteService;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<ApplicationInviteController> {
@@ -36,6 +38,9 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
     @Mock
     private InviteService inviteService;
+
+    @Mock
+    private AcceptInviteService acceptInviteService;
 
     @Before
     public void setUp() {
@@ -95,5 +100,19 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .contentType(APPLICATION_JSON)
                 .content(organisationResourceString))
                 .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void acceptInvite() throws Exception {
+        String hash = "abcdef";
+        long userId = 1L;
+
+        when(acceptInviteService.acceptInvite(hash, userId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/invite/acceptInvite/{hash}/{userId}", hash, userId))
+                .andExpect(status().isOk());
+
+        verify(acceptInviteService).acceptInvite(hash, userId);
     }
 }

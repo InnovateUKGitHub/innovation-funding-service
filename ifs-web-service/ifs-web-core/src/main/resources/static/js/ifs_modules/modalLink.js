@@ -106,7 +106,7 @@ IFS.core.modal = (function () {
     },
     setInputValues: function (form, eventTarget) {
       jQuery.each(eventTarget[0].attributes, function (index, val) {
-        if (val.name.startsWith('data-modal-input-')) {
+        if (val.name.match('^data-modal-input-')) {
           var inputName = val.name.replace('data-modal-input-', '')
           var inputVal = val.value
           var input = jQuery('#' + inputName)

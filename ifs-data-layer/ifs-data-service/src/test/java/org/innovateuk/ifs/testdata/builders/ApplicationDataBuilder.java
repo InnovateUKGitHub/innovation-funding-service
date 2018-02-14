@@ -120,7 +120,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
-            doAs(systemRegistrar(), () -> inviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
+            doAs(systemRegistrar(), () -> acceptInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
         });
     }
 
