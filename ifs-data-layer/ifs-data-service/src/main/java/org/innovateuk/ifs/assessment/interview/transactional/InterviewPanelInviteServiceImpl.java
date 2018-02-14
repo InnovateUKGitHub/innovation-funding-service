@@ -188,7 +188,7 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
     }
 
     private ServiceResult<AssessmentInterviewPanel> assignApplicationToCompetition(Application application) {
-        final Role leadApplicantRole = roleRepository.findOneByName(UserRoleType.LEADAPPLICANT.getName());
+        final Role leadApplicantRole = roleRepository.findOneByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName());
         final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), leadApplicantRole);
         final AssessmentInterviewPanel panel = new AssessmentInterviewPanel(application, pr);
 
