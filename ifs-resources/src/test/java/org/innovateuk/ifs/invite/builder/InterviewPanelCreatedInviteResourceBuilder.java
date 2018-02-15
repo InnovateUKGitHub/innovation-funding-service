@@ -33,7 +33,7 @@ public class InterviewPanelCreatedInviteResourceBuilder extends BaseBuilder<Inte
     }
 
     public InterviewPanelCreatedInviteResourceBuilder withApplicationId(Long... value) {
-        return withArraySetFieldByReflection("inviteId", value);
+        return withArraySetFieldByReflection("applicationId", value);
     }
 
     public InterviewPanelCreatedInviteResourceBuilder withApplicationName(String... value) {

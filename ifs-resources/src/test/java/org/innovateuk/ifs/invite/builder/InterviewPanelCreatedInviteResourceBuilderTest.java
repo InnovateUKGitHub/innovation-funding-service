@@ -12,40 +12,47 @@ public class InterviewPanelCreatedInviteResourceBuilderTest {
 
     @Test
     public void buildOne() {
-        long expectedApplicationId = 1L;
+        long expectedId = 1L;
+        long expectedApplicationId = 3L;
         String expectedApplicationName = "applicationName";
         String expectedLeadOrganisation = "leadOrganisation";
 
         InterviewPanelCreatedInviteResource interviewPanelCreatedInviteResource = newInterviewPanelCreatedInviteResource()
+                .withId(expectedId)
                 .withApplicationId(expectedApplicationId)
                 .withApplicationName(expectedApplicationName)
                 .withLeadOrganisationName(expectedLeadOrganisation)
                 .build();
 
-        assertEquals(expectedApplicationId, interviewPanelCreatedInviteResource.getId());
+        assertEquals(expectedId, interviewPanelCreatedInviteResource.getId());
+        assertEquals(expectedApplicationId, interviewPanelCreatedInviteResource.getApplicationId());
         assertEquals(expectedApplicationName, interviewPanelCreatedInviteResource.getApplicationName());
         assertEquals(expectedLeadOrganisation, interviewPanelCreatedInviteResource.getLeadOrganisationName());
     }
 
     @Test
     public void buildMany() {
-        Long[] expectedApplicationIds = {1L, 2L};
+        Long[] expectedIds = {1L, 2L};
+        Long[] expectedApplicationIds = {3L, 4L};
         String[] expectedApplicationNames = {"applicationName1", "applicationName2"};
         String[] expectedLeadOrganisations = {"leadOrganisation1", "leadOrganisation2"};
 
         List<InterviewPanelCreatedInviteResource> interviewPanelCreatedInviteResources = newInterviewPanelCreatedInviteResource()
+                .withId(expectedIds)
                 .withApplicationId(expectedApplicationIds)
                 .withApplicationName(expectedApplicationNames)
                 .withLeadOrganisationName(expectedLeadOrganisations)
                 .build(2);
 
         InterviewPanelCreatedInviteResource first = interviewPanelCreatedInviteResources.get(0);
-        assertEquals(expectedApplicationIds[0], first.getApplicationId());
+        assertEquals((long) expectedIds[0], first.getId());
+        assertEquals((long) expectedApplicationIds[0], first.getApplicationId());
         assertEquals(expectedApplicationNames[0], first.getApplicationName());
         assertEquals(expectedLeadOrganisations[0], first.getLeadOrganisationName());
 
         InterviewPanelCreatedInviteResource second = interviewPanelCreatedInviteResources.get(1);
-        assertEquals(expectedApplicationIds[1], second.getApplicationId());
+        assertEquals((long) expectedIds[1], second.getId());
+        assertEquals((long) expectedApplicationIds[1], second.getApplicationId());
         assertEquals(expectedApplicationNames[1], second.getApplicationName());
         assertEquals(expectedLeadOrganisations[1], second.getLeadOrganisationName());
     }
