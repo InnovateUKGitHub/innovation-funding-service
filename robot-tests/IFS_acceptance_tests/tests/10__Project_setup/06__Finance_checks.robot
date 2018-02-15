@@ -103,7 +103,7 @@ Project Finance user can see the finance check summary page
 Project finance user cannot view viability section if this is not applicable for the org in question
     [Documentation]    INFUND-9517
     [Tags]
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/viability    ${404_error_message}
+    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/viability    ${404_error_message}
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
@@ -119,10 +119,10 @@ Status of the Eligibility column (workaround for private beta competition)
 Query section is disabled before finance contacts have been selected
     [Documentation]    IFS-236
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/eligibility
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationEggsId}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}/eligibility
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/eligibility
     And the user clicks the button/link    jQuery=.button:contains("Queries")
     Then the user should see the element    jQuery=.button:contains("Post a new query")[disabled]
     [Teardown]    finance contacts are selected and bank details are approved
@@ -221,10 +221,10 @@ Project finance user can view finances summary for the consortium
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section    1    200,903    30%    60,271    2,468    138,164
     #Check finances summary for academic user
-    When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
     Then the Categories Are Verified For Finances Summary Section    2    990    100%    990    0    0
     #Check finances summary for non lead partner
-    When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
     Then the Categories Are Verified For Finances Summary Section    3    200,903    30%    60,271    2,468    138,164
     #Check total
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
@@ -240,10 +240,10 @@ Project finance can see finance breakdown for different categories
     # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
     And all the categories are verified    1    200,903    3,081    0    100,200    552    90,000    5,970    1,100
     #Check finances summary for academic user
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
     Then all the categories are verified  2   990      286 	 154 	66     0    0        44     440
     #Check finances summary for non lead partner
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
     Then all the categories are verified  3   200,903 	3,081   0   100,200  552  90,000   5,970  1,100
     #Check total
     And the user should see the text in the element    css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,797
@@ -389,7 +389,7 @@ Project finance user can see the viability checks for the industrial partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-7578
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    Then the user should see the text in the page   ${organisationLudlowName}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
     And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}
     And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
@@ -640,17 +640,18 @@ Project finance user can see the Eligibility check page for the partner
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    Then the user should see the text in the page  ${organisationLudlowName}
 
 # The below test deviates to a different project to check 0% funding for a partner
 Project finance user can see the partner's zero funding request
     [Documentation]    INFUND-9269
     [Tags]
-    When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
+    When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
+    capture large screenshot
     Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
-    [Teardown]    the user navigates to the page        ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
+    [Teardown]    the user navigates to the page        ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
 
 Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
@@ -724,7 +725,7 @@ Project finance user can see the eligibility checks for the industrial partner
     [Tags]
     When the user clicks the button/link   link=Finance checks
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    Then the user should see the text in the page  ${organisationLudlowName}
 
 Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4839
@@ -788,10 +789,10 @@ Project finance can see updated finance breakdown for different categories
     # the below figures are in this order    Total 	      Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
     And all the categories are verified  1   £177,784 	 59,430  1,954 	80,000   5,050   10,600  10,000   10,750
     #check breakdown for academic user
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${organisationEggsName}
     Then all the categories are verified  2   £990 	     286 	   154    66       0 	      0 	    44      440
     #check breakdown for non lead partner
-    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${organisationLudlowName}
     Then all the categories are verified  3   £177,784   59,430  1,954  80,000    5,050   10,600  10,000   10,750
     #Check total
     And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£356,559
@@ -828,10 +829,10 @@ Project finance user can view updated finances summary for the consortium
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     And the Categories Are Verified For Finances Summary Section   1   £177,784   30%     53,335    2,468     121,981
     #check breakdown for academic user
-    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong  ${organisationEggsName}
     Then the Categories Are Verified For Finances Summary Section   2   £990   100%  990     0     0
     #check breakdown for non lead partner
-    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong  ${organisationLudlowName}
     Then the Categories Are Verified For Finances Summary Section   3   £177,784  30%     53,335    2,468     121,981
     #check total
     And the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
@@ -1068,7 +1069,7 @@ Academic user can view Finance checks page
     When the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page   The finance checks have been completed and your finances approved.
     And the user should not see the text in the page    View finances
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}/finance-checks/eligibility    ${404_error_message}
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${organisationEggsId}/finance-checks/eligibility    ${404_error_message}
     Then the user clicks the button/link    link=your dashboard
 
 Non Lead Partner can view finance checks page
