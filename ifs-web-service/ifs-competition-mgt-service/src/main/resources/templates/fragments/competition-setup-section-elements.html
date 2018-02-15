@@ -209,8 +209,8 @@
             <div class="form-group" th:if="${question.appendix != null}">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Appendix</legend>
-                    <div class="multiple-choice" data-target="allowedFileTypesDiv">
-                        <input id="appendix-yes" th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio" />
+                    <div class="multiple-choice" data-target="allowedFileTypesDiv" data-target-clear-form="true">
+                        <input id="appendix-yes" th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio"  />
                         <label for="appendix-yes">Yes</label>
                     </div>
                     <div class="multiple-choice">
