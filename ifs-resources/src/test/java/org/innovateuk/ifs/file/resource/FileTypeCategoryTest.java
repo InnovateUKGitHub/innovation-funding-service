@@ -8,11 +8,11 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
-public class FileTypeCategoriesTest {
+public class FileTypeCategoryTest {
 
     @Test
     public void testGetMediaTypesPdf() {
-        assertEquals(FileTypeCategories.PDF.getMediaTypes(), singletonList("application/pdf"));
+        assertEquals(FileTypeCategory.PDF.getMediaTypes(), singletonList("application/pdf"));
     }
 
     @Test
@@ -20,6 +20,6 @@ public class FileTypeCategoriesTest {
 
         List<String> expectedTypes = asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
 
-        assertEquals(FileTypeCategories.SPREADSHEET.getMediaTypes(), expectedTypes);
+        assertEquals(FileTypeCategory.SPREADSHEET.getMediaTypes(), expectedTypes);
     }
 }

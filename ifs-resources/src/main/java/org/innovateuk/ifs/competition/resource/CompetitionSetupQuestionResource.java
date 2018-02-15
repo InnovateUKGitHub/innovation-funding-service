@@ -4,16 +4,17 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.file.resource.FileTypeCategories.PDF;
-import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
@@ -21,12 +22,6 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
 @FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
-    /* This exists for ZDD purposes. We need a way to recognize on the data-service
-     * to see if we need to save the new fileUploadGuidance as it will be sent as null
-     * by the old ifs-competition-mgt-service. This should be removed as part of IFS-xxxx.
-     */
-    private boolean updated;
-
     private Long questionId;
 
     private CompetitionSetupQuestionType type;
@@ -50,7 +45,7 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private List<String> allowedFileTypes;
+    private List<FileTypeCategory> allowedFileTypes;
     private String fileUploadGuidance;
 
     private String assessmentGuidanceTitle;
@@ -228,15 +223,23 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public List<String> getAllowedFileTypes() {
+    public List<FileTypeCategory> getAllowedFileTypes() {
         return allowedFileTypes;
     }
 
-    public void setAllowedFileTypes(List<String> allowedFileTypes) {
+    public void setAllowedFileTypes(List<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 
-    public static List<FileTypeCategories> getSupportedTypeCategories(){
+    public String getFileUploadGuidance() {
+        return fileUploadGuidance;
+    }
+
+    public void setFileUploadGuidance(String fileUploadGuidance) {
+        this.fileUploadGuidance = fileUploadGuidance;
+    }
+
+    public static List<FileTypeCategory> getSupportedTypeCategories(){
         return asList(PDF, SPREADSHEET);
     }
 
@@ -300,19 +303,4 @@ public class CompetitionSetupQuestionResource {
                 .toHashCode();
     }
 
-    public String getFileUploadGuidance() {
-        return fileUploadGuidance;
-    }
-
-    public void setFileUploadGuidance(String fileUploadGuidance) {
-        this.fileUploadGuidance = fileUploadGuidance;
-    }
-
-    public boolean isUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Boolean updated) {
-        this.updated = updated;
-    }
 }

@@ -232,7 +232,7 @@
                             <input type="checkbox"
                                    th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
                                    th:field="*{question.allowedFileTypes}"
-                                   th:value="${fileTypeCategory.displayName}"
+                                   th:value="${fileTypeCategory.name()}"
                                    name="allowedFileTypes"
                                    required="required" />
                             <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}" th:text="${fileTypeCategory.displayName}">PDF</label>

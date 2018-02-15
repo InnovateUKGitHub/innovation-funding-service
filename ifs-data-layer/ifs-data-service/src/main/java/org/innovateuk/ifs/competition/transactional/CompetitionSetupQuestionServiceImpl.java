@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -27,9 +28,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -88,9 +89,10 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAllowedFileTypes(asList(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())));
+                setupResource.setAllowedFileTypes(
+                        simpleMap(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes()),
+                                FileTypeCategory::valueOf));
                 setupResource.setFileUploadGuidance(formInput.getGuidanceAnswer());
-
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
@@ -172,20 +174,36 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     }
 
     private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD);
+        FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
+                FormInputScope.APPLICATION,
+                FormInputType.FILEUPLOAD);
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
-            appendixFormInput.setAllowedFileTypes(StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
 
-            /* This exception exists for ZDD purposes. If the resource is updated
-             * we should be saving the value of fileUploadGuidance. Otherwise ignore
-             * it - because it would be null and overriding the default value.
-             * The exception should be removed after deploy as part of IFS-xxxx.
-             */
-            if(competitionSetupQuestionResource.isUpdated()) {
-                appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
+            if(competitionSetupQuestionResource.getAppendix()) {
+                setAppendixSubOptions(appendixFormInput, competitionSetupQuestionResource );
+            }
+            else {
+                resetAppendixSubOptions(appendixFormInput);
             }
         }
+    }
+
+    private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        appendixFormInput.setAllowedFileTypes(StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
+
+        /* This exception exists for ZDD purposes. If the file upload guidance
+         * is null: don't save it. Should be removed as part of IFS-xxxx.
+         */
+
+        if (competitionSetupQuestionResource.getFileUploadGuidance() != null) {
+            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
+        }
+    }
+
+    private void resetAppendixSubOptions(FormInput appendixFormInput) {
+        appendixFormInput.setAllowedFileTypes(null);
+        appendixFormInput.setGuidanceAnswer(null);
     }
 
     private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
