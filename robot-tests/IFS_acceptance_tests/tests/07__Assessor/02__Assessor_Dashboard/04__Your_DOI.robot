@@ -30,7 +30,7 @@ Server-side validations when No selected at yes/no
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
     Then the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
-    Then The user should see a summary error    Please correct the errors in the form below.
+    Then The user should see the element     css=.error-summary
     And the user should see a field error    Please enter a principal employer.
     And the user should see a field error    Please enter your role with your principal employer.
     And the user should see a field error    You must agree that your account is accurate.
@@ -100,9 +100,9 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=role    Professor
     the user enters text to a text field    id=professionalAffiliations    Role x at Company y
     the user enters text to a text field    id=financialInterests    finance int
-    the user enters text to a text field    Id=familyAffiliations0.relation    Relation
-    the user enters text to a text field    id=familyAffiliations0.organisation    Innovate
-    the user enters text to a text field    id=familyAffiliations0.position    Director
+    the user enters text to a text field    Id=familyAffiliations[0].relation    Relation
+    the user enters text to a text field    id=familyAffiliations[0].organisation    Innovate
+    the user enters text to a text field    id=familyAffiliations[0].position    Director
     the user enters text to a text field    id=familyFinancialInterests    My interests
     the user moves focus to the element    css=[for^="accurateAccount"]
     the user selects the checkbox    accurateAccount1
