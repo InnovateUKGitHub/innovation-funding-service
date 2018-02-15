@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.invite.mapper;
 
-import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelParticipant;
-import org.innovateuk.ifs.invite.resource.AssessmentInterviewPanelParticipantResource;
+import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
+import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
+import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,13 +16,13 @@ import org.mapstruct.Mappings;
         uses = {
                 CompetitionMapper.class,
                 UserMapper.class,
-                AssessmentInterviewPanelInviteMapper.class,
+                InterviewInviteMapper.class,
                 RejectionReasonMapper.class,
                 CompetitionParticipantRoleMapper.class,
                 ParticipantStatusMapper.class,
         }
 )
-public abstract class AssessmentInterviewPanelParticipantMapper extends BaseMapper<AssessmentInterviewPanelParticipant, AssessmentInterviewPanelParticipantResource, Long> {
+public abstract class AssessmentInterviewPanelParticipantMapper extends BaseMapper<InterviewParticipant, InterviewParticipantResource, Long> {
 
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),
@@ -37,16 +37,16 @@ public abstract class AssessmentInterviewPanelParticipantMapper extends BaseMapp
             @Mapping(target = "awaitingApplications", ignore = true),
     })
     @Override
-    public abstract AssessmentInterviewPanelParticipantResource mapToResource(AssessmentInterviewPanelParticipant domain);
+    public abstract InterviewParticipantResource mapToResource(InterviewParticipant domain);
 
     @Mappings({
             @Mapping(source = "userId", target = "user"),
             @Mapping(source = "competitionId", target = "process")
     })
     @Override
-    public abstract AssessmentInterviewPanelParticipant mapToDomain(AssessmentInterviewPanelParticipantResource resource);
+    public abstract InterviewParticipant mapToDomain(InterviewParticipantResource resource);
 
-    public Long mapAssessmentInterviewPanelParticipantToId(AssessmentInterviewPanelParticipant object) {
+    public Long mapAssessmentInterviewPanelParticipantToId(InterviewParticipant object) {
         if (object == null) {
             return null;
         }

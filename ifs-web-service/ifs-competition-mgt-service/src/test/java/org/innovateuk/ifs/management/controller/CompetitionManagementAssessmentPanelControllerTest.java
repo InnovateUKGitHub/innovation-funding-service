@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.AssessmentPanelModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,13 +17,11 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.RestResult.toGetResponse;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.AssessmentPanelKeyStatisticsResourceBuilder.newAssessmentPanelKeyStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,7 +34,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
     private AssessmentPanelModelPopulator assessmentPanelModelPopulator;
 
     @Mock
-    private AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource;
+    private ReviewKeyStatisticsResource reviewKeyStatisticsResource;
 
     @Override
     protected CompetitionManagementAssessmentPanelController supplyControllerUnderTest() {
@@ -59,7 +57,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
-        assessmentPanelKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource()
+        reviewKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource()
                 .withApplicationsInPanel(applicationsInPanel)
                 .withAssessorsAccepted(assessorsAccepted)
                 .withAssessorsPending(assessorsPending)
@@ -68,7 +66,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
         when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelKeyStatisticsByCompetition(competitionId))
-                .thenReturn(toGetResponse(assessmentPanelKeyStatisticsResource));
+                .thenReturn(toGetResponse(reviewKeyStatisticsResource));
         when(assessmentPanelRestService.isPendingReviewNotifications(competitionId))
                 .thenReturn(toGetResponse(reviewsPending));
 

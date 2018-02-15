@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,23 +14,23 @@ import java.util.Set;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentInterviewPanelInviteRepository extends PagingAndSortingRepository<AssessmentInterviewPanelInvite, Long> {
+public interface AssessmentInterviewPanelInviteRepository extends PagingAndSortingRepository<InterviewInvite, Long> {
 
-    AssessmentInterviewPanelInvite getByEmailAndCompetitionId(String email, long competitionId);
+    InterviewInvite getByEmailAndCompetitionId(String email, long competitionId);
 
-    List<AssessmentInterviewPanelInvite> getByCompetitionId(long competitionId);
+    List<InterviewInvite> getByCompetitionId(long competitionId);
 
-    List<AssessmentInterviewPanelInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status);
+    List<InterviewInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status);
 
-    Page<AssessmentInterviewPanelInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status, Pageable pageable);
+    Page<InterviewInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status, Pageable pageable);
 
     int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
 
-    List<AssessmentInterviewPanelInvite> getByUserId(long userId);
+    List<InterviewInvite> getByUserId(long userId);
 
-    List<AssessmentInterviewPanelInvite> getByIdIn(List<Long> inviteIds);
+    List<InterviewInvite> getByIdIn(List<Long> inviteIds);
 
-    AssessmentInterviewPanelInvite getByHash(String hash);
+    InterviewInvite getByHash(String hash);
 
     void deleteByCompetitionIdAndStatus(long competitionId, InviteStatus status);
 }

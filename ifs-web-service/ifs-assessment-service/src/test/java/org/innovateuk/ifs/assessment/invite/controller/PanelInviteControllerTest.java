@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.PanelInviteViewModel;
-import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelInviteResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
+import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,7 +82,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
         ZonedDateTime panelDate = ZonedDateTime.now();
         Boolean accept = true;
 
-        AssessmentReviewPanelInviteResource inviteResource = newAssessmentReviewPanelInviteResource()
+        ReviewInviteResource inviteResource = newAssessmentReviewPanelInviteResource()
                 .withCompetitionName("my competition")
                 .withPanelDate(panelDate)
                 .build();
@@ -130,7 +130,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
     public void openInvite() throws Exception {
         ZonedDateTime panelDate = ZonedDateTime.now();
 
-        AssessmentReviewPanelInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition")
+        ReviewInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition")
                 .withPanelDate(panelDate)
                 .build();
 
@@ -147,7 +147,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
 
     @Test
     public void openInvite_hashNotExists() throws Exception {
-        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentReviewPanelInviteResource.class, "notExistHash")));
+        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(ReviewInviteResource.class, "notExistHash")));
         mockMvc.perform(get(restUrl + "{inviteHash}", "notExistHash"))
                 .andExpect(model().attributeDoesNotExist("model"))
                 .andExpect(status().isNotFound());
@@ -157,7 +157,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
 
     @Test
     public void noDecisionMade() throws Exception {
-        AssessmentReviewPanelInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition").build();
+        ReviewInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition").build();
 
         when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
@@ -212,8 +212,8 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
         String comment = String.join(" ", nCopies(100, "comment"));
         Boolean accept = false;
 
-        when(assessmentPanelInviteRestService.rejectInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentReviewPanelInviteResource.class, "notExistHash")));
-        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentReviewPanelInviteResource.class, "notExistHash")));
+        when(assessmentPanelInviteRestService.rejectInvite("notExistHash")).thenReturn(restFailure(notFoundError(ReviewInviteResource.class, "notExistHash")));
+        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(ReviewInviteResource.class, "notExistHash")));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "notExistHash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

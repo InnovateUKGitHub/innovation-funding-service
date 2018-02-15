@@ -12,9 +12,9 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class AssessmentReviewPanelParticipantResourceBuilder extends BaseBuilder<AssessmentReviewPanelParticipantResource, AssessmentReviewPanelParticipantResourceBuilder> {
+public class AssessmentReviewPanelParticipantResourceBuilder extends BaseBuilder<ReviewParticipantResource, AssessmentReviewPanelParticipantResourceBuilder> {
 
-    private AssessmentReviewPanelParticipantResourceBuilder(List<BiConsumer<Integer, AssessmentReviewPanelParticipantResource>> multiActions) {
+    private AssessmentReviewPanelParticipantResourceBuilder(List<BiConsumer<Integer, ReviewParticipantResource>> multiActions) {
         super(multiActions);
     }
 
@@ -23,12 +23,12 @@ public class AssessmentReviewPanelParticipantResourceBuilder extends BaseBuilder
     }
 
     @Override
-    protected AssessmentReviewPanelParticipantResource createInitial() {
-        return new AssessmentReviewPanelParticipantResource();
+    protected ReviewParticipantResource createInitial() {
+        return new ReviewParticipantResource();
     }
 
     @Override
-    protected AssessmentReviewPanelParticipantResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentReviewPanelParticipantResource>> actions) {
+    protected AssessmentReviewPanelParticipantResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewParticipantResource>> actions) {
         return new AssessmentReviewPanelParticipantResourceBuilder(actions);
     }
 
@@ -44,11 +44,11 @@ public class AssessmentReviewPanelParticipantResourceBuilder extends BaseBuilder
         return withArraySetFieldByReflection("competitionId", competitions);
     }
 
-    public AssessmentReviewPanelParticipantResourceBuilder withInvite(AssessmentReviewPanelInviteResource... invites) {
+    public AssessmentReviewPanelParticipantResourceBuilder withInvite(ReviewInviteResource... invites) {
         return withArraySetFieldByReflection("invite", invites);
     }
 
-    public AssessmentReviewPanelParticipantResourceBuilder withInvite(Builder<AssessmentReviewPanelInviteResource, ?> invite) {
+    public AssessmentReviewPanelParticipantResourceBuilder withInvite(Builder<ReviewInviteResource, ?> invite) {
         return withInvite(invite.build());
     }
 
@@ -101,7 +101,7 @@ public class AssessmentReviewPanelParticipantResourceBuilder extends BaseBuilder
     }
 
     @Override
-    protected void postProcess(int index, AssessmentReviewPanelParticipantResource instance) {
+    protected void postProcess(int index, ReviewParticipantResource instance) {
         super.postProcess(index, instance);
     }
 }

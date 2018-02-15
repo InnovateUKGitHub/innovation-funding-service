@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.interview.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterview;
-import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState;
+import org.innovateuk.ifs.interview.domain.Interview;
+import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 
@@ -15,9 +15,9 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_INTERVIEW;
 
-public class AssessmentInterviewBuilder extends BaseBuilder<AssessmentInterview, AssessmentInterviewBuilder> {
+public class AssessmentInterviewBuilder extends BaseBuilder<Interview, AssessmentInterviewBuilder> {
 
-    private AssessmentInterviewBuilder(List<BiConsumer<Integer, AssessmentInterview>> multiActions) {
+    private AssessmentInterviewBuilder(List<BiConsumer<Integer, Interview>> multiActions) {
         super(multiActions);
     }
 
@@ -26,13 +26,13 @@ public class AssessmentInterviewBuilder extends BaseBuilder<AssessmentInterview,
     }
 
     @Override
-    protected AssessmentInterviewBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentInterview>> actions) {
+    protected AssessmentInterviewBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Interview>> actions) {
         return new AssessmentInterviewBuilder(actions);
     }
 
     @Override
-    protected AssessmentInterview createInitial() {
-        return new AssessmentInterview();
+    protected Interview createInitial() {
+        return new Interview();
     }
 
     public AssessmentInterviewBuilder withId(Long... ids) {
@@ -47,7 +47,7 @@ public class AssessmentInterviewBuilder extends BaseBuilder<AssessmentInterview,
         return withArray((participant, invite) -> invite.setParticipant(participant), participants);
     }
 
-    public AssessmentInterviewBuilder withState(AssessmentInterviewState... states) {
+    public AssessmentInterviewBuilder withState(InterviewState... states) {
         return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_INTERVIEW, state.getBackingState())), states);
     }
 }

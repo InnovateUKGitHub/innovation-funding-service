@@ -2,23 +2,23 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.review.domain.AssessmentReviewRejectOutcome;
-import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
-import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewRejectOutcomeMapper;
-import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
-import org.innovateuk.ifs.assessment.review.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.review.domain.Review;
+import org.innovateuk.ifs.review.domain.ReviewRejectOutcome;
+import org.innovateuk.ifs.review.mapper.ReviewMapper;
+import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
+import org.innovateuk.ifs.review.repository.ReviewRepository;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -35,12 +35,12 @@ import java.util.List;
 
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_ACCEPT_FAILED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_REJECT_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -59,10 +59,10 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
-    private AssessmentReviewWorkflowHandler workflowHandler;
+    private ReviewWorkflowHandler workflowHandler;
 
     @Autowired
-    private AssessmentReviewRepository assessmentReviewRepository;
+    private ReviewRepository reviewRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -77,10 +77,10 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
-    private AssessmentReviewMapper assessmentReviewMapper;
+    private ReviewMapper reviewMapper;
 
     @Autowired
-    private AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapper;
+    private ReviewRejectOutcomeMapper reviewRejectOutcomeMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -108,7 +108,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private ServiceResult<Void> withdrawAssessmentReviewsForApplication(Application application) {
-        assessmentReviewRepository
+        reviewRepository
                 .findByTargetIdAndActivityStateStateNot(application.getId(), State.WITHDRAWN)
                 .forEach(workflowHandler::withdraw);
         return serviceSuccess();
@@ -126,13 +126,13 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Override
     public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
-        return serviceSuccess(assessmentReviewRepository.notifiable(competitionId));
+        return serviceSuccess(reviewRepository.notifiable(competitionId));
     }
 
     @Override
-    public ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId) {
-        List<AssessmentReview> assessmentReviews = assessmentReviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
-        return serviceSuccess(simpleMap(assessmentReviews, assessmentReviewMapper::mapToResource));
+    public ServiceResult<List<ReviewResource>> getAssessmentReviews(long userId, long competitionId) {
+        List<Review> reviews = reviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        return serviceSuccess(simpleMap(reviews, reviewMapper::mapToResource));
     }
 
     @Override
@@ -142,44 +142,44 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Override
     public ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId,
-                                                      AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcome) {
+                                                      ReviewRejectOutcomeResource assessmentReviewRejectOutcome) {
         return findAssessmentReview(assessmentReviewId)
                 .andOnSuccess(
-                        r -> rejectAssessmentReview(r, assessmentReviewRejectOutcomeMapper.mapToDomain(assessmentReviewRejectOutcome)));
+                        r -> rejectAssessmentReview(r, reviewRejectOutcomeMapper.mapToDomain(assessmentReviewRejectOutcome)));
     }
 
     @Override
-    public ServiceResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId) {
-        return find(assessmentReviewRepository.findOne(assessmentReviewId), notFoundError(AssessmentReviewResource.class, assessmentReviewId))
-                .andOnSuccessReturn(assessmentReviewMapper::mapToResource);
+    public ServiceResult<ReviewResource> getAssessmentReview(long assessmentReviewId) {
+        return find(reviewRepository.findOne(assessmentReviewId), notFoundError(ReviewResource.class, assessmentReviewId))
+                .andOnSuccessReturn(reviewMapper::mapToResource);
     }
 
-    private ServiceResult<AssessmentReview> findAssessmentReview(long assessmentReviewId) {
-        return find(assessmentReviewRepository.findOne(assessmentReviewId), notFoundError(AssessmentReview.class, assessmentReviewId));
+    private ServiceResult<Review> findAssessmentReview(long assessmentReviewId) {
+        return find(reviewRepository.findOne(assessmentReviewId), notFoundError(Review.class, assessmentReviewId));
     }
 
-    private ServiceResult<Void> acceptAssessmentReview(AssessmentReview assessmentReview) {
-        if (!workflowHandler.acceptInvitation(assessmentReview)) {
+    private ServiceResult<Void> acceptAssessmentReview(Review review) {
+        if (!workflowHandler.acceptInvitation(review)) {
             return serviceFailure(ASSESSMENT_REVIEW_ACCEPT_FAILED);
         }
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> rejectAssessmentReview(AssessmentReview assessmentReview, AssessmentReviewRejectOutcome rejectOutcome) {
-        if (!workflowHandler.rejectInvitation(assessmentReview, rejectOutcome)) {
+    private ServiceResult<Void> rejectAssessmentReview(Review review, ReviewRejectOutcome rejectOutcome) {
+        if (!workflowHandler.rejectInvitation(review, rejectOutcome)) {
             return serviceFailure(ASSESSMENT_REVIEW_REJECT_FAILED);
         }
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> createAssessmentReview(AssessmentReviewPanelParticipant assessor, Application application) {
-        if (!assessmentReviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
+    private ServiceResult<Void> createAssessmentReview(ReviewParticipant assessor, Application application) {
+        if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
             final Role panelAssessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
             final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED);
 
-            AssessmentReview assessmentReview =  new AssessmentReview(application, assessor, panelAssessorRole);
-            assessmentReview.setActivityState(createdActivityState);
-            assessmentReviewRepository.save(assessmentReview);
+            Review review =  new Review(application, assessor, panelAssessorRole);
+            review.setActivityState(createdActivityState);
+            reviewRepository.save(review);
         }
         return serviceSuccess();
     }
@@ -188,7 +188,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
     }
 
-    private List<AssessmentReviewPanelParticipant> getAllAssessorsOnPanel(long competitionId) {
+    private List<ReviewParticipant> getAllAssessorsOnPanel(long competitionId) {
         return assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));}
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
@@ -197,31 +197,31 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {
-        assessmentReviewRepository
+        reviewRepository
                 .findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState())
                 .forEach(this::notifyInvitation);
 
         return serviceSuccess();
     }
 
-    private void notifyInvitation(AssessmentReview assessmentReview) {
-        workflowHandler.notifyInvitation(assessmentReview);
-        sendInviteNotification("Applications ready for review", assessmentReview, Notifications.INVITE_ASSESSMENT_REVIEW);
+    private void notifyInvitation(Review review) {
+        workflowHandler.notifyInvitation(review);
+        sendInviteNotification("Applications ready for review", review, Notifications.INVITE_ASSESSMENT_REVIEW);
     }
 
     private ServiceResult<Void> sendInviteNotification(String subject,
-                                                       AssessmentReview assessmentReview,
+                                                       Review review,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new UserNotificationTarget(assessmentReview.getParticipant().getUser());
+        NotificationTarget recipient = new UserNotificationTarget(review.getParticipant().getUser());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
                 notificationType,
                 asMap(
                         "subject", subject,
-                        "name", assessmentReview.getParticipant().getUser().getName(),
-                        "competitionName", assessmentReview.getTarget().getCompetition().getName(),
-                        "panelDate", assessmentReview.getTarget().getCompetition().getAssessmentPanelDate().format(INVITE_DATE_FORMAT),
+                        "name", review.getParticipant().getUser().getName(),
+                        "competitionName", review.getTarget().getCompetition().getName(),
+                        "panelDate", review.getTarget().getCompetition().getAssessmentPanelDate().format(INVITE_DATE_FORMAT),
                         "ifsUrl", webBaseUrl
                 ));
 

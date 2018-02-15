@@ -4,9 +4,9 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -20,33 +20,33 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
- * Builder for {@link AssessmentInterviewPanelParticipant}s.
+ * Builder for {@link InterviewParticipant}s.
  */
-public class AssessmentInterviewPanelParticipantBuilder extends BaseBuilder<AssessmentInterviewPanelParticipant, AssessmentInterviewPanelParticipantBuilder> {
+public class AssessmentInterviewPanelParticipantBuilder extends BaseBuilder<InterviewParticipant, AssessmentInterviewPanelParticipantBuilder> {
 
     public static AssessmentInterviewPanelParticipantBuilder newAssessmentInterviewPanelParticipant() {
         return new AssessmentInterviewPanelParticipantBuilder(emptyList()).with(uniqueIds());
     }
 
-    private AssessmentInterviewPanelParticipantBuilder(List<BiConsumer<Integer, AssessmentInterviewPanelParticipant>> multiActions) {
+    private AssessmentInterviewPanelParticipantBuilder(List<BiConsumer<Integer, InterviewParticipant>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected AssessmentInterviewPanelParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentInterviewPanelParticipant>> actions) {
+    protected AssessmentInterviewPanelParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewParticipant>> actions) {
         return new AssessmentInterviewPanelParticipantBuilder(actions);
     }
 
     @Override
-    protected AssessmentInterviewPanelParticipant createInitial() {
+    protected InterviewParticipant createInitial() {
         try {
-            Constructor c = AssessmentInterviewPanelParticipant.class.getDeclaredConstructor();
+            Constructor c = InterviewParticipant.class.getDeclaredConstructor();
             c.setAccessible(true);
-            AssessmentInterviewPanelParticipant instance = (AssessmentInterviewPanelParticipant) c.newInstance();
+            InterviewParticipant instance = (InterviewParticipant) c.newInstance();
             setField("status", ParticipantStatus.PENDING, instance);
             return instance;
         } catch (NoSuchMethodException | IllegalAccessException |InstantiationException | InvocationTargetException e) {
-            throw new IllegalStateException("Missing default constructor for AssessmentInterviewPanelParticipant", e);
+            throw new IllegalStateException("Missing default constructor for InterviewParticipant", e);
         }
     }
 
@@ -70,11 +70,11 @@ public class AssessmentInterviewPanelParticipantBuilder extends BaseBuilder<Asse
         return withCompetition(competitions.build());
     }
 
-    public AssessmentInterviewPanelParticipantBuilder withInvite(AssessmentInterviewPanelInvite... invites) {
+    public AssessmentInterviewPanelParticipantBuilder withInvite(InterviewInvite... invites) {
         return withArray((invite, i) -> setField("invite", invite, i), invites);
     }
 
-    public AssessmentInterviewPanelParticipantBuilder withInvite(Builder<AssessmentInterviewPanelInvite, ?> invite) {
+    public AssessmentInterviewPanelParticipantBuilder withInvite(Builder<InterviewInvite, ?> invite) {
         return withInvite(invite.build());
     }
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -9,9 +9,9 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 
 public class AssessmentReviewRejectOutcomeResourceBuilder
-        extends BaseBuilder<AssessmentReviewRejectOutcomeResource, AssessmentReviewRejectOutcomeResourceBuilder> {
+        extends BaseBuilder<ReviewRejectOutcomeResource, AssessmentReviewRejectOutcomeResourceBuilder> {
 
-    private AssessmentReviewRejectOutcomeResourceBuilder(List<BiConsumer<Integer, AssessmentReviewRejectOutcomeResource>> multiActions) {
+    private AssessmentReviewRejectOutcomeResourceBuilder(List<BiConsumer<Integer, ReviewRejectOutcomeResource>> multiActions) {
         super(multiActions);
     }
 
@@ -21,13 +21,13 @@ public class AssessmentReviewRejectOutcomeResourceBuilder
 
     @Override
     protected AssessmentReviewRejectOutcomeResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer,
-            AssessmentReviewRejectOutcomeResource>> actions) {
+            ReviewRejectOutcomeResource>> actions) {
         return new AssessmentReviewRejectOutcomeResourceBuilder(actions);
     }
 
     @Override
-    protected AssessmentReviewRejectOutcomeResource createInitial() {
-        return new AssessmentReviewRejectOutcomeResource();
+    protected ReviewRejectOutcomeResource createInitial() {
+        return new ReviewRejectOutcomeResource();
     }
 
     public AssessmentReviewRejectOutcomeResourceBuilder withReason(String... reasons) {

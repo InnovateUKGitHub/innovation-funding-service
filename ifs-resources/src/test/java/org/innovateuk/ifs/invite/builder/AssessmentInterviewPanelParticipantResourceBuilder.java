@@ -12,9 +12,9 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class AssessmentInterviewPanelParticipantResourceBuilder extends BaseBuilder<AssessmentInterviewPanelParticipantResource, AssessmentInterviewPanelParticipantResourceBuilder> {
+public class AssessmentInterviewPanelParticipantResourceBuilder extends BaseBuilder<InterviewParticipantResource, AssessmentInterviewPanelParticipantResourceBuilder> {
 
-    private AssessmentInterviewPanelParticipantResourceBuilder(List<BiConsumer<Integer, AssessmentInterviewPanelParticipantResource>> multiActions) {
+    private AssessmentInterviewPanelParticipantResourceBuilder(List<BiConsumer<Integer, InterviewParticipantResource>> multiActions) {
         super(multiActions);
     }
 
@@ -23,12 +23,12 @@ public class AssessmentInterviewPanelParticipantResourceBuilder extends BaseBuil
     }
 
     @Override
-    protected AssessmentInterviewPanelParticipantResource createInitial() {
-        return new AssessmentInterviewPanelParticipantResource();
+    protected InterviewParticipantResource createInitial() {
+        return new InterviewParticipantResource();
     }
 
     @Override
-    protected AssessmentInterviewPanelParticipantResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentInterviewPanelParticipantResource>> actions) {
+    protected AssessmentInterviewPanelParticipantResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewParticipantResource>> actions) {
         return new AssessmentInterviewPanelParticipantResourceBuilder(actions);
     }
 
@@ -44,11 +44,11 @@ public class AssessmentInterviewPanelParticipantResourceBuilder extends BaseBuil
         return withArraySetFieldByReflection("competitionId", competitions);
     }
 
-    public AssessmentInterviewPanelParticipantResourceBuilder withInvite(AssessmentInterviewPanelInviteResource... invites) {
+    public AssessmentInterviewPanelParticipantResourceBuilder withInvite(InterviewInviteResource... invites) {
         return withArraySetFieldByReflection("invite", invites);
     }
 
-    public AssessmentInterviewPanelParticipantResourceBuilder withInvite(Builder<AssessmentInterviewPanelInviteResource, ?> invite) {
+    public AssessmentInterviewPanelParticipantResourceBuilder withInvite(Builder<InterviewInviteResource, ?> invite) {
         return withInvite(invite.build());
     }
 
@@ -101,7 +101,7 @@ public class AssessmentInterviewPanelParticipantResourceBuilder extends BaseBuil
     }
 
     @Override
-    protected void postProcess(int index, AssessmentInterviewPanelParticipantResource instance) {
+    protected void postProcess(int index, InterviewParticipantResource instance) {
         super.postProcess(index, instance);
     }
 }

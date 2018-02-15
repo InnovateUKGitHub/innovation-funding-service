@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.service;
 
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,13 +37,13 @@ public class AssessmentPanelRestServiceImpl extends BaseRestService implements A
     }
 
     @Override
-    public RestResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId) {
+    public RestResult<List<ReviewResource>> getAssessmentReviews(long userId, long competitionId) {
         return getWithRestResult(format("%s/user/%s/competition/%s", assessmentPanelRestUrl, userId, competitionId), assessmentReviewResourceListType());
     }
 
     @Override
-    public RestResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId) {
-        return getWithRestResult(format("%s/review/%d", assessmentPanelRestUrl, assessmentReviewId), AssessmentReviewResource.class);
+    public RestResult<ReviewResource> getAssessmentReview(long assessmentReviewId) {
+        return getWithRestResult(format("%s/review/%d", assessmentPanelRestUrl, assessmentReviewId), ReviewResource.class);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class AssessmentPanelRestServiceImpl extends BaseRestService implements A
     }
 
     @Override
-    public RestResult<Void> rejectAssessmentReview(long assessmentReviewId, AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource) {
-        return putWithRestResult(format("%s/review/%d/reject", assessmentPanelRestUrl, assessmentReviewId), assessmentReviewRejectOutcomeResource, Void.class);
+    public RestResult<Void> rejectAssessmentReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource) {
+        return putWithRestResult(format("%s/review/%d/reject", assessmentPanelRestUrl, assessmentReviewId), reviewRejectOutcomeResource, Void.class);
     }
 }

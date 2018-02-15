@@ -19,12 +19,12 @@ import java.util.List;
 public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionAssessmentParticipant, Long> {
 
     String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
-            "FROM AssessmentReviewPanelInvite invite " +
+            "FROM ReviewInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 
     String USERS_WITH_INTERVIEW_PANEL_INVITE = "SELECT invite.user.id " +
-            "FROM AssessmentInterviewPanelInvite invite " +
+            "FROM InterviewInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 

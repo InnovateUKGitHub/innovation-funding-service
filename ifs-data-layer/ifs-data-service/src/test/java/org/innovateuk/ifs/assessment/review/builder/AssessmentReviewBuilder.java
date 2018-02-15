@@ -2,9 +2,9 @@ package org.innovateuk.ifs.assessment.review.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.review.domain.AssessmentReviewRejectOutcome;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
+import org.innovateuk.ifs.review.domain.Review;
+import org.innovateuk.ifs.review.domain.ReviewRejectOutcome;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 
@@ -16,9 +16,9 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 
-public class AssessmentReviewBuilder extends BaseBuilder<AssessmentReview, AssessmentReviewBuilder> {
+public class AssessmentReviewBuilder extends BaseBuilder<Review, AssessmentReviewBuilder> {
 
-    private AssessmentReviewBuilder(List<BiConsumer<Integer, AssessmentReview>> multiActions) {
+    private AssessmentReviewBuilder(List<BiConsumer<Integer, Review>> multiActions) {
         super(multiActions);
     }
 
@@ -27,20 +27,20 @@ public class AssessmentReviewBuilder extends BaseBuilder<AssessmentReview, Asses
     }
 
     @Override
-    protected AssessmentReviewBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentReview>> actions) {
+    protected AssessmentReviewBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Review>> actions) {
         return new AssessmentReviewBuilder(actions);
     }
 
     @Override
-    protected AssessmentReview createInitial() {
-        return new AssessmentReview();
+    protected Review createInitial() {
+        return new Review();
     }
 
     public AssessmentReviewBuilder withId(Long... ids) {
         return withArray((id, invite) -> setField("id", id, invite), ids);
     }
 
-    public AssessmentReviewBuilder withRejection(AssessmentReviewRejectOutcome... rejections) {
+    public AssessmentReviewBuilder withRejection(ReviewRejectOutcome... rejections) {
         return withArray((rejection, invite) -> invite.setRejection(rejection), rejections);
     }
 
@@ -52,7 +52,7 @@ public class AssessmentReviewBuilder extends BaseBuilder<AssessmentReview, Asses
         return withArray((participant, invite) -> invite.setParticipant(participant), participants);
     }
 
-    public AssessmentReviewBuilder withState(AssessmentReviewState... states) {
+    public AssessmentReviewBuilder withState(ReviewState... states) {
         return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_REVIEW, state.getBackingState())), states);
     }
 }

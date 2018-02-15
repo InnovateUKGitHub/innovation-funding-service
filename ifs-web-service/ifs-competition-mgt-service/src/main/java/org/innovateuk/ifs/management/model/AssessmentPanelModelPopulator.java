@@ -2,11 +2,11 @@ package org.innovateuk.ifs.management.model;
 
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public class AssessmentPanelModelPopulator {
 
     public AssessmentPanelViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        AssessmentPanelKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService
+        ReviewKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService
                 .getAssessmentPanelKeyStatisticsByCompetition(competitionId)
                 .getSuccess();
 

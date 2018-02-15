@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -39,14 +39,14 @@ public interface AssessmentPanelService {
     ServiceResult<Boolean> isPendingReviewNotifications(long competitionId);
 
     @PostFilter("hasPermission(filterObject, 'READ_PANEL_DASHBOARD')")
-    ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId);
+    ServiceResult<List<ReviewResource>> getAssessmentReviews(long userId, long competitionId);
 
-    @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource', 'READ')")
-    ServiceResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId);
+    @PreAuthorize("hasPermission(#assessmentReviewId, 'ReviewResource', 'READ')")
+    ServiceResult<ReviewResource> getAssessmentReview(long assessmentReviewId);
 
-    @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource', 'UPDATE')")
+    @PreAuthorize("hasPermission(#assessmentReviewId, 'ReviewResource', 'UPDATE')")
     ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId);
 
-    @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource', 'UPDATE')")
-    ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId, AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource);
+    @PreAuthorize("hasPermission(#assessmentReviewId, 'ReviewResource', 'UPDATE')")
+    ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource);
 }

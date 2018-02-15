@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.builder;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -9,13 +9,13 @@ import java.util.function.BiConsumer;
  * Resource builder for AssessmentPanelInviteStatisticsResources
  */
 public class AssessmentPanelInviteStatisticsResourceBuilder
-    extends BaseBuilder<AssessmentPanelInviteStatisticsResource, AssessmentPanelInviteStatisticsResourceBuilder> {
+    extends BaseBuilder<ReviewInviteStatisticsResource, AssessmentPanelInviteStatisticsResourceBuilder> {
 
     protected AssessmentPanelInviteStatisticsResourceBuilder() {
         super();
     }
 
-    protected AssessmentPanelInviteStatisticsResourceBuilder(List<BiConsumer<Integer, AssessmentPanelInviteStatisticsResource>> newActions) {
+    protected AssessmentPanelInviteStatisticsResourceBuilder(List<BiConsumer<Integer, ReviewInviteStatisticsResource>> newActions) {
         super(newActions);
     }
 
@@ -24,13 +24,13 @@ public class AssessmentPanelInviteStatisticsResourceBuilder
     }
 
     @Override
-    protected AssessmentPanelInviteStatisticsResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentPanelInviteStatisticsResource>> actions) {
+    protected AssessmentPanelInviteStatisticsResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewInviteStatisticsResource>> actions) {
         return new AssessmentPanelInviteStatisticsResourceBuilder(actions);
     }
 
     @Override
-    protected AssessmentPanelInviteStatisticsResource createInitial() {
-        return new AssessmentPanelInviteStatisticsResource();
+    protected ReviewInviteStatisticsResource createInitial() {
+        return new ReviewInviteStatisticsResource();
     }
 
     public AssessmentPanelInviteStatisticsResourceBuilder withAssessorsInvited(Integer ...assessorsInvited) {

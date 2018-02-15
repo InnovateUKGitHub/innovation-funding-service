@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelInviteResource;
+import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -12,11 +12,11 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for {@link AssessmentReviewPanelInviteResource}
+ * Builder for {@link ReviewInviteResource}
  */
-public class AssessmentReviewPanelInviteResourceBuilder extends BaseBuilder<AssessmentReviewPanelInviteResource, AssessmentReviewPanelInviteResourceBuilder> {
+public class AssessmentReviewPanelInviteResourceBuilder extends BaseBuilder<ReviewInviteResource, AssessmentReviewPanelInviteResourceBuilder> {
 
-    private AssessmentReviewPanelInviteResourceBuilder(List<BiConsumer<Integer, AssessmentReviewPanelInviteResource>> multiActions) {
+    private AssessmentReviewPanelInviteResourceBuilder(List<BiConsumer<Integer, ReviewInviteResource>> multiActions) {
         super(multiActions);
     }
 
@@ -57,12 +57,12 @@ public class AssessmentReviewPanelInviteResourceBuilder extends BaseBuilder<Asse
     }
 
     @Override
-    protected AssessmentReviewPanelInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentReviewPanelInviteResource>> actions) {
+    protected AssessmentReviewPanelInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewInviteResource>> actions) {
         return new AssessmentReviewPanelInviteResourceBuilder(actions);
     }
 
     @Override
-    protected AssessmentReviewPanelInviteResource createInitial() {
-        return new AssessmentReviewPanelInviteResource();
+    protected ReviewInviteResource createInitial() {
+        return new ReviewInviteResource();
     }
 }

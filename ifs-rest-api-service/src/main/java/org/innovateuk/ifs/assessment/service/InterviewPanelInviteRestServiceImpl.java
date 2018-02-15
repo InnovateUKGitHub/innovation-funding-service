@@ -87,7 +87,7 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
     }
 
     @Override
-    public RestResult<List<AssessmentInterviewPanelParticipantResource>> getAllInvitesByUser(long userId) {
+    public RestResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId) {
         String baseUrl = format("%s/%s/%s", interviewPanelInviteRestUrl, "get-all-invites-by-user", userId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
@@ -122,8 +122,8 @@ public class InterviewPanelInviteRestServiceImpl extends BaseRestService impleme
     }
 
     @Override
-    public RestResult<AssessmentInterviewPanelInviteResource> openInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "open-invite", inviteHash), AssessmentInterviewPanelInviteResource.class);
+    public RestResult<InterviewInviteResource> openInvite(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", interviewPanelInviteRestUrl, "open-invite", inviteHash), InterviewInviteResource.class);
     }
 
     @Override

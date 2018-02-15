@@ -4,10 +4,10 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.lang.reflect.Constructor;
@@ -20,33 +20,33 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
- * Builder for {@link AssessmentReviewPanelParticipant}s.
+ * Builder for {@link ReviewParticipant}s.
  */
-public class AssessmentReviewPanelParticipantBuilder extends BaseBuilder<AssessmentReviewPanelParticipant, AssessmentReviewPanelParticipantBuilder> {
+public class AssessmentReviewPanelParticipantBuilder extends BaseBuilder<ReviewParticipant, AssessmentReviewPanelParticipantBuilder> {
 
     public static AssessmentReviewPanelParticipantBuilder newAssessmentPanelParticipant() {
         return new AssessmentReviewPanelParticipantBuilder(emptyList()).with(uniqueIds());
     }
 
-    private AssessmentReviewPanelParticipantBuilder(List<BiConsumer<Integer, AssessmentReviewPanelParticipant>> multiActions) {
+    private AssessmentReviewPanelParticipantBuilder(List<BiConsumer<Integer, ReviewParticipant>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected AssessmentReviewPanelParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentReviewPanelParticipant>> actions) {
+    protected AssessmentReviewPanelParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewParticipant>> actions) {
         return new AssessmentReviewPanelParticipantBuilder(actions);
     }
 
     @Override
-    protected AssessmentReviewPanelParticipant createInitial() {
+    protected ReviewParticipant createInitial() {
         try {
-            Constructor c = AssessmentReviewPanelParticipant.class.getDeclaredConstructor();
+            Constructor c = ReviewParticipant.class.getDeclaredConstructor();
             c.setAccessible(true);
-            AssessmentReviewPanelParticipant instance = (AssessmentReviewPanelParticipant) c.newInstance();
+            ReviewParticipant instance = (ReviewParticipant) c.newInstance();
             setField("status", ParticipantStatus.PENDING, instance);
             return instance;
         } catch (NoSuchMethodException | IllegalAccessException |InstantiationException | InvocationTargetException e) {
-            throw new IllegalStateException("Missing default constructor for AssessmentReviewPanelParticipant", e);
+            throw new IllegalStateException("Missing default constructor for ReviewParticipant", e);
         }
     }
 
@@ -70,11 +70,11 @@ public class AssessmentReviewPanelParticipantBuilder extends BaseBuilder<Assessm
         return withCompetition(competitions.build());
     }
 
-    public AssessmentReviewPanelParticipantBuilder withInvite(AssessmentReviewPanelInvite... invites) {
+    public AssessmentReviewPanelParticipantBuilder withInvite(ReviewInvite... invites) {
         return withArray((invite, i) -> setField("invite", invite, i), invites);
     }
 
-    public AssessmentReviewPanelParticipantBuilder withInvite(Builder<AssessmentReviewPanelInvite, ?> invite) {
+    public AssessmentReviewPanelParticipantBuilder withInvite(Builder<ReviewInvite, ?> invite) {
         return withInvite(invite.build());
     }
 

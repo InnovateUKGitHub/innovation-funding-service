@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.assessment.interview.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterviewPanelMessageOutcome;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
+import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class AssessmentInterviewPanelMessageOutcomeBuilder extends BaseBuilder<AssessmentInterviewPanelMessageOutcome, AssessmentInterviewPanelMessageOutcomeBuilder> {
+public class AssessmentInterviewPanelMessageOutcomeBuilder extends BaseBuilder<InterviewAssignmentMessageOutcome, AssessmentInterviewPanelMessageOutcomeBuilder> {
 
-    private AssessmentInterviewPanelMessageOutcomeBuilder(List<BiConsumer<Integer, AssessmentInterviewPanelMessageOutcome>> multiActions) {
+    private AssessmentInterviewPanelMessageOutcomeBuilder(List<BiConsumer<Integer, InterviewAssignmentMessageOutcome>> multiActions) {
         super(multiActions);
     }
 
@@ -20,13 +20,13 @@ public class AssessmentInterviewPanelMessageOutcomeBuilder extends BaseBuilder<A
     }
 
     @Override
-    protected AssessmentInterviewPanelMessageOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentInterviewPanelMessageOutcome>> actions) {
+    protected AssessmentInterviewPanelMessageOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewAssignmentMessageOutcome>> actions) {
         return new AssessmentInterviewPanelMessageOutcomeBuilder(actions);
     }
 
     @Override
-    protected AssessmentInterviewPanelMessageOutcome createInitial() {
-        return new AssessmentInterviewPanelMessageOutcome();
+    protected InterviewAssignmentMessageOutcome createInitial() {
+        return new InterviewAssignmentMessageOutcome();
     }
 
     public AssessmentInterviewPanelMessageOutcomeBuilder withId(Long... ids) {

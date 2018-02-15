@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewResource;
-import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
+import org.innovateuk.ifs.interview.resource.InterviewResource;
+import org.innovateuk.ifs.interview.resource.InterviewState;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,9 +12,9 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class AssessmentInterviewResourceBuilder extends BaseBuilder<AssessmentInterviewResource, AssessmentInterviewResourceBuilder> {
+public class AssessmentInterviewResourceBuilder extends BaseBuilder<InterviewResource, AssessmentInterviewResourceBuilder> {
 
-    private AssessmentInterviewResourceBuilder(List<BiConsumer<Integer, AssessmentInterviewResource>> multiActions) {
+    private AssessmentInterviewResourceBuilder(List<BiConsumer<Integer, InterviewResource>> multiActions) {
         super(multiActions);
     }
 
@@ -23,13 +23,13 @@ public class AssessmentInterviewResourceBuilder extends BaseBuilder<AssessmentIn
     }
 
     @Override
-    protected AssessmentInterviewResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentInterviewResource>> actions) {
+    protected AssessmentInterviewResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewResource>> actions) {
         return new AssessmentInterviewResourceBuilder(actions);
     }
 
     @Override
-    protected AssessmentInterviewResource createInitial() {
-        return new AssessmentInterviewResource();
+    protected InterviewResource createInitial() {
+        return new InterviewResource();
     }
 
     public AssessmentInterviewResourceBuilder withId(Long... value) {
@@ -64,7 +64,7 @@ public class AssessmentInterviewResourceBuilder extends BaseBuilder<AssessmentIn
         return withArraySetFieldByReflection("competition", value);
     }
 
-    public AssessmentInterviewResourceBuilder withActivityState(AssessmentInterviewState... value) {
+    public AssessmentInterviewResourceBuilder withActivityState(InterviewState... value) {
         return withArraySetFieldByReflection("assessmentInterviewState", value);
     }
 }

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.invite.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelInviteResource;
+import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
 
 import java.time.ZonedDateTime;
 
@@ -13,7 +13,7 @@ public class PanelInviteViewModel extends BaseInviteViewModel {
 
     private ZonedDateTime panelDate;
 
-    public PanelInviteViewModel(String panelInviteHash, AssessmentReviewPanelInviteResource invite, boolean userLoggedIn) {
+    public PanelInviteViewModel(String panelInviteHash, ReviewInviteResource invite, boolean userLoggedIn) {
         super(panelInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
         this.panelDate = invite.getPanelDate();
     }

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.builder;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -10,13 +10,13 @@ import java.util.function.BiConsumer;
  */
 
 public class AssessmentPanelKeyStatisticsResourceBuilder
-        extends BaseBuilder<AssessmentPanelKeyStatisticsResource, AssessmentPanelKeyStatisticsResourceBuilder> {
+        extends BaseBuilder<ReviewKeyStatisticsResource, AssessmentPanelKeyStatisticsResourceBuilder> {
 
     protected AssessmentPanelKeyStatisticsResourceBuilder() {
         super();
     }
 
-    protected AssessmentPanelKeyStatisticsResourceBuilder(List<BiConsumer<Integer, AssessmentPanelKeyStatisticsResource>> newActions) {
+    protected AssessmentPanelKeyStatisticsResourceBuilder(List<BiConsumer<Integer, ReviewKeyStatisticsResource>> newActions) {
         super(newActions);
     }
 
@@ -25,13 +25,13 @@ public class AssessmentPanelKeyStatisticsResourceBuilder
     }
 
     @Override
-    protected AssessmentPanelKeyStatisticsResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentPanelKeyStatisticsResource>> actions) {
+    protected AssessmentPanelKeyStatisticsResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewKeyStatisticsResource>> actions) {
         return new AssessmentPanelKeyStatisticsResourceBuilder(actions);
     }
 
     @Override
-    protected AssessmentPanelKeyStatisticsResource createInitial() {
-        return new AssessmentPanelKeyStatisticsResource();
+    protected ReviewKeyStatisticsResource createInitial() {
+        return new ReviewKeyStatisticsResource();
     }
 
     public AssessmentPanelKeyStatisticsResourceBuilder withApplicationsInPanel(Integer ...applicationsInPanel) {

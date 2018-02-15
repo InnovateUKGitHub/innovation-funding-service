@@ -6,9 +6,9 @@ import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusView
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
+import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +43,15 @@ public class AssessorDashboardModelPopulator {
 
         UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccess();
 
-        List<AssessmentReviewPanelParticipantResource> assessmentReviewPanelParticipantResourceList = assessmentPanelInviteRestService.getAllInvitesByUser(userId).getSuccess();
+        List<ReviewParticipantResource> reviewParticipantResourceList = assessmentPanelInviteRestService.getAllInvitesByUser(userId).getSuccess();
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),
                 getActiveCompetitions(participantResourceList),
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
-                getAssessmentPanelInvites(assessmentReviewPanelParticipantResourceList),
-                getAssessmentPanelAccepted(assessmentReviewPanelParticipantResourceList)
+                getAssessmentPanelInvites(reviewParticipantResourceList),
+                getAssessmentPanelAccepted(reviewParticipantResourceList)
         );
     }
 
@@ -101,9 +101,9 @@ public class AssessorDashboardModelPopulator {
                 .collect(toList());
     }
 
-    private List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelInvites(List<AssessmentReviewPanelParticipantResource> assessmentReviewPanelParticipantResourceList) {
-        return assessmentReviewPanelParticipantResourceList.stream()
-                .filter(AssessmentReviewPanelParticipantResource::isPending)
+    private List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelInvites(List<ReviewParticipantResource> reviewParticipantResourceList) {
+        return reviewParticipantResourceList.stream()
+                .filter(ReviewParticipantResource::isPending)
                 .filter(appr -> !isAfterPanelDate(appr.getCompetitionId()))
                 .map(appr -> new AssessorDashboardAssessmentPanelInviteViewModel(
                         appr.getCompetitionName(),
@@ -113,9 +113,9 @@ public class AssessorDashboardModelPopulator {
                 .collect(toList());
     }
 
-    private List<AssessorDashboardAssessmentPanelAcceptedViewModel> getAssessmentPanelAccepted(List<AssessmentReviewPanelParticipantResource> assessmentPanelAcceptedResourceList) {
+    private List<AssessorDashboardAssessmentPanelAcceptedViewModel> getAssessmentPanelAccepted(List<ReviewParticipantResource> assessmentPanelAcceptedResourceList) {
         return assessmentPanelAcceptedResourceList.stream()
-                .filter(AssessmentReviewPanelParticipantResource::isAccepted)
+                .filter(ReviewParticipantResource::isAccepted)
                 .filter(appr -> !isAfterPanelDate(appr.getCompetitionId()))
                 .map(appr -> new AssessorDashboardAssessmentPanelAcceptedViewModel(
                         appr.getCompetitionName(),

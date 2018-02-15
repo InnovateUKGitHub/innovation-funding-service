@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.AssessmentInterviewPanelInviteResource;
+import org.innovateuk.ifs.invite.resource.InterviewInviteResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -12,11 +12,11 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for {@link AssessmentInterviewPanelInviteResource}
+ * Builder for {@link InterviewInviteResource}
  */
-public class AssessmentInterviewPanelInviteResourceBuilder extends BaseBuilder<AssessmentInterviewPanelInviteResource, AssessmentInterviewPanelInviteResourceBuilder> {
+public class AssessmentInterviewPanelInviteResourceBuilder extends BaseBuilder<InterviewInviteResource, AssessmentInterviewPanelInviteResourceBuilder> {
 
-    private AssessmentInterviewPanelInviteResourceBuilder(List<BiConsumer<Integer, AssessmentInterviewPanelInviteResource>> multiActions) {
+    private AssessmentInterviewPanelInviteResourceBuilder(List<BiConsumer<Integer, InterviewInviteResource>> multiActions) {
         super(multiActions);
     }
 
@@ -57,12 +57,12 @@ public class AssessmentInterviewPanelInviteResourceBuilder extends BaseBuilder<A
     }
 
     @Override
-    protected AssessmentInterviewPanelInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentInterviewPanelInviteResource>> actions) {
+    protected AssessmentInterviewPanelInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewInviteResource>> actions) {
         return new AssessmentInterviewPanelInviteResourceBuilder(actions);
     }
 
     @Override
-    protected AssessmentInterviewPanelInviteResource createInitial() {
-        return new AssessmentInterviewPanelInviteResource();
+    protected InterviewInviteResource createInitial() {
+        return new InterviewInviteResource();
     }
 }

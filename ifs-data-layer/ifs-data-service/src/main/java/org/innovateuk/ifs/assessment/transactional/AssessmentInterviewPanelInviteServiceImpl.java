@@ -2,21 +2,21 @@ package org.innovateuk.ifs.assessment.transactional;
 
 
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterview;
-import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
-import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
-import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.interview.domain.Interview;
+import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
+import org.innovateuk.ifs.interview.repository.InterviewRepository;
+import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
 import org.innovateuk.ifs.invite.mapper.AssessmentInterviewPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelInviteRepository;
@@ -70,7 +70,7 @@ import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 /*
- * Service for managing {@link AssessmentInterviewPanelInvite}s.
+ * Service for managing {@link InterviewInvite}s.
  */
 @Service
 @Transactional
@@ -95,7 +95,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
-    private AssessmentInterviewPanelInviteMapper assessmentInterviewPanelInviteMapper;
+    private InterviewInviteMapper interviewInviteMapper;
 
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
@@ -125,7 +125,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private AssessmentInterviewRepository assessmentInterviewRepository;
+    private InterviewRepository interviewRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -144,9 +144,9 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<AssessmentInterviewPanelInvite> invites = assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+            List<InterviewInvite> invites = assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
-            List<String> recipients = simpleMap(invites, AssessmentInterviewPanelInvite::getName);
+            List<String> recipients = simpleMap(invites, InterviewInvite::getName);
             recipients.sort(String::compareTo);
 
             return serviceSuccess(new AssessorInvitesToSendResource(
@@ -162,8 +162,8 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
 
-            List<AssessmentInterviewPanelInvite> invites = assessmentInterviewPanelInviteRepository.getByIdIn(inviteIds);
-            List<String> recipients = simpleMap(invites, AssessmentInterviewPanelInvite::getName);
+            List<InterviewInvite> invites = assessmentInterviewPanelInviteRepository.getByIdIn(inviteIds);
+            List<String> recipients = simpleMap(invites, InterviewInvite::getName);
             recipients.sort(String::compareTo);
 
             return serviceSuccess(new AssessorInvitesToSendResource(
@@ -186,7 +186,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
                     assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         assessmentInterviewPanelParticipantRepository.save(
-                                new AssessmentInterviewPanelParticipant(invite.send(loggedInUserSupplier.get(), now()))
+                                new InterviewParticipant(invite.send(loggedInUserSupplier.get(), now()))
                         );
 
                         return sendInviteNotification(
@@ -255,7 +255,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
 
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-        Page<AssessmentInterviewPanelInvite> pagedResult = assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
+        Page<InterviewInvite> pagedResult = assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),
@@ -297,7 +297,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
                                                                                    List<ParticipantStatus> statuses) {
-        Page<AssessmentInterviewPanelParticipant> pagedResult = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
+        Page<InterviewParticipant> pagedResult = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                     competitionId,
                     statuses,
                     pageable);
@@ -332,7 +332,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
         ));
     }
 
-    private String getDetails(AssessmentInterviewPanelParticipant participant) {
+    private String getDetails(InterviewParticipant participant) {
         String details = null;
 
         if (participant.getStatus() == REJECTED) {
@@ -348,24 +348,24 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
 
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
-        List<AssessmentInterviewPanelParticipant> participants = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
+        List<InterviewParticipant> participants = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                 competitionId,
                 asList(PENDING, REJECTED));
 
         return serviceSuccess(simpleMap(participants, participant -> participant.getInvite().getId()));
     }
 
-    private ServiceResult<AssessmentInterviewPanelInvite> inviteUserToCompetition(User user, long competitionId) {
+    private ServiceResult<InterviewInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
-                        competition -> assessmentInterviewPanelInviteRepository.save(new AssessmentInterviewPanelInvite(user, generateInviteHash(), competition))
+                        competition -> assessmentInterviewPanelInviteRepository.save(new InterviewInvite(user, generateInviteHash(), competition))
                 );
 
     }
 
     @Override
-    public ServiceResult<List<AssessmentInterviewPanelParticipantResource>> getAllInvitesByUser(long userId) {
-        List<AssessmentInterviewPanelParticipantResource> assessmentInterviewPanelParticipantResources =
+    public ServiceResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId) {
+        List<InterviewParticipantResource> interviewParticipantResources =
                 assessmentInterviewPanelParticipantRepository
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
@@ -373,9 +373,9 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
                 .map(assessmentInterviewPanelParticipantMapper::mapToResource)
                 .collect(toList());
 
-        assessmentInterviewPanelParticipantResources.forEach(this::determineStatusOfPanelApplications);
+        interviewParticipantResources.forEach(this::determineStatusOfPanelApplications);
 
-        return serviceSuccess(assessmentInterviewPanelParticipantResources);
+        return serviceSuccess(interviewParticipantResources);
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
@@ -399,7 +399,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     private ServiceResult<Void> sendInviteNotification(String subject,
                                                        String customTextPlain,
                                                        String customTextHtml,
-                                                       AssessmentInterviewPanelInvite invite,
+                                                       InterviewInvite invite,
                                                        Notifications notificationType) {
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
@@ -422,11 +422,11 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
         return find(userRepository.findOne(id), notFoundError(User.class, id));
     }
 
-    private ServiceResult<AssessmentInterviewPanelInvite> getByEmailAndCompetition(String email, long competitionId) {
-        return find(assessmentInterviewPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInterviewPanelInvite.class, email, competitionId));
+    private ServiceResult<InterviewInvite> getByEmailAndCompetition(String email, long competitionId) {
+        return find(assessmentInterviewPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(InterviewInvite.class, email, competitionId));
     }
 
-    private boolean isUserCompliant(AssessmentInterviewPanelInvite competitionInvite) {
+    private boolean isUserCompliant(InterviewInvite competitionInvite) {
         if (competitionInvite == null || competitionInvite.getUser() == null) {
             return false;
         }
@@ -434,25 +434,25 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
         return profile.isCompliant(competitionInvite.getUser());
     }
 
-    private List<InnovationAreaResource> getInnovationAreasForInvite(AssessmentInterviewPanelInvite competitionInvite) {
+    private List<InnovationAreaResource> getInnovationAreasForInvite(InterviewInvite competitionInvite) {
         return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
                 .map(innovationAreaMapper::mapToResource)
                 .collect(toList());
     }
 
     @Override
-    public ServiceResult<AssessmentInterviewPanelInviteResource> openInvite(String inviteHash) {
+    public ServiceResult<InterviewInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
-                .andOnSuccessReturn(assessmentInterviewPanelInviteMapper::mapToResource);
+                .andOnSuccessReturn(interviewInviteMapper::mapToResource);
     }
 
-    private AssessmentInterviewPanelInvite openInvite(AssessmentInterviewPanelInvite invite) {
+    private InterviewInvite openInvite(InterviewInvite invite) {
         return assessmentInterviewPanelInviteRepository.save(invite.open());
     }
 
-    private ServiceResult<AssessmentInterviewPanelParticipant> getParticipantByInviteHash(String inviteHash) {
-        return find(assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash), notFoundError(AssessmentInterviewPanelParticipant.class, inviteHash));
+    private ServiceResult<InterviewParticipant> getParticipantByInviteHash(String inviteHash) {
+        return find(assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash), notFoundError(InterviewParticipant.class, inviteHash));
     }
 
     @Override
@@ -466,11 +466,11 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
         });
     }
 
-    private ServiceResult<AssessmentInterviewPanelInvite> getByHash(String inviteHash) {
-        return find(assessmentInterviewPanelInviteRepository.getByHash(inviteHash), notFoundError(AssessmentInterviewPanelInvite.class, inviteHash));
+    private ServiceResult<InterviewInvite> getByHash(String inviteHash) {
+        return find(assessmentInterviewPanelInviteRepository.getByHash(inviteHash), notFoundError(InterviewInvite.class, inviteHash));
     }
 
-    private static ServiceResult<AssessmentInterviewPanelParticipant> accept(AssessmentInterviewPanelParticipant participant) {
+    private static ServiceResult<InterviewParticipant> accept(InterviewParticipant participant) {
         User user = participant.getUser();
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
@@ -483,18 +483,18 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
         }
     }
 
-    private static String getInviteCompetitionName(AssessmentInterviewPanelParticipant participant) {
+    private static String getInviteCompetitionName(InterviewParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
 
-    private ServiceResult<AssessmentInterviewPanelInvite> getByHashIfOpen(String inviteHash) {
+    private ServiceResult<InterviewInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
             if (invite.getTarget().getPanelDate() == null || now().isAfter(invite.getTarget().getPanelDate())) {
                 return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 
-            AssessmentInterviewPanelParticipant participant = assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash);
+            InterviewParticipant participant = assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash);
 
             if (participant == null) {
                 return serviceSuccess(invite);
@@ -519,7 +519,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
                         assessmentInterviewPanelInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
     }
 
-    private ServiceResult<Void> deleteInvite(AssessmentInterviewPanelInvite invite) {
+    private ServiceResult<Void> deleteInvite(InterviewInvite invite) {
         if (invite.getStatus() != CREATED) {
             return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_INVITE_CANNOT_DELETE_ONCE_SENT, invite.getEmail()));
         }
@@ -528,17 +528,17 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
         return serviceSuccess();
     }
 
-    private void determineStatusOfPanelApplications(AssessmentInterviewPanelParticipantResource assessmentInterviewPanelParticipantResource) {
+    private void determineStatusOfPanelApplications(InterviewParticipantResource interviewParticipantResource) {
 
-        List<AssessmentInterview> reviews = assessmentInterviewRepository.
+        List<Interview> reviews = interviewRepository.
                 findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
-                        assessmentInterviewPanelParticipantResource.getUserId(),
-                        assessmentInterviewPanelParticipantResource.getCompetitionId());
+                        interviewParticipantResource.getUserId(),
+                        interviewParticipantResource.getCompetitionId());
 
-        assessmentInterviewPanelParticipantResource.setAwaitingApplications(getApplicationsPendingForPanelCount(reviews));
+        interviewParticipantResource.setAwaitingApplications(getApplicationsPendingForPanelCount(reviews));
     }
 
-    private Long getApplicationsPendingForPanelCount(List<AssessmentInterview> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(AssessmentInterviewState.PENDING)).count();
+    private Long getApplicationsPendingForPanelCount(List<Interview> reviews) {
+        return reviews.stream().filter(review -> review.getActivityState().equals(InterviewState.PENDING)).count();
     }
 }

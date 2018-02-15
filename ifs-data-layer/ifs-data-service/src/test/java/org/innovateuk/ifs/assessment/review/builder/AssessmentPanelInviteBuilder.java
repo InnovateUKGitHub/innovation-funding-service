@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.review.builder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.builder.BaseInviteBuilder;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.ZonedDateTime;
@@ -13,8 +13,8 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class AssessmentPanelInviteBuilder extends BaseInviteBuilder<Competition, AssessmentReviewPanelInvite, AssessmentPanelInviteBuilder> {
-    private AssessmentPanelInviteBuilder(List<BiConsumer<Integer, AssessmentReviewPanelInvite>> multiActions) {
+public class AssessmentPanelInviteBuilder extends BaseInviteBuilder<Competition, ReviewInvite, AssessmentPanelInviteBuilder> {
+    private AssessmentPanelInviteBuilder(List<BiConsumer<Integer, ReviewInvite>> multiActions) {
         super(multiActions);
     }
 
@@ -27,7 +27,7 @@ public class AssessmentPanelInviteBuilder extends BaseInviteBuilder<Competition,
     }
 
     @Override
-    protected AssessmentPanelInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentReviewPanelInvite>> actions) {
+    protected AssessmentPanelInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewInvite>> actions) {
         return new AssessmentPanelInviteBuilder(actions);
     }
 
@@ -51,7 +51,7 @@ public class AssessmentPanelInviteBuilder extends BaseInviteBuilder<Competition,
         return  withArraySetFieldByReflection("sentOn", dates);
     }
     @Override
-    protected AssessmentReviewPanelInvite createInitial() {
-        return new AssessmentReviewPanelInvite();
+    protected ReviewInvite createInitial() {
+        return new ReviewInvite();
     }
 }

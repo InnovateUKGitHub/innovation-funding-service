@@ -2,10 +2,10 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.resource.ReviewState;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,9 +14,9 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class AssessmentReviewResourceBuilder extends BaseBuilder<AssessmentReviewResource, AssessmentReviewResourceBuilder> {
+public class AssessmentReviewResourceBuilder extends BaseBuilder<ReviewResource, AssessmentReviewResourceBuilder> {
 
-    private AssessmentReviewResourceBuilder(List<BiConsumer<Integer, AssessmentReviewResource>> multiActions) {
+    private AssessmentReviewResourceBuilder(List<BiConsumer<Integer, ReviewResource>> multiActions) {
         super(multiActions);
     }
 
@@ -25,13 +25,13 @@ public class AssessmentReviewResourceBuilder extends BaseBuilder<AssessmentRevie
     }
 
     @Override
-    protected AssessmentReviewResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentReviewResource>> actions) {
+    protected AssessmentReviewResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewResource>> actions) {
         return new AssessmentReviewResourceBuilder(actions);
     }
 
     @Override
-    protected AssessmentReviewResource createInitial() {
-        return new AssessmentReviewResource();
+    protected ReviewResource createInitial() {
+        return new ReviewResource();
     }
 
     public AssessmentReviewResourceBuilder withId(Long... value) {
@@ -50,11 +50,11 @@ public class AssessmentReviewResourceBuilder extends BaseBuilder<AssessmentRevie
         return withArraySetFieldByReflection("fundingDecision", value);
     }
 
-    public AssessmentReviewResourceBuilder withRejection(AssessmentReviewRejectOutcomeResource... value) {
+    public AssessmentReviewResourceBuilder withRejection(ReviewRejectOutcomeResource... value) {
         return withArraySetFieldByReflection("rejection", value);
     }
 
-    public AssessmentReviewResourceBuilder withRejection(Builder<AssessmentReviewRejectOutcomeResource, ?> value) {
+    public AssessmentReviewResourceBuilder withRejection(Builder<ReviewRejectOutcomeResource, ?> value) {
         return withRejection(value.build());
     }
 
@@ -74,7 +74,7 @@ public class AssessmentReviewResourceBuilder extends BaseBuilder<AssessmentRevie
         return withArraySetFieldByReflection("competition", value);
     }
 
-    public AssessmentReviewResourceBuilder withActivityState(AssessmentReviewState... value) {
+    public AssessmentReviewResourceBuilder withActivityState(ReviewState... value) {
         return withArraySetFieldByReflection("assessmentReviewState", value);
     }
 }

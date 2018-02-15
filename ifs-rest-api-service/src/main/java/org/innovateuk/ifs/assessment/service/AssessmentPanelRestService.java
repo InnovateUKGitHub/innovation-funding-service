@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.service;
 
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ public interface AssessmentPanelRestService {
     RestResult<Void> unassignFromPanel(long applicationId);
     RestResult<Void> notifyAssessors(long competitionId);
     RestResult<Boolean> isPendingReviewNotifications(long competitionId);
-    RestResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId);
+    RestResult<List<ReviewResource>> getAssessmentReviews(long userId, long competitionId);
     RestResult<Void> acceptAssessmentReview(long assessmentReviewId);
-    RestResult<Void> rejectAssessmentReview(long assessmentReviewId, AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource);
-    RestResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId);
+    RestResult<Void> rejectAssessmentReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource);
+    RestResult<ReviewResource> getAssessmentReview(long assessmentReviewId);
 }

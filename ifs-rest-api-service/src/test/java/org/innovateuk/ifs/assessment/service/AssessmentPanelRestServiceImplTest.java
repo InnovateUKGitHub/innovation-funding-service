@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.junit.Test;
 
 import java.util.List;
@@ -65,11 +65,11 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void getAssessmentReviews() {
         long competitionId = 11L;
         long userId = 2L;
-        List<AssessmentReviewResource> assessmentReviews = newAssessmentReviewResource().build(2);
+        List<ReviewResource> assessmentReviews = newAssessmentReviewResource().build(2);
 
         setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", restUrl, userId, competitionId), assessmentReviewResourceListType(), assessmentReviews, OK);
 
-        List<AssessmentReviewResource> result = service.getAssessmentReviews(userId, competitionId).getSuccess();
+        List<ReviewResource> result = service.getAssessmentReviews(userId, competitionId).getSuccess();
         assertEquals(assessmentReviews, result);
     }
 
@@ -77,11 +77,11 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void getAssessmentReview() {
         long assessmentReviewId = 11L;
 
-        AssessmentReviewResource assessmentReview = newAssessmentReviewResource().build();
+        ReviewResource assessmentReview = newAssessmentReviewResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/review/%d", restUrl, assessmentReviewId), AssessmentReviewResource.class, assessmentReview, OK);
+        setupGetWithRestResultExpectations(format("%s/review/%d", restUrl, assessmentReviewId), ReviewResource.class, assessmentReview, OK);
 
-        AssessmentReviewResource result = service.getAssessmentReview(assessmentReviewId).getSuccess();
+        ReviewResource result = service.getAssessmentReview(assessmentReviewId).getSuccess();
         assertEquals(assessmentReview, result);
     }
 
@@ -97,9 +97,9 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void rejectAssessmentReview() {
         long assessmentReviewId = 1L;
 
-        AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource = newAssessmentReviewRejectOutcomeResource().build();
+        ReviewRejectOutcomeResource reviewRejectOutcomeResource = newAssessmentReviewRejectOutcomeResource().build();
         setupPutWithRestResultExpectations(format("%s/review/%d/reject", restUrl, assessmentReviewId),
-                assessmentReviewRejectOutcomeResource, OK);
-        service.rejectAssessmentReview(assessmentReviewId, assessmentReviewRejectOutcomeResource).getSuccess();
+                reviewRejectOutcomeResource, OK);
+        service.rejectAssessmentReview(assessmentReviewId, reviewRejectOutcomeResource).getSuccess();
     }
 }

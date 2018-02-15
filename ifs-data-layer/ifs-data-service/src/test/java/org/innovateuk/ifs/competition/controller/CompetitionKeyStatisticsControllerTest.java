@@ -1,19 +1,19 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessmentPanelInviteStatisticsResourceBuilder.newAssessmentPanelInviteStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.AssessmentPanelKeyStatisticsResourceBuilder.newAssessmentPanelKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
-import static org.innovateuk.ifs.competition.builder.AssessmentPanelKeyStatisticsResourceBuilder.newAssessmentPanelKeyStatisticsResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -93,23 +93,23 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
     public void getAssessmentPanelKeyStatistics() throws Exception {
         final long competitionId = 1L;
 
-        AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource().build();
-        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(assessmentPanelKeyStatisticsResource));
+        ReviewKeyStatisticsResource reviewKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource().build();
+        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
 
         mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(assessmentPanelKeyStatisticsResource)));
+                .andExpect(content().json(toJson(reviewKeyStatisticsResource)));
     }
 
     @Test
     public void getAssessmentPanelInviteStatistics() throws Exception {
         final long competitionId = 1L;
 
-        AssessmentPanelInviteStatisticsResource assessmentPanelInviteStatisticsResource = newAssessmentPanelInviteStatisticsResource().build();
-        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(assessmentPanelInviteStatisticsResource));
+        ReviewInviteStatisticsResource reviewInviteStatisticsResource = newAssessmentPanelInviteStatisticsResource().build();
+        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
 
         mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(assessmentPanelInviteStatisticsResource)));
+                .andExpect(content().json(toJson(reviewInviteStatisticsResource)));
     }
 }

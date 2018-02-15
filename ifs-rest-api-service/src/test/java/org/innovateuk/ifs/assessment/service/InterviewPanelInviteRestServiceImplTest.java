@@ -185,32 +185,32 @@ public class InterviewPanelInviteRestServiceImplTest extends BaseRestServiceUnit
     @Test
     public void getAllInvitesByUser() throws Exception {
         long userId = 1L;
-        AssessmentInterviewPanelParticipantResource assessmentInterviewPanelParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
                 .withUser(userId)
                 .withCompetitionParticipantRole(INTERVIEW_ASSESSOR)
                 .withCompetitionName("Competition Name")
                 .build();
-        List<AssessmentInterviewPanelParticipantResource> expected = singletonList(assessmentInterviewPanelParticipantResource);
+        List<InterviewParticipantResource> expected = singletonList(interviewParticipantResource);
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "get-all-invites-by-user", userId), ParameterizedTypeReferences.assessmentInterviewPanelParticipantResourceListType(), expected, OK);
 
-        List<AssessmentInterviewPanelParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccess();
+        List<InterviewParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccess();
         assertEquals(expected, actual);
     }
 
     @Test
     public void openInvite() {
-        AssessmentInterviewPanelInviteResource expected = newAssessmentInterviewPanelInviteResource().build();
+        InterviewInviteResource expected = newAssessmentInterviewPanelInviteResource().build();
         expected.setCompetitionName("my competition");
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hash"), AssessmentInterviewPanelInviteResource.class, null, expected, OK);
-        AssessmentInterviewPanelInviteResource actual = service.openInvite("hash").getSuccess();
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hash"), InterviewInviteResource.class, null, expected, OK);
+        InterviewInviteResource actual = service.openInvite("hash").getSuccess();
         assertEquals(expected, actual);
     }
 
     @Test
     public void openInvite_hashNotExists() {
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hashNotExists"), AssessmentInterviewPanelInviteResource.class, null, null, NOT_FOUND);
-        RestResult<AssessmentInterviewPanelInviteResource> restResult = service.openInvite("hashNotExists");
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hashNotExists"), InterviewInviteResource.class, null, null, NOT_FOUND);
+        RestResult<InterviewInviteResource> restResult = service.openInvite("hashNotExists");
         assertTrue(restResult.isFailure());
     }
 

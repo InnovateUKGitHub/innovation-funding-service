@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
@@ -11,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 /**
- * Service for managing {@link org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite}s.
+ * Service for managing {@link InterviewInvite}s.
  */
 public interface AssessmentInterviewPanelInviteService {
 
@@ -60,7 +61,7 @@ public interface AssessmentInterviewPanelInviteService {
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_INTERVIEW_PANEL_INVITES')")
     @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITES",
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")
-    ServiceResult<List<AssessmentInterviewPanelParticipantResource>> getAllInvitesByUser(long userId);
+    ServiceResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITE_OVERVIEW_BY_COMPETITION",
@@ -78,7 +79,7 @@ public interface AssessmentInterviewPanelInviteService {
     @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<AssessmentInterviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash);
+    ServiceResult<InterviewInviteResource> openInvite(@P("inviteHash") String inviteHash);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CHECK_EXISTING_USER_ON_HASH",

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.interview.builder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.builder.BaseInviteBuilder;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.ZonedDateTime;
@@ -13,8 +13,8 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class AssessmentInterviewPanelInviteBuilder extends BaseInviteBuilder<Competition, AssessmentInterviewPanelInvite, AssessmentInterviewPanelInviteBuilder> {
-    private AssessmentInterviewPanelInviteBuilder(List<BiConsumer<Integer, AssessmentInterviewPanelInvite>> multiActions) {
+public class AssessmentInterviewPanelInviteBuilder extends BaseInviteBuilder<Competition, InterviewInvite, AssessmentInterviewPanelInviteBuilder> {
+    private AssessmentInterviewPanelInviteBuilder(List<BiConsumer<Integer, InterviewInvite>> multiActions) {
         super(multiActions);
     }
 
@@ -27,7 +27,7 @@ public class AssessmentInterviewPanelInviteBuilder extends BaseInviteBuilder<Com
     }
 
     @Override
-    protected AssessmentInterviewPanelInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentInterviewPanelInvite>> actions) {
+    protected AssessmentInterviewPanelInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewInvite>> actions) {
         return new AssessmentInterviewPanelInviteBuilder(actions);
     }
 
@@ -51,7 +51,7 @@ public class AssessmentInterviewPanelInviteBuilder extends BaseInviteBuilder<Com
         return  withArraySetFieldByReflection("sentOn", dates);
     }
     @Override
-    protected AssessmentInterviewPanelInvite createInitial() {
-        return new AssessmentInterviewPanelInvite();
+    protected InterviewInvite createInitial() {
+        return new InterviewInvite();
     }
 }

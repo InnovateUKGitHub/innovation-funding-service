@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentReviewRejectOutcomeDocs.assessmentReviewRejectOutcomeResourceBuilder;
-import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.PENDING;
+import static org.innovateuk.ifs.review.resource.ReviewState.PENDING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessmentReviewDocs {

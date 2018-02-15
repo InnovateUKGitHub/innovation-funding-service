@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.controller.CompetitionKeyStatisticsController;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -109,9 +109,9 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getInAssessmentPanelKeyStatistics() throws Exception {
         long competitionId = 1L;
-        AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = assessmentPanelKeyStatisticsResourceBuilder.build();
+        ReviewKeyStatisticsResource reviewKeyStatisticsResource = assessmentPanelKeyStatisticsResourceBuilder.build();
 
-        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(assessmentPanelKeyStatisticsResource));
+        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competitionStatistics/{method-name}",
@@ -125,9 +125,9 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getInAssessmentInviteKeyStatistics() throws Exception {
         long competitionId = 1L;
-        AssessmentPanelInviteStatisticsResource assessmentPanelInviteStatisticsResource = assessmentPanelInviteStatisticsResourceBuilder.build();
+        ReviewInviteStatisticsResource reviewInviteStatisticsResource = assessmentPanelInviteStatisticsResourceBuilder.build();
 
-        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(assessmentPanelInviteStatisticsResource));
+        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competitionStatistics/{method-name}",

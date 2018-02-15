@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.assessment.review.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.assessment.review.domain.AssessmentReviewRejectOutcome;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
+import org.innovateuk.ifs.review.domain.ReviewRejectOutcome;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class AssessmentReviewRejectOutcomeBuilder extends BaseBuilder<AssessmentReviewRejectOutcome, AssessmentReviewRejectOutcomeBuilder> {
+public class AssessmentReviewRejectOutcomeBuilder extends BaseBuilder<ReviewRejectOutcome, AssessmentReviewRejectOutcomeBuilder> {
 
-    private AssessmentReviewRejectOutcomeBuilder(List<BiConsumer<Integer, AssessmentReviewRejectOutcome>> multiActions) {
+    private AssessmentReviewRejectOutcomeBuilder(List<BiConsumer<Integer, ReviewRejectOutcome>> multiActions) {
         super(multiActions);
     }
 
@@ -20,13 +20,13 @@ public class AssessmentReviewRejectOutcomeBuilder extends BaseBuilder<Assessment
     }
 
     @Override
-    protected AssessmentReviewRejectOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentReviewRejectOutcome>> actions) {
+    protected AssessmentReviewRejectOutcomeBuilder createNewBuilderWithActions(List<BiConsumer<Integer, ReviewRejectOutcome>> actions) {
         return new AssessmentReviewRejectOutcomeBuilder(actions);
     }
 
     @Override
-    protected AssessmentReviewRejectOutcome createInitial() {
-        return new AssessmentReviewRejectOutcome();
+    protected ReviewRejectOutcome createInitial() {
+        return new ReviewRejectOutcome();
     }
 
     public AssessmentReviewRejectOutcomeBuilder withId(Long... ids) {

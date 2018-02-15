@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -12,6 +11,7 @@ import org.innovateuk.ifs.management.model.AssessmentPanelInviteAssessorsOvervie
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -59,7 +59,7 @@ public class CompetitionManagementAssessmentPanelInviteAssessorsOverviewControll
 
     private CompetitionResource competition;
 
-    private AssessmentPanelInviteStatisticsResource inviteStatistics;
+    private ReviewInviteStatisticsResource inviteStatistics;
 
     @Override
     @Before
