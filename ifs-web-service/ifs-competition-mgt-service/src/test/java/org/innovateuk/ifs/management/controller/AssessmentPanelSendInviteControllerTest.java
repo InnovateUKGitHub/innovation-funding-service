@@ -38,13 +38,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class AssessmentReviewPanelSendInviteControllerTest extends BaseControllerMockMVCTest<AssessmentReviewPanelSendInviteController> {
+public class AssessmentPanelSendInviteControllerTest extends BaseControllerMockMVCTest<AssessmentPanelSendInviteController> {
 
     private CompetitionResource competition;
 
     @Override
-    protected AssessmentReviewPanelSendInviteController supplyControllerUnderTest() {
-        return new AssessmentReviewPanelSendInviteController();
+    protected AssessmentPanelSendInviteController supplyControllerUnderTest() {
+        return new AssessmentPanelSendInviteController();
     }
 
     @Override
@@ -72,7 +72,7 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
                 .withContent("Readonly content")
                 .build();
 
-        when(assessmentReviewPanelInviteRestService.getAllInvitesToSend(competitionId)).thenReturn(restSuccess(invites));
+        when(assessmentPanelInviteRestService.getAllInvitesToSend(competitionId)).thenReturn(restSuccess(invites));
 
         SendInviteForm expectedForm = new SendInviteForm();
         expectedForm.setSubject("Invitation to assessment panel for 'Photonics for health'");
@@ -85,7 +85,7 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessors/panel-send-invites"));
 
-        verify(assessmentReviewPanelInviteRestService, only()).getAllInvitesToSend(competitionId);
+        verify(assessmentPanelInviteRestService, only()).getAllInvitesToSend(competitionId);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
         expectedSelectionForm.setSelectedInviteIds(inviteIds);
         Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
 
-        when(assessmentReviewPanelInviteRestService.getAllInvitesToResend(competition.getId(), inviteIds)).thenReturn(restSuccess(invite));
+        when(assessmentPanelInviteRestService.getAllInvitesToResend(competition.getId(), inviteIds)).thenReturn(restSuccess(invite));
 
         ResendInviteForm expectedForm = new ResendInviteForm();
         expectedForm.setSubject("Invitation to assessment panel for 'Photonics for health'");
@@ -118,7 +118,7 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessors/panel-resend-invites"));
 
-        verify(assessmentReviewPanelInviteRestService, only()).getAllInvitesToResend(competition.getId(), inviteIds);
+        verify(assessmentPanelInviteRestService, only()).getAllInvitesToResend(competition.getId(), inviteIds);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
                 .withContent("Editable content...")
                 .build();
 
-        when(assessmentReviewPanelInviteRestService.sendAllInvites(competitionId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
+        when(assessmentPanelInviteRestService.sendAllInvites(competitionId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/panel/competition/{competitionId}/assessors/invite/send", competitionId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -139,8 +139,8 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/overview", competitionId)));
 
-        InOrder inOrder = inOrder(assessmentReviewPanelInviteRestService);
-        inOrder.verify(assessmentReviewPanelInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
+        InOrder inOrder = inOrder(assessmentPanelInviteRestService);
+        inOrder.verify(assessmentPanelInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -155,7 +155,7 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
                 .withContent("Editable content...")
                 .build();
 
-        when(assessmentReviewPanelInviteRestService.resendInvites(inviteIds, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
+        when(assessmentPanelInviteRestService.resendInvites(inviteIds, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/panel/competition/{competitionId}/assessors/invite/resend", competition.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -166,8 +166,8 @@ public class AssessmentReviewPanelSendInviteControllerTest extends BaseControlle
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/overview?page=0", competition.getId())));
 
-        InOrder inOrder = inOrder(assessmentReviewPanelInviteRestService);
-        inOrder.verify(assessmentReviewPanelInviteRestService).resendInvites(inviteIds, expectedAssessorInviteSendResource);
+        InOrder inOrder = inOrder(assessmentPanelInviteRestService);
+        inOrder.verify(assessmentPanelInviteRestService).resendInvites(inviteIds, expectedAssessorInviteSendResource);
         inOrder.verifyNoMoreInteractions();
     }
 

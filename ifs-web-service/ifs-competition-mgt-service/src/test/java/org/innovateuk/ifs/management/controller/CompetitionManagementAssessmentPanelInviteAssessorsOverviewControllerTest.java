@@ -8,7 +8,7 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
-import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentPanelInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
@@ -46,15 +46,15 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewController> {
+public class CompetitionManagementAssessmentPanelInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentPanelInviteAssessorsOverviewController> {
 
     @Spy
     @InjectMocks
-    private AssessmentReviewReviewPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private AssessmentPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
 
     @Override
-    protected CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewController supplyControllerUnderTest() {
-        return new CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewController();
+    protected CompetitionManagementAssessmentPanelInviteAssessorsOverviewController supplyControllerUnderTest() {
+        return new CompetitionManagementAssessmentPanelInviteAssessorsOverviewController();
     }
 
     private CompetitionResource competition;
@@ -95,9 +95,9 @@ public class CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewCo
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(assessmentReviewPanelInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
+        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
                 .thenReturn(restSuccess(pageResource));
-        when(assessmentReviewPanelInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
+        when(assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/overview", competition.getId())
                 .param("page", "1"))
@@ -109,10 +109,10 @@ public class CompetitionManagementAssessmentReviewPanelInviteAssessorsOverviewCo
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentReviewPanelInviteRestService);
-        inOrder.verify(assessmentReviewPanelInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService);
+        inOrder.verify(assessmentPanelInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(assessmentReviewPanelInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
+        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
         inOrder.verifyNoMoreInteractions();
     }
 

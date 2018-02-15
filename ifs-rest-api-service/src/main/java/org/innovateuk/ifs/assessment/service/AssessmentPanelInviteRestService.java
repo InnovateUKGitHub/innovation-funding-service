@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * REST service for managing {@link InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource }
  */
-public interface AssessmentReviewPanelInviteRestService {
+public interface AssessmentPanelInviteRestService {
 
     RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 

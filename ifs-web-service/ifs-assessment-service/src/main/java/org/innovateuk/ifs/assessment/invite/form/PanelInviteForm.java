@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Form field model for the panel rejection content
  */
-public class ReviewPanelInviteForm extends BaseBindingResultTarget {
+public class PanelInviteForm extends BaseBindingResultTarget {
 
     @NotNull(message = "{validation.panelinvitedecision.required}")
     private Boolean acceptInvitation;
@@ -28,7 +28,7 @@ public class ReviewPanelInviteForm extends BaseBindingResultTarget {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ReviewPanelInviteForm that = (ReviewPanelInviteForm) o;
+        PanelInviteForm that = (PanelInviteForm) o;
 
         return new EqualsBuilder()
                 .append(acceptInvitation, that.acceptInvitation)

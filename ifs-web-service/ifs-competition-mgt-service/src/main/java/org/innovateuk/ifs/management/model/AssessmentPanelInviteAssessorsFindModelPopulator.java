@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.assessment.service.AssessmentReviewPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
@@ -20,10 +20,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Panel Find view.
  */
 @Component
-public class AssessmentReviewReviewPanelInviteAssessorsFindModelPopulator extends AssessmentReviewPanelInviteAssessorsModelPopulator<AssessmentPanelInviteAssessorsFindViewModel> {
+public class AssessmentPanelInviteAssessorsFindModelPopulator extends AssessmentPanelInviteAssessorsModelPopulator<AssessmentPanelInviteAssessorsFindViewModel> {
 
     @Autowired
-    private AssessmentReviewPanelInviteRestService assessmentReviewPanelInviteRestService;
+    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -37,7 +37,7 @@ public class AssessmentReviewReviewPanelInviteAssessorsFindModelPopulator extend
 
         AssessmentPanelInviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        AvailableAssessorPageResource pageResource = assessmentReviewPanelInviteRestService.getAvailableAssessors(
+        AvailableAssessorPageResource pageResource = assessmentPanelInviteRestService.getAvailableAssessors(
                 competition.getId(),
                 page)
                 .getSuccess();
