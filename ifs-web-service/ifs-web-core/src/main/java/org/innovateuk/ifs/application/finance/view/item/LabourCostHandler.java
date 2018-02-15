@@ -18,7 +18,7 @@ public class LabourCostHandler extends FinanceRowHandler {
 
     @Override
     public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {
-        BigDecimal grossAnnualSalary = null;
+        BigDecimal grossEmployeeCost = null;
         String role = null;
         Integer labourDays = null;
         String description = null;
@@ -28,8 +28,11 @@ public class LabourCostHandler extends FinanceRowHandler {
             String fieldValue = financeFormField.getValue();
             if(fieldValue != null) {
                 switch (financeFormField.getCostName()) {
-                    case "grossAnnualSalary":
-                        grossAnnualSalary = NumberUtils.getBigDecimalValue(fieldValue, 0D);
+                    case "grossAnnualSalary": // added for zdd support - to be removed on next Sprint
+                        grossEmployeeCost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
+                        break;
+                    case "grossEmployeeCost":
+                        grossEmployeeCost = NumberUtils.getBigDecimalValue(fieldValue, 0D);
                         break;
                     case "role":
                         role = fieldValue;
@@ -49,9 +52,9 @@ public class LabourCostHandler extends FinanceRowHandler {
             }
         }
         
-        if(allNull(id, grossAnnualSalary, role, labourDays, description, key)) {
+        if(allNull(id, grossEmployeeCost, role, labourDays, description, key)) {
         	return null;
         }
-        return new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
+        return new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
     }
 }
