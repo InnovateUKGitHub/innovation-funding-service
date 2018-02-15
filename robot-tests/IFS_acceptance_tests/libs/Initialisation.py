@@ -95,6 +95,15 @@ for proj in cursor.fetchall():
     projectName = proj[1]
     project_ids[projectName] = str(projectId)
 
+# execute SQL query using execute() method, to fetch the Organisations
+cursor.execute("SELECT `id`,`name` FROM organisation")
+
+# Fetch the Organisation records
+organisation_ids = {}
+for org in cursor.fetchall():
+    organisationId = org[0]
+    organisationName = org[1]
+    organisation_ids[organisationName] = str(organisationId)
 
 # disconnect from server
 cursor.close()
