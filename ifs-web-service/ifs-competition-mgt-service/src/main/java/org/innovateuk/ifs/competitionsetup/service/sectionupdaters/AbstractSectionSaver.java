@@ -27,7 +27,7 @@ public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
             setNestedProperty(form, fieldName, convert(value, propertyType));
             return saveSection(competitionResource, form);
         } catch (Exception e) {
-            return handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
+            return handleIrregularAutosaveCase(competitionResource, form, fieldName, value, questionId);
         }
     }
 
@@ -42,7 +42,11 @@ public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
 
     protected abstract ServiceResult<Void> doSaveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
+                                                              CompetitionSetupForm competitionSetupForm,
+                                                              String fieldName,
+                                                              String value,
+                                                              Optional<Long> questionId) {
         return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
     }
 

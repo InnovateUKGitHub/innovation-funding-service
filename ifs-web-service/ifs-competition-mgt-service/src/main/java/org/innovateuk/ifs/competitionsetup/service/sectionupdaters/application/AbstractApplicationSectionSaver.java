@@ -2,15 +2,24 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
 import org.apache.el.parser.ParseException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.AbstractApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSectionSaver;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 
@@ -36,14 +45,34 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
 	protected abstract void mapGuidanceRows(AbstractApplicationQuestionForm form);
 
     @Override
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
+                                                              CompetitionSetupForm competitionSetupForm,
+                                                              String fieldName,
+                                                              String value,
+                                                              Optional<Long> questionId) {
         if("removeGuidanceRow".equals(fieldName)) {
             return removeGuidanceRow(questionId, fieldName, value);
         } else if (fieldName.contains("guidanceRow")) {
             return tryUpdateGuidanceRow(questionId, fieldName, value);
+        } else if (fieldName.contains("allowedFileTypes")) {
+            return updateAllowedFileTypes(questionId, value);
         } else {
-            return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
+            return super.handleIrregularAutosaveCase(competitionResource, competitionSetupForm, fieldName, value, questionId);
         }
+    }
+
+    private ServiceResult<Void> updateAllowedFileTypes(Optional<Long> questionId, String value) {
+        return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
+            List<String> strings = asList(StringUtils.commaDelimitedListToStringArray(value));
+
+            List<FileTypeCategory> fileTypeCategories = Arrays.stream(FileTypeCategory.values())
+                    .filter(fileTypeCategory -> strings.contains(fileTypeCategory.name()))
+                    .collect(Collectors.toList());
+
+            question.setAllowedFileTypes(fileTypeCategories);
+
+            return competitionSetupQuestionService.updateQuestion(question);
+        });
     }
 
     private ServiceResult<Void> removeGuidanceRow(Optional<Long> questionId, String fieldName, String value) {

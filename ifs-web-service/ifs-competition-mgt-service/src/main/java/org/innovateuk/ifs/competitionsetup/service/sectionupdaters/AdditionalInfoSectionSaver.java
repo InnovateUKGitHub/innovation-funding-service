@@ -76,13 +76,17 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
+	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
+															  CompetitionSetupForm competitionSetupForm,
+															  String fieldName,
+															  String value,
+															  Optional<Long> questionId) {
 		if("removeFunder".equals(fieldName)) {
 			return removeFunder(competitionResource, fieldName, value);
 		} else if (fieldName.contains("funder")) {
 			return tryUpdateFunders(competitionResource, fieldName, value);
 		} else {
-			return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
+			return super.handleIrregularAutosaveCase(competitionResource, competitionSetupForm, fieldName, value, questionId);
 		}
 	}
 
