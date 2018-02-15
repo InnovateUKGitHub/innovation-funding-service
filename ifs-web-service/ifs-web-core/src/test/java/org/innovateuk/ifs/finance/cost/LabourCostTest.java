@@ -16,7 +16,7 @@ public class LabourCostTest {
     private Long id;
     private String key;
     private String role;
-    private BigDecimal grossAnnualSalary;
+    private BigDecimal grossEmployeeCost;
     private Integer labourDays;
     private BigDecimal rate;
     private String description;
@@ -28,28 +28,22 @@ public class LabourCostTest {
         id = 1L;
         key = "working_days_per_year";
         role = "role";
-        grossAnnualSalary = new BigDecimal(100000);
+        grossEmployeeCost = new BigDecimal(100000);
         labourDays = 100;
         rate = new BigDecimal(1000);
         description = "description";
         total = BigDecimal.ZERO;
-        labourCost = new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
         rate = labourCost.getRate(labourDays);
         total = labourCost.getTotal(labourDays);
     }
 
     @Test
-    public void constructorShouldReturnNewInstance(){
-        new LabourCost();
-        new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
-    }
-
-    @Test
     public void getRatePerDayShouldNotFailOnInfiniteDivisions(){
-        grossAnnualSalary = new BigDecimal(10);
+        grossEmployeeCost = new BigDecimal(10);
         labourDays = 3;
-        LabourCost labour = new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
-        BigDecimal result = grossAnnualSalary.divide(new BigDecimal(labourDays), 5, RoundingMode.HALF_EVEN);
+        LabourCost labour = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
+        BigDecimal result = grossEmployeeCost.divide(new BigDecimal(labourDays), 5, RoundingMode.HALF_EVEN);
 
         Assert.assertEquals(result, labour.getRate(labourDays));
     }
@@ -59,7 +53,7 @@ public class LabourCostTest {
         Assert.assertEquals(id, labourCost.getId());
         Assert.assertEquals(key, labourCost.getName());
         Assert.assertEquals(role, labourCost.getRole());
-        Assert.assertEquals(grossAnnualSalary, labourCost.getGrossAnnualSalary());
+        Assert.assertEquals(grossEmployeeCost, labourCost.getGrossEmployeeCost());
         Assert.assertEquals(rate, labourCost.getRate());
         Assert.assertEquals(labourDays, labourCost.getLabourDays());
         Assert.assertEquals(total, labourCost.getTotal());
@@ -68,11 +62,6 @@ public class LabourCostTest {
     @Test
     public void getRatePerDayShouldReturnZeroWhenWorkingDaysIsZero(){
         Assert.assertEquals(BigDecimal.ZERO, labourCost.getRate(0));
-    }
-
-    //@Test
-    public void getRateShouldNotRecalculateRateWhenArgumentIsNull(){
-        Assert.assertEquals(rate, labourCost.getRate(null));
     }
 
     @Test
@@ -85,30 +74,25 @@ public class LabourCostTest {
 
     @Test
     public void getTotalShouldReturnZeroWhenRateIsNull(){
-        labourCost = new LabourCost(id, key, role, grossAnnualSalary, labourDays, description);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays, description);
 
         Assert.assertNull(labourCost.getRate());
         Assert.assertEquals(BigDecimal.ZERO, labourCost.getTotal(0));
     }
 
     @Test
-    public void setGrossAnnualSalaryShouldNotThrowAnError(){
-        labourCost.setGrossAnnualSalary(new BigDecimal(123));
+    public void setGrossEmployeeCostShouldNotThrowAnError(){
+        labourCost.setGrossEmployeeCost(new BigDecimal(123));
     }
 
     @Test
-    public void setGrossAnnualSalaryShouldNotThrowAnErrorOnNegativeValue(){
-        labourCost.setGrossAnnualSalary(new BigDecimal(-123));
+    public void setGrossEmployeeCostShouldNotThrowAnErrorOnNegativeValue(){
+        labourCost.setGrossEmployeeCost(new BigDecimal(-123));
     }
 
     @Test
-    public void setGrossAnnualSalaryShouldNotThrowAnErrorOnNull(){
-        labourCost.setGrossAnnualSalary(null);
-    }
-
-    @Test
-    public void setRoleShouldNotThrowAnErrorOnString(){
-        labourCost.setRole("new role");
+    public void setGrossEmployeeCostShouldNotThrowAnErrorOnNull(){
+        labourCost.setGrossEmployeeCost(null);
     }
 
     @Test
