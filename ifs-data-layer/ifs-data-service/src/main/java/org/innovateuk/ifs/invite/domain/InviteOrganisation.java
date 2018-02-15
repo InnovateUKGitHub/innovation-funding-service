@@ -73,6 +73,10 @@ public class InviteOrganisation {
         this.invites = invites;
     }
 
+    public boolean isOnLastInvite() {
+        return invites.size() == 1;
+    }
+
     public void addInvite(ApplicationInvite invite) {
         invite.setInviteOrganisation(this);
         invites.add(invite);
