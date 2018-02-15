@@ -512,10 +512,10 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         return validateApprovalOrRejection(grantOfferLetterApprovalResource).andOnSuccess(() ->
             getProject(projectId).andOnSuccess(project -> {
                 if (golWorkflowHandler.isReadyToApprove(project)) {
-                    if (ApprovalType.APPROVED == grantOfferLetterApprovalResource.getApprovalType()) {
+                    if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return approveGOL(project)
                                 .andOnSuccess(() -> moveProjectToLiveState(project));
-                    } else if (ApprovalType.REJECTED == grantOfferLetterApprovalResource.getApprovalType()) {
+                    } else if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
                         return rejectGOL(project, grantOfferLetterApprovalResource.getRejectionReason());
                     }
                 }
@@ -525,7 +525,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private ServiceResult<Void> validateApprovalOrRejection(GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
         if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
-            if (grantOfferLetterApprovalResource.getRejectionReason() != null && org.apache.commons.lang3.StringUtils.trim(grantOfferLetterApprovalResource.getRejectionReason()).length() > 0) {
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(grantOfferLetterApprovalResource.getRejectionReason())) {
                 return serviceSuccess();
             }
         } else if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {

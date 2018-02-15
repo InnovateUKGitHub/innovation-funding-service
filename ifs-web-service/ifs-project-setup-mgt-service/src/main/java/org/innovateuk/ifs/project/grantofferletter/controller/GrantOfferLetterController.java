@@ -131,7 +131,9 @@ public class GrantOfferLetterController {
             @ModelAttribute(APPROVAL_FORM_ATTR) GrantOfferLetterApprovalForm approvalForm) {
 
         if (validateApprovalOrRejection(approvalForm)) {
-            grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, new GrantOfferLetterApprovalResource(approvalForm.getApprovalType(), approvalForm.getRejectionReason())).toPostResponse();
+            grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId,
+                    new GrantOfferLetterApprovalResource(approvalForm.getApprovalType(), approvalForm.getRejectionReason()))
+                    .toPostResponse();
         }
 
         return redirectToGrantOfferLetterPage(projectId);
@@ -139,7 +141,7 @@ public class GrantOfferLetterController {
 
     private boolean validateApprovalOrRejection(GrantOfferLetterApprovalForm approvalForm) {
         if (ApprovalType.REJECTED.equals(approvalForm.getApprovalType())) {
-            if (approvalForm.getRejectionReason() != null && StringUtils.trim(approvalForm.getRejectionReason()).length() > 0) {
+            if (StringUtils.isNotBlank(approvalForm.getRejectionReason())) {
                 return true;
             }
         } else if (ApprovalType.APPROVED.equals(approvalForm.getApprovalType())) {

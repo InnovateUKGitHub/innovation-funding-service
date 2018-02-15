@@ -4,13 +4,19 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 
+/**
+ * Resource to capture the approval or rejection response, along with the rejection reason, if applicable.
+ */
 public class GrantOfferLetterApprovalResource {
 
     private ApprovalType approvalType;
 
     private String rejectionReason;
 
-    public GrantOfferLetterApprovalResource() {
+    /*
+     * For JSON
+     */
+    GrantOfferLetterApprovalResource() {
     }
 
     public GrantOfferLetterApprovalResource(ApprovalType approvalType, String rejectionReason) {

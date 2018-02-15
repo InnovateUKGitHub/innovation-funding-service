@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
  */
 public class GrantOfferLetterApprovalForm {
 
-    private ApprovalType approvalType = ApprovalType.APPROVED;
+    private ApprovalType approvalType;
 
     private String rejectionReason;
 
