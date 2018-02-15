@@ -11,9 +11,9 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.AssessmentReviewPanelSelectionForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
-import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsAcceptedModelPopulator;
-import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsFindModelPopulator;
-import org.innovateuk.ifs.management.model.AssessmentReviewPanelInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentReviewReviewPanelInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,13 +51,13 @@ public class CompetitionManagementAssessmentReviewPanelInviteAssessorsController
     private AssessmentReviewPanelInviteRestService assessmentReviewPanelInviteRestService;
 
     @Autowired
-    private AssessmentReviewPanelInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
+    private AssessmentReviewReviewPanelInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
 
     @Autowired
-    private AssessmentReviewPanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
+    private AssessmentReviewReviewPanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
 
     @Autowired
-    private AssessmentReviewPanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
+    private AssessmentReviewReviewPanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
     protected String getCookieName() {
         return SELECTION_FORM;
