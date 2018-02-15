@@ -37,6 +37,6 @@ public class AvailableApplicationResourceBuilder extends BaseBuilder<AvailableAp
     }
 
     public AvailableApplicationResourceBuilder withLeadOrganisation(String... value) {
-        return withArraySetFieldByReflection("name", value);
+        return withArraySetFieldByReflection("leadOrganisation", value);
     }
 }
