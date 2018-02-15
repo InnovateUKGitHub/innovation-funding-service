@@ -115,7 +115,7 @@ public class OrganisationFinanceHandlerTest {
 
         labour = new LabourCost();
         labour.setLabourDays(300);
-        labour.setGrossAnnualSalary(BigDecimal.valueOf(50000));
+        labour.setGrossEmployeeCost(BigDecimal.valueOf(50000));
         labour.setRole("Developer");
         labour.setDescription("");
         labourCost = handler.costItemToCost(labour);
