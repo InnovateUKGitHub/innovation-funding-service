@@ -158,43 +158,46 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         // if we have specific answers for questions in the application-questions.csv file, fill them in here now
         if (!responsesForApplication.isEmpty()) {
 
-            List<QuestionResponseDataBuilder> responseBuilders = questionResponsesFromCsv(baseBuilder, applicationLine.leadApplicant, responsesForApplication);
-
-            return simpleMap(responseBuilders, BaseBuilder::build);
+            return createQuestionResponsesFromCsv(baseBuilder, applicationLine.leadApplicant, responsesForApplication);
         }
         // otherwise provide a default set of marked as complete questions if the application is to be submitted
         else if (applicationLine.submittedDate != null) {
 
-            List<QuestionResource> competitionQuestions = retrieveCachedQuestionsByCompetitionId(applicationData.getCompetition().getId());
-
-            List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
-                    q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
-
-            List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
-
-                QuestionResponseDataBuilder responseBuilder = baseBuilder.
-                        forQuestion(question.getName()).
-                        withAssignee(applicationData.getLeadApplicant().getEmail()).
-                        withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", applicationData.getLeadApplicant().getEmail());
-
-                List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
-
-                if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
-
-                    String fileUploadName = (applicationData.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
-                            .toLowerCase().replace(' ', '-') ;
-
-                    responseBuilder = responseBuilder.
-                            withFileUploads(singletonList(fileUploadName), applicationData.getLeadApplicant().getEmail());
-                }
-
-                return responseBuilder;
-            });
-
-            return simpleMap(responseBuilders, BaseBuilder::build);
+            return createQuestionResponsesFromDefaults(applicationData, baseBuilder);
         }
 
         return emptyList();
+    }
+
+    private List<ApplicationQuestionResponseData> createQuestionResponsesFromDefaults(ApplicationData applicationData, QuestionResponseDataBuilder baseBuilder) {
+
+        List<QuestionResource> competitionQuestions = retrieveCachedQuestionsByCompetitionId(applicationData.getCompetition().getId());
+
+        List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
+                q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
+
+        List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
+
+            QuestionResponseDataBuilder responseBuilder = baseBuilder.
+                    forQuestion(question.getName()).
+                    withAssignee(applicationData.getLeadApplicant().getEmail()).
+                    withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", applicationData.getLeadApplicant().getEmail());
+
+            List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
+
+            if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
+
+                String fileUploadName = (applicationData.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
+                        .toLowerCase().replace(' ', '-') ;
+
+                responseBuilder = responseBuilder.
+                        withFileUploads(singletonList(fileUploadName), applicationData.getLeadApplicant().getEmail());
+            }
+
+            return responseBuilder;
+        });
+
+        return simpleMap(responseBuilders, BaseBuilder::build);
     }
 
     private List<ApplicationFinanceData> createApplicationFinances(ApplicationData applicationData) {
@@ -291,9 +294,9 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationBuilder.build();
     }
 
-    private List<QuestionResponseDataBuilder> questionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication) {
+    private List<ApplicationQuestionResponseData> createQuestionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication) {
 
-        return simpleMap(responsesForApplication, line -> {
+        List<QuestionResponseDataBuilder> responseBuilders = simpleMap(responsesForApplication, line -> {
 
             String answeringUser = !isBlank(line.answeredBy) ? line.answeredBy : (!isBlank(line.assignedTo) ? line.assignedTo : leadApplicant);
 
@@ -311,12 +314,16 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             UnaryOperator<QuestionResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
 
-            return withQuestion.
+            QuestionResponseDataBuilder builders = withQuestion.
                     andThen(answerIfNecessary).
                     andThen(uploadFilesIfNecessary).
                     andThen(assignIfNecessary).
                     apply(baseBuilder);
+
+            return builders;
         });
+
+        return simpleMap(responseBuilders, BaseBuilder::build);
     }
 
     private ApplicationData createApplicationFromCsv(ApplicationDataBuilder builder, CsvUtils.ApplicationLine line) {
