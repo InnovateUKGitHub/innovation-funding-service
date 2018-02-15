@@ -72,7 +72,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                 newLabourCost().withId().
                     withName().
                     withRole(role).
-                    withGrossAnnualSalary(bd(annualSalary)).
+                        withGrossEmployeeCost(bd(annualSalary)).
                     withLabourDays(daysToBeSpent).
                     withDescription().
                     build());
