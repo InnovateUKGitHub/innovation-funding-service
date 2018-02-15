@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -26,18 +26,18 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void testPdf() {
-        assertExpectedMediaTypesForFileTypeCategories(singletonList(FileTypeCategories.PDF), "application/pdf");
+        assertExpectedMediaTypesForFileTypeCategories(singletonList(FileTypeCategory.PDF), "application/pdf");
     }
 
     @Test
     public void testSpreadsheet() {
-        assertExpectedMediaTypesForFileTypeCategories(singletonList(FileTypeCategories.SPREADSHEET),
+        assertExpectedMediaTypesForFileTypeCategories(singletonList(FileTypeCategory.SPREADSHEET),
                 "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
     }
 
     @Test
     public void testPdfAndSpreadsheet() {
-        assertExpectedMediaTypesForFileTypeCategories(asList(FileTypeCategories.PDF, FileTypeCategories.SPREADSHEET),
+        assertExpectedMediaTypesForFileTypeCategories(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET),
                 "application/pdf", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "application/vnd.oasis.opendocument.spreadsheet");
     }
@@ -47,7 +47,7 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
         assertExpectedMediaTypesForFileTypeCategories(emptyList());
     }
 
-    private void assertExpectedMediaTypesForFileTypeCategories(List<FileTypeCategories> fileTypeCategories, String... expectedMediaTypes) {
+    private void assertExpectedMediaTypesForFileTypeCategories(List<FileTypeCategory> fileTypeCategories, String... expectedMediaTypes) {
 
         FormInputResource formInput = newFormInputResource().
                 withAllowedFileTypes(fileTypeCategories).

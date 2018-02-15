@@ -7,14 +7,14 @@ import java.util.List;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-public enum FileTypeCategories {
+public enum FileTypeCategory {
     SPREADSHEET("Spreadsheet", "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.oasis.opendocument.spreadsheet"),
     PDF("PDF", "application/pdf");
 
     private String displayName;
     private String mediaTypeString;
 
-    FileTypeCategories(String displayName, String mediaTypeString) {
+    FileTypeCategory(String displayName, String mediaTypeString) {
         this.displayName = displayName;
         this.mediaTypeString = mediaTypeString;
     }
@@ -31,7 +31,7 @@ public enum FileTypeCategories {
         return simpleMap(mediaTypeString.split(","), StringUtils::trim);
     }
 
-    public static FileTypeCategories fromDisplayName(String displayName) {
-        return simpleFindFirst(FileTypeCategories.values(), category -> category.getDisplayName().equals(displayName)).orElse(null);
+    public static FileTypeCategory fromDisplayName(String displayName) {
+        return simpleFindFirst(FileTypeCategory.values(), category -> category.getDisplayName().equals(displayName)).orElse(null);
     }
 }

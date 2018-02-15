@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.controller;
 
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,16 +14,16 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 public class ValidMediaTypesFileUploadErrorTranslatorTest {
 
     private Error pdfOnlyErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.PDF.getMediaTypeString()));
+            singletonList(FileTypeCategory.PDF.getMediaTypeString()));
 
     private Error spreadsheetOnlyErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.SPREADSHEET.getMediaTypeString()));
+            singletonList(FileTypeCategory.SPREADSHEET.getMediaTypeString()));
 
     private Error pdfOrSpreadsheetOnlyErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.SPREADSHEET.getMediaTypeString() + ", " + FileTypeCategories.PDF.getMediaTypeString()));
+            singletonList(FileTypeCategory.SPREADSHEET.getMediaTypeString() + ", " + FileTypeCategory.PDF.getMediaTypeString()));
 
     private Error notDirectMatchingMediaTypesErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.PDF.getMediaTypeString() + ", application/nomatch"));
+            singletonList(FileTypeCategory.PDF.getMediaTypeString() + ", application/nomatch"));
 
 
     @Test

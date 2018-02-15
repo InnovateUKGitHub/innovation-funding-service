@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.file.resource.FileTypeCategories.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 
 /**
  * Component that creates a Question object containing default values & validators.
