@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ public class LabourCostTest {
     private Long id;
     private String key;
     private String role;
-    private BigDecimal grossAnnualSalary;
+    private BigDecimal grossEmployeeCost;
     private Integer labourDays;
     private String description;
 
@@ -24,18 +23,18 @@ public class LabourCostTest {
         id = 0L;
         key = "Labour";
         role = "Manager";
-        grossAnnualSalary = new BigDecimal(50000);
+        grossEmployeeCost = new BigDecimal(50000);
         labourDays = new Integer(168);
         description = "";
 
-        labourCost = new LabourCost(id, key, role, grossAnnualSalary, labourDays,  description);
+        labourCost = new LabourCost(id, key, role, grossEmployeeCost, labourDays,  description);
     }
 
     @Test
     public void labourCostShouldReturnCorrectBaseAttributesTest() throws Exception {
         assert(labourCost.getId().equals(id));
         assert(labourCost.getRole().equals(role));
-        assert(labourCost.getGrossAnnualSalary().equals(grossAnnualSalary));
+        assert(labourCost.getGrossEmployeeCost().equals(grossEmployeeCost));
         assert(labourCost.getLabourDays().equals(labourDays));
         assert(labourCost.getDescription().equals(description));
     }
@@ -63,9 +62,9 @@ public class LabourCostTest {
     }
 
     @Test
-    public void getRateWithoutGrossAnnualSalaryTest() throws Exception {
+    public void getRateWithoutGrossEmployeeCost() throws Exception {
         int workingDaysPerYear = 50;
-        labourCost.setGrossAnnualSalary(BigDecimal.ZERO);
+        labourCost.setGrossEmployeeCost(BigDecimal.ZERO);
         BigDecimal ratePerDay = labourCost.getRate(workingDaysPerYear);
         assertEquals(labourCost.getRate(), ratePerDay);
     }

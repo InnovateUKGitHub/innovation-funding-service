@@ -240,7 +240,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -475,7 +475,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -542,7 +542,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -609,7 +609,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -750,7 +750,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         return asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000000"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 200).
                                 build(2)).

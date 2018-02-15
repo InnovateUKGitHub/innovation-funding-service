@@ -209,7 +209,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
                                 withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 120, 250).
                                 build(3)).
@@ -236,7 +236,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Map<FinanceRowType, FinanceRowCostCategory> academicOrganisationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), new BigDecimal("600.11"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000.23"), new BigDecimal("5100.11"), new BigDecimal("600.11"), BigDecimal.ZERO).
                                 withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 120, 120, 250).
                                 withName("direct_staff", "direct_staff", "exceptions_staff").
