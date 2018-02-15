@@ -34,7 +34,7 @@ public class InterviewPanelCreatedInviteResource {
         return id;
     }
 
-    public long getApplicationId() {
+    public Long getApplicationId() {
         return applicationId;
     }
 
