@@ -921,7 +921,8 @@
                    th:id="${'section-total-'+subSection.id}"
                    data-calculation-fields="[id*=netCost]"
                    data-calculation-operations="+"
-                   th:value="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
+                   th:value="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"
+                   th:attr="data-calculation-rawvalue=${costCategory.total}" />
         </th:block>
     </th:block>
 
@@ -1274,7 +1275,8 @@
                        data-calculation-fields="[id*=travelCostTotal]"
                        data-calculation-operations="+"
                        th:id="${'section-total-'+subSection.id}"
-                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"/>
+                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"
+                       th:attr="data-calculation-rawvalue=${costCategory.total}" />
             </div>
         </th:block>
     </th:block>
@@ -1425,7 +1427,8 @@
                        th:id="${'section-total-'+subSection.id}"
                        data-calculation-fields="[name^=other_costs-otherCost]"
                        data-calculation-operations="+"
-                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"/>
+                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"
+                       th:attr="data-calculation-rawvalue=${costCategory.total}" />
             </div>
         </th:block>
     </th:block>
