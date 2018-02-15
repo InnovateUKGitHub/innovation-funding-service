@@ -75,7 +75,7 @@
                             <th scope="col">Project title</th>
                             <th scope="col">Lead organisation</th>
                             <td scope="col" class="alignright">
-                                <button name="removeAll" class="buttonlink alignright disabled" aria-disabled="true"
+                                <button disabled="disabled" name="removeAll" class="buttonlink alignright disabled" aria-disabled="true"
                                         th:if="${!#lists.isEmpty(model.applications)}">
                                     Remove all
                                 </button>
@@ -92,7 +92,7 @@
                             <td th:text="${app.applicationName}">Application name</td>
                             <td th:text="${app.leadOrganisation}">Lead organisation</td>
                             <td class="alignright">
-                                <button class="buttonlink alignright disabled" name="remove" th:value="${app.id}" aria-disabled="true">
+                                <button  disabled="disabled" class="buttonlink alignright disabled" name="remove" th:value="${app.id}" aria-disabled="true">
                                     <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
                                 </button>
                             </td>
