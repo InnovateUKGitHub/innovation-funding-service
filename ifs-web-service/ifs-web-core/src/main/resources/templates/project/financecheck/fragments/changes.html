@@ -12,10 +12,10 @@
                 <td th:text="${changePair.changed.role}" colspan="2" th:class="${changePair.submitted.role != changePair.changed.role} ? 'item-changed' : ''"></td>
             </tr>
 
-            <tr th:class="${changePair.submitted.grossAnnualSalary != changePair.changed.grossAnnualSalary} ? 'item-changed' : ''">
-                <th scope="row">Gross annual salary (&pound;)</th>
-                <td th:text="${changePair.submitted.grossAnnualSalary}"></td>
-                <td th:text="${changePair.changed.grossAnnualSalary}" colspan="2" th:class="${changePair.submitted.grossAnnualSalary != changePair.changed.grossAnnualSalary} ? 'item-changed' : ''"></td>
+            <tr th:class="${changePair.submitted.grossEmployeeCost != changePair.changed.grossEmployeeCost} ? 'item-changed' : ''">
+                <th scope="row">Gross employee cost (&pound;)</th>
+                <td th:text="${changePair.submitted.grossEmployeeCost}"></td>
+                <td th:text="${changePair.changed.grossEmployeeCost}" colspan="2" th:class="${changePair.submitted.grossEmployeeCost != changePair.changed.grossEmployeeCost} ? 'item-changed' : ''"></td>
             </tr>
 
             <tr th:class="${changePair.submitted.labourDays != changePair.changed.labourDays} ? 'item-changed' : ''">
@@ -40,9 +40,9 @@
         </tr>
 
         <tr>
-            <th scope="row">Gross annual salary</th>
+            <th scope="row">Gross employee cost</th>
             <td></td>
-            <td th:text="${changePair.changed.grossAnnualSalary}" colspan="2"></td>
+            <td th:text="${changePair.changed.grossEmployeeCost}" colspan="2"></td>
         </tr>
 
         <tr>
@@ -66,8 +66,8 @@
         </tr>
 
         <tr>
-            <th scope="row">Gross annual salary</th>
-            <td th:text="${changePair.submitted.grossAnnualSalary}"></td>
+            <th scope="row">Gross employee cost</th>
+            <td th:text="${changePair.submitted.grossEmployeeCost}"></td>
             <td colspan="2"></td>
         </tr>
 
