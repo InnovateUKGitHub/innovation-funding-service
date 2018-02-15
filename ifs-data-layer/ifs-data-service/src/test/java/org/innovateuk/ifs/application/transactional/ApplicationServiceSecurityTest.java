@@ -341,6 +341,18 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         );
     }
 
+    @Test
+    public void updateApplicationProgress() {
+        when(applicationLookupStrategy.getApplicationResource(1L)).thenReturn(newApplicationResource().build());
+
+        assertAccessDenied(
+                () -> classUnderTest.updateApplicationProgress(1L),
+                () -> verify(applicationRules).applicantCanUpdateApplicationResource(
+                        isA(ApplicationResource.class),
+                        isA(UserResource.class)
+                ));
+    }
+
     @Override
     protected Class<? extends ApplicationService> getClassUnderTest() {
         return TestApplicationService.class;
@@ -443,7 +455,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
+        public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
             return null;
         }
 

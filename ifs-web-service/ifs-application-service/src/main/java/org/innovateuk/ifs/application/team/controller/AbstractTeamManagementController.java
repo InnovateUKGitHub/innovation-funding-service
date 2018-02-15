@@ -45,7 +45,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
                                         @PathVariable("organisationId") long organisationId,
                                         UserResource loggedInUser,
                                         @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamUpdateForm form) {
-        return validateOrganisationAndApplicationIds(applicationId, organisationId, () -> {
+        return validateOrganisationAndApplicationIdsOrRedirect(applicationId, organisationId, () -> {
             ApplicationTeamManagementViewModel viewModel = teamManagementService.createViewModel(applicationId, organisationId, loggedInUser);
             model.addAttribute("model", viewModel);
             return "application-team/edit-org";
@@ -165,4 +165,16 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         }
         throw new ObjectNotFoundException("Organisation invite id not found in application id provided.", Collections.emptyList());
     }
+
+    protected String validateOrganisationAndApplicationIdsOrRedirect(Long applicationId, Long organisationId, Supplier<String> supplier) {
+        if(teamManagementService.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId)) {
+            return supplier.get();
+        }
+
+        // TODO: IFS-2598 - the above validation currently fails when the team update page is redrawn
+        //       after the last active user is removed from the team and pending users are still remaining.
+        // For now we will redirect to the team page, until this is fixed under IFS-2598.
+        return redirectToApplicationTeamPage(applicationId);
+    }
+
 }
