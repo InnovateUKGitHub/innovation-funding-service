@@ -55,8 +55,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -269,25 +268,47 @@ public class InviteServiceImpl extends BaseApplicationInviteService implements I
     private void removeApplicationInvite(ApplicationInvite applicationInvite) {
         Application application = applicationInvite.getTarget();
 
-        List<ProcessRole> collaboratorProcessRoles = processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
-        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(applicationInvite.getTarget().getId(), collaboratorProcessRoles, applicationInvite.getTarget().getLeadApplicantProcessRole());
+        List<ProcessRole> collaboratorProcessRoles =
+                processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
+
+        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(
+                application.getId(),
+                collaboratorProcessRoles,
+                application.getLeadApplicantProcessRole()
+        );
 
         processRoleRepository.delete(collaboratorProcessRoles);
         application.removeProcessRoles(collaboratorProcessRoles);
 
         InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
-        if (inviteOrganisation.getInvites().size() < 2) {
-            inviteOrganisationRepository.delete(inviteOrganisation);
-            deleteOrganisationsApplicationData(inviteOrganisation.getOrganisation(), application);
+        if (isRemovingLastActiveCollaboratorUser(application, inviteOrganisation)) {
+            deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
+            inviteOrganisation.setOrganisation(null);
+        }
 
+        if (inviteOrganisation.isOnLastInvite()) {
+            inviteOrganisationRepository.delete(inviteOrganisation);
         } else {
             inviteOrganisation.getInvites().remove(applicationInvite);
-            inviteOrganisationRepository.save(inviteOrganisation);
         }
     }
 
-    private void deleteOrganisationsApplicationData(Organisation organisation, Application application) {
+    private boolean isRemovingLastActiveCollaboratorUser(
+            Application application,
+            InviteOrganisation inviteOrganisation
+    ) {
+        if (inviteOrganisation.getOrganisation() == null) {
+            return false;
+        }
+
+        return !simpleAnyMatch(
+                application.getProcessRoles(),
+                processRole -> processRole.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId())
+        );
+    }
+
+    private void deleteOrganisationFinanceData(Organisation organisation, Application application) {
         if (organisation != null) {
             ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
             if (finance != null) {
