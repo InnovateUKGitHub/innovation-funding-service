@@ -2,15 +2,13 @@ package org.innovateuk.ifs.assessment.interview.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
-
-
-// TODO Who is the participant? Lead assessor -- probably as they submit responses
 
 @Entity
 public class AssessmentInterviewPanel extends Process<ProcessRole, Application, AssessmentInterviewPanelState> {
@@ -96,7 +94,7 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(participant)
-                .append(target)
+//                .append(target)
                 .append(message)
                 .append(response)
                 .toHashCode();
@@ -104,5 +102,18 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
 
     public AssessmentInterviewPanelMessageOutcome getMessage() {
         return message;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("participant", participant)
+                .append("target", target)
+                .append("message", message)
+                .append("response", response)
+                .append("activityState", activityState)
+                .append("processOutcomes", processOutcomes)
+                .append("internalParticipant", internalParticipant)
+                .toString();
     }
 }

@@ -59,7 +59,8 @@ public class ActivityState {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
+                .append(activityType)
+                .append(state)
                 .toHashCode();
     }
 }
