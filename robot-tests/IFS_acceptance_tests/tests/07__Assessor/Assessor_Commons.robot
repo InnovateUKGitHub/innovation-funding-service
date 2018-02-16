@@ -10,6 +10,9 @@ ${assessor_ben_email}        benjamin.nixon@gmail.com
 ${assessor_joel_email}       joel.george@gmail.com
 ${assessor_madeleine_email}  madeleine.martin@gmail.com
 ${assessor_riley_email}      riley.butler@gmail.com
+${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
+${computer_vision_application_name}  Computer vision and machine learning for transport networks
+${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
 
 *** Keywords ***
 Invited guest user log in

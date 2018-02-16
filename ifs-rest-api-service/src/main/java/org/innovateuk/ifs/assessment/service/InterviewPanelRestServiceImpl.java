@@ -31,7 +31,7 @@ public class InterviewPanelRestServiceImpl extends BaseRestService implements In
     }
 
     @Override
-    public RestResult<List<Long>> getAvailableApplicationIds(long competitionId) {
+    public RestResult<List<Long>> getAvailableAssessorsIds(long competitionId) {
         String baseUrl = format("%s/%s/%s", REST_URL, "available-application-ids", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);

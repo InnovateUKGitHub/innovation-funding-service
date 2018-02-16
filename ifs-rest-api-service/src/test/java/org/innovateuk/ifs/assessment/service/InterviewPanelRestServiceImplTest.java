@@ -61,7 +61,7 @@ public class InterviewPanelRestServiceImplTest extends BaseRestServiceUnitTest<I
                 expected
         );
 
-        List<Long> actual = service.getAvailableApplicationIds(competitionId).getSuccess();
+        List<Long> actual = service.getAvailableAssessorsIds(competitionId).getSuccess();
         assertEquals(expected, actual);
 
     }

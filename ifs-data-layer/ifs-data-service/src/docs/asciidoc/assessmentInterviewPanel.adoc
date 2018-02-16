@@ -1,0 +1,46 @@
+=== Assign an application to interview panel
+==== Request
+include::{snippets}/interview-panel/assign-application/http-request.adoc[]
+include::{snippets}/interview-panel/assign-application/request-fields.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/assign-application/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/assign-application/curl-request.adoc[]
+
+=== Get available applications for interview panel
+==== Request
+include::{snippets}/interview-panel/get-available-applications/http-request.adoc[]
+include::{snippets}/interview-panel/get-available-applications/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-available-applications/http-response.adoc[]
+include::{snippets}/interview-panel/get-available-applications/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-available-applications/curl-request.adoc[]
+
+=== Get available assessor Id's for interview panel
+==== Request
+include::{snippets}/interview-panel/get-available-assessor-ids/http-request.adoc[]
+include::{snippets}/interview-panel/get-available-assessor-ids/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-available-assessor-ids/http-response.adoc[]
+include::{snippets}/interview-panel/get-available-assessor-ids/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-available-assessor-ids/curl-request.adoc[]
+
+=== Get invited application
+==== Request
+include::{snippets}/interview-panel/get-creates/http-request.adoc[]
+include::{snippets}/interview-panel/get-creates/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/get-creates/http-response.adoc[]
+include::{snippets}/interview-panel/get-creates/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/get-creates/curl-request.adoc[]

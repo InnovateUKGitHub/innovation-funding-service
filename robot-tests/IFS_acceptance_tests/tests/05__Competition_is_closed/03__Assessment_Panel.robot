@@ -50,9 +50,6 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
 ${assessment_panel}          ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
-${computer_vision_application_name}  Computer vision and machine learning for transport networks
-${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
