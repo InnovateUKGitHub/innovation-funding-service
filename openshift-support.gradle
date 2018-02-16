@@ -30,10 +30,9 @@ build.enabled = false
 // Currently these is the WRONG parameters for the named envs.
 
 if (!isNamedEnv()) {
-    println "AJB: ************ Non named env "
     apply from: rootProject.file("non-named-env-properties.gradle")
 } else {
-        println "AJB: ************  named env "
+    apply from: rootProject.file("named-env-properties.gradle")
 }
 
 //TODO add functionality here to bring in specific named env properties files.
