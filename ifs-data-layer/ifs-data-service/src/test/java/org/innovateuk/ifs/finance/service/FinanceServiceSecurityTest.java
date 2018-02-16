@@ -5,8 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
@@ -18,9 +16,7 @@ import org.junit.Test;
 import org.springframework.security.access.method.P;
 import static org.junit.Assert.assertTrue;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -47,6 +43,7 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
 
     @Before
     public void lookupPermissionRules() {
+
         financeRowMetaFieldPermissionsRules = getMockPermissionRulesBean(FinanceRowMetaFieldPermissionsRules.class);
         costPermissionsRules = getMockPermissionRulesBean(ApplicationFinanceRowPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);
@@ -123,54 +120,7 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
                 });
     }
 
-        @Test
-    public void testDeleteFinanceFileEntry() {
-        final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.deleteFinanceFileEntry(applicationFinanceId),
-                () -> {
-                    verify(applicationFinanceRules).consortiumMemberCanDeleteAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                });
-    }
-
-
     @Test
-    public void testCreateFinanceFileEntry() {
-        final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.createFinanceFileEntry(applicationFinanceId, null, null),
-                () -> {
-                    verify(applicationFinanceRules).consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                });
-    }
-
-
-    @Test
-    public void testUpdateFinanceFileEntry() {
-        final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.updateFinanceFileEntry(applicationFinanceId, null, null),
-                () -> {
-                    verify(applicationFinanceRules).consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                });
-    }
-
-    @Test
-    public void testGetFileContents() {
-        final Long applicationFinanceId = 1L;
-        when(applicationFinanceLookupStrategy.getApplicationFinance(applicationFinanceId)).thenReturn(newApplicationFinanceResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.getFileContents(applicationFinanceId),
-                () -> {
-                    verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules).internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                });
-    }
-
-        @Test
     public void testOrganisationSeeksFunding() {
         final Long projectId = 1L;
         final Long applicationId = 1L;
@@ -185,7 +135,6 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
                     verify(costPermissionsRules).projectPartnersCanCheckFundingStatusOfTeam(isA(ProjectResource.class), isA(UserResource.class));
                 });
     }
-
 
     private void verifyApplicationFinanceResourceReadRulesCalled() {
         verifyApplicationFinanceResourceReadRulesCalled(1);
@@ -229,7 +178,6 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
             return serviceSuccess(newApplicationFinanceResource().build());
         }
 
-
         @Override
         public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
             return serviceSuccess(newApplicationFinanceResource().build());
@@ -243,26 +191,6 @@ public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceS
         @Override
         public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
             return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getFileContents(@P("applicationFinanceId") long applicationFinance) {
-            return null;
         }
 
         @Override

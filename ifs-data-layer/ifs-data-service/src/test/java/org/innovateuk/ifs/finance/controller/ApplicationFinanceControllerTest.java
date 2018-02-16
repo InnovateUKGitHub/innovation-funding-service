@@ -137,7 +137,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         FileEntryResource fileEntry = newFileEntryResource().build();
 
-        when(financeServiceMock.getFileContents(123)).thenReturn(serviceSuccess(new BasicFileAndContents(fileEntry, () -> null)));
+        when(financeFileEntryServiceMock.getFileContents(123)).thenReturn(serviceSuccess(new BasicFileAndContents(fileEntry, () -> null)));
 
         mockMvc.perform(get("/applicationfinance/financeDocument/fileentry?applicationFinanceId=123"))
                 .andExpect(status().isOk())

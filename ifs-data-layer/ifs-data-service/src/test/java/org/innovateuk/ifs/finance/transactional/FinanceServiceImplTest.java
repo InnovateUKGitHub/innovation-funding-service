@@ -98,7 +98,6 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
         assertEquals(singletonList(expectedFinance), result.getSuccess());
     }
 
-
     @Test
     public void testOrganisationSeeksFunding(){
         Long competitionId = 1L;
@@ -133,7 +132,6 @@ public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceIm
 
         assertFalse(result.getSuccess());
     }
-
 
     @Test
     public void testFindApplicationFinanceDetailsByApplicationId() {

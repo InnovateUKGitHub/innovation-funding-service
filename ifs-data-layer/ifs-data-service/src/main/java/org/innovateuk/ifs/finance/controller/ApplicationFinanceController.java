@@ -8,6 +8,7 @@ import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
+import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class ApplicationFinanceController {
 
     @Autowired
     private FinanceService financeService;
+
+    @Autowired
+    private FinanceFileEntryService financeFileEntryService;
 
     @Autowired
     @Qualifier("mediaTypeStringsFileValidator")
@@ -109,7 +113,7 @@ public class ApplicationFinanceController {
             HttpServletRequest request) {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance, request, (fileAttributes, inputStreamSupplier) ->
-                financeService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                financeFileEntryService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @PutMapping(value = "/financeDocument", produces = "application/json")
@@ -121,14 +125,14 @@ public class ApplicationFinanceController {
             HttpServletRequest request) {
 
         return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance, request, (fileAttributes, inputStreamSupplier) ->
-                financeService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
+                financeFileEntryService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
     @DeleteMapping(value = "/financeDocument", produces = "application/json")
     public RestResult<Void> deleteFinanceDocument(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
-        ServiceResult<Void> deleteResult = financeService.deleteFinanceFileEntry(applicationFinanceId);
+        ServiceResult<Void> deleteResult = financeFileEntryService.deleteFinanceFileEntry(applicationFinanceId);
         return deleteResult.toDeleteResponse();
     }
 
@@ -136,12 +140,12 @@ public class ApplicationFinanceController {
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
-        return handleFileDownload(() -> financeService.getFileContents(applicationFinanceId));
+        return handleFileDownload(() -> financeFileEntryService.getFileContents(applicationFinanceId));
     }
 
     @GetMapping("/financeDocument/fileentry")
     public RestResult<FileEntryResource> getFileDetails(@RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
-        return financeService.getFileContents(applicationFinanceId).
+        return financeFileEntryService.getFileContents(applicationFinanceId).
                 andOnSuccessReturn(FileAndContents::getFileEntry).
                 toGetResponse();
     }

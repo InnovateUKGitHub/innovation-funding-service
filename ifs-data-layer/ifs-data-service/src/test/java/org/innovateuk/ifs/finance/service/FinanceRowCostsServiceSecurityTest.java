@@ -60,6 +60,7 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Before
     public void lookupPermissionRules() {
+
         financeRowMetaFieldPermissionsRules = getMockPermissionRulesBean(FinanceRowMetaFieldPermissionsRules.class);
         costPermissionsRules = getMockPermissionRulesBean(ApplicationFinanceRowPermissionRules.class);
         applicationFinanceRules = getMockPermissionRulesBean(ApplicationFinancePermissionRules.class);

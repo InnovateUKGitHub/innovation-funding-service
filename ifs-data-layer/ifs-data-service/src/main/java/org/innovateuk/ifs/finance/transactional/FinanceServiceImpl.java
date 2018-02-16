@@ -1,17 +1,9 @@
 package org.innovateuk.ifs.finance.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.file.mapper.FileEntryMapper;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.BasicFileAndContents;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.ApplicationFinanceFileEntryService;
-import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
@@ -29,10 +21,7 @@ import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +46,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private ApplicationFinanceFileEntryService fileEntryService;
-
-    @Autowired
     private ApplicationFinanceMapper applicationFinanceMapper;
 
     @Autowired
@@ -70,13 +53,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
 
     @Autowired
     private ProjectFinanceHandler projectFinanceHandler;
-
-    @Autowired
-    private FileEntryMapper fileEntryMapper;
-
-    @Autowired
-    private FinanceRowCostsService financeRowCostsService;
-
 
 
     @Override
@@ -117,45 +93,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     }
 
     @Override
-    @Transactional
-    public ServiceResult<FileEntryResource> createFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
-        return getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(app ->
-                fileService.createFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinance, fileResults))
-        );
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<FileEntryResource> updateFinanceFileEntry(long applicationFinanceId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        ApplicationFinance applicationFinance = applicationFinanceRepository.findOne(applicationFinanceId);
-        return getOpenApplication(applicationFinance.getApplication().getId()).andOnSuccess(app ->
-                fileService.updateFile(fileEntryResource, inputStreamSupplier).
-                        andOnSuccessReturn(fileResults -> linkFileEntryToApplicationFinance(applicationFinance, fileResults))
-        );
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> deleteFinanceFileEntry(long applicationFinanceId) {
-        Application application = applicationFinanceRepository.findOne(applicationFinanceId).getApplication();
-        return getOpenApplication(application.getId()).andOnSuccess(app ->
-                getApplicationFinanceById(applicationFinanceId).
-                        andOnSuccess(finance -> fileService.deleteFileIgnoreNotFound(finance.getFinanceFileEntry()).
-                                andOnSuccess(() -> removeFileEntryFromApplicationFinance(finance))).
-                        andOnSuccessReturnVoid()
-        );
-    }
-
-    @Override
-    public ServiceResult<FileAndContents> getFileContents(long applicationFinanceId) {
-        return fileEntryService.getFileEntryByApplicationFinanceId(applicationFinanceId)
-                .andOnSuccess(fileEntry -> fileService.getFileByFileEntryId(fileEntry.getId())
-                        .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream)));
-    }
-
-    @Override
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
         return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
@@ -189,8 +126,6 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
         }
     }
 
-
-
     private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
         return find(projectFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
@@ -207,31 +142,10 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 
-    private FileEntryResource linkFileEntryToApplicationFinance(ApplicationFinance applicationFinance, Pair<File, FileEntry> fileResults) {
-        FileEntry fileEntry = fileResults.getValue();
-
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-
-        if (applicationFinanceResource != null) {
-            applicationFinanceResource.setFinanceFileEntry(fileEntry.getId());
-            financeRowCostsService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
-        }
-
-        return fileEntryMapper.mapToResource(fileEntry);
-    }
-
     private Supplier<ServiceResult<ApplicationFinance>> applicationFinance(Long applicationFinanceId) {
         return () -> getApplicationFinance(applicationFinanceId);
     }
 
-
-    private ServiceResult<ApplicationFinanceResource> removeFileEntryFromApplicationFinance(ApplicationFinanceResource applicationFinanceResource) {
-        Application application = applicationFinanceRepository.findOne(applicationFinanceResource.getId()).getApplication();
-        return getOpenApplication(application.getId()).andOnSuccess(app -> {
-            applicationFinanceResource.setFinanceFileEntry(null);
-            return financeRowCostsService.updateCost(applicationFinanceResource.getId(), applicationFinanceResource);
-        });
-    }
 
     private boolean isAcademic(OrganisationType type) {
         return OrganisationTypeEnum.RESEARCH.getId().equals(type.getId());
@@ -246,8 +160,4 @@ public class FinanceServiceImpl extends BaseTransactionalService implements Fina
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
         return find(applicationFinanceRepository.findOne(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
     }
-
-
-
-
 }
