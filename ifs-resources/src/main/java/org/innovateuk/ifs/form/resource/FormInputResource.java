@@ -1,13 +1,20 @@
 package org.innovateuk.ifs.form.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategories;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Collections.emptySet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
@@ -25,6 +32,10 @@ public class FormInputResource {
     private List<GuidanceRowResource> guidanceRows;
     private Integer priority;
     private FormInputScope scope;
+    /**
+     * TODO: IFS-2564 - Remove JsonIgnore in ZDD contract.
+     */
+    @JsonDeserialize(using = AllowedFileTypesDeserializer.class)
     private Set<FileTypeCategories> allowedFileTypes = new HashSet<>();
 
     public FormInputResource() {
@@ -159,20 +170,57 @@ public class FormInputResource {
     }
 
     /**
-     * TODO: IFS-2564 - Rename in ZDD migrate.
+     * TODO: IFS-2564 - Rename and remove JsonIgnore in ZDD migrate.
      */
+    @JsonIgnore
     public Set<FileTypeCategories> getAllowedFileTypesSet() {
         return this.allowedFileTypes;
     }
 
+    /**
+     * TODO: IFS-2564 - Remove JsonIgnore in ZDD contract.
+     */
+    @JsonIgnore
     public void setAllowedFileTypes(Set<FileTypeCategories> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 
     /**
-     * TODO: IFS-2564 - Remove in ZDD contraction.
+     * Custom deserializer for the 'allowedFileTypes' property.
+     *
+     * This is required as this property may come through from the
+     * data-tier as either an array or a string.
+     * Ideally we would use overloading on setter methods,
+     * but Jackson doesn't seem to deserialize correctly if we do this.
+     *
+     * TODO: IFS-2564 - Remove in ZDD contract.
      */
-    public void setAllowedFileTypes(String allowedFileTypes) {
-        this.allowedFileTypes = simpleMapSet(allowedFileTypes.split(","), FileTypeCategories::valueOf);
+    static class AllowedFileTypesDeserializer extends JsonDeserializer<Set<FileTypeCategories>> {
+        @Override
+        public Set<FileTypeCategories> deserialize(JsonParser p, DeserializationContext ctxt)
+                throws IOException, JsonProcessingException
+        {
+            if (p.isExpectedStartArrayToken()) {
+                Set<FileTypeCategories> result = newHashSet();
+
+                while (p.nextToken() != JsonToken.END_ARRAY) {
+                    result.add(FileTypeCategories.valueOf(p.getValueAsString()));
+                }
+
+                return result;
+            }
+
+            if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
+                String valueAsString = p.getValueAsString();
+
+                if (valueAsString.isEmpty()) {
+                    return emptySet();
+                }
+
+                return simpleMapSet(valueAsString.split(","), FileTypeCategories::valueOf);
+            }
+
+            throw ctxt.wrongTokenException(p, p.getCurrentToken(), "Token should be a Array or String.");
+        }
     }
 }
