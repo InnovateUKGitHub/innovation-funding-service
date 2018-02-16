@@ -8,6 +8,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+
 public class FormInputResource {
     private Long id;
     private Integer wordCount;
@@ -148,12 +151,28 @@ public class FormInputResource {
         this.scope = scope;
     }
 
-    public Set<FileTypeCategories> getAllowedFileTypes() {
-        return allowedFileTypes;
+    /**
+     * TODO: IFS-2564 - Remove in ZDD migrate.
+     */
+    public String getAllowedFileTypes() {
+        return simpleJoiner(allowedFileTypes, ",");
+    }
+
+    /**
+     * TODO: IFS-2564 - Rename in ZDD migrate.
+     */
+    public Set<FileTypeCategories> getAllowedFileTypesSet() {
+        return this.allowedFileTypes;
     }
 
     public void setAllowedFileTypes(Set<FileTypeCategories> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
-}
 
+    /**
+     * TODO: IFS-2564 - Remove in ZDD contraction.
+     */
+    public void setAllowedFileTypes(String allowedFileTypes) {
+        this.allowedFileTypes = simpleMapSet(allowedFileTypes.split(","), FileTypeCategories::valueOf);
+    }
+}
