@@ -14,6 +14,11 @@ public class GrantOfferLetterApprovalForm {
     public GrantOfferLetterApprovalForm() {
     }
 
+    public GrantOfferLetterApprovalForm(ApprovalType approvalType, String rejectionReason) {
+        this.approvalType = approvalType;
+        this.rejectionReason = rejectionReason;
+    }
+
     public ApprovalType getApprovalType() {
         return approvalType;
     }
