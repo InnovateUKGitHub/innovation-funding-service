@@ -69,7 +69,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
         when(assessmentReviewPanelInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getAvailableAssessors/{competitionId}", COMPETITION_ID)
+        mockMvc.perform(get("/assessment-panel-invite/get-available-assessors/{competitionId}", COMPETITION_ID)
                 .param("page", String.valueOf(page))
                 .param("size", String.valueOf(pageSize))
                 .param("sort", "lastName,desc"))
@@ -99,7 +99,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
         when(assessmentReviewPanelInviteServiceMock.getAvailableAssessors(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getAvailableAssessors/{competitionId}", COMPETITION_ID))
+        mockMvc.perform(get("/assessment-panel-invite/get-available-assessors/{competitionId}", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorPageResource)));
 
@@ -113,7 +113,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
         when(assessmentReviewPanelInviteServiceMock.getAvailableAssessorIds(COMPETITION_ID))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorIds));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getAvailableAssessorIds/{competitionId}", COMPETITION_ID))
+        mockMvc.perform(get("/assessment-panel-invite/get-available-assessor-ids/{competitionId}", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableAssessorIds)));
 
@@ -140,7 +140,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getCreatedInvites/{competitionId}", COMPETITION_ID)
+        mockMvc.perform(get("/assessment-panel-invite/get-created-invites/{competitionId}", COMPETITION_ID)
                 .param("page", String.valueOf(page))
                 .param("size", String.valueOf(pageSize))
                 .param("sort", "email,ASC"))
@@ -170,7 +170,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.getCreatedInvites(COMPETITION_ID, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getCreatedInvites/{competitionId}", COMPETITION_ID))
+        mockMvc.perform(get("/assessment-panel-invite/get-created-invites/{competitionId}", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
@@ -190,7 +190,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.inviteUsers(existingUserStagedInvites)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/assessmentpanelinvite/inviteUsers")
+        mockMvc.perform(post("/assessment-panel-invite/invite-users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(existingUserStagedInviteList)))
                 .andExpect(status().isOk());
@@ -207,7 +207,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.sendAllInvites(COMPETITION_ID, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/assessmentpanelinvite/sendAllInvites/{competitionId}", COMPETITION_ID)
+        mockMvc.perform(post("/assessment-panel-invite/send-all-invites/{competitionId}", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk());
@@ -221,7 +221,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.getAllInvitesToSend(COMPETITION_ID)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesToSend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/assessment-panel-invite/get-all-invites-to-send/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(assessmentReviewPanelInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
@@ -243,7 +243,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
                 .build();
         when(assessmentReviewPanelInviteServiceMock.getAllInvitesByUser(USER_ID)).thenReturn(serviceSuccess(singletonList(reviewParticipantResource)));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{user_id}", USER_ID))
+        mockMvc.perform(get("/assessment-panel-invite/get-all-invites-by-user/{user_id}", USER_ID))
                 .andExpect(status().isOk());
     }
 
@@ -254,7 +254,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.getAllInvitesToResend(COMPETITION_ID, inviteIds)).thenReturn(serviceSuccess(resource));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesToResend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/assessment-panel-invite/get-all-invites-to-resend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON)
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
                 .andExpect(status().isOk());
 
@@ -272,7 +272,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/assessmentpanelinvite/resendInvites")
+        mockMvc.perform(post("/assessment-panel-invite/resend-invites")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource))
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
@@ -297,7 +297,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
         when(assessmentReviewPanelInviteServiceMock.getInvitationOverview(competitionId, pageable, status))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getInvitationOverview/{competitionId}", competitionId)
+        mockMvc.perform(get("/assessment-panel-invite/get-invitation-overview/{competitionId}", competitionId)
                 .param("page", "2")
                 .param("size", "10")
                 .param("sort", "invite.email")
@@ -315,7 +315,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/assessmentpanelinvite/deleteInvite")
+        mockMvc.perform(delete("/assessment-panel-invite/delete-invite")
                 .param("email", email)
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent());
@@ -329,7 +329,7 @@ public class ReviewInviteControllerTest extends BaseControllerMockMVCTest<Review
 
         when(assessmentReviewPanelInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/assessmentpanelinvite/deleteAllInvites")
+        mockMvc.perform(delete("/assessment-panel-invite/delete-all-invites")
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent());
 

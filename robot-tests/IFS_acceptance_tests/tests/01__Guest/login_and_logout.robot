@@ -128,7 +128,7 @@ Valid login as Project Finance role
 Page not found
     [Documentation]    INFUND-8712
     When the user navigates to the page and gets a custom error message  ${SERVER}/ibble/dibble    ${404_error_message}
-    [Teardown]    Logout as user
+    [Teardown]    Logout as user from the Dashboard
 
 Reset password
     [Documentation]    INFUND-1889
