@@ -220,7 +220,7 @@ public class FormInputResource {
                 return simpleMapSet(valueAsString.split(","), FileTypeCategories::valueOf);
             }
 
-            throw ctxt.wrongTokenException(p, p.getCurrentToken(), "Token should be a Array or String.");
+            throw ctxt.wrongTokenException(p, p.getCurrentToken(), "Token should be an Array or String.");
         }
     }
 }
