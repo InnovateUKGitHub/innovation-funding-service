@@ -29,15 +29,8 @@ Server-side validations when No selected at yes/no
     ...    INFUND-7060
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    Then the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
-    Then the user should see the error summary links
-    And the user should see a field error    Please enter a principal employer.
-    And the user should see a field error    Please enter your role with your principal employer.
-    And the user should see a field error    You must agree that your account is accurate.
-    And the user should see a field error    Please tell us if you have any appointments or directorships.
-    And the user should see a field error    Please tell us if you have any other financial interests.
-    And the user should see a field error    Please tell us if any of your immediate family members have any appointments or directorships.
-    And the user should see a field error    Please tell us if any of your immediate family members have any other financial interests.
+    When the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
+    Then the user should see the field error text and summary error links
 
 Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
@@ -121,12 +114,11 @@ the user should not see the validation error
     Wait Until Page Contains Element Without Screenshots    css=.error-message
     Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}
 
-the user should see the error summary links
-    the user should see a summary error    Please enter a principal employer.
-    the user should see a summary error    Please enter your role with your principal employer.
-    the user should see a summary error    Please tell us if any of your immediate family members have any appointments or directorships.
-    the user should see a summary error    Please tell us if any of your immediate family members have any other financial interests.
-    the user should see a summary error    Please tell us if you have any other financial interests.
-    the user should see a summary error    Please tell us if you have any appointments or directorships.
-    the user should see a summary error    You must agree that your account is accurate.
-
+the user should see the field error text and summary error links
+    the user should see a field and summary error    Please enter a principal employer.
+    the user should see a field and summary error    Please enter your role with your principal employer.
+    the user should see a field and summary error    Please tell us if any of your immediate family members have any appointments or directorships.
+    the user should see a field and summary error    Please tell us if any of your immediate family members have any other financial interests.
+    the user should see a field and summary error    Please tell us if you have any other financial interests.
+    the user should see a field and summary error    Please tell us if you have any appointments or directorships.
+    the user should see a field and summary error    You must agree that your account is accurate.
