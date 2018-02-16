@@ -62,7 +62,7 @@ items:
           - name: SP_DOMAIN
             value: ${SHIB_ADDRESS}
           - name: IDP_DOMAIN
-            value: <<SHIB-IDP-ADDRESS>>
+            value: ${SHIB_IDP_ADDRESS}
           - name: HTTPS_PORT
             value: "9443"
           - name: HTTP_PORT
