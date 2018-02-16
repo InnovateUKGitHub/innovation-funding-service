@@ -1,5 +1,6 @@
 ext.LDAP_BASEDN="dc=int,dc=g2g3digital,dc=net"
-
+ext.LDAP_BINDDN="cn=admin,dc=int,dc=g2g3digital,dc=net"
+ext.LDAP_AUTHENTICATOR="bindSearchAuthenticator"
 ext.SHIBBOLETH_LDAP_PORT="389"
 
 ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=int,dc=g2g3digital,dc=net"
