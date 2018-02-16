@@ -26,14 +26,10 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessmentInterviewPanelControllerDocumentation extends BaseControllerMockMVCTest<InterviewPanelController> {
@@ -42,7 +38,6 @@ public class AssessmentInterviewPanelControllerDocumentation extends BaseControl
 
     ExistingUserStagedInviteListResource existingUserStagedInviteListResource = existingUserStagedInviteListResourceBuilder.build();
     List<ExistingUserStagedInviteResource> existingUserStagedInviteResources = existingUserStagedInviteListResource.getInvites();
-
 
     @Override
     public InterviewPanelController supplyControllerUnderTest() {
@@ -130,7 +125,7 @@ public class AssessmentInterviewPanelControllerDocumentation extends BaseControl
     public void getAvailableAssessorIds() throws Exception {
         when(interviewPanelInviteServiceMock.getAvailableAssessorIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interview-panel/available-application-ids/{competitionId}", 1L))
+        mockMvc.perform(get("/interview-panel/available-assessor-ids/{competitionId}", 1L))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(

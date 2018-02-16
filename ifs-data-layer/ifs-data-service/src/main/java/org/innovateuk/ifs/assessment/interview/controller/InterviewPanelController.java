@@ -2,7 +2,9 @@ package org.innovateuk.ifs.assessment.interview.controller;
 
 import org.innovateuk.ifs.assessment.interview.transactional.InterviewPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
+import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInvitePageResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -38,7 +40,7 @@ public class InterviewPanelController {
         return interviewPanelInviteService.getCreatedApplications(competitionId, pageable).toGetResponse();
     }
 
-    @GetMapping(value = "/available-application-ids/{competitionId}")
+    @GetMapping(value = "/available-assessor-ids/{competitionId}")
     public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable long competitionId) {
         return interviewPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }

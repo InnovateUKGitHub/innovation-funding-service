@@ -174,7 +174,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         }
 
     private List<Long> getAllAssessorIds(long competitionId) {
-        return interviewPanelRestService.getAvailableApplicationIds(competitionId).getSuccess();
+        return interviewPanelRestService.getAvailableAssessorsIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
