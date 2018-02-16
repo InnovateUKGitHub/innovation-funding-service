@@ -27,9 +27,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
 import static org.innovateuk.ifs.review.resource.ReviewState.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
@@ -59,7 +59,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         CompetitionResource competition = buildTestCompetition();
         List<ApplicationResource> applications = buildTestApplications();
 
-        List<ReviewResource> assessmentReviews = newAssessmentReviewResource()
+        List<ReviewResource> assessmentReviews = newReviewResource()
                 .withId(1L, 2L, 3L, 4L)
                 .withApplication(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId(), applications.get(3).getId())
                 .withCompetition(competition.getId())

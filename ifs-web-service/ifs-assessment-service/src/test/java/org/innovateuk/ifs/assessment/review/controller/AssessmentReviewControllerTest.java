@@ -21,11 +21,11 @@ import java.util.TreeSet;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingLong;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
+import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -106,7 +106,7 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 PROJECT_SUMMARY_TEXT
         );
 
-        ReviewResource reviewResource = newAssessmentReviewResource()
+        ReviewResource reviewResource = newReviewResource()
                 .withId(REVIEW_ID)
                 .withApplication(APPLICATION_ID)
                 .withApplicationName(APPLICATION_NAME)
@@ -133,7 +133,7 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
     public void respondToAssignment_accept() throws Exception {
         final boolean accept = true;
 
-        ReviewResource reviewResource = newAssessmentReviewResource()
+        ReviewResource reviewResource = newReviewResource()
                 .with(id(REVIEW_ID))
                 .withApplication(APPLICATION_ID)
                 .withCompetition(COMPETITION_ID)
@@ -159,13 +159,13 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
         final boolean accept = false;
         String comment = "comment";
 
-        ReviewResource reviewResource = newAssessmentReviewResource()
+        ReviewResource reviewResource = newReviewResource()
                 .with(id(REVIEW_ID))
                 .withApplication(APPLICATION_ID)
                 .withCompetition(COMPETITION_ID)
                 .build();
 
-        ReviewRejectOutcomeResource rejectOutcomeResource = newAssessmentReviewRejectOutcomeResource()
+        ReviewRejectOutcomeResource rejectOutcomeResource = newReviewRejectOutcomeResource()
                 .withReason(comment)
                 .build();
 

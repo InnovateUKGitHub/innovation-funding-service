@@ -17,9 +17,9 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.RestResult.toGetResponse;
-import static org.innovateuk.ifs.competition.builder.AssessmentPanelKeyStatisticsResourceBuilder.newAssessmentPanelKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
+import static org.innovateuk.ifs.review.builder.ReviewKeyStatisticsResourceBuilder.newReviewKeyStatisticsResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -57,7 +57,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
                 .withCompetitionStatus(competitionStatus)
                 .build();
 
-        reviewKeyStatisticsResource = newAssessmentPanelKeyStatisticsResource()
+        reviewKeyStatisticsResource = newReviewKeyStatisticsResource()
                 .withApplicationsInPanel(applicationsInPanel)
                 .withAssessorsAccepted(assessorsAccepted)
                 .withAssessorsPending(assessorsPending)

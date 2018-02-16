@@ -23,12 +23,12 @@ import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder.newAssessmentReviewPanelInviteResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -82,7 +82,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
         ZonedDateTime panelDate = ZonedDateTime.now();
         Boolean accept = true;
 
-        ReviewInviteResource inviteResource = newAssessmentReviewPanelInviteResource()
+        ReviewInviteResource inviteResource = newReviewInviteResource()
                 .withCompetitionName("my competition")
                 .withPanelDate(panelDate)
                 .build();
@@ -130,7 +130,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
     public void openInvite() throws Exception {
         ZonedDateTime panelDate = ZonedDateTime.now();
 
-        ReviewInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition")
+        ReviewInviteResource inviteResource = newReviewInviteResource().withCompetitionName("my competition")
                 .withPanelDate(panelDate)
                 .build();
 
@@ -157,7 +157,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
 
     @Test
     public void noDecisionMade() throws Exception {
-        ReviewInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition").build();
+        ReviewInviteResource inviteResource = newReviewInviteResource().withCompetitionName("my competition").build();
 
         when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 

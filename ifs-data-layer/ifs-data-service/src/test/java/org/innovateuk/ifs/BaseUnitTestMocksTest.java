@@ -59,6 +59,7 @@ import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
+import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.*;
@@ -109,6 +110,8 @@ import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
 import org.innovateuk.ifs.review.mapper.ReviewMapper;
 import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
+import org.innovateuk.ifs.review.transactional.ReviewInviteService;
+import org.innovateuk.ifs.review.transactional.ReviewService;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
@@ -195,10 +198,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentInterviewPanelInviteRepository assessmentInterviewPanelInviteRepositoryMock;
 
     @Mock
-    protected AssessmentReviewPanelInviteService assessmentReviewPanelInviteServiceMock;
+    protected ReviewInviteService reviewInviteServiceMock;
 
     @Mock
-    protected AssessmentPanelService assessmentPanelServiceMock;
+    protected ReviewService reviewServiceMock;
 
     @Mock
     protected AssessmentPanelParticipantRepository assessmentPanelParticipantRepositoryMock;
@@ -207,7 +210,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentInterviewPanelParticipantRepository assessmentInterviewPanelParticipantRepositoryMock;
 
     @Mock
-    protected AssessmentInterviewPanelInviteService assessmentInterviewPanelInviteServiceMock;
+    protected InterviewInviteService interviewInviteServiceMock;
 
     @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;

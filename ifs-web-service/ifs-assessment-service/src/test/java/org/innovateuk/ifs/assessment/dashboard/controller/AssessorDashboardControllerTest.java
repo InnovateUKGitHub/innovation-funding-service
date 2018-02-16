@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder.newAssessmentReviewPanelInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -42,6 +41,7 @@ import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResou
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
+import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -104,7 +104,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(false)
                 .build();
 
-        ReviewInviteResource invite = newAssessmentReviewPanelInviteResource()
+        ReviewInviteResource invite = newReviewInviteResource()
                 .withInviteHash("")
                 .withCompetitionId(competitionResource.getId())
                 .withCompetitionName("Juggling Craziness")
@@ -482,7 +482,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(true)
                 .build();
 
-        ReviewInviteResource invite = newAssessmentReviewPanelInviteResource()
+        ReviewInviteResource invite = newReviewInviteResource()
                 .withInviteHash("")
                 .withCompetitionId(competitionResource.getId())
                 .withCompetitionName("Juggling Craziness")

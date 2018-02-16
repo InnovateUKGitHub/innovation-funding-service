@@ -11,10 +11,6 @@ import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AssessmentPanelInviteStatisticsResourceDocs.assessmentPanelInviteStatisticsResourceBuilder;
-import static org.innovateuk.ifs.documentation.AssessmentPanelInviteStatisticsResourceDocs.assessmentPanelInviteStatisticsResourceFields;
-import static org.innovateuk.ifs.documentation.AssessmentPanelKeyStatisticsResourceDocs.assessmentPanelKeyStatisticsResourceBuilder;
-import static org.innovateuk.ifs.documentation.AssessmentPanelKeyStatisticsResourceDocs.assessmentPanelKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyStatisticsResourceDocs.competitionInAssessmentKeyStatisticsResourceBuilder;
@@ -23,6 +19,10 @@ import static org.innovateuk.ifs.documentation.CompetitionOpenKeyStatisticsResou
 import static org.innovateuk.ifs.documentation.CompetitionOpenKeyStatisticsResourceDocs.competitionOpenKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyStatisticsResourceDocs.competitionReadyToOpenKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyStatisticsResourceDocs.competitionReadyToOpenKeyStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceBuilder;
+import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.ReviewKeyStatisticsResourceDocs.reviewKeyStatisticsResourceBuilder;
+import static org.innovateuk.ifs.documentation.ReviewKeyStatisticsResourceDocs.reviewKeyStatisticsResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -109,7 +109,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getInAssessmentPanelKeyStatistics() throws Exception {
         long competitionId = 1L;
-        ReviewKeyStatisticsResource reviewKeyStatisticsResource = assessmentPanelKeyStatisticsResourceBuilder.build();
+        ReviewKeyStatisticsResource reviewKeyStatisticsResource = reviewKeyStatisticsResourceBuilder.build();
 
         when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
@@ -118,14 +118,14 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
-                        responseFields(assessmentPanelKeyStatisticsResourceFields)
+                        responseFields(reviewKeyStatisticsResourceFields)
                 ));
     }
 
     @Test
     public void getInAssessmentInviteKeyStatistics() throws Exception {
         long competitionId = 1L;
-        ReviewInviteStatisticsResource reviewInviteStatisticsResource = assessmentPanelInviteStatisticsResourceBuilder.build();
+        ReviewInviteStatisticsResource reviewInviteStatisticsResource = reviewInviteStatisticsResourceBuilder.build();
 
         when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
@@ -134,7 +134,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
-                        responseFields(assessmentPanelInviteStatisticsResourceFields)
+                        responseFields(reviewInviteStatisticsResourceFields)
                 ));
     }
 }

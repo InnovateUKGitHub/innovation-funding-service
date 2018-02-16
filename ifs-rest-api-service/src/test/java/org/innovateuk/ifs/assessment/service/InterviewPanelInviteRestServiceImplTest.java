@@ -13,7 +13,7 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.builder.AssessmentInterviewPanelInviteResourceBuilder.newAssessmentInterviewPanelInviteResource;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
@@ -200,7 +200,7 @@ public class InterviewPanelInviteRestServiceImplTest extends BaseRestServiceUnit
 
     @Test
     public void openInvite() {
-        InterviewInviteResource expected = newAssessmentInterviewPanelInviteResource().build();
+        InterviewInviteResource expected = newInterviewInviteResource().build();
         expected.setCompetitionName("my competition");
         setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hash"), InterviewInviteResource.class, null, expected, OK);
         InterviewInviteResource actual = service.openInvite("hash").getSuccess();

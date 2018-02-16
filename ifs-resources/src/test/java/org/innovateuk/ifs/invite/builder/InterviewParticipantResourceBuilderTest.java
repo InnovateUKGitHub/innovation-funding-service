@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.AssessmentInterviewPanelInviteResourceBuilder.newAssessmentInterviewPanelInviteResource;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +35,7 @@ public class InterviewParticipantResourceBuilderTest {
                 .withId(expectedId)
                 .withUser(expectedUserId)
                 .withCompetition(expectedCompetitionId)
-                .withInvite(newAssessmentInterviewPanelInviteResource().build())
+                .withInvite(newInterviewInviteResource().build())
                 .withRejectionReason(expectedRejectionReason)
                 .withRejectionReasonComment(expectedRejectionReasonComment)
                 .withCompetitionParticipantRole(expectedRole)
@@ -90,7 +90,7 @@ public class InterviewParticipantResourceBuilderTest {
                 .withId(expectedIds)
                 .withUser(expectedUserIds)
                 .withCompetition(expectedCompetitionIds)
-                .withInvite(newAssessmentInterviewPanelInviteResource().buildArray(2, InterviewInviteResource.class))
+                .withInvite(newInterviewInviteResource().buildArray(2, InterviewInviteResource.class))
                 .withRejectionReason(expectedRejectionReasons)
                 .withRejectionReasonComment(expectedRejectionReasonComments)
                 .withCompetitionParticipantRole(expectedRoles)

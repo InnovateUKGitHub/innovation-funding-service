@@ -8,9 +8,9 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessmentReviewResourceListType;
+import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
+import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -65,7 +65,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void getAssessmentReviews() {
         long competitionId = 11L;
         long userId = 2L;
-        List<ReviewResource> assessmentReviews = newAssessmentReviewResource().build(2);
+        List<ReviewResource> assessmentReviews = newReviewResource().build(2);
 
         setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", restUrl, userId, competitionId), assessmentReviewResourceListType(), assessmentReviews, OK);
 
@@ -77,7 +77,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void getAssessmentReview() {
         long assessmentReviewId = 11L;
 
-        ReviewResource assessmentReview = newAssessmentReviewResource().build();
+        ReviewResource assessmentReview = newReviewResource().build();
 
         setupGetWithRestResultExpectations(format("%s/review/%d", restUrl, assessmentReviewId), ReviewResource.class, assessmentReview, OK);
 
@@ -97,7 +97,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void rejectAssessmentReview() {
         long assessmentReviewId = 1L;
 
-        ReviewRejectOutcomeResource reviewRejectOutcomeResource = newAssessmentReviewRejectOutcomeResource().build();
+        ReviewRejectOutcomeResource reviewRejectOutcomeResource = newReviewRejectOutcomeResource().build();
         setupPutWithRestResultExpectations(format("%s/review/%d/reject", restUrl, assessmentReviewId),
                 reviewRejectOutcomeResource, OK);
         service.rejectAssessmentReview(assessmentReviewId, reviewRejectOutcomeResource).getSuccess();
