@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -94,7 +94,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     private ProjectUsersHelper projectUsersHelper;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceService financeService;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
@@ -158,7 +158,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
         return result.map(Boolean::booleanValue).orElse(false);
     }
 

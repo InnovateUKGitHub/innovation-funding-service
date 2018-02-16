@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.function.Supplier;
 
-public interface FinanceRowService {
+public interface FinanceService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId);
 

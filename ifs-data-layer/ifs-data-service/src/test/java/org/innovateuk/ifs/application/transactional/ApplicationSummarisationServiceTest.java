@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class ApplicationSummarisationServiceTest {
 	private FinanceRowCostsService financeRowCostsService;
 
 	@Mock
-	private FinanceRowService financeRowService;
+	private FinanceService financeService;
 	
 	private Application application;
 	
@@ -58,7 +58,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 		
-		when(financeRowService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 		
 		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 		
@@ -87,7 +87,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 		
-		when(financeRowService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 		
 		ServiceResult<BigDecimal> result = service.getTotalProjectCost(application);
 		

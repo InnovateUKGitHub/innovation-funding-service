@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class FinanceRowServiceImpl extends BaseTransactionalService implements FinanceRowService {
+public class FinanceServiceImpl extends BaseTransactionalService implements FinanceService {
 
 
     @Autowired

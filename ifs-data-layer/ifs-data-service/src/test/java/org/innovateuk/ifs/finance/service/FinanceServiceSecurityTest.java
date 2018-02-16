@@ -9,7 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.security.*;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<FinanceRowService> {
+public class FinanceServiceSecurityTest extends BaseServiceSecurityTest<FinanceService> {
 
     private FinanceRowMetaFieldPermissionsRules financeRowMetaFieldPermissionsRules;
     private ApplicationFinanceRowPermissionRules costPermissionsRules;
@@ -198,11 +198,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
     }
 
     @Override
-    protected Class<FinanceRowServiceSecurityTest.TestFinanceRowService> getClassUnderTest() {
-        return FinanceRowServiceSecurityTest.TestFinanceRowService.class;
+    protected Class<TestFinanceService> getClassUnderTest() {
+        return TestFinanceService.class;
     }
 
-    public static class TestFinanceRowService implements FinanceRowService {
+    public static class TestFinanceService implements FinanceService {
 
         @Override
         public ServiceResult<ApplicationFinanceResource> findApplicationFinanceByApplicationIdAndOrganisation(Long applicationId, Long organisationId) {

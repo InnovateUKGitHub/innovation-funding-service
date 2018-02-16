@@ -38,11 +38,11 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.GRANT_CLAIM;
 
-public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowServiceImpl> {
+public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceImpl> {
 
     @Override
-    protected FinanceRowServiceImpl supplyServiceUnderTest() {
-        return new FinanceRowServiceImpl();
+    protected FinanceServiceImpl supplyServiceUnderTest() {
+        return new FinanceServiceImpl();
     }
 
     @Mock

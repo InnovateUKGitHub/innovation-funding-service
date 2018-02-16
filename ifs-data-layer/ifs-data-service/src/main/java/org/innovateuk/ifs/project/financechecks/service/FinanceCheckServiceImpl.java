@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -71,7 +71,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceService financeService;
 
     @Autowired
     private ProjectFinanceRowService projectFinanceRowService;
@@ -150,7 +150,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
-        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentageFromProject(project.getId());
+        ServiceResult<Double> researchParticipationPercentage = financeService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
@@ -166,7 +166,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
 
-            financeRowService.financeDetails(application.getId(), organisationId).
+            financeService.financeDetails(application.getId(), organisationId).
                     andOnSuccessReturn(applicationFinanceResource -> {
 
                         BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());

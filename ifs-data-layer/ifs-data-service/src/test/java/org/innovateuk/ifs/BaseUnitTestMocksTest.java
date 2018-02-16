@@ -59,7 +59,7 @@ import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -568,7 +568,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceRowCostsService financeRowCostsServiceMock;
 
     @Mock
-    protected FinanceRowService financeRowServiceMock;
+    protected FinanceService financeServiceMock;
 
     @Mock
     protected ProjectFinanceRowService projectFinanceRowServiceMock;

@@ -44,12 +44,12 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void applicationFinanceControllerShouldReturnApplicationByApplicationIdAndOrganisationId() throws Exception {
 
-        when(financeRowServiceMock.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(financeServiceMock.findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
 
         mockMvc.perform(get("/applicationfinance/findByApplicationOrganisation/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isOk());
 
-        verify(financeRowServiceMock, times(1)).findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
+        verify(financeServiceMock, times(1)).findApplicationFinanceByApplicationIdAndOrganisation(123L, 456L);
     }
 
     @Test
@@ -78,12 +78,12 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void findByApplicationShouldReturnApplicationByApplicationId() throws Exception {
 
-        when(financeRowServiceMock.findApplicationFinanceByApplication(123L)).thenReturn(serviceSuccess(singletonList(applicationFinanceResource)));
+        when(financeServiceMock.findApplicationFinanceByApplication(123L)).thenReturn(serviceSuccess(singletonList(applicationFinanceResource)));
 
         mockMvc.perform(get("/applicationfinance/findByApplication/{applicationId}", "123"))
                 .andExpect(status().isOk());
 
-        verify(financeRowServiceMock, times(1)).findApplicationFinanceByApplication(123L);
+        verify(financeServiceMock, times(1)).findApplicationFinanceByApplication(123L);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         FileEntryResource fileEntry = newFileEntryResource().build();
 
-        when(financeRowServiceMock.getFileContents(123)).thenReturn(serviceSuccess(new BasicFileAndContents(fileEntry, () -> null)));
+        when(financeServiceMock.getFileContents(123)).thenReturn(serviceSuccess(new BasicFileAndContents(fileEntry, () -> null)));
 
         mockMvc.perform(get("/applicationfinance/financeDocument/fileentry?applicationFinanceId=123"))
                 .andExpect(status().isOk())
@@ -148,25 +148,25 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
     public void testFinanceDetails() throws Exception {
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
 
-        when(financeRowServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(financeServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
 
         mockMvc.perform(get("/applicationfinance/financeDetails/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationFinanceResource)));
 
-        verify(financeRowServiceMock).financeDetails(123L, 456L);
+        verify(financeServiceMock).financeDetails(123L, 456L);
     }
 
     @Test
     public void testGetFinanceDetailsForApplication() throws Exception {
         List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().build(3);
 
-        when(financeRowServiceMock.financeDetails(123L)).thenReturn(serviceSuccess(applicationFinanceResources));
+        when(financeServiceMock.financeDetails(123L)).thenReturn(serviceSuccess(applicationFinanceResources));
 
         mockMvc.perform(get("/applicationfinance/financeDetails/{applicationId}", "123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationFinanceResources)));
 
-        verify(financeRowServiceMock).financeDetails(123L);
+        verify(financeServiceMock).financeDetails(123L);
     }
 }

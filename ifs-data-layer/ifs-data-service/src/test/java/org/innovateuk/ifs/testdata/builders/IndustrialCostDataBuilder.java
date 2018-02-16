@@ -114,7 +114,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return with(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
                             getSuccess();
 
             applicationFinance.setOrganisationSize(organsationSize);
