@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
- * This controller will handle all Competition Management requests related to inviting assessors to an interview Panel.
+ * This controller will handle all Competition Management requests related to assigning applications to an interview Panel.
  */
 @Controller
 @RequestMapping("/assessment/interview-panel/competition/{competitionId}/applications")
@@ -76,10 +76,10 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
 
-        InterviewPanelApplicationsFindViewModel interviewPanelInviteAssessorsFindViewModel =
+        InterviewPanelApplicationsFindViewModel interviewPanelApplicationsFindModel =
                 interviewPanelApplicationsFindModelPopulator.populateModel(competitionId, page, originQuery);
 
-        model.addAttribute("model", interviewPanelInviteAssessorsFindViewModel);
+        model.addAttribute("model", interviewPanelApplicationsFindModel);
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview-panel-find";
@@ -91,16 +91,16 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
                                      PanelSelectionForm selectionForm) {
         PanelSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
 
-        PanelSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, competitionId);
-        selectionForm.setSelectedIds(trimmedAssessorForm.getSelectedIds());
-        selectionForm.setAllSelected(trimmedAssessorForm.getAllSelected());
+        PanelSelectionForm trimmedApplicationsForm = trimSelectionByFilteredResult(storedSelectionForm, competitionId);
+        selectionForm.setSelectedIds(trimmedApplicationsForm.getSelectedIds());
+        selectionForm.setAllSelected(trimmedApplicationsForm.getAllSelected());
 
         saveFormToCookie(response, competitionId, selectionForm);
     }
 
     private PanelSelectionForm trimSelectionByFilteredResult(PanelSelectionForm selectionForm,
                                                              long competitionId) {
-        List<Long> filteredResults = getAllAssessorIds(competitionId);
+        List<Long> filteredResults = getAvailableApplicationIds(competitionId);
         PanelSelectionForm updatedSelectionForm = new PanelSelectionForm();
 
         selectionForm.getSelectedIds().retainAll(filteredResults);
@@ -116,29 +116,29 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
     }
 
     @PostMapping(value = "/find", params = {"selectionId"})
-    public @ResponseBody JsonNode selectAssessorForInviteList(
+    public @ResponseBody JsonNode selectApplicationForInviteList(
             @PathVariable("competitionId") long competitionId,
-            @RequestParam("selectionId") long assessorId,
+            @RequestParam("selectionId") long applicationId,
             @RequestParam("isSelected") boolean isSelected,
             HttpServletRequest request,
             HttpServletResponse response) {
 
         boolean limitExceeded = false;
         try {
-            List<Long> assessorIds = getAllAssessorIds(competitionId);
+            List<Long> applicationIds = getAvailableApplicationIds(competitionId);
             PanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedIds().size() + 1;
                 if(limitIsExceeded(predictedSize)){
                     limitExceeded = true;
                 } else {
-                    selectionForm.getSelectedIds().add(assessorId);
-                    if (selectionForm.getSelectedIds().containsAll(assessorIds)) {
+                    selectionForm.getSelectedIds().add(applicationId);
+                    if (selectionForm.getSelectedIds().containsAll(applicationIds)) {
                         selectionForm.setAllSelected(true);
                     }
                 }
             } else {
-                selectionForm.getSelectedIds().remove(assessorId);
+                selectionForm.getSelectedIds().remove(applicationId);
                 selectionForm.setAllSelected(false);
             }
             saveFormToCookie(response, competitionId, selectionForm);
@@ -149,16 +149,16 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
     }
 
     @PostMapping(value = "/find", params = {"addAll"})
-    public @ResponseBody JsonNode addAllAssessorsToInviteList(Model model,
-                                              @PathVariable("competitionId") long competitionId,
-                                              @RequestParam("addAll") boolean addAll,
-                                              HttpServletRequest request,
-                                              HttpServletResponse response) {
+    public @ResponseBody JsonNode addAllApplicationsToInviteList(Model model,
+                                                                 @PathVariable("competitionId") long competitionId,
+                                                                 @RequestParam("addAll") boolean addAll,
+                                                                 HttpServletRequest request,
+                                                                 HttpServletResponse response) {
         try {
     PanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
 
             if (addAll) {
-        selectionForm.setSelectedIds(getAllAssessorIds(competitionId));
+        selectionForm.setSelectedIds(getAvailableApplicationIds(competitionId));
         selectionForm.setAllSelected(true);
     } else {
         selectionForm.getSelectedIds().clear();
@@ -173,8 +173,8 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
         }
         }
 
-    private List<Long> getAllAssessorIds(long competitionId) {
-        return interviewPanelRestService.getAvailableAssessorsIds(competitionId).getSuccess();
+    private List<Long> getAvailableApplicationIds(long competitionId) {
+        return interviewPanelRestService.getAvailableApplicationIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -205,7 +205,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
     }
 
     private String redirectToFind(long competitionId, int page, Optional<Long> innovationArea) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/assessment/panel/competition/{competitionId}/assessors/find")
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/assessment/interview-panel/competition/{competitionId}/applications/find")
                 .queryParam("page", page);
 
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
@@ -224,7 +224,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
 
         model.addAttribute("model", interviewPanelApplicationsInviteModelPopulator
                 .populateModel(competitionId, page, originQuery));
-        model.addAttribute("originQuery", originQuery); // TODO do we need this for assigning to interview?
+        model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview-panel-invite";
     }

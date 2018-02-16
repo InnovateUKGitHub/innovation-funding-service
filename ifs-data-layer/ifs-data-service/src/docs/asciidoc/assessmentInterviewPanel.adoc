@@ -21,26 +21,26 @@ include::{snippets}/interview-panel/get-available-applications/response-fields.a
 ==== Curl Example
 include::{snippets}/interview-panel/get-available-applications/curl-request.adoc[]
 
-=== Get available assessor Id's for interview panel
+=== Get available application IDs for interview panel
 ==== Request
-include::{snippets}/interview-panel/get-available-assessor-ids/http-request.adoc[]
-include::{snippets}/interview-panel/get-available-assessor-ids/path-parameters.adoc[]
+include::{snippets}/interview-panel/get-available-application-ids/http-request.adoc[]
+include::{snippets}/interview-panel/get-available-application-ids/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/interview-panel/get-available-assessor-ids/http-response.adoc[]
-include::{snippets}/interview-panel/get-available-assessor-ids/response-fields.adoc[]
+include::{snippets}/interview-panel/get-available-application-ids/http-response.adoc[]
+include::{snippets}/interview-panel/get-available-application-ids/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/interview-panel/get-available-assessor-ids/curl-request.adoc[]
+include::{snippets}/interview-panel/get-available-application-ids/curl-request.adoc[]
 
-=== Get invited application
+=== Get stages application
 ==== Request
-include::{snippets}/interview-panel/get-creates/http-request.adoc[]
-include::{snippets}/interview-panel/get-creates/path-parameters.adoc[]
+include::{snippets}/interview-panel/get-staged-applications/http-request.adoc[]
+include::{snippets}/interview-panel/get-staged-applications/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/interview-panel/get-creates/http-response.adoc[]
-include::{snippets}/interview-panel/get-creates/response-fields.adoc[]
+include::{snippets}/interview-panel/get-staged-applications/http-response.adoc[]
+include::{snippets}/interview-panel/get-staged-applications/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/interview-panel/get-creates/curl-request.adoc[]
+include::{snippets}/interview-panel/get-staged-applications/curl-request.adoc[]

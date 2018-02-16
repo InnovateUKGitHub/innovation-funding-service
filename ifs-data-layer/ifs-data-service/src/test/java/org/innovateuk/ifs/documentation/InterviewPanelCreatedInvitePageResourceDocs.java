@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInvitePageResourceBuilder;
+import org.innovateuk.ifs.invite.builder.InterviewPanelStagedApplicationPageResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInvitePageResourceBuilder.newInterviewPanelCreatedInvitePageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInviteResourceBuilder.newInterviewPanelCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInviteResourceBuilder.newInterviewPanelStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewPanelStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
 
 public class InterviewPanelCreatedInvitePageResourceDocs extends PageResourceDocs {
         public static final FieldDescriptor[] interviewPanelCreatedInvitePageResourceFields = pageResourceFields;
 
-        public static final InterviewPanelCreatedInvitePageResourceBuilder interviewPanelCreatedInvitePageResourceBuilder =
-                newInterviewPanelCreatedInvitePageResource()
-                        .withContent(newInterviewPanelCreatedInviteResource().build(2))
+        public static final InterviewPanelStagedApplicationPageResourceBuilder interviewPanelCreatedInvitePageResourceBuilder =
+                newInterviewPanelStagedApplicationPageResource()
+                        .withContent(newInterviewPanelStagedApplicationResource().build(2))
                         .withSize(20)
                         .withTotalPages(5)
                         .withTotalElements(100L)

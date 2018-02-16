@@ -216,9 +216,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentInterviewPanelInviteService assessmentInterviewPanelInviteServiceMock;
 
     @Mock
-    protected InterviewPanelInviteService interviewPanelInviteServiceMock;
-
-    @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
 
     @Mock

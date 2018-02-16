@@ -92,12 +92,12 @@ public class AssessmentInterviewPanelControllerDocumentation extends BaseControl
     }
 
     @Test
-    public void getCreates() throws Exception {
+    public void getStagedApplications() throws Exception {
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        when(interviewPanelInviteServiceMock.getCreatedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewPanelCreatedInvitePageResourceBuilder.build()));
+        when(interviewPanelInviteServiceMock.getStagedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewPanelCreatedInvitePageResourceBuilder.build()));
 
-        mockMvc.perform(get("/interview-panel/invited-applications/{competitionId}", 1L)
+        mockMvc.perform(get("/interview-panel/staged-applications/{competitionId}", 1L)
                 .param("size", "20")
                 .param("page", "0")
                 .param("sort", "name,asc"))
@@ -118,22 +118,22 @@ public class AssessmentInterviewPanelControllerDocumentation extends BaseControl
                                 .andWithPrefix("content[].", interviewPanelCreatedInviteResourceFields)
                 ));
 
-        verify(interviewPanelInviteServiceMock, only()).getCreatedApplications(competitionId, pageable);
+        verify(interviewPanelInviteServiceMock, only()).getStagedApplications(competitionId, pageable);
     }
 
     @Test
-    public void getAvailableAssessorIds() throws Exception {
-        when(interviewPanelInviteServiceMock.getAvailableAssessorIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
+    public void getAvailableApplicationIds() throws Exception {
+        when(interviewPanelInviteServiceMock.getAvailableApplicationIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interview-panel/available-assessor-ids/{competitionId}", 1L))
+        mockMvc.perform(get("/interview-panel/available-application-ids/{competitionId}", 1L))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
-                        responseFields(fieldWithPath("[].").description("List of available assessor ids "))
+                        responseFields(fieldWithPath("[].").description("List of available application ids "))
                 ));
 
-        verify(interviewPanelInviteServiceMock, only()).getAvailableAssessorIds(competitionId);
+        verify(interviewPanelInviteServiceMock, only()).getAvailableApplicationIds(competitionId);
     }
 }
