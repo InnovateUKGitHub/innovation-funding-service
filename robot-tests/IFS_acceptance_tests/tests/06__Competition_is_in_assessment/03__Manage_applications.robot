@@ -37,8 +37,6 @@ View the list of the applications
     [Tags]
     Given The user clicks the button/link        link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link         jQuery=a:contains("Manage assessments")
-    And the user see the correct key statistics
-    And The key statistics counts should be correct
     And The user clicks the button/link          jQuery=a:contains("Manage applications")
     Then the application list is correct before changes
     [Teardown]  the user clicks the button/link  link=Manage assessments
@@ -165,35 +163,34 @@ View application progress page
 Review the application
     [Documentation]    INFUND-7046
     [Tags]
-    When the user clicks the button/link           link=Review application
-    Then the user should see the text in the page  Application overview
-    And the user should see the element            jQuery=dt:contains("Innovation area") + dd:contains("Digital manufacturing")
+    When the user clicks the button/link  link=Review application
+    Then the user should see the element  jQuery=h1:contains("Application overview")
+    And the user should see the element   jQuery=dt:contains("Innovation area") + dd:contains("Digital manufacturing")
     [Teardown]    The user goes back to the previous page
 
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
     Then the user should see the element  jQuery=.column-two-thirds:contains("Assessors")
-    And the user clicks the button/link   jQuery=.pagination-label:contains("Next")
+    And the user clicks the button/link   link=21 to 40
     And the available assessors information is correct
 
 View the application assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
-    Given The user should see the element          jQuery=p:contains("No assessors have been assigned to this application.")
-    When the user clicks the button/link           jQuery=tr:contains("Paul Plum") button:contains("Assign")
-    Then the user should see the text in the page  Assigned (1)
+    [Setup]  the user should see the element  jQuery=h2:contains("Living with Cryptocurrencies")
+    Given The user should see the element  jQuery=p:contains("No assessors have been assigned to this application.")
+    When the user clicks the button/link   jQuery=tr:contains("Paul Plum") button:contains("Assign")
+    Then the user should see the element   jQuery=h2:contains("Assigned (1)")
     And the assigned list is correct before notification
-    And the user clicks the button/link            link=Allocate applications
-    Then the user should see the element           jQuery=td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
+    And the user clicks the button/link    link=Allocate applications
+    Then the user should see the element   jQuery=td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
 
 Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
     Given the user clicks the button/link  jQuery=td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
-    And the user clicks the button/link    jQuery=td:contains("Paul Plum") ~ td:contains("Remove")
-    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
-    And the available assessors information is correct
+    Then the user clicks the button/link   jQuery=td:contains("Paul Plum") ~ td:contains("Remove")
 
 Notify an assigned user
     [Documentation]    INFUND-7050
@@ -269,50 +266,19 @@ the application list is correct before changes
     the user should see the element    jQuery=tr:nth-child(1) td:nth-child(6):contains("0")
 
 the available assessors information is correct
-    the user should see the element    jQuery=.assessors-available td:nth-child(1):contains('Paul Plum')
-    the user should see the element    jQuery=.assessors-available td:nth-child(2):contains('Town Planning, Construction')
-    the user should see the element    jQuery=.assessors-available td:nth-child(3):contains('10')
-    the user should see the element    jQuery=.assessors-available td:nth-child(4):contains('7')
-    the user should see the element    jQuery=.assessors-available td:nth-child(5):contains('0')
+    the user should see the element  jQuery=tr:contains("Mabel Robinson") td:contains("3") + td:contains("0") + td:contains("0") + td:contains("Assign")
+    # TODO Add some skills too IFS-1298
 
 the assigned list is correct before notification
-    the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
-    the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("Academic")
-    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Urban living")
-    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("infrastructure")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("11")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("8")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(7):contains("-")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(8):contains("-")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(9):contains("-")
+    the user should see the element  jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum") ~ td:contains("Academic") ~ td:contains("Urban living") ~ td:contains("9") + td:contains("9")
 
 the previously assigned list is correct
     the user should see the element    jQuery=.assessors-previous td:contains("Paul Plum") + td:contains("Academic") + td:contains("Urban living")
     the user should see the element    jQuery=.assessors-previous td:contains("Paul Plum") ~ td:contains('10') + td:contains("7")
 
-the user see the correct key statistics
-    the user should see the element    jQuery=small:contains("Total assignments")
-    the user should see the element    jQuery=small:contains("Assignments awaiting response")
-    the user should see the element    jQuery=small:contains("Assignments accepted")
-    the user should see the element    jQuery=small:contains("Assessments started")
-    the user should see the element    jQuery=small:contains("Assessments completed")
-
-The key statistics counts should be correct
-    ${TOTAL_ASSIGNMENT}=    Get text    css=.column-fifth:nth-child(1) span
-    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    16
-    ${AWAITING}=    Get text    css=.column-fifth:nth-child(2) span
-    Should Be Equal As Integers    ${AWAITING}    7
-    ${ACCEPTED}=    Get text    css=.column-fifth:nth-child(3) span
-    Should Be Equal As Integers    ${ACCEPTED}    6
-    ${STARTED}=    Get text    css=.column-fifth:nth-child(4) span
-    Should Be Equal As Integers    ${STARTED}    0
-    ${SUBMITTED}=    Get text    css=.column-fifth:nth-child(5) span
-    Should Be Equal As Integers    ${SUBMITTED}    3
-
 the assessor list is correct before changes
-    the user clicks the button/link  jQuery=a:contains("21 to 40")
-    the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("1")
+    the user clicks the button/link  link=21 to 40
+    the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("8") ~ td:contains("8") ~ td:contains("4") ~ td:contains("0") ~ td:contains("View progress")
 
 the user accepts the application
     the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
