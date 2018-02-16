@@ -1,30 +1,30 @@
 package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInviteResource;
+import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class InterviewPanelCreatedInviteResourceBuilder extends BaseBuilder<InterviewPanelCreatedInviteResource, InterviewPanelCreatedInviteResourceBuilder> {
+public class InterviewPanelCreatedInviteResourceBuilder extends BaseBuilder<InterviewPanelStagedApplicationResource, InterviewPanelCreatedInviteResourceBuilder> {
 
-    private InterviewPanelCreatedInviteResourceBuilder(List<BiConsumer<Integer, InterviewPanelCreatedInviteResource>> newMultiActions) {
+    private InterviewPanelCreatedInviteResourceBuilder(List<BiConsumer<Integer, InterviewPanelStagedApplicationResource>> newMultiActions) {
         super(newMultiActions);
     }
 
     @Override
-    protected InterviewPanelCreatedInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewPanelCreatedInviteResource>> actions) {
+    protected InterviewPanelCreatedInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewPanelStagedApplicationResource>> actions) {
         return new InterviewPanelCreatedInviteResourceBuilder(actions);
     }
 
     @Override
-    protected InterviewPanelCreatedInviteResource createInitial() {
-        return new InterviewPanelCreatedInviteResource();
+    protected InterviewPanelStagedApplicationResource createInitial() {
+        return new InterviewPanelStagedApplicationResource();
     }
 
-    public static InterviewPanelCreatedInviteResourceBuilder newInterviewPanelCreatedInviteResource() {
+    public static InterviewPanelCreatedInviteResourceBuilder newInterviewPanelStagedApplicationResource() {
         return new InterviewPanelCreatedInviteResourceBuilder(emptyList());
     }
 

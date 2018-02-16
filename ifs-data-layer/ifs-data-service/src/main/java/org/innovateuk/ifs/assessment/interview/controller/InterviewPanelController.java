@@ -31,16 +31,16 @@ public class InterviewPanelController {
         return interviewPanelInviteService.getAvailableApplications(competitionId, pageable).toGetResponse();
     }
 
-    @GetMapping("/invited-applications/{competitionId}")
-    public RestResult<InterviewPanelCreatedInvitePageResource> getCreates(
+    @GetMapping("/staged-applications/{competitionId}")
+    public RestResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"target.id"}, direction = Sort.Direction.ASC) Pageable pageable) {
-        return interviewPanelInviteService.getCreatedApplications(competitionId, pageable).toGetResponse();
+        return interviewPanelInviteService.getStagedApplications(competitionId, pageable).toGetResponse();
     }
 
     @GetMapping(value = "/available-application-ids/{competitionId}")
-    public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable long competitionId) {
-        return interviewPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
+    public RestResult<List<Long>> getAvailableApplicationIds(@PathVariable long competitionId) {
+        return interviewPanelInviteService.getAvailableApplicationIds(competitionId).toGetResponse();
     }
 
     @PostMapping("/assign-applications")

@@ -16,6 +16,7 @@ import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
+import org.innovateuk.ifs.assessment.interview.transactional.InterviewPanelInviteService;
 import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
@@ -210,6 +211,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentInterviewPanelInviteService assessmentInterviewPanelInviteServiceMock;
+
+    @Mock
+    protected InterviewPanelInviteService interviewPanelInviteServiceMock;
 
     @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;

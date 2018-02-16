@@ -17,5 +17,5 @@ public interface InterviewPanelRestService {
     // TODO rename the resource or create a new one?
     RestResult<Void> assignApplications(ExistingUserStagedInviteListResource existingUserStagedInviteListResource);
 
-    RestResult<InterviewPanelCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
+    RestResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, int page);
 }

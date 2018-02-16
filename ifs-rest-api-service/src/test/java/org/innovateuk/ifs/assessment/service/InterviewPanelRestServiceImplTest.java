@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInvitePageResource;
+import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,8 +16,8 @@ import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResource
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInvitePageResourceBuilder.newInterviewPanelCreatedInvitePageResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInviteResourceBuilder.newInterviewPanelCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.InterviewPanelStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInviteResourceBuilder.newInterviewPanelStagedApplicationResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -87,16 +87,16 @@ public class InterviewPanelRestServiceImplTest extends BaseRestServiceUnitTest<I
     }
 
     @Test
-    public void getCreatedInvites() {
+    public void getStagedApplications() {
         long competitionId = 1L;
         int page = 1;
-        InterviewPanelCreatedInvitePageResource expected = newInterviewPanelCreatedInvitePageResource()
-                .withContent(newInterviewPanelCreatedInviteResource().build(2))
+        InterviewPanelStagedApplicationPageResource expected = newInterviewPanelStagedApplicationPageResource()
+                .withContent(newInterviewPanelStagedApplicationResource().build(2))
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "invited-applications", competitionId), InterviewPanelCreatedInvitePageResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "staged-applications", competitionId), InterviewPanelStagedApplicationPageResource.class, expected);
 
-        InterviewPanelCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, page).getSuccess();
+        InterviewPanelStagedApplicationPageResource actual = service.getStagedApplications(competitionId, page).getSuccess();
         assertEquals(expected, actual);
     }
 }

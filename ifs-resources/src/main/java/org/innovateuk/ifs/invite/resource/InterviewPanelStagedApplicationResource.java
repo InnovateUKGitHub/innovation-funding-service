@@ -2,28 +2,25 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-
-import java.util.List;
 
 /**
  * DTO for a created assessor invite that is ready to be sent.
  */
-public class InterviewPanelCreatedInviteResource {
+public class InterviewPanelStagedApplicationResource {
 
     private final long id;
     private final long applicationId;
     private final String applicationName;
     private final String leadOrganisationName;
 
-    public InterviewPanelCreatedInviteResource() {
+    public InterviewPanelStagedApplicationResource() {
         id = -1;
         applicationId = -1;
         applicationName = null;
         leadOrganisationName = null;
     }
 
-    public InterviewPanelCreatedInviteResource(long id, long applicationId, String applicationName, String leadOrganisationName) {
+    public InterviewPanelStagedApplicationResource(long id, long applicationId, String applicationName, String leadOrganisationName) {
         this.id = id;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -52,7 +49,7 @@ public class InterviewPanelCreatedInviteResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewPanelCreatedInviteResource that = (InterviewPanelCreatedInviteResource) o;
+        InterviewPanelStagedApplicationResource that = (InterviewPanelStagedApplicationResource) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

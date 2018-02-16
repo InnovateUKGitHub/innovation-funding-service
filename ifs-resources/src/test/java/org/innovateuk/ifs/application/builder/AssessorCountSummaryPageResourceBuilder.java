@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
+import org.innovateuk.ifs.application.resource.AssessorCountSummaryResource;
 import org.innovateuk.ifs.commons.builder.PageResourceBuilder;
 
 import java.util.List;
@@ -8,7 +9,8 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class AssessorCountSummaryPageResourceBuilder extends PageResourceBuilder<AssessorCountSummaryPageResource,AssessorCountSummaryPageResourceBuilder> {
+public class AssessorCountSummaryPageResourceBuilder
+        extends PageResourceBuilder<AssessorCountSummaryPageResource,AssessorCountSummaryPageResourceBuilder, AssessorCountSummaryResource> {
 
     private AssessorCountSummaryPageResourceBuilder(List<BiConsumer<Integer, AssessorCountSummaryPageResource>> multiActions) {
         super(multiActions);

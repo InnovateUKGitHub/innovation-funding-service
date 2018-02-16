@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInvitePageResource;
+import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -45,11 +45,11 @@ public class InterviewPanelRestServiceImpl extends BaseRestService implements In
     }
 
     @Override
-    public RestResult<InterviewPanelCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
-        String baseUrl = format("%s/%s/%s", REST_URL, "invited-applications", competitionId);
+    public RestResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, int page) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "staged-applications", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl).queryParam("page", page);
 
-        return getWithRestResult(builder.toUriString(), InterviewPanelCreatedInvitePageResource.class);
+        return getWithRestResult(builder.toUriString(), InterviewPanelStagedApplicationPageResource.class);
     }
 }

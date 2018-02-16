@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInvitePageResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelCreatedInviteResource;
+import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationResource;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationInviteRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationsInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -32,8 +32,8 @@ public class InterviewPanelApplicationsInviteModelPopulator {
                 .getCompetitionById(competitionId)
                 .getSuccess();
 
-        InterviewPanelCreatedInvitePageResource pageResource = interviewPanelRestService
-                .getCreatedInvites(competition.getId(), page)
+        InterviewPanelStagedApplicationPageResource pageResource = interviewPanelRestService
+                .getStagedApplications(competition.getId(), page)
                 .getSuccess();
 
         return new InterviewPanelApplicationsInviteViewModel(
@@ -49,12 +49,12 @@ public class InterviewPanelApplicationsInviteModelPopulator {
         );
     }
 
-    private InterviewPanelApplicationInviteRowViewModel getRowViewModel(InterviewPanelCreatedInviteResource interviewPanelCreatedInviteResource) {
+    private InterviewPanelApplicationInviteRowViewModel getRowViewModel(InterviewPanelStagedApplicationResource interviewPanelStagedApplicationResource) {
         return new InterviewPanelApplicationInviteRowViewModel(
-                interviewPanelCreatedInviteResource.getId(),
-                interviewPanelCreatedInviteResource.getApplicationId(),
-                interviewPanelCreatedInviteResource.getApplicationName(),
-                interviewPanelCreatedInviteResource.getLeadOrganisationName()
+                interviewPanelStagedApplicationResource.getId(),
+                interviewPanelStagedApplicationResource.getApplicationId(),
+                interviewPanelStagedApplicationResource.getApplicationName(),
+                interviewPanelStagedApplicationResource.getLeadOrganisationName()
         );
     }
 }
