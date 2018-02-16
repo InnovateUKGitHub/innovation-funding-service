@@ -73,7 +73,7 @@ items:
         volumes:
           - name: dir-1
             persistentVolumeClaim:
-              claimName: file-upload-claim
+              claimName: ${FILE_UPLOAD_CLAIM}
     test: false
     triggers:
     - type: ConfigChange

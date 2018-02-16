@@ -242,11 +242,11 @@ function tailorAppInstance() {
 #    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/spring-admin/*.yml
 
 
-    if $(isNamedEnvironment ${TARGET}); then
-
-        sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" $(getBuildLocation)/*.yml
-
-    fi
+#    if $(isNamedEnvironment ${TARGET}); then
+#
+#        sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" $(getBuildLocation)/*.yml
+#
+#    fi
 
     # for the IDP and Registration Service
 #    substituteMandatoryEnvVariable LDAP_URL "<<LDAP-URL>>"
@@ -293,11 +293,6 @@ function tailorAppInstance() {
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/5-front-door-service.yml
-    fi
-
-    if [[ ${TARGET} == "local" ]]
-    then
-        replacePersistentFileClaim
     fi
 }
 
