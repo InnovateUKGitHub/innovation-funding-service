@@ -27,7 +27,10 @@
     </th:block>
 
     <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
-        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager. If you have not already done so, please contact the Project Manager to explain your decision.</p>
+        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+        <p>If you have not already done so, please contact the Project Manager to explain your decision.</p>
+        <p>Reason for rejection:</p>
+        <p th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
     </div>
 
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
