@@ -30,7 +30,7 @@ Server-side validations when No selected at yes/no
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
     When the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
-    Then the user should see the field error text and summary error links
+    Then the user should see the proper validation messages triggered
 
 Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
@@ -114,7 +114,7 @@ the user should not see the validation error
     Wait Until Page Contains Element Without Screenshots    css=.error-message
     Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}
 
-the user should see the field error text and summary error links
+the user should see the proper validation messages triggered
     the user should see a field and summary error    Please enter a principal employer.
     the user should see a field and summary error    Please enter your role with your principal employer.
     the user should see a field and summary error    Please tell us if any of your immediate family members have any appointments or directorships.
