@@ -91,7 +91,7 @@ public class AssessmentInterviewPanelInviteControllerDocumentation extends BaseC
         when(assessmentInterviewPanelInviteServiceMock.getAvailableAssessorIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get("/interview-panel-invite/get-available-applications-ids/{competitionId}", competitionId))
+        mockMvc.perform(get("/interview-panel-invite/get-available-assessor-ids/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel-invite/{method-name}",
                         pathParameters(

@@ -68,7 +68,7 @@ public class AssessmentInterviewPanelInviteController {
         return assessmentInterviewPanelInviteService.getAvailableAssessors(competitionId, pageable).toGetResponse();
     }
 
-    @GetMapping(value = "/get-available-application-ids/{competitionId}")
+    @GetMapping(value = "/get-available-assessor-ids/{competitionId}")
     public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable long competitionId) {
         return assessmentInterviewPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
