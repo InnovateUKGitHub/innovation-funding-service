@@ -49,9 +49,9 @@ items:
           - name: SP_PROXY_KEY
             value: "<<SSLKEY>>"
           - name: SP_DOMAIN
-            value: <<SHIB-ADDRESS>>
+            value: ${SHIB_ADDRESS}
           - name: IDP_DOMAIN
-            value: <<SHIB-IDP-ADDRESS>>
+            value: ${SHIB_IDP_ADDRESS}
           - name: HTTPS_PORT
             value: "9443"
           - name: HTTP_PORT
@@ -104,7 +104,7 @@ items:
     annotations:
       haproxy.router.openshift.io/balance: roundrobin
   spec:
-    host: <<SHIB-ADDRESS>>
+    host:  ${SHIB_ADDRESS}
     port:
       targetPort: 443-tcp
     tls:

@@ -46,7 +46,7 @@ items:
           imagePullPolicy: Always
           env:
           - name: IFS_WEB_BASEURL
-            value: 'https://<<SHIB-ADDRESS>>'
+            value: 'https://${SHIB_ADDRESS}'
           - name: IDP_REST_BASEURL
             value: 'http://registration-svc:8080'
           - name: JAVA_OPTS

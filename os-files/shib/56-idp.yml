@@ -60,7 +60,7 @@ items:
           - name: SP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
           - name: SP_DOMAIN
-            value: <<SHIB-ADDRESS>>
+            value: ${SHIB_ADDRESS}
           - name: IDP_DOMAIN
             value: <<SHIB-IDP-ADDRESS>>
           - name: HTTPS_PORT
@@ -125,7 +125,7 @@ items:
     annotations:
       haproxy.router.openshift.io/balance: source
   spec:
-    host: <<SHIB-IDP-ADDRESS>>
+    host: ${SHIB_IDP_ADDRESS}
     port:
       targetPort: 443-tcp
     tls:

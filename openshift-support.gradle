@@ -42,34 +42,10 @@ if (!isNamedEnv()) {
 
 processResources {
 
-    from('os-files') {
+    from('os-files/') {
         include '**/*.yml'
     }
-    // Note the presence of a $ character that is not then substituted or escaped
-    // will cause process resources to fail.  This is why we are selective here
-    //about which directories / files we perform property substitution on.
-    //top level files
-    filesMatching("*.*") {
-        expand project.properties
-    }
-    // shib yml files
-    filesMatching("shib/*.*") {
-        expand project.properties
-    }
-
-    filesMatching("sil-stub/*.*") {
-        expand project.properties
-    }
-
-    filesMatching("mail/*.*") {
-        expand project.properties
-    }
-
-    filesMatching("mysql-client/*.*") {
-        expand project.properties
-    }
-
-    filesMatching("finance-data-service/*.*") {
+    filesMatching("**/**.*") {
         expand project.properties
     }
 }

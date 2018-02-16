@@ -221,25 +221,25 @@ function tailorAppInstance() {
 #    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/sil-stub/*.yml
 #    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/shib/56-*.yml
 
-    if [[ ${TARGET} == "production" ]]
-    then
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
+#    if [[ ${TARGET} == "production" ]]
+#    then
+#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
+#
+#      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+#      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
 
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
-
-    else
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
-
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
-    fi
+#    else
+#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
+#
+#      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+#      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
+#    fi
 
 
-    sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/mail/*.yml
-    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/spring-admin/*.yml
+#    sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/mail/*.yml
+#    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/spring-admin/*.yml
 
 
     if $(isNamedEnvironment ${TARGET}); then
