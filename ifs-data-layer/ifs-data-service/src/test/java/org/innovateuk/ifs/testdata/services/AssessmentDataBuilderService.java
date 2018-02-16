@@ -128,7 +128,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                     formInputs, "research category", "Feasibility studies");
 
             createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
-                    formInputs, "scope", "TRUE");
+                    formInputs, "scope", "true");
 
             createAssessorResponseForFormInputIfPresent(competitionName, applicationName, assessorEmail, question,
                     formInputs, "Feedback",

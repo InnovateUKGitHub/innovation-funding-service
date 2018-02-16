@@ -93,7 +93,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @SuppressWarnings("unused")
     private static final Predicate<CompetitionLine> SPECIFIC_COMPETITIONS_PREDICATE =
-            competitionLine -> "Expression of Interest: Assistive technologies for caregivers".equals(competitionLine.name);
+            competitionLine -> "Smart monitoring in high-pressure engineering systems".equals(competitionLine.name);
 
     private static final Predicate<CompetitionLine> COMPETITIONS_FILTER =
             SPECIFIC_COMPETITIONS_PREDICATE;
