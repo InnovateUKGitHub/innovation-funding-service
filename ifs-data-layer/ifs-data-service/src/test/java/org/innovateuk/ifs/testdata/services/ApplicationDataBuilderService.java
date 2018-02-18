@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -24,13 +26,16 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -64,6 +69,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private QuestionResponseDataBuilder questionResponseDataBuilder;
 
     private List<CsvUtils.ApplicationLine> applicationLines;
+    private List<CsvUtils.CompetitionLine> competitionLines;
 
     private Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
 
@@ -93,16 +99,20 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     @PostConstruct
     public void readCsvs() {
-        applicationLines = readApplications();
-        inviteLines = readInvites();
-        questionResponseLines = readApplicationQuestionResponses();
-        applicationFinanceLines = readApplicationFinances();
 
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
+
         applicationDataBuilder = newApplicationData(serviceLocator);
         competitionDataBuilder = newCompetitionData(serviceLocator);
         applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
+
+        applicationLines = readApplications();
+        inviteLines = readInvites();
+        questionResponseLines = readApplicationQuestionResponses();
+        applicationFinanceLines = readApplicationFinances();
+        competitionLines = readCompetitions();
+
     }
 
     public List<CompletableFuture<List<ApplicationData>>> fillInAndCompleteApplications(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
@@ -115,6 +125,31 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             return competitionAndApplicationFutures.thenApply(applicationFutures ->
                     simpleMap(applicationFutures, CompletableFuture::join));
         });
+    }
+
+    public void createFundingDecisions(List<CompetitionData> competitions) {
+
+        competitions.forEach(competition -> {
+
+            CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
+                    Objects.equals(l.name, competition.getCompetition().getName()));
+
+            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
+
+            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
+
+                basicCompetitionInformation.
+                        moveCompetitionIntoFundersPanelStatus().
+                        sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name)).
+                        build();
+            }
+        });
+    }
+
+    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
+        List<CsvUtils.ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
+        List<CsvUtils.ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
+        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
     private static List<CsvUtils.ApplicationQuestionResponseLine> readApplicationQuestionResponses() {

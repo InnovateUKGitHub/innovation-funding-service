@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.testdata;
 
 import com.google.common.collect.ImmutableMap;
-import org.apache.commons.lang3.tuple.Pair;
 import org.flywaydb.core.Flyway;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -20,12 +16,11 @@ import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
-import org.innovateuk.ifs.testdata.builders.*;
+import org.innovateuk.ifs.testdata.builders.TestService;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -38,28 +33,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.PostConstruct;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
-import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
-import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
-import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -107,9 +95,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private String systemUserUUID;
 
     @Autowired
-    private GenericApplicationContext applicationContext;
-
-    @Autowired
     private RegistrationService registrationService;
 
     @Autowired
@@ -149,16 +134,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private UserDataBuilderService userDataBuilderService;
 
-    private CompetitionDataBuilder competitionDataBuilder;
-    private CompetitionFunderDataBuilder competitionFunderDataBuilder;
-    private OrganisationDataBuilder organisationBuilder;
+    @Autowired
+    private OrganisationDataBuilderService organisationDataBuilderService;
 
     private static List<OrganisationLine> organisationLines;
     private static List<CompetitionLine> competitionLines;
-    private static List<CompetitionFunderLine> competitionFunderLines;
     private static List<PublicContentGroupLine> publicContentGroupLines;
     private static List<PublicContentDateLine> publicContentDateLines;
-    private static List<ApplicationLine> applicationLines;
     private static List<ExternalUserLine> externalUserLines;
     private static List<InternalUserLine> internalUserLines;
 
@@ -173,10 +155,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     public void readCsvs() {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
-        competitionFunderLines = readCompetitionFunders();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
-        applicationLines = readApplications();
         externalUserLines = readExternalUsers();
         internalUserLines = readInternalUsers();
     }
@@ -211,12 +191,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @PostConstruct
     public void setupBaseBuilders() {
-
-        ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
-
-        competitionDataBuilder = newCompetitionData(serviceLocator);
-        competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
-        organisationBuilder = newOrganisationData(serviceLocator);
     }
 
     @Test
@@ -267,9 +241,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
             List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
 
-            createFundingDecisions(competitions);
+            applicationDataBuilderService.createFundingDecisions(competitions);
             projectDataBuilderService.createProjects(applications);
             competitionDataBuilderService.moveCompetitionsToCorrectFinalState(competitions);
+
         }, taskExecutor);
 
         CompletableFuture.allOf(competitionFundersFutures, publicContentFutures, assessorFutures, competitionsFinalisedFuture).join();
@@ -289,7 +264,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitionFunders(List<CompetitionData> competitions) {
-        competitions.forEach(this::createCompetitionFunder);
+        competitions.forEach(competitionDataBuilderService::createCompetitionFunder);
     }
 
     private void createPublicContentGroups(List<CompetitionData> competitions) {
@@ -318,64 +293,16 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         });
     }
 
-    private void createCompetitionFunder(CompetitionData competition) {
-
-        Optional<CompetitionFunderLine> funderLine = simpleFindFirst(competitionFunderLines, l ->
-                Objects.equals(competition.getCompetition().getName(), l.competitionName));
-
-        funderLine.ifPresent(line ->
-            competitionFunderDataBuilder.
-                    withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder).
-                    build());
-    }
-
     private void createOrganisations() {
 
-        List<CompletableFuture<Void>> futures = simpleMap(organisationLines, line -> CompletableFuture.runAsync(() -> {
-
-            OrganisationDataBuilder organisation =
-                    organisationBuilder.createOrganisation(line.name, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
-
-            for (OrganisationAddressType organisationType : line.addressType) {
-                organisation = organisation.withAddress(organisationType,
-                        line.addressLine1, line.addressLine2,
-                        line.addressLine3, line.town,
-                        line.postcode, line.county);
-            }
-
-            organisation.build();
-        }, taskExecutor));
+        List<CompletableFuture<Void>> futures = simpleMap(organisationLines, line -> CompletableFuture.runAsync(() ->
+                organisationDataBuilderService.createOrganisation(line), taskExecutor));
 
         waitForFutureList(futures).join();
     }
 
     private void createInternalUsers() {
         internalUserLines.forEach(userDataBuilderService::createInternalUser);
-    }
-
-    private void createFundingDecisions(List<CompetitionData> competitions) {
-
-        competitions.forEach(competition -> {
-
-            CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                    Objects.equals(l.name, competition.getCompetition().getName()));
-
-            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
-
-            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
-
-                basicCompetitionInformation.
-                        moveCompetitionIntoFundersPanelStatus().
-                        sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name)).
-                        build();
-            }
-        });
-    }
-
-    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
-        List<CsvUtils.ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
-        List<CsvUtils.ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
-        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
     private void freshDb() throws Exception {
@@ -418,10 +345,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         f.setPlaceholders(placeholders);
         f.clean();
         f.migrate();
-    }
-
-    private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
-        return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
     }
 
     protected abstract boolean cleanDbFirst();
