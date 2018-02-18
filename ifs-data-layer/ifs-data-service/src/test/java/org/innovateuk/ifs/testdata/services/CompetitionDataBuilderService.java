@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
-import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
-import org.innovateuk.ifs.testdata.builders.ServiceLocator;
-import org.innovateuk.ifs.testdata.builders.TestService;
+import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,8 @@ import java.util.concurrent.Executor;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
+import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -45,6 +45,8 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private GenericApplicationContext applicationContext;
 
     private CompetitionDataBuilder competitionDataBuilder;
+    private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
+    private PublicContentDateDataBuilder publicContentDateDataBuilder;
 
     private List<CsvUtils.CompetitionLine> competitionLines;
 
@@ -52,6 +54,9 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     public void readCsvs() {
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
         competitionDataBuilder = newCompetitionData(serviceLocator);
+        publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
+        publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
+
         competitionLines = readCompetitions();
     }
 
@@ -90,6 +95,16 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                     withFeedbackReleasedDate(line.feedbackReleased).
                     build();
         });
+    }
+
+    public void createPublicContentGroup(CsvUtils.PublicContentGroupLine line) {
+        publicContentGroupDataBuilder.withPublicContentGroup(line.competitionName, line.heading, line.content, line.section)
+                .build();
+    }
+
+    public void createPublicContentDate(CsvUtils.PublicContentDateLine line) {
+        publicContentDateDataBuilder.withPublicContentDate(line.competitionName, line.date, line.content)
+                .build();
     }
 
     private CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {

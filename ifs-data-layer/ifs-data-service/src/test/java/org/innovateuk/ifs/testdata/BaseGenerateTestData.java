@@ -22,12 +22,10 @@ import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
-import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -52,7 +50,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.function.Predicate;
-import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -60,11 +57,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
-import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
-import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
-import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
-import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
@@ -153,12 +146,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private ProjectDataBuilderService projectDataBuilderService;
 
+    @Autowired
+    private UserDataBuilderService userDataBuilderService;
+
     private CompetitionDataBuilder competitionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
-    private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
-    private PublicContentDateDataBuilder publicContentDateDataBuilder;
-    private ExternalUserDataBuilder externalUserBuilder;
-    private InternalUserDataBuilder internalUserBuilder;
     private OrganisationDataBuilder organisationBuilder;
 
     private static List<OrganisationLine> organisationLines;
@@ -224,11 +216,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
-        externalUserBuilder = newExternalUserData(serviceLocator);
-        internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
-        publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
-        publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
     }
 
     @Test
@@ -297,7 +285,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
-        externalUserLines.forEach(line -> createUser(externalUserBuilder, line));
+        externalUserLines.forEach(userDataBuilderService::createExternalUser);
     }
 
     private void createCompetitionFunders(List<CompetitionData> competitions) {
@@ -313,7 +301,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             Optional<PublicContentGroupLine> publicContentLine = simpleFindFirst(publicContentGroupLines, l ->
                     Objects.equals(competition.getCompetition().getName(), l.competitionName));
 
-            publicContentLine.ifPresent(this::createPublicContentGroup);
+            publicContentLine.ifPresent(competitionDataBuilderService::createPublicContentGroup);
         });
     }
 
@@ -326,7 +314,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             Optional<PublicContentDateLine> publicContentLine = simpleFindFirst(publicContentDateLines, l ->
                     Objects.equals(competition.getCompetition().getName(), l.competitionName));
 
-            publicContentLine.ifPresent(this::createPublicContentDate);
+            publicContentLine.ifPresent(competitionDataBuilderService::createPublicContentDate);
         });
     }
 
@@ -339,16 +327,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             competitionFunderDataBuilder.
                     withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder).
                     build());
-    }
-
-    private void createPublicContentGroup(PublicContentGroupLine line) {
-        publicContentGroupDataBuilder.withPublicContentGroup(line.competitionName, line.heading, line.content, line.section)
-                .build();
-    }
-
-    private void createPublicContentDate(PublicContentDateLine line) {
-        publicContentDateDataBuilder.withPublicContentDate(line.competitionName, line.date, line.content)
-                .build();
     }
 
     private void createOrganisations() {
@@ -372,17 +350,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createInternalUsers() {
-
-        internalUserLines.forEach(line -> testService.doWithinTransaction(() -> {
-
-            setDefaultSystemRegistrar();
-
-            List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
-
-            InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
-
-            createUser(baseBuilder, line);
-        }));
+        internalUserLines.forEach(userDataBuilderService::createInternalUser);
     }
 
     private void createFundingDecisions(List<CompetitionData> competitions) {
@@ -452,17 +420,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         f.migrate();
     }
 
-    private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, UserLine line) {
-
-        UnaryOperator<S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
-
-        UnaryOperator<S> verifyEmail = BaseUserDataBuilder::verifyEmail;
-
-        UnaryOperator<S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
-
-        registerUserIfNecessary.andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
-    }
-
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
     }
@@ -470,13 +427,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected abstract boolean cleanDbFirst();
 
     protected abstract void fixUpDatabase();
-
-    private void setDefaultSystemRegistrar() {
-        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
-        testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
-        );
-    }
 
     private void setDefaultCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
