@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.Project;
@@ -71,7 +71,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceService financeService;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
@@ -193,7 +193,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
         return result.map(Boolean::booleanValue).orElse(false);
     }
 
