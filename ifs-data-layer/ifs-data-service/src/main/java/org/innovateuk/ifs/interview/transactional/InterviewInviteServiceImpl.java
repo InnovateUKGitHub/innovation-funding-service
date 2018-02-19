@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.interview.transactional;
 
 
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -33,9 +32,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -122,16 +119,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private InterviewRepository interviewRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     enum Notifications {
         INVITE_ASSESSOR_TO_PANEL,

@@ -24,31 +24,31 @@ public class InterviewPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_INTERVIEW_DASHBOARD", description = "Assessors can view all Assessment Interviews on the competition " +
             "dashboard")
-    public boolean userCanReadAssessmentInterviewOnDashboard(InterviewResource assessmentInterview, UserResource user) {
+    public boolean userCanReadInterviewOnDashboard(InterviewResource interview, UserResource user) {
         Set<InterviewState> allowedStates = EnumSet.of(PENDING);
-        return isAssessorForAssessmentInterview(assessmentInterview, user, allowedStates);
+        return isAssessorForInterview(interview, user, allowedStates);
     }
 
     @PermissionRule(value = "UPDATE", description = "An assessor may only update their own invites to assessment Interviews")
-    public boolean userCanUpdateAssessmentInterview(InterviewResource assessmentInterview, UserResource loggedInUser) {
-        return isAssessorForAssessmentInterview(assessmentInterview, loggedInUser);
+    public boolean userCanUpdateInterview(InterviewResource interview, UserResource loggedInUser) {
+        return isAssessorForInterview(interview, loggedInUser);
     }
 
     @PermissionRule(value = "READ", description = "An assessor may only read their own invites to assessment Interviews")
-    public boolean userCanReadAssessmentInterviews(InterviewResource assessmentInterview, UserResource loggedInUser) {
-        return isAssessorForAssessmentInterview(assessmentInterview, loggedInUser);
+    public boolean userCanReadInterviews(InterviewResource interview, UserResource loggedInUser) {
+        return isAssessorForInterview(interview, loggedInUser);
     }
 
-    private boolean isAssessorForAssessmentInterview(InterviewResource assessmentInterview, UserResource user, Set<InterviewState> allowedStates) {
-        return isAssessorForAssessmentInterview(assessmentInterview, user) && assessmentInterviewIsInState(assessmentInterview, allowedStates);
+    private boolean isAssessorForInterview(InterviewResource interview, UserResource user, Set<InterviewState> allowedStates) {
+        return isAssessorForInterview(interview, user) && interviewIsInState(interview, allowedStates);
     }
 
-    private boolean isAssessorForAssessmentInterview(InterviewResource assessmentInterview, UserResource user) {
-        Long assessmentUser = processRoleRepository.findOne(assessmentInterview.getProcessRole()).getUser().getId();
+    private boolean isAssessorForInterview(InterviewResource interview, UserResource user) {
+        Long assessmentUser = processRoleRepository.findOne(interview.getProcessRole()).getUser().getId();
         return user.getId().equals(assessmentUser);
     }
 
-    private boolean assessmentInterviewIsInState(InterviewResource interviewResource, Set<InterviewState> allowedStates) {
+    private boolean interviewIsInState(InterviewResource interviewResource, Set<InterviewState> allowedStates) {
         Interview interview = interviewRepository.findOne(interviewResource.getId());
         return allowedStates.contains(interview.getActivityState());
     }

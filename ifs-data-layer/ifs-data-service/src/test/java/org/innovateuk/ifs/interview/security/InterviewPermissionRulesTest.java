@@ -60,18 +60,18 @@ public class InterviewPermissionRulesTest extends BasePermissionRulesTest<Interv
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment Interview should be able to read that assessment Interview on the dashboard",
-                        rules.userCanReadAssessmentInterviewOnDashboard(assessmentInterviews.get(state), assessorUser)));
+                        rules.userCanReadInterviewOnDashboard(assessmentInterviews.get(state), assessorUser)));
 
         EnumSet.complementOf(allowedStates).forEach(state ->
                 assertFalse("the owner of an assessment Interview should not be able to read that assessment Interview on the dashboard",
-                        rules.userCanReadAssessmentInterviewOnDashboard(assessmentInterviews.get(state), assessorUser)));
+                        rules.userCanReadInterviewOnDashboard(assessmentInterviews.get(state), assessorUser)));
     }
 
     @Test
     public void otherUsersCanNotReadAssessmentsOnDashboard() {
         EnumSet.allOf(InterviewState.class).forEach(state ->
                 assertFalse("other users should not be able to read any assessment Interviews",
-                        rules.userCanReadAssessmentInterviewOnDashboard(assessmentInterviews.get(state), otherUser)));
+                        rules.userCanReadInterviewOnDashboard(assessmentInterviews.get(state), otherUser)));
     }
 
     private InterviewResource setupAssessmentInterview(ProcessRole participant, InterviewState state) {

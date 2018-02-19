@@ -30,7 +30,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
                 .withRolesGlobal(singletonList(assessorRole()))
                 .build();
 
-        assertTrue(rules.userCanAcceptAssessmentInterviewPanelInvite(interviewParticipantResource, userResource));
+        assertTrue(rules.userCanAcceptInterviewInvite(interviewParticipantResource, userResource));
     }
 
     @Test
@@ -43,7 +43,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
                 .withRolesGlobal(singletonList(assessorRole()))
                 .build();
 
-        assertFalse(rules.userCanAcceptAssessmentInterviewPanelInvite(interviewParticipantResource, userResource));
+        assertFalse(rules.userCanAcceptInterviewInvite(interviewParticipantResource, userResource));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
                 .withRolesGlobal(singletonList(assessorRole()))
                 .build();
 
-        assertTrue(rules.userCanAcceptAssessmentInterviewPanelInvite(interviewParticipantResource, userResource));
+        assertTrue(rules.userCanAcceptInterviewInvite(interviewParticipantResource, userResource));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
                 .withRolesGlobal(singletonList(assessorRole()))
                 .build();
 
-        assertFalse(rules.userCanAcceptAssessmentInterviewPanelInvite(interviewParticipantResource, userResource));
+        assertFalse(rules.userCanAcceptInterviewInvite(interviewParticipantResource, userResource));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
                 .withRolesGlobal(singletonList(assessorRole()))
                 .build();
 
-        assertTrue(rules.userCanViewTheirOwnAssessmentPanelParticipation(interviewParticipantResource, userResource));
+        assertTrue(rules.userCanViewTheirOwnInterviewParticipation(interviewParticipantResource, userResource));
     }
 
     @Test
@@ -96,6 +96,6 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
                 .withRolesGlobal(singletonList(assessorRole()))
                 .build();
 
-        assertFalse(rules.userCanViewTheirOwnAssessmentPanelParticipation(interviewParticipantResource, userResource));
+        assertFalse(rules.userCanViewTheirOwnInterviewParticipation(interviewParticipantResource, userResource));
     }
 }

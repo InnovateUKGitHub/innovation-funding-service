@@ -130,26 +130,26 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ServiceResult<List<ReviewResource>> getAssessmentReviews(long userId, long competitionId) {
+    public ServiceResult<List<ReviewResource>> getReviews(long userId, long competitionId) {
         List<Review> reviews = reviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
         return serviceSuccess(simpleMap(reviews, reviewMapper::mapToResource));
     }
 
     @Override
-    public ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId) {
+    public ServiceResult<Void> acceptReview(long assessmentReviewId) {
         return findAssessmentReview(assessmentReviewId).andOnSuccess(this::acceptAssessmentReview);
     }
 
     @Override
-    public ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId,
-                                                      ReviewRejectOutcomeResource assessmentReviewRejectOutcome) {
+    public ServiceResult<Void> rejectReview(long assessmentReviewId,
+                                            ReviewRejectOutcomeResource assessmentReviewRejectOutcome) {
         return findAssessmentReview(assessmentReviewId)
                 .andOnSuccess(
                         r -> rejectAssessmentReview(r, reviewRejectOutcomeMapper.mapToDomain(assessmentReviewRejectOutcome)));
     }
 
     @Override
-    public ServiceResult<ReviewResource> getAssessmentReview(long assessmentReviewId) {
+    public ServiceResult<ReviewResource> getReview(long assessmentReviewId) {
         return find(reviewRepository.findOne(assessmentReviewId), notFoundError(ReviewResource.class, assessmentReviewId))
                 .andOnSuccessReturn(reviewMapper::mapToResource);
     }

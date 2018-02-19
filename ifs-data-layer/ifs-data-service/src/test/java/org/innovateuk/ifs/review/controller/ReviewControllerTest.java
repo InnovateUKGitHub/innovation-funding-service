@@ -73,25 +73,25 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
     public void getAssessmentReviews() throws Exception {
         List<ReviewResource> assessmentReviews = newReviewResource().build(2);
 
-        when(reviewServiceMock.getAssessmentReviews(userId, competitionId)).thenReturn(serviceSuccess(assessmentReviews));
+        when(reviewServiceMock.getReviews(userId, competitionId)).thenReturn(serviceSuccess(assessmentReviews));
 
         mockMvc.perform(get("/assessmentpanel/user/{userId}/competition/{competitionId}", userId, competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(assessmentReviews)));
 
-        verify(reviewServiceMock, only()).getAssessmentReviews(userId, competitionId);
+        verify(reviewServiceMock, only()).getReviews(userId, competitionId);
     }
 
     @Test
     public void acceptInvitation() throws Exception {
         long assessmentReviewId = 1L;
 
-        when(reviewServiceMock.acceptAssessmentReview(assessmentReviewId)).thenReturn(serviceSuccess());
+        when(reviewServiceMock.acceptReview(assessmentReviewId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessmentpanel/review/{id}/accept", assessmentReviewId))
                 .andExpect(status().isOk());
 
-        verify(reviewServiceMock, only()).acceptAssessmentReview(assessmentReviewId);
+        verify(reviewServiceMock, only()).acceptReview(assessmentReviewId);
     }
 
     @Test
@@ -102,25 +102,25 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
                 .withReason(rejectComment)
                 .build();
 
-        when(reviewServiceMock.rejectAssessmentReview(assessmentReviewId, reviewRejectOutcomeResource)).thenReturn(serviceSuccess());
+        when(reviewServiceMock.rejectReview(assessmentReviewId, reviewRejectOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessmentpanel/review/{id}/reject", assessmentReviewId)
                 .contentType(APPLICATION_JSON)
                 .content(toJson(reviewRejectOutcomeResource)))
                 .andExpect(status().isOk());
 
-        verify(reviewServiceMock, only()).rejectAssessmentReview(assessmentReviewId, reviewRejectOutcomeResource);
+        verify(reviewServiceMock, only()).rejectReview(assessmentReviewId, reviewRejectOutcomeResource);
     }
 
     @Test
-    public void getAssessmentReview() throws Exception {
+    public void getReview() throws Exception {
         ReviewResource reviewResource = newReviewResource().build();
 
-        when(reviewServiceMock.getAssessmentReview(reviewResource.getId())).thenReturn(serviceSuccess(reviewResource));
+        when(reviewServiceMock.getReview(reviewResource.getId())).thenReturn(serviceSuccess(reviewResource));
 
         mockMvc.perform(get("/assessmentpanel/review/{id}", reviewResource.getId()))
                 .andExpect(status().isOk());
 
-        verify(reviewServiceMock, only()).getAssessmentReview(reviewResource.getId());
+        verify(reviewServiceMock, only()).getReview(reviewResource.getId());
     }
 }

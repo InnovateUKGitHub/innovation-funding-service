@@ -16,25 +16,25 @@ import org.springframework.stereotype.Component;
 public class InterviewParticipantPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ACCEPT", description = "only the same user can accept an interview panel invitation")
-    public boolean userCanAcceptAssessmentInterviewPanelInvite(InterviewParticipantResource assessmentInterviewPanelParticipant, UserResource user) {
+    public boolean userCanAcceptInterviewInvite(InterviewParticipantResource interviewParticipant, UserResource user) {
         return user != null &&
-                assessmentInterviewPanelParticipant != null &&
-                isSameUser(assessmentInterviewPanelParticipant, user);
+                interviewParticipant != null &&
+                isSameUser(interviewParticipant, user);
     }
 
     @PermissionRule(value = "READ", description = "only the same user can read their interview panel participation")
-    public boolean userCanViewTheirOwnAssessmentPanelParticipation(InterviewParticipantResource assessmentInterviewPanelParticipant, UserResource user) {
+    public boolean userCanViewTheirOwnInterviewParticipation(InterviewParticipantResource assessmentInterviewPanelParticipant, UserResource user) {
         return isSameParticipant(assessmentInterviewPanelParticipant, user);
     }
 
-    private static boolean isSameParticipant(InterviewParticipantResource assessmentInterviewPanelParticipant, UserResource user) {
-        return user.getId().equals(assessmentInterviewPanelParticipant.getUserId());
+    private static boolean isSameParticipant(InterviewParticipantResource interviewParticipant, UserResource user) {
+        return user.getId().equals(interviewParticipant.getUserId());
     }
 
-    private static boolean isSameUser(InterviewParticipantResource assessmentInterviewPanelParticipant, UserResource user) {
-        return isSameParticipant(assessmentInterviewPanelParticipant, user)
-                || assessmentInterviewPanelParticipant.getUserId() == null
-                && assessmentInterviewPanelParticipant.getInvite() != null
-                && user.getEmail().equals(assessmentInterviewPanelParticipant.getInvite().getEmail());
+    private static boolean isSameUser(InterviewParticipantResource interviewParticipant, UserResource user) {
+        return isSameParticipant(interviewParticipant, user)
+                || interviewParticipant.getUserId() == null
+                && interviewParticipant.getInvite() != null
+                && user.getEmail().equals(interviewParticipant.getInvite().getEmail());
     }
 }

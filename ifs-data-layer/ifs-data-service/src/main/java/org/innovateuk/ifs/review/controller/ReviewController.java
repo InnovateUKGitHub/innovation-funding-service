@@ -41,25 +41,25 @@ public class ReviewController {
     }
 
     @GetMapping("/user/{userId}/competition/{competitionId}")
-    public RestResult<List<ReviewResource>> getAssessmentReviews(
+    public RestResult<List<ReviewResource>> getReviews(
             @PathVariable("userId") long userId,
             @PathVariable("competitionId") long competitionId) {
-        return reviewService.getAssessmentReviews(userId, competitionId).toGetResponse();
+        return reviewService.getReviews(userId, competitionId).toGetResponse();
     }
 
-    @GetMapping("/review/{assessmentReviewId}")
-    public RestResult<ReviewResource> getAssessmentReview(@PathVariable("assessmentReviewId") long assessmentReviewId) {
-        return reviewService.getAssessmentReview(assessmentReviewId).toGetResponse();
+    @GetMapping("/review/{id}")
+    public RestResult<ReviewResource> getReview(@PathVariable("id") long id) {
+        return reviewService.getReview(id).toGetResponse();
     }
 
     @PutMapping("/review/{id}/accept")
     public RestResult<Void> acceptInvitation(@PathVariable("id") long id) {
-        return reviewService.acceptAssessmentReview(id).toPutResponse();
+        return reviewService.acceptReview(id).toPutResponse();
     }
 
     @PutMapping("/review/{id}/reject")
     public RestResult<Void> rejectInvitation(@PathVariable("id") long id,
                                              @RequestBody @Valid ReviewRejectOutcomeResource reviewRejectOutcomeResource) {
-        return reviewService.rejectAssessmentReview(id, reviewRejectOutcomeResource).toPutResponse();
+        return reviewService.rejectReview(id, reviewRejectOutcomeResource).toPutResponse();
     }
 }

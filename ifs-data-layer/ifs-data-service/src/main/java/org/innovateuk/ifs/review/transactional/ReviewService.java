@@ -39,14 +39,14 @@ public interface ReviewService {
     ServiceResult<Boolean> isPendingReviewNotifications(long competitionId);
 
     @PostFilter("hasPermission(filterObject, 'READ_PANEL_DASHBOARD')")
-    ServiceResult<List<ReviewResource>> getAssessmentReviews(long userId, long competitionId);
+    ServiceResult<List<ReviewResource>> getReviews(long userId, long competitionId);
 
     @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.review.resource.ReviewResource', 'READ')")
-    ServiceResult<ReviewResource> getAssessmentReview(long assessmentReviewId);
+    ServiceResult<ReviewResource> getReview(long assessmentReviewId);
 
     @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.review.resource.ReviewResource', 'UPDATE')")
-    ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId);
+    ServiceResult<Void> acceptReview(long assessmentReviewId);
 
     @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.review.resource.ReviewResource', 'UPDATE')")
-    ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource);
+    ServiceResult<Void> rejectReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource);
 }

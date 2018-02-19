@@ -449,7 +449,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         flushAndClearSession();
 
-        List<ReviewResource> reviews = controller.getAssessmentReviews(assessor.getId(), competition.getId()).getSuccess();
+        List<ReviewResource> reviews = controller.getReviews(assessor.getId(), competition.getId()).getSuccess();
 
         // Returned reviews ordered activity state id
         assertEquals(assessmentReviews.get(0).getId(), reviews.get(1).getId());

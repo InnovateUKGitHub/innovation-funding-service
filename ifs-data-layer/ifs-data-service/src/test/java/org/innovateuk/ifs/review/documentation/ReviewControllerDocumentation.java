@@ -62,10 +62,10 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
     }
 
     @Test
-    public void getAssessmentReviews() throws Exception {
+    public void getReviews() throws Exception {
         List<ReviewResource> assessmentResources = reviewResourceBuilder.build(2);
 
-        when(reviewServiceMock.getAssessmentReviews(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
+        when(reviewServiceMock.getReviews(userId, competitionId)).thenReturn(serviceSuccess(assessmentResources));
         mockMvc.perform(get("/assessmentpanel/user/{userId}/competition/{competitionId}", userId, competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
@@ -77,14 +77,14 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
                                 .andWithPrefix("[].", reviewFields)
                 ));
 
-        verify(reviewServiceMock, only()).getAssessmentReviews(userId, competitionId);
+        verify(reviewServiceMock, only()).getReviews(userId, competitionId);
     }
 
     @Test
-    public void getAssessmentReview() throws Exception {
+    public void getReview() throws Exception {
         ReviewResource reviewResource = reviewResourceBuilder.build();
 
-        when(reviewServiceMock.getAssessmentReview(reviewId)).thenReturn(serviceSuccess(reviewResource));
+        when(reviewServiceMock.getReview(reviewId)).thenReturn(serviceSuccess(reviewResource));
 
         mockMvc.perform(get("/assessmentpanel/review/{reviewId}", reviewId))
                 .andExpect(status().isOk())
@@ -95,12 +95,12 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
                         responseFields(reviewFields)
                 ));
 
-        verify(reviewServiceMock, only()).getAssessmentReview(reviewId);
+        verify(reviewServiceMock, only()).getReview(reviewId);
     }
 
     @Test
     public void acceptInvitation() throws Exception {
-        when(reviewServiceMock.acceptAssessmentReview(reviewId)).thenReturn(serviceSuccess());
+        when(reviewServiceMock.acceptReview(reviewId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessmentpanel/review/{reviewId}/accept", reviewId))
                 .andExpect(status().isOk())
@@ -109,13 +109,13 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
                                 parameterWithName("reviewId").description("Id of the review to accept")
                         )));
 
-        verify(reviewServiceMock, only()).acceptAssessmentReview(reviewId);
+        verify(reviewServiceMock, only()).acceptReview(reviewId);
     }
 
     @Test
     public void rejectInvitation() throws Exception {
         ReviewRejectOutcomeResource rejectOutcomeResource = reviewRejectOutcomeResourceBuilder.build();
-        when(reviewServiceMock.rejectAssessmentReview(reviewId, rejectOutcomeResource)).thenReturn(serviceSuccess());
+        when(reviewServiceMock.rejectReview(reviewId, rejectOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessmentpanel/review/{reviewId}/reject", reviewId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -126,6 +126,6 @@ public class ReviewControllerDocumentation extends BaseControllerMockMVCTest<Rev
                                 parameterWithName("reviewId").description("Id of the review to reject")
                         )));
 
-        verify(reviewServiceMock, only()).rejectAssessmentReview(reviewId, rejectOutcomeResource);
+        verify(reviewServiceMock, only()).rejectReview(reviewId, rejectOutcomeResource);
     }
 }

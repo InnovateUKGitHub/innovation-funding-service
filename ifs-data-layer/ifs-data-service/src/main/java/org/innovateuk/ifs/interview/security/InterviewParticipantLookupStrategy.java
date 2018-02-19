@@ -23,7 +23,7 @@ public class InterviewParticipantLookupStrategy {
     private InterviewParticipantMapper interviewParticipantMapper;
 
     @PermissionEntityLookupStrategy
-    public InterviewParticipantResource getAssessmentInterviewPanelParticipantResource(String inviteHash) {
+    public InterviewParticipantResource getInterviewParticipantResource(String inviteHash) {
         return interviewParticipantMapper.mapToResource(interviewParticipantRepository.getByInviteHash(inviteHash));
     }
 }

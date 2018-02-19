@@ -249,7 +249,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         when(reviewMapperMock.mapToResource(same(reviews.get(0)))).thenReturn(reviewResources.get(0));
         when(reviewMapperMock.mapToResource(same(reviews.get(1)))).thenReturn(reviewResources.get(1));
 
-        assertEquals(reviewResources, service.getAssessmentReviews(userId, competitionId).getSuccess());
+        assertEquals(reviewResources, service.getReviews(userId, competitionId).getSuccess());
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewMapperMock);
         inOrder.verify(reviewRepositoryMock).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
@@ -264,7 +264,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         when(reviewRepositoryMock.findOne(review.getId())).thenReturn(review);
         when(reviewWorkflowHandlerMock.acceptInvitation(review)).thenReturn(true);
 
-        service.acceptAssessmentReview(review.getId()).getSuccess();
+        service.acceptReview(review.getId()).getSuccess();
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewWorkflowHandlerMock);
         inOrder.verify(reviewRepositoryMock).findOne(review.getId());
@@ -276,7 +276,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
     public void acceptAssessmentReview_notFound() {
         Review review = newReview().build();
 
-        ServiceResult<Void> serviceResult = service.acceptAssessmentReview(review.getId());
+        ServiceResult<Void> serviceResult = service.acceptReview(review.getId());
 
         assertTrue(serviceResult.isFailure());
         assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
@@ -293,7 +293,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         when(reviewRepositoryMock.findOne(review.getId())).thenReturn(review);
         when(reviewWorkflowHandlerMock.acceptInvitation(review)).thenReturn(false);
 
-        ServiceResult<Void> serviceResult = service.acceptAssessmentReview(review.getId());
+        ServiceResult<Void> serviceResult = service.acceptReview(review.getId());
         assertTrue(serviceResult.isFailure());
         assertEquals(ASSESSMENT_REVIEW_ACCEPT_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
@@ -314,7 +314,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         when(reviewWorkflowHandlerMock.rejectInvitation(review, reviewRejectOutcome)).thenReturn(true);
         when(reviewRejectOutcomeMapperMock.mapToDomain(rejectOutcomeResource)).thenReturn(reviewRejectOutcome);
 
-        service.rejectAssessmentReview(review.getId(), rejectOutcomeResource).getSuccess();
+        service.rejectReview(review.getId(), rejectOutcomeResource).getSuccess();
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewWorkflowHandlerMock, reviewRejectOutcomeMapperMock);
         inOrder.verify(reviewRepositoryMock).findOne(review.getId());
@@ -334,7 +334,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         when(reviewWorkflowHandlerMock.rejectInvitation(review, reviewRejectOutcome)).thenReturn(false);
         when(reviewRejectOutcomeMapperMock.mapToDomain(rejectOutcomeResource)).thenReturn(reviewRejectOutcome);
 
-        ServiceResult<Void> serviceResult = service.rejectAssessmentReview(review.getId(), rejectOutcomeResource);
+        ServiceResult<Void> serviceResult = service.rejectReview(review.getId(), rejectOutcomeResource);
         assertTrue(serviceResult.isFailure());
         assertEquals(ASSESSMENT_REVIEW_REJECT_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
 
@@ -353,7 +353,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         when(reviewRepositoryMock.findOne(reviewResource.getId())).thenReturn(review);
         when(reviewMapperMock.mapToResource(review)).thenReturn(reviewResource);
 
-        ReviewResource result = service.getAssessmentReview(reviewResource.getId())
+        ReviewResource result = service.getReview(reviewResource.getId())
                 .getSuccess();
 
         assertEquals(reviewResource, result);

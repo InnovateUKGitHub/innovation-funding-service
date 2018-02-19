@@ -53,7 +53,7 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
 
     @Test
     public void getAssessmentReviews() {
-        classUnderTest.getAssessmentReviews(userId, competitionId);
+        classUnderTest.getReviews(userId, competitionId);
         verify(reviewPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentReviewOnDashboard(isA(ReviewResource.class), isA(UserResource.class));
     }
 
@@ -61,7 +61,7 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
     public void getAssessmentReview() {
         when(reviewLookupStrategy.getAssessmentReviewResource(reviewId)).thenReturn(newReviewResource().withId(reviewId).build());
         assertAccessDenied(
-                () -> classUnderTest.getAssessmentReview(reviewId),
+                () -> classUnderTest.getReview(reviewId),
                 () -> verify(reviewPermissionRules).userCanReadAssessmentReviews(isA(ReviewResource.class), isA(UserResource.class))
         );
     }
@@ -70,7 +70,7 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
     public void acceptAssessmentReview() {
         when(reviewLookupStrategy.getAssessmentReviewResource(reviewId)).thenReturn(newReviewResource().withId(reviewId).build());
         assertAccessDenied(
-                () -> classUnderTest.acceptAssessmentReview(reviewId),
+                () -> classUnderTest.acceptReview(reviewId),
                 () -> verify(reviewPermissionRules).userCanUpdateAssessmentReview(isA(ReviewResource.class), isA(UserResource.class))
         );
     }
@@ -80,7 +80,7 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
         ReviewRejectOutcomeResource rejectOutcomeResource = newReviewRejectOutcomeResource().build();
         when(reviewLookupStrategy.getAssessmentReviewResource(reviewId)).thenReturn(newReviewResource().withId(reviewId).build());
         assertAccessDenied(
-                () -> classUnderTest.rejectAssessmentReview(reviewId, rejectOutcomeResource),
+                () -> classUnderTest.rejectReview(reviewId, rejectOutcomeResource),
                 () -> verify(reviewPermissionRules).userCanUpdateAssessmentReview(isA(ReviewResource.class), isA(UserResource.class))
         );
     }
@@ -108,22 +108,22 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
         }
 
         @Override
-        public ServiceResult<List<ReviewResource>> getAssessmentReviews(long userId, long competitionId) {
+        public ServiceResult<List<ReviewResource>> getReviews(long userId, long competitionId) {
             return serviceSuccess(newReviewResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<ReviewResource> getAssessmentReview(long assessmentReviewId) {
+        public ServiceResult<ReviewResource> getReview(long assessmentReviewId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId) {
+        public ServiceResult<Void> acceptReview(long assessmentReviewId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource) {
+        public ServiceResult<Void> rejectReview(long assessmentReviewId, ReviewRejectOutcomeResource reviewRejectOutcomeResource) {
             return null;
         }
     }
