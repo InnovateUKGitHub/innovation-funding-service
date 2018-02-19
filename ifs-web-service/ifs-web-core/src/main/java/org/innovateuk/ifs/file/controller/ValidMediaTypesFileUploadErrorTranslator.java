@@ -28,10 +28,16 @@ public class ValidMediaTypesFileUploadErrorTranslator implements FileUploadError
 
     private static final EnumSet<FileTypeCategories> PDF_ONLY_VALID_MEDIA_TYPES = EnumSet.of(FileTypeCategories.PDF);
     private static final EnumSet<FileTypeCategories> SPREADSHEET_ONLY_VALID_MEDIA_TYPES = EnumSet.of(FileTypeCategories.SPREADSHEET);
-    private static final EnumSet<FileTypeCategories> PDF_AND_SPREADSHEET_ONLY_VALID_MEDIA_TYPES = EnumSet.of(FileTypeCategories.PDF, FileTypeCategories.SPREADSHEET);
+    private static final EnumSet<FileTypeCategories> PDF_AND_SPREADSHEET_ONLY_VALID_MEDIA_TYPES = EnumSet.of(
+            FileTypeCategories.PDF,
+            FileTypeCategories.SPREADSHEET
+    );
 
-    private static final List<EnumSet<FileTypeCategories>> VALID_MEDIA_TYPE_SETS =
-            asList(PDF_ONLY_VALID_MEDIA_TYPES, SPREADSHEET_ONLY_VALID_MEDIA_TYPES, PDF_AND_SPREADSHEET_ONLY_VALID_MEDIA_TYPES);
+    private static final List<EnumSet<FileTypeCategories>> VALID_MEDIA_TYPE_SETS = asList(
+            PDF_ONLY_VALID_MEDIA_TYPES,
+            SPREADSHEET_ONLY_VALID_MEDIA_TYPES,
+            PDF_AND_SPREADSHEET_ONLY_VALID_MEDIA_TYPES
+    );
 
     private static final Map<EnumSet<FileTypeCategories>, String> VALID_MEDIA_TYPES_TO_ERROR_MESSAGE = asMap(
             PDF_ONLY_VALID_MEDIA_TYPES, UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY,
@@ -60,8 +66,8 @@ public class ValidMediaTypesFileUploadErrorTranslator implements FileUploadError
                 return allMediaTypesInThisSet.size() == validMediaTypes.size() && allMediaTypesInThisSet.containsAll(validMediaTypes);
             });
 
-            String errorMessage = mediaTypeSetSupportingErrorConditions.map(VALID_MEDIA_TYPES_TO_ERROR_MESSAGE::get).
-                    orElse(error.getErrorKey());
+            String errorMessage = mediaTypeSetSupportingErrorConditions.map(VALID_MEDIA_TYPES_TO_ERROR_MESSAGE::get)
+                    .orElse(error.getErrorKey());
 
             return fieldError(fieldId, fieldRejectedValue, errorMessage);
         } else {

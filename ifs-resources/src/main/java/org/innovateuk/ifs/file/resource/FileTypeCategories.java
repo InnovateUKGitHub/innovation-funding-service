@@ -5,6 +5,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 
 public enum FileTypeCategories {
 
@@ -29,6 +30,10 @@ public enum FileTypeCategories {
 
     public List<String> getMediaTypes() {
         return mediaTypes;
+    }
+
+    public String getMediaTypesString() {
+        return simpleJoiner(mediaTypes, ", ");
     }
 
     public static FileTypeCategories fromDisplayName(String displayName) {

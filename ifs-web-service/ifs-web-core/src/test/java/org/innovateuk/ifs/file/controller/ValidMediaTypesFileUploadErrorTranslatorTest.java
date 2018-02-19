@@ -13,32 +13,60 @@ import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 public class ValidMediaTypesFileUploadErrorTranslatorTest {
 
-    private Error pdfOnlyErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.PDF.getMediaTypeString()));
+    private Error pdfOnlyErrorFromDataLayer = fieldError(
+            null,
+            "application/madeup",
+            UNSUPPORTED_MEDIA_TYPE.name(),
+            singletonList(FileTypeCategories.PDF.getMediaTypesString())
+    );
 
-    private Error spreadsheetOnlyErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.SPREADSHEET.getMediaTypeString()));
+    private Error spreadsheetOnlyErrorFromDataLayer = fieldError(
+            null,
+            "application/madeup",
+            UNSUPPORTED_MEDIA_TYPE.name(),
+            singletonList(FileTypeCategories.SPREADSHEET.getMediaTypesString())
+    );
 
-    private Error pdfOrSpreadsheetOnlyErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.SPREADSHEET.getMediaTypeString() + ", " + FileTypeCategories.PDF.getMediaTypeString()));
+    private Error pdfOrSpreadsheetOnlyErrorFromDataLayer = fieldError(
+            null,
+            "application/madeup",
+            UNSUPPORTED_MEDIA_TYPE.name(),
+            singletonList(
+                    FileTypeCategories.SPREADSHEET.getMediaTypesString() + ", " +
+                            FileTypeCategories.PDF.getMediaTypesString()
+            )
+    );
 
-    private Error notDirectMatchingMediaTypesErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.PDF.getMediaTypeString() + ", application/nomatch"));
+    private Error notDirectMatchingMediaTypesErrorFromDataLayer = fieldError(
+            null,
+            "application/madeup",
+            UNSUPPORTED_MEDIA_TYPE.name(),
+            singletonList(FileTypeCategories.PDF.getMediaTypesString() + ", application/nomatch")
+    );
 
 
     @Test
     public void testPdfOnlyMessage() {
-        assertSpecialisedMessageProduced(pdfOnlyErrorFromDataLayer, ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY);
+        assertSpecialisedMessageProduced(
+                pdfOnlyErrorFromDataLayer,
+                ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY
+        );
     }
 
     @Test
     public void testSpreadsheetOnlyMessage() {
-        assertSpecialisedMessageProduced(spreadsheetOnlyErrorFromDataLayer, ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY);
+        assertSpecialisedMessageProduced(
+                spreadsheetOnlyErrorFromDataLayer,
+                ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY
+        );
     }
 
     @Test
     public void testPdfAndSpreadsheetOnlyMessage() {
-        assertSpecialisedMessageProduced(pdfOrSpreadsheetOnlyErrorFromDataLayer, ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY);
+        assertSpecialisedMessageProduced(
+                pdfOrSpreadsheetOnlyErrorFromDataLayer,
+                ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY
+        );
     }
 
     @Test
@@ -48,7 +76,8 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
 
     private void assertSpecialisedMessageProduced(Error errorFromDataLayer, String expectedErrorKey) {
 
-        List<Error> errors = new ValidMediaTypesFileUploadErrorTranslator().translateFileUploadErrors(e -> "formInput[123]", singletonList(errorFromDataLayer));
+        List<Error> errors = new ValidMediaTypesFileUploadErrorTranslator()
+                .translateFileUploadErrors(e -> "formInput[123]", singletonList(errorFromDataLayer));
 
         Error expectedSpecialisedError = fieldError("formInput[123]", "application/madeup", expectedErrorKey);
 
