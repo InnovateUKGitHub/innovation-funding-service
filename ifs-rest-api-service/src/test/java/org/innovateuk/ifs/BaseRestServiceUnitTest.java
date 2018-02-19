@@ -1,9 +1,9 @@
 package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.commons.security.authentication.token.Authentication;
-import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.HttpHeadersUtils;
+import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.RootDefaultRestTemplateAdaptor;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -19,9 +19,9 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.concurrent.ExecutionException;
-
-import static org.mockito.Mockito.*;
+import static org.innovateuk.ifs.application.service.Futures.settable;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -71,14 +71,8 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         setLoggedInUser(VALID_AUTH_TOKEN);
     }
 
-    private <T> ListenableFuture<ResponseEntity<T>> getAsyncResponseFromEntity(ResponseEntity<T> response) {
-        ListenableFuture<ResponseEntity<T>> asyncResponse = mock(ListenableFuture.class);
-        try {
-            when(asyncResponse.get()).thenReturn(response);
-        } catch (InterruptedException | ExecutionException e) {
-            //won't ever get thrown as this is just a mock.
-        }
-        return asyncResponse;
+    private <T> ListenableFuture<ResponseEntity<T>> getAsyncResponseFromEntity(T response, HttpStatus code) {
+        return settable(new ResponseEntity<>(response, code));
     }
 
     protected void setLoggedInUser(String authToken) {
@@ -129,15 +123,13 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return httpEntityForRestCallWithoutAuthToken("");
     }
 
-    protected <T> ResponseEntity<T> setupGetWithRestResultAsyncExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
-        return setupGetWithRestResultAsyncExpectations(nonBaseUrl, responseType, responseBody, OK);
+    protected <T> void setupGetWithRestResultAsyncExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
+        setupGetWithRestResultAsyncExpectations(nonBaseUrl, responseType, responseBody, OK);
     }
 
-    protected <T> ResponseEntity<T> setupGetWithRestResultAsyncExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
-        ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
-        ListenableFuture<ResponseEntity<T>> asyncResponse = getAsyncResponseFromEntity(response);
+    protected <T> void setupGetWithRestResultAsyncExpectations(String nonBaseUrl, Class<T> responseType, T responseBody, HttpStatus responseCode) {
+        ListenableFuture<ResponseEntity<T>> asyncResponse = getAsyncResponseFromEntity(responseBody, responseCode);
         when(mockAsyncRestTemplate.exchange(dataServicesUrl + nonBaseUrl, GET, httpEntityForRestCall(), responseType)).thenReturn(asyncResponse);
-        return response;
     }
 
     protected <T> ResponseEntity<T> setupGetWithRestResultExpectations(String nonBaseUrl, Class<T> responseType, T responseBody) {
