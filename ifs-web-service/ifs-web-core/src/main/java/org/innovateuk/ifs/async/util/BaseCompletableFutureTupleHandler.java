@@ -9,7 +9,9 @@ import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -73,6 +75,23 @@ abstract class BaseCompletableFutureTupleHandler {
         this.futures = futures;
     }
 
+    /**
+     * This method is the main implementation of awaitAll(future1, future2).thenApply((f1, f2) -> {... child future});
+     *
+     * In addition to creating "child future" and chaining it to execute after future1 and future2 have completed
+     * (essentially out-of-the-box CompletableFuture.allOf(...).thenApply() functionality), this method additionally
+     * enforces consistency in the order of execution of these futures above and beyond the out-of-the-box
+     * CompletableFuture functionality.
+     *
+     * Firstly, rather than just waiting for future1 and future2 to complete prior to executing "child future", this
+     * method will guarantee that any child futures created by future1 and future2 have also completed, and any further
+     * descendants too.
+     *
+     * Secondly, this method registers "child future" with {@link AsyncFuturesHolder} so that we can wait on its
+     * completion prior to letting Controller methods complete.  "child future" will always be registered before any of
+     * its potential child futures are registered because its execution is deferred until it is fully registered, thus
+     * giving us additional consistency in the order that things are registered and executed.
+     */
     <R> CompletableFuture<R> thenApplyInternal(ExceptionThrowingSupplier<R> supplier) {
 
         Supplier<R> waitingSupplier = () -> {
@@ -91,9 +110,24 @@ abstract class BaseCompletableFutureTupleHandler {
         CompletableFuture<Void> joiningFuture = CompletableFuture.allOf(futures);
 
         if (AsyncAllowedThreadLocal.isAsyncAllowed()) {
-            CompletableFuture<R> blockingFuture = joiningFuture.thenApplyAsync(done -> waitingSupplier.get(), threadPool);
-            return AsyncFuturesHolder.registerFuture(futureName, blockingFuture);
+
+            // Ensure that this future is registered prior to it executing and potentially registering more futures.
+            // This gives consistency to the order of future registration - this future will register first, and then
+            // any futures that this future might create will be guaranteed to register afterwards always
+            CountDownLatch waitForRegistrationLatch = new CountDownLatch(1);
+
+            CompletableFuture<R> blockingFuture = joiningFuture.thenApplyAsync(done -> {
+                waitForRegistration(waitForRegistrationLatch);
+                return waitingSupplier.get();
+            }, threadPool);
+
+            // register this future and then allow it to execute
+            CompletableFuture<R> registeredFuture = AsyncFuturesHolder.registerFuture(futureName, blockingFuture);
+            waitForRegistrationLatch.countDown();
+            return registeredFuture;
+
         } else {
+
             return joiningFuture.thenApply(done -> waitingSupplier.get());
         }
     }
@@ -109,7 +143,10 @@ abstract class BaseCompletableFutureTupleHandler {
         return getResult(futures[index]);
     }
 
-    @SuppressWarnings("unchecked")
+    List<?> getResultsAsList()  {
+        return simpleMap(futures, this::getResult);
+    }
+
     private <R> R getResult(CompletableFuture<?> future)  {
         try {
             return (R) future.get();
@@ -119,7 +156,12 @@ abstract class BaseCompletableFutureTupleHandler {
         }
     }
 
-    List<?> getResultsAsList()  {
-        return simpleMap(futures, this::getResult);
+    private void waitForRegistration(CountDownLatch waitForRegistrationLatch) {
+        try {
+            waitForRegistrationLatch.await(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            LOG.error("Exception occurred whilst awaiting registration of parent Future", e);
+            throw new RuntimeException(e);
+        }
     }
 }
