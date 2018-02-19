@@ -33,7 +33,9 @@ if (!isNamedEnv()) {
     apply from: rootProject.file("non-named-env-properties.gradle")
 } else {
     apply from: rootProject.file("named-env-properties.gradle")
-    apply from: openshiftEnv + "-named-env-properties.gradle"
+    if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
+        apply from: openshiftEnv + "-named-env-properties.gradle"
+    }
 }
 
 //TODO add functionality here to bring in specific named env properties files.
