@@ -179,115 +179,12 @@ function substituteMandatoryEnvVariable() {
 
 function tailorAppInstance() {
 
-    # We will set up the default environment variables here for local and remote projects as we do not expect these to
-    # be available other than in Bamboo-triggered jobs
-#    if ! $(isNamedEnvironment $TARGET); then
-
-        # for the IDP and Registration Service
-#        export LDAP_URL="ldaps://ldap:389"
-#        export LDAP_PASSWORD="default"
-
-        # for the SP
-#        export SHIBBOLETH_SP_MPM_STARTSERVERS="2"
-#        export SHIBBOLETH_SP_MPM_MINSPARETHREADS="25"
-#        export SHIBBOLETH_SP_MPM_MAXSPARETHREADS="75"
-#        export SHIBBOLETH_SP_MPM_THREADLIMIT="64"
-#        export SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
-#        export SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="150"
-#        export SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
-#        export SHIBBOLETH_SP_MEMORY_REQUEST="300Mi"
-#        export SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
-
-        # for the IDP
-#        export SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
-#        export SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
-#        export GA_TRACKING_ID=
-#        export LDAP_USESSL="true"
-#        export LDAP_BASEDN="dc=nodomain"
-#        export LDAP_BINDDN="cn=admin,dc=nodomain"
-#        export LDAP_AUTHENTICATOR="anonSearchAuthenticator"
-
-        # for the SP and IDP
-#        export SHIBBOLETH_MEMCACHE_ENDPOINT=
-#    fi
 
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
     sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
     sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
-#    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/*.yml
-#    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/finance-data-service/*.yml
-#    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/sil-stub/*.yml
-#    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/shib/56-*.yml
-
-#    if [[ ${TARGET} == "production" ]]
-#    then
-#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
-#
-#      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-#      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
-
-#    else
-#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-#      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
-#
-#      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
-#      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
-#    fi
-
-
-#    sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/mail/*.yml
-#    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/spring-admin/*.yml
-
-
-#    if $(isNamedEnvironment ${TARGET}); then
-#
-#        sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" $(getBuildLocation)/*.yml
-#
-#    fi
-
-    # for the IDP and Registration Service
-#    substituteMandatoryEnvVariable LDAP_URL "<<LDAP-URL>>"
-#    substituteMandatoryEnvVariable LDAP_PASSWORD "<<LDAP-PASSWORD>>"
-
-    # for the SP
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_STARTSERVERS "<<SHIBBOLETH_SP_MPM_STARTSERVERS>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MINSPARETHREADS "<<SHIBBOLETH_SP_MPM_MINSPARETHREADS>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXSPARETHREADS "<<SHIBBOLETH_SP_MPM_MAXSPARETHREADS>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_THREADLIMIT "<<SHIBBOLETH_SP_MPM_THREADLIMIT>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_THREADSPERCHILD "<<SHIBBOLETH_SP_MPM_THREADSPERCHILD>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS "<<SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD "<<SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD>>"
-#    substituteOptionalEnvVariable SHIBBOLETH_SP_MEMORY_REQUEST "<<SHIBBOLETH_SP_MEMORY_REQUEST>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_SP_MEMORY_LIMIT "<<SHIBBOLETH_SP_MEMORY_LIMIT>>"
-
-    # for the IDP
-#    substituteOptionalEnvVariable SHIBBOLETH_IDP_MEMORY_REQUEST "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
-#    substituteMandatoryEnvVariable SHIBBOLETH_IDP_MEMORY_LIMIT "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
-#    substituteOptionalEnvVariable GA_TRACKING_ID "<<GA-TRACKING-ID>>"
-#    substituteMandatoryEnvVariable LDAP_USESSL "450<<LDAP_USESSL>>"
-#    substituteMandatoryEnvVariable LDAP_BASEDN "<<LDAP_BASEDN>>"
-#    substituteMandatoryEnvVariable LDAP_BINDDN "<<LDAP_BINDDN>>"
-#    substituteMandatoryEnvVariable LDAP_AUTHENTICATOR "<<LDAP_AUTHENTICATOR>>"
-
-    # for the SP and IDP
-#    substituteOptionalEnvVariable SHIBBOLETH_MEMCACHE_ENDPOINT "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
-
-    ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
-    ## we can do away with this more complex configuration block and that of the one above that this one mirrors
-#    if $(isNamedEnvironment ${TARGET}); then
-#
-#        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
-#        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
-#        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
-#
-#    else
-#        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
-#        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
-#        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
-#    fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
