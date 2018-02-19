@@ -55,10 +55,6 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
             return emptySet();
         }
 
-        return simpleMapSet(fileTypes.split(","), FileTypeCategories::valueOf);
-    }
-
-    String mapFromFileTypes(Set<FileTypeCategories> fileTypes) {
-        return StringUtils.join(fileTypes, ",");
+        return simpleMapSet(fileTypes.split(","), FileTypeCategories::fromDisplayName);
     }
 }
