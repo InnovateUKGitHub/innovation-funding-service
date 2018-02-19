@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceRowMetaFieldControllerTest extends BaseControllerMockMVCTest<FinanceRowMetaFieldController> {
 
     @Mock
-    private FinanceRowService costFieldService;
+    private FinanceRowCostsService costFieldService;
 
     @Override
     protected FinanceRowMetaFieldController supplyControllerUnderTest() {
