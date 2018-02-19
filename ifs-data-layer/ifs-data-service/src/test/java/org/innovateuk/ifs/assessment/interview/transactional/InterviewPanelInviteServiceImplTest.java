@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterviewPanel;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
+import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
 import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
@@ -24,10 +25,25 @@ import static org.innovateuk.ifs.assessment.interview.builder.AssessmentIntervie
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<InterviewPanelInviteServiceImpl> {
+
+    private static final long COMPETITION_ID = 1L;
+    private static final Pageable PAGE_REQUEST = new PageRequest(0, 20);
+    private static final int TOTAL_APPLICATIONS = 2;
+    private static final Organisation LEAD_ORGANISATION = newOrganisation().withName("lead org").build();
+    private static final List<Application> EXPECTED_AVAILABLE_APPLICATIONS =
+            newApplication()
+                    .withProcessRoles(
+                            newProcessRole()
+                                    .withRole(newRole().withType(UserRoleType.LEADAPPLICANT).build())
+                                    .withOrganisationId(LEAD_ORGANISATION.getId())
+                                    .build()
+                    )
+                    .build(TOTAL_APPLICATIONS);
 
     @Override
     protected InterviewPanelInviteServiceImpl supplyServiceUnderTest() {
@@ -36,62 +52,32 @@ public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<Int
 
     @Test
     public void getAvailableApplications() {
-        final long competitionId = 1L;
-        final int pageNumber = 0;
-        final int pageSize = 20;
-        final int totalApplications = 2;
-        final String leadOrganisationName = "lead org";
+        Page<Application> expectedPage = new PageImpl<>(EXPECTED_AVAILABLE_APPLICATIONS, PAGE_REQUEST, TOTAL_APPLICATIONS);
 
-        final Pageable pageRequest = new PageRequest(pageNumber, pageSize);
+        when(applicationRepositoryMock.findSubmittedApplicationsNotOnInterviewPanel(COMPETITION_ID, PAGE_REQUEST)).thenReturn(expectedPage);
+        when(organisationRepositoryMock.findOne(LEAD_ORGANISATION.getId())).thenReturn(LEAD_ORGANISATION);
 
-        final Organisation leadOrganisation = newOrganisation().withName(leadOrganisationName).build();
+        AvailableApplicationPageResource availableApplicationPageResource = service.getAvailableApplications(COMPETITION_ID, PAGE_REQUEST).getSuccess();
 
-        List<Application> expectedApplications =
-                newApplication()
-                        .withProcessRoles(
-                                newProcessRole()
-                                        .withRole(newRole().withType(UserRoleType.LEADAPPLICANT).build())
-                                        .withOrganisationId(leadOrganisation.getId())
-                                        .build()
-                        )
-                        .build(totalApplications);
+        assertPageRequestMatchesPageResource(PAGE_REQUEST, availableApplicationPageResource);
 
-        Page<Application> expectedPage = new PageImpl<>(expectedApplications, pageRequest, totalApplications);
+        assertEquals(TOTAL_APPLICATIONS, availableApplicationPageResource.getTotalElements());
 
-        when(applicationRepositoryMock.findSubmittedApplicationsNotOnInterviewPanel(competitionId, pageRequest)).thenReturn(expectedPage);
-        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
-
-        AvailableApplicationPageResource availableApplicationPageResource = service.getAvailableApplications(competitionId, pageRequest).getSuccess();
-
-        assertEquals(pageNumber, availableApplicationPageResource.getNumber());
-        assertEquals(pageSize, availableApplicationPageResource.getSize());
-        assertEquals(totalApplications, availableApplicationPageResource.getTotalElements());
-
-        assertAvailableApplicationResourcesMatch(leadOrganisation, expectedApplications, availableApplicationPageResource);
+        assertAvailableApplicationResourcesMatch(LEAD_ORGANISATION, EXPECTED_AVAILABLE_APPLICATIONS, availableApplicationPageResource);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).findSubmittedApplicationsNotOnInterviewPanel(competitionId, pageRequest);
-        inOrder.verify(organisationRepositoryMock, times(totalApplications)).findOne(leadOrganisation.getId());
+        inOrder.verify(applicationRepositoryMock).findSubmittedApplicationsNotOnInterviewPanel(COMPETITION_ID, PAGE_REQUEST);
+        inOrder.verify(organisationRepositoryMock, times(TOTAL_APPLICATIONS)).findOne(LEAD_ORGANISATION.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void getStagedApplications() {
-        final long competitionId = 1L;
-        final int pageNumber = 0;
-        final int pageSize = 20;
-        final int totalApplications = 2;
-        final String leadOrganisationName = "lead org";
-
-        final Pageable pageRequest = new PageRequest(pageNumber, pageSize);
-
-        final Organisation leadOrganisation = newOrganisation().withName(leadOrganisationName).build();
-
         List<AssessmentInterviewPanel> expectedInterviewPanels = newAssessmentInterviewPanel()
                 .withParticipant(
                         newProcessRole()
                                 .withRole(UserRoleType.INTERVIEW_LEAD_APPLICANT)
-                                .withOrganisationId(leadOrganisation.getId())
+                                .withOrganisationId(LEAD_ORGANISATION.getId())
                                 .build()
                 )
                 .withTarget(
@@ -99,34 +85,41 @@ public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<Int
                             .build()
 
                 )
-                .build(totalApplications);
+                .build(TOTAL_APPLICATIONS);
 
-        Page<AssessmentInterviewPanel> expectedPage = new PageImpl<>(expectedInterviewPanels, pageRequest, totalApplications);
+        Page<AssessmentInterviewPanel> expectedPage = new PageImpl<>(expectedInterviewPanels, PAGE_REQUEST, TOTAL_APPLICATIONS);
 
         when(assessmentInterviewPanelRepositoryMock.findByTargetCompetitionIdAndActivityStateState(
-                competitionId, AssessmentInterviewPanelState.CREATED.getBackingState(), pageRequest)).thenReturn(expectedPage);
+                COMPETITION_ID, AssessmentInterviewPanelState.CREATED.getBackingState(), PAGE_REQUEST)).thenReturn(expectedPage);
 
-        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(organisationRepositoryMock.findOne(LEAD_ORGANISATION.getId())).thenReturn(LEAD_ORGANISATION);
 
-        InterviewPanelStagedApplicationPageResource stagedApplicationPageResource = service.getStagedApplications(competitionId, pageRequest).getSuccess();
+        InterviewPanelStagedApplicationPageResource stagedApplicationPageResource = service.getStagedApplications(COMPETITION_ID, PAGE_REQUEST).getSuccess();
 
-        assertEquals(pageNumber, stagedApplicationPageResource.getNumber());
-        assertEquals(pageSize, stagedApplicationPageResource.getSize());
-        assertEquals(totalApplications, stagedApplicationPageResource.getTotalElements());
+        assertPageRequestMatchesPageResource(PAGE_REQUEST, stagedApplicationPageResource);
+        assertEquals(TOTAL_APPLICATIONS, stagedApplicationPageResource.getTotalElements());
 
         assertEquals(expectedInterviewPanels.size(), stagedApplicationPageResource.getContent().size());
 
-        assertStagedApplicationResourcesMatch(leadOrganisation, expectedInterviewPanels, stagedApplicationPageResource);
+        assertStagedApplicationResourcesMatch(LEAD_ORGANISATION, expectedInterviewPanels, stagedApplicationPageResource);
 
         InOrder inOrder = inOrder(assessmentInterviewPanelRepositoryMock, organisationRepositoryMock);
         inOrder.verify(assessmentInterviewPanelRepositoryMock)
-                .findByTargetCompetitionIdAndActivityStateState(competitionId, AssessmentInterviewPanelState.CREATED.getBackingState(), pageRequest);
-        inOrder.verify(organisationRepositoryMock, times(totalApplications)).findOne(leadOrganisation.getId());
+                .findByTargetCompetitionIdAndActivityStateState(COMPETITION_ID, AssessmentInterviewPanelState.CREATED.getBackingState(), PAGE_REQUEST);
+        inOrder.verify(organisationRepositoryMock, times(TOTAL_APPLICATIONS)).findOne(LEAD_ORGANISATION.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void getAvailableApplicationIds() {
+        when(applicationRepositoryMock.findSubmittedApplicationsNotOnInterviewPanel(COMPETITION_ID))
+                .thenReturn(EXPECTED_AVAILABLE_APPLICATIONS);
+
+        List<Long> availableApplicationIds = service.getAvailableApplicationIds(COMPETITION_ID).getSuccess();
+
+        assertEquals(simpleMap(EXPECTED_AVAILABLE_APPLICATIONS, Application::getId), availableApplicationIds);
+
+        verify(applicationRepositoryMock, only()).findSubmittedApplicationsNotOnInterviewPanel(COMPETITION_ID);
     }
 
     @Test
@@ -169,5 +162,10 @@ public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<Int
         assertEquals(application.getId(), (Long) stagedApplicationResource.getApplicationId());
         assertEquals(application.getName(), stagedApplicationResource.getApplicationName());
         assertEquals(leadOrganisation.getName(), stagedApplicationResource.getLeadOrganisationName());
+    }
+
+    private static void assertPageRequestMatchesPageResource(Pageable pageRequest, PageResource<?> pageResource) {
+        assertEquals(pageRequest.getPageNumber(), pageResource.getNumber());
+        assertEquals(pageRequest.getPageSize(), pageResource.getSize());
     }
 }
