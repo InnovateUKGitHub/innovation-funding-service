@@ -234,7 +234,8 @@
                                    th:field="*{question.allowedFileTypes}"
                                    th:value="${fileTypeCategory.name()}"
                                    name="allowedFileTypes"
-                                   required="required" />
+                                   required="required"
+                                   data-autosave-list />
                             <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}" th:text="${fileTypeCategory.displayName}">PDF</label>
                         </div>
                     </fieldset>
