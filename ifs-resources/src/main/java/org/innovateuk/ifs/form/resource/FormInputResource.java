@@ -32,10 +32,6 @@ public class FormInputResource {
     private List<GuidanceRowResource> guidanceRows;
     private Integer priority;
     private FormInputScope scope;
-    /**
-     * TODO: IFS-2564 - Remove JsonIgnore in ZDD contract.
-     */
-    @JsonDeserialize(using = AllowedFileTypesDeserializer.class)
     private Set<FileTypeCategories> allowedFileTypes = new HashSet<>();
 
     public FormInputResource() {
@@ -178,9 +174,9 @@ public class FormInputResource {
     }
 
     /**
-     * TODO: IFS-2564 - Remove JsonIgnore in ZDD contract.
+     * TODO: IFS-2564 - Remove deserializer in ZDD contract.
      */
-    @JsonIgnore
+    @JsonDeserialize(using = AllowedFileTypesDeserializer.class)
     public void setAllowedFileTypes(Set<FileTypeCategories> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
