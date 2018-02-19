@@ -208,10 +208,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         ReflectionTestUtils.setField(bankDetailsServiceUnwrapped, "silExperianEndpoint", silExperianEndpointMock);
     }
 
-    @PostConstruct
-    public void setupBaseBuilders() {
-    }
-
     @Test
     public void generateTestData() throws ExecutionException, InterruptedException {
 
@@ -234,42 +230,23 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
                 fillInAndCompleteApplications(createCompetitionFutures);
 
-        CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() -> {
-            List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
-            createCompetitionFunders(competitions);
-        }, taskExecutor);
+        CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                createCompetitionFundersForCompetitions(createCompetitionFutures), taskExecutor);
 
-        CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() -> {
-            List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
-            createPublicContentGroups(competitions);
-            createPublicContentDates(competitions);
-        }, taskExecutor);
+        CompletableFuture<Void> publicContentFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() ->
+                createPublicContent(createCompetitionFutures), taskExecutor);
 
-        CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() -> {
-
-            List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
-            List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
-
-            assessmentDataBuilderService.createAssessors(competitions);
-            assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions);
-            assessmentDataBuilderService.createAssessments(applications);
-        }, taskExecutor);
+        CompletableFuture<Void> assessorFutures = waitForFutureList(createApplicationsFutures).thenRunAsync(() ->
+                createAssessorsAndAssessments(createCompetitionFutures, createApplicationsFutures), taskExecutor);
 
         CompletableFuture<Void> competitionsFinalisedFuture = assessorFutures.thenRunAsync(() -> {
 
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
             List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
 
-            competitions.forEach(competition -> {
-
-                CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                        Objects.equals(l.name, competition.getCompetition().getName()));
-
-                applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
-            });
-
-            projectDataBuilderService.createProjects(applications);
-            competitionDataBuilderService.moveCompetitionsToCorrectFinalState(competitions);
+            createFundingDecisions(competitions);
+            createProjects(applications);
+            moveCompetitionsIntoFinalState(competitions);
 
         }, taskExecutor);
 
@@ -279,6 +256,44 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+    }
+
+    private void moveCompetitionsIntoFinalState(List<CompetitionData> competitions) {
+        competitionDataBuilderService.moveCompetitionsToCorrectFinalState(competitions);
+    }
+
+    private void createProjects(List<ApplicationData> applications) {
+        projectDataBuilderService.createProjects(applications);
+    }
+
+    private void createFundingDecisions(List<CompetitionData> competitions) {
+        competitions.forEach(competition -> {
+
+            CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
+                    Objects.equals(l.name, competition.getCompetition().getName()));
+
+            applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
+        });
+    }
+
+    private void createAssessorsAndAssessments(List<CompletableFuture<CompetitionData>> createCompetitionFutures, List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
+
+        assessmentDataBuilderService.createAssessors(competitions);
+        assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions);
+        assessmentDataBuilderService.createAssessments(applications);
+    }
+
+    private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        createPublicContentGroups(competitions);
+        createPublicContentDates(competitions);
+    }
+
+    private void createCompetitionFundersForCompetitions(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+        List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
+        createCompetitionFunders(competitions);
     }
 
     private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
