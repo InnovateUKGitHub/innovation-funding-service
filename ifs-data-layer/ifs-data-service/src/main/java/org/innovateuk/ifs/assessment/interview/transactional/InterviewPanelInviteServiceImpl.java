@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,7 +118,7 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
     private InterviewPanelStagedApplicationResource mapToPanelCreatedInviteResource(AssessmentInterviewPanel panelInvite) {
         final Application application = panelInvite.getTarget();
 
-        return getOrganisation(application.getLeadOrganisationId())
+        return getOrganisation(panelInvite.getParticipant().getOrganisationId())
                 .andOnSuccessReturn(leadOrganisation ->
                         new InterviewPanelStagedApplicationResource(
                                 panelInvite.getId(),
@@ -134,10 +135,10 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
 
     private ServiceResult<AssessmentInterviewPanel> assignApplicationToCompetition(Application application) {
         final Role leadApplicantRole = roleRepository.findOneByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName());
-        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), leadApplicantRole);
-        final AssessmentInterviewPanel panel = new AssessmentInterviewPanel(application, pr);
+        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, AssessmentInterviewPanelState.CREATED.getBackingState());
+        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), leadApplicantRole, application.getLeadOrganisationId());
+        final AssessmentInterviewPanel panel = new AssessmentInterviewPanel(application, pr, createdActivityState);
 
-        panel.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, AssessmentInterviewPanelState.CREATED.getBackingState()));
         assessmentInterviewPanelRepository.save(panel);
 
         return serviceSuccess(panel);
