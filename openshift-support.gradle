@@ -38,11 +38,10 @@ if (!isNamedEnv()) {
     }
 }
 
-//TODO add functionality here to bring in specific named env properties files.
 
+task prepareDeployment(type: Copy) {
 
-
-processResources {
+    destinationDir = file('build/resources/main')
 
     from('os-files/') {
         include '**/*.yml'
@@ -53,19 +52,19 @@ processResources {
 }
 
 task osDeployProduction(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
 task osUpgradeProduction(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
 task dbAnonymisedDumpProduction(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "production", project.version]
 }
@@ -74,31 +73,31 @@ task dbAnonymisedDumpProduction(type: Exec) {
 
 
 task osDeployUat(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task osUpgradeUat(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task dbResetUat(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task dbAnonymisedDumpUat(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task importAnonDataIntoUat(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
     args = [openshiftEnv, "uat", project.version]
 }
@@ -107,13 +106,13 @@ task importAnonDataIntoUat(type: Exec) {
 
 
 task osDeployDemo(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
 task osUpgradeDemo(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "demo", project.version]
 }
@@ -122,25 +121,25 @@ task osUpgradeDemo(type: Exec) {
 
 
 task osDeploySysint(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task osUpgradeSysint(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task dbResetSysint(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task osDeployFractalSysint(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
@@ -149,19 +148,19 @@ task osDeployFractalSysint(type: Exec) {
 
 
 task osDeployPerf(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
 task osUpgradePerf(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
 task dbResetPerf(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "perf", project.version]
 }
@@ -174,25 +173,25 @@ task osInitClusterLocal(type: Exec) {
 }
 
 task osDeployLocal(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task osUpgradeLocal(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task dbResetLocal(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task dbAnonymisedDumpLocal(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "local", project.version]
 }
@@ -203,7 +202,7 @@ task createProjectLocal(type: Exec) {
 }
 
 task importAnonDataIntoLocal(type:Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
     args = [openshiftEnv, "local",  project.version]
 }
@@ -217,37 +216,37 @@ task createProject(type: Exec) {
 }
 
 task osDeployFractalRemote(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task osDeployRemote(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task osUpgradeRemote(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task dbAnonymisedDumpRemote(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task importAnonDataIntoRemote(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task dbResetRemote(type: Exec) {
-    dependsOn processResources
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "remote", project.version]
 }
