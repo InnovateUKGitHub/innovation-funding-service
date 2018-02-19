@@ -21,7 +21,6 @@ ext.LDAP_URL="ldaps://ldap:389"
 ext.LDAP_PASSWORD="default"
 
 //for idp
-
 ext.SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
 ext.SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
 ext.GA_TRACKING_ID=""
@@ -37,12 +36,10 @@ ext.SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain"
 
 
 ext.NEW_RELIC_LICENCE_KEY=""
-// we can use openshiftEnv in place of NEWRELIC_ENVIRONMENT
 
 
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
-//TODO Tidy this
-//TODO needs to be added to named env properties
+
 ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
@@ -50,5 +47,4 @@ ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties[
 ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
-//TODO add named env file upload claims
 ext.FILE_UPLOAD_CLAIM="file-upload-claim"
