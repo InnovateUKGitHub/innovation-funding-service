@@ -43,7 +43,7 @@ ext.NEW_RELIC_LICENCE_KEY=""
 ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 //TODO Tidy this
 //TODO needs to be added to named env properties
-ext.SHIB_IDP_ADDRESS="auth."+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
+ext.SHIB_IDP_ADDRESS="auth-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.SHIB_ADDRESS=project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
 
