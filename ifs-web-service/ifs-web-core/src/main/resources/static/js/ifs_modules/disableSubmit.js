@@ -3,7 +3,9 @@ IFS.core.disableSubmitUntilChecked = (function () {
   var s
   return {
     settings: {
-      checkBoxesAttribute: 'data-switches-button-status'
+      checkBoxesAttribute: 'data-switches-button-status',
+      checkBoxRevealPanel: 'data-target',
+      checkRequiredInputs: '[aria-hidden="false"] input[type="text"][required][data-switches-button-status]'
     },
     init: function () {
       s = this.settings
@@ -11,8 +13,28 @@ IFS.core.disableSubmitUntilChecked = (function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
       })
 
+      jQuery('body').on('change', '[' + s.checkBoxRevealPanel + ']', function () {
+        IFS.core.disableSubmitUntilChecked.checkButtonStates(s.checkRequiredInputs)
+      })
+
       jQuery('[' + s.checkBoxesAttribute + ']').each(function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
+      })
+
+      // Checking that a required text input contains text when updating
+      jQuery('body').on('change keyup', s.checkRequiredInputs, function (e) {
+        var inputValue = jQuery(this).val()
+        var buttonInputSelector = jQuery(this).attr(s.checkBoxesAttribute)
+        var buttonSelected = jQuery(buttonInputSelector)
+        if (e.type === 'keyup') {
+          // wait until the user stops typing
+          if (inputValue.trim()) {
+            // Checking if content has been added to input
+            IFS.core.disableSubmitUntilChecked.updateButton(buttonSelected, true)
+          } else {
+            IFS.core.disableSubmitUntilChecked.updateButton(buttonSelected, false)
+          }
+        }
       })
     },
     checkButtonStates: function (el) {
@@ -47,6 +69,8 @@ IFS.core.disableSubmitUntilChecked = (function () {
           state = inst.prop('checked')
         } else if (inst.is('select')) {
           state = inst.val() !== 'UNSET'
+        } else if (inst.is('input[type="text"]')) {
+          state = inst.val().trim().length > 0
         }
         if (typeof (state) !== 'undefined') {
           buttonStates.push(state)
