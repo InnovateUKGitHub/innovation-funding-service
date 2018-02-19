@@ -22,7 +22,7 @@ import org.mapstruct.Mappings;
                 ParticipantStatusMapper.class,
         }
 )
-public abstract class AssessmentInterviewPanelParticipantMapper extends BaseMapper<InterviewParticipant, InterviewParticipantResource, Long> {
+public abstract class InterviewParticipantMapper extends BaseMapper<InterviewParticipant, InterviewParticipantResource, Long> {
 
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),

@@ -27,10 +27,10 @@ import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.ava
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
 import static org.innovateuk.ifs.documentation.ReviewInviteDocs.REVIEW_INVITE_RESOURCE_BUILDER;
 import static org.innovateuk.ifs.documentation.ReviewInviteDocs.reviewInviteFields;
-import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -201,7 +201,7 @@ public class ReviewInviteControllerDocumentation extends BaseControllerMockMVCTe
     @Test
     public void getAllInvitesByUser() throws Exception {
         final long userId = 12L;
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource().build();
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
         when(reviewInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(reviewParticipantResource)));
 
         mockMvc.perform(get("/assessment-panel-invite/get-all-invites-by-user/{userId}", userId))

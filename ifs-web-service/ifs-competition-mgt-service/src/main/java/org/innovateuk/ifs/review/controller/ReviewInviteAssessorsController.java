@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.review.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,6 +14,7 @@ import org.innovateuk.ifs.review.form.ReviewSelectionForm;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,7 +49,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewInviteRestService reviewInviteRestService;
 
     @Autowired
     private ReviewInviteAssessorsFindModelPopulator panelInviteAssessorsFindModelPopulator;
@@ -182,7 +182,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
     }
 
     private List<Long> getAllAssessorIds(long competitionId) {
-        return assessmentPanelInviteRestService.getAvailableAssessorIds(competitionId).getSuccess();
+        return reviewInviteRestService.getAvailableAssessorIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -201,7 +201,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> restResult = assessmentPanelInviteRestService.inviteUsers(
+            RestResult<Void> restResult = reviewInviteRestService.inviteUsers(
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)
@@ -272,11 +272,11 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
     }
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
-        return assessmentPanelInviteRestService.deleteInvite(email, competitionId).toServiceResult();
+        return reviewInviteRestService.deleteInvite(email, competitionId).toServiceResult();
     }
 
     private ServiceResult<Void> deleteAllInvites(long competitionId) {
-        return assessmentPanelInviteRestService.deleteAllInvites(competitionId).toServiceResult();
+        return reviewInviteRestService.deleteAllInvites(competitionId).toServiceResult();
     }
 
     private String redirectToInvite(long competitionId, int page) {

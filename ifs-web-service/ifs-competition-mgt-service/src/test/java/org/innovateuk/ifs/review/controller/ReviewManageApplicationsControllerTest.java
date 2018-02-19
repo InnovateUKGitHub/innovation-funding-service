@@ -4,9 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.model.ManagePanelApplicationsModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.ManagePanelApplicationsViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.review.model.ManageReviewApplicationsModelPopulator;
+import org.innovateuk.ifs.review.viewmodel.ManagePanelApplicationsViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
@@ -27,7 +27,7 @@ public class ReviewManageApplicationsControllerTest extends BaseControllerMockMV
 
     @InjectMocks
     @Spy
-    private ManagePanelApplicationsModelPopulator managePanelApplicationsPopulator;
+    private ManageReviewApplicationsModelPopulator managePanelApplicationsPopulator;
 
     @Override
     protected ReviewManageApplicationsController supplyControllerUnderTest() {

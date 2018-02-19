@@ -6,7 +6,7 @@ import org.innovateuk.ifs.interview.builder.InterviewAssignmentResponseOutcomeBu
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentResponseOutcome;
-import org.innovateuk.ifs.interview.repository.InterviewAssignmentPanelRepository;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 public class InterviewAssignmentWorkflowHandlerIntegrationTest
         extends BaseWorkflowHandlerIntegrationTest<
         InterviewAssignmentWorkflowHandler,
-        InterviewAssignmentPanelRepository, TestableTransitionWorkflowAction> {
+        InterviewAssignmentRepository, TestableTransitionWorkflowAction> {
 
     private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_INTERVIEW_PANEL;
 
@@ -43,12 +43,12 @@ public class InterviewAssignmentWorkflowHandlerIntegrationTest
     private InterviewAssignmentWorkflowHandler workflowHandler;
 
     private ActivityStateRepository activityStateRepositoryMock;
-    private InterviewAssignmentPanelRepository repositoryMock;
+    private InterviewAssignmentRepository repositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
         activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
-        repositoryMock = (InterviewAssignmentPanelRepository) mockSupplier.apply(InterviewAssignmentPanelRepository.class);
+        repositoryMock = (InterviewAssignmentRepository) mockSupplier.apply(InterviewAssignmentRepository.class);
     }
 
     @Override
@@ -100,15 +100,15 @@ public class InterviewAssignmentWorkflowHandlerIntegrationTest
     }
 
     @Override
-    protected Class<InterviewAssignmentPanelRepository> getProcessRepositoryType() {
-        return InterviewAssignmentPanelRepository.class;
+    protected Class<InterviewAssignmentRepository> getProcessRepositoryType() {
+        return InterviewAssignmentRepository.class;
     }
 
     private ActivityType getActivityType() {
         return ACTIVITY_TYPE;
     }
 
-    private InterviewAssignmentPanelRepository getRepositoryMock() {
+    private InterviewAssignmentRepository getRepositoryMock() {
         return repositoryMock;
     }
 

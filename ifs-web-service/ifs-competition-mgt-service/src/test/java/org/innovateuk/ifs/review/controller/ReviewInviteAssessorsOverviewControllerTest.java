@@ -95,9 +95,9 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
+        when(reviewInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
                 .thenReturn(restSuccess(pageResource));
-        when(assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
+        when(reviewInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/overview", competition.getId())
                 .param("page", "1"))
@@ -109,10 +109,10 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService);
-        inOrder.verify(assessmentPanelInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService);
+        inOrder.verify(reviewInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
+        inOrder.verify(reviewInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
         inOrder.verifyNoMoreInteractions();
     }
 

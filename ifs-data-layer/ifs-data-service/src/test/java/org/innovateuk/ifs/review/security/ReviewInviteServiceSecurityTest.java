@@ -20,9 +20,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -147,7 +147,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
                                 .build()
                         )
                 ).build();
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource().build();
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
 
         when(reviewParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
                 .thenReturn(reviewParticipantResource);
@@ -183,7 +183,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
                                 .build()
                         )
                 ).build();
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource().build();
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
         when(reviewParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
                 .thenReturn(reviewParticipantResource);
         when(reviewParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource, assessorUserResource))
@@ -289,7 +289,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
         @Override
         public ServiceResult<List<ReviewParticipantResource>> getAllInvitesByUser(long userId) {
-            return serviceSuccess(singletonList(newAssessmentReviewPanelParticipantResource().withUser(1L).build()));
+            return serviceSuccess(singletonList(newReviewParticipantResource().withUser(1L).build()));
         }
 
         @Override

@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.review.controller;
 
-import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.review.model.ReviewModelPopulator;
+import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -27,7 +27,7 @@ public class ReviewController {
     private ReviewModelPopulator reviewModelPopulator;
 
     @Autowired
-    private AssessmentPanelRestService assessmentPanelRestService;
+    private ReviewRestService reviewRestService;
 
     @GetMapping
     public String assessmentPanel(@PathVariable("competitionId") long competitionId, Model model) {
@@ -38,7 +38,7 @@ public class ReviewController {
 
     @PostMapping("/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") long competitionId) {
-        assessmentPanelRestService.notifyAssessors(competitionId).getSuccess();
+        reviewRestService.notifyAssessors(competitionId).getSuccess();
         return format("redirect:/assessment/panel/competition/%d", competitionId);
     }
 }

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.review.model;
 
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
@@ -8,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsAcceptedViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class ReviewInviteAssessorsAcceptedModelPopulator extends ReviewInviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewInviteRestService reviewInviteRestService;
 
     @Autowired
     private CompetitionRestService competitionsRestService;
@@ -38,7 +38,7 @@ public class ReviewInviteAssessorsAcceptedModelPopulator extends ReviewInviteAss
 
         InviteAssessorsAcceptedViewModel model = super.populateModel(competition);
 
-        AssessorInviteOverviewPageResource pageResource = assessmentPanelInviteRestService.getInvitationOverview(
+        AssessorInviteOverviewPageResource pageResource = reviewInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
                 singletonList(ACCEPTED))

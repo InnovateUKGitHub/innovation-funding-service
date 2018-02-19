@@ -74,7 +74,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .build(4);
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(assessmentPanelRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(assessmentReviews));
+        when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(assessmentReviews));
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
@@ -89,9 +89,9 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .andExpect(view().name("assessor-competition-for-panel-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentPanelRestService, applicationService, processRoleService, organisationRestService);
+        InOrder inOrder = inOrder(competitionService, reviewRestService, applicationService, processRoleService, organisationRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(assessmentPanelRestService).getAssessmentReviews(userId, competition.getId());
+        inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
 
         assessmentReviews.forEach(assessmentReview -> {
             inOrder.verify(applicationService).getById(assessmentReview.getApplication());
@@ -123,7 +123,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         CompetitionResource competition = buildTestCompetition();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(assessmentPanelRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}/panel", competition.getId()))
                 .andExpect(status().isOk())
@@ -131,9 +131,9 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .andExpect(view().name("assessor-competition-for-panel-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentPanelRestService);
+        InOrder inOrder = inOrder(competitionService, reviewRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(assessmentPanelRestService).getAssessmentReviews(userId, competition.getId());
+        inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(applicationService);

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.review.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  *  * REST service for managing applications on an assessment panel.
  */
-public interface AssessmentPanelRestService {
+public interface ReviewRestService {
     RestResult<Void> assignToPanel(long applicationId);
     RestResult<Void> unassignFromPanel(long applicationId);
     RestResult<Void> notifyAssessors(long competitionId);

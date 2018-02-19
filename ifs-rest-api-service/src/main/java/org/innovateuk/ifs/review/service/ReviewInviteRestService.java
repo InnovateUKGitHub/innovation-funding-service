@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.review.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.*;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * REST service for managing {@link InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource }
  */
-public interface AssessmentPanelInviteRestService {
+public interface ReviewInviteRestService {
 
     RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 

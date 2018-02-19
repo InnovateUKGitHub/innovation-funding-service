@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.interview.workflow.actions;
 
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
-import org.innovateuk.ifs.interview.repository.InterviewAssignmentPanelRepository;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
@@ -14,7 +14,7 @@ import org.springframework.statemachine.StateContext;
 public abstract class BaseInterviewAssignmentAction extends TestableTransitionWorkflowAction<InterviewAssignmentState, InterviewAssignmentEvent> {
 
     @Autowired
-    protected InterviewAssignmentPanelRepository interviewAssignmentPanelRepository;
+    protected InterviewAssignmentRepository interviewAssignmentRepository;
 
     @Override
     public void doExecute(StateContext<InterviewAssignmentState, InterviewAssignmentEvent> context) {

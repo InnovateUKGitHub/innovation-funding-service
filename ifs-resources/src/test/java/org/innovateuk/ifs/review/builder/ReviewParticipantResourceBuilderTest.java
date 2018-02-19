@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.builder;
+package org.innovateuk.ifs.review.builder;
 
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -7,8 +7,8 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
+import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.junit.Assert.assertEquals;
 
 public class ReviewParticipantResourceBuilderTest {
@@ -31,7 +31,7 @@ public class ReviewParticipantResourceBuilderTest {
         CompetitionStatus expectedCompetitionStatus = CompetitionStatus.IN_ASSESSMENT;
         long expectedAwaitingApplications = 3L;
 
-        ReviewParticipantResource competitionParticipant = newAssessmentReviewPanelParticipantResource()
+        ReviewParticipantResource competitionParticipant = newReviewParticipantResource()
                 .withId(expectedId)
                 .withUser(expectedUserId)
                 .withCompetition(expectedCompetitionId)
@@ -86,7 +86,7 @@ public class ReviewParticipantResourceBuilderTest {
         CompetitionStatus[] expectedCompetitionStatuses = {CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL};
         Long[] expectedAwaitingApplications = {3L, 4L};
 
-        List<ReviewParticipantResource> competitionParticipants = newAssessmentReviewPanelParticipantResource()
+        List<ReviewParticipantResource> competitionParticipants = newReviewParticipantResource()
                 .withId(expectedIds)
                 .withUser(expectedUserIds)
                 .withCompetition(expectedCompetitionIds)

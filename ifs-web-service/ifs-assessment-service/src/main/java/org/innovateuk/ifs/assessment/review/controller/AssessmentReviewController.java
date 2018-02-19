@@ -2,12 +2,12 @@ package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.assessment.review.form.AssessmentReviewForm;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,7 +35,7 @@ public class AssessmentReviewController {
     private AssessmentReviewModelPopulator assessmentReviewModelPopulator;
 
     @Autowired
-    private AssessmentPanelRestService assessmentPanelRestService;
+    private ReviewRestService reviewRestService;
 
 
     @GetMapping
@@ -56,12 +56,12 @@ public class AssessmentReviewController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ReviewResource assessmentReview = assessmentPanelRestService.getAssessmentReview(reviewId).getSuccess();
+            ReviewResource assessmentReview = reviewRestService.getAssessmentReview(reviewId).getSuccess();
             final RestResult<Void> updateResult;
             if (form.getReviewAccept()) {
-                updateResult = assessmentPanelRestService.acceptAssessmentReview(reviewId);
+                updateResult = reviewRestService.acceptAssessmentReview(reviewId);
             } else {
-                updateResult = assessmentPanelRestService.rejectAssessmentReview(
+                updateResult = reviewRestService.rejectAssessmentReview(
                         reviewId,
                         new ReviewRejectOutcomeResource(form.getRejectComment())
                 );

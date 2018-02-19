@@ -7,13 +7,13 @@ import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
 import java.time.ZonedDateTime;
 
 /**
- * ViewModel of an AssessmentPanelInvite.
+ * ViewModel of a ReviewInvite.
  */
-public class PanelInviteViewModel extends BaseInviteViewModel {
+public class ReviewInviteViewModel extends BaseInviteViewModel {
 
     private ZonedDateTime panelDate;
 
-    public PanelInviteViewModel(String panelInviteHash, ReviewInviteResource invite, boolean userLoggedIn) {
+    public ReviewInviteViewModel(String panelInviteHash, ReviewInviteResource invite, boolean userLoggedIn) {
         super(panelInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
         this.panelDate = invite.getPanelDate();
     }
@@ -32,7 +32,7 @@ public class PanelInviteViewModel extends BaseInviteViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PanelInviteViewModel that = (PanelInviteViewModel) o;
+        ReviewInviteViewModel that = (ReviewInviteViewModel) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

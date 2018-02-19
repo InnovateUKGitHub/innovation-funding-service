@@ -113,15 +113,15 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .withCompetition(COMPETITION_ID)
                 .build();
 
-        when(assessmentPanelRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
+        when(reviewRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
 
         mockMvc.perform(get("/review/{reviewId}", REVIEW_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedReviewViewModel))
                 .andExpect(view().name("assessment/review-invitation")).andReturn();
 
-        InOrder inOrder = inOrder(assessmentPanelRestService, formInputResponseRestService, processRoleService, organisationRestService);
-        inOrder.verify(assessmentPanelRestService).getAssessmentReview(REVIEW_ID);
+        InOrder inOrder = inOrder(reviewRestService, formInputResponseRestService, processRoleService, organisationRestService);
+        inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, PROJECT_SUMMARY_QUESTION_NAME);
         inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
         asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
@@ -139,8 +139,8 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .withCompetition(COMPETITION_ID)
                 .build();
 
-        when(assessmentPanelRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
-        when(assessmentPanelRestService.acceptAssessmentReview(REVIEW_ID)).thenReturn(restSuccess());
+        when(reviewRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
+        when(reviewRestService.acceptAssessmentReview(REVIEW_ID)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/review/{reviewId}/respond", REVIEW_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -148,9 +148,9 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%d/panel", COMPETITION_ID)));
 
-        InOrder inOrder = inOrder(assessmentPanelRestService);
-        inOrder.verify(assessmentPanelRestService).getAssessmentReview(REVIEW_ID);
-        inOrder.verify(assessmentPanelRestService).acceptAssessmentReview(REVIEW_ID);
+        InOrder inOrder = inOrder(reviewRestService);
+        inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
+        inOrder.verify(reviewRestService).acceptAssessmentReview(REVIEW_ID);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -169,8 +169,8 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .withReason(comment)
                 .build();
 
-        when(assessmentPanelRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
-        when(assessmentPanelRestService.rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource)).thenReturn(restSuccess());
+        when(reviewRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
+        when(reviewRestService.rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/review/{reviewId}/respond", REVIEW_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -179,9 +179,9 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%d/panel", COMPETITION_ID)));
 
-        InOrder inOrder = inOrder(assessmentPanelRestService);
-        inOrder.verify(assessmentPanelRestService).getAssessmentReview(REVIEW_ID);
-        inOrder.verify(assessmentPanelRestService).rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource);
+        InOrder inOrder = inOrder(reviewRestService);
+        inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
+        inOrder.verify(reviewRestService).rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource);
         inOrder.verifyNoMoreInteractions();
     }
 }

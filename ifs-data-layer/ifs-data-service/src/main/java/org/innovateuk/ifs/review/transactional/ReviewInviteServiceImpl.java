@@ -11,8 +11,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
-import org.innovateuk.ifs.invite.mapper.AssessmentReviewPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
+import org.innovateuk.ifs.invite.mapper.ReviewParticipantMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
@@ -105,7 +105,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
-    private AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapper;
+    private ReviewParticipantMapper reviewParticipantMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -374,7 +374,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
                 .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
-                .map(assessmentReviewPanelParticipantMapper::mapToResource)
+                .map(reviewParticipantMapper::mapToResource)
                 .collect(toList());
 
         reviewParticipantResources.forEach(this::determineStatusOfPanelApplications);

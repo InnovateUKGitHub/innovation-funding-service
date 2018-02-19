@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.review.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.review.form.ReviewOverviewSelectionForm;
 import org.innovateuk.ifs.review.model.ReviewInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,7 +33,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewInviteRestService reviewInviteRestService;
 
     @Autowired
     private ReviewInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
@@ -161,6 +161,6 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
     }
 
     private List<Long> getAllInviteIds(long competitionId) {
-        return assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccess();
+        return reviewInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccess();
     }
 }

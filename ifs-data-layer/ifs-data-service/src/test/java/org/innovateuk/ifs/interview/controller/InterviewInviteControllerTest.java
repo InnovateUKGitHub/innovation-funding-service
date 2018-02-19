@@ -17,7 +17,7 @@ import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
-import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
+import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
@@ -236,7 +236,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
                 .withStatus(InviteStatus.SENT)
                 .build();
 
-        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withStatus(PENDING)
                 .withInvite(invite)
                 .build();

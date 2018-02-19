@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.management.viewmodel;
+package org.innovateuk.ifs.review.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 
 /**
  * Holder of model attributes for the applications shown in the 'Manage applications' page
  */
-public class ManagePanelApplicationsRowViewModel {
+public class ManageReviewApplicationsRowViewModel {
     private long id;
     private String title;
     private String leadOrganisation;
@@ -14,7 +14,7 @@ public class ManagePanelApplicationsRowViewModel {
     private long completed;
     private String innovationArea;
 
-    public ManagePanelApplicationsRowViewModel(ApplicationSummaryResource applicationSummaryResource) {
+    public ManageReviewApplicationsRowViewModel(ApplicationSummaryResource applicationSummaryResource) {
         this.id = applicationSummaryResource.getId();
         this.title = applicationSummaryResource.getName();
         this.leadOrganisation = applicationSummaryResource.getLead();

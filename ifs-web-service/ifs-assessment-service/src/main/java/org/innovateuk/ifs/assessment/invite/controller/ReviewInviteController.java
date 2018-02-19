@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.assessment.invite.controller;
 
-import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
-import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.invite.form.ReviewInviteForm;
+import org.innovateuk.ifs.assessment.invite.populator.ReviewInviteModelPopulator;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,29 +28,29 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
- * Controller to manage Invites to an Assessment Panel.
+ * Controller to manage Invites to an Assessment Review Panel.
  */
 @Controller
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = PanelInviteController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewInviteController.class)
 @PreAuthorize("permitAll")
-public class PanelInviteController {
+public class ReviewInviteController {
 
     @Autowired
-    private AssessmentPanelInviteRestService inviteRestService;
+    private ReviewInviteRestService inviteRestService;
 
     @Autowired
     private RejectionReasonRestService rejectionReasonRestService;
 
     @Autowired
-    private PanelInviteModelPopulator panelInviteModelPopulator;
+    private ReviewInviteModelPopulator reviewInviteModelPopulator;
 
     @GetMapping("/invite/panel/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
-                             @ModelAttribute(name = "form", binding = false) PanelInviteForm form,
+                             @ModelAttribute(name = "form", binding = false) ReviewInviteForm form,
                              UserResource loggedInUser,
                              Model model) {
         boolean userLoggedIn = loggedInUser != null;
-        model.addAttribute("model", panelInviteModelPopulator.populateModel(inviteHash, userLoggedIn));
+        model.addAttribute("model", reviewInviteModelPopulator.populateModel(inviteHash, userLoggedIn));
 
         return "assessor-panel-invite";
     }
@@ -59,7 +59,7 @@ public class PanelInviteController {
     public String handleDecision(Model model,
                                  @PathVariable("inviteHash") String inviteHash,
                                  UserResource loggedInUser,
-                                 @Valid @ModelAttribute("form") PanelInviteForm form,
+                                 @Valid @ModelAttribute("form") ReviewInviteForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler) {
 
@@ -83,7 +83,7 @@ public class PanelInviteController {
         return inviteRestService.checkExistingUser(inviteHash)
                 .andOnSuccessReturn(userExists -> {
                     if (userExists) {
-                        model.addAttribute("model", panelInviteModelPopulator.populateModel(inviteHash, false));
+                        model.addAttribute("model", reviewInviteModelPopulator.populateModel(inviteHash, false));
                         return "assessor-panel-accept-user-exists-but-not-logged-in";
                     } else {
                         return format("redirect:/registration/%s/start", inviteHash);
@@ -106,7 +106,7 @@ public class PanelInviteController {
 
     private String doRejectInvite(Model model,
                                   String inviteHash,
-                                  PanelInviteForm form,
+                                  ReviewInviteForm form,
                                   UserResource loggedInUser,
                                   ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> openInvite(inviteHash, form, loggedInUser, model);

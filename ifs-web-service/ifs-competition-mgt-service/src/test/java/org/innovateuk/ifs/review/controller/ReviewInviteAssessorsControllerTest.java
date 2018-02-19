@@ -146,8 +146,8 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .withContent(setUpAvailableAssessorResources())
                 .build();
 
-        when(assessmentPanelInviteRestService.getAvailableAssessors(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(reviewInviteRestService.getAvailableAssessors(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .param("page", "2"))
@@ -162,11 +162,11 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService, competitionKeyStatisticsRestServiceMock);
-        inOrder.verify(assessmentPanelInviteRestService).getAvailableAssessorIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
+        inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getAvailableAssessors(competition.getId(), page);
+        inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -178,8 +178,8 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .withContent(emptyList())
                 .build();
 
-        when(assessmentPanelInviteRestService.getAvailableAssessors(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(reviewInviteRestService.getAvailableAssessors(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId()))
                 .andExpect(status().isOk())
@@ -193,11 +193,11 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService, competitionKeyStatisticsRestServiceMock);
-        inOrder.verify(assessmentPanelInviteRestService).getAvailableAssessorIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
+        inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getAvailableAssessors(competition.getId(), page);
+        inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -215,8 +215,8 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .withContent(setUpAvailableAssessorResources())
                 .build();
 
-        when(assessmentPanelInviteRestService.getAvailableAssessors(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(reviewInviteRestService.getAvailableAssessors(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .cookie(selectionFormCookie))
@@ -234,11 +234,11 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService, competitionKeyStatisticsRestServiceMock);
-        inOrder.verify(assessmentPanelInviteRestService).getAvailableAssessorIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
+        inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getAvailableAssessors(competition.getId(), page);
+        inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -247,7 +247,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         long assessorId = 1L;
         Cookie formCookie = createFormCookie(new ReviewSelectionForm());
 
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
@@ -269,7 +269,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         long assessorId = 1L;
         Cookie formCookie = createFormCookie(new ReviewSelectionForm());
 
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
@@ -289,7 +289,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
     public void addAllAssessorsFromFindView_defaultParams() throws Exception {
         Cookie formCookie = createFormCookie(new ReviewSelectionForm());
 
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .param("addAll", "true")
@@ -311,7 +311,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         form.getSelectedAssessorIds().add(assessorId);
         Cookie formCookie = createFormCookie(form);
 
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
@@ -336,7 +336,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         form.getSelectedAssessorIds().add(assessorId);
         formCookie = createFormCookie(form);
 
-        when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(reviewInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/find", competition.getId())
                 .param("selectionId", valueOf(assessorId))
@@ -377,9 +377,9 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertInvitedAssessors(assessorCreatedInviteResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService, categoryRestServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getCreatedInvites(competition.getId(), page);
+        inOrder.verify(reviewInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -394,7 +394,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page, status))
+        when(reviewInviteRestService.getInvitationOverview(competition.getId(), page, status))
                 .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/accepted", competition.getId())
@@ -407,9 +407,9 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         assertCompetitionDetails(competition, result);
         assertInviteAccepted(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService,  assessmentPanelInviteRestService);
+        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page, status);
+        inOrder.verify(reviewInviteRestService).getInvitationOverview(competition.getId(), page, status);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -435,7 +435,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
     public void removeInviteFromInviteView() throws Exception {
         String email = "firstname.lastname@example.com";
 
-        when(assessmentPanelInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
+        when(reviewInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("remove", email)
@@ -444,14 +444,14 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=5", competition.getId())))
                 .andReturn();
 
-        verify(assessmentPanelInviteRestService, only()).deleteInvite(email, competition.getId());
+        verify(reviewInviteRestService, only()).deleteInvite(email, competition.getId());
     }
 
     @Test
     public void removeInviteFromInviteView_defaultParams() throws Exception {
         String email = "firstname.lastname@example.com";
 
-        when(assessmentPanelInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
+        when(reviewInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("remove", email))
@@ -459,12 +459,12 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=0", competition.getId())))
                 .andReturn();
 
-        verify(assessmentPanelInviteRestService, only()).deleteInvite(email, competition.getId());
+        verify(reviewInviteRestService, only()).deleteInvite(email, competition.getId());
     }
 
     @Test
     public void removeAllInvitesFromInviteView() throws Exception {
-        when(assessmentPanelInviteRestService.deleteAllInvites(competition.getId())).thenReturn(restSuccess());
+        when(reviewInviteRestService.deleteAllInvites(competition.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
                 .param("removeAll", ""))
@@ -472,7 +472,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=0", competition.getId())))
                 .andReturn();
 
-        verify(assessmentPanelInviteRestService).deleteAllInvites(competition.getId());
+        verify(reviewInviteRestService).deleteAllInvites(competition.getId());
     }
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
@@ -587,7 +587,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .withChildren(children)
                 .build(1);
 
-        when(assessmentPanelInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(assessorCreatedInvitePageResource));
+        when(reviewInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(assessorCreatedInvitePageResource));
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
     }
 

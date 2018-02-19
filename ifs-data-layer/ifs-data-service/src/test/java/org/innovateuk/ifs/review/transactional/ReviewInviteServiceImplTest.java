@@ -57,7 +57,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
@@ -75,6 +74,7 @@ import static org.innovateuk.ifs.review.builder.ReviewBuilder.newReview;
 import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
 import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantBuilder.newReviewParticipant;
+import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.innovateuk.ifs.review.transactional.ReviewInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -756,7 +756,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withUser(user)
                 .build(2);
 
-        List<ReviewParticipantResource> expected = newAssessmentReviewPanelParticipantResource()
+        List<ReviewParticipantResource> expected = newReviewParticipantResource()
                 .withCompetition(2L)
                 .withCompetitionName("Competition in Assessor Panel")
                 .withUser(1L)
@@ -767,8 +767,8 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .build(2);
 
         when(reviewParticipantRepositoryMock.findByUserIdAndRole(1L, PANEL_ASSESSOR)).thenReturn(reviewParticipants);
-        when(assessmentReviewPanelParticipantMapperMock.mapToResource(reviewParticipants.get(0))).thenReturn(expected.get(0));
-        when(assessmentReviewPanelParticipantMapperMock.mapToResource(reviewParticipants.get(1))).thenReturn(expected.get(1));
+        when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(0))).thenReturn(expected.get(0));
+        when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(1))).thenReturn(expected.get(1));
         when(reviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(1L, competition.getId())).thenReturn(reviews);
 
         List<ReviewParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
@@ -805,15 +805,15 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withCompetition(competition)
                 .withUser(user)
                 .build(2);
-        List<ReviewParticipantResource> expected = newAssessmentReviewPanelParticipantResource()
+        List<ReviewParticipantResource> expected = newReviewParticipantResource()
                 .withCompetition(2L)
                 .withCompetitionName("Competition in Assessor Panel")
                 .withUser(1L)
                 .build(2);
 
         when(reviewParticipantRepositoryMock.findByUserIdAndRole(1L, PANEL_ASSESSOR)).thenReturn(reviewParticipants);
-        when(assessmentReviewPanelParticipantMapperMock.mapToResource(reviewParticipants.get(0))).thenReturn(expected.get(0));
-        when(assessmentReviewPanelParticipantMapperMock.mapToResource(reviewParticipants.get(1))).thenReturn(expected.get(1));
+        when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(0))).thenReturn(expected.get(0));
+        when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(1))).thenReturn(expected.get(1));
 
         List<ReviewParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
         assertTrue(actual.isEmpty());

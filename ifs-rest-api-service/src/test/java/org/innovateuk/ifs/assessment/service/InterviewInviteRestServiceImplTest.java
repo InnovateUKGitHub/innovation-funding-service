@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -13,7 +14,8 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
+import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
@@ -23,23 +25,22 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
-import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
-public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUnitTest<AssessmentPanelInviteRestServiceImpl> {
+public class InterviewInviteRestServiceImplTest extends BaseRestServiceUnitTest<InterviewInviteRestServiceImpl> {
 
-    private static final String restUrl = "/assessment-panel-invite";
+    private static final String restUrl = "/interview-panel-invite";
 
     @Override
-    protected AssessmentPanelInviteRestServiceImpl registerRestServiceUnderTest() {
-        AssessmentPanelInviteRestServiceImpl assessmentPanelInviteRestService = new AssessmentPanelInviteRestServiceImpl();
-        return assessmentPanelInviteRestService;
+    protected InterviewInviteRestServiceImpl registerRestServiceUnderTest() {
+        InterviewInviteRestServiceImpl interviewPanelInviteRestService = new InterviewInviteRestServiceImpl();
+        return interviewPanelInviteRestService;
     }
 
     @Test
@@ -185,32 +186,32 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
     @Test
     public void getAllInvitesByUser() throws Exception {
         long userId = 1L;
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withUser(userId)
-                .withCompetitionParticipantRole(PANEL_ASSESSOR)
+                .withCompetitionParticipantRole(INTERVIEW_ASSESSOR)
                 .withCompetitionName("Competition Name")
                 .build();
-        List<ReviewParticipantResource> expected = singletonList(reviewParticipantResource);
+        List<InterviewParticipantResource> expected = singletonList(interviewParticipantResource);
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "get-all-invites-by-user", userId), ParameterizedTypeReferences.assessmentPanelParticipantResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "get-all-invites-by-user", userId), ParameterizedTypeReferences.assessmentInterviewPanelParticipantResourceListType(), expected, OK);
 
-        List<ReviewParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccess();
+        List<InterviewParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccess();
         assertEquals(expected, actual);
     }
 
     @Test
     public void openInvite() {
-        ReviewInviteResource expected = newReviewInviteResource().build();
+        InterviewInviteResource expected = newInterviewInviteResource().build();
         expected.setCompetitionName("my competition");
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hash"), ReviewInviteResource.class, null, expected, OK);
-        ReviewInviteResource actual = service.openInvite("hash").getSuccess();
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hash"), InterviewInviteResource.class, null, expected, OK);
+        InterviewInviteResource actual = service.openInvite("hash").getSuccess();
         assertEquals(expected, actual);
     }
 
     @Test
     public void openInvite_hashNotExists() {
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hashNotExists"), ReviewInviteResource.class, null, null, NOT_FOUND);
-        RestResult<ReviewInviteResource> restResult = service.openInvite("hashNotExists");
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "open-invite", "hashNotExists"), InterviewInviteResource.class, null, null, NOT_FOUND);
+        RestResult<InterviewInviteResource> restResult = service.openInvite("hashNotExists");
         assertTrue(restResult.isFailure());
     }
 
@@ -255,4 +256,5 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
         RestResult<Void> resultResult = service.deleteAllInvites(competitionId);
         assertTrue(resultResult.isSuccess());
     }
+
 }

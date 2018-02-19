@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -9,6 +8,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewSelectionForm;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewInviteAssessorsFindViewModel;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
@@ -48,7 +48,7 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private InterviewPanelInviteRestService interviewPanelInviteRestService;
+    private InterviewInviteRestService interviewInviteRestService;
 
     @Autowired
     private InterviewInviteAssessorsFindModelPopulator interviewInviteAssessorsFindModelPopulator;
@@ -179,7 +179,7 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
     }
 
     private List<Long> getAllAssessorIds(long competitionId) {
-        return interviewPanelInviteRestService.getAvailableAssessorIds(competitionId).getSuccess();
+        return interviewInviteRestService.getAvailableAssessorIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -198,7 +198,7 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> restResult = interviewPanelInviteRestService.inviteUsers(
+            RestResult<Void> restResult = interviewInviteRestService.inviteUsers(
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)
@@ -253,11 +253,11 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
     }
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
-        return interviewPanelInviteRestService.deleteInvite(email, competitionId).toServiceResult();
+        return interviewInviteRestService.deleteInvite(email, competitionId).toServiceResult();
     }
 
     private ServiceResult<Void> deleteAllInvites(long competitionId) {
-        return interviewPanelInviteRestService.deleteAllInvites(competitionId).toServiceResult();
+        return interviewInviteRestService.deleteAllInvites(competitionId).toServiceResult();
     }
 
     private String redirectToInvite(long competitionId, int page) {

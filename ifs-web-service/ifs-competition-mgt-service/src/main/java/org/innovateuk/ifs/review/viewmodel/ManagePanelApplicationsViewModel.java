@@ -1,5 +1,7 @@
-package org.innovateuk.ifs.management.viewmodel;
+package org.innovateuk.ifs.review.viewmodel;
 
+
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
 
@@ -10,17 +12,17 @@ public class ManagePanelApplicationsViewModel {
     private long competitionId;
     private String competitionName;
     private String competitionStatus;
-    private List<ManagePanelApplicationsRowViewModel> applications;
+    private List<ManageReviewApplicationsRowViewModel> applications;
     private String filter;
     private String sorting;
     private PaginationViewModel pagination;
-    private List<ManagePanelApplicationsRowViewModel> assignedApplications;
+    private List<ManageReviewApplicationsRowViewModel> assignedApplications;
 
     public ManagePanelApplicationsViewModel(Long competitionId,
                                             String competitionName,
                                             String competitionStatus,
-                                            List<ManagePanelApplicationsRowViewModel> applications,
-                                            List<ManagePanelApplicationsRowViewModel> assignedApplications,
+                                            List<ManageReviewApplicationsRowViewModel> applications,
+                                            List<ManageReviewApplicationsRowViewModel> assignedApplications,
                                             String filter,
                                             String sorting,
                                             PaginationViewModel pagination) {
@@ -44,11 +46,11 @@ public class ManagePanelApplicationsViewModel {
 
     public String getCompetitionStatus() { return competitionStatus; }
 
-    public List<ManagePanelApplicationsRowViewModel> getApplications() {
+    public List<ManageReviewApplicationsRowViewModel> getApplications() {
         return applications;
     }
 
-    public List<ManagePanelApplicationsRowViewModel> getAssignedApplications() {
+    public List<ManageReviewApplicationsRowViewModel> getAssignedApplications() {
         return assignedApplications;
     }
 

@@ -6,9 +6,9 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
 import static freemarker.template.utility.Collections12.singletonList;
-import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
+import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -22,7 +22,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
 
     @Test
     public void userCanAcceptAssessmentPanelInvite() {
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource()
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withUser(1L)
                 .build();
         UserResource userResource = newUserResource()
@@ -35,7 +35,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
 
     @Test
     public void userCanAcceptAssessmentPanelInvite_differentParticipantUser() {
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource()
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withUser(1L)
                 .build();
         UserResource userResource = newUserResource()
@@ -48,7 +48,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
 
     @Test
     public void userCanAcceptAssessmentPanelInvite_noParticipantUserAndSameEmail() {
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource()
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withInvite(newReviewInviteResource().withEmail("tom@poly.io"))
                 .build();
         UserResource userResource = newUserResource()
@@ -61,7 +61,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
 
     @Test
     public void userCanAcceptCompetitionInvite_noParticipantUserAndDifferentEmail() {
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource()
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withInvite(newReviewInviteResource().withEmail("tom@poly.io"))
                 .build();
         UserResource userResource = newUserResource()
@@ -74,7 +74,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
 
     @Test
     public void userCanViewTheirOwnAssessmentPanelParticipation() {
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource()
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withUser(7L)
                 .withInvite(newReviewInviteResource().withStatus(SENT).build())
                 .build();
@@ -88,7 +88,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
 
     @Test
     public void userCanViewTheirOwnAssessmentPanelParticipation_differentUser() {
-        ReviewParticipantResource reviewParticipantResource = newAssessmentReviewPanelParticipantResource()
+        ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withUser(7L)
                 .build();
         UserResource userResource = newUserResource()

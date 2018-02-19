@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.ava
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
 import static org.innovateuk.ifs.documentation.InterviewInviteDocs.INTERVIEW_INVITE_RESOURCE_BUILDER;
 import static org.innovateuk.ifs.documentation.InterviewInviteDocs.interviewInviteFields;
-import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
+import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
@@ -201,7 +201,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
     @Test
     public void getAllInvitesByUser() throws Exception {
         final long userId = 12L;
-        InterviewParticipantResource interviewPanelParticipantResource = newAssessmentInterviewPanelParticipantResource().build();
+        InterviewParticipantResource interviewPanelParticipantResource = newInterviewParticipantResource().build();
         when(interviewInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(interviewPanelParticipantResource)));
 
         mockMvc.perform(get("/interview-panel-invite/get-all-invites-by-user/{userId}", userId))

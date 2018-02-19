@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.interview.model.InterviewModelPopulator;
-import org.innovateuk.ifs.interview.viewmodel.InterviewPanelViewModel;
+import org.innovateuk.ifs.interview.viewmodel.InterviewViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
@@ -49,7 +49,7 @@ public class InterviewControllerTest extends BaseControllerMockMVCTest<Interview
                 .andExpect(view().name("competition/manage-interview-panel"))
                 .andReturn();
 
-        InterviewPanelViewModel model = (InterviewPanelViewModel) result.getModelAndView().getModel().get("model");
+        InterviewViewModel model = (InterviewViewModel) result.getModelAndView().getModel().get("model");
 
         verify(competitionService, only()).getById(competitionId);
 

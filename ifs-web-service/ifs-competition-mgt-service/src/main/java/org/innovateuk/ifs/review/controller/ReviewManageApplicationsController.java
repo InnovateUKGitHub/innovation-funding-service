@@ -4,12 +4,12 @@ package org.innovateuk.ifs.review.controller;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.management.model.ManagePanelApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
+import org.innovateuk.ifs.review.model.ManageReviewApplicationsModelPopulator;
+import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class ReviewManageApplicationsController {
     private static final int PAGE_SIZE  = 20;
 
     @Autowired
-    private ManagePanelApplicationsModelPopulator managePanelApplicationsModelPopulator;
+    private ManageReviewApplicationsModelPopulator manageReviewApplicationsModelPopulator;
 
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
@@ -46,7 +46,7 @@ public class ReviewManageApplicationsController {
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private AssessmentPanelRestService assessmentPanelRestService;
+    private ReviewRestService reviewRestService;
 
     @GetMapping("/manage-applications")
     public String manageApplications(Model model,
@@ -61,7 +61,7 @@ public class ReviewManageApplicationsController {
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_APPLICATIONS_PANEL, queryParams);
         ApplicationSummaryPageResource applications = getSummaries(competitionResource.getId(), page, filter, sortBy);
         List<ApplicationSummaryResource> assignedApplications = getAssignedSummaries(competitionId);
-        model.addAttribute("model", managePanelApplicationsModelPopulator.populateModel(competitionResource, applications, assignedApplications, filter, sortBy, originQuery));
+        model.addAttribute("model", manageReviewApplicationsModelPopulator.populateModel(competitionResource, applications, assignedApplications, filter, sortBy, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/manage-applications-panel";
@@ -69,13 +69,13 @@ public class ReviewManageApplicationsController {
 
     @GetMapping("/assign/{applicationId}")
     public String assignApplication(@PathVariable("competitionId") long competitionId, @PathVariable("applicationId") long applicationId) {
-        assessmentPanelRestService.assignToPanel(applicationId);
+        reviewRestService.assignToPanel(applicationId);
         return format("redirect:/assessment/panel/competition/%d/manage-applications", competitionId);
     }
 
     @GetMapping("/unassign/{applicationId}")
     public String unassignApplication(@PathVariable("competitionId") long competitionId, @PathVariable("applicationId") long applicationId) {
-        assessmentPanelRestService.unassignFromPanel(applicationId);
+        reviewRestService.unassignFromPanel(applicationId);
         return format("redirect:/assessment/panel/competition/%d/manage-applications", competitionId);
     }
 

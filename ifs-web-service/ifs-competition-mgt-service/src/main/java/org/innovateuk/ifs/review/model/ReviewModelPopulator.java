@@ -2,10 +2,10 @@ package org.innovateuk.ifs.review.model;
 
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
+import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class ReviewModelPopulator {
     private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
 
     @Autowired
-    private AssessmentPanelRestService assessmentPanelRestService;
+    private ReviewRestService reviewRestService;
 
     public ReviewViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -31,7 +31,7 @@ public class ReviewModelPopulator {
                 .getAssessmentPanelKeyStatisticsByCompetition(competitionId)
                 .getSuccess();
 
-        boolean pendingReviewNotifications = assessmentPanelRestService
+        boolean pendingReviewNotifications = reviewRestService
                 .isPendingReviewNotifications(competitionId)
                 .getSuccess();
 

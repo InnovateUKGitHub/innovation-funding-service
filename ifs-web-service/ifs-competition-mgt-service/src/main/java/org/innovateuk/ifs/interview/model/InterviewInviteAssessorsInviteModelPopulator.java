@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.interview.model;
 
-import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewInviteAssessorsInviteViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class InterviewInviteAssessorsInviteModelPopulator extends InterviewInviteAssessorsModelPopulator<InterviewInviteAssessorsInviteViewModel> {
 
     @Autowired
-    private InterviewPanelInviteRestService interviewPanelInviteRestService;
+    private InterviewInviteRestService interviewInviteRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -34,7 +34,7 @@ public class InterviewInviteAssessorsInviteModelPopulator extends InterviewInvit
 
         InterviewInviteAssessorsInviteViewModel model = super.populateModel(competition);
 
-        AssessorCreatedInvitePageResource pageResource = interviewPanelInviteRestService.getCreatedInvites(competition.getId(), page)
+        AssessorCreatedInvitePageResource pageResource = interviewInviteRestService.getCreatedInvites(competition.getId(), page)
                 .getSuccess();
 
         List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);

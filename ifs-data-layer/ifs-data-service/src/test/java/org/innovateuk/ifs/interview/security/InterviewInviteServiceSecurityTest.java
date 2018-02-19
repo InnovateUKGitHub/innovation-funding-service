@@ -20,7 +20,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
+import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -204,7 +204,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
         @Override
         public ServiceResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId) {
-            return serviceSuccess(singletonList(newAssessmentInterviewPanelParticipantResource().withUser(1L).build()));
+            return serviceSuccess(singletonList(newInterviewParticipantResource().withUser(1L).build()));
         }
 
         @Override

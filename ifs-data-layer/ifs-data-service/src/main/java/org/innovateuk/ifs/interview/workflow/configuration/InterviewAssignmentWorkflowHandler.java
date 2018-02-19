@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentResponseOutcome;
-import org.innovateuk.ifs.interview.repository.InterviewAssignmentPanelRepository;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentEvent;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -34,7 +34,7 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
     private StateMachineFactory<InterviewAssignmentState, InterviewAssignmentEvent> stateMachineFactory;
 
     @Autowired
-    private InterviewAssignmentPanelRepository interviewAssignmentPanelRepository;
+    private InterviewAssignmentRepository interviewAssignmentRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -62,7 +62,7 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
 
     @Override
     protected ProcessRepository<InterviewAssignment> getProcessRepository() {
-        return interviewAssignmentPanelRepository;
+        return interviewAssignmentRepository;
     }
 
     @Override

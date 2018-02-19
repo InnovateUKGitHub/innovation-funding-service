@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.service.ReviewRestServiceImpl;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,13 +15,13 @@ import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewR
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.OK;
 
-public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<AssessmentPanelRestServiceImpl> {
+public class ReviewRestServiceImplTest extends BaseRestServiceUnitTest<ReviewRestServiceImpl> {
 
     private static final String restUrl = "/assessmentpanel";
 
     @Override
-    protected AssessmentPanelRestServiceImpl registerRestServiceUnderTest() {
-        return new AssessmentPanelRestServiceImpl();
+    protected ReviewRestServiceImpl registerRestServiceUnderTest() {
+        return new ReviewRestServiceImpl();
     }
 
     @Test

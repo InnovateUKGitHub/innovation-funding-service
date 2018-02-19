@@ -22,7 +22,7 @@ import org.mapstruct.Mappings;
                 ParticipantStatusMapper.class,
         }
 )
-public abstract class AssessmentReviewPanelParticipantMapper extends BaseMapper<ReviewParticipant, ReviewParticipantResource, Long> {
+public abstract class ReviewParticipantMapper extends BaseMapper<ReviewParticipant, ReviewParticipantResource, Long> {
 
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),

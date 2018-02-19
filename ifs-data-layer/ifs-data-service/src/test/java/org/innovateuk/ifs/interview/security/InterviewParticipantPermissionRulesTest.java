@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
-import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
+import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
@@ -22,7 +22,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void userCanAcceptAssessmentPanelInvite() {
-        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withUser(1L)
                 .build();
         UserResource userResource = newUserResource()
@@ -35,7 +35,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void userCanAcceptAssessmentPanelInvite_differentParticipantUser() {
-        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withUser(1L)
                 .build();
         UserResource userResource = newUserResource()
@@ -48,7 +48,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void userCanAcceptAssessmentPanelInvite_noParticipantUserAndSameEmail() {
-        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withInvite(newInterviewInviteResource().withEmail("tom@poly.io"))
                 .build();
         UserResource userResource = newUserResource()
@@ -61,7 +61,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void userCanAcceptCompetitionInvite_noParticipantUserAndDifferentEmail() {
-        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withInvite(newInterviewInviteResource().withEmail("tom@poly.io"))
                 .build();
         UserResource userResource = newUserResource()
@@ -74,7 +74,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void userCanViewTheirOwnAssessmentPanelParticipation() {
-        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withUser(7L)
                 .withInvite(newInterviewInviteResource().withStatus(SENT).build())
                 .build();
@@ -88,7 +88,7 @@ public class InterviewParticipantPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void userCanViewTheirOwnAssessmentPanelParticipation_differentUser() {
-        InterviewParticipantResource interviewParticipantResource = newAssessmentInterviewPanelParticipantResource()
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
                 .withUser(7L)
                 .build();
         UserResource userResource = newUserResource()

@@ -17,7 +17,7 @@ import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentPartici
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
-import org.innovateuk.ifs.invite.mapper.AssessmentInterviewPanelParticipantMapper;
+import org.innovateuk.ifs.invite.mapper.InterviewParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
@@ -101,7 +101,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
-    private AssessmentInterviewPanelParticipantMapper assessmentInterviewPanelParticipantMapper;
+    private InterviewParticipantMapper interviewParticipantMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -370,7 +370,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
                 .filter(participant -> now().isBefore(participant.getInvite().getTarget().getPanelDate()))
-                .map(assessmentInterviewPanelParticipantMapper::mapToResource)
+                .map(interviewParticipantMapper::mapToResource)
                 .collect(toList());
 
         interviewParticipantResources.forEach(this::determineStatusOfPanelApplications);

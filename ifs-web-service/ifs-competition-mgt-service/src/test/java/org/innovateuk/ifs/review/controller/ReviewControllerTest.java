@@ -67,7 +67,7 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
         when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelKeyStatisticsByCompetition(competitionId))
                 .thenReturn(toGetResponse(reviewKeyStatisticsResource));
-        when(assessmentPanelRestService.isPendingReviewNotifications(competitionId))
+        when(reviewRestService.isPendingReviewNotifications(competitionId))
                 .thenReturn(toGetResponse(reviewsPending));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}", competitionId))
@@ -92,13 +92,13 @@ public class ReviewControllerTest extends BaseControllerMockMVCTest<ReviewContro
     public void notifyAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(assessmentPanelRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+        when(reviewRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/assessment/panel/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl(format("/assessment/panel/competition/%d", competitionId)))
                 .andReturn();
 
-        verify(assessmentPanelRestService, only()).notifyAssessors(competitionId);
+        verify(reviewRestService, only()).notifyAssessors(competitionId);
     }
 }

@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.review.model;
 
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.review.viewmodel.ReviewAvailableAssessorRowViewModel;
 import org.innovateuk.ifs.review.viewmodel.ReviewInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class ReviewInviteAssessorsFindModelPopulator extends ReviewInviteAssessorsModelPopulator<ReviewInviteAssessorsFindViewModel> {
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewInviteRestService reviewInviteRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -37,7 +37,7 @@ public class ReviewInviteAssessorsFindModelPopulator extends ReviewInviteAssesso
 
         ReviewInviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        AvailableAssessorPageResource pageResource = assessmentPanelInviteRestService.getAvailableAssessors(
+        AvailableAssessorPageResource pageResource = reviewInviteRestService.getAvailableAssessors(
                 competition.getId(),
                 page)
                 .getSuccess();

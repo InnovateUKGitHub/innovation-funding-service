@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.review.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -12,7 +12,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessmentReviewResourceListType;
 
 @Service
-public class AssessmentPanelRestServiceImpl extends BaseRestService implements AssessmentPanelRestService {
+public class ReviewRestServiceImpl extends BaseRestService implements ReviewRestService {
 
     private static final String assessmentPanelRestUrl = "/assessmentpanel";
 
