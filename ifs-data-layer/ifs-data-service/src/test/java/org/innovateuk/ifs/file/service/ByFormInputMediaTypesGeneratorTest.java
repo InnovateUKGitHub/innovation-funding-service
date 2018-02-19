@@ -70,8 +70,8 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
 
         List<MediaType> mediaTypes = generator.apply(formInput.getId());
 
-        assertThat(simpleMap(mediaTypes, MediaType::toString).toArray())
-                .isEqualTo(expectedMediaTypes);
+        assertThat(simpleMap(mediaTypes, MediaType::toString))
+                .containsOnlyOnce(expectedMediaTypes);
 
         verify(formInputServiceMock).findFormInput(formInput.getId());
     }

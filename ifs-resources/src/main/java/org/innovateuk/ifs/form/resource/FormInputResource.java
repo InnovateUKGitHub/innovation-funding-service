@@ -32,7 +32,7 @@ public class FormInputResource {
     private List<GuidanceRowResource> guidanceRows;
     private Integer priority;
     private FormInputScope scope;
-    private Set<FileTypeCategories> allowedFileTypes = new HashSet<>();
+    private Set<FileTypeCategories> allowedFileTypes = new LinkedHashSet<>();
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
