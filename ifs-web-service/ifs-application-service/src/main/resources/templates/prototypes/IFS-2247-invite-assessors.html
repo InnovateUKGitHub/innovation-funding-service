@@ -20,6 +20,8 @@
 
 	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Invite assessors to interview panel'}, ${null})" />
 
+    <h2 class="heading-medium">Key statistics</h2>
+
     <ul class="grid-row">
         <li class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
@@ -67,7 +69,7 @@
 	</ul>
 
 	<th:block th:if="${param.tab == null or param.tab[0] == 'find'}">
-        <h2 class="heading-medium">
+        <h2 class="heading-small">
             Find registered assessors to invite.
         </h2>
 
@@ -75,12 +77,15 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
-        <h2 class="heading-medium">
+        <h2 class="heading-small">
             Invite assessors to interview panel.
         </h2>
 
         <div class="grid-row sorting">
-            <div class="column-one alignright">
+            <div class="column-half">
+                <h2 class="heading-small">Invite list</h2>
+            </div>
+            <div class="column-half alignright">
                 <a href="/prototypes/IFS-2247-review-send" class="button">Review and send invites</a>
             </div>
         </div>
@@ -128,7 +133,7 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
-        <h2 class="heading-medium">
+        <h2 class="heading-small">
             View assessors who have not yet responded or have declined the invite.
         </h2>
 
@@ -268,7 +273,7 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'accepted'}">
-        <h2 class="heading-medium">
+        <h2 class="heading-small">
             View assessors who have accepted an invite to interview panel.
         </h2>
 
