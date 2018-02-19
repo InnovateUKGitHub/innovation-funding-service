@@ -124,8 +124,13 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                         build());
     }
 
-    private CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {
+    public CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {
         return competitionBuilderWithBasicInformation(competitionLine).build();
+    }
+
+    public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
+        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
+        basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line) {

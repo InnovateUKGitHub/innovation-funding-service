@@ -26,7 +26,7 @@ public class GenerateTestDataConfiguration {
         MULTI_THREADED
     }
 
-    @Value("${ifs.generate.test.data.execution:SINGLE_THREADED}")
+    @Value("${ifs.generate.test.data.execution:MULTI_THREADED}")
     private ExecutionPolicy executionPolicy;
 
     @Bean(name = "generateTestDataExecutor")

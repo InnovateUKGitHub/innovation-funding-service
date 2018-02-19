@@ -18,6 +18,8 @@ import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.TestService;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
+import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
+import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -42,6 +44,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
@@ -137,12 +140,19 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @Autowired
     private OrganisationDataBuilderService organisationDataBuilderService;
 
-    private static List<OrganisationLine> organisationLines;
-    private static List<CompetitionLine> competitionLines;
-    private static List<PublicContentGroupLine> publicContentGroupLines;
-    private static List<PublicContentDateLine> publicContentDateLines;
-    private static List<ExternalUserLine> externalUserLines;
-    private static List<InternalUserLine> internalUserLines;
+    private List<OrganisationLine> organisationLines;
+    private List<CompetitionLine> competitionLines;
+    private List<CsvUtils.ApplicationLine> applicationLines;
+    private List<PublicContentGroupLine> publicContentGroupLines;
+    private List<PublicContentDateLine> publicContentDateLines;
+    private List<ExternalUserLine> externalUserLines;
+    private List<InternalUserLine> internalUserLines;
+    private List<CsvUtils.AssessmentLine> assessmentLines;
+    private List<CsvUtils.AssessorResponseLine> assessorResponseLines;
+    private List<CsvUtils.AssessorUserLine> assessorUserLines;
+    private List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
+    private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
+    private List<CsvUtils.InviteLine> inviteLines;
 
     @Before
     public void setup() throws Exception {
@@ -159,6 +169,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         publicContentDateLines = readPublicContentDates();
         externalUserLines = readExternalUsers();
         internalUserLines = readInternalUsers();
+        assessmentLines = readAssessments();
+        assessorUserLines = readAssessorUsers();
+        assessorResponseLines = readAssessorResponses();
+        inviteLines = readInvites();
+        applicationLines = readApplications();
+        inviteLines = readInvites();
+        questionResponseLines = readApplicationQuestionResponses();
+        applicationFinanceLines = readApplicationFinances();
+        competitionLines = readCompetitions();
     }
 
     @PostConstruct
@@ -207,13 +226,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
 
-        List<CompetitionLine> competitionsToProcess = simpleFilter(BaseGenerateTestData.competitionLines, COMPETITIONS_FILTER);
+        List<CompetitionLine> competitionsToProcess = simpleFilter(competitionLines, COMPETITIONS_FILTER);
 
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
-                competitionDataBuilderService.createCompetitions(competitionsToProcess);
+                createCompetitions(competitionsToProcess);
 
         List<CompletableFuture<List<ApplicationData>>> createApplicationsFutures =
-                applicationDataBuilderService.fillInAndCompleteApplications(createCompetitionFutures);
+                fillInAndCompleteApplications(createCompetitionFutures);
 
         CompletableFuture<Void> competitionFundersFutures = waitForFutureList(createCompetitionFutures).thenRunAsync(() -> {
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
@@ -241,7 +260,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
             List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
 
-            applicationDataBuilderService.createFundingDecisions(competitions);
+            competitions.forEach(competition -> {
+
+                CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
+                        Objects.equals(l.name, competition.getCompetition().getName()));
+
+                applicationDataBuilderService.createFundingDecisions(competition, competitionLine, applicationLines);
+            });
+
             projectDataBuilderService.createProjects(applications);
             competitionDataBuilderService.moveCompetitionsToCorrectFinalState(competitions);
 
@@ -253,6 +279,75 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+    }
+
+    private List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
+        return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() ->
+                competitionDataBuilderService.createCompetition(line), taskExecutor));
+    }
+
+    private Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
+
+        ApplicationLine applicationLine = getApplicationLineForApplication(applicationData);
+
+        CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = CompletableFuture.supplyAsync(() ->
+                applicationDataBuilderService.createApplicationQuestionResponses(applicationData, applicationLine, questionResponseLines),
+                taskExecutor);
+
+        CompletableFuture<List<ApplicationFinanceData>> applicationFinances = CompletableFuture.supplyAsync(() ->
+                applicationDataBuilderService.createApplicationFinances(applicationData, applicationLine, applicationFinanceLines),
+                taskExecutor);
+
+        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
+
+        return allQuestionsAnswered.thenApplyAsync(done -> {
+
+            List<ApplicationQuestionResponseData> responses = questionResponses.join();
+            List<ApplicationFinanceData> finances = applicationFinances.join();
+            applicationDataBuilderService.completeApplication(applicationData, applicationLine, responses, finances);
+            return applicationData;
+
+        }, taskExecutor);
+    };
+
+    private ApplicationLine getApplicationLineForApplication(ApplicationData applicationData) {
+        return simpleFindFirstMandatory(applicationLines, l ->
+                        l.title.equals(applicationData.getApplication().getName()));
+    }
+
+    private Function<CompetitionData, List<CompletableFuture<ApplicationData>>> fillInAndCompleteApplications = competitionData -> {
+
+        List<CompletableFuture<ApplicationData>> applicationFutures = createBasicApplicationDetails(competitionData);
+
+        return simpleMap(applicationFutures, applicationFuture ->
+                applicationFuture.thenComposeAsync(fillInAndCompleteApplicationFn, taskExecutor));
+    };
+
+    public List<CompletableFuture<List<ApplicationData>>> fillInAndCompleteApplications(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
+
+        return simpleMap(createCompetitionFutures, competition -> {
+
+            CompletableFuture<List<CompletableFuture<ApplicationData>>> competitionAndApplicationFutures =
+                    competition.thenApplyAsync(fillInAndCompleteApplications, taskExecutor);
+
+            return competitionAndApplicationFutures.thenApply(applicationFutures ->
+                    simpleMap(applicationFutures, CompletableFuture::join));
+        });
+    }
+
+    public List<CompletableFuture<ApplicationData>> createBasicApplicationDetails(CompetitionData competition) {
+
+        List<CsvUtils.ApplicationLine> applicationsForCompetition = simpleFilter(applicationLines, applicationLine ->
+                applicationLine.competitionName.equals(competition.getCompetition().getName()));
+
+        if (applicationsForCompetition.isEmpty()) {
+            return emptyList();
+        }
+
+        competitionDataBuilderService.moveCompetitionIntoOpenStatus(competition);
+
+        return simpleMap(applicationsForCompetition, applicationLine -> CompletableFuture.supplyAsync(() ->
+                applicationDataBuilderService.createApplication(competition, applicationLine, inviteLines), taskExecutor));
     }
 
     private CompletableFuture<Void> waitForFutureList(List<? extends CompletableFuture<?>> createApplicationsFutures) {

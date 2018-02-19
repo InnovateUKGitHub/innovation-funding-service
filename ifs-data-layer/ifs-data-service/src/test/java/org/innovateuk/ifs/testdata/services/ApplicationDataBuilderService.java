@@ -19,7 +19,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -28,11 +27,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
@@ -52,14 +47,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
-    private List<CsvUtils.ApplicationQuestionResponseLine> questionResponseLines;
-    private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
-    private List<CsvUtils.InviteLine> inviteLines;
-
-    @Autowired
-    @Qualifier("generateTestDataExecutor")
-    private Executor taskExecutor;
-
     @Autowired
     private GenericApplicationContext applicationContext;
 
@@ -67,35 +54,6 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
     private CompetitionDataBuilder competitionDataBuilder;
     private ApplicationFinanceDataBuilder applicationFinanceDataBuilder;
     private QuestionResponseDataBuilder questionResponseDataBuilder;
-
-    private List<CsvUtils.ApplicationLine> applicationLines;
-    private List<CsvUtils.CompetitionLine> competitionLines;
-
-    private Function<ApplicationData, CompletableFuture<ApplicationData>> fillInAndCompleteApplicationFn = applicationData -> {
-
-        CompletableFuture<List<ApplicationQuestionResponseData>> questionResponses = CompletableFuture.supplyAsync(() ->
-                createApplicationQuestionResponses(applicationData), taskExecutor);
-
-        CompletableFuture<List<ApplicationFinanceData>> applicationFinances = CompletableFuture.supplyAsync(() ->
-                createApplicationFinances(applicationData), taskExecutor);
-
-        CompletableFuture<Void> allQuestionsAnswered = CompletableFuture.allOf(questionResponses, applicationFinances);
-
-        return allQuestionsAnswered.thenApplyAsync(done -> {
-            List<ApplicationQuestionResponseData> responses = questionResponses.join();
-            List<ApplicationFinanceData> finances = applicationFinances.join();
-            completeApplication(applicationData, responses, finances);
-            return applicationData;
-        }, taskExecutor);
-    };
-
-    private Function<CompetitionData, List<CompletableFuture<ApplicationData>>> fillInAndCompleteApplications = competitionData -> {
-
-        List<CompletableFuture<ApplicationData>> applicationFutures = createBasicApplicationDetails(competitionData);
-
-        return simpleMap(applicationFutures, applicationFuture ->
-                applicationFuture.thenComposeAsync(fillInAndCompleteApplicationFn, taskExecutor));
-    };
 
     @PostConstruct
     public void readCsvs() {
@@ -106,82 +64,14 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         competitionDataBuilder = newCompetitionData(serviceLocator);
         applicationFinanceDataBuilder = newApplicationFinanceData(serviceLocator);
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
-
-        applicationLines = readApplications();
-        inviteLines = readInvites();
-        questionResponseLines = readApplicationQuestionResponses();
-        applicationFinanceLines = readApplicationFinances();
-        competitionLines = readCompetitions();
-
     }
 
-    public List<CompletableFuture<List<ApplicationData>>> fillInAndCompleteApplications(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
-
-        return simpleMap(createCompetitionFutures, competition -> {
-
-            CompletableFuture<List<CompletableFuture<ApplicationData>>> competitionAndApplicationFutures =
-                    competition.thenApplyAsync(fillInAndCompleteApplications, taskExecutor);
-
-            return competitionAndApplicationFutures.thenApply(applicationFutures ->
-                    simpleMap(applicationFutures, CompletableFuture::join));
-        });
-    }
-
-    public void createFundingDecisions(List<CompetitionData> competitions) {
-
-        competitions.forEach(competition -> {
-
-            CompetitionLine competitionLine = simpleFindFirstMandatory(competitionLines, l ->
-                    Objects.equals(l.name, competition.getCompetition().getName()));
-
-            CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
-
-            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
-
-                basicCompetitionInformation.
-                        moveCompetitionIntoFundersPanelStatus().
-                        sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name)).
-                        build();
-            }
-        });
-    }
-
-    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
-        List<CsvUtils.ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
-        List<CsvUtils.ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
-        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
-    }
-
-    private static List<CsvUtils.ApplicationQuestionResponseLine> readApplicationQuestionResponses() {
-        return simpleMap(readCsvLines("application-questions"), CsvUtils.ApplicationQuestionResponseLine::new);
-    }
-
-    private List<CompletableFuture<ApplicationData>> createBasicApplicationDetails(CompetitionData competitionData) {
-
-        List<CsvUtils.ApplicationLine> applicationsForCompetition = simpleFilter(applicationLines, applicationLine ->
-                applicationLine.competitionName.equals(competitionData.getCompetition().getName()));
-
-        if (applicationsForCompetition.isEmpty()) {
-            return emptyList();
-        }
-
-        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionData);
-
-        basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
-
-        ApplicationDataBuilder applicationBuilder = applicationDataBuilder.withCompetition(competitionData.getCompetition());
-
-        return simpleMap(applicationsForCompetition, applicationLine -> CompletableFuture.supplyAsync(() ->
-                createApplicationFromCsv(applicationBuilder, applicationLine), taskExecutor));
-    }
-
-    private List<ApplicationQuestionResponseData> createApplicationQuestionResponses(ApplicationData applicationData) {
+    public List<ApplicationQuestionResponseData> createApplicationQuestionResponses(ApplicationData applicationData,
+                                                                                    ApplicationLine applicationLine,
+                                                                                    List<ApplicationQuestionResponseLine> questionResponseLines) {
 
         QuestionResponseDataBuilder baseBuilder =
                 questionResponseDataBuilder.withApplication(applicationData.getApplication());
-
-        CsvUtils.ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
-                l.title.equals(applicationData.getApplication().getName()));
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
                 simpleFilter(questionResponseLines, r -> r.competitionName.equals(applicationLine.competitionName) && r.applicationName.equals(applicationLine.title));
@@ -228,10 +118,8 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return emptyList();
     }
 
-    private List<ApplicationFinanceData> createApplicationFinances(ApplicationData applicationData) {
-
-        CsvUtils.ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
-                l.title.equals(applicationData.getApplication().getName()));
+    public List<ApplicationFinanceData> createApplicationFinances(ApplicationData applicationData, ApplicationLine applicationLine,
+                                                                  List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines) {
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 
@@ -258,15 +146,15 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
                 return organisationFinances.map(suppliedFinances ->
-                    generateAcademicFinancesFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                        generateAcademicFinancesFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
                 ).orElseGet(() ->
-                    generateAcademicFinances(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                        generateAcademicFinances(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
                 );
             } else {
                 return organisationFinances.map(suppliedFinances ->
-                    generateIndustrialCostsFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, suppliedFinances)
+                        generateIndustrialCostsFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, suppliedFinances)
                 ).orElseGet(() ->
-                    generateIndustrialCosts(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                        generateIndustrialCosts(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
                 );
             }
 
@@ -275,10 +163,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return simpleMap(builders, BaseBuilder::build);
     }
 
-    private void completeApplication(ApplicationData applicationData, List<ApplicationQuestionResponseData> questionResponseData, List<ApplicationFinanceData> financeData) {
-
-        CsvUtils.ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
-                l.title.equals(applicationData.getApplication().getName()));
+    public void completeApplication(ApplicationData applicationData, ApplicationLine applicationLine, List<ApplicationQuestionResponseData> questionResponseData, List<ApplicationFinanceData> financeData) {
 
         if (applicationLine.submittedDate != null) {
             forEachWithIndex(questionResponseData, (i, response) -> {
@@ -318,6 +203,25 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationBuilder.build();
     }
 
+    public void createFundingDecisions(CompetitionData competition, CompetitionLine competitionLine, List<ApplicationLine> applicationLines) {
+
+        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
+
+        if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
+
+            basicCompetitionInformation.
+                    moveCompetitionIntoFundersPanelStatus().
+                    sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name, applicationLines)).
+                    build();
+        }
+    }
+
+    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName, List<ApplicationLine> applicationLines) {
+        List<CsvUtils.ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
+        List<CsvUtils.ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
+        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
+    }
+
     private List<QuestionResponseDataBuilder> questionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication) {
 
         return simpleMap(responsesForApplication, line -> {
@@ -346,11 +250,11 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         });
     }
 
-    private ApplicationData createApplicationFromCsv(ApplicationDataBuilder builder, CsvUtils.ApplicationLine line) {
+    public ApplicationData createApplication(CompetitionData competition, CsvUtils.ApplicationLine line, List<InviteLine> inviteLines) {
 
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
-        ApplicationDataBuilder baseBuilder = builder.
+        ApplicationDataBuilder baseBuilder = applicationDataBuilder.withCompetition(competition.getCompetition()).
                 withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission).
                 withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).

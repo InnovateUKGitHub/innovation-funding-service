@@ -22,7 +22,6 @@ public class OrganisationDataBuilderService {
     @Autowired
     private GenericApplicationContext applicationContext;
 
-    @Autowired
     private OrganisationDataBuilder organisationDataBuilder;
 
     @PostConstruct
