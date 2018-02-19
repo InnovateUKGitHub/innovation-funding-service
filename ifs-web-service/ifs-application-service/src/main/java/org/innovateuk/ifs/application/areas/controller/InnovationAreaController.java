@@ -77,14 +77,12 @@ public class InnovationAreaController {
 
         Supplier<String> failureView = () -> "application/innovation-areas";
 
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            return validationHandler.addAnyErrors(saveInnovationAreaChoice(applicationId, innovationAreaForm)).failNowOrSucceedWith(failureView,
-                    () -> {cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-                    return "redirect:/application/"+applicationId+"/form/question/"+questionId;
-            });
-        });
+        return validationHandler.failNowOrSucceedWith(failureView, () ->
+                validationHandler.addAnyErrors(saveInnovationAreaChoice(applicationId, innovationAreaForm)).failNowOrSucceedWith(failureView,
+                () -> {cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
+                return "redirect:/application/"+applicationId+"/form/question/"+questionId;
+        }));
     }
-
 
     private RestResult<ApplicationResource> saveInnovationAreaChoice(Long applicationId, InnovationAreaForm innovationAreaForm) {
         if(innovationAreaForm.getInnovationAreaChoice().equals("NOT_APPLICABLE")) {

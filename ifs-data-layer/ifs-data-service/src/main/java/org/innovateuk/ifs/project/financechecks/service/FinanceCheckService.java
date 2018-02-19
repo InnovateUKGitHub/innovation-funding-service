@@ -28,7 +28,7 @@ public interface FinanceCheckService {
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
-    ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(@P("projectId")Long projectId);
+    ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
 
     @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
     ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId);
@@ -43,7 +43,7 @@ public interface FinanceCheckService {
     ServiceResult<Long> getHeadCountByOrganisationId(Long applicationId, Long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
-    ServiceResult<List<ProjectFinanceResource>> getProjectFinances(@P("projectId") Long projectId);
+    ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")
     ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId);
