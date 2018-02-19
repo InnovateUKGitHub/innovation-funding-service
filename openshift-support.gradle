@@ -26,9 +26,6 @@ build.enabled = false
 // End workaround
 
 
-//TODO need some logic to apply this for other environments
-// Currently these is the WRONG parameters for the named envs.
-
 if (!isNamedEnv()) {
     apply from: rootProject.file("non-named-env-properties.gradle")
 } else {
