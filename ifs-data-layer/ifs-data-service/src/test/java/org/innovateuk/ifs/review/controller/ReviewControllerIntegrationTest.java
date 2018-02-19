@@ -12,8 +12,8 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
+import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.mapper.ReviewMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
@@ -65,13 +65,13 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
     private UserRepository userRepository;
 
     @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+    private ReviewInviteRepository reviewInviteRepository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
     @Autowired
-    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
+    private ReviewParticipantRepository reviewParticipantRepository;
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -162,13 +162,13 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(reviewInvite);
+        reviewInviteRepository.save(reviewInvite);
 
         ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
         reviewParticipant.getInvite().open();
         reviewParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(reviewParticipant);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -217,13 +217,13 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(reviewInvite);
+        reviewInviteRepository.save(reviewInvite);
 
         ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
         reviewParticipant.getInvite().open();
         reviewParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(reviewParticipant);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -270,13 +270,13 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(reviewInvite);
+        reviewInviteRepository.save(reviewInvite);
 
         ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
         reviewParticipant.getInvite().open();
         reviewParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(reviewParticipant);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -340,13 +340,13 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(competitionAssessmentInvite);
+        reviewInviteRepository.save(competitionAssessmentInvite);
 
         ReviewParticipant reviewParticipant = new ReviewParticipant(competitionAssessmentInvite);
         reviewParticipant.getInvite().open();
         reviewParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(reviewParticipant);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -411,13 +411,13 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(reviewInvite);
+        reviewInviteRepository.save(reviewInvite);
 
         ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
         reviewParticipant.getInvite().open();
         reviewParticipant.acceptAndAssignUser(assessor);
 
-        assessmentPanelParticipantRepository.save(reviewParticipant);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))

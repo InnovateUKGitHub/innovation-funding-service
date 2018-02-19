@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.interview.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.security.*;
+import org.innovateuk.ifs.assessment.security.CompetitionParticipantLookupStrategy;
+import org.innovateuk.ifs.assessment.security.CompetitionParticipantPermissionRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -30,11 +31,11 @@ import static org.mockito.Mockito.*;
 public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewInviteService> {
 
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
-    private AssessmentInterviewPanelInvitePermissionRules assessmentInterviewPanelInvitePermissionRules;
+    private InterviewInvitePermissionRules interviewInvitePermissionRules;
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
     private UserLookupStrategies userLookupStrategies;
-    private AssessmentInterviewPanelParticipantPermissionRules assessmentInterviewPanelParticipantPermissionRules;
-    private AssessmentInterviewPanelParticipantLookupStrategy assessmentInterviewPanelParticipantLookupStrategy;
+    private InterviewParticipantPermissionRules interviewParticipantPermissionRules;
+    private InterviewParticipantLookupStrategy interviewParticipantLookupStrategy;
 
     @Override
     protected Class<? extends InterviewInviteService> getClassUnderTest() {
@@ -45,10 +46,10 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
     public void setUp() throws Exception {
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
         competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
-        assessmentInterviewPanelInvitePermissionRules = getMockPermissionRulesBean(AssessmentInterviewPanelInvitePermissionRules.class);
+        interviewInvitePermissionRules = getMockPermissionRulesBean(InterviewInvitePermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
-        assessmentInterviewPanelParticipantPermissionRules = getMockPermissionRulesBean(AssessmentInterviewPanelParticipantPermissionRules.class);
-        assessmentInterviewPanelParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentInterviewPanelParticipantLookupStrategy.class);
+        interviewParticipantPermissionRules = getMockPermissionRulesBean(InterviewParticipantPermissionRules.class);
+        interviewParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(InterviewParticipantLookupStrategy.class);
     }
 
     @Test
@@ -131,8 +132,8 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
         assertAccessDenied(
                 () -> classUnderTest.getAllInvitesByUser(1L),
                 () -> {
-                    verify(assessmentInterviewPanelInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
-                    verifyNoMoreInteractions(assessmentInterviewPanelInvitePermissionRules);
+                    verify(interviewInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(interviewInvitePermissionRules);
                 }
         );
     }

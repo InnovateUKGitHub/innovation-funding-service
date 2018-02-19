@@ -19,9 +19,9 @@ import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
 import org.innovateuk.ifs.invite.mapper.AssessmentInterviewPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelInviteRepository;
-import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -80,13 +80,13 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
-    private AssessmentInterviewPanelInviteRepository assessmentInterviewPanelInviteRepository;
+    private InterviewInviteRepository interviewInviteRepository;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    private AssessmentInterviewPanelParticipantRepository assessmentInterviewPanelParticipantRepository;
+    private InterviewParticipantRepository interviewParticipantRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -144,7 +144,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<InterviewInvite> invites = assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+            List<InterviewInvite> invites = interviewInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
             List<String> recipients = simpleMap(invites, InterviewInvite::getName);
             recipients.sort(String::compareTo);
@@ -162,7 +162,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
 
-            List<InterviewInvite> invites = assessmentInterviewPanelInviteRepository.getByIdIn(inviteIds);
+            List<InterviewInvite> invites = interviewInviteRepository.getByIdIn(inviteIds);
             List<String> recipients = simpleMap(invites, InterviewInvite::getName);
             recipients.sort(String::compareTo);
 
@@ -183,9 +183,9 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
             String customTextHtml = plainTextToHtml(customTextPlain);
 
             return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
-                    assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
+                    interviewInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
-                        assessmentInterviewPanelParticipantRepository.save(
+                        interviewParticipantRepository.save(
                                 new InterviewParticipant(invite.send(loggedInUserSupplier.get(), now()))
                         );
 
@@ -207,7 +207,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
         String customTextHtml = plainTextToHtml(customTextPlain);
 
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
-                assessmentInterviewPanelInviteRepository.getByIdIn(inviteIds),
+                interviewInviteRepository.getByIdIn(inviteIds),
                 invite -> sendInviteNotification(
                         assessorInviteSendResource.getSubject(),
                         customTextPlain,
@@ -255,7 +255,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
 
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-        Page<InterviewInvite> pagedResult = assessmentInterviewPanelInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
+        Page<InterviewInvite> pagedResult = interviewInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),
@@ -297,7 +297,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                    Pageable pageable,
                                                                                    List<ParticipantStatus> statuses) {
-        Page<InterviewParticipant> pagedResult = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
+        Page<InterviewParticipant> pagedResult = interviewParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                     competitionId,
                     statuses,
                     pageable);
@@ -348,7 +348,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
 
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
-        List<InterviewParticipant> participants = assessmentInterviewPanelParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
+        List<InterviewParticipant> participants = interviewParticipantRepository.getInterviewPanelAssessorsByCompetitionAndStatusContains(
                 competitionId,
                 asList(PENDING, REJECTED));
 
@@ -358,7 +358,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     private ServiceResult<InterviewInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
-                        competition -> assessmentInterviewPanelInviteRepository.save(new InterviewInvite(user, generateInviteHash(), competition))
+                        competition -> interviewInviteRepository.save(new InterviewInvite(user, generateInviteHash(), competition))
                 );
 
     }
@@ -366,7 +366,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     @Override
     public ServiceResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId) {
         List<InterviewParticipantResource> interviewParticipantResources =
-                assessmentInterviewPanelParticipantRepository
+                interviewParticipantRepository
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
                 .filter(participant -> now().isBefore(participant.getInvite().getTarget().getPanelDate()))
@@ -423,7 +423,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     }
 
     private ServiceResult<InterviewInvite> getByEmailAndCompetition(String email, long competitionId) {
-        return find(assessmentInterviewPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(InterviewInvite.class, email, competitionId));
+        return find(interviewInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(InterviewInvite.class, email, competitionId));
     }
 
     private boolean isUserCompliant(InterviewInvite competitionInvite) {
@@ -448,11 +448,11 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     }
 
     private InterviewInvite openInvite(InterviewInvite invite) {
-        return assessmentInterviewPanelInviteRepository.save(invite.open());
+        return interviewInviteRepository.save(invite.open());
     }
 
     private ServiceResult<InterviewParticipant> getParticipantByInviteHash(String inviteHash) {
-        return find(assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash), notFoundError(InterviewParticipant.class, inviteHash));
+        return find(interviewParticipantRepository.getByInviteHash(inviteHash), notFoundError(InterviewParticipant.class, inviteHash));
     }
 
     @Override
@@ -467,7 +467,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     }
 
     private ServiceResult<InterviewInvite> getByHash(String inviteHash) {
-        return find(assessmentInterviewPanelInviteRepository.getByHash(inviteHash), notFoundError(InterviewInvite.class, inviteHash));
+        return find(interviewInviteRepository.getByHash(inviteHash), notFoundError(InterviewInvite.class, inviteHash));
     }
 
     private static ServiceResult<InterviewParticipant> accept(InterviewParticipant participant) {
@@ -494,7 +494,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
                 return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 
-            InterviewParticipant participant = assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash);
+            InterviewParticipant participant = interviewParticipantRepository.getByInviteHash(inviteHash);
 
             if (participant == null) {
                 return serviceSuccess(invite);
@@ -516,7 +516,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     public ServiceResult<Void> deleteAllInvites(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturnVoid(competition ->
-                        assessmentInterviewPanelInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
+                        interviewInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
     }
 
     private ServiceResult<Void> deleteInvite(InterviewInvite invite) {
@@ -524,7 +524,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
             return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_INVITE_CANNOT_DELETE_ONCE_SENT, invite.getEmail()));
         }
 
-        assessmentInterviewPanelInviteRepository.delete(invite);
+        interviewInviteRepository.delete(invite);
         return serviceSuccess();
     }
 

@@ -9,8 +9,8 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
+import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -52,10 +52,10 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+    private ReviewInviteRepository reviewInviteRepository;
 
     @Autowired
-    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
+    private ReviewParticipantRepository reviewParticipantRepository;
 
     @Autowired
     @Override
@@ -237,11 +237,11 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .withStatus(InviteStatus.SENT)
                 .withName("tom baldwin")
                 .build();
-        assessmentPanelInviteRepository.save(reviewInvite);
+        reviewInviteRepository.save(reviewInvite);
 
         ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
         reviewParticipant.setStatus(ParticipantStatus.ACCEPTED);
-        assessmentPanelParticipantRepository.save(reviewParticipant);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -274,12 +274,12 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(competitionAssessmentInvite);
+        reviewInviteRepository.save(competitionAssessmentInvite);
 
         ReviewParticipant competitionAssessmentParticipant = new ReviewParticipant(competitionAssessmentInvite);
         competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
-        assessmentPanelParticipantRepository.save(competitionAssessmentParticipant);
+        reviewParticipantRepository.save(competitionAssessmentParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -329,11 +329,11 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .withStatus(InviteStatus.SENT)
                 .withName("tom baldwin")
                 .build();
-        assessmentPanelInviteRepository.save(reviewInvite);
+        reviewInviteRepository.save(reviewInvite);
 
         ReviewParticipant competitionAssessmentParticipant = new ReviewParticipant(reviewInvite);
         competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
-        assessmentPanelParticipantRepository.save(competitionAssessmentParticipant);
+        reviewParticipantRepository.save(competitionAssessmentParticipant);
 
         Application application = newApplication()
                 .with(id(null))

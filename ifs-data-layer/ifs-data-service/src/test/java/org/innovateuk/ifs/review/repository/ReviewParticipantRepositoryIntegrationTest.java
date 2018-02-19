@@ -12,9 +12,9 @@ import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
+import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -49,7 +49,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentPanelParticipantRepository> {
+public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ReviewParticipantRepository> {
 
     private Competition competition;
     private InnovationArea innovationArea;
@@ -95,14 +95,14 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
     private MilestoneRepository milestoneRepository;
 
     @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+    private ReviewInviteRepository reviewInviteRepository;
 
     @Autowired
-    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
+    private ReviewParticipantRepository reviewParticipantRepository;
 
     @Autowired
     @Override
-    protected void setRepository(AssessmentPanelParticipantRepository repository) {
+    protected void setRepository(ReviewParticipantRepository repository) {
         this.repository = repository;
     }
 
@@ -288,7 +288,7 @@ public class ReviewParticipantRepositoryIntegrationTest extends BaseRepositoryIn
         );
 
         savedParticipants.get(0).acceptAndAssignUser(user);
-        assessmentPanelParticipantRepository.save( savedParticipants.get(0));
+        reviewParticipantRepository.save( savedParticipants.get(0));
 
         flushAndClearSession();
 

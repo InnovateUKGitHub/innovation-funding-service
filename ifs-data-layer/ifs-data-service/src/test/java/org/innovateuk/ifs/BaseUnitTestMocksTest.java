@@ -192,10 +192,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
 
     @Mock
-    protected AssessmentPanelInviteRepository assessmentPanelInviteRepositoryMock;
+    protected ReviewInviteRepository reviewInviteRepositoryMock;
 
     @Mock
-    protected AssessmentInterviewPanelInviteRepository assessmentInterviewPanelInviteRepositoryMock;
+    protected InterviewInviteRepository interviewInviteRepositoryMock;
 
     @Mock
     protected ReviewInviteService reviewInviteServiceMock;
@@ -204,10 +204,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ReviewService reviewServiceMock;
 
     @Mock
-    protected AssessmentPanelParticipantRepository assessmentPanelParticipantRepositoryMock;
+    protected ReviewParticipantRepository reviewParticipantRepositoryMock;
 
     @Mock
-    protected AssessmentInterviewPanelParticipantRepository assessmentInterviewPanelParticipantRepositoryMock;
+    protected InterviewParticipantRepository interviewParticipantRepositoryMock;
 
     @Mock
     protected InterviewInviteService interviewInviteServiceMock;

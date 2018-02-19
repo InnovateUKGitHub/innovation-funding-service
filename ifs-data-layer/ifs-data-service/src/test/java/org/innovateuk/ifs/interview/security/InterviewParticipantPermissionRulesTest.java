@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.interview.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.assessment.security.AssessmentInterviewPanelParticipantPermissionRules;
 import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -14,11 +13,11 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class InterviewParticipantPermissionRulesTest extends BasePermissionRulesTest<AssessmentInterviewPanelParticipantPermissionRules> {
+public class InterviewParticipantPermissionRulesTest extends BasePermissionRulesTest<InterviewParticipantPermissionRules> {
 
     @Override
-    protected AssessmentInterviewPanelParticipantPermissionRules supplyPermissionRulesUnderTest() {
-        return new AssessmentInterviewPanelParticipantPermissionRules();
+    protected InterviewParticipantPermissionRules supplyPermissionRulesUnderTest() {
+        return new InterviewParticipantPermissionRules();
     }
 
     @Test

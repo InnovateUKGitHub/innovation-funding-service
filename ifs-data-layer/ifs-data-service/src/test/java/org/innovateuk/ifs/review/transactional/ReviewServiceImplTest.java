@@ -159,7 +159,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
         when(roleRepositoryMock.findOneByName(panelAssessorRole.getName())).thenReturn(panelAssessorRole);
 
-        when(assessmentPanelParticipantRepositoryMock
+        when(reviewParticipantRepositoryMock
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
                 .thenReturn(reviewParticipants);
         when(applicationRepositoryMock
@@ -194,10 +194,10 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         service.createAndNotifyReviews(competitionId).getSuccess();
 
 
-        InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock, applicationRepositoryMock,
+        InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock,
                 reviewRepositoryMock, activityStateRepositoryMock, reviewRepositoryMock,
                 reviewRepositoryMock, reviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock, roleRepositoryMock);
-        inOrder.verify(assessmentPanelParticipantRepositoryMock)
+        inOrder.verify(reviewParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
         inOrder.verify(applicationRepositoryMock)
                 .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);

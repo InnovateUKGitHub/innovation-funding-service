@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.security;
+package org.innovateuk.ifs.review.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PermissionRules
-public class AssessmentReviewPanelParticipantPermissionRules extends BasePermissionRules {
+public class ReviewParticipantPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ACCEPT", description = "only the same user can accept a panel invitation")
     public boolean userCanAcceptAssessmentPanelInvite(ReviewParticipantResource assessmentPanelParticipant, UserResource user) {

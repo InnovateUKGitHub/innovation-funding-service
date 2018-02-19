@@ -14,7 +14,7 @@ import java.util.Set;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentInterviewPanelInviteRepository extends PagingAndSortingRepository<InterviewInvite, Long> {
+public interface InterviewInviteRepository extends PagingAndSortingRepository<InterviewInvite, Long> {
 
     InterviewInvite getByEmailAndCompetitionId(String email, long competitionId);
 

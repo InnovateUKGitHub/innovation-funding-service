@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.assessment.security;
+package org.innovateuk.ifs.interview.security;
 
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
 import org.innovateuk.ifs.invite.mapper.AssessmentInterviewPanelParticipantMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelParticipantRepository;
+import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,16 +14,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @PermissionEntityLookupStrategies
-public class AssessmentInterviewPanelParticipantLookupStrategy {
+public class InterviewParticipantLookupStrategy {
 
     @Autowired
-    private AssessmentInterviewPanelParticipantRepository assessmentInterviewPanelParticipantRepository;
+    private InterviewParticipantRepository interviewParticipantRepository;
 
     @Autowired
     private AssessmentInterviewPanelParticipantMapper assessmentInterviewPanelParticipantMapper;
 
     @PermissionEntityLookupStrategy
     public InterviewParticipantResource getAssessmentInterviewPanelParticipantResource(String inviteHash) {
-        return assessmentInterviewPanelParticipantMapper.mapToResource(assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash));
+        return assessmentInterviewPanelParticipantMapper.mapToResource(interviewParticipantRepository.getByInviteHash(inviteHash));
     }
 }

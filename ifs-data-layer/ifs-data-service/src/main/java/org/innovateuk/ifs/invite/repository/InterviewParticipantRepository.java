@@ -16,7 +16,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentInterviewPanelParticipantRepository extends PagingAndSortingRepository<InterviewParticipant, Long> {
+public interface InterviewParticipantRepository extends PagingAndSortingRepository<InterviewParticipant, Long> {
 
     String USERS_WITH_INTERVIEW_PANEL_INVITE = "SELECT invite.user.id " +
             "FROM InterviewInvite invite " +
