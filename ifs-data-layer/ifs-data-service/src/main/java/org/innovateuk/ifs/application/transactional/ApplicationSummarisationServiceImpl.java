@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class ApplicationSummarisationServiceImpl implements ApplicationSummarisationService {
 
 	@Autowired
-	private FinanceRowService financeRowService;
+	private FinanceService financeService;
 
 	@Override
 	public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {
@@ -26,7 +26,7 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 			return result(BigDecimal.ZERO);
 		}
 
-		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeRowService.financeTotals(application.getId());
+		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeService.financeTotals(application.getId());
 
 		BigDecimal total;
 		if (financeTotalsResult.isSuccess()) {
@@ -45,7 +45,7 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 			return result(BigDecimal.ZERO);
 		}
 
-		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeRowService.financeTotals(application.getId());
+		ServiceResult<List<ApplicationFinanceResource>> financeTotalsResult = financeService.financeTotals(application.getId());
 
 		BigDecimal fundingSought;
 		if (financeTotalsResult.isSuccess()) {

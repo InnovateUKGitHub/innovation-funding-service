@@ -90,11 +90,11 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
     }
 
     @Override
-    protected Class<TestProjectFinanceRowService> getClassUnderTest() {
-        return TestProjectFinanceRowService.class;
+    protected Class<TestProjectFinanceRowCostsService> getClassUnderTest() {
+        return TestProjectFinanceRowCostsService.class;
     }
 
-    public static class TestProjectFinanceRowService implements ProjectFinanceRowService {
+    public static class TestProjectFinanceRowCostsService implements ProjectFinanceRowService {
 
         @Override
         public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {

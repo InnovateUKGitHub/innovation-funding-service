@@ -24,20 +24,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static java.lang.String.format;
-import static java.time.ZonedDateTime.now;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 
-/*
- * Service for managing {@link AssessmentInterviewPanelInvite}s.
+/**
+ * Service for managing {@link AssessmentInterviewPanel}s.
  */
 @Service
-@Transactional()
+@Transactional
 public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteService {
 
     @Autowired
@@ -51,7 +48,6 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
 
     @Autowired
     private AssessmentInterviewPanelRepository assessmentInterviewPanelRepository;
-
 
     @Autowired
     private OrganisationRepository organisationRepository;
@@ -110,11 +106,9 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
     }
 
     private AvailableApplicationResource mapToAvailableApplicationResource(Application application) {
-        final Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
-
         return getOrganisation(application.getLeadOrganisationId())
                 .andOnSuccessReturn(
-                        organisation ->
+                        leadOrganisation ->
                                 new AvailableApplicationResource(application.getId(), application.getName(), leadOrganisation.getName()
                         )
                 ).getSuccess();
