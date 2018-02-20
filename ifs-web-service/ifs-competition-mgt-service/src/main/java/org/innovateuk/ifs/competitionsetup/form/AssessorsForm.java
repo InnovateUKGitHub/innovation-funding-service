@@ -24,6 +24,9 @@ public class AssessorsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.assessorsform.interviewStage.required}")
     private Boolean hasInterviewStage;
 
+    @NotNull(message = "{validation.assessorsform.fullFinanceView.required}")
+    private Boolean hasFullFinanceView;
+
     public Integer getAssessorCount() {
         return assessorCount;
     }
@@ -54,5 +57,13 @@ public class AssessorsForm extends CompetitionSetupForm {
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public Boolean getHasFullFinanceView() {
+        return hasFullFinanceView;
+    }
+
+    public void setHasFullFinanceView(Boolean hasFullFinanceView) {
+        this.hasFullFinanceView = hasFullFinanceView;
     }
 }

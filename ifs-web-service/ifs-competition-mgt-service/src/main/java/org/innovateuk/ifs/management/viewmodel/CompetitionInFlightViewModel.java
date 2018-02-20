@@ -28,6 +28,7 @@ public class CompetitionInFlightViewModel {
     private boolean readOnly;
     private boolean assessmentPanelEnabled;
     private boolean interviewPanelEnabled;
+    private boolean fullFinanceViewEnabled;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         List<MilestonesRowViewModel> milestones,
@@ -49,6 +50,7 @@ public class CompetitionInFlightViewModel {
         this.readOnly = readOnly;
         this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel();
         this.interviewPanelEnabled = competitionResource.isHasInterviewStage();
+        this.fullFinanceViewEnabled = competitionResource.ishasFullFinanceView();
     }
 
     public Long getCompetitionId() {
@@ -109,5 +111,9 @@ public class CompetitionInFlightViewModel {
 
     public boolean isInterviewPanelEnabled() {
         return interviewPanelEnabled;
+    }
+
+    public boolean isFullFinanceViewEnabled() {
+        return fullFinanceViewEnabled;
     }
 }

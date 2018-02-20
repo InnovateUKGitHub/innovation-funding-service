@@ -27,6 +27,7 @@ public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {
 		competitionSetupForm.setAssessorPay(competitionResource.getAssessorPay() != null ? competitionResource.getAssessorPay() : BigDecimal.ZERO);
 		competitionSetupForm.setHasAssessmentPanel(competitionResource.isHasAssessmentPanel());
 		competitionSetupForm.setHasInterviewStage(competitionResource.isHasInterviewStage());
+		competitionSetupForm.setHasFullFinanceView(competitionResource.ishasFullFinanceView());
 
 		return competitionSetupForm;
 	}

@@ -34,7 +34,8 @@ public class AssessorsFormPopulatorTest {
 				.withAssessorCount(1)
 				.withAssessorPay(BigDecimal.TEN)
 				.withHasAssessmentPanel(Boolean.FALSE)
-				.withHasInterviewStage(Boolean.FALSE).build();
+				.withHasInterviewStage(Boolean.FALSE)
+				.withHasFullFinanceView(Boolean.FALSE).build();
 
 		CompetitionSetupForm result = populator.populateForm(competition);
 		
@@ -44,5 +45,6 @@ public class AssessorsFormPopulatorTest {
 		assertEquals(BigDecimal.TEN, form.getAssessorPay());
 		assertEquals(Boolean.FALSE, form.getHasAssessmentPanel());
 		assertEquals(Boolean.FALSE, form.getHasInterviewStage());
+		assertEquals(Boolean.FALSE, form.getHasFullFinanceView());
 	}
 }

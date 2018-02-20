@@ -114,6 +114,38 @@
                     </div>
                 </fieldset>
             </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('hasFullFinanceView')} ? 'form-group-error'">
+                    <legend class="heading-small">
+                        Assessor view of finances
+                        <th:block th:if="${#fields.hasErrors('hasFullFinanceView')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('hasFullFinanceView')}" th:text="${err}" />
+                        </th:block>
+                    </legend>
+                    <div class="multiple-choice">
+                        <input id="hasFullFinanceView-0"
+                               type="radio"
+                               th:field="${competitionSetupForm.hasFullFinanceView}"
+                               value="1"
+                               th:errorclass="field-error"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.fullFinanceView.required}" />
+                        <label for="hasFullFinanceView-0">
+                            Overview
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="hasFullFinanceView-1"
+                               type="radio"
+                               th:field="${competitionSetupForm.hasFullFinanceView}"
+                               th:errorclass="field-error"
+                               required="required"
+                               value="0"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.fullFinanceView.required}" />
+                        <label for="hasFullFinanceView-1">
+                            Detailed
+                        </label>
+                    </div>
+            </div>
 
             <button class="button">Done</button>
         </th:block>
@@ -131,6 +163,9 @@
 
                 <dt>Enable interview stage for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Yes' : 'No' "/>
+
+                <dt>Assesor view of finances?</dt>
+                <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Overview' : 'Detailed' "/>
             </dl>
 
            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>

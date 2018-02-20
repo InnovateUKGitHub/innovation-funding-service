@@ -93,6 +93,7 @@ public class Competition implements ProcessActivity {
     private Boolean resubmission;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
+    private Boolean hasFullFinanceView;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -669,6 +670,14 @@ public class Competition implements ProcessActivity {
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public Boolean isHasFullFinanceView() {
+        return hasFullFinanceView;
+    }
+
+    public void setHasFullFinanceView(Boolean hasFullFinanceView) {
+        this.hasFullFinanceView = hasFullFinanceView;
     }
 
     public TermsAndConditions getTermsAndConditions() {
