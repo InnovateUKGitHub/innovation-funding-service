@@ -5,12 +5,14 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterviewPanel;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
 import org.innovateuk.ifs.commons.resource.PageResource;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.springframework.data.domain.Page;
@@ -20,13 +22,18 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelBuilder.newAssessmentInterviewPanel;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<InterviewPanelInviteServiceImpl> {
@@ -39,11 +46,14 @@ public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<Int
             newApplication()
                     .withProcessRoles(
                             newProcessRole()
+                                    .withUser(newUser().build())
                                     .withRole(newRole().withType(UserRoleType.LEADAPPLICANT).build())
                                     .withOrganisationId(LEAD_ORGANISATION.getId())
                                     .build()
                     )
                     .build(TOTAL_APPLICATIONS);
+    private static final Role LEAD_APPLICANT_ROLE = newRole(UserRoleType.INTERVIEW_LEAD_APPLICANT).build();
+    private static final ActivityState CREATED_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
 
     @Override
     protected InterviewPanelInviteServiceImpl supplyServiceUnderTest() {
@@ -124,6 +134,48 @@ public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<Int
 
     @Test
     public void assignApplications() {
+        List<ExistingUserStagedInviteResource> expectedStagedApplications = newExistingUserStagedInviteResource()
+                .withUserId(simpleMap(EXPECTED_AVAILABLE_APPLICATIONS, Application::getId).toArray(new Long[TOTAL_APPLICATIONS]))
+                .withCompetitionId(COMPETITION_ID)
+                .build(TOTAL_APPLICATIONS);
+
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL, AssessmentInterviewPanelState.CREATED.getBackingState())).thenReturn(CREATED_ACTIVITY_STATE);
+
+        when(roleRepositoryMock.findOneByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName())).thenReturn(LEAD_APPLICANT_ROLE);
+
+        forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
+            when(applicationRepositoryMock.findOne(expectedApplication.getId()))
+                    .thenReturn(expectedApplication);
+
+            when(assessmentInterviewPanelRepositoryMock.save(interviewPanellambdaMatcher(expectedApplication)))
+                    .thenReturn(newAssessmentInterviewPanel().build()
+            );
+        });
+
+        service.assignApplications(expectedStagedApplications).getSuccess();
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock,
+                assessmentInterviewPanelRepositoryMock);
+
+        forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
+            inOrder.verify(applicationRepositoryMock).findOne(expectedApplication.getId());
+            inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName());
+            inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(
+                    ActivityType.ASSESSMENT_INTERVIEW_PANEL, AssessmentInterviewPanelState.CREATED.getBackingState());
+            inOrder.verify(assessmentInterviewPanelRepositoryMock).save(interviewPanellambdaMatcher(expectedApplication));
+        });
+    }
+
+    private static AssessmentInterviewPanel interviewPanellambdaMatcher(Application application) {
+        return createLambdaMatcher((AssessmentInterviewPanel interviewPanel) -> {
+            ProcessRole participant = interviewPanel.getParticipant();
+            assertEquals(application.getId(), interviewPanel.getTarget().getId());
+            assertEquals(application.getId(), participant.getApplicationId());
+            assertTrue(participant.getRole().isOfType(UserRoleType.INTERVIEW_LEAD_APPLICANT));
+            assertEquals(participant.getUser(), application.getLeadApplicant());
+            assertEquals(participant.getOrganisationId(), application.getLeadOrganisationId());
+        });
     }
 
     private static void assertAvailableApplicationResourcesMatch(Organisation leadOrganisation, List<Application> expectedApplications, AvailableApplicationPageResource availableApplicationPageResource) {
