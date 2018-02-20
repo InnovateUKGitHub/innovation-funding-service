@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSummarisationServiceTest {
@@ -33,7 +34,10 @@ public class ApplicationSummarisationServiceTest {
 	private ApplicationSummarisationServiceImpl service;
 	
 	@Mock
-	private FinanceRowService financeRowService;
+	private FinanceRowCostsService financeRowCostsService;
+
+	@Mock
+	private FinanceService financeService;
 	
 	private Application application;
 	
@@ -54,7 +58,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 		
-		when(financeRowService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 		
 		ServiceResult<BigDecimal> result = service.getFundingSought(application);
 		
@@ -70,7 +74,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		assertTrue(result.isSuccess());
 		assertEquals(new BigDecimal("0.00"), result.getSuccess());
-		verifyNoMoreInteractions(financeRowService);
+		verifyNoMoreInteractions(financeRowCostsService);
 	}
 	
 	@Test
@@ -83,7 +87,7 @@ public class ApplicationSummarisationServiceTest {
 		
 		ServiceResult<List<ApplicationFinanceResource>> afrs = serviceSuccess(Arrays.asList(afr1, afr2));
 		
-		when(financeRowService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
+		when(financeService.financeTotals(APPLICATION_ID)).thenReturn(afrs);
 		
 		ServiceResult<BigDecimal> result = service.getTotalProjectCost(application);
 		
@@ -99,6 +103,6 @@ public class ApplicationSummarisationServiceTest {
 		
 		assertTrue(result.isSuccess());
 		assertEquals(new BigDecimal("0.00"), result.getSuccess());
-		verifyNoMoreInteractions(financeRowService);
+		verifyNoMoreInteractions(financeRowCostsService);
 	}
 }

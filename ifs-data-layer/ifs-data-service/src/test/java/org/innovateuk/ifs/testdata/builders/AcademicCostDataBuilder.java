@@ -93,7 +93,7 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
-            financeRowService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
+            financeRowCostsService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
                     getSuccess();
         });
     }
