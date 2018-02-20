@@ -260,7 +260,7 @@ Assign applicaitons to assessor upon acceting invite in panel
     And the user clicks the button/link       link=Invite
     When the user clicks the button/link      link=Review and send invites
     Then the user clicks the button/link      jQuery=button:contains("Send invite")
-    When log in as a different user           &{assessor2_credentials}
+    When log in as a different user           ${panel_assessor_madeleine}  ${short_password}
     Then the user clicks the button/link      jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     And the user selects the radio button     acceptInvitation  true
     And the user clicks the button/link       css=button[type="submit"]  # Confirm
@@ -294,7 +294,7 @@ Assessors view of application summary and feedback
     And the user should not see the element     jQuery=span:contains("Question score")
     And the user should not see the element     jQuery=label:contains("Feedback")
     #assessor view of application summery when he has assessed application at first place.
-    When log in as a different user             &{assessor2_credentials}
+    When log in as a different user             ${panel_assessor_madeleine}  ${short_password}
     And the user clicks the button/link         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
     And the user selects the radio button       reviewAccept  true
