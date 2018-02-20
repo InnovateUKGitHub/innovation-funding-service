@@ -75,8 +75,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setFundersPanelEndDate(endDate));
     }
 
-    public CompetitionBuilder withFeedbackReleased(ZonedDateTime feedbackReleased) {
-        return with(competition -> setField("feedbackReleasedDate", feedbackReleased, competition));
+    public CompetitionBuilder withFeedbackReleased(ZonedDateTime feedbackReleasedDate) {
+        return with(competition -> setField("feedbackReleasedDate", feedbackReleasedDate, competition));
     }
 
     public CompetitionBuilder withResubmission(Boolean resubmission) {

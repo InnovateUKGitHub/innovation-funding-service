@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -21,19 +20,16 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.text.Collator;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
@@ -46,8 +42,6 @@ import static org.innovateuk.ifs.application.transactional.ApplicationFundingSer
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;

@@ -274,7 +274,6 @@ public class Competition implements ProcessActivity {
         setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorDeadlineDate);
     }
 
-
     public ZonedDateTime getReleaseFeedbackDate() {
         return getMilestoneDate(MilestoneType.RELEASE_FEEDBACK).orElse(null);
     }
@@ -283,12 +282,10 @@ public class Competition implements ProcessActivity {
         setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
     }
 
-    @JsonIgnore
     public void setFeedbackReleasedDate(ZonedDateTime feedbackReleasedDate) {
         setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, feedbackReleasedDate);
     }
 
-    @JsonIgnore
     public ZonedDateTime getFeedbackReleasedDate() {
         return getMilestoneDate(MilestoneType.FEEDBACK_RELEASED).orElse(null);
     }

@@ -166,7 +166,7 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
     }
 
     private void updateApplicationWorkflowImmediatelyIfCompetitionIsInProjectSetup(Application application, FundingDecisionStatus fundingDecision) {
-        if (
+        if (FundingDecisionStatus.FUNDED.equals(fundingDecision) &&
                 (CompetitionStatus.PROJECT_SETUP).equals(application.getCompetition().getCompetitionStatus())) {
             applicationWorkflowHandler.approve(application);
         }
