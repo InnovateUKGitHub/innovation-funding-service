@@ -115,8 +115,23 @@ db.close()
 def getProjectId(name):
     db, cursor = connectToDb()
 
-    # execute SQL query using execute() method, to fetch the Applications
+    # execute SQL query using execute() method, to fetch the Projects
     cursor.execute("SELECT `id` FROM project where `name` = '" + name + "'")
+
+    id = cursor.fetchone()[0]
+
+    # disconnect from server
+    cursor.close()
+    db.close()
+
+    return id
+
+# One can use this function in order to request the User Id of a user, by providing his email address.
+def getUserId(email):
+    db, cursor = connectToDb()
+
+    # execute SQL query using execute() method, to fetch the Users
+    cursor.execute("SELECT `id` FROM user where `email` = '" + email + "'")
 
     id = cursor.fetchone()[0]
 
