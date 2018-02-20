@@ -7,5 +7,3 @@ RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
 # The user will be a member of the root group so give access to that group
 RUN chgrp -R 0 /var/run/mysqld/ && chmod -R g=u /var/run/mysqld/
 RUN chgrp -R 0 /var/lib/mysql && chmod -R g=u /var/lib/mysql
-
-COPY create_ifs_finance_db.sql /docker-entrypoint-initdb.d

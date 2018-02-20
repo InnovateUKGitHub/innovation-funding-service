@@ -26,23 +26,23 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
     @Test
     public void addShouldCreateNewCost() throws Exception{
 
-        when(financeRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
+        when(financeRowCostsServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(post("/cost/add/{applicationFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
-        verify(financeRowServiceMock, times(1)).addCost(123L, 456L, null);
+        verify(financeRowCostsServiceMock, times(1)).addCost(123L, 456L, null);
     }
     
     @Test
     public void addShouldCreateNewCostWithoutPersisting() throws Exception{
 
-        when(financeRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
+        when(financeRowCostsServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(post("/cost/add-without-persisting/{applicationFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
-        verify(financeRowServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
+        verify(financeRowCostsServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
     public void updateShouldReturnEmptyResponseOnWrongId() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
-        when(financeRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
+        when(financeRowCostsServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
 
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -91,32 +91,32 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        verify(financeRowServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));
+        verify(financeRowCostsServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));
     }
 
     @Test
     public void updateShouldReturnIsCorrectOnCorrectValues() throws Exception {
 
         GrantClaim costItem = new GrantClaim();
-        when(financeRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
+        when(financeRowCostsServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
 
         mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(costItem)))
                 .andExpect(status().isOk());
 
-        verify(financeRowServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));
+        verify(financeRowCostsServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));
     }
 
     @Test
     public void deleteCostAPICallShouldRenderResponse() throws Exception {
 
-        when(financeRowServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
+        when(financeRowCostsServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/cost/delete/123"))
                 .andExpect(status().isNoContent());
 
-        verify(financeRowServiceMock, times(1)).deleteCost(123L);
+        verify(financeRowCostsServiceMock, times(1)).deleteCost(123L);
     }
 
     @Override

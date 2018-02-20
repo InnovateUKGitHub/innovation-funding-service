@@ -24,20 +24,13 @@ Back to the dashboard link
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side validations when No selected at yes/no
-    [Documentation]    INFUND-3715
+    [Documentation]    INFUND-3715  IFS-1947
     ...
     ...    INFUND-7060
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    Then the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
-    Then The user should see a summary error    Please correct the errors in the form below.
-    And the user should see a field error    Please enter a principal employer.
-    And the user should see a field error    Please enter your role with your principal employer.
-    And the user should see a field error    You must agree that your account is accurate.
-    And the user should see a field error    Please tell us if you have any appointments or directorships.
-    And the user should see a field error    Please tell us if you have any other financial interests.
-    And the user should see a field error    Please tell us if any of your immediate family members have any appointments or directorships.
-    And the user should see a field error    Please tell us if any of your immediate family members have any other financial interests.
+    When the user clicks the button/link     jQuery=button:contains("Save and return to your declaration of interest")
+    Then the user should see the proper validation messages triggered
 
 Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
@@ -100,9 +93,9 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=role    Professor
     the user enters text to a text field    id=professionalAffiliations    Role x at Company y
     the user enters text to a text field    id=financialInterests    finance int
-    the user enters text to a text field    Id=familyAffiliations0.relation    Relation
-    the user enters text to a text field    id=familyAffiliations0.organisation    Innovate
-    the user enters text to a text field    id=familyAffiliations0.position    Director
+    the user enters text to a text field    Id=familyAffiliations[0].relation    Relation
+    the user enters text to a text field    id=familyAffiliations[0].organisation    Innovate
+    the user enters text to a text field    id=familyAffiliations[0].position    Director
     the user enters text to a text field    id=familyFinancialInterests    My interests
     the user moves focus to the element    css=[for^="accurateAccount"]
     the user selects the checkbox    accurateAccount1
@@ -120,3 +113,12 @@ the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
     Wait Until Page Contains Element Without Screenshots    css=.error-message
     Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}
+
+the user should see the proper validation messages triggered
+    the user should see a field and summary error    Please enter a principal employer.
+    the user should see a field and summary error    Please enter your role with your principal employer.
+    the user should see a field and summary error    Please tell us if any of your immediate family members have any appointments or directorships.
+    the user should see a field and summary error    Please tell us if any of your immediate family members have any other financial interests.
+    the user should see a field and summary error    Please tell us if you have any other financial interests.
+    the user should see a field and summary error    Please tell us if you have any appointments or directorships.
+    the user should see a field and summary error    You must agree that your account is accurate.

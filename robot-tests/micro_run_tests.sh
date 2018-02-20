@@ -89,7 +89,7 @@ function buildAndDeploy() {
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
 
-    ./gradlew -Pcloud=development composeUp
+    ./gradlew -Pcloud=development composeUp -Pifs.full-deployment.enabled=true -Pifs.finance-totals.enabled=false
 }
 
 function injectRobotParameters() {
@@ -276,7 +276,6 @@ function saveResultsToCompressedFolder() {
 
 section "=> GETTING SCRIPT VARIABLES"
 
-#cd "$(dirname "$0")"
 scriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd ${scriptDir}

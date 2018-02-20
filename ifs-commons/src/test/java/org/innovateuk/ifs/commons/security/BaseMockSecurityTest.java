@@ -3,6 +3,9 @@ package org.innovateuk.ifs.commons.security;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.security.evaluator.*;
+import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
 import org.mockito.MockitoAnnotations;
@@ -12,12 +15,16 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.*;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -236,6 +243,31 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     protected void assertPostFilter(List list, Runnable verifications) {
         assertTrue(list.isEmpty());
         verifications.run();
+    }
+
+    /**
+     * Asserts that only the given Global Role(s) can perform the given action.  Any specified roles who cannot perform
+     * the action will raise an error and vice versa any not specified who can will also raise an error
+     */
+    protected void assertRolesCanPerform(Runnable actionFn, UserRoleType... supportedRoles) {
+
+        asList(UserRoleType.values()).forEach(role -> {
+
+            RoleResource roleResource = newRoleResource().withType(role).build();
+            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+            setLoggedInUser(userWithRole);
+
+            if (asList(supportedRoles).contains(role)) {
+                actionFn.run();
+            } else {
+                try {
+                    actionFn.run();
+                    fail("Should have thrown an AccessDeniedException for any non " + Arrays.toString(supportedRoles) + " users");
+                } catch (AccessDeniedException e) {
+                    // expected behaviour
+                }
+            }
+        });
     }
 
     public static class PermissionRulesClassToMock extends HashMap<Class<?>, Object> {

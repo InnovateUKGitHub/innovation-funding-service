@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +21,7 @@ import java.util.List;
 public class FinanceRowMetaFieldController {
 
     @Autowired
-    private FinanceRowService costFieldService;
+    private FinanceRowCostsService costFieldService;
 
     @GetMapping("/findAll/")
     public RestResult<List<FinanceRowMetaFieldResource>> findAll() {

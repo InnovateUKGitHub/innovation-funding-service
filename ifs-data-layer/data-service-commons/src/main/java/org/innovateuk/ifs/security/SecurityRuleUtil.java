@@ -35,7 +35,7 @@ public class SecurityRuleUtil {
         return processRole != null;
     }
 
-    public static boolean checkProcessRole(final UserResource user, final long applicationId, UserRoleType userRoleType, final ProcessRoleRepository processRoleRepository, final RoleRepository roleRepository) {
+    public static boolean checkProcessRole(final UserResource user, final long applicationId, UserRoleType userRoleType, final ProcessRoleRepository processRoleRepository) {
         return processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(user.getId(), applicationId, userRoleType.getName());
     }
 

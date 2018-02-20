@@ -57,7 +57,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return doAsUser(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
+                    financeRowCostsService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
                             getSuccess();
 
             IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
@@ -73,7 +73,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return doAsUser(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
+                    financeRowCostsService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
                             getSuccess();
 
             AcademicCostDataBuilder baseFinanceBuilder = newAcademicCostData(serviceLocator).
