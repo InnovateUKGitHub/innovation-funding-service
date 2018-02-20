@@ -283,19 +283,21 @@ Assessors view of competition dashboard and applications in panel status
     When the user clicks the button/link        jQuery=button:contains("Confirm")
     Then the user should see the element        jQuery=.progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
 
-Assessors view of application summary and feedback
+Assessor can attend Panel and see applications he has not assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]
-    # assessor view of application summery when he has not assessed application at first place.
     Given the user clicks the button/link       link=${computer_vision_application_name}
     When the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
     And the user should see the element         jQuery=h1:contains("Application summary")
-    Then the user clicks the button/link        jQuery=button:contains("Business opportunity")
+    Then the user expands the section           Business opportunity
     And the user should not see the element     jQuery=span:contains("Question score")
     And the user should not see the element     jQuery=label:contains("Feedback")
-    #assessor view of application summery when he has assessed application at first place.
-    When log in as a different user             ${panel_assessor_madeleine}  ${short_password}
-    And the user clicks the button/link         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+
+Assessor can attend Panel and see applications that he has assessed
+    [Documentation]  IFS-29   IFS-2375   IFS-2549
+    [Tags]
+    [Setup]  log in as a different user         ${panel_assessor_madeleine}  ${short_password}
+    Given the user clicks the button/link       jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
     And the user selects the radio button       reviewAccept  true
     And the user clicks the button/link         jQuery=button:contains("Confirm")
