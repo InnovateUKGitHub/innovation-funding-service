@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.review.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,16 +42,7 @@ public class ReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegra
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
     @Override

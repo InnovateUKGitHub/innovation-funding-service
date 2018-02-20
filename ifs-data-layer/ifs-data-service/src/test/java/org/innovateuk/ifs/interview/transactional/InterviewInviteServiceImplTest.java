@@ -445,7 +445,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_assessors_panel_text.txt";
+        String templatePath = "invite_assessors_to_interview_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(interviewInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
@@ -500,7 +500,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
-        String templatePath = "invite_assessors_to_assessors_panel_text.txt";
+        String templatePath = "invite_assessors_to_interview_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(interviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);

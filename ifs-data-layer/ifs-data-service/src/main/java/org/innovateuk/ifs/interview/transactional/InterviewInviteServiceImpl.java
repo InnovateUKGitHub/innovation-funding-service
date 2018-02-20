@@ -58,7 +58,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -122,8 +122,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     private InterviewRepository interviewRepository;
 
     enum Notifications {
-        INVITE_ASSESSOR_TO_PANEL,
-        INVITE_ASSESSOR_GROUP_TO_PANEL
+        INVITE_ASSESSOR_GROUP_TO_INTERVIEW
     }
 
     @Value("${ifs.web.baseURL}")
@@ -182,7 +181,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
                                 customTextPlain,
                                 customTextHtml,
                                 invite,
-                                Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
+                                Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
                         );
                     }
             ));
@@ -201,7 +200,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
                         customTextPlain,
                         customTextHtml,
                         invite.sendOrResend(loggedInUserSupplier.get(), now()),
-                        Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
+                        Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
                 )
         ));
     }
@@ -355,7 +354,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     public ServiceResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId) {
         List<InterviewParticipantResource> interviewParticipantResources =
                 interviewParticipantRepository
-                .findByUserIdAndRole(userId, PANEL_ASSESSOR)
+                .findByUserIdAndRole(userId, INTERVIEW_ASSESSOR)
                 .stream()
                 .filter(participant -> now().isBefore(participant.getInvite().getTarget().getPanelDate()))
                 .map(interviewParticipantMapper::mapToResource)
@@ -372,7 +371,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
 
-        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessors_to_assessors_panel_text.txt",
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessors_to_interview_panel_text.txt",
                 arguments).getSuccess();
     }
 
@@ -398,7 +397,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
                         "subject", subject,
                         "name", invite.getName(),
                         "competitionName", invite.getTarget().getName(),
-                        "inviteUrl", format("%s/invite/panel/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
+                        "inviteUrl", format("%s/invite/interview/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
                         "customTextPlain", customTextPlain,
                         "customTextHtml", customTextHtml
                 ));
