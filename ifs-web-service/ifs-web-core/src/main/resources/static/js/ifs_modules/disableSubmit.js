@@ -13,6 +13,7 @@ IFS.core.disableSubmitUntilChecked = (function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
       })
 
+      // Check input value when panel revealed
       jQuery('body').on('change', '[' + s.checkBoxRevealPanel + ']', function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(s.checkRequiredInputs)
       })
@@ -23,17 +24,9 @@ IFS.core.disableSubmitUntilChecked = (function () {
 
       // Checking that a required text input contains text when updating
       jQuery('body').on('change keyup', s.checkRequiredInputs, function (e) {
-        var inputValue = jQuery(this).val()
-        var buttonInputSelector = jQuery(this).attr(s.checkBoxesAttribute)
-        var buttonSelected = jQuery(buttonInputSelector)
         if (e.type === 'keyup') {
           // wait until the user stops typing
-          if (inputValue.trim()) {
-            // Checking if content has been added to input
-            IFS.core.disableSubmitUntilChecked.updateButton(buttonSelected, true)
-          } else {
-            IFS.core.disableSubmitUntilChecked.updateButton(buttonSelected, false)
-          }
+          IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
         }
       })
     },
@@ -69,7 +62,7 @@ IFS.core.disableSubmitUntilChecked = (function () {
           state = inst.prop('checked')
         } else if (inst.is('select')) {
           state = inst.val() !== 'UNSET'
-        } else if (inst.is('input[type="text"]')) {
+        } else if (inst.is('input[type="text"][required]')) {
           state = inst.val().trim().length > 0
         }
         if (typeof (state) !== 'undefined') {
