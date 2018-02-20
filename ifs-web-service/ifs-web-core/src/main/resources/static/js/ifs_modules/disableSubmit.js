@@ -13,8 +13,16 @@ IFS.core.disableSubmitUntilChecked = (function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
       })
 
-      // Check input value when panel revealed
+      // Check input value when panel revealed and reset errors
       jQuery('body').on('change', '[' + s.checkBoxRevealPanel + ']', function () {
+        // Check if there are existing error classes inside the panel and remove them
+        var panelSelector = jQuery(this).attr(s.checkBoxRevealPanel)
+        var panelId = '#' + panelSelector
+        var inputError = jQuery(panelId + s.checkRequiredInputs)
+        var formGroupError = jQuery(inputError).parent()
+        inputError.removeClass('form-control-error')
+        formGroupError.removeClass('form-group-error')
+        // Set CTA state accordingly
         IFS.core.disableSubmitUntilChecked.checkButtonStates(s.checkRequiredInputs)
       })
 
@@ -25,7 +33,7 @@ IFS.core.disableSubmitUntilChecked = (function () {
       // Checking that a required text input contains text when updating
       jQuery('body').on('change keyup', s.checkRequiredInputs, function (e) {
         if (e.type === 'keyup') {
-          // wait until the user stops typing
+          // Wait until the user stops typing
           IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
         }
       })
