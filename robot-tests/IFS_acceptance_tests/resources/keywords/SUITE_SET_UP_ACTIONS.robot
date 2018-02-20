@@ -64,8 +64,16 @@ the user marks the section as complete
     Input Text    css=.textarea-wrapped .editor    Entering text to allow valid mark as complete
     Mouse Out    css=.textarea-wrapped .editor
     wait for autosave
+    the user checks the Appendix guidance
     the user clicks the button/link    name=mark_as_complete
     #the user clicks the button/link    css=.next
+
+the user checks the Appendix guidance
+    the user clicks the button/link           jQuery=span.summary:contains(What should I include in the appendix?)
+    the user should see the element           jQuery=h4:contains("Accepted appendix file types")
+    the user should see the element           jQuery=li:contains("Spreadsheet")
+    the user should see the element           jQuery=li:contains("PDF")
+    the user should see the element           jQuery=p:contains("It must be less than 1MB in size.")
 
 Create new application with the same user
     [Arguments]  ${Application_title}
