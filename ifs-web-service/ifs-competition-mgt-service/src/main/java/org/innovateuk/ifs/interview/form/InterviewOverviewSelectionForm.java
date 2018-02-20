@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.form;
+package org.innovateuk.ifs.interview.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * Form for the selection of assessors on the Interview Panel Overview assessors tab
  */
-public class InterviewPanelOverviewSelectionForm extends BaseBindingResultTarget {
+public class InterviewOverviewSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
     private List<Long> selectedInviteIds;
 
-    public InterviewPanelOverviewSelectionForm() {
+    public InterviewOverviewSelectionForm() {
         this.selectedInviteIds = new ArrayList<>();
     }
 
@@ -45,7 +45,7 @@ public class InterviewPanelOverviewSelectionForm extends BaseBindingResultTarget
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewPanelOverviewSelectionForm that = (InterviewPanelOverviewSelectionForm) o;
+        InterviewOverviewSelectionForm that = (InterviewOverviewSelectionForm) o;
 
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)

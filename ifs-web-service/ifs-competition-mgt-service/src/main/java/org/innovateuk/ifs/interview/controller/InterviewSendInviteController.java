@@ -1,12 +1,13 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.interview.controller;
 
-import org.innovateuk.ifs.assessment.service.InterviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.interview.form.InterviewOverviewSelectionForm;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.form.InterviewPanelOverviewSelectionForm;
+import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
  */
 @Controller
 @RequestMapping("/interview/competition/{competitionId}/assessors/invite")
-@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = CompetitionManagementInterviewPanelSendInviteController.class)
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewSendInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementInterviewPanelSendInviteController extends CompetitionManagementCookieController<InterviewPanelOverviewSelectionForm> {
+public class InterviewSendInviteController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessmentInterviewPanelOverviewSelectionForm";
 
     @Autowired
-    private InterviewPanelInviteRestService interviewPanelInviteRestService;
+    private InterviewInviteRestService interviewInviteRestService;
 
     @Override
     protected String getCookieName() {
@@ -43,8 +44,8 @@ public class CompetitionManagementInterviewPanelSendInviteController extends Com
     }
 
     @Override
-    protected Class<InterviewPanelOverviewSelectionForm> getFormType() {
-        return InterviewPanelOverviewSelectionForm.class;
+    protected Class<InterviewOverviewSelectionForm> getFormType() {
+        return InterviewOverviewSelectionForm.class;
     }
 
     @GetMapping("/send")
@@ -52,7 +53,7 @@ public class CompetitionManagementInterviewPanelSendInviteController extends Com
                                    @PathVariable("competitionId") long competitionId,
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
-        AssessorInvitesToSendResource invites = interviewPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
+        AssessorInvitesToSendResource invites = interviewInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToInterviewPanelFindTab(competitionId);
@@ -81,7 +82,7 @@ public class CompetitionManagementInterviewPanelSendInviteController extends Com
         Supplier<String> failureView = () -> getInvitesToSend(model, competitionId, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> sendResult = interviewPanelInviteRestService
+            RestResult<Void> sendResult = interviewInviteRestService
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()));
 
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;

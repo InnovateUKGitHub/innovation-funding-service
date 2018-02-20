@@ -1,20 +1,14 @@
 package org.innovateuk.ifs.review.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
-import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
-import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;

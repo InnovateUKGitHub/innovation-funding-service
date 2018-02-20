@@ -1,8 +1,7 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.interview.controller.InterviewSendInviteController;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.management.form.SendInviteForm;
@@ -64,7 +63,7 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
                 .withContent("Readonly content")
                 .build();
 
-        when(interviewPanelInviteRestService.getAllInvitesToSend(competitionId)).thenReturn(restSuccess(invites));
+        when(interviewInviteRestService.getAllInvitesToSend(competitionId)).thenReturn(restSuccess(invites));
 
         SendInviteForm expectedForm = new SendInviteForm();
         expectedForm.setSubject("Invitation to Innovate UK interview panel for 'Photonics for health'");
@@ -77,7 +76,7 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessors/interview-send-invites"));
 
-        verify(interviewPanelInviteRestService, only()).getAllInvitesToSend(competitionId);
+        verify(interviewInviteRestService, only()).getAllInvitesToSend(competitionId);
     }
 
     @Test
@@ -89,7 +88,7 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
                 .withContent("Editable content...")
                 .build();
 
-        when(interviewPanelInviteRestService.sendAllInvites(competitionId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
+        when(interviewInviteRestService.sendAllInvites(competitionId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/interview/competition/{competitionId}/assessors/invite/send", competitionId)
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -98,8 +97,8 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/assessors/find", competitionId)));
 
-        InOrder inOrder = inOrder(interviewPanelInviteRestService);
-        inOrder.verify(interviewPanelInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
+        InOrder inOrder = inOrder(interviewInviteRestService);
+        inOrder.verify(interviewInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
         inOrder.verifyNoMoreInteractions();
     }
 }

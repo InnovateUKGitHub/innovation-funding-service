@@ -1,11 +1,11 @@
-package org.innovateuk.ifs.assessment.repository;
+package org.innovateuk.ifs.interview.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
-import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelInviteRepository;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
@@ -22,15 +22,15 @@ import java.util.List;
 
 import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelInviteBuilder.newAssessmentInterviewPanelInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentInterviewPanelInviteRepository> {
+public class InterviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InterviewInviteRepository> {
 
     private Competition competition;
 
@@ -45,7 +45,7 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
 
     @Autowired
     @Override
-    protected void setRepository(AssessmentInterviewPanelInviteRepository repository) {
+    protected void setRepository(InterviewInviteRepository repository) {
         this.repository = repository;
     }
 
@@ -56,10 +56,10 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
 
     @Test
     public void getByEmailAndCompetitionId() {
-        AssessmentInterviewPanelInvite invite = new AssessmentInterviewPanelInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
-        AssessmentInterviewPanelInvite saved = repository.save(invite);
+        InterviewInvite invite = new InterviewInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
+        InterviewInvite saved = repository.save(invite);
 
-        AssessmentInterviewPanelInvite retrievedInvite = repository.getByEmailAndCompetitionId("paul.plum@gmail.com", competition.getId());
+        InterviewInvite retrievedInvite = repository.getByEmailAndCompetitionId("paul.plum@gmail.com", competition.getId());
         assertNotNull(retrievedInvite);
 
         assertEquals(saved, retrievedInvite);
@@ -69,7 +69,7 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
     public void getByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newAssessmentInterviewPanelInvite()
+        repository.save(newInterviewInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -81,9 +81,9 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        Page<AssessmentInterviewPanelInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        Page<InterviewInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
 
-        List<AssessmentInterviewPanelInvite> retrievedInvites = pageResult.getContent();
+        List<InterviewInvite> retrievedInvites = pageResult.getContent();
 
         assertEquals(1, retrievedInvites.size());
 
@@ -98,7 +98,7 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
     public void getByCompetitionIdAndStatus_asList() throws Exception {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newAssessmentInterviewPanelInvite()
+        repository.save(newInterviewInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -108,7 +108,7 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        List<AssessmentInterviewPanelInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        List<InterviewInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         assertEquals(1, retrievedInvites.size());
 
@@ -123,7 +123,7 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
     public void countByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newAssessmentInterviewPanelInvite()
+        repository.save(newInterviewInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -139,14 +139,14 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
 
     @Test
     public void save() {
-        AssessmentInterviewPanelInvite invite = new AssessmentInterviewPanelInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
+        InterviewInvite invite = new InterviewInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
         repository.save(invite);
 
         flushAndClearSession();
 
         long id = invite.getId();
 
-        AssessmentInterviewPanelInvite retrievedInvite = repository.findOne(id);
+        InterviewInvite retrievedInvite = repository.findOne(id);
 
         assertEquals("Professor Plum", retrievedInvite.getName());
         assertEquals("paul.plum@gmail.com", retrievedInvite.getEmail());
@@ -156,13 +156,13 @@ public class AssessmentInterviewPanelInviteRepositoryIntegrationTest extends Bas
 
     @Test(expected = DataIntegrityViolationException.class)
     public void save_duplicateHash() {
-        repository.save(new AssessmentInterviewPanelInvite(userMapper.mapToDomain(getPaulPlum()), "sameHash", competition));
-        repository.save(new AssessmentInterviewPanelInvite(userMapper.mapToDomain(getFelixWilson()), "sameHash", competition));
+        repository.save(new InterviewInvite(userMapper.mapToDomain(getPaulPlum()), "sameHash", competition));
+        repository.save(new InterviewInvite(userMapper.mapToDomain(getFelixWilson()), "sameHash", competition));
     }
 
     @Test
     public void deleteByCompetitionIdAndStatus() throws Exception {
-        List<AssessmentInterviewPanelInvite> invites = newAssessmentInterviewPanelInvite()
+        List<InterviewInvite> invites = newInterviewInvite()
                 .withCompetition(competition)
                 .withEmail("test1@test.com", "test2@test.com")
                 .withHash("hash1", "hash2")
