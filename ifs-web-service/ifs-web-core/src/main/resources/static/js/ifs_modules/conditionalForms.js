@@ -47,7 +47,7 @@ IFS.core.conditionalForms = (function () {
         target.attr('aria-hidden', 'true')
         if (clearForm) {
           target.find('input[type=checkbox]').prop('checked', false)
-          target.find('textarea, input').val('')
+          target.find('textarea').val('')
           target.find('.editor').html('')
         }
       }
