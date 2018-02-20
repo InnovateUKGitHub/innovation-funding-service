@@ -55,7 +55,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 FinanceRowType.LABOUR, newLabourCostCategory().
                         withCosts(
                             newLabourCost().
-                                    withGrossAnnualSalary(new BigDecimal("10000"), new BigDecimal("5100"), BigDecimal.ZERO).
+                                    withGrossEmployeeCost(new BigDecimal("10000"), new BigDecimal("5100"), BigDecimal.ZERO).
                                     withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
                                     withLabourDays(100, 120, 250).
                                     build(3)).
@@ -124,7 +124,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         Map<FinanceRowType, FinanceRowCostCategory> finances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000"), new BigDecimal("5100"), new BigDecimal("600"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000"), new BigDecimal("5100"), new BigDecimal("600"), BigDecimal.ZERO).
                                 withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 120, 120, 250).
                                 withName(DIRECTLY_INCURRED_STAFF.getFinanceRowName(), DIRECTLY_INCURRED_STAFF.getFinanceRowName(), INDIRECT_COSTS_STAFF.getFinanceRowName()).

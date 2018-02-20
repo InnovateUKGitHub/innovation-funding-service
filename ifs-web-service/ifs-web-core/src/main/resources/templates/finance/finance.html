@@ -279,7 +279,7 @@
                 <thead>
                 <tr>
                     <th scope="col">Role within project</th>
-                    <th scope="col" class="numeric">Gross annual salary (&pound;)</th>
+                    <th scope="col" class="numeric">Gross employee cost (&pound;)</th>
                     <th scope="col" class="numeric">Rate (&pound;/day)</th>
                     <th scope="col" class="numeric">Days to be spent by all staff at this grade</th>
                     <th scope="col" class="numeric">Total costs</th>
@@ -289,7 +289,7 @@
                 <th:block th:each="cost, iteration : ${costCategory.costs}">
                     <tr>
                         <td th:text="${cost.role}"></td>
-                        <td class="numeric" th:text="${cost.grossAnnualSalary != null ? #numbers.formatInteger(cost.grossAnnualSalary,0,'DEFAULT') : '0'}"></td>
+                        <td class="numeric" th:text="${cost.grossEmployeeCost != null ? #numbers.formatInteger(cost.grossEmployeeCost,0,'DEFAULT') : '0'}"></td>
                         <td class="numeric" th:text="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? #numbers.formatInteger(cost.getRate(costCategory.workingDaysPerYear),0,'DEFAULT') : '0'}"></td>
                         <td class="numeric" th:text="${cost.labourDays}"></td>
                         <td class="numeric">&pound;<th:block th:text="${cost.getTotal(costCategory.workingDaysPerYear) != null ? #numbers.formatInteger(cost.getTotal(costCategory.workingDaysPerYear), 0, 'DEFAULT') : '0'}" /> </td>
@@ -332,7 +332,7 @@
                         <thead>
                         <tr>
                             <th id="labour-role" scope="col">Role within project</th>
-                            <th id="labour-salary" scope="col" class="numeric width-small-medium">Gross annual salary</th>
+                            <th id="labour-salary" scope="col" class="numeric width-small-medium">Gross employee cost</th>
                             <th id="labour-rate" scope="col" class="numeric width-small">Rate (&pound;/day)</th>
                             <th id="labour-days" scope="col" class="numeric width-small-medium">Days to be spent by all staff at this grade</th>
                             <th scope="col" class="numeric width-medium">Total costs</th>
@@ -385,17 +385,17 @@
                            required="required"
                            maxlength="255"  />
                 </td>
-                <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossAnnualSalary]}')} ? 'form-group-error'">
-                    <label th:for="|formInput[cost-${costIdentifier}-grossAnnualSalary]|">
-                        <span class="visuallyhidden">Gross annual salary</span>
-                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossAnnualSalary'})" />
+                <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossEmployeeCost]}')} ? 'form-group-error'">
+                    <label th:for="|formInput[cost-${costIdentifier}-grossEmployeeCost]|">
+                        <span class="visuallyhidden">Gross employee cost</span>
+                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossEmployeeCost'})" />
                     </label>
                     <input type="number"
                            class="form-control width-full"
-                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossAnnualSalary]}')} ? 'form-control-error'"
-                           th:name="${'labour-grossAnnualSalary-' + question.id + '-' + costIdentifier}"
-                           th:id="|formInput[cost-${costIdentifier}-grossAnnualSalary]|"
-                           ifs:nonZeroValue="${cost.grossAnnualSalary}"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+costIdentifier+'-grossEmployeeCost]}')} ? 'form-control-error'"
+                           th:name="${'labour-grossEmployeeCost-' + question.id + '-' + costIdentifier}"
+                           th:id="|formInput[cost-${costIdentifier}-grossEmployeeCost]|"
+                           ifs:nonZeroValue="${cost.grossEmployeeCost}"
                            placeholder="0"
                            required="required"
                            min="1"
@@ -404,7 +404,7 @@
                     />
                 </td>
                 <td class="numeric"
-                    th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-grossAnnualSalary]'],[id='formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]']|,
+                    th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-grossEmployeeCost]'],[id='formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]']|,
                             data-calculation-rawValue=${costCategory?.workingDaysPerYear != null ? cost.getRate(costCategory.workingDaysPerYear) : 0}"
                     th:id="${'cost-labour-'+costIdentifier+'-labourRate'}"
                     data-calculation-operations="/">
@@ -431,7 +431,7 @@
                 <td class="numeric"
                     data-calculation-operations="/,*"
                     th:id="${'cost-labour-'+costIdentifier+'-labourTotalCost'}"
-                    th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-grossAnnualSalary]'],[id='formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]'],[id='formInput[cost-${costIdentifier}-labourDays]']|,data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}">
+                    th:attr="data-calculation-fields=|[id='formInput[cost-${costIdentifier}-grossEmployeeCost]'],[id='formInput[cost-${costCategory.workingDaysPerYearCostItem?.id}-labourDays]'],[id='formInput[cost-${costIdentifier}-labourDays]']|,data-calculation-rawvalue=${cost.getTotal(costCategory.workingDaysPerYear)}">
                         &pound;<th:block th:text="${#numbers.formatInteger(cost.getTotal(costCategory.workingDaysPerYear), 0, 'DEFAULT')}">0</th:block>
                 </td>
                 <td class="buttoncolumn alignright">
@@ -921,7 +921,8 @@
                    th:id="${'section-total-'+subSection.id}"
                    data-calculation-fields="[id*=netCost]"
                    data-calculation-operations="+"
-                   th:value="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}" />
+                   th:value="'£' + ${costCategory.total &lt; 0 ? 0 : #numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"
+                   th:attr="data-calculation-rawvalue=${costCategory.total}" />
         </th:block>
     </th:block>
 
@@ -1274,7 +1275,8 @@
                        data-calculation-fields="[id*=travelCostTotal]"
                        data-calculation-operations="+"
                        th:id="${'section-total-'+subSection.id}"
-                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"/>
+                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"
+                       th:attr="data-calculation-rawvalue=${costCategory.total}" />
             </div>
         </th:block>
     </th:block>
@@ -1425,7 +1427,8 @@
                        th:id="${'section-total-'+subSection.id}"
                        data-calculation-fields="[name^=other_costs-otherCost]"
                        data-calculation-operations="+"
-                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"/>
+                       th:value="'£' + ${#numbers.formatInteger(costCategory.total, 0, 'DEFAULT')}"
+                       th:attr="data-calculation-rawvalue=${costCategory.total}" />
             </div>
         </th:block>
     </th:block>

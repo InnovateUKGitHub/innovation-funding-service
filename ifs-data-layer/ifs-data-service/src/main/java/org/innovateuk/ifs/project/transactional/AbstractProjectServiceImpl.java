@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
@@ -73,7 +73,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected SpendProfileRepository spendProfileRepository;
 
     @Autowired
-    protected FinanceRowService financeRowService;
+    protected FinanceService financeService;
 
     @Autowired
     protected FinanceCheckService financeCheckService;
@@ -144,7 +144,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     }
 
     private boolean isSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        return financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId)
+        return financeService.organisationSeeksFunding(projectId, applicationId, organisationId)
                 .getOptionalSuccessObject()
                 .map(Boolean::booleanValue)
                 .orElse(false);

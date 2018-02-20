@@ -48,7 +48,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
-public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<ProjectFinanceRowServiceImpl> {
+public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFinanceRowServiceImpl> {
     @Mock
     private ProjectFinanceHandler projectFinanceHandlerMock;
 
