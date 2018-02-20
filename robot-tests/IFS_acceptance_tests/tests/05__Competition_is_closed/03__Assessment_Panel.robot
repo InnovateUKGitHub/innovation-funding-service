@@ -300,12 +300,11 @@ Assessor can attend Panel and see applications that he has assessed
     Given the user clicks the button/link       jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
     And the user selects the radio button       reviewAccept  true
-    And the user clicks the button/link         jQuery=button:contains("Confirm")
+    And the user clicks the button/link         css=button[type="submit"]  # Confirm
     When the user clicks the button/link        link=${CLOSED_COMPETITION_APPLICATION_TITLE}
     And the user clicks the button/link         jQuery=button:contains("Business opportunity")
     Then the user should see the element        jQuery=p:contains("This is the business opportunity feedback")
     And the user should see the element         jQuery=div:contains("Score") span:contains(8)
-
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138
