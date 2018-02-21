@@ -17,7 +17,7 @@ Resource          ../../../../resources/defaultResources.robot
 *** Test Cases ***
 Appendices available only for the correct questions
     [Documentation]    INFUND-832  IFS-2564
-    [Tags]    TEST1
+    [Tags]
     [Setup]    Log in as a different user                            &{lead_applicant_credentials}
     ## Please leave this test case on top. It checks the appearance of the Upload button for pdfs before other tests do an actual upload
     the user cannot see the option to upload a file on the question  link=1. Business opportunity
