@@ -125,6 +125,7 @@
                         <input id="financeView-0"
                                type="radio"
                                th:field="${competitionSetupForm.financeView}"
+                               th:checked="${competitionSetupForm.financeView == 'OVERVIEW'}"
                                value="OVERVIEW"
                                th:errorclass="field-error"
                                required="required"

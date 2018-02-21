@@ -86,7 +86,7 @@ public class CompetitionResource {
     private boolean useResubmissionQuestion;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
-    private FinanceView financeView;
+    private FinanceView financeView = FinanceView.OVERVIEW;
 
     private boolean nonIfs = false;
     private String nonIfsUrl;

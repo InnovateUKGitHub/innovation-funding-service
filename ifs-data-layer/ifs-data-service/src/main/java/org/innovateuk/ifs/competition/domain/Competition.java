@@ -92,7 +92,7 @@ public class Competition implements ProcessActivity {
     private Boolean hasInterviewStage;
 
     @Enumerated(EnumType.STRING)
-    private FinanceView financeView;
+    private FinanceView financeView = FinanceView.OVERVIEW;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
