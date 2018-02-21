@@ -1,7 +1,11 @@
 *** Settings ***
 Documentation     INFUND-832
+...
 ...               INFUND-409
+...
 ...               IFS-2327
+...
+...               IFS-2564 As an Applicant I am able to see the Appendix guidance, file type and size
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Upload    Applicant    Email
@@ -12,8 +16,8 @@ Resource          ../../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Appendices available only for the correct questions
-    [Documentation]    INFUND-832
-    [Tags]
+    [Documentation]    INFUND-832  IFS-2564
+    [Tags]    TEST1
     [Setup]    Log in as a different user                            &{lead_applicant_credentials}
     ## Please leave this test case on top. It checks the appearance of the Upload button for pdfs before other tests do an actual upload
     the user cannot see the option to upload a file on the question  link=1. Business opportunity
@@ -179,7 +183,14 @@ the user can see the option to upload a file on the question
     the user navigates to the page   ${DASHBOARD_URL}
     the user clicks the button/link  link=Academic robot test application
     the user clicks the button/link  ${QUESTION}
+    the user checks the Appendix guidance
     the user should see the text in the page  Upload
+
+the user checks the Appendix guidance
+    the user clicks the button/link           jQuery=span:contains("What should I include in the appendix?")
+    the user should see the element           jQuery=h4:contains("Accepted appendix file types")
+    the user should see the element           jQuery=li:contains("PDF")
+    the user should see the element           jQuery=p:contains("It must be less than 1MB in size.")
 
 The applicant opens the uploaded file
     The user opens the link in new window        ${valid_pdf}
