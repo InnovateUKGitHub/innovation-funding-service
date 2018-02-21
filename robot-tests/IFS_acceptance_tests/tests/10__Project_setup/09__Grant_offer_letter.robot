@@ -529,10 +529,10 @@ the user removes existing and uploads new grant offer letter
     the user should see the element  jQuery=li:contains(Grant offer letter) .status-waiting
 
 the user tries to reject without a reason he should get a validation message
-    the user selects the radio button    approvalType  rejectGOL
+    the user selects the radio button     approvalType  rejectGOL
     the user enters text to a text field  id=gol-reject-reason  ${empty}
-    the user moves focus to the element  link=Dashboard
-    the user should see a field error    This field cannot be left blank
+    the user moves focus to the element   link=Dashboard
+    the user should see a field error     This field cannot be left blank
 
 the user rejects the GOL then he should see a proper status message
     # Insert Rejection text and submit
