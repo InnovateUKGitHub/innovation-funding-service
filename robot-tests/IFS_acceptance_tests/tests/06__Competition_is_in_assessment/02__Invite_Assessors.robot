@@ -109,24 +109,21 @@ Filter on innovation area
 Next/Previous pagination on Find tab
     [Documentation]    INFUND-6403
     [Tags]
-    When the user clicks the button/link     jQuery=.pagination-label:contains("Next")
-    Then the user should see the element     jQuery=.pagination-part-title:contains("1 to 20")
-    And the user should see the element      jQuery=.pagination-part-title:contains("41 to")
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
-    And the user should not see the element  jQuery=.pagination-label:contains("Previous")
-    And the user should not see the element  jQuery=.pagination-part-title:contains("41 to")
+    Given the user clicks the button/link  link=21 to 40
+    Then the user should see the element   jQuery=.pagination-label:contains("Previous")
+    And the user should see the element    jQuery=.pagination-label:contains("Next")
 
 The user can select the profile link
     [Documentation]    INFUND-6669
     [Tags]
-    [Setup]
-    When the user clicks the button/link           link=Will Smith
-    Then the user should see the text in the page  ${invitedAssessor}
-    And the user should see the text in the page   028572565937
-    And the user should see the text in the page   Solar energy research
-    And the user should see the text in the page   Precision medicine
-    And the user should see the text in the page   Business
-    [Teardown]    The user clicks the button/link  link=Back
+    Given the user clicks the button/link  jQuery=a:contains("41 to")
+    When the user clicks the button/link   link=Will Smith
+    Then the user should see the element   jQuery=h3:contains("Email address") + p:contains("${invitedAssessor}")
+    Then the user should see the element   jQuery=h3:contains("Phone") + p:contains("28572565937")
+    Then the user should see the element   jQuery=h3:contains("Skill areas") + p:contains("Solar energy research")
+    Then the user should see the element   jQuery=h3:contains("Innovation areas") + ul:contains("Precision medicine")
+    Then the user should see the element   jQuery=h3:contains("Assessor type") + p:contains("Business")
+    [Teardown]  The user clicks the button/link  link=Back
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
@@ -140,7 +137,7 @@ Innovation sector and area are correct
 Invite multiple assessors
     [Documentation]    INFUND-6414
     [Tags]
-    Given the user clicks the button/link              jQuery=a:contains("1 to 20")
+    Given the user clicks the button/link              link=1 to 20
     And the user invites multiple assessors
     And the user clicks the button/link                jQuery=button:contains("Add selected to invite list")
     When the user clicks the button/link               jQuery=a:contains("Review and send invites")
