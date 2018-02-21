@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface AcceptInviteService {
+public interface AcceptApplicationInviteService {
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "ACCEPT_INVITE",

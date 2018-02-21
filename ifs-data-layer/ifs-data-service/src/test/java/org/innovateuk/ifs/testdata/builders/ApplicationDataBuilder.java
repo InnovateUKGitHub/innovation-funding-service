@@ -120,7 +120,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
-            doAs(systemRegistrar(), () -> acceptInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
+            doAs(systemRegistrar(), () -> acceptApplicationInviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
         });
     }
 
@@ -195,14 +195,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 withCompetitionId(data.getCompetition().getId()).
                 build(1);
 
-        inviteService.createApplicationInvites(newInviteOrganisationResource().
+        applicationInviteService.createApplicationInvites(newInviteOrganisationResource().
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).
                 build(), Optional.of(data.getApplication().getId())).getSuccess();
 
         testService.flushAndClearSession();
 
-        List<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
+        List<InviteOrganisationResource> invites = applicationInviteService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
 
         InviteOrganisationResource newInvite = simpleFindFirst(invites, i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
         ApplicationInviteResource usersInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(email)).get();

@@ -37,7 +37,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AcceptInviteServiceImplTest {
+public class AcceptApplicationInviteServiceImplTest {
 
     @Mock
     private InviteOrganisationRepository inviteOrganisationRepositoryMock;
@@ -55,7 +55,7 @@ public class AcceptInviteServiceImplTest {
     private OrganisationRepository organisationRepositoryMock;
 
     @InjectMocks
-    private AcceptInviteServiceImpl service = new AcceptInviteServiceImpl();
+    private AcceptApplicationInviteServiceImpl service = new AcceptApplicationInviteServiceImpl();
 
     private final String testInviteHash = "abcdef";
 

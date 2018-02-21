@@ -725,7 +725,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleInviteMapper roleInviteMapperMock;
 
     @Mock
-    protected InviteService inviteServiceMock;
+    protected ApplicationInviteService applicationInviteServiceMock;
 
     @Mock
     protected OrganisationInitialCreationService organisationInitialCreationServiceMock;

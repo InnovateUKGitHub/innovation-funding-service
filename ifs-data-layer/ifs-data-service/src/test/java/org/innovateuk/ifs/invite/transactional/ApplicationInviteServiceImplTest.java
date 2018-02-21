@@ -72,7 +72,7 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class InviteServiceImplTest {
+public class ApplicationInviteServiceImplTest {
 
     @Mock
     private NotificationService notificationService;
@@ -114,7 +114,7 @@ public class InviteServiceImplTest {
     private SystemNotificationSource systemNotificationSourceMock;
 
     @InjectMocks
-    private InviteServiceImpl inviteService = new InviteServiceImpl();
+    private ApplicationInviteServiceImpl inviteService = new ApplicationInviteServiceImpl();
     private LocalValidatorFactoryBean localValidatorFactory;
 
     @Before

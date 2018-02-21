@@ -50,7 +50,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Service
 public class InviteProjectServiceImpl extends BaseTransactionalService implements InviteProjectService {
 
-    private static final Log LOG = LogFactory.getLog(InviteServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(InviteProjectServiceImpl.class);
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;

@@ -16,7 +16,7 @@ import org.springframework.security.access.prepost.PreFilter;
 import java.util.List;
 import java.util.Optional;
 
-public interface InviteService {
+public interface ApplicationInviteService {
 
     @PreFilter(filterTarget = "invites", value = "hasPermission(filterObject, 'SEND')")
     List<ServiceResult<Void>> inviteCollaborators(String baseUrl, @P("invites") List<ApplicationInvite> invites);

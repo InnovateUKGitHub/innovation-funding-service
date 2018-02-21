@@ -59,9 +59,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class InviteServiceImpl extends BaseApplicationInviteService implements InviteService {
+public class ApplicationInviteServiceImpl extends BaseApplicationInviteService implements ApplicationInviteService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InviteServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationInviteServiceImpl.class);
 
     enum Notifications {
         INVITE_COLLABORATOR
@@ -105,7 +105,7 @@ public class InviteServiceImpl extends BaseApplicationInviteService implements I
 
     LocalValidatorFactoryBean validator;
 
-    public InviteServiceImpl() {
+    public ApplicationInviteServiceImpl() {
         validator = new LocalValidatorFactoryBean();
         validator.setProviderClass(HibernateValidator.class);
         validator.afterPropertiesSet();

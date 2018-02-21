@@ -6,7 +6,7 @@ import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
-import org.innovateuk.ifs.invite.transactional.InviteService;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newAppl
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.builder.InviteResultResourceBuilder.newInviteResultResource;
-import static org.innovateuk.ifs.invite.security.InviteServiceSecurityTest.TestInviteService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
+import static org.innovateuk.ifs.invite.security.ApplicationInviteServiceSecurityTest.TestApplicationInviteService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -29,9 +29,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 /**
- * Testing how the secured methods in InviteService interact with Spring Security
+ * Testing how the secured methods in ApplicationInviteService interact with Spring Security
  */
-public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteService> {
+public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTest<ApplicationInviteService> {
 
     ApplicationInvitePermissionRules invitePermissionRules;
     InviteOrganisationPermissionRules inviteOrganisationPermissionRules;
@@ -93,11 +93,11 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     }
 
     @Override
-    protected Class<? extends InviteService> getClassUnderTest() {
-        return TestInviteService.class;
+    protected Class<? extends ApplicationInviteService> getClassUnderTest() {
+        return TestApplicationInviteService.class;
     }
 
-    public static class TestInviteService implements InviteService {
+    public static class TestApplicationInviteService implements ApplicationInviteService {
 
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
