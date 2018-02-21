@@ -30,8 +30,9 @@
                     <th:block th:if="${question.appendix}">
                         <dt class="column-third">Accepted appendix file types</dt>
                         <dd class="column-two-thirds">
-                            <ul th:each="fileType : ${question.allowedFileTypes}">
-                                <li th:text="${fileType}"></li>
+                            <ul>
+                                <li th:each="fileType : ${question.allowedFileTypes}"
+                                    th:text="${fileType}"></li>
                             </ul>
                         </dd>
                         <dt class="column-third">Appendix guidance</dt>
