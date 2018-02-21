@@ -219,7 +219,6 @@ public class AssessmentReviewPanelParticipantRepositoryIntegrationTest extends B
 
     @Test
     public void findByUserIdAndRole() {
-        loginSteveSmith();
 
         Competition competition = newCompetition()
                 .with(id(null))

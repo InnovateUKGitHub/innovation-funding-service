@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class AssessmentReviewPanelInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentPanelInviteRepository> {
+public class AssessmentReviewPanelInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentReviewPanelInviteRepository> {
 
     private Competition competition;
 
@@ -45,7 +45,7 @@ public class AssessmentReviewPanelInviteRepositoryIntegrationTest extends BaseRe
 
     @Autowired
     @Override
-    protected void setRepository(AssessmentPanelInviteRepository repository) {
+    protected void setRepository(AssessmentReviewPanelInviteRepository repository) {
         this.repository = repository;
     }
 

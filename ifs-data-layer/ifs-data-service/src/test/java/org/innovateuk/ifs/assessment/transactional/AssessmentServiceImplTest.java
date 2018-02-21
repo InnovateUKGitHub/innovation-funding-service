@@ -885,11 +885,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, "",  null,true)).thenReturn(applications);
-        when(assessmentPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
+        when(assessmentReviewPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
         when(assessmentPanelParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
                 .thenReturn(1);
-        when(assessmentPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT)))
+        when(assessmentReviewPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT)))
                 .thenReturn(1);
         when(assessmentPanelParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.PENDING, panelInviteIds))
@@ -897,13 +897,14 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentPanelKeyStatisticsResource> serviceResult = assessmentService.getAssessmentPanelKeyStatistics(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, assessmentPanelInviteRepositoryMock, assessmentPanelParticipantRepositoryMock);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).getByCompetitionId(competitionId);
+        InOrder inOrder = inOrder(applicationRepositoryMock,
+                                  assessmentReviewPanelInviteRepositoryMock, assessmentPanelParticipantRepositoryMock);
+        inOrder.verify(assessmentReviewPanelInviteRepositoryMock).getByCompetitionId(competitionId);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, "",  null,true);
 
         inOrder.verify(assessmentPanelParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT));
+        inOrder.verify(assessmentReviewPanelInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT));
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
@@ -942,8 +943,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentReviewPanelInvite::getId);
 
-        when(assessmentPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(2);
-        when(assessmentPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
+        when(assessmentReviewPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(2);
+        when(assessmentReviewPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
 
         when(assessmentPanelParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
@@ -954,8 +955,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentPanelInviteStatisticsResource> serviceResult = assessmentService.getAssessmentPanelInviteStatistics(competitionId);
 
-        InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock, assessmentPanelParticipantRepositoryMock);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).getByCompetitionId(competitionId);
+        InOrder inOrder = inOrder(assessmentReviewPanelInviteRepositoryMock, assessmentPanelParticipantRepositoryMock);
+        inOrder.verify(assessmentReviewPanelInviteRepositoryMock).getByCompetitionId(competitionId);
         inOrder.verify(assessmentPanelParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
         inOrder.verify(assessmentPanelParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds);
         inOrder.verifyNoMoreInteractions();

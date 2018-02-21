@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
-import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
@@ -59,7 +59,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     private InviteProjectMapper inviteMapper;
 
     @Autowired
-    private InviteProjectRepository inviteProjectRepository;
+    private ProjectInviteRepository projectInviteRepository;
 
     @Autowired
     private ProjectService projectService;
@@ -94,7 +94,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                 return serviceFailure(badRequestError(errors.toString()));
             } else {
                 projectInvite.setHash(generateInviteHash());
-                inviteProjectRepository.save(projectInvite);
+                projectInviteRepository.save(projectInvite);
                 return serviceSuccess();
             }
         })));
@@ -117,7 +117,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
         if(projectId == null) {
             return serviceFailure(new Error(PROJECT_INVITE_INVALID_PROJECT_ID, NOT_FOUND));
         }
-        List<ProjectInvite> invites = inviteProjectRepository.findByProjectId(projectId);
+        List<ProjectInvite> invites = projectInviteRepository.findByProjectId(projectId);
         List<InviteProjectResource> inviteResources = invites.stream().map(this::mapInviteToInviteResource).collect(Collectors.toList());
         return serviceSuccess(Lists.newArrayList(inviteResources));
     }
@@ -127,7 +127,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     public ServiceResult<Void> acceptProjectInvite(String inviteHash, Long userId) {
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if(invite.getEmail().equalsIgnoreCase(user.getEmail())){
-                ProjectInvite projectInvite = inviteProjectRepository.save(invite.open());
+                ProjectInvite projectInvite = projectInviteRepository.save(invite.open());
                 return projectService.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId()).andOnSuccess(pu -> {
                     pu.setInvite(projectInvite);
                     projectUserRepository.save(pu.accept());
@@ -165,7 +165,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     private ServiceResult<Void> validateUserNotAlreadyInvited(InviteProjectResource invite) {
 
-        List<ProjectInvite> existingInvites = inviteProjectRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
+        List<ProjectInvite> existingInvites = projectInviteRepository.findByProjectIdAndEmail(invite.getProject(), invite.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_INVITED_ON_PROJECT);
     }
 
@@ -205,6 +205,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     }
 
     private ServiceResult<ProjectInvite> getByHash(String hash) {
-        return find(inviteProjectRepository.getByHash(hash), notFoundError(ProjectInvite.class, hash));
+        return find(projectInviteRepository.getByHash(hash), notFoundError(ProjectInvite.class, hash));
     }
 }

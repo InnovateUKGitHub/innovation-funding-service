@@ -17,7 +17,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -82,7 +82,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private ActivityStateRepository activityStateRepository;
 
     @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+    private AssessmentReviewPanelInviteRepository assessmentReviewPanelInviteRepository;
 
     @Autowired
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
@@ -164,11 +164,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
         AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = new AssessmentPanelKeyStatisticsResource();
-        List<Long> assessmentPanelInviteIds = simpleMap(assessmentPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
+        List<Long> assessmentPanelInviteIds = simpleMap(assessmentReviewPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
         assessmentPanelKeyStatisticsResource.setApplicationsInPanel(getApplicationPanelAssignedCountStatistic(competitionId));
         assessmentPanelKeyStatisticsResource.setAssessorsAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
-        assessmentPanelKeyStatisticsResource.setAssessorsPending(assessmentPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
+        assessmentPanelKeyStatisticsResource.setAssessorsPending(assessmentReviewPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
 
         return serviceSuccess(assessmentPanelKeyStatisticsResource);
     }
@@ -181,9 +181,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentPanelInviteStatisticsResource> getAssessmentPanelInviteStatistics(long competitionId) {
         AssessmentPanelInviteStatisticsResource statisticsResource = new AssessmentPanelInviteStatisticsResource();
-        List<Long> assessmentPanelInviteIds = simpleMap(assessmentPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
+        List<Long> assessmentPanelInviteIds = simpleMap(assessmentReviewPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
-        statisticsResource.setInvited(assessmentPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        statisticsResource.setInvited(assessmentReviewPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         statisticsResource.setAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
         statisticsResource.setDeclined(getParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, assessmentPanelInviteIds));
 

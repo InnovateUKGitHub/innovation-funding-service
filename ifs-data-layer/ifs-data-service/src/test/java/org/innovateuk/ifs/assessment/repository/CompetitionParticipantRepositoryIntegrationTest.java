@@ -14,7 +14,7 @@ import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -111,7 +111,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     private AgreementRepository agreementRepository;
 
     @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+    private AssessmentReviewPanelInviteRepository assessmentReviewPanelInviteRepository;
 
     @Autowired
     @Override
@@ -1012,7 +1012,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         unavailableParticipant.acceptAndAssignUser(assessor);
 
         AssessmentReviewPanelInvite invite = new AssessmentReviewPanelInvite(userMapper.mapToDomain(getFelixWilson()), "hash", competition);
-        assessmentPanelInviteRepository.save(invite);
+        assessmentReviewPanelInviteRepository.save(invite);
 
         flushAndClearSession();
 

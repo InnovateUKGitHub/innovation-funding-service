@@ -17,7 +17,7 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.mapper.AssessmentReviewPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
@@ -84,7 +84,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+    private AssessmentReviewPanelInviteRepository assessmentReviewPanelInviteRepository;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
@@ -148,7 +148,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<AssessmentReviewPanelInvite> invites = assessmentPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+            List<AssessmentReviewPanelInvite> invites = assessmentReviewPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
             List<String> recipients = simpleMap(invites, AssessmentReviewPanelInvite::getName);
             recipients.sort(String::compareTo);
@@ -166,7 +166,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
 
-            List<AssessmentReviewPanelInvite> invites = assessmentPanelInviteRepository.getByIdIn(inviteIds);
+            List<AssessmentReviewPanelInvite> invites = assessmentReviewPanelInviteRepository.getByIdIn(inviteIds);
             List<String> recipients = simpleMap(invites, AssessmentReviewPanelInvite::getName);
             recipients.sort(String::compareTo);
 
@@ -187,7 +187,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
             String customTextHtml = plainTextToHtml(customTextPlain);
 
             return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
-                    assessmentPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
+                    assessmentReviewPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         assessmentPanelParticipantRepository.save(
                                 new AssessmentReviewPanelParticipant(invite.send(loggedInUserSupplier.get(), now()))
@@ -211,7 +211,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
         String customTextHtml = plainTextToHtml(customTextPlain);
 
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
-                assessmentPanelInviteRepository.getByIdIn(inviteIds),
+                assessmentReviewPanelInviteRepository.getByIdIn(inviteIds),
                 invite -> sendInviteNotification(
                         assessorInviteSendResource.getSubject(),
                         customTextPlain,
@@ -259,7 +259,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
 
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-        Page<AssessmentReviewPanelInvite> pagedResult = assessmentPanelInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
+        Page<AssessmentReviewPanelInvite> pagedResult = assessmentReviewPanelInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),
@@ -362,7 +362,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     private ServiceResult<AssessmentReviewPanelInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
-                        competition -> assessmentPanelInviteRepository.save(new AssessmentReviewPanelInvite(user, generateInviteHash(), competition))
+                        competition -> assessmentReviewPanelInviteRepository.save(new AssessmentReviewPanelInvite(user, generateInviteHash(), competition))
                 );
 
     }
@@ -427,7 +427,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     }
 
     private ServiceResult<AssessmentReviewPanelInvite> getByEmailAndCompetition(String email, long competitionId) {
-        return find(assessmentPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
+        return find(assessmentReviewPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
     }
 
     private boolean isUserCompliant(AssessmentReviewPanelInvite competitionInvite) {
@@ -452,7 +452,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     }
 
     private AssessmentReviewPanelInvite openInvite(AssessmentReviewPanelInvite invite) {
-        return assessmentPanelInviteRepository.save(invite.open());
+        return assessmentReviewPanelInviteRepository.save(invite.open());
     }
 
     @Override
@@ -499,7 +499,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     }
 
     private ServiceResult<AssessmentReviewPanelInvite> getByHash(String inviteHash) {
-        return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
+        return find(assessmentReviewPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
     }
 
     private static ServiceResult<AssessmentReviewPanelParticipant> accept(AssessmentReviewPanelParticipant participant) {
@@ -560,7 +560,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     public ServiceResult<Void> deleteAllInvites(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturnVoid(competition ->
-                        assessmentPanelInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
+                        assessmentReviewPanelInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
     }
 
     private ServiceResult<Void> deleteInvite(AssessmentReviewPanelInvite invite) {
@@ -568,7 +568,7 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
             return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_CANNOT_DELETE_ONCE_SENT, invite.getEmail()));
         }
 
-        assessmentPanelInviteRepository.delete(invite);
+        assessmentReviewPanelInviteRepository.delete(invite);
         return serviceSuccess();
     }
 
