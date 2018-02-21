@@ -21,7 +21,7 @@ User navigates to the Manage interview panel
     Then the user clicks the button/link   jQuery=a:contains("Manage interview panel")
     And the user sees the Interview panel page and the Interview links
 
-There are no Assessors in Invite tab before sending invite
+There are no Assessors in Invite tab before sending invites
     [Documentation]  IFS-2779
     [Tags]
     Given the user clicks the button/link  link=Invite assessors
@@ -49,12 +49,11 @@ Assessors receives the invite to interview panel
     When the user clicks the button/link       link=Review and send invites
     Then the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
     And the user should see the element        jQuery=label:contains("Subject") ~ input[value="Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
-    And the user enters text to a text field   id=message  Addintional message
-    When the user clicks the button/link       jQuery=button:contains("Send invite")
+    And the user enters text to a text field   css=.editor   Additional message
+    When the user clicks the button/link       css=button[type="submit"]   #Send invite
     Then the user should see the element       link=Find
     And the user reads his email               ${assessor_ben_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
     And the user reads his email               ${assessor_joel_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
-    #TODO This test will need to be updated when the stats are fixed IFS-2727
 
 *** Keywords ***
 Custom Suite Setup
