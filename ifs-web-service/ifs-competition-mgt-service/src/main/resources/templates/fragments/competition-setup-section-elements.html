@@ -232,7 +232,7 @@
                         <div class="multiple-choice" th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
                             <input type="checkbox"
                                    th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
-                                   th:field="*{question.allowedFileTypes}"
+                                   th:field="*{question.allowedFileTypesEnum}"
                                    th:value="${fileTypeCategory.name()}"
                                    name="allowedFileTypes"
                                    required="required"

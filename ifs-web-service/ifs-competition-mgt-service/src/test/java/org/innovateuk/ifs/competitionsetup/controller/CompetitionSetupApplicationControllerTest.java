@@ -16,7 +16,6 @@ import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -374,6 +373,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
                 .param("question.allowedFileTypes", "PDF")
+                .param("question.fileUploadGuidance", "Only PDFs allowed")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")
                 .param("question.writtenFeedback", "true")
@@ -393,7 +393,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void submitSectionApplicationQuestionWithAppendixWithoutTypeResultsInErrors() throws Exception {
+    public void submitSectionApplicationQuestionWithAppendixWithoutTypeResultsAndGuidanceInErrors() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
@@ -430,6 +430,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedFileTypes").getCode());
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.fileUploadGuidance").getCode());
 
         verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(ApplicationQuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
     }
@@ -612,7 +613,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidance", "My guidance")
                 .param("question.maxWords", "400")
                 .param("question.appendix", "true")
-                .param("question.allowedFileTypes", "Spreadsheet")
+                .param("question.allowedFileTypes", "SPREADSHEET")
+                .param("question.fileUploadGuidance", "Spreadsheet only")
                 .param("question.scored", "true")
                 .param("question.scoreTotal", "100")
                 .param("question.writtenFeedback", "true")
