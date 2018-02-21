@@ -21,7 +21,7 @@ User navigates to the Manage interview panel
     Then the user clicks the button/link   jQuery=a:contains("Manage interview panel")
     And the user sees the Interview panel page and the Interview links
 
-There are no Assessors in Invite tab before sending invites
+There are no Assessors in Invite tab before sending the invites
     [Documentation]  IFS-2779
     [Tags]
     Given the user clicks the button/link  link=Invite assessors
