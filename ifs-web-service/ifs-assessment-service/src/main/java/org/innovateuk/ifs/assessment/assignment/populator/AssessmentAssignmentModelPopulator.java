@@ -48,7 +48,7 @@ public class AssessmentAssignmentModelPopulator {
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 
@@ -60,13 +60,13 @@ public class AssessmentAssignmentModelPopulator {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
                         || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .collect(Collectors.toCollection(supplier));
     }
 
     private String getProjectSummary(AssessmentResource assessmentResource) {
         FormInputResponseResource formInputResponseResource = formInputResponseRestService.getByApplicationIdAndQuestionName(
-                assessmentResource.getApplication(), "Project summary").getSuccessObjectOrThrowException();
+                assessmentResource.getApplication(), "Project summary").getSuccess();
         return formInputResponseResource.getValue();
     }
 }

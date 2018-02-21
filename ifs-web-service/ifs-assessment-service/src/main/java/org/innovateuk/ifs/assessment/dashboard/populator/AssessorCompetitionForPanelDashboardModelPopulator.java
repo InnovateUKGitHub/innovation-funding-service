@@ -4,10 +4,9 @@ import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -61,7 +60,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     }
 
     private List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications(long userId, long competitionId) {
-        List<AssessmentReviewResource> reviews = assessmentPanelRestService.getAssessmentReviews(userId, competitionId).getSuccessObject();
+        List<AssessmentReviewResource> reviews = assessmentPanelRestService.getAssessmentReviews(userId, competitionId).getSuccess();
         return simpleMap(reviews, review -> createApplicationViewModel(review));
     }
 
@@ -80,7 +79,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 }

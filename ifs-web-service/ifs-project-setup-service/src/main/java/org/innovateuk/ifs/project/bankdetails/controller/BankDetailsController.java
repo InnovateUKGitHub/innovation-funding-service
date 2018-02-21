@@ -58,7 +58,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
         if(bankDetailsResourceRestResult.isSuccess()) {
-            BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
+            BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccess();
             populateExitingBankDetailsInForm(bankDetailsResource, form);
         }
         return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, false);
@@ -74,7 +74,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
         if(bankDetailsResourceRestResult.isSuccess()) {
-            BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
+            BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccess();
             populateExitingBankDetailsInForm(bankDetailsResource, form);
         }
         return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, true);
@@ -214,7 +214,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         BankDetailsViewModel bankDetailsViewModel = loadDataIntoModelResource(project, organisationResource);
 
         if(bankDetailsResourceRestResult.isSuccess()){
-            model.addAttribute("bankDetails", bankDetailsResourceRestResult.getSuccessObject());
+            model.addAttribute("bankDetails", bankDetailsResourceRestResult.getSuccess());
         }
 
         model.addAttribute("project", project);
@@ -243,7 +243,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     private void populateExitingBankDetailsInForm(BankDetailsResource bankDetails, BankDetailsForm bankDetailsForm){
-        OrganisationAddressResource organisationAddressResource = organisationAddressRestService.findOne(bankDetails.getOrganisationAddress().getId()).getSuccessObjectOrThrowException();
+        OrganisationAddressResource organisationAddressResource = organisationAddressRestService.findOne(bankDetails.getOrganisationAddress().getId()).getSuccess();
         bankDetailsForm.setAddressType(OrganisationAddressType.valueOf(organisationAddressResource.getAddressType().getName()));
         bankDetailsForm.setSortCode(bankDetails.getSortCode());
         bankDetailsForm.setAccountNumber(bankDetails.getAccountNumber());

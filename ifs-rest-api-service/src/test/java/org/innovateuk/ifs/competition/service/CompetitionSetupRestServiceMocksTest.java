@@ -37,7 +37,7 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
         setupPostWithRestResultExpectations(competitionSetupRestURL + "", CompetitionResource.class, null, competition, HttpStatus.CREATED);
 
-        CompetitionResource response = service.create().getSuccessObject();
+        CompetitionResource response = service.create().getSuccess();
         assertNotNull(response);
         Assert.assertEquals(competition, response);
     }
@@ -48,7 +48,7 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
         setupPostWithRestResultExpectations(competitionSetupRestURL + "/non-ifs", CompetitionResource.class, null, competition, HttpStatus.CREATED);
 
-        CompetitionResource response = service.createNonIfs().getSuccessObject();
+        CompetitionResource response = service.createNonIfs().getSuccess();
         assertNotNull(response);
         Assert.assertEquals(competition, response);
     }
@@ -61,7 +61,7 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
 
         setupPutWithRestResultExpectations(competitionSetupRestURL + "/" + competition.getId(), Void.class, competition, null, HttpStatus.OK);
 
-        service.update(competition).getSuccessObject();
+        service.update(competition).getSuccess();
     }
 
     @Test
@@ -84,7 +84,7 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
         String competitionCode = "1602-1";
         setupPostWithRestResultExpectations(String.format("%s/generate-competition-code/%s", competitionSetupRestURL, competitionId), String.class, openingDate, competitionCode, HttpStatus.OK);
 
-        String response = service.generateCompetitionCode(competitionId, openingDate).getSuccessObject();
+        String response = service.generateCompetitionCode(competitionId, openingDate).getSuccess();
         assertNotNull(response);
         assertEquals(competitionCode, response);
     }
@@ -161,6 +161,6 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
         RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> result = service.getSectionStatuses(competitionId);
 
         assertTrue(result.isSuccess());
-        assertEquals(expectedResult, result.getSuccessObject());
+        assertEquals(expectedResult, result.getSuccess());
     }
 }

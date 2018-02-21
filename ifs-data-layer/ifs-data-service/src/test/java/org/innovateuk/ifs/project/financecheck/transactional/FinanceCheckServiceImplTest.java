@@ -124,12 +124,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<FinanceCheckResource> result = service.getByProjectAndOrganisation(compositeId);
         // Assertions - basically testing the deserialisation into resource objects
         assertTrue(result.isSuccess());
-        assertEquals(financeCheck.getId(), result.getSuccessObject().getId());
-        assertEquals(financeCheck.getOrganisation().getId(), result.getSuccessObject().getOrganisation());
-        assertEquals(financeCheck.getProject().getId(), result.getSuccessObject().getProject());
-        assertEquals(financeCheck.getCostGroup().getId(), result.getSuccessObject().getCostGroup().getId());
-        assertEquals(financeCheck.getCostGroup().getCosts().size(), result.getSuccessObject().getCostGroup().getCosts().size());
-        assertEquals(financeCheck.getCostGroup().getCosts().get(0).getCostCategory().getId(), result.getSuccessObject().getCostGroup().getCosts().get(0).getCostCategory().getId());
+        assertEquals(financeCheck.getId(), result.getSuccess().getId());
+        assertEquals(financeCheck.getOrganisation().getId(), result.getSuccess().getOrganisation());
+        assertEquals(financeCheck.getProject().getId(), result.getSuccess().getProject());
+        assertEquals(financeCheck.getCostGroup().getId(), result.getSuccess().getCostGroup().getId());
+        assertEquals(financeCheck.getCostGroup().getCosts().size(), result.getSuccess().getCostGroup().getCosts().size());
+        assertEquals(financeCheck.getCostGroup().getCosts().get(0).getCostCategory().getId(), result.getSuccess().getCostGroup().getCosts().get(0).getCostCategory().getId());
     }
 
 
@@ -192,11 +192,11 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeCheckQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
-        FinanceCheckSummaryResource summary = result.getSuccessObject();
+        FinanceCheckSummaryResource summary = result.getSuccess();
         List<FinanceCheckPartnerStatusResource> partnerStatuses = summary.getPartnerStatusResources();
         assertEquals(3, partnerStatuses.size());
 
@@ -240,7 +240,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -274,12 +274,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(applicationFinanceResource));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
 
-        FinanceCheckEligibilityResource eligibility = result.getSuccessObject();
+        FinanceCheckEligibilityResource eligibility = result.getSuccess();
 
         assertTrue(eligibility.getDurationInMonths() == 5L);
         assertTrue(new BigDecimal("5000033.33").compareTo(eligibility.getTotalCost()) == 0);
@@ -325,7 +325,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject());
+        assertTrue(result.getSuccess());
     }
 
     @Test
@@ -346,7 +346,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -367,7 +367,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -386,7 +386,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -405,7 +405,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -424,7 +424,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertFalse(result.getSuccessObject());
+        assertFalse(result.getSuccess());
     }
 
     @Test
@@ -447,7 +447,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isFailure());
@@ -475,7 +475,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -505,12 +505,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
 
-        FinanceCheckOverviewResource overview = result.getSuccessObject();
+        FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
         assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
@@ -542,7 +542,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -572,12 +572,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
 
-        FinanceCheckOverviewResource overview = result.getSuccessObject();
+        FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
         assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
@@ -609,7 +609,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -639,12 +639,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
 
-        FinanceCheckOverviewResource overview = result.getSuccessObject();
+        FinanceCheckOverviewResource overview = result.getSuccess();
         assertEquals(projectId, overview.getProjectId());
         assertEquals(6, overview.getDurationInMonths());
         assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
@@ -663,7 +663,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(2L, result.getSuccessObject().longValue());
+        assertEquals(2L, result.getSuccess().longValue());
     }
 
     @Test
@@ -674,7 +674,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(1L, result.getSuccessObject().longValue());
+        assertEquals(1L, result.getSuccess().longValue());
     }
 
     @Test
@@ -685,7 +685,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(2L, result.getSuccessObject().longValue());
+        assertEquals(2L, result.getSuccess().longValue());
     }
 
     @Test
@@ -696,7 +696,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(1L, result.getSuccessObject().longValue());
+        assertEquals(1L, result.getSuccess().longValue());
     }
 
     @Test
@@ -750,7 +750,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         return asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000000"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 200).
                                 build(2)).
@@ -1086,7 +1086,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<Boolean> result = service.getCreditReport(projectId, organisationId);
 
         assertTrue(result.isSuccess());
-        assertEquals(true, result.getSuccessObject());
+        assertEquals(true, result.getSuccess());
 
         verify(projectFinanceRepositoryMock).findByProjectIdAndOrganisationId(projectId, organisationId);
     }
@@ -1153,7 +1153,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        ViabilityResource returnedViabilityResource = result.getSuccessObject();
+        ViabilityResource returnedViabilityResource = result.getSuccess();
 
         assertGetViabilityResults(returnedViabilityResource, Viability.REVIEW, ViabilityRagStatus.RED,
                 null, null, null);
@@ -1169,7 +1169,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        ViabilityResource returnedViabilityResource = result.getSuccessObject();
+        ViabilityResource returnedViabilityResource = result.getSuccess();
 
         assertGetViabilityResults(returnedViabilityResource, Viability.NOT_APPLICABLE, ViabilityRagStatus.AMBER,
                 null, null, null);
@@ -1193,7 +1193,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        ViabilityResource returnedViabilityResource = result.getSuccessObject();
+        ViabilityResource returnedViabilityResource = result.getSuccess();
 
         assertGetViabilityResults(returnedViabilityResource, Viability.APPROVED, ViabilityRagStatus.GREEN,
                 "Lee", "Bowman", LocalDate.now());
@@ -1257,7 +1257,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+        EligibilityResource returnedEligibilityResource = result.getSuccess();
 
         assertGetEligibilityResults(returnedEligibilityResource, Eligibility.REVIEW, EligibilityRagStatus.RED,
                 null, null, null);
@@ -1274,7 +1274,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+        EligibilityResource returnedEligibilityResource = result.getSuccess();
 
         assertGetEligibilityResults(returnedEligibilityResource, Eligibility.NOT_APPLICABLE, EligibilityRagStatus.AMBER,
                 null, null, null);
@@ -1299,7 +1299,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         assertTrue(result.isSuccess());
 
-        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+        EligibilityResource returnedEligibilityResource = result.getSuccess();
 
         assertGetEligibilityResults(returnedEligibilityResource, Eligibility.APPROVED, EligibilityRagStatus.GREEN,
                 "Lee", "Bowman", LocalDate.now());

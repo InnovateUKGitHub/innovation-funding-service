@@ -19,7 +19,7 @@ public class ApplicationInnovationAreaPopulator {
 
 
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
-        innovationAreaViewModel.setAvailableInnovationAreas(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationResource.getId()).getSuccessObject());
+        innovationAreaViewModel.setAvailableInnovationAreas(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationResource.getId()).getSuccess());
         innovationAreaViewModel.setQuestionId(questionId);
         innovationAreaViewModel.setApplicationId(applicationResource.getId());
         innovationAreaViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());

@@ -29,7 +29,7 @@ public class InviteOrganisationServiceImplTest extends BaseServiceUnitTest<Invit
         when(inviteOrganisationMapperMock.mapToResource(inviteOrganisation)).thenReturn(inviteOrganisationResource);
 
         ServiceResult<InviteOrganisationResource> result = service.getById(inviteOrganisation.getId());
-        assertEquals(inviteOrganisationResource, result.getSuccessObject());
+        assertEquals(inviteOrganisationResource, result.getSuccess());
 
         InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, inviteOrganisationMapperMock);
         inOrder.verify(inviteOrganisationRepositoryMock).findOne(inviteOrganisation.getId());
@@ -49,7 +49,7 @@ public class InviteOrganisationServiceImplTest extends BaseServiceUnitTest<Invit
         when(inviteOrganisationMapperMock.mapToResource(inviteOrganisation)).thenReturn(inviteOrganisationResource);
 
         ServiceResult<InviteOrganisationResource> result = service.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId);
-        assertEquals(inviteOrganisationResource, result.getSuccessObject());
+        assertEquals(inviteOrganisationResource, result.getSuccess());
 
         InOrder inOrder = inOrder(inviteOrganisationRepositoryMock, inviteOrganisationMapperMock);
         inOrder.verify(inviteOrganisationRepositoryMock).findOneByOrganisationIdAndInvitesApplicationId(organisationId, applicationId);

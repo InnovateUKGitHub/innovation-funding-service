@@ -67,7 +67,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
     @Override
     public FinanceRowItem addCostWithoutPersisting(Long projectId, Long organisationId, Long questionId) {
         ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(projectId, organisationId);
-        return projectFinanceRowRestService.addWithoutPersisting(projectFinanceResource.getId(), questionId).getSuccessObjectOrThrowException();
+        return projectFinanceRowRestService.addWithoutPersisting(projectFinanceResource.getId(), questionId).getSuccess();
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
         }
         if (requestParams.containsKey("remove_cost")) {
             String removeCostParam = request.getParameter("remove_cost");
-            projectFinanceRowRestService.delete(projectId, organisationId, Long.valueOf(removeCostParam)).getSuccessObjectOrThrowException();
+            projectFinanceRowRestService.delete(projectId, organisationId, Long.valueOf(removeCostParam)).getSuccess();
         }
     }
 
@@ -114,12 +114,12 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
                         if (costItem != null && fieldGroup.size() > 0) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
-                            ValidationMessages addResult = projectFinanceRowRestService.add(projectFinanceId, questionId, costItem).getSuccessObjectOrThrowException();
+                            ValidationMessages addResult = projectFinanceRowRestService.add(projectFinanceId, questionId, costItem).getSuccess();
                             Either<FinanceRowItem, ValidationMessages> either;
                             if(addResult.hasErrors()) {
                                 either = Either.right(addResult);
                             } else {
-                                FinanceRowItem added = projectFinanceRowRestService.findById(addResult.getObjectId()).getSuccessObjectOrThrowException();
+                                FinanceRowItem added = projectFinanceRowRestService.findById(addResult.getObjectId()).getSuccess();
                                 either = Either.left(added);
                             }
 

@@ -11,9 +11,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.getId;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.getId;
 
 /**
  * A base class from which concrete builders can extend
@@ -67,6 +67,10 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
         return withArray((value, t) -> ReflectionTestUtils.setField(t, fieldName, value), values);
     }
 
+    public <R> S withArraySetFieldByReflection(String fieldName, R[] values, String valueFieldName) {
+        return withArray((value, t) -> ReflectionTestUtils.setField(t, fieldName, ReflectionTestUtils.getField
+                (value, valueFieldName)), values);
+    }
 
     /**
      * Given a List of values, this function will supply each item in the list to the BiConsumer provided, so that you

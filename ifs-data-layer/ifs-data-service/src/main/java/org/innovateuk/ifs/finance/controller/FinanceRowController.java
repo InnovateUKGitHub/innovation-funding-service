@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 
 /**
@@ -24,7 +24,7 @@ public class FinanceRowController {
     private static final Log LOG = LogFactory.getLog(FinanceRowController.class);
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceRowCostsService financeRowCostsService;
 
     @Autowired
     private ValidationUtil validationUtil;
@@ -34,11 +34,11 @@ public class FinanceRowController {
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
-    	RestResult<FinanceRowItem> createResult = financeRowService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
+    	RestResult<FinanceRowItem> createResult = financeRowCostsService.addCost(applicationFinanceId, questionId, newCostItem).toPostCreateResponse();
         if(createResult.isFailure()){
             return RestResult.restFailure(createResult.getFailure());
         }else{
-            FinanceRowItem costItem = createResult.getSuccessObject();
+            FinanceRowItem costItem = createResult.getSuccess();
             ValidationMessages validationMessages = validationUtil.validateCostItem(costItem);
             return RestResult.restSuccess(validationMessages, HttpStatus.CREATED);
         }
@@ -48,12 +48,12 @@ public class FinanceRowController {
     public RestResult<FinanceRowItem> addWithoutPersisting(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId) {
-        return financeRowService.addCostWithoutPersisting(applicationFinanceId, questionId).toPostCreateResponse();
+        return financeRowCostsService.addCostWithoutPersisting(applicationFinanceId, questionId).toPostCreateResponse();
     }
 
     @GetMapping("/{id}")
     public RestResult<FinanceRowItem> get(@PathVariable("id") final Long id) {
-        return financeRowService.getCostItem(id).toGetResponse();
+        return financeRowCostsService.getCostItem(id).toGetResponse();
     }
 
     /**
@@ -62,11 +62,11 @@ public class FinanceRowController {
      */
     @PutMapping("/update/{id}")
     public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @RequestBody final FinanceRowItem newCostItem) {
-        RestResult<FinanceRowItem> updateResult = financeRowService.updateCost(id, newCostItem).toGetResponse();
+        RestResult<FinanceRowItem> updateResult = financeRowCostsService.updateCost(id, newCostItem).toGetResponse();
         if(updateResult.isFailure()){
             return RestResult.restFailure(updateResult.getFailure());
         }else{
-            FinanceRowItem costItem = updateResult.getSuccessObject();
+            FinanceRowItem costItem = updateResult.getSuccess();
             ValidationMessages validationMessages = validationUtil.validateCostItem(costItem);
             return RestResult.restSuccess(validationMessages);
         }
@@ -74,6 +74,6 @@ public class FinanceRowController {
 
     @DeleteMapping("/delete/{costId}")
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
-        return financeRowService.deleteCost(costId).toDeleteResponse();
+        return financeRowCostsService.deleteCost(costId).toDeleteResponse();
     }
 }

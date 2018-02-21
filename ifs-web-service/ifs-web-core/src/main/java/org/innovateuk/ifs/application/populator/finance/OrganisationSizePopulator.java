@@ -40,8 +40,8 @@ public class OrganisationSizePopulator extends AbstractFormInputPopulator<Organi
             List<Long> completedSectionIds = sectionService.getCompleted(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId());
             viewModel.setOrganisationSizeAlert(completedSectionIds.contains(fundingSection.getId()));
         });
-        viewModel.setOrganisationSizes(organisationDetailsRestService.getOrganisationSizes().getSuccessObjectOrThrowException());
-        ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccessObjectOrThrowException();
+        viewModel.setOrganisationSizes(organisationDetailsRestService.getOrganisationSizes().getSuccess());
+        ApplicationFinanceResource applicationFinanceResource = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccess();
         viewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
 
     }

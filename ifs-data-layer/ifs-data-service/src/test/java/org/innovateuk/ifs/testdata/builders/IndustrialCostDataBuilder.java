@@ -43,14 +43,14 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     public IndustrialCostDataBuilder withWorkingDaysPerYear(Integer workingDays) {
         return updateCostItem(LabourCost.class, "Labour", item -> LabourCostCategory.WORKING_DAYS_PER_YEAR.equals(item.getRole()), existingCost -> {
             existingCost.setLabourDays(workingDays);
-            financeRowService.updateCost(existingCost.getId(), existingCost);
+            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
         });
     }
 
     public IndustrialCostDataBuilder withOtherFunding(String fundingSource, LocalDate dateSecured, BigDecimal fundingAmount) {
         return updateCostItem(OtherFunding.class, "Other funding", existingCost -> {
             existingCost.setOtherPublicFunding("Yes");
-            financeRowService.updateCost(existingCost.getId(), existingCost);
+            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
         }).addCostItem("Other funding", () -> {
             OtherFunding otherFunding = new OtherFunding();
             otherFunding.setFundingAmount(fundingAmount);
@@ -63,7 +63,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     public IndustrialCostDataBuilder withGrantClaim(Integer grantClaim) {
         return updateCostItem(GrantClaim.class, "Funding level", existingCost -> {
             existingCost.setGrantClaimPercentage(grantClaim);
-            financeRowService.updateCost(existingCost.getId(), existingCost);
+            financeRowCostsService.updateCost(existingCost.getId(), existingCost);
         });
     }
 
@@ -72,7 +72,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                 newLabourCost().withId().
                     withName().
                     withRole(role).
-                    withGrossAnnualSalary(bd(annualSalary)).
+                        withGrossEmployeeCost(bd(annualSalary)).
                     withLabourDays(daysToBeSpent).
                     withDescription().
                     build());
@@ -114,12 +114,12 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
         return with(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowService.getApplicationFinanceById(data.getApplicationFinance().getId()).
-                            getSuccessObjectOrThrowException();
+                    financeService.getApplicationFinanceById(data.getApplicationFinance().getId()).
+                            getSuccess();
 
             applicationFinance.setOrganisationSize(organsationSize);
 
-            financeRowService.updateCost(applicationFinance.getId(), applicationFinance);
+            financeRowCostsService.updateCost(applicationFinance.getId(), applicationFinance);
         });
     }
 
@@ -138,7 +138,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     private IndustrialCostDataBuilder doSetAdministrativeSupportCosts(OverheadRateType rateType, Integer rate) {
         return updateCostItem(Overhead.class, FinanceRowType.OVERHEADS.getName(), existingCost -> {
             Overhead updated = new Overhead(existingCost.getId(), rateType, rate);
-            financeRowService.updateCost(existingCost.getId(), updated);
+            financeRowCostsService.updateCost(existingCost.getId(), updated);
         });
     }
 
@@ -151,7 +151,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
-            List<FinanceRowItem> existingItems = financeRowService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccessObjectOrThrowException();
+            List<FinanceRowItem> existingItems = financeRowCostsService.getCostItems(data.getApplicationFinance().getId(), question.getId()).getSuccess();
             simpleFilter(existingItems, item -> filterFn.test((T) item)).forEach(item -> updateFn.accept((T) item));
         });
     }
@@ -163,8 +163,8 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
-            financeRowService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
-                    getSuccessObjectOrThrowException();
+            financeRowCostsService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
+                    getSuccess();
         });
     }
 
@@ -198,8 +198,8 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
     @Override
     protected void postProcess(int index, IndustrialCostData instance) {
         super.postProcess(index, instance);
-        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccessObjectOrThrowException();
-        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccessObjectOrThrowException();
+        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccess();
+        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccess();
         LOG.info("Created Industrial Costs for Application '{}', Organisation '{}'", application.getName(), organisation.getName());
     }
 }

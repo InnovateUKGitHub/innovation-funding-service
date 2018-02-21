@@ -6,6 +6,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-643: Complete internal user registration
 ...               IFS-644: Disable or reenable user profile
 ...               IFS-983: Manage users: Pending registration tab
+...               IFS-2412: Internal users resend invites
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -83,9 +84,14 @@ Administrator can successfully invite a new user
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
     And the user clicks the button/link                      jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
-    Then the user should see the element                     jQuery=h1:contains("Manage users")
+
+Administrator can successfully finish the rest of the invitation
+    [Documentation]  IFS-27  IFS-983  IFS-2412
+    [Tags]  HappyPath
+    Given the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
     And the user should see the element                      jQuery=.selected:contains("Pending")
+    When the user resends the invite
     Then the user verifies pending tab content
     When the user clicks the button/link                     jQuery=a:contains("Active")
     Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
@@ -292,3 +298,7 @@ the re-activated user tries to login
     run keyword if  ${docker}==1  log in as a different user  ${localEmailInvtedUser}  ${correct_password}
     # On production the accepted domain is innovateuk.gov.uk
     run keyword if  ${docker}!=1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
+
+the user resends the invite
+    the user clicks the button/link    css=input.button.button-secondary
+    the user reads his email           ${localEmailInvtedUser}  Invitation to Innovation Funding  Your Innovation Funding Service

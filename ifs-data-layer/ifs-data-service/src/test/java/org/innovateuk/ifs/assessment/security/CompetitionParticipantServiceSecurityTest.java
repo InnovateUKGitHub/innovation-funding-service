@@ -53,7 +53,7 @@ public class CompetitionParticipantServiceSecurityTest extends BaseServiceSecuri
 
         setLoggedInUser(assessorUserResource);
 
-        assertTrue(classUnderTest.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR).getSuccessObject().isEmpty());
+        assertTrue(classUnderTest.getCompetitionParticipants(7L, CompetitionParticipantRoleResource.ASSESSOR).getSuccess().isEmpty());
 
         verify(competitionParticipantPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanViewTheirOwnCompetitionParticipation(any(CompetitionParticipantResource.class), eq(assessorUserResource));
     }

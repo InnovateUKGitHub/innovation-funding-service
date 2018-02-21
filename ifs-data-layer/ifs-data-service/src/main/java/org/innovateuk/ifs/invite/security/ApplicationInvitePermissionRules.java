@@ -54,7 +54,7 @@ public class ApplicationInvitePermissionRules {
         return applicationIsEditableById(invite.getApplication()) && isLeadForInvite(invite, user);
     }
 
-    @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for thier organisation")
+    @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for their organisation")
     public boolean collaboratorCanSaveInviteToApplicationForTheirOrganisation(final ApplicationInviteResource invite, final UserResource user) {
         return applicationIsEditableById(invite.getApplication()) && isCollaboratorOnInvite(invite, user);
     }
@@ -103,11 +103,11 @@ public class ApplicationInvitePermissionRules {
     }
 
     private boolean isLeadForInvite(final ApplicationInvite invite, final UserResource user) {
-        return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository, roleRepository);
+        return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean isLeadForInvite(final ApplicationInviteResource invite, final UserResource user) {
-        return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository, roleRepository);
+        return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
     }
 
     private boolean applicationIsEditableById(final Long applicationId) {

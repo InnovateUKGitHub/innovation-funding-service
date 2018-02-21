@@ -73,7 +73,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     // TODO DW - INFUND-1555 - handle rest result
     private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
-        return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccessObjectOrThrowException();
+        return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccess();
     }
 
     @Override

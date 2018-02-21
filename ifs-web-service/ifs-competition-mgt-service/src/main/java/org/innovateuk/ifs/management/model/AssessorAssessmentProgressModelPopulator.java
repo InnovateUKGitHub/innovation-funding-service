@@ -46,7 +46,7 @@ public class AssessorAssessmentProgressModelPopulator {
                                                              String origin) {
         AssessorCompetitionSummaryResource summaryResource = assessorCompetitionSummaryRestService
                 .getAssessorSummary(assessorId, competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<String> innovationAreas = simpleMap(
                 summaryResource.getAssessor().getProfile().getInnovationAreas(),
@@ -165,7 +165,7 @@ public class AssessorAssessmentProgressModelPopulator {
                         innovationArea,
                         filter,
                         sortField)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 
     private AssessorAssessmentProgressApplicationsViewModel getApplicationsViewModel(ApplicationCountSummaryPageResource applicationCounts,
@@ -189,6 +189,6 @@ public class AssessorAssessmentProgressModelPopulator {
     }
 
     private CompetitionResource getCompetition(long competitionId) {
-        return competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        return competitionService.getCompetitionById(competitionId).getSuccess();
     }
 }

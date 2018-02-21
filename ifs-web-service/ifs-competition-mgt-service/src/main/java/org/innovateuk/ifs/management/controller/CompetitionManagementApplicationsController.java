@@ -154,8 +154,8 @@ public class CompetitionManagementApplicationsController {
                                               @PathVariable("competitionId") long competitionId,
                                               @PathVariable("applicationId") long applicationId)  {
 
-        applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccessObjectOrThrowException();
-        projectService.createProjectFromApplicationId(applicationId).getSuccessObjectOrThrowException();
+        applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId)).getSuccess();
+        projectService.createProjectFromApplicationId(applicationId).getSuccess();
 
         return "redirect:/competition/{competitionId}/applications/unsuccessful";
     }

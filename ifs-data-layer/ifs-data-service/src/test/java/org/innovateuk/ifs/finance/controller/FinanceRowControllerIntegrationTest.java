@@ -88,24 +88,24 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         grandClaimCost = applicationFinanceRowRepository.findOne(48L);
         applicationFinance = ((ApplicationFinanceRow) grandClaimCost).getTarget();
 
-        grantClaim = (GrantClaim) controller.get(48L).getSuccessObject();
-        materials = (Materials) controller.get(12L).getSuccessObject();
-        labourCost = (LabourCost) controller.get(4L).getSuccessObject();
-        labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccessObject();
+        grantClaim = (GrantClaim) controller.get(48L).getSuccess();
+        materials = (Materials) controller.get(12L).getSuccess();
+        labourCost = (LabourCost) controller.get(4L).getSuccess();
+        labourCostDaysPerYear = (LabourCost) controller.get(1L).getSuccess();
 
-        otherFunding = (OtherFunding) controller.get(54L).getSuccessObject();
+        otherFunding = (OtherFunding) controller.get(54L).getSuccess();
 
-        overhead =  (Overhead) controller.get(51L).getSuccessObject();
-        ValidationMessages capitalUsageResult = controller.add(applicationFinance.getId(), 31L, null).getSuccessObject();
-        capitalUsage = (CapitalUsage) controller.get(capitalUsageResult.getObjectId()).getSuccessObject();
-        ValidationMessages subConstractingCostResult = controller.add(applicationFinance.getId(), 32L, new SubContractingCost()).getSuccessObject();
-        subContractingCost = (SubContractingCost) controller.get(subConstractingCostResult.getObjectId()).getSuccessObject();
-        ValidationMessages travelCostResult = controller.add(applicationFinance.getId(), 33L, new TravelCost()).getSuccessObject();
-        travelCost = (TravelCost) controller.get(travelCostResult.getObjectId()).getSuccessObject();
-        ValidationMessages otherCostResult = controller.add(applicationFinance.getId(), 34L, null).getSuccessObject();
-        otherCost = (OtherCost) controller.get(otherCostResult.getObjectId()).getSuccessObject();
-        ValidationMessages otherFundingResult = controller.add(applicationFinance.getId(), 35L, null).getSuccessObject();
-        otherFundingCost = (OtherFunding) controller.get(otherFundingResult.getObjectId()).getSuccessObject();
+        overhead =  (Overhead) controller.get(51L).getSuccess();
+        ValidationMessages capitalUsageResult = controller.add(applicationFinance.getId(), 31L, null).getSuccess();
+        capitalUsage = (CapitalUsage) controller.get(capitalUsageResult.getObjectId()).getSuccess();
+        ValidationMessages subConstractingCostResult = controller.add(applicationFinance.getId(), 32L, new SubContractingCost()).getSuccess();
+        subContractingCost = (SubContractingCost) controller.get(subConstractingCostResult.getObjectId()).getSuccess();
+        ValidationMessages travelCostResult = controller.add(applicationFinance.getId(), 33L, new TravelCost()).getSuccess();
+        travelCost = (TravelCost) controller.get(travelCostResult.getObjectId()).getSuccess();
+        ValidationMessages otherCostResult = controller.add(applicationFinance.getId(), 34L, null).getSuccess();
+        otherCost = (OtherCost) controller.get(otherCostResult.getObjectId()).getSuccess();
+        ValidationMessages otherFundingResult = controller.add(applicationFinance.getId(), 35L, null).getSuccess();
+        otherFundingCost = (OtherFunding) controller.get(otherFundingResult.getObjectId()).getSuccess();
 
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
@@ -139,7 +139,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -147,20 +147,20 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
     public void testValidationLabourUpdateIncorrectValues(){
         labourCost.setRole("");
         labourCost.setLabourDays(-50);
-        labourCost.setGrossAnnualSalary(new BigDecimal("-500000"));
+        labourCost.setGrossEmployeeCost(new BigDecimal("-500000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
         assertTrue(validationMessages.isSuccess());
         assertNotNull(validationMessages.getOptionalSuccessObject().get());
 
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
         assertEquals(3, messages.getErrors().size());
         assertEquals(labourCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
         List<Error> expectedErrors = asList(
                 fieldError("labourDays", -50, "validation.field.max.value.or.higher", 1),
-                fieldError("grossAnnualSalary", new BigDecimal("-500000"), "validation.field.max.value.or.higher", 1),
+                fieldError("grossEmployeeCost", new BigDecimal("-500000"), "validation.field.max.value.or.higher", 1),
                 fieldError("role", "", "validation.field.must.not.be.blank"));
 
         assertErrorsAsExpected(messages, expectedErrors);
@@ -172,12 +172,12 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         labourCost.setRole(overMaxAllowedTextSize);
         labourCost.setLabourDays(400);
-        labourCost.setGrossAnnualSalary(new BigDecimal("100000"));
+        labourCost.setGrossEmployeeCost(new BigDecimal("100000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(labourCost.getId(), labourCost);
 
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     /* Overhead Section Tests */
@@ -193,7 +193,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -204,7 +204,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(-100, overhead.getRate() * 1000/100);
 
         RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(1, messages.getErrors().size());
         assertEquals(overhead.getId(), messages.getObjectId());
@@ -223,7 +223,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(1500, overhead.getRate() * 1000/100);
 
         RestResult<ValidationMessages> validationMessages = controller.update(overhead.getId(), overhead);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(1, messages.getErrors().size());
         assertEquals(overhead.getId(), messages.getObjectId());
@@ -245,7 +245,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -257,7 +257,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         materials.setQuantity(-5);
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(materials.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -280,7 +280,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(materials.getId(), materials);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
 
     }
 
@@ -301,7 +301,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -315,7 +315,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         capitalUsage.setUtilisation(-5);
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(capitalUsage.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -342,7 +342,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         capitalUsage.setUtilisation(200);
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(capitalUsage.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -368,7 +368,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         capitalUsage.setUtilisation(200);
 
         RestResult<ValidationMessages> validationMessages = controller.update(capitalUsage.getId(), capitalUsage);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(capitalUsage.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -393,7 +393,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(subContractingCost.getId(), subContractingCost);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -405,7 +405,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         subContractingCost.setCost(new BigDecimal("-5000"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -428,7 +428,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(subContractingCost.getId(), subContractingCost);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     /* TravelCost Section Tests */
@@ -444,7 +444,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -455,7 +455,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         travelCost.setQuantity(-500);
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
         assertEquals(travelCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
 
@@ -476,7 +476,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         travelCost.setQuantity(0);
 
         RestResult<ValidationMessages> validationMessages = controller.update(travelCost.getId(), travelCost);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(300, overMaxAllowedTextSize.length());
 
@@ -500,7 +500,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -511,7 +511,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         otherCost.setDescription(overMaxAllowedTextSize);
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(otherCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -530,7 +530,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         otherCost.setDescription("");
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherCost.getId(), otherCost);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(otherCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -552,7 +552,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals("Yes", otherFunding.getOtherPublicFunding());
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherFunding.getId(), otherFunding);
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -567,7 +567,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         otherFundingCost.setFundingAmount(new BigDecimal("0"));
 
         RestResult<ValidationMessages> validationMessages = controller.update(otherFundingCost.getId(), otherFundingCost);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(otherFundingCost.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -591,7 +591,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -602,7 +602,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         grantClaim.setGrantClaimPercentage(71);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -622,7 +622,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -646,7 +646,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -659,7 +659,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         grantClaim.setGrantClaimPercentage(61);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -680,7 +680,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -704,7 +704,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
         assertTrue(validationMessages.isSuccess());
-        assertTrue(validationMessages.getSuccessObject().getErrors().isEmpty());
+        assertTrue(validationMessages.getSuccess().getErrors().isEmpty());
     }
 
     @Rollback
@@ -716,7 +716,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(large.getId(), applicationFinance.getOrganisationSize().getId());
         grantClaim.setGrantClaimPercentage(51);
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(grantClaim.getId(), messages.getObjectId());
         assertEquals("costItem", messages.getObjectName());
@@ -737,7 +737,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
         grantClaim.setGrantClaimPercentage(-1);
 
         RestResult<ValidationMessages> validationMessages = controller.update(grantClaim.getId(), grantClaim);
-        ValidationMessages messages = validationMessages.getSuccessObject();
+        ValidationMessages messages = validationMessages.getSuccess();
 
         assertEquals(1, messages.getErrors().size());
         assertEquals(grantClaim.getId(), messages.getObjectId());

@@ -88,7 +88,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsMapperMock.mapToResource(bankDetails)).thenReturn(bankDetailsResource);
         ServiceResult<BankDetailsResource> result = service.getByProjectAndOrganisation(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject(), bankDetailsResource);
+        assertEquals(result.getSuccess(), bankDetailsResource);
     }
 
     @Test
@@ -215,7 +215,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisation.getId())).thenReturn(bankDetails);
         when(bankDetailsMapperMock.mapToResource(bankDetails)).thenReturn(bankDetailsResource);
         when(projectUsersHelperMock.getPartnerOrganisations(projectId)).thenReturn(singletonList(organisation));
-        when(financeRowServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
         when(organisationRepositoryMock.findOne(leadApplicantRole.getOrganisationId())).thenReturn(organisation);
 
         List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource().withOrganisationId(organisation.getId()).withOrganisationName(organisation.getName()).withBankDetailsStatus(ProjectActivityStates.ACTION_REQUIRED).build(1);
@@ -228,7 +228,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         expected.setBankDetailsStatusResources(bankDetailsStatusResource);
         ServiceResult<ProjectBankDetailsStatusSummary> result = service.getProjectBankDetailsStatusSummary(projectId);
         assertTrue(result.isSuccess());
-        assertEquals(expected, result.getSuccessObject());
+        assertEquals(expected, result.getSuccess());
     }
 
     @Test
@@ -241,7 +241,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ServiceResult<List<BankDetailsReviewResource>> result = service.getPendingBankDetailsApprovals();
 
         assertTrue(result.isSuccess());
-        assertEquals(pendingBankDetails, result.getSuccessObject());
+        assertEquals(pendingBankDetails, result.getSuccess());
     }
 
     @Test
@@ -254,7 +254,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ServiceResult<Long> result = service.countPendingBankDetailsApprovals();
 
         assertTrue(result.isSuccess());
-        assertEquals(pendingBankDetailsCount, result.getSuccessObject());
+        assertEquals(pendingBankDetailsCount, result.getSuccess());
     }
 
     @Override

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -25,13 +23,13 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -41,11 +39,9 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -59,16 +55,13 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
-public class InviteServiceImpl extends BaseTransactionalService implements InviteService {
+public class InviteServiceImpl extends BaseApplicationInviteService implements InviteService {
 
-    private static final Log LOG = LogFactory.getLog(InviteServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InviteServiceImpl.class);
 
     enum Notifications {
         INVITE_COLLABORATOR
@@ -237,37 +230,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         });
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
-        return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
-            if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
-                invite.open();
-                List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
-                if (invite.getInviteOrganisation().getOrganisation() == null && !usersOrganisations.isEmpty()) {
-                    invite.getInviteOrganisation().setOrganisation(usersOrganisations.get(0));
-                }
-                invite = applicationInviteRepository.save(invite);
-                initializeInvitee(invite, user);
-
-                return serviceSuccess();
-            }
-            LOG.error(format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
-            Error e = new Error("Invited emailaddress not the same as the users emailaddress", NOT_ACCEPTABLE);
-            return serviceFailure(e);
-        });
-    }
-
-    private void initializeInvitee(ApplicationInvite invite, User user) {
-        Application application = invite.getTarget();
-        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
-        Organisation organisation = invite.getInviteOrganisation().getOrganisation();
-        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
-        processRoleRepository.save(processRole);
-        application.addProcessRole(processRole);
-        updateApplicationProgress(application);
-    }
-
     private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
         ApplicationInviteResource inviteResource = applicationInviteMapper.mapToResource(invite);
         Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
@@ -306,40 +268,54 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private void removeApplicationInvite(ApplicationInvite applicationInvite) {
         Application application = applicationInvite.getTarget();
 
-        List<ProcessRole> collaboratorProcessRoles = processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
-        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(applicationInvite.getTarget().getId(), collaboratorProcessRoles, applicationInvite.getTarget().getLeadApplicantProcessRole());
+        List<ProcessRole> collaboratorProcessRoles =
+                processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), application.getId());
+
+        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(
+                application.getId(),
+                collaboratorProcessRoles,
+                application.getLeadApplicantProcessRole()
+        );
 
         processRoleRepository.delete(collaboratorProcessRoles);
         application.removeProcessRoles(collaboratorProcessRoles);
 
         InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
-        if (inviteOrganisation.getInvites().size() < 2) {
-            inviteOrganisationRepository.delete(inviteOrganisation);
-            deleteOrganisationsApplicationData(inviteOrganisation.getOrganisation(), application);
+        if (isRemovingLastActiveCollaboratorUser(application, inviteOrganisation)) {
+            deleteOrganisationFinanceData(inviteOrganisation.getOrganisation(), application);
+            inviteOrganisation.setOrganisation(null);
+        }
 
+        if (inviteOrganisation.isOnLastInvite()) {
+            inviteOrganisationRepository.delete(inviteOrganisation);
         } else {
             inviteOrganisation.getInvites().remove(applicationInvite);
-            inviteOrganisationRepository.save(inviteOrganisation);
         }
     }
 
-    private void deleteOrganisationsApplicationData(Organisation organisation, Application application) {
+    private boolean isRemovingLastActiveCollaboratorUser(
+            Application application,
+            InviteOrganisation inviteOrganisation
+    ) {
+        if (inviteOrganisation.getOrganisation() == null) {
+            return false;
+        }
+
+        return !simpleAnyMatch(
+                application.getProcessRoles(),
+                processRole -> processRole.getOrganisationId().equals(inviteOrganisation.getOrganisation().getId())
+        );
+    }
+
+    private void deleteOrganisationFinanceData(Organisation organisation, Application application) {
         if (organisation != null) {
             ApplicationFinance finance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
             if (finance != null) {
                 applicationFinanceRepository.delete(finance);
             }
         }
-        updateApplicationProgress(application);
-    }
-
-    private Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
-        return () -> getByHash(hash);
-    }
-
-    private ServiceResult<ApplicationInvite> getByHash(String hash) {
-        return find(applicationInviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
+        applicationService.updateApplicationProgress(application.getId());
     }
 
     private InviteResultsResource sendInvites(List<ApplicationInvite> invites) {
@@ -360,7 +336,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if (inviteOrganisationResource.getOrganisation() != null && applicationId.isPresent()) {
             return eitherFindExistingInviteOrganisationOrCreateNewInviteOrganisationForOrganisation(inviteOrganisationResource, applicationId.get());
         } else {
-
             return serviceSuccess(buildNewInviteOrganisation(inviteOrganisationResource));
         }
     }
@@ -425,7 +400,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private Set<String> getUniqueEmailAddressesForApplicationInvites(long applicationId) {
-        List<InviteOrganisationResource> inviteOrganisationResources = getInvitesByApplication(applicationId).getSuccessObject();
+        List<InviteOrganisationResource> inviteOrganisationResources = getInvitesByApplication(applicationId).getSuccess();
         return inviteOrganisationResources.stream().flatMap(inviteOrganisationResource ->
                 inviteOrganisationResource.getInviteResources().stream().map(ApplicationInviteResource::getEmail)).collect(Collectors.toSet());
     }
@@ -449,12 +424,5 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                         .andOnSuccess(inviteOrganisation -> serviceSuccess(inviteOrganisation))
                         .andOnFailure(() -> serviceSuccess(buildNewInviteOrganisationForOrganisation(inviteOrganisationResource, organisation)))
                 );
-    }
-
-    private void updateApplicationProgress(Application application) {
-        BigDecimal completion = applicationService
-                .getProgressPercentageBigDecimalByApplicationId(application.getId())
-                .getSuccessObject();
-        application.setCompletion(completion);
     }
 }

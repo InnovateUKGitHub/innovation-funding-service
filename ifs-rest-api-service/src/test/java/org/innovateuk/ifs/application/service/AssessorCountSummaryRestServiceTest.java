@@ -25,7 +25,7 @@ public class AssessorCountSummaryRestServiceTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorCountSummaryPageResource.class, pageResource, OK);
 
-        AssessorCountSummaryPageResource result = service.getAssessorCountSummariesByCompetitionId(1L, Optional.of(5L), Optional.of(BusinessType.ACADEMIC), 2, 3).getSuccessObject();
+        AssessorCountSummaryPageResource result = service.getAssessorCountSummariesByCompetitionId(1L, Optional.of(5L), Optional.of(BusinessType.ACADEMIC), 2, 3).getSuccess();
         assertEquals(pageResource, result);
     }
 }

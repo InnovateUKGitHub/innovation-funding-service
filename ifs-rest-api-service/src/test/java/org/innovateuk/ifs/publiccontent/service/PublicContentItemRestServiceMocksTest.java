@@ -32,7 +32,7 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
         expectedResponse.setTotalElements(23293L);
         expectedResponse.setTotalPages(123);
         setupGetWithRestResultAnonymousExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?innovationAreaId=12&searchString=Search+my+competition&pageNumber=32&pageSize=20", PublicContentItemPageResource.class, expectedResponse);
-        PublicContentItemPageResource response = service.getByFilterValues(Optional.of(12L), Optional.of("Search my competition"), Optional.of(32), 20).getSuccessObjectOrThrowException();
+        PublicContentItemPageResource response = service.getByFilterValues(Optional.of(12L), Optional.of("Search my competition"), Optional.of(32), 20).getSuccess();
         assertThat(response, equalTo(expectedResponse));
     }
 
@@ -44,7 +44,7 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
         expectedResponse.setTotalElements(23293L);
         expectedResponse.setTotalPages(123);
         setupGetWithRestResultAnonymousExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter", PublicContentItemPageResource.class, expectedResponse);
-        PublicContentItemPageResource response = service.getByFilterValues(Optional.empty(), Optional.empty(), Optional.empty(), null).getSuccessObjectOrThrowException();
+        PublicContentItemPageResource response = service.getByFilterValues(Optional.empty(), Optional.empty(), Optional.empty(), null).getSuccess();
         assertThat(response, equalTo(expectedResponse));
     }
 
@@ -57,7 +57,7 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
         expectedResponse.setTotalElements(23293L);
         expectedResponse.setTotalPages(123);
         setupGetWithRestResultAnonymousExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?pageNumber=32&pageSize=20", PublicContentItemPageResource.class, expectedResponse);
-        PublicContentItemPageResource response = service.getByFilterValues(Optional.empty(), Optional.empty(), Optional.of(32), 20).getSuccessObjectOrThrowException();
+        PublicContentItemPageResource response = service.getByFilterValues(Optional.empty(), Optional.empty(), Optional.of(32), 20).getSuccess();
         assertThat(response, equalTo(expectedResponse));
     }
 

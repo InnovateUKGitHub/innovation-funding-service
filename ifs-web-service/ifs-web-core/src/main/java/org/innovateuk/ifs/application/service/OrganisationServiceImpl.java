@@ -42,44 +42,44 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Override
     public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
-        return companyHouseRestService.getOrganisationById(organisationId).getSuccessObjectOrThrowException();
+        return companyHouseRestService.getOrganisationById(organisationId).getSuccess();
     }
 
     @Override
     public OrganisationResource getOrganisationById(Long organisationId) {
-        return organisationRestService.getOrganisationById(organisationId).getSuccessObjectOrThrowException();
+        return organisationRestService.getOrganisationById(organisationId).getSuccess();
     }
 
     @Override
     public OrganisationResource getOrganisationForUser(Long userId) {
-        return organisationRestService.getOrganisationByUserId(userId).getSuccessObjectOrThrowException();
+        return organisationRestService.getOrganisationByUserId(userId).getSuccess();
     }
 
     @Override
     public OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId) {
-        return organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId).getSuccessObjectOrThrowException();
+        return organisationRestService.getOrganisationByIdForAnonymousUserFlow(organisationId).getSuccess();
     }
 
     @Override
     public OrganisationResource createOrMatch(OrganisationResource organisation) {
-        return organisationRestService.createOrMatch(organisation).getSuccessObjectOrThrowException();
+        return organisationRestService.createOrMatch(organisation).getSuccess();
     }
 
     @Override
     public OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
-        return organisationRestService.createAndLinkByInvite(organisation, inviteHash).getSuccessObjectOrThrowException();
+        return organisationRestService.createAndLinkByInvite(organisation, inviteHash).getSuccess();
     }
 
     @Override
     public OrganisationResource updateNameAndRegistration(OrganisationResource organisation){
-        return organisationRestService.updateNameAndRegistration(organisation).getSuccessObjectOrThrowException();
+        return organisationRestService.updateNameAndRegistration(organisation).getSuccess();
     }
 
     @Override
     public Long getOrganisationType(Long userId, Long applicationId) {
         final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
-            final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccessObjectOrThrowException();
+            final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccess();
             return organisationResource.getOrganisationType();
         }
         return null;
@@ -89,7 +89,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     public Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
             .filter(uar -> uar.getUser().equals(userId))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
             .findFirst();
     }
 

@@ -71,7 +71,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
         ServiceResult<String> result = service.createUserRecordWithUid("email@example.com", "thepassword");
         assertTrue(result.isSuccess());
-        assertEquals("new-uid", result.getSuccessObject());
+        assertEquals("new-uid", result.getSuccess());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class RestIdentityProviderServiceTest extends BaseUnitTestMocksTest  {
 
         ServiceResult<String> result = service.updateUserPassword("existing-uid", "newpassword");
         assertTrue(result.isSuccess());
-        assertEquals("existing-uid", result.getSuccessObject());
+        assertEquals("existing-uid", result.getSuccess());
     }
 
     @Test

@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -71,7 +71,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FinanceCheckRepository financeCheckRepository;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceService financeService;
 
     @Autowired
     private ProjectFinanceRowService projectFinanceRowService;
@@ -127,7 +127,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
         boolean bankDetailsApproved = getBankDetailsApprovalStatus(projectId);
 
-        FinanceCheckOverviewResource overviewResource = getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
+        FinanceCheckOverviewResource overviewResource = getFinanceCheckOverview(projectId).getSuccess();
 
         String spendProfileGeneratedBy = spendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null);
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
@@ -143,14 +143,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
 
-        List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceRowService.financeChecksTotals(projectId).getSuccessObject();
+        List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceRowService.financeChecksTotals(projectId).getSuccess();
 
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
         BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalFundingSought);
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
-        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentageFromProject(project.getId());
+        ServiceResult<Double> researchParticipationPercentage = financeService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
@@ -166,7 +166,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
 
-            financeRowService.financeDetails(application.getId(), organisationId).
+            financeService.financeDetails(application.getId(), organisationId).
                     andOnSuccessReturn(applicationFinanceResource -> {
 
                         BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());
@@ -185,7 +185,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private boolean getBankDetailsApprovalStatus(Long projectId) {
         ServiceResult<ProjectTeamStatusResource> teamStatusResult = statusService.getProjectTeamStatus(projectId, Optional.empty());
-        return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getBankDetailsStatus())).isPresent();
+        return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccess().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getBankDetailsStatus())).isPresent();
     }
 
     private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations, Project project) {
@@ -196,7 +196,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             Pair<Viability, ViabilityRagStatus> viability = getViabilityStatus(compositeId);
             Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibilityStatus(compositeId);
 
-            boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccessObject();
+            boolean anyQueryAwaitingResponse = isQueryActionRequired(project.getId(), org.getOrganisation().getId()).getSuccess();
 
             return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
                     org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
@@ -210,9 +210,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         ServiceResult<ProjectFinanceResource> resource = projectFinanceRowService.financeChecksDetails(projectId, organisationId);
         if(resource.isSuccess()) {
-                ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccessObject().getId());
+                ServiceResult<List<QueryResource>> queries = financeCheckQueriesService.findAll(resource.getSuccess().getId());
                 if(queries.isSuccess()) {
-                    actionRequired = queries.getSuccessObject().stream().anyMatch(q -> q.awaitingResponse);
+                    actionRequired = queries.getSuccess().stream().anyMatch(q -> q.awaitingResponse);
                 }
         }
 
@@ -259,7 +259,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private Pair<Viability, ViabilityRagStatus> getViabilityStatus(ProjectOrganisationCompositeId compositeId) {
 
-        ViabilityResource viabilityDetails = getViability(compositeId).getSuccessObjectOrThrowException();
+        ViabilityResource viabilityDetails = getViability(compositeId).getSuccess();
 
         return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityRagStatus());
 
@@ -267,7 +267,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private Pair<Eligibility, EligibilityRagStatus> getEligibilityStatus(ProjectOrganisationCompositeId compositeId) {
 
-        EligibilityResource eligibilityDetails = getEligibility(compositeId).getSuccessObjectOrThrowException();
+        EligibilityResource eligibilityDetails = getEligibility(compositeId).getSuccess();
 
         return Pair.of(eligibilityDetails.getEligibility(), eligibilityDetails.getEligibilityRagStatus());
     }
@@ -334,8 +334,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
         BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
-        if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccessObject() != null) {
-            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccessObject());
+        if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccess() != null) {
+            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccess());
         }
         return researchParticipationPercentageValue;
     }

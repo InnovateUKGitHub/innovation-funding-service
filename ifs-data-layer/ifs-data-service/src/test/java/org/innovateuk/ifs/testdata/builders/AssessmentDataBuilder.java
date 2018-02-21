@@ -39,7 +39,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             Application application = applicationRepository.findByName(applicationName).get(0);
 
             AssessmentResource assessmentResource = doAs(compAdmin(), () -> assessmentService.createAssessment(
-                    new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccessObjectOrThrowException()
+                    new AssessmentCreateResource(application.getId(), assessor.getId())).getSuccess()
             );
 
             testService.doWithinTransaction(() -> {
@@ -53,16 +53,16 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                 case READY_TO_SUBMIT:
                 case SUBMITTED:
                     doAs(assessor, () -> assessmentService.acceptInvitation(assessmentResource.getId())
-                            .getSuccessObjectOrThrowException());
+                            .getSuccess());
                     break;
                 case REJECTED:
                     doAs(assessor, () -> assessmentService.rejectInvitation(assessmentResource.getId(), new
                             AssessmentRejectOutcomeResource(rejectReason, rejectComment))
-                            .getSuccessObjectOrThrowException());
+                            .getSuccess());
                     break;
                 case WITHDRAWN:
                     doAs(compAdmin(), () -> assessmentService.withdrawAssessment(assessmentResource.getId())
-                            .getSuccessObjectOrThrowException());
+                            .getSuccess());
                     break;
             }
 
@@ -89,7 +89,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                         recommendComment
                 );
 
-                assessmentService.recommend(assessmentResource.getId(), fundingDecision).getSuccessObjectOrThrowException();
+                assessmentService.recommend(assessmentResource.getId(), fundingDecision).getSuccess();
             });
         });
     }

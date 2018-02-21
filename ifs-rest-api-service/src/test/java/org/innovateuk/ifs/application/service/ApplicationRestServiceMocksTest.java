@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -9,7 +7,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -19,12 +16,10 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationResourceListType;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -52,7 +47,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, ApplicationResource.class, response);
 
         // now run the method under test
-        ApplicationResource application = service.getApplicationById(123L).getSuccessObject();
+        ApplicationResource application = service.getApplicationById(123L).getSuccess();
         assertNotNull(application);
         Assert.assertEquals(response, application);
     }
@@ -65,7 +60,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
         // now run the method under test
-        List<ApplicationResource> applications = service.getApplicationsByCompetitionIdAndUserId(123L, 456L, APPLICANT).getSuccessObject();
+        List<ApplicationResource> applications = service.getApplicationsByCompetitionIdAndUserId(123L, 456L, APPLICANT).getSuccess();
         assertNotNull(applications);
         assertEquals(returnedApplications, applications);
     }
@@ -78,7 +73,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, applicationResourceListType(), returnedApplications);
 
         // now run the method under test
-        List<ApplicationResource> applications = service.getApplicationsByUserId(123L).getSuccessObject();
+        List<ApplicationResource> applications = service.getApplicationsByUserId(123L).getSuccess();
 
         assertNotNull(applications);
         assertEquals(returnedApplications, applications);
@@ -87,16 +82,13 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void test_getCompleteQuestionsPercentage() throws Exception {
 
-        String expectedUrl =  BaseRestServiceUnitTest.dataServicesUrl + applicationRestURL + "/getProgressPercentageByApplicationId/123";
-        ObjectNode returnedDetails = new ObjectMapper().createObjectNode().put("completedPercentage", "60.5");
+        Double returnedResponse = 60.5;
 
-        when(mockAsyncRestTemplate.exchange(expectedUrl, HttpMethod.GET, httpEntityForRestCall(), ObjectNode.class)).thenReturn(settable(new ResponseEntity<>(returnedDetails, OK)));
+        String expectedUrl = applicationRestURL + "/getProgressPercentageByApplicationId/123";
+        setupGetWithRestResultAsyncExpectations(expectedUrl, Double.class, returnedResponse);
 
-        // now run the method under test
-        Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccessObject();
-
-        assertNotNull(percentage);
-        assertEquals(Double.valueOf(60.5), percentage);
+        Double percentage = service.getCompleteQuestionsPercentage(123L).get().getSuccess();
+        assertEquals(returnedResponse, percentage);
     }
 
     @Test
@@ -131,7 +123,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupPostWithRestResultExpectations(expectedUrl, ApplicationResource.class, application, application, CREATED);
 
         // now run the method under test
-        ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123").getSuccessObject();
+        ApplicationResource returnedResponse = service.createApplication(123L, 456L, "testApplicationName123").getSuccess();
         Assert.assertEquals(returnedResponse.getName(), application.getName());
     }
 
@@ -144,7 +136,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, ApplicationResource.class, application);
 
         // now run the method under test
-        ApplicationResource returnedResponse = service.findByProcessRoleId(processRoleId).getSuccessObject();
+        ApplicationResource returnedResponse = service.findByProcessRoleId(processRoleId).getSuccess();
         assertEquals(returnedResponse, application);
     }
 
@@ -158,7 +150,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, Integer.class, count);
 
         // now run the method under test
-        Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccessObject();
+        Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccess();
         assertEquals(actualCount, Integer.valueOf(count));
     }
 
@@ -179,6 +171,6 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
 
         setupPostWithRestResultExpectations(applicationRestURL + "/informIneligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
-        service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccessObjectOrThrowException();
+        service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccess();
     }
 }

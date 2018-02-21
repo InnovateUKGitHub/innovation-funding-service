@@ -9,7 +9,6 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -79,7 +78,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, ofNullable("filter"));
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test
@@ -90,6 +89,6 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionIdAndInnovationArea(competitionId, 1L,0, 20, ofNullable(2L), "", "");
 
         assertTrue(result.isSuccess());
-        assertEquals(resource, result.getSuccessObject());
+        assertEquals(resource, result.getSuccess());
     }
 }

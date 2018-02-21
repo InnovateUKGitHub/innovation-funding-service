@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.builder;
 
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
 import org.junit.Test;
 
 import java.util.List;

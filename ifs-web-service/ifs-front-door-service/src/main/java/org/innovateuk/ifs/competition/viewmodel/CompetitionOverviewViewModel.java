@@ -127,7 +127,7 @@ public class CompetitionOverviewViewModel {
         } else if (userIsLoggedIn) {
             return "/application/create-authenticated/" + competitionId;
         } else {
-            return "/application/create/check-eligibility/" + competitionId;
+            return "/application/create/start-application/" + competitionId;
         }
     }
 

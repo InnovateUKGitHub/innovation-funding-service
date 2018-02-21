@@ -53,7 +53,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * This Controller handles finance check queries activity for the finance team members
+ * This Controller handles finance check queries activity for the finance team members (internal)
  */
 @Controller
 @RequestMapping(FinanceChecksQueriesController.FINANCE_CHECKS_QUERIES_BASE_URL)
@@ -225,7 +225,7 @@ public class FinanceChecksQueriesController {
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             result.ifSuccessful(uploadedAttachment -> {
-                attachments.add(result.getSuccessObject().id);
+                attachments.add(result.getSuccess().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
                 saveFormToCookie(response, projectId, organisationId, queryId, form);
             });
@@ -296,7 +296,7 @@ public class FinanceChecksQueriesController {
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
         if (queriesResult.isSuccess()) {
-            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccessObject(), user ->
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
                     user.hasRole(UserRoleType.PROJECT_FINANCE) ?
                         user.getName() + " - Innovate UK (Finance team)" :
                         user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());

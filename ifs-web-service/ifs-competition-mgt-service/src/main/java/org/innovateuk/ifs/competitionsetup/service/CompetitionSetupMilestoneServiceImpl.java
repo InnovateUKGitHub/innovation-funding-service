@@ -35,7 +35,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     public ServiceResult<List<MilestoneResource>> createMilestonesForIFSCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
         Stream.of(MilestoneType.presetValues()).filter(milestoneType -> !milestoneType.isOnlyNonIfs()).forEach(type ->
-            newMilestones.add(milestoneRestService.create(type, competitionId).getSuccessObjectOrThrowException())
+            newMilestones.add(milestoneRestService.create(type, competitionId).getSuccess())
         );
         return serviceSuccess(newMilestones);
     }
@@ -55,7 +55,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                 } else {
                     milestoneRestService
                             .resetMilestone(milestoneResource)
-                            .getSuccessObjectOrThrowException();
+                            .getSuccess();
                 }
             }
         });
