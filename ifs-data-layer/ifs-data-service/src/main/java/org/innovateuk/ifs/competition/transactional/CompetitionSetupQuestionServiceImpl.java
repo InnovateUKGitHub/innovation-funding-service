@@ -208,17 +208,10 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                     StringUtils.collectionToDelimitedString(
                             simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName),
                             ","));
+            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
         }
         else {
             setAllowedFileTypesByResourceStringValue(appendixFormInput, competitionSetupQuestionResource);
-        }
-
-        /* This exception exists for ZDD purposes. If the file upload guidance
-         * is null: don't save it. Should be removed as part of IFS-xxxx.
-         */
-
-        if (competitionSetupQuestionResource.getFileUploadGuidance() != null) {
-            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
         }
     }
 
