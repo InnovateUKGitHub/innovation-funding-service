@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.interview.transactional;
 
-
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterviewPanel;
@@ -29,7 +28,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-
 
 /**
  * Service for managing {@link AssessmentInterviewPanel}s.
@@ -74,7 +72,6 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
         final Page<AssessmentInterviewPanel> pagedResult =
                 assessmentInterviewPanelRepository.findByTargetCompetitionIdAndActivityStateState(
                         competitionId, AssessmentInterviewPanelState.CREATED.getBackingState(), pageable);
-
 
         return serviceSuccess(new InterviewPanelStagedApplicationPageResource(
                 pagedResult.getTotalElements(),

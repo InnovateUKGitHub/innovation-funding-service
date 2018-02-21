@@ -38,4 +38,3 @@ public class AssessmentInterviewDocs {
             .withActivityState(CREATED);
 
 }
-

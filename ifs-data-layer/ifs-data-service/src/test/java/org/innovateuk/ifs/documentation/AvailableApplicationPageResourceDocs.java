@@ -17,4 +17,3 @@ public class AvailableApplicationPageResourceDocs extends PageResourceDocs {
                         .withTotalElements(100L)
                         .withNumber(0);
     }
-

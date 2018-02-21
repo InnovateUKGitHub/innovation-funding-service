@@ -42,7 +42,6 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
 
     private Pageable pageable;
 
-
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
@@ -108,7 +107,6 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
 
         assertEquals(getPaulPlum().getId(), interviewPanel.getParticipant().getApplicationId());
     }
-
 
     @Test
     public void getAvailableApplications() {
@@ -181,5 +179,4 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
 
         assertEquals(1, interviewPanelStagedApplicationPageResource.getTotalElements());
     }
-
 }

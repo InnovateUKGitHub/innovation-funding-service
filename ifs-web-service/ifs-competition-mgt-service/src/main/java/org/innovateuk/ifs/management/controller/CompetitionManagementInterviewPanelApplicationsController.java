@@ -61,8 +61,7 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
     protected Class<PanelSelectionForm> getFormType() {
         return PanelSelectionForm.class;
     }
-
-
+    
     @GetMapping("/find")
     public String find(Model model,
                        @ModelAttribute(name = SELECTION_FORM, binding = false) PanelSelectionForm selectionForm,
