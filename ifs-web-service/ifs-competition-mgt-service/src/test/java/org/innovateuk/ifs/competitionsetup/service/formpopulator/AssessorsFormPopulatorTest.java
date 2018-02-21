@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.FinanceView.OVERVIEW;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +36,7 @@ public class AssessorsFormPopulatorTest {
 				.withAssessorPay(BigDecimal.TEN)
 				.withHasAssessmentPanel(Boolean.FALSE)
 				.withHasInterviewStage(Boolean.FALSE)
-				.withHasFullFinanceView(Boolean.FALSE).build();
+				.withFinanceView(OVERVIEW).build();
 
 		CompetitionSetupForm result = populator.populateForm(competition);
 		
@@ -45,6 +46,6 @@ public class AssessorsFormPopulatorTest {
 		assertEquals(BigDecimal.TEN, form.getAssessorPay());
 		assertEquals(Boolean.FALSE, form.getHasAssessmentPanel());
 		assertEquals(Boolean.FALSE, form.getHasInterviewStage());
-		assertEquals(Boolean.FALSE, form.getHasFullFinanceView());
+		assertEquals(OVERVIEW, form.getFinanceView());
 	}
 }

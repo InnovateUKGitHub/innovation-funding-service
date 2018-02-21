@@ -114,34 +114,34 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('hasFullFinanceView')} ? 'form-group-error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('financeView')} ? 'form-group-error'">
                     <legend class="heading-small">
                         Assessor view of finances
-                        <th:block th:if="${#fields.hasErrors('hasFullFinanceView')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('hasFullFinanceView')}" th:text="${err}" />
+                        <th:block th:if="${#fields.hasErrors('financeView')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('financeView')}" th:text="${err}" />
                         </th:block>
                     </legend>
                     <div class="multiple-choice">
-                        <input id="hasFullFinanceView-0"
+                        <input id="financeView-0"
                                type="radio"
-                               th:field="${competitionSetupForm.hasFullFinanceView}"
-                               value="1"
+                               th:field="${competitionSetupForm.financeView}"
+                               value="OVERVIEW"
                                th:errorclass="field-error"
                                required="required"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.fullFinanceView.required}" />
-                        <label for="hasFullFinanceView-0">
+                               th:attr="data-required-errormessage=#{validation.assessorsform.financeView.required}" />
+                        <label for="financeView-0">
                             Overview
                         </label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="hasFullFinanceView-1"
+                        <input id="financeView-1"
                                type="radio"
-                               th:field="${competitionSetupForm.hasFullFinanceView}"
+                               th:field="${competitionSetupForm.financeView}"
                                th:errorclass="field-error"
                                required="required"
-                               value="0"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.fullFinanceView.required}" />
-                        <label for="hasFullFinanceView-1">
+                               value="DETAILED"
+                               th:attr="data-required-errormessage=#{validation.assessorsform.financeView.required}" />
+                        <label for="financeView-1">
                             Detailed
                         </label>
                     </div>
@@ -165,7 +165,7 @@
                 <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Yes' : 'No' "/>
 
                 <dt>Assesor view of finances?</dt>
-                <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Overview' : 'Detailed' "/>
+                <dd th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.financeView))}"/>
             </dl>
 
            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>

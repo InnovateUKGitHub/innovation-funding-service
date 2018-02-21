@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.FinanceView;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -28,7 +29,7 @@ public class CompetitionInFlightViewModel {
     private boolean readOnly;
     private boolean assessmentPanelEnabled;
     private boolean interviewPanelEnabled;
-    private boolean fullFinanceViewEnabled;
+    private FinanceView financeView;
 
     public CompetitionInFlightViewModel(CompetitionResource competitionResource,
                                         List<MilestonesRowViewModel> milestones,
@@ -50,7 +51,7 @@ public class CompetitionInFlightViewModel {
         this.readOnly = readOnly;
         this.assessmentPanelEnabled = competitionResource.isHasAssessmentPanel();
         this.interviewPanelEnabled = competitionResource.isHasInterviewStage();
-        this.fullFinanceViewEnabled = competitionResource.ishasFullFinanceView();
+        this.financeView = competitionResource.getFinanceView();
     }
 
     public Long getCompetitionId() {
@@ -113,7 +114,7 @@ public class CompetitionInFlightViewModel {
         return interviewPanelEnabled;
     }
 
-    public boolean isFullFinanceViewEnabled() {
-        return fullFinanceViewEnabled;
+    public FinanceView getFinanceView() {
+        return financeView;
     }
 }

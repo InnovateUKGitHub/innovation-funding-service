@@ -207,8 +207,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("hasInterviewStage", hasInterviewStage);
     }
 
-    public CompetitionResourceBuilder withHasFullFinanceView(Boolean... hasFullFinanceView) {
-        return withArraySetFieldByReflection("hasFullFinanceView", hasFullFinanceView);
+    public CompetitionResourceBuilder withFinanceView(FinanceView... financeView) {
+        return withArraySetFieldByReflection("financeView", financeView);
     }
 
     public CompetitionResourceBuilder withTermsAndConditions(TermsAndConditionsResource... value) {
