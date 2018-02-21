@@ -195,6 +195,7 @@ Remove an assigned user (Not notified)
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Tags]
+    [Setup]  the user clicks the button/link   link=21 to 40
     Given the user clicks the button/link  jQuery=tr:contains("Paul Plum") button:contains("Assign")
     And the user clicks the button/link    link=Allocate applications
     And the user clicks the button/link    link=Manage assessments
@@ -274,7 +275,7 @@ the assigned list is correct before notification
 
 the previously assigned list is correct
     the user should see the element    jQuery=.assessors-previous td:contains("Paul Plum") + td:contains("Academic") + td:contains("Urban living")
-    the user should see the element    jQuery=.assessors-previous td:contains("Paul Plum") ~ td:contains('10') + td:contains("7")
+    the user should see the element    jQuery=.assessors-previous td:contains("Paul Plum") ~ td:contains("8") + td:contains("8")
 
 the assessor list is correct before changes
     the user clicks the button/link  link=21 to 40
