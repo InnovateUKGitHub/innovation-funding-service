@@ -77,10 +77,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @SuppressWarnings("unused")
     private static final Predicate<CompetitionLine> SPECIFIC_COMPETITIONS_PREDICATE =
-            competitionLine -> "Rolling stock future developments".equals(competitionLine.name);
+            competitionLine -> "Home and industrial efficiency programme".equals(competitionLine.name);
 
     private static final Predicate<CompetitionLine> COMPETITIONS_FILTER =
-            ALL_COMPETITIONS_PREDICATE;
+            SPECIFIC_COMPETITIONS_PREDICATE;
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -280,9 +280,17 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         List<CompetitionData> competitions = simpleMap(createCompetitionFutures, CompletableFuture::join);
         List<ApplicationData> applications = flattenLists(simpleMap(createApplicationsFutures, CompletableFuture::join));
 
-        assessmentDataBuilderService.createAssessors(competitions);
-        assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions);
-        assessmentDataBuilderService.createAssessments(applications);
+        List<String> competitionNames = simpleMap(competitions, c -> c.getCompetition().getName());
+        List<String> applicationNames = simpleMap(applications, a -> a.getApplication().getName());
+
+        List<AssessorUserLine> filteredAssessorLines = simpleFilter(this.assessorUserLines, l -> competitionNames.contains(l.competitionName));
+        List<AssessmentLine> filteredAssessmentLines = simpleFilter(this.assessmentLines, l -> applicationNames.contains(l.applicationName));
+        List<InviteLine> filteredAssessorInviteLines = simpleFilter(this.inviteLines, l -> "COMPETITION".equals(l.type) && competitionNames.contains(l.targetName));
+        List<AssessorResponseLine> filteredAssessorResponseLines = simpleFilter(this.assessorResponseLines, l -> applicationNames.contains(l.applicationName));
+
+        assessmentDataBuilderService.createAssessors(competitions, filteredAssessorLines, filteredAssessorInviteLines);
+        assessmentDataBuilderService.createNonRegisteredAssessorInvites(competitions, filteredAssessorInviteLines);
+        assessmentDataBuilderService.createAssessments(applications, filteredAssessmentLines, filteredAssessorResponseLines);
     }
 
     private void createPublicContent(List<CompletableFuture<CompetitionData>> createCompetitionFutures) {
@@ -383,10 +391,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         competitions.forEach(competition -> {
 
-            Optional<PublicContentGroupLine> publicContentLine = simpleFindFirst(publicContentGroupLines, l ->
+            List<PublicContentGroupLine> publicContentLine = simpleFilter(publicContentGroupLines, l ->
                     Objects.equals(competition.getCompetition().getName(), l.competitionName));
 
-            publicContentLine.ifPresent(competitionDataBuilderService::createPublicContentGroup);
+            publicContentLine.forEach(competitionDataBuilderService::createPublicContentGroup);
         });
     }
 
@@ -396,10 +404,10 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         competitions.forEach(competition -> {
 
-            Optional<PublicContentDateLine> publicContentLine = simpleFindFirst(publicContentDateLines, l ->
+            List<PublicContentDateLine> publicContentLines = simpleFilter(publicContentDateLines, l ->
                     Objects.equals(competition.getCompetition().getName(), l.competitionName));
 
-            publicContentLine.ifPresent(competitionDataBuilderService::createPublicContentDate);
+            publicContentLines.forEach(competitionDataBuilderService::createPublicContentDate);
         });
     }
 
