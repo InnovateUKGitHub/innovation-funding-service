@@ -41,6 +41,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...
 ...               IFS-2511 Resend Signed Grant Offer Letter
 ...
+...               IFS-2533 Reason for rejecting GOL
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
@@ -392,17 +393,13 @@ Comp Admin can accept the signed grant offer letter
     And the user should see the element   css=label[for="acceptGOL"]
     And the user should see the element   css=#submit-button.disabled
     When the user selects the radio button  approvalType  rejectGOL
-    Then the user should not see the element  css=#submit-button.disabled
+    Then the user should see the element  css=#submit-button
 
 Comp Admin is able to Reject the Grant Offer letter
-    [Documentation]  IFS-2174
+    [Documentation]  IFS-2174  IFS-2533
     [Tags]  HappyPath
-    Given the user selects the radio button    approvalType  rejectGOL
-    And the user clicks the button/link        jQuery=button:contains("Submit")
-    And the user clicks the button/link        jQuery=button[type="submit"]:contains("Reject signed grant offer letter")
-    Then the user should see the element       jQuery=.warning-alert:contains("documents have been reviewed and rejected.")
-    When the user navigates to the page        ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
-    Then the user should see the element       jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).rejected
+    Given the user tries to reject without a reason he should get a validation message
+    When the user rejects the GOL then he should see a proper status message
 
 PM can see that the GOL section requires completion
     [Documentation]  IFS-2174
@@ -529,3 +526,22 @@ the user removes existing and uploads new grant offer letter
     the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
     the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
     the user clicks the button/link  css=button[name="confirmSubmit"]
+    the user should see the element  jQuery=li:contains(Grant offer letter) .status-waiting
+
+the user tries to reject without a reason he should get a validation message
+    the user selects the radio button    approvalType  rejectGOL
+    the user enters text to a text field  id=gol-reject-reason  ${empty}
+    the user moves focus to the element  link=Dashboard
+    the user should see a field error    This field cannot be left blank
+
+the user rejects the GOL then he should see a proper status message
+    # Insert Rejection text and submit
+    The user enters text to a text field  id=gol-reject-reason  The document was not signed.
+    the user clicks the button/link       css=#submit-button
+    the user clicks the button/link       jQuery=button[type="submit"]:contains("Reject signed grant offer letter")
+    # Warning message on the same page
+    the user should see the element       jQuery=.warning-alert:contains("documents have been reviewed and rejected.")
+    the user should see the element       jQuery=.warning-alert:contains("Reason for rejection:")
+    # Warning message on Competition level
+    the user navigates to the page        ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
+    the user should see the element       jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).rejected
