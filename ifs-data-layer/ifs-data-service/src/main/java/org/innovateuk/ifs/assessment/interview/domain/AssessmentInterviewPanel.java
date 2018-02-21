@@ -41,11 +41,11 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
             throw new IllegalArgumentException("createdState must be CREATED");
         if (!participant.getRole().isOfType(UserRoleType.INTERVIEW_LEAD_APPLICANT))
             throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
-        if (participant.getApplicationId() != application.getId())
+        if (!participant.getApplicationId().equals(application.getId()))
             throw new IllegalArgumentException("participant application must match the application");
-        if (participant.getOrganisationId() != application.getLeadOrganisationId())
+        if (!participant.getOrganisationId().equals(application.getLeadOrganisationId()))
             throw new IllegalArgumentException("participant organisation must match the application's lead organisation");
-        if (participant.getUser().getId() != application.getLeadApplicant().getId())
+        if (!participant.getUser().getId().equals(application.getLeadApplicant().getId()))
             throw new IllegalArgumentException("participant user must match the application's lead user");
 
         this.target = application;
