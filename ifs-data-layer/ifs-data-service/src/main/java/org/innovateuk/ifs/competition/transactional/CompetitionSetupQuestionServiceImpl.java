@@ -206,10 +206,11 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if(competitionSetupQuestionResource.isZDDUpdated()) {
             appendixFormInput.setAllowedFileTypes(
                     StringUtils.collectionToDelimitedString(
-                            simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName), ","));
+                            simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName),
+                            ","));
         }
         else {
-
+            setAllowedFileTypesByResourceStringValue(appendixFormInput, competitionSetupQuestionResource);
         }
 
         /* This exception exists for ZDD purposes. If the file upload guidance
