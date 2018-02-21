@@ -28,10 +28,10 @@ import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.*;
 public class InterviewAssignmentWorkflow extends StateMachineConfigurerAdapter<InterviewAssignmentState, InterviewAssignmentEvent> {
 
     @Autowired
-    private NotifyInterviewAssignmentAction notifyAssessmentInterviewPanelAction;
+    private NotifyInterviewAssignmentAction notifyInterviewAssignmentAction;
 
     @Autowired
-    private FeedbackResponseInterviewAssignmentAction feedbackResponseAssessmentInterviewPanelAction;
+    private FeedbackResponseInterviewAssignmentAction feedbackResponseInterviewAssignmentAction;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<InterviewAssignmentState, InterviewAssignmentEvent> config) throws Exception {
@@ -51,7 +51,7 @@ public class InterviewAssignmentWorkflow extends StateMachineConfigurerAdapter<I
                 .withExternal()
                 .source(CREATED).target(AWAITING_FEEDBACK_RESPONSE)
                 .event(NOTIFY)
-                .action(notifyAssessmentInterviewPanelAction)
+                .action(notifyInterviewAssignmentAction)
                 .and()
                 .withExternal()
                 .source(AWAITING_FEEDBACK_RESPONSE).target(AWAITING_FEEDBACK_RESPONSE)
@@ -60,6 +60,6 @@ public class InterviewAssignmentWorkflow extends StateMachineConfigurerAdapter<I
                 .withExternal()
                 .source(AWAITING_FEEDBACK_RESPONSE).target(SUBMITTED_FEEDBACK_RESPONSE)
                 .event(RESPOND)
-                .action(feedbackResponseAssessmentInterviewPanelAction);
+                .action(feedbackResponseInterviewAssignmentAction);
     }
 }

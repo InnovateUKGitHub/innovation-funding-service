@@ -11,8 +11,11 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
@@ -42,9 +45,15 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
+
+
     @Override
-    protected InterviewAssignment createNewProcess(Application target, ProcessRole participant) {
-        return new InterviewAssignment(target, participant);
+    protected InterviewAssignment createNewProcess(Application application, ProcessRole participant) {
+        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
+
+        return new InterviewAssignment(application, participant, createdActivityState);
     }
 
     public boolean notifyInterviewPanel(InterviewAssignment interviewAssignment, InterviewAssignmentMessageOutcome messageOutcome) {
@@ -86,16 +95,16 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
     }
 
     private MessageBuilder<InterviewAssignmentEvent> notifyMessage(InterviewAssignment interviewAssignment, InterviewAssignmentMessageOutcome messageOutcome) {
-        return assessmentInterviewPanelMessage(interviewAssignment, InterviewAssignmentEvent.NOTIFY)
+        return interviewAssignmentMessage(interviewAssignment, InterviewAssignmentEvent.NOTIFY)
                 .setHeader("message", messageOutcome);
     }
 
     private MessageBuilder<InterviewAssignmentEvent> responseMessage(InterviewAssignment interviewAssignment, InterviewAssignmentResponseOutcome responseOutcome) {
-        return assessmentInterviewPanelMessage(interviewAssignment, InterviewAssignmentEvent.RESPOND)
+        return interviewAssignmentMessage(interviewAssignment, InterviewAssignmentEvent.RESPOND)
                 .setHeader("response", responseOutcome);
     }
 
-    private static MessageBuilder<InterviewAssignmentEvent> assessmentInterviewPanelMessage(InterviewAssignment interviewAssignment, InterviewAssignmentEvent event) {
+    private static MessageBuilder<InterviewAssignmentEvent> interviewAssignmentMessage(InterviewAssignment interviewAssignment, InterviewAssignmentEvent event) {
         return MessageBuilder
                 .withPayload(event)
                 .setHeader("target", interviewAssignment);

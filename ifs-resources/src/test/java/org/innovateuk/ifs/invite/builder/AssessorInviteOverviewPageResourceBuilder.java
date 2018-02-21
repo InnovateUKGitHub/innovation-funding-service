@@ -2,13 +2,15 @@ package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.commons.builder.PageResourceBuilder;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
+import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class AssessorInviteOverviewPageResourceBuilder extends PageResourceBuilder<AssessorInviteOverviewPageResource, AssessorInviteOverviewPageResourceBuilder> {
+public class AssessorInviteOverviewPageResourceBuilder
+        extends PageResourceBuilder<AssessorInviteOverviewPageResource, AssessorInviteOverviewPageResourceBuilder, AssessorInviteOverviewResource> {
 
     public static AssessorInviteOverviewPageResourceBuilder newAssessorInviteOverviewPageResource() {
         return new AssessorInviteOverviewPageResourceBuilder(emptyList());

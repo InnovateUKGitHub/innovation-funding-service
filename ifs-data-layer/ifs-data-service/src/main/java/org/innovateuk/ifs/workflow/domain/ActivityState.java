@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.workflow.domain;
 
-import org.innovateuk.ifs.workflow.resource.State;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.workflow.resource.State;
 
 import javax.persistence.*;
 
@@ -59,7 +59,8 @@ public class ActivityState {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
+                .append(activityType)
+                .append(state)
                 .toHashCode();
     }
 }

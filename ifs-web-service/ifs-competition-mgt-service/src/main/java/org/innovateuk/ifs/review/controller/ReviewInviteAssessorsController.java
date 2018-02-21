@@ -60,6 +60,7 @@ public class ReviewInviteAssessorsController extends CompetitionManagementCookie
     @Autowired
     private ReviewInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
+    @Override
     protected String getCookieName() {
         return SELECTION_FORM;
     }

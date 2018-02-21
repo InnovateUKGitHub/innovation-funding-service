@@ -2,15 +2,15 @@ package org.innovateuk.ifs.interview.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
-
-
-// TODO Who is the participant? Lead assessor -- probably as they submit responses
 
 @Entity
 public class InterviewAssignment extends Process<ProcessRole, Application, InterviewAssignmentState> {
@@ -32,9 +32,25 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     public InterviewAssignment() {
     }
 
-    public InterviewAssignment(Application target, ProcessRole participant) {
-        this.target = target;
+    public InterviewAssignment(Application application, ProcessRole participant, ActivityState createdState) {
+        if (application == null) throw new NullPointerException("target cannot be null");
+        if (participant == null) throw new NullPointerException("participant cannot be null");
+        if (createdState == null) throw new NullPointerException("createdState cannot be null");
+
+        if (createdState.getState() != InterviewAssignmentState.CREATED.getBackingState())
+            throw new IllegalArgumentException("createdState must be CREATED");
+        if (!participant.getRole().isOfType(UserRoleType.INTERVIEW_LEAD_APPLICANT))
+            throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
+        if (participant.getApplicationId() != application.getId())
+            throw new IllegalArgumentException("participant application must match the application");
+        if (participant.getOrganisationId() != application.getLeadOrganisationId())
+            throw new IllegalArgumentException("participant organisation must match the application's lead organisation");
+        if (participant.getUser().getId() != application.getLeadApplicant().getId())
+            throw new IllegalArgumentException("participant user must match the application's lead user");
+
+        this.target = application;
         this.participant = participant;
+        setActivityState(createdState);
     }
 
     @Override
@@ -96,7 +112,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(participant)
-                .append(target)
+//                .append(target)  // TODO ??
                 .append(message)
                 .append(response)
                 .toHashCode();
@@ -104,5 +120,18 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
     public InterviewAssignmentMessageOutcome getMessage() {
         return message;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("participant", participant)
+                .append("target", target)
+                .append("message", message)
+                .append("response", response)
+                .append("activityState", activityState)
+                .append("processOutcomes", processOutcomes)
+                .append("internalParticipant", internalParticipant)
+                .toString();
     }
 }

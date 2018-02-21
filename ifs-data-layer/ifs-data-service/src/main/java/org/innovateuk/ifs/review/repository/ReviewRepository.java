@@ -17,7 +17,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ReviewRepository extends ProcessRepository<Review>, PagingAndSortingRepository<Review, Long> {
-    List<Review> findByTargetCompetitionIdAndActivityStateState(long applicationId, State backingState);
+    List<Review> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
     boolean existsByParticipantUserAndTargetAndActivityStateStateNot(User user, Application target, State state);
     boolean existsByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
 

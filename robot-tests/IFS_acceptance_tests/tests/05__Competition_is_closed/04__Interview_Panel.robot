@@ -18,7 +18,7 @@ User navigates to the Manage interview panel
     [Tags]
     Given the Interview Panel is activated in the db
     When the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
-    Then the user clicks the button/link   jQuery=a:contains("Manage interview panel")
+    Then the user clicks the button/link   link=Manage interview panel
     And the user sees the Interview panel page and the Interview links
 
 There are no Assessors in Invite tab before sending invite
@@ -56,6 +56,14 @@ Assessors receives the invite to interview panel
     And the user reads his email               ${assessor_joel_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
     #TODO This test will need to be updated when the stats are fixed IFS-2727
 
+CompAdmin can add the applications to invite list
+#to assign applications to interview panel
+    [Documentation]  IFS-2727
+    Given the user clicks the button/link   link=Competition
+    And the user clicks the button/link     link=Manage interview panel
+    When the user clicks the button/link    link=Assign applications
+    Then the competition admin select the applications and add to invite list
+
 *** Keywords ***
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
@@ -66,6 +74,13 @@ the Interview Panel is activated in the db
 
 the user sees the Interview panel page and the Interview links
     And the user should see the element    jQuery=h1:contains("Manage interview panel")
-    And the user should see the element    jQuery=a:contains("Assign applications")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
     #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2783
+
+the competition admin select the applications and add to invite list
+#compadmin selecting the applications checkbox
+    the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
+    the user clicks the button/link    jQuery=tr:contains("${computer_vision_application}") label
+    the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
+    the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+    the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")

@@ -12,7 +12,6 @@ import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWo
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
@@ -104,10 +103,6 @@ public class InterviewAssignmentWorkflowHandlerIntegrationTest
         return InterviewAssignmentRepository.class;
     }
 
-    private ActivityType getActivityType() {
-        return ACTIVITY_TYPE;
-    }
-
     private InterviewAssignmentRepository getRepositoryMock() {
         return repositoryMock;
     }
@@ -116,22 +111,14 @@ public class InterviewAssignmentWorkflowHandlerIntegrationTest
         return InterviewAssignmentBuilder.newInterviewAssignment().withState(initialState).build();
     }
 
-    private void assertStateChangeOnWorkflowHandlerCall(InterviewAssignmentState initialState, InterviewAssignmentState expectedState, Function<InterviewAssignment, Boolean> workflowHandlerMethod) {
-        assertStateChangeOnWorkflowHandlerCall(initialState, expectedState, workflowHandlerMethod, null);
-    }
-
     private void assertStateChangeOnWorkflowHandlerCall(InterviewAssignmentState initialState, InterviewAssignmentState expectedState, Function<InterviewAssignment, Boolean> workflowHandlerMethod, Consumer<InterviewAssignment> additionalVerifications) {
         InterviewAssignment workflowProcess = buildWorkflowProcessWithInitialState(initialState);
         when(getRepositoryMock().findOneByTargetId(workflowProcess.getId())).thenReturn(workflowProcess);
-
-        ActivityState expectedActivityState = new ActivityState(getActivityType(), expectedState.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(getActivityType(), expectedState.getBackingState())).thenReturn(expectedActivityState);
 
         assertTrue(workflowHandlerMethod.apply(workflowProcess));
 
         assertEquals(expectedState, workflowProcess.getActivityState());
 
-        verify(activityStateRepositoryMock).findOneByActivityTypeAndState(getActivityType(), expectedState.getBackingState());
         verify(getRepositoryMock()).save(workflowProcess);
 
         if (additionalVerifications != null) {

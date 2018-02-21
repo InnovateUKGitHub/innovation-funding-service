@@ -60,7 +60,9 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
@@ -212,7 +214,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewParticipantRepository interviewParticipantRepositoryMock;
 
     @Mock
+    protected InterviewAssignmentInviteService interviewAssignmentInviteServiceMock;
+
+    @Mock
     protected InterviewInviteService interviewInviteServiceMock;
+
+    @Mock
+    protected InterviewAssignmentRepository interviewAssignmentRepositoryMock;
 
     @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
