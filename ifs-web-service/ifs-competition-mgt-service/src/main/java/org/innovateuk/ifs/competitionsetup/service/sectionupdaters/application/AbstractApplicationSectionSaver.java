@@ -69,7 +69,7 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
                     .filter(fileTypeCategory -> strings.contains(fileTypeCategory.name()))
                     .collect(Collectors.toList());
 
-            question.setAllowedFileTypes(fileTypeCategories);
+            question.setAllowedFileTypesEnum(fileTypeCategories);
 
             return competitionSetupQuestionService.updateQuestion(question);
         });

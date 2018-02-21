@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,9 +91,10 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAllowedFileTypes(
+                setupResource.setAllowedFileTypesEnum(
                         simpleMap(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes()),
-                                FileTypeCategory::valueOf));
+                                FileTypeCategory::fromDisplayName));
+                setFileTypeCategoriesByString(setupResource, formInput);
                 setupResource.setFileUploadGuidance(formInput.getGuidanceAnswer());
                 break;
             case TEXTAREA:
@@ -100,6 +103,16 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setMaxWords(formInput.getWordCount());
                 break;
         }
+    }
+
+    @ZeroDowntime(
+            reference = "IFS-2565",
+            description = "Setting category String list still used in old comp-mgt service during deployment."
+    )
+    private void setFileTypeCategoriesByString(CompetitionSetupQuestionResource setupResource, FormInput formInput) {
+        setupResource.setAllowedFileTypes(
+                Arrays.asList(
+                        StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())));
     }
 
     private void mapAssessmentFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
@@ -190,7 +203,14 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     }
 
     private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        appendixFormInput.setAllowedFileTypes(StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
+        if(competitionSetupQuestionResource.isZDDUpdated()) {
+            appendixFormInput.setAllowedFileTypes(
+                    StringUtils.collectionToDelimitedString(
+                            simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName), ","));
+        }
+        else {
+
+        }
 
         /* This exception exists for ZDD purposes. If the file upload guidance
          * is null: don't save it. Should be removed as part of IFS-xxxx.
@@ -199,6 +219,15 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         if (competitionSetupQuestionResource.getFileUploadGuidance() != null) {
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
         }
+    }
+
+    @ZeroDowntime(
+            reference = "IFS-2565",
+            description = "If the resource is old, then use the String values to save selected preferences."
+    )
+    private void setAllowedFileTypesByResourceStringValue(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        appendixFormInput.setAllowedFileTypes(
+                StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
     }
 
     private void resetAppendixSubOptions(FormInput appendixFormInput) {

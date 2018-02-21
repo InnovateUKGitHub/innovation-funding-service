@@ -22,6 +22,9 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 @FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
+    //@ZeroDownTime(reference = "IFS-2565", description = "Indicator on resource whether updated or not. To be removed during contraction.")
+    private boolean isZDDUpdated;
+
     private Long questionId;
 
     private CompetitionSetupQuestionType type;
@@ -45,7 +48,8 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private List<FileTypeCategory> allowedFileTypes;
+    private List<FileTypeCategory> allowedFileTypesEnum;
+    private List<String> allowedFileTypes;
     private String fileUploadGuidance;
 
     private String assessmentGuidanceTitle;
@@ -223,12 +227,20 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public List<FileTypeCategory> getAllowedFileTypes() {
+    public List<String> getAllowedFileTypes() {
         return allowedFileTypes;
     }
 
-    public void setAllowedFileTypes(List<FileTypeCategory> allowedFileTypes) {
+    public void setAllowedFileTypes(List<String> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
+    }
+
+    public List<FileTypeCategory> getAllowedFileTypesEnum() {
+        return allowedFileTypesEnum;
+    }
+
+    public void setAllowedFileTypesEnum(List<FileTypeCategory> allowedFileTypes) {
+        this.allowedFileTypesEnum = allowedFileTypes;
     }
 
     public String getFileUploadGuidance() {
@@ -241,6 +253,15 @@ public class CompetitionSetupQuestionResource {
 
     public static List<FileTypeCategory> getSupportedTypeCategories(){
         return asList(PDF, SPREADSHEET);
+    }
+
+
+    public boolean isZDDUpdated() {
+        return isZDDUpdated;
+    }
+
+    public void setZDDUpdated(boolean ZDDUpdated) {
+        isZDDUpdated = ZDDUpdated;
     }
 
     @Override
@@ -272,7 +293,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows, that.guidanceRows)
                 .append(researchCategoryQuestion, that.researchCategoryQuestion)
                 .append(scope, that.scope)
-                .append(allowedFileTypes, that.allowedFileTypes)
+                .append(allowedFileTypesEnum, that.allowedFileTypesEnum)
                 .isEquals();
     }
 
@@ -299,7 +320,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows)
                 .append(researchCategoryQuestion)
                 .append(scope)
-                .append(allowedFileTypes)
+                .append(allowedFileTypesEnum)
                 .toHashCode();
     }
 
