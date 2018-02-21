@@ -399,7 +399,7 @@ Comp Admin is able to Reject the Grant Offer letter
     [Documentation]  IFS-2174  IFS-2533
     [Tags]  HappyPath
     Given the user tries to reject without a reason he should get a validation message
-    When the user rejects the GOL then he should see a proper status message
+    Then the user rejects the GOL and sees the successful status
 
 PM can see that the GOL section requires completion
     [Documentation]  IFS-2174
@@ -534,7 +534,7 @@ the user tries to reject without a reason he should get a validation message
     the user moves focus to the element   link=Dashboard
     the user should see a field error     This field cannot be left blank
 
-the user rejects the GOL then he should see a proper status message
+the user rejects the GOL and sees the successful status
     # Insert Rejection text and submit
     The user enters text to a text field  id=gol-reject-reason  The document was not signed.
     the user clicks the button/link       css=#submit-button
