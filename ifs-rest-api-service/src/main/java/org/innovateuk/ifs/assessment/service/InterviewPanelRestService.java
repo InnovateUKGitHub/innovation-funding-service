@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 
 import java.util.List;
 
@@ -16,8 +16,7 @@ public interface InterviewPanelRestService {
 
     RestResult<List<Long>> getAvailableApplicationIds(long competitionId);
 
-    // TODO rename the resource or create a new one?
-    RestResult<Void> assignApplications(ExistingUserStagedInviteListResource existingUserStagedInviteListResource);
+    RestResult<Void> assignApplications(StagedApplicationListResource stagedApplicationListResource);
 
     RestResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, int page);
 }

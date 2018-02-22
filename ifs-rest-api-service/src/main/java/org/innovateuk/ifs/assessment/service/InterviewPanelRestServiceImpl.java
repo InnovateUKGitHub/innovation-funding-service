@@ -3,8 +3,8 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -40,8 +40,8 @@ public class InterviewPanelRestServiceImpl extends BaseRestService implements In
     }
 
     @Override
-    public RestResult<Void> assignApplications(ExistingUserStagedInviteListResource existingUserStagedInviteListResource) {
-        return postWithRestResult(format("%s/%s", REST_URL, "assign-applications"), existingUserStagedInviteListResource, Void.class);
+    public RestResult<Void> assignApplications(StagedApplicationListResource stagedApplicationListResource) {
+        return postWithRestResult(format("%s/%s", REST_URL, "assign-applications"), stagedApplicationListResource, Void.class);
     }
 
     @Override

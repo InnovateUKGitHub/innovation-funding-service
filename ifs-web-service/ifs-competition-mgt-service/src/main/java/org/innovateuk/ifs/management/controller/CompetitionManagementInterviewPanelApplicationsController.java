@@ -5,8 +5,8 @@ import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.innovateuk.ifs.management.form.PanelSelectionForm;
 import org.innovateuk.ifs.management.model.InterviewPanelApplicationsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewPanelApplicationsInviteModelPopulator;
@@ -235,8 +235,8 @@ public class CompetitionManagementInterviewPanelApplicationsController extends C
                 .toUriString();
     }
 
-    private ExistingUserStagedInviteListResource newSelectionFormToResource(PanelSelectionForm form, long competitionId) {
-        return new ExistingUserStagedInviteListResource(simpleMap(
-                form.getSelectedIds(), id -> new ExistingUserStagedInviteResource(id, competitionId)));
+    private StagedApplicationListResource newSelectionFormToResource(PanelSelectionForm form, long competitionId) {
+        return new StagedApplicationListResource(simpleMap(
+                form.getSelectedIds(), applicationId -> new StagedApplicationResource(applicationId, competitionId)));
     }
 }
