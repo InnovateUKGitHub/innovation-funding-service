@@ -113,6 +113,12 @@ function rolloutStatus {
 
 # Entry point
 tailorAppInstance
+
+if [[ ${TARGET} == "local" ]]
+then
+    replacePersistentFileClaim
+fi
+
 useContainerRegistry
 upgradeServices
 
