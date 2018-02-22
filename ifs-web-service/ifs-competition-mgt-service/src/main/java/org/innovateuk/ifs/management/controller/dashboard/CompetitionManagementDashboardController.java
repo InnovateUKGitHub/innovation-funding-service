@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
@@ -129,11 +128,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
-/*    @Autowired
-    private InviteUserRestService inviteUserRestService;*/
-
-    //TODO - ZZZ - Remove IFS Admin once normal testing is done
-    @SecuredBySpring(value = "READ", description = "The support users are allowed to view the application search page")
+    @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping("/dashboard/application/search")
     public String applicationSearch(@RequestParam(name = "searchString", defaultValue = "") String searchString,
@@ -147,36 +142,13 @@ public class CompetitionManagementDashboardController {
 
         ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchString, pageNumber, pageSize);
 
-/*        RoleInvitePageResource pendingInternalUserInvites =
-                inviteUserRestService.getPendingInternalUserInvites(pageNumber, pageSize).getSuccess();*/
-
-/*        UserListViewModel viewModel1 = new UserListViewModel(
-                null, //active tab
-                null,
-                null,
-                pendingInternalUserInvites.getContent(),
-                0L,
-                0L,
-                pendingInternalUserInvites.getTotalElements(),
-                null,
-                null,
-                new PaginationViewModel(pendingInternalUserInvites, "search?" + existingQueryString));*/
-
-/*        model.addAttribute("model1",
-                viewModel1);*/
-
         ApplicationSearchDashboardViewModel viewModel =
                 new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
                                                         matchedApplications.getTotalElements(),
                                                         new PaginationViewModel(matchedApplications, "search?" + existingQueryString),
                                                         trimmedSearchString);
+        model.addAttribute("model", viewModel);
 
-        model.addAttribute("model",
-                viewModel);
-
-        //model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
-        //model.addAttribute("searchQuery", searchQuery);
-        //model.addAttribute("tabs", new DashboardTabsViewModel(user));
         return TEMPLATE_PATH + "application-search";
     }
 

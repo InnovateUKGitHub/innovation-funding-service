@@ -50,7 +50,6 @@ public interface ApplicationService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
 
-    //TODO - ZZZ - Put permissions in place - @PostFilter("hasPermission(filterObject, 'READ')")
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable);
 

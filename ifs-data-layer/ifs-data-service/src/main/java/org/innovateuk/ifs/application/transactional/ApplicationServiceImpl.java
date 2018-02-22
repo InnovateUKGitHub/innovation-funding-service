@@ -341,7 +341,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
 
-        //TODO - ZZZ - Check if you can put an order by clause for the id if the ids are not retrieved in order
         Page<Application> pagedResult = applicationRepository.searchByIdLike(searchString, pageable);
         List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
