@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.security;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -97,6 +98,11 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Internal users other than innovation lead can see all application resources")
     public boolean internalUsersCanViewApplications(final ApplicationResource application, final UserResource user) {
         return !isInnovationLead(user) && isInternal(user);
+    }
+
+    @PermissionRule(value = "READ", description = "Support or IFS Admin can search applications from competition dashboard")
+    public boolean supportOrIFSAdminCanSearchApplications(final ApplicationPageResource applicationPageResource, final UserResource user) {
+        return isSupport(user) || isIFSAdmin(user);
     }
 
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
