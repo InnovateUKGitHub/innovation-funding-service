@@ -232,6 +232,414 @@
     </ul>
 </div>
 
+<!-- =========================== Tables of data =========================== -->
+<th:block th:fragment="prototype-assessor-list-table">
+    <div class="grid-row sorting extra-margin">
+        <div class="column-half">
+            <span class="heading-xlarge no-margin">20</span>
+            <span class="heading-small">assessors</span>
+        </div>
+    </div>
+
+    <div class="grid-row sorting">
+        <div class="column-half select-all">
+            <div class="multiple-choice">
+                <input type="checkbox" data-select-all="" id="select-all-check">
+                <label for="select-all-check">
+                    Select all assessors
+                </label>
+            </div>
+            <span class="form-hint">
+                      <span data-count-selected="" class="applications-selected">0</span> assessors selected
+                  </span>
+        </div>
+        <div class="column-half select-all alignright">
+            <form method="get">
+                <input type="hidden" name="tab" value="invite">
+                <button class="button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
+                    Add selected to invite list
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col" class="width-small">Select assessor</th>
+                <th scope="col">Assessor name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Innovation area</th>
+                <th scope="col">Contract and DOI</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-1" value="205" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-1">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Addison Shannon</a>
+                </td>
+                <td>Business</td>
+                <td>Digital manufacturing</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-2" value="240" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-2">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Alexis Colon</a>
+                </td>
+                <td></td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-3" value="193" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-3">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Alexis Kinney</a>
+                </td>
+                <td>Business</td>
+                <td>Digital manufacturing</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-4" value="178" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-4">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Angel Spencer</a>
+                </td>
+                <td>Academic</td>
+                <td>Digital manufacturing</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-5" value="207" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-5">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Angel Witt</a>
+                </td>
+                <td>Business</td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-6" value="239" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-6">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Angelo Arnold</a>
+                </td>
+                <td>Business</td>
+                <td>Digital manufacturing</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-7" value="216" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-7">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Anita Ruiz</a>
+                </td>
+                <td>Academic</td>
+                <td>Digital manufacturing</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-8" value="254" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-8">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Benjamin Nixon</a>
+                </td>
+                <td>Business</td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-9" value="198" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-9">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Blake Wood</a>
+                </td>
+                <td>Business</td>
+                <td>Digital manufacturing</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-10" value="231" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-10">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Bob Malone</a>
+                </td>
+                <td>Business</td>
+                <td>Creative industries</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-11" value="235" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-11">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Brandi Mccarthy</a>
+                </td>
+                <td>Academic</td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-12" value="169" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-12">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Brandon Harper</a>
+                </td>
+                <td>Academic</td>
+                <td>Urban living</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-13" value="173" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-13">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Brentley Mcmillan</a>
+                </td>
+                <td>Business</td>
+                <td>Digital manufacturing</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-14" value="206" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-14">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Bret Alvarez</a>
+                </td>
+                <td></td>
+                <td>Creative industries</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-15" value="181" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-15">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Bret John</a>
+                </td>
+                <td>Business</td>
+                <td>Assembly / disassembly / joining</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-16" value="170" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-16">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Callum Austin</a>
+                </td>
+                <td>Business</td>
+                <td>Urban living</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-17" value="185" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-17">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Cameron Guzman</a>
+                </td>
+                <td>Academic</td>
+                <td>Creative industries</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-18" value="243" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-18">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Camille Shelton</a>
+                </td>
+                <td>Business</td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td>
+                    <span class="yes">Yes</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-19" value="197" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-19">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Carmen Marks</a>
+                </td>
+                <td></td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="multiple-choice">
+                        <input type="checkbox" id="assessor-row-20" value="204" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
+                        <label for="assessor-row-20">
+                            <span class="invisible">Add</span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <a href="#">Charlie Russell</a>
+                </td>
+                <td></td>
+                <td>Materials, process and manufacturing design technologies</td>
+                <td>
+                    <span class="no">No</span>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</th:block>
 
 
 <!-- =========================== Manage assessor main content =========================== -->
@@ -318,411 +726,8 @@
                 </form>
             </th:block>
 
+            <th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-assessor-list-table" />
 
-            <div class="grid-row sorting extra-margin">
-                <div class="column-half">
-                    <span class="heading-xlarge no-margin">20</span>
-                    <span class="heading-small">assessors</span>
-                </div>
-            </div>
-
-            <div class="grid-row sorting">
-              <div class="column-half select-all">
-                  <div class="multiple-choice">
-                      <input type="checkbox" data-select-all="" id="select-all-check">
-                      <label for="select-all-check">
-                          Select all assessors
-                      </label>
-                  </div>
-                  <span class="form-hint">
-                      <span data-count-selected="" class="applications-selected">0</span> assessors selected
-                  </span>
-              </div>
-              <div class="column-half select-all alignright">
-                <form method="get">
-                  <button class="button" name="addSelected" data-submit-el="" disabled="disabled" th:formaction="${#httpServletRequest.requestURI}">
-                      Add selected to invite list
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            <div class="table-overflow">
-              <table>
-                <thead>
-                <tr>
-                    <th scope="col" class="width-small">Select assessor</th>
-                    <th scope="col">Assessor name</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Innovation area</th>
-                    <th scope="col">Contract and DOI</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-1" value="205" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-1">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Addison Shannon</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Digital manufacturing</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-2" value="240" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-2">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Alexis Colon</a>
-                    </td>
-                    <td></td>
-                    <td>Materials, process and manufacturing design technologies</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-3" value="193" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-3">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Alexis Kinney</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Digital manufacturing</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-4" value="178" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-4">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Angel Spencer</a>
-                    </td>
-                    <td>Academic</td>
-                    <td>Digital manufacturing</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-5" value="207" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-5">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Angel Witt</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Materials, process and manufacturing design technologies</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-6" value="239" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-6">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Angelo Arnold</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Digital manufacturing</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-7" value="216" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-7">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Anita Ruiz</a>
-                    </td>
-                    <td>Academic</td>
-                    <td>Digital manufacturing</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-8" value="254" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-8">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Benjamin Nixon</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Materials, process and manufacturing design technologies</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-9" value="198" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-9">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Blake Wood</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Digital manufacturing</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-10" value="231" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-10">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Bob Malone</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Creative industries</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-11" value="235" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-11">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Brandi Mccarthy</a>
-                    </td>
-                    <td>Academic</td>
-                    <td>Materials, process and manufacturing design technologies</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-12" value="169" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-12">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Brandon Harper</a>
-                    </td>
-                    <td>Academic</td>
-                    <td>Urban living</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-13" value="173" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-13">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Brentley Mcmillan</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Digital manufacturing</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-14" value="206" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-14">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Bret Alvarez</a>
-                    </td>
-                    <td></td>
-                    <td>Creative industries</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-15" value="181" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-15">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Bret John</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Assembly / disassembly / joining</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-16" value="170" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-16">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Callum Austin</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Urban living</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-17" value="185" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-17">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Cameron Guzman</a>
-                    </td>
-                    <td>Academic</td>
-                    <td>Creative industries</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-18" value="243" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-18">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Camille Shelton</a>
-                    </td>
-                    <td>Business</td>
-                    <td>Materials, process and manufacturing design technologies</td>
-                    <td>
-                        <span class="yes">Yes</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-19" value="197" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-19">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Carmen Marks</a>
-                    </td>
-                    <td></td>
-                    <td>Materials, process and manufacturing design technologies</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="multiple-choice">
-                            <input type="checkbox" id="assessor-row-20" value="204" name="selectedAssessorIds"><input type="hidden" name="_selectedAssessorIds" value="on">
-                            <label for="assessor-row-20">
-                                <span class="invisible">Add</span>
-                            </label>
-                        </div>
-                    </td>
-                    <td>
-                        <a href="#">Charlie Russell</a>
-                    </td>
-                    <td></td>
-                    <td>Materials, process and manufacturing design technologies</td>
-                    <td>
-                        <span class="no">No</span>
-                    </td>
-                </tr>
-
-                </tbody>
-            </table>
-            </div>
             <!--</div>-->
 
             <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination" />
