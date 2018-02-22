@@ -32,18 +32,18 @@ the assessor adds score and feedback for every question
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link               jquery=button:contains("Save and return to assessment overview")
 
-the competition admin invite assessors for the competition
-    the competition admin select assessors and add them to invite list
+the competition admin invites assessors to the competition
+    the competition admin selects assessors and add them to invite list
     the competition admin should not see invited assessors on find tab
 
-the competition admin select assessors and add them to invite list
+the competition admin selects assessors and add them to invite list
 #competition admin selecting the assessor name checkboxs
     the user clicks the button/link      jQuery=tr:contains("${assessor_ben}") label
     the user clicks the button/link      jQuery=tr:contains("${assessor_joel}") label
     the user clicks the button/link      jquery=tr:contains("${assessor_madeleine}") label
     the user clicks the button/link      jquery=tr:contains("${assessor_riley}") label
-    the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
-    the user should see the element     jQuery=td:contains("${assessor_ben}") + td:contains("${assessor_ben_email}")
+    the user clicks the button/link      jQuery=button:contains("Add selected to invite list")
+    the user should see the element      jQuery=td:contains("${assessor_ben}") + td:contains("${assessor_ben_email}")
     the user should see the element      jQuery=td:contains("${assessor_joel}") + td:contains("${assessor_joel_email}")
     the user should see the element      jQuery=td:contains("${assessor_madeleine}") + td:contains("${assessor_madeleine_email}")
     the user should see the element      jQuery=td:contains("${assessor_riley}") + td:contains("${assessor_riley_email}")

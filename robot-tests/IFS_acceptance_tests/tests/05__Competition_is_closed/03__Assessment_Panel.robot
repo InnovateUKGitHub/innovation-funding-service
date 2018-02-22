@@ -89,7 +89,7 @@ CompAdmin can add an assessors to invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
     When the user clicks the button/link     link=Find
-    Then the competition admin invite assessors for the competition
+    Then the competition admin invites assessors to the competition
 
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565

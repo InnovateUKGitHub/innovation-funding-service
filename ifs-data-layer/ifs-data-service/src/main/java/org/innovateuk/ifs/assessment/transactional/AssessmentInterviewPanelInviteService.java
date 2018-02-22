@@ -27,12 +27,12 @@ public interface AssessmentInterviewPanelInviteService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "SEND_ALL_INTERVIEW_PANEL_INVITES",
-            description = "The Competition Admins and Project Finance users can send all assessment panel invites")
+            description = "The Competition Admins and Project Finance users can send all interview panel invites")
     ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "RESEND_INTERVIEW_PANEL_INVITES",
-            description = "The Competition Admins and Project Finance users can resend assessment panel invites")
+            description = "The Competition Admins and Project Finance users can resend interview panel invites")
     ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
