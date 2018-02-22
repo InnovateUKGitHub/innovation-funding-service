@@ -1,5 +1,5 @@
-### Set Programme competition template application question file appendix default guidance ###
-# This query is part of IFS-2565.
+-- Change Programme competition template application question file appendix default guidance
+-- This query is part of IFS-2565.
 
 SET @programme_competition_id = (   SELECT id
                                     FROM competition
@@ -34,7 +34,7 @@ SET guidance_answer='<p>You can include an appendix of additional information to
 WHERE form_input.description = 'Appendix';
 
 
-### Set Sector competition template application question file appendix default guidance ###
+-- Change Sector competition template application question file appendix default guidance
 
 SET @sector_competition_id = (   SELECT id
                                     FROM competition

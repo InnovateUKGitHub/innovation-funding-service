@@ -1,5 +1,5 @@
-# Set guidance and allowed file types to null for disabled appendix in all competition templates' default application questions.
-# This query is part of IFS-2565.
+-- Set guidance and allowed file types to null for disabled appendix in all competition templates' default application questions.
+-- This query is part of IFS-2565.
 
 UPDATE form_input
     INNER JOIN competition ON (competition.template = true)
