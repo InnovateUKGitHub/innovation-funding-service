@@ -120,7 +120,7 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         if (!processRoleResources.isEmpty()){
 
             List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService
-                    .getAllAssessorFormInputResponsesForPanel(processRoleResources.get(0).getId())
+                    .getAllAssessorFormInputResponsesForPanel(processRoleResources.get(0).getApplicationId())
                     .getSuccess();
 
             if(!inputResponse.isEmpty()) {
