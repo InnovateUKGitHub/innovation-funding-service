@@ -315,7 +315,6 @@ the user is able to configure the new question
     Run Keyword If  '${status}' == 'False'  the user clicks the button/link       css=label[for="allowed-file-types-PDF"]
     the user clicks the button/link       css=label[for="allowed-file-types-Spreadsheet"]
     the user enters text to a text field  css=label[for="question.fileUploadGuidance"] + div .editor  You may include an appendix of additional information to provide details of the specific expertise and track record of each project partner and each subcontractor.
-
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
