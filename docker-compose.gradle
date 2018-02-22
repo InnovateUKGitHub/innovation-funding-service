@@ -1,4 +1,3 @@
-
 buildscript {
 
     repositories {
@@ -15,11 +14,24 @@ apply plugin: com.avast.gradle.dockercompose.DockerComposePlugin
 
 dockerCompose {
 
-    useComposeFiles = ['docker-compose.yml']
+    if (project.hasProperty('ifs.debug.disabled') ? project.property('ifs.debug.disabled').toBoolean() : false) {
+        //Temp change to allow testing of compose HTTP_TIMEOUT issue
+        useComposeFiles = ['docker-compose-debug.yml']
+    } else {
+        useComposeFiles = ['docker-compose.yml']
+    }
+
 
     if (project.hasProperty('ifs.full-deployment.enabled') ? project.property('ifs.full-deployment.enabled').toBoolean() : true) {
-        useComposeFiles.add('docker-compose-full.yml')
+
+        if (project.hasProperty('ifs.debug.disabled') ? project.property('ifs.debug.disabled').toBoolean() : false) {
+            //Temp change to allow testing of compose HTTP_TIMEOUT issue
+            useComposeFiles.add('docker-compose-full-debug.yml')
+        } else {
+            useComposeFiles.add('docker-compose-full.yml')
+        }
     }
+
 
     if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
         useComposeFiles.add('docker-compose-zipkin.yml')
@@ -36,6 +48,7 @@ dockerCompose {
     if (project.property('ifsFinanceTotalsEnabled').toBoolean()) {
         useComposeFiles.add('docker-compose-finance-totals.yml')
     }
+
 
     removeContainers = false
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"

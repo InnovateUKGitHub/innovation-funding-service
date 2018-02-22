@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -231,6 +232,154 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
+    public void test_updateShouldNotChangeAppendixFormInputWhenItCantBeFound() {
+        setPrerequisitesForSuccessfulUpdate();
+        CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
+
+        resource.setAppendix(false);
+        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setFileUploadGuidance(fileUploadGuidance);
+
+
+        boolean appendixEnabled = true;
+        String guidanceAnswer = "Only excel files with spaghetti VB macros allowed";
+        String allowedFileTypes = "XLSX";
+
+        FormInput appendixFormInput = newFormInput()
+                .withActive(appendixEnabled)
+                .withGuidanceAnswer(guidanceAnswer)
+                .withAllowedFileTypes(allowedFileTypes)
+                .build();
+        //Override repository response set in prerequisites test prep function
+        when(formInputRepository.findByQuestionIdAndScopeAndType(
+                1L,
+                FormInputScope.APPLICATION,
+                FormInputType.FILEUPLOAD
+        )).thenReturn(appendixFormInput);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        assertEquals(true, result.isSuccess());
+        assertNotEquals(appendixEnabled, appendixFormInput.getActive());
+        assertNotEquals(guidanceAnswer, appendixFormInput.getAllowedFileTypes());
+        assertNotEquals(allowedFileTypes, appendixFormInput.getGuidanceAnswer());
+    }
+
+    @Test
+    public void test_updateShouldNotChangeAppendixFormInputWhenOptionIsNull() {
+        setPrerequisitesForSuccessfulUpdate();
+        CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
+
+        resource.setAppendix(false);
+        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setFileUploadGuidance(fileUploadGuidance);
+
+
+        boolean appendixEnabled = true;
+        String guidanceAnswer = "Only excel files with spaghetti VB macros allowed";
+        String allowedFileTypes = "XLSX";
+
+        FormInput appendixFormInput = newFormInput()
+                .withActive(appendixEnabled)
+                .withGuidanceAnswer(guidanceAnswer)
+                .withAllowedFileTypes(allowedFileTypes)
+                .build();
+        //Override repository response set in prerequisites test prep function
+        when(formInputRepository.findByQuestionIdAndScopeAndType(
+                1L,
+                FormInputScope.APPLICATION,
+                FormInputType.FILEUPLOAD
+        )).thenReturn(appendixFormInput);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        assertEquals(true, result.isSuccess());
+        assertNotEquals(appendixEnabled, appendixFormInput.getActive());
+        assertNotEquals(guidanceAnswer, appendixFormInput.getAllowedFileTypes());
+        assertNotEquals(allowedFileTypes, appendixFormInput.getGuidanceAnswer());
+    }
+
+    @Test
+    public void test_updateShouldResetAppendixOptionsFormInputWhenItsNotSelected() {
+        setPrerequisitesForSuccessfulUpdate();
+        CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
+
+        resource.setAppendix(false);
+        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setFileUploadGuidance(fileUploadGuidance);
+
+        FormInput appendixFormInput = newFormInput()
+                .withActive(true)
+                .withGuidanceAnswer("Only excel files with spaghetti VB macros allowed")
+                .withAllowedFileTypes("XLSX")
+                .build();
+
+        //Override repository response set in prerequisites test prep function
+        when(formInputRepository.findByQuestionIdAndScopeAndType(
+                1L,
+                FormInputScope.APPLICATION,
+                FormInputType.FILEUPLOAD
+        )).thenReturn(appendixFormInput);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        assertEquals(true, result.isSuccess());
+        assertFalse(appendixFormInput.getActive());
+        assertNull(appendixFormInput.getAllowedFileTypes());
+        assertNull(appendixFormInput.getGuidanceAnswer());
+
+    }
+
+    @Test
+    public void test_updateShouldSetAppendixOptionsFormInputWhenSelected() {
+        setPrerequisitesForSuccessfulUpdate();
+        CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
+
+        resource.setAppendix(true);
+        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setFileUploadGuidance(fileUploadGuidance);
+
+        FormInput appendixFormInput = newFormInput().build();
+        //Override repository response set in prerequisites test prep function
+        when(formInputRepository.findByQuestionIdAndScopeAndType(
+                1L,
+                FormInputScope.APPLICATION,
+                FormInputType.FILEUPLOAD
+        )).thenReturn(appendixFormInput);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        String appendedFileTypes = FileTypeCategory.PDF.getDisplayName() + "," + FileTypeCategory.SPREADSHEET.getDisplayName();
+
+        assertEquals(true, result.isSuccess());
+        assertTrue(appendixFormInput.getActive());
+        assertEquals(FileTypeCategory.PDF.getDisplayName(), appendixFormInput.getAllowedFileTypes());
+        assertEquals(fileUploadGuidance, appendixFormInput.getGuidanceAnswer());
+    }
+
+    @Test
+    public void test_updateShouldAppendFileTypeSeparatedByComma() {
+        Long questionId = 1L;
+
+        setPrerequisitesForSuccessfulUpdate();
+        CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
+
+        resource.setAppendix(true);
+        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET));
+        resource.setFileUploadGuidance(fileUploadGuidance);
+
+        FormInput appendixFormInput = newFormInput().build();
+        //Override repository response set in prerequisites test prep function
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
+
+        String appendedFileTypes = FileTypeCategory.PDF.getDisplayName() + "," + FileTypeCategory.SPREADSHEET.getDisplayName();
+
+        assertEquals(appendedFileTypes, appendixFormInput.getAllowedFileTypes());
+    }
+
+    @Test
     public void test_delete() {
         long questionId = 1L;
         when(competitionSetupTemplateService.deleteAssessedQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
@@ -275,5 +424,57 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(COMPETITION_NOT_EDITABLE));
+    }
+
+    private void setPrerequisitesForSuccessfulUpdate() {
+        long questionId = 1L;
+        when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
+
+        Question question = newQuestion().
+                withShortName(CompetitionSetupQuestionType.SCOPE.getShortName()).build();
+
+        FormInput questionFormInput = newFormInput().build();
+        FormInput appendixFormInput = newFormInput().build();
+        FormInput researchCategoryQuestionFormInput = newFormInput().build();
+        FormInput scopeQuestionFormInput = newFormInput().build();
+        FormInput scoredQuestionFormInput = newFormInput().build();
+        FormInput writtenFeedbackFormInput = newFormInput().build();
+
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+        when(questionRepository.findOne(questionId)).thenReturn(question);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
+
+        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
+        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
+    }
+
+    private CompetitionSetupQuestionResource createValidQuestionResourceWithoutAppendixOptions() {
+        CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
+                .withAppendix(false)
+                .withGuidance(guidance)
+                .withGuidanceTitle(guidanceTitle)
+                .withMaxWords(maxWords)
+                .withNumber(number)
+                .withTitle(title)
+                .withShortTitle(newShortTitle)
+                .withSubTitle(subTitle)
+                .withQuestionId(1L)
+                .withAssessmentGuidance(assessmentGuidanceAnswer)
+                .withAssessmentGuidanceTitle(assessmentGuidanceTitle)
+                .withAssessmentMaxWords(assessmentMaxWords)
+                .withGuidanceRows(newFormInputGuidanceRowResourceBuilder().build(1))
+                .withScored(true)
+                .withScoreTotal(scoreTotal)
+                .withWrittenFeedback(true)
+                .build();
+
+        //Set temp ZDD option to true to trigger new functionality
+        resource.setZDDUpdated(true);
+
+        return resource;
     }
 }

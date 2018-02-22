@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-summary">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+    <div class="my-applications">
+        <h1 class="heading-large">Dashboard</h1>
+
+        <section class="projects-in-setup">
+            <div class="progress-list">
+                <h2 class="heading-medium">Set up your project</h2>
+                <ul>
+                    <li>
+                        <div class="task">
+                            <h3 class="heading-small"><a href="#">Mobile Phone Data for Logistics Analytics</a></h3>
+                            <ul class="application-details">
+                                <li>Project number: <span>11</span></li>
+                                <li>Competition: <span>Connected digital additive manufacturing</span></li>
+                            </ul>
+                        </div>
+                        <div class="status">
+                            <strong class="status-msg msg-progress">
+                                Project in setup
+                            </strong>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="task">
+                            <h3 class="heading-small"><a href="#">Climate science the history of Greenland's ice</a></h3>
+                            <ul class="application-details">
+                                <li>Project number: <span>112</span></li>
+                                <li>Competition: <span>Predicting market trends programme</span></li>
+                            </ul>
+                        </div>
+                        <div class="status">
+                            <strong class="status-msg msg-progress">
+                                Project in setup
+                            </strong>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="in-progress">
+            <div class="progress-list">
+                <h2 class="heading-medium">Applications in progress</h2>
+                <ul>
+                    <li class="status-2-col">
+                        <div class="task">
+                            <h3 class="heading-small"><a href="/prototypes/IFS-2249-applicant-feedback-overview">Magic material</a></h3>
+                            <ul class="application-details">
+                                <li>Project number: <span>112</span></li>
+                                <li>Competition: <span>New designs for a circular economy</span></li>
+                            </ul>
+                        </div>
+                        <div class="status">
+                            <span class="status-msg msg-progress">Feedback available</span>
+                            <span class="status-msg msg-progress">Invited to <br />interview</span>
+                        </div>
+                    </li>
+                    <li class="status-2-col">
+                        <div class="task">
+                            <h3 class="heading-small">
+                                <a href="#">Evolution of the global phosphorus cycle</a>
+                            </h3>
+                            <ul class="application-details">
+                                <li>Application number: <span>146</span></li>
+                                <li>Competition: <span>Predicting market trends programme</span></li>
+                            </ul>
+                        </div>
+                        <div class="status">
+                            <div class="status-msg msg-deadline">
+                                <strong class="bold-medium days-remaining">18140</strong> <br>
+                                days left <br>
+                                Deadline
+                                <span class="day">9</span>
+                                <span class="month">September</span>
+                            </div>
+                            <span class="status-msg msg-progress">26% complete</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+<script type="text/javascript">
+
+	jQuery('input#agree-terms').on('click',function(e){
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#confirm-submit").removeClass('disabled');
+		}else{
+			jQuery("#confirm-submit").addClass('disabled');
+		}
+
+	});
+
+</script>
+</body>
+</html>

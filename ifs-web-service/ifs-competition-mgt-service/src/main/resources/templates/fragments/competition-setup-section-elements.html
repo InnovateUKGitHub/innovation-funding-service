@@ -221,12 +221,12 @@
                 </fieldset>
             </div>
             <div  id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}">
-                <div class="form-group" th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
+                <div class="form-group" th:classappend="${#fields.hasErrors('question.allowedFileTypesEnum')} ? 'form-group-error'">
                     <fieldset>
-                        <legend id="question.allowedFileTypes">
+                        <legend id="question.allowedFileTypesEnum">
                             <span class="form-label-bold">Accepted appendix file types</span>
-                            <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
-                                <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypes')}" th:text="${err}" ></span>
+                            <th:block th:if="${#fields.hasErrors('question.allowedFileTypesEnum')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypesEnum')}" th:text="${err}" ></span>
                             </th:block>
                         </legend>
                         <div class="multiple-choice" th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
