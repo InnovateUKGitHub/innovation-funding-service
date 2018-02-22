@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Search'" />
+</head>
+<body class="competition-management">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Search results',size='heading-large'" />
+
+    <!--<p>${model.applicationCount} application(s)  matching the number ${model.searchString}</p>-->
+    <p><th:block th:if="${model.searchStringPresent}" th:text="${model.applicationCount} + ' application(s) matching the number ' +  ${model.searchString}"/></p>
+
+<!--    <ul class="inline-nav cf">
+      <li th:classappend="${model.tab == 'active'} ? 'selected'">
+        <a th:href="active" th:text="|Active (${model.activeCount})|">Active (38)</a>
+      </li>
+      <li th:classappend="${model.tab == 'inactive'} ? 'selected'">
+        <a th:href="inactive" th:text="|Inactive (${model.inactiveCount})|">Inactive (10)</a>
+      </li>
+      <li th:classappend="${model.tab == 'pending'} ? 'selected'">
+        <a th:href="pending" th:text="|Pending (${model.pendingCount})|">Pending (10)</a>
+      </li>
+    </ul>-->
+
+<!--    <th:block th:if="${model.tab == 'active'}" th:insert="fragments/admin-users :: active(users=${model.activeUsers}, count=${model.activeCount}, pagination=${model.activeUsersPagination})" />
+
+    <th:block th:if="${model.tab == 'inactive'}" th:insert="fragments/admin-users :: inactive(users=${model.inactiveUsers}, count=${model.inactiveCount}, pagination=${model.inactiveUsersPagination})" />-->
+
+    <th:block th:insert="fragments/dashboard-application-search :: application-search(applications=${model.applications}, count=${model.applicationCount}, pagination=${model.applicationPagination})" />
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
