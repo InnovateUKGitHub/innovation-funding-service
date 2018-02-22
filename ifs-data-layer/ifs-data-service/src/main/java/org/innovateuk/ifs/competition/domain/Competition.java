@@ -230,6 +230,9 @@ public class Competition implements ProcessActivity {
         return questions;
     }
 
+    @JsonIgnore
+    public boolean inProjectSetup() { return PROJECT_SETUP.equals(getCompetitionStatus()); }
+
     public void setName(String name) {
         this.name = name;
     }
