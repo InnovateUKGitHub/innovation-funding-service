@@ -2,7 +2,7 @@ textarea {
   border: 2px solid;
 }
 
-/*----- Search ----*/
+/*----- Search ----*/ 
 .form-search{
   position: relative;
   margin-top: 2.5em;
@@ -224,6 +224,20 @@ select.form-control{
     background: url(../images/icons/icon-download.png) no-repeat;
   }
 }*/
+
+.upload-section{
+
+  td &{
+    padding: 0;
+    margin: 0;
+    background: none;
+
+    .inputfile+label{
+      margin-top: 8px;
+    }
+  }
+}
+
 
 /*----- Search / filtering ----*/
 
