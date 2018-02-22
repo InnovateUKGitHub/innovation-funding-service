@@ -24,8 +24,10 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -90,7 +92,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
 
-            return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+            return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
                     .failNowOrSucceedWith(failureView, () -> redirectToPanelOverviewTab(competitionId));
         });
     }
