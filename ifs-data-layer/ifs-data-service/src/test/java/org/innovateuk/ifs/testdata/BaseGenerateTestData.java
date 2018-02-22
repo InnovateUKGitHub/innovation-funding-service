@@ -80,7 +80,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
             competitionLine -> "Home and industrial efficiency programme".equals(competitionLine.name);
 
     private static final Predicate<CompetitionLine> COMPETITIONS_FILTER =
-            SPECIFIC_COMPETITIONS_PREDICATE;
+            ALL_COMPETITIONS_PREDICATE;
 
     @Value("${flyway.url}")
     private String databaseUrl;
