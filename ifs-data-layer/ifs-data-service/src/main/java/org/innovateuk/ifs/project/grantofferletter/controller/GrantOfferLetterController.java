@@ -4,10 +4,10 @@ import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -168,10 +168,10 @@ public class GrantOfferLetterController {
         return grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
     }
 
-    @PostMapping("/{projectId}/signed-grant-offer-letter/approval/{approvalType}")
+    @PostMapping("/{projectId}/signed-grant-offer-letter/approval")
     public RestResult<Void> approveOrRejectSignedGrantOfferLetter(@PathVariable("projectId") final Long projectId,
-                                                                  @PathVariable("approvalType") final ApprovalType approvalType) {
-        return grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
+                                                                  @RequestBody final GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
+        return grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource).toPostResponse();
     }
 
     @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")

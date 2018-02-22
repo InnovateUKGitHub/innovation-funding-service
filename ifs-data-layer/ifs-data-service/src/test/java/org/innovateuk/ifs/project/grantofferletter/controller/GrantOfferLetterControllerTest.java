@@ -5,9 +5,11 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -25,9 +27,11 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -134,6 +138,21 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
                 andExpect(status().isNoContent()).
                 andDo(document("project/{method-name}"));
+    }
+
+    @Test
+    public void approveOrRejectSignedGrantOfferLetter() throws Exception {
+
+        GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
+        when(grantOfferLetterServiceMock.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/signed-grant-offer-letter/approval", projectId)
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(grantOfferLetterApprovalResource)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        verify(grantOfferLetterServiceMock).approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
     }
 
     @Test
