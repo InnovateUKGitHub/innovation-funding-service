@@ -111,16 +111,11 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
                                       UserResource user,
                                       Model model,
                                       long applicationId) {
-        List<ProcessRoleResource> processRoleResources = userApplicationRoles
-                .stream()
-                .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
-                .filter(processRoleResource -> processRoleResource.getRoleName().equals("assessor"))
-                .collect(toList());
 
-        if (!processRoleResources.isEmpty()){
+        if (isAssessorForApplication(userApplicationRoles, user)) {
 
             List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService
-                    .getAllAssessorFormInputResponsesForPanel(processRoleResources.get(0).getApplicationId())
+                    .getAllAssessorFormInputResponsesForPanel(applicationId)
                     .getSuccess();
 
             if(!inputResponse.isEmpty()) {
@@ -145,5 +140,12 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
                 model.addAttribute("feedbackSummary", feedbackSummary);
             }
         }
+    }
+
+    private boolean isAssessorForApplication(List<ProcessRoleResource> userApplicationRoles, UserResource user) {
+        return userApplicationRoles
+                .stream()
+                .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
+                .anyMatch(processRoleResource -> processRoleResource.getRoleName().equals("assessor"));
     }
 }
