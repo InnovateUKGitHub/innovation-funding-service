@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 
-public interface InviteProjectService {
+public interface ProjectInviteService {
 
 
     @PreAuthorize("hasPermission(#inviteProjectResource, 'SAVE_PROJECT_INVITE')")

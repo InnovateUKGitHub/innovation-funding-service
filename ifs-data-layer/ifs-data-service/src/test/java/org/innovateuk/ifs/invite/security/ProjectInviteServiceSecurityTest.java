@@ -3,7 +3,7 @@ package org.innovateuk.ifs.invite.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.invite.transactional.InviteProjectService;
+import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
-import static org.innovateuk.ifs.invite.security.InviteProjectServiceSecurityTest.TestInviteProjectService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
+import static org.innovateuk.ifs.invite.security.ProjectInviteServiceSecurityTest.TestProjectInviteService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -22,9 +22,9 @@ import static org.mockito.Mockito.verify;
 
 
 /**
- * Testing how the secured methods in InviteProjectService interact with Spring Security
+ * Testing how the secured methods in ProjectInviteService interact with Spring Security
  */
-public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<InviteProjectService> {
+public class ProjectInviteServiceSecurityTest extends BaseServiceSecurityTest<ProjectInviteService> {
 
     private ProjectInvitePermissionRules projectInvitePermissionRules;
 
@@ -74,11 +74,11 @@ public class InviteProjectServiceSecurityTest extends BaseServiceSecurityTest<In
     }
 
     @Override
-    protected Class<? extends InviteProjectService> getClassUnderTest() {
-        return TestInviteProjectService.class;
+    protected Class<? extends ProjectInviteService> getClassUnderTest() {
+        return TestProjectInviteService.class;
     }
 
-    public static class TestInviteProjectService implements InviteProjectService {
+    public static class TestProjectInviteService implements ProjectInviteService {
 
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 

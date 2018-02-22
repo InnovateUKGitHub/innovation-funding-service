@@ -48,7 +48,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @InjectMocks
-    private InviteProjectService inviteProjectService = new InviteProjectServiceImpl();
+    private ProjectInviteService projectInviteService = new ProjectInviteServiceImpl();
 
     @Test
     public void testAcceptProjectInviteSuccess() throws Exception {
@@ -61,7 +61,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(projectInviteRepositoryMock.save(projectInvite)).thenReturn(projectInvite);
         when(projectServiceMock.addPartner(projectInvite.getTarget().getId(), user.getId(), projectInvite.getOrganisation().getId())).thenReturn(serviceSuccess(projectUser));
-        ServiceResult<Void> result = inviteProjectService.acceptProjectInvite(projectInvite.getHash(), user.getId());
+        ServiceResult<Void> result = projectInviteService.acceptProjectInvite(projectInvite.getHash(), user.getId());
         assertTrue(result.isSuccess());
     }
 
@@ -72,7 +72,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         User user = newUser().withEmailAddress("email@example.com").build();
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        ServiceResult<Void> result = inviteProjectService.acceptProjectInvite(hash, user.getId());
+        ServiceResult<Void> result = projectInviteService.acceptProjectInvite(hash, user.getId());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(ProjectInvite.class, hash)));
     }
@@ -83,7 +83,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findOne(userId)).thenReturn(null);
-        ServiceResult<Void> result = inviteProjectService.acceptProjectInvite(projectInvite.getHash(), userId);
+        ServiceResult<Void> result = projectInviteService.acceptProjectInvite(projectInvite.getHash(), userId);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(User.class, userId)));
     }
@@ -95,7 +95,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newProjectInvite().withEmail(user.getEmail()).withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(of(user));
-        ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
+        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(projectInvite.getHash());
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccess());
     }
@@ -104,7 +104,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     public void testCheckUserExistingByInviteHashHashNotFound() throws Exception {
         String hash = "hash";
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
-        ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(hash);
+        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(hash);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(ProjectInvite.class, hash)));
     }
@@ -114,7 +114,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
-        ServiceResult<Boolean> result = inviteProjectService.checkUserExistingByInviteHash(projectInvite.getHash());
+        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(projectInvite.getHash());
         assertTrue(result.isSuccess());
         assertFalse(result.getSuccess());
     }
@@ -138,7 +138,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         InviteProjectResource inviteProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInvite);
         when(userRepositoryMock.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(inviteProjectMapperMock.mapToDomain(inviteProjectResource)).thenReturn(projectInvite);
-        ServiceResult<Void> result = inviteProjectService.saveProjectInvite(inviteProjectResource);
+        ServiceResult<Void> result = projectInviteService.saveProjectInvite(inviteProjectResource);
         assertTrue(result.isSuccess());
     }
 
@@ -152,7 +152,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             ProjectInvite projectInviteNoName = newProjectInvite().withProject(project).withOrganisation(organisation).withEmail(user.getEmail()).build();
             InviteProjectResource projectInviteNoNameResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoName);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoNameResource)).thenReturn(projectInviteNoName);
-            ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoNameResource);
+            ServiceResult<Void> result = projectInviteService.saveProjectInvite(projectInviteNoNameResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
@@ -161,7 +161,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             ProjectInvite projectInviteNoEmail = newProjectInvite().withProject(project).withOrganisation(organisation).withName("project name").build();
             InviteProjectResource projectInviteNoEmailResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoEmail);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoEmailResource)).thenReturn(projectInviteNoEmail);
-            ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoEmailResource);
+            ServiceResult<Void> result = projectInviteService.saveProjectInvite(projectInviteNoEmailResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
@@ -170,7 +170,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             ProjectInvite projectInviteNoOrganisation = newProjectInvite().withProject(project).withName("project name").withEmail(user.getEmail()).build();
             InviteProjectResource projectInviteNoOrganisationResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoOrganisation);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoOrganisationResource)).thenReturn(projectInviteNoOrganisation);
-            ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoOrganisationResource);
+            ServiceResult<Void> result = projectInviteService.saveProjectInvite(projectInviteNoOrganisationResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
@@ -179,7 +179,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
             ProjectInvite projectInviteNoProject = newProjectInvite().withOrganisation(organisation).withName("project name").withEmail(user.getEmail()).build();
             InviteProjectResource projectInviteNoProjectResource = getMapper(InviteProjectMapper.class).mapToResource(projectInviteNoProject);
             when(inviteProjectMapperMock.mapToDomain(projectInviteNoProjectResource)).thenReturn(projectInviteNoProject);
-            ServiceResult<Void> result = inviteProjectService.saveProjectInvite(projectInviteNoProjectResource);
+            ServiceResult<Void> result = projectInviteService.saveProjectInvite(projectInviteNoProjectResource);
             assertTrue(result.isFailure());
             assertTrue(result.getFailure().is(PROJECT_INVITE_INVALID));
         }
@@ -193,7 +193,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         when(projectInviteRepositoryMock.findByProjectId(project.getId())).thenReturn(asList(inviteProject));
         when(inviteProjectMapperMock.mapToResource(inviteProject)).thenReturn(inviteProjectResource);
         when(organisationRepositoryMock.findOne(anyLong())).thenReturn(inviteProject.getOrganisation());
-        ServiceResult<List<InviteProjectResource>> invitesByProject = inviteProjectService.getInvitesByProject(project.getId());
+        ServiceResult<List<InviteProjectResource>> invitesByProject = projectInviteService.getInvitesByProject(project.getId());
         assertTrue(invitesByProject.isSuccess());
         assertEquals(asList(inviteProjectResource), invitesByProject.getSuccess());
     }

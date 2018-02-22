@@ -48,9 +48,9 @@ import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
-public class InviteProjectServiceImpl extends BaseTransactionalService implements InviteProjectService {
+public class ProjectInviteServiceImpl extends BaseTransactionalService implements ProjectInviteService {
 
-    private static final Log LOG = LogFactory.getLog(InviteProjectServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ProjectInviteServiceImpl.class);
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -72,7 +72,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
 
     private LocalValidatorFactoryBean validator;
 
-    public InviteProjectServiceImpl() {
+    public ProjectInviteServiceImpl() {
         validator = new LocalValidatorFactoryBean();
         validator.setProviderClass(HibernateValidator.class);
         validator.afterPropertiesSet();

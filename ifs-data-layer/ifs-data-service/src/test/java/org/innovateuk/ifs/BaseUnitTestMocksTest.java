@@ -383,7 +383,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectInviteRepository projectInviteRepositoryMock;
 
     @Mock
-    protected InviteProjectService inviteProjectServiceMock;
+    protected ProjectInviteService projectInviteServiceMock;
 
     @Mock
     protected InviteUserService inviteUserServiceMock;
