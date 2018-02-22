@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -40,6 +41,8 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -402,40 +405,103 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     }
 
     @Test
-    public void testApproveSignedGOLSuccess() throws Exception {
+    public void signedGrantOfferLetterApprovalSuccess() throws Exception {
         Long projectId = 123L;
 
-        FileEntryResource signedGolFileEntryResource = FileEntryResourceBuilder.newFileEntryResource()
-                .withName("signed-gol-file.pdf")
-                .build();
+        GrantOfferLetterApprovalResource approvalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
+        when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId,
+                approvalResource)).thenReturn(serviceSuccess());
 
-        when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed?approvalType=" + ApprovalType.APPROVED)).
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed")
+                        .param("approvalType", "APPROVED")
+                       ).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
-        verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+        verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, approvalResource);
     }
 
     @Test
-    public void testApproveSignedGOLRejectionSuccess() throws Exception {
+    public void signedGrantOfferLetterRejectionSuccess() throws Exception {
 
         Long projectId = 123L;
 
-        FileEntryResource signedGolFileEntryResource = FileEntryResourceBuilder.newFileEntryResource()
-                .withName("signed-gol-file.pdf")
-                .build();
+        String rejectionReason = "No signature";
+        GrantOfferLetterApprovalResource approvalResource = new GrantOfferLetterApprovalResource(ApprovalType.REJECTED, rejectionReason);
 
-        when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.REJECTED)).thenReturn(serviceSuccess());
+        when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, approvalResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed?approvalType=" + ApprovalType.REJECTED)).
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed")
+                .param("approvalType", "REJECTED")
+                .param("rejectionReason", rejectionReason)
+        ).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
-        verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.REJECTED);
+        verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, approvalResource);
+    }
+
+    @Test
+    public void signedGrantOfferLetterWhenRejectedButRejectedReasonAllWhiteSpaces() throws Exception {
+
+        Long projectId = 123L;
+
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed")
+                .param("approvalType", "REJECTED")
+                .param("rejectionReason", "       ")
+        ).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
+                andReturn();
+
+        verify(grantOfferLetterService, never()).approveOrRejectSignedGrantOfferLetter(any(), any());
+    }
+
+    @Test
+    public void signedGrantOfferLetterWhenRejectedButRejectedReasonEmpty() throws Exception {
+
+        Long projectId = 123L;
+
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed")
+                .param("approvalType", "REJECTED")
+                .param("rejectionReason", "")
+        ).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
+                andReturn();
+
+        verify(grantOfferLetterService, never()).approveOrRejectSignedGrantOfferLetter(any(), any());
+    }
+
+    @Test
+    public void signedGrantOfferLetterWhenRejectedButNoRejectedReason() throws Exception {
+
+        Long projectId = 123L;
+
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed")
+                .param("approvalType", "REJECTED")
+        ).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
+                andReturn();
+
+        verify(grantOfferLetterService, never()).approveOrRejectSignedGrantOfferLetter(any(), any());
+    }
+
+    @Test
+    public void signedGrantOfferLetterWhenNeitherApprovedNorRejected() throws Exception {
+
+        Long projectId = 123L;
+
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed")
+                        ).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
+                andReturn();
+
+        verify(grantOfferLetterService, never()).approveOrRejectSignedGrantOfferLetter(any(), any());
     }
 
     @Test

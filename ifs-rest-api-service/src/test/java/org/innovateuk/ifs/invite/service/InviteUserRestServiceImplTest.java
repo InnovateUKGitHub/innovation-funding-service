@@ -30,7 +30,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     }
 
     @Test
-    public void saveUserInvite() throws Exception {
+    public void saveUserInvite() {
         InviteUserResource inviteUserResource = new InviteUserResource();
         String url = inviteRestBaseUrl + "/saveInvite";
         setupPostWithRestResultExpectations(url, inviteUserResource, HttpStatus.OK);
@@ -39,7 +39,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     }
 
     @Test
-    public void getInvite() throws Exception {
+    public void getInvite() {
         RoleInviteResource roleInviteResource = new RoleInviteResource();
         String url = inviteRestBaseUrl + "/getInvite/";
         String inviteHash = "hash";
@@ -50,7 +50,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     }
 
     @Test
-    public void checkExistingUser() throws Exception {
+    public void checkExistingUser() {
         String url = inviteRestBaseUrl + "/checkExistingUser/";
         String inviteHash = "hash";
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, Boolean.class, true);
@@ -60,7 +60,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     }
 
     @Test
-    public void getPendingInternalUsers() throws Exception {
+    public void getPendingInternalUsers() {
         RoleInvitePageResource expected = new RoleInvitePageResource();
         setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()), RoleInvitePageResource.class, expected, OK);
         RoleInvitePageResource result = service.getPendingInternalUserInvites(0, 5).getSuccess();
@@ -68,7 +68,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     }
 
     @Test
-    public void findExternalInvites() throws Exception {
+    public void findExternalInvites() {
 
         String searchString = "%a%";
         SearchCategory searchCategory = SearchCategory.NAME;
@@ -77,5 +77,16 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         setupGetWithRestResultExpectations(inviteRestBaseUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType(), expected, OK);
         List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccess();
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void resendInternalUserInvite() {
+
+        setupPutWithRestResultExpectations(inviteRestBaseUrl + "/internal/pending/123/resend", OK);
+
+        RestResult<Void> result = service.resendInternalUserInvite(123L);
+
+        assertTrue(result.isSuccess());
+        setupPutWithRestResultVerifications(inviteRestBaseUrl + "/internal/pending/123/resend");
     }
 }

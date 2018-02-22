@@ -192,7 +192,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(financeCheckQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(financeCheckQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(financeCheckQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -240,7 +240,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -274,7 +274,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(applicationFinanceResource));
+        when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceSuccess(applicationFinanceResource));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isSuccess());
@@ -447,7 +447,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+        when(financeServiceMock.financeDetails(applicationId, organisationId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isFailure());
@@ -475,7 +475,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -505,7 +505,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -542,7 +542,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -572,7 +572,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -609,7 +609,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("1.0"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(1, 200).
                                 build(2)).
@@ -639,7 +639,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
+        when(financeServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -750,7 +750,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         return asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000000"), BigDecimal.ZERO).
+                                withGrossEmployeeCost(new BigDecimal("10000000"), BigDecimal.ZERO).
                                 withDescription("Developers", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 200).
                                 build(2)).

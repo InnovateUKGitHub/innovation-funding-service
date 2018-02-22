@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder;
 import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
@@ -57,7 +57,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
     private UserService userService;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceService financeService;
 
     @Autowired
     private EntityManager entityManager;
@@ -160,7 +160,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
     private ApplicationFinanceResource getFinanceDetails(UserResource applicant, Long applicationId, Long organisationId) {
         setLoggedInUser(applicant);
-        return financeRowService.financeDetails(applicationId, organisationId).getSuccess();
+        return financeService.financeDetails(applicationId, organisationId).getSuccess();
     }
 
     private ApplicationData createApcApplication(CompetitionData competitionData, UserResource applicant, Optional<Long> organisationSize, Organisation applicantOrganisation, boolean academic) {
