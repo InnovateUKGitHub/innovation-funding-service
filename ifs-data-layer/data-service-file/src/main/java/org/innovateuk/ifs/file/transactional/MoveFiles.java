@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.file.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -18,6 +20,8 @@ import static java.util.stream.Collectors.toList;
  */
 public final class MoveFiles {
 
+    private static final Log LOG = LogFactory.getLog(MoveFiles.class);
+
     public static ServiceResult<List<File>> moveAllFiles(final FileStorageStrategy from, final FileStorageStrategy to, final boolean ignoreAlreadyMovedErrors) {
         if (ignoreAlreadyMovedErrors) {
             return aggregate(filterErrors(moveAllFiles(from, to), f -> !f.is(FILES_MOVE_DESTINATION_EXIST_SOURCE_DOES_NOT)));
@@ -32,7 +36,11 @@ public final class MoveFiles {
                     final Long id = idAndPathOfFileToMove.getKey();
                     final Pair<List<String>, String> path = idAndPathOfFileToMove.getValue();
                     final File fileToMove = new File(pathElementsToFile(path.getKey()), path.getValue());
-                    return to.moveFile(id, fileToMove);
+                    ServiceResult<File> moveResult= to.moveFile(id, fileToMove);
+                    moveResult.ifSuccessful(movedFile -> {
+                        LOG.info("Moved file " + fileToMove.getAbsolutePath() + " to " + movedFile.getAbsolutePath() );
+                    });
+                    return moveResult;
                 }).
                 collect(toList());
         return moveResults;

@@ -73,6 +73,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
+        LOG.info("Creating file with FileEntry ID: " + fileEntry.getId() + " and size: " + fileEntry.getFilesizeBytes());
         return createFileForFileEntry(pathElements, filename, temporaryFile);
     }
 
@@ -146,6 +147,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
+            LOG.info("Path of file created: " + targetFile.toAbsolutePath());
             return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
             LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
