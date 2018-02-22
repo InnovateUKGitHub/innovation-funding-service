@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.resource.FinanceView;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -212,7 +213,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
                         researchCategory, "ian.cooper@innovateuk.test",
                         "john.doe@innovateuk.test", "DET1536/1537", "875",
                         "CCCC", "16014", 1, BigDecimal.valueOf(100L),
-                        false, false, false,
+                        false, false, FinanceView.OVERVIEW,false,
                         "single-or-collaborative", singletonList(OrganisationTypeEnum.BUSINESS),
                         50, false, "").
                 withApplicationFormFromTemplate().

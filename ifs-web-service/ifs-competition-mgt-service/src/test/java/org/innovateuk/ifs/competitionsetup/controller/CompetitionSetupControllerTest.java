@@ -913,7 +913,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("assessorCount", "1")
                 .param("assessorPay", "10")
                 .param("hasAssessmentPanel", "0")
-                .param("hasInterviewStage", "0"))
+                .param("hasInterviewStage", "0")
+                .param("financeView","OVERVIEW"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"));
 
