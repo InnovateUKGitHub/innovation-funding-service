@@ -48,9 +48,9 @@ items:
           - name: JAVA_OPTS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-finance-data-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-finance-data-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
-            value: "<<NEWRELIC-LICENCE-KEY>>"
+            value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
