@@ -63,7 +63,6 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
         return InterviewSelectionForm.class;
     }
 
-
     @GetMapping("/find")
     public String find(Model model,
                        @ModelAttribute(name = SELECTION_FORM, binding = false) InterviewSelectionForm selectionForm,

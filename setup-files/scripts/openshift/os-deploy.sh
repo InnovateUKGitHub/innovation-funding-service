@@ -56,6 +56,12 @@ function shibInit() {
 
 # Entry point
 tailorAppInstance
+
+if [[ ${TARGET} == "local" ]]
+then
+    replacePersistentFileClaim
+fi
+
 useContainerRegistry
 deploy
 blockUntilServiceIsUp

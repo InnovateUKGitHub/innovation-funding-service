@@ -43,7 +43,6 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
     private Pageable pageable;
 
-
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
@@ -109,7 +108,6 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         assertEquals(getPaulPlum().getId(), interviewAssignment.getParticipant().getApplicationId());
     }
-
 
     @Test
     public void getAvailableApplications() {
@@ -182,5 +180,4 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         assertEquals(1, interviewPanelStagedApplicationPageResource.getTotalElements());
     }
-
 }

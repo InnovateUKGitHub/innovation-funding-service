@@ -33,13 +33,23 @@
     </ul>
 
     <ul class="link-list extra-margin">
-        <li><a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Assign applications</a></li>
+
+        <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+               th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">
+            Assign Applications
+        </a>
+            <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+               class="disabled" aria-disabled="true" >
+                Assign Applications
+            </a>
+        </li>
 
         <li><a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors</a></li>
 
         <li><p class="extra-margin">You can allocate applications to assessors once they have responded.</p></li>
 
         <li><a class="disabled" aria-disabled="true">Allocate applications to assessors</a></li>
+        
     </ul>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

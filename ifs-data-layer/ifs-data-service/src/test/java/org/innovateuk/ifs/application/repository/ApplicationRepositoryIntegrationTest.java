@@ -75,7 +75,6 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition competition = newCompetition().with(id(null)).build();
         competitionRepository.save(competition);
 
-
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .withActivityState(activityState(ApplicationState.CREATED), activityState(ApplicationState.SUBMITTED))
@@ -102,7 +101,6 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         assertEquals(0, applications.getTotalElements());
     }
-
 
     @Test
     public void findSubmittedApplicationsNotOnInterviewPanel_staged() {
