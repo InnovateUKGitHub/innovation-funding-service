@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationRowViewModel;
@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class InterviewPanelApplicationsFindModelPopulator {
 
     @Autowired
-    private InterviewPanelRestService interviewPanelRestService;
+    private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -36,7 +36,7 @@ public class InterviewPanelApplicationsFindModelPopulator {
                 .getCompetitionById(competitionId)
                 .getSuccess();
 
-        AvailableApplicationPageResource pageResource = interviewPanelRestService.getAvailableApplications(
+        AvailableApplicationPageResource pageResource = interviewAssignmentRestService.getAvailableApplications(
                 competition.getId(),
                 page)
                 .getSuccess();

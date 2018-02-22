@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationResource;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationInviteRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationsInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class InterviewPanelApplicationsInviteModelPopulator {
 
     @Autowired
-    private InterviewPanelRestService interviewPanelRestService;
+    private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
@@ -32,7 +32,7 @@ public class InterviewPanelApplicationsInviteModelPopulator {
                 .getCompetitionById(competitionId)
                 .getSuccess();
 
-        InterviewPanelStagedApplicationPageResource pageResource = interviewPanelRestService
+        InterviewAssignmentStagedApplicationPageResource pageResource = interviewAssignmentRestService
                 .getStagedApplications(competition.getId(), page)
                 .getSuccess();
 
@@ -49,12 +49,12 @@ public class InterviewPanelApplicationsInviteModelPopulator {
         );
     }
 
-    private InterviewPanelApplicationInviteRowViewModel getRowViewModel(InterviewPanelStagedApplicationResource interviewPanelStagedApplicationResource) {
+    private InterviewPanelApplicationInviteRowViewModel getRowViewModel(InterviewAssignmentStagedApplicationResource interviewAssignmentStagedApplicationResource) {
         return new InterviewPanelApplicationInviteRowViewModel(
-                interviewPanelStagedApplicationResource.getId(),
-                interviewPanelStagedApplicationResource.getApplicationId(),
-                interviewPanelStagedApplicationResource.getApplicationName(),
-                interviewPanelStagedApplicationResource.getLeadOrganisationName()
+                interviewAssignmentStagedApplicationResource.getId(),
+                interviewAssignmentStagedApplicationResource.getApplicationId(),
+                interviewAssignmentStagedApplicationResource.getApplicationName(),
+                interviewAssignmentStagedApplicationResource.getLeadOrganisationName()
         );
     }
 }

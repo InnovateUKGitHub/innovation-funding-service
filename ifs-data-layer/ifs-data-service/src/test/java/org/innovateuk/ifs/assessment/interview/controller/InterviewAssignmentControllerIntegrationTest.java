@@ -13,7 +13,7 @@ import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -173,11 +173,11 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         interviewAssignmentRepository.save(interviewPanel);
 
-        RestResult<InterviewPanelStagedApplicationPageResource> interviewPanelStagedApplicationPageResourceRestResult = controller.getStagedApplications(competition.getId(), pageable);
+        RestResult<InterviewAssignmentStagedApplicationPageResource> interviewPanelStagedApplicationPageResourceRestResult = controller.getStagedApplications(competition.getId(), pageable);
         assertTrue(interviewPanelStagedApplicationPageResourceRestResult.isSuccess());
 
-        InterviewPanelStagedApplicationPageResource interviewPanelStagedApplicationPageResource = interviewPanelStagedApplicationPageResourceRestResult.getSuccess();
+        InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = interviewPanelStagedApplicationPageResourceRestResult.getSuccess();
 
-        assertEquals(1, interviewPanelStagedApplicationPageResource.getTotalElements());
+        assertEquals(1, interviewAssignmentStagedApplicationPageResource.getTotalElements());
     }
 }

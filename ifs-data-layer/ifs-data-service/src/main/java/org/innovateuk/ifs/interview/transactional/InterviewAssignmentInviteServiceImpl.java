@@ -68,12 +68,12 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     @Override
     @Transactional
-    public ServiceResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
+    public ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
         final Page<InterviewAssignment> pagedResult =
                 interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(
                         competitionId, InterviewAssignmentState.CREATED.getBackingState(), pageable);
 
-        return serviceSuccess(new InterviewPanelStagedApplicationPageResource(
+        return serviceSuccess(new InterviewAssignmentStagedApplicationPageResource(
                 pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
                 simpleMap(pagedResult.getContent(), this::mapToPanelCreatedInviteResource),
@@ -112,12 +112,12 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
                 ).getSuccess();
     }
 
-    private InterviewPanelStagedApplicationResource mapToPanelCreatedInviteResource(InterviewAssignment panelInvite) {
+    private InterviewAssignmentStagedApplicationResource mapToPanelCreatedInviteResource(InterviewAssignment panelInvite) {
         final Application application = panelInvite.getTarget();
 
         return getOrganisation(panelInvite.getParticipant().getOrganisationId())
                 .andOnSuccessReturn(leadOrganisation ->
-                        new InterviewPanelStagedApplicationResource(
+                        new InterviewAssignmentStagedApplicationResource(
                                 panelInvite.getId(),
                                 application.getId(),
                                 application.getName(),

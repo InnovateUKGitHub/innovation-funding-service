@@ -6,21 +6,21 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * DTO for a created assessor invite that is ready to be sent.
  */
-public class InterviewPanelStagedApplicationResource {
+public class InterviewAssignmentStagedApplicationResource {
 
     private final long id;
     private final long applicationId;
     private final String applicationName;
     private final String leadOrganisationName;
 
-    public InterviewPanelStagedApplicationResource() {
+    public InterviewAssignmentStagedApplicationResource() {
         id = -1;
         applicationId = -1;
         applicationName = null;
         leadOrganisationName = null;
     }
 
-    public InterviewPanelStagedApplicationResource(long id, long applicationId, String applicationName, String leadOrganisationName) {
+    public InterviewAssignmentStagedApplicationResource(long id, long applicationId, String applicationName, String leadOrganisationName) {
         this.id = id;
         this.applicationId = applicationId;
         this.applicationName = applicationName;
@@ -49,7 +49,7 @@ public class InterviewPanelStagedApplicationResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewPanelStagedApplicationResource that = (InterviewPanelStagedApplicationResource) o;
+        InterviewAssignmentStagedApplicationResource that = (InterviewAssignmentStagedApplicationResource) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

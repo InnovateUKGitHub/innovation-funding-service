@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.interview.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.interview.transactional.InterviewPanelInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +16,11 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
-public class InterviewPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewPanelInviteService> {
+public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentInviteService> {
 
     @Override
-    protected Class<? extends InterviewPanelInviteService> getClassUnderTest() {
-        return TestInterviewPanelInviteService.class;
+    protected Class<? extends InterviewAssignmentInviteService> getClassUnderTest() {
+        return TestInterviewAssignmentInviteService.class;
     }
 
     private static Pageable PAGE_REQUEST = new PageRequest(0,20);
@@ -57,7 +57,7 @@ public class InterviewPanelInviteServiceSecurityTest extends BaseServiceSecurity
         );
     }
 
-    public static class TestInterviewPanelInviteService implements InterviewPanelInviteService {
+    public static class TestInterviewAssignmentInviteService implements InterviewAssignmentInviteService {
 
         @Override
         public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
@@ -65,7 +65,7 @@ public class InterviewPanelInviteServiceSecurityTest extends BaseServiceSecurity
         }
 
         @Override
-        public ServiceResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
+        public ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
             return null;
         }
 

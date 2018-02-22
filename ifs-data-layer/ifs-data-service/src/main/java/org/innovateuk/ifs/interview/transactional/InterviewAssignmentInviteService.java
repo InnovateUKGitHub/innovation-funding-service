@@ -4,14 +4,14 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
 /**
- * Service for managing {@link org.innovateuk.ifs.invite.domain.competition.InterviewAssignmentInvite}s
+ * Service for managing {@link org.innovateuk.ifs.invite.domain.competition.InterviewInvite}s
  */
 public interface InterviewAssignmentInviteService {
 
@@ -23,7 +23,7 @@ public interface InterviewAssignmentInviteService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_STAGED_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available applications by competition")
-    ServiceResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable);
+    ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",

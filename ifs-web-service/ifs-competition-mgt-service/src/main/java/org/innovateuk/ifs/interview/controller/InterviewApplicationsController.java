@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.innovateuk.ifs.assessment.service.InterviewPanelRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewSelectionForm;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
@@ -45,7 +45,7 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
     private static final String SELECTION_FORM = "interviewPanelApplicationSelectionForm";
 
     @Autowired
-    private InterviewPanelRestService interviewPanelRestService;
+    private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
     private InterviewPanelApplicationsFindModelPopulator interviewPanelApplicationsFindModelPopulator;
@@ -174,7 +174,7 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
         }
 
     private List<Long> getAvailableApplicationIds(long competitionId) {
-        return interviewPanelRestService.getAvailableApplicationIds(competitionId).getSuccess();
+        return interviewAssignmentRestService.getAvailableApplicationIds(competitionId).getSuccess();
     }
 
     @PostMapping(value = "/find/addSelected")
@@ -193,7 +193,7 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            RestResult<Void> restResult = interviewPanelRestService.assignApplications(
+            RestResult<Void> restResult = interviewAssignmentRestService.assignApplications(
                     newSelectionFormToResource(submittedSelectionForm, competitionId));
 
             return validationHandler.addAnyErrors(restResult)

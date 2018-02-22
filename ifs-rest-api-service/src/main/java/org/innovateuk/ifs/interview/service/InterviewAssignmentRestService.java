@@ -1,16 +1,16 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 
 import java.util.List;
 
 /**
  * REST service for managing to interview panels
  */
-public interface InterviewPanelRestService {
+public interface InterviewAssignmentRestService {
 
     RestResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, int page);
 
@@ -19,5 +19,5 @@ public interface InterviewPanelRestService {
     // TODO rename the resource or create a new one?
     RestResult<Void> assignApplications(ExistingUserStagedInviteListResource existingUserStagedInviteListResource);
 
-    RestResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, int page);
+    RestResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, int page);
 }

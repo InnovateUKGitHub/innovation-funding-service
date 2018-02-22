@@ -105,7 +105,7 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
         when(organisationRepositoryMock.findOne(LEAD_ORGANISATION.getId())).thenReturn(LEAD_ORGANISATION);
 
-        InterviewPanelStagedApplicationPageResource stagedApplicationPageResource = service.getStagedApplications(COMPETITION_ID, PAGE_REQUEST).getSuccess();
+        InterviewAssignmentStagedApplicationPageResource stagedApplicationPageResource = service.getStagedApplications(COMPETITION_ID, PAGE_REQUEST).getSuccess();
 
         assertPageRequestMatchesPageResource(PAGE_REQUEST, stagedApplicationPageResource);
         assertEquals(TOTAL_APPLICATIONS, stagedApplicationPageResource.getTotalElements());
@@ -197,19 +197,19 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
         assertEquals(leadOrganisation.getName(), availableApplicationResource.getLeadOrganisation());
     }
 
-    private static void assertStagedApplicationResourcesMatch(Organisation leadOrganisation, List<InterviewAssignment> expectedInterviewPanels, InterviewPanelStagedApplicationPageResource stagedApplicationPageResource) {
-        final List<InterviewPanelStagedApplicationResource> stagedApplicationResources =  stagedApplicationPageResource.getContent();
+    private static void assertStagedApplicationResourcesMatch(Organisation leadOrganisation, List<InterviewAssignment> expectedInterviewPanels, InterviewAssignmentStagedApplicationPageResource stagedApplicationPageResource) {
+        final List<InterviewAssignmentStagedApplicationResource> stagedApplicationResources =  stagedApplicationPageResource.getContent();
 
         assertEquals(expectedInterviewPanels.size(), stagedApplicationResources.size());
 
         for (int i=0; i<expectedInterviewPanels.size(); i++) {
-            final InterviewPanelStagedApplicationResource stagedApplicationResource = stagedApplicationResources.get(i);
+            final InterviewAssignmentStagedApplicationResource stagedApplicationResource = stagedApplicationResources.get(i);
             final InterviewAssignment expectedInterviewPanel = expectedInterviewPanels.get(i);
             assertStagedApplicationResourceMatches(expectedInterviewPanel, stagedApplicationResource, leadOrganisation);
         }
     }
 
-    private static void assertStagedApplicationResourceMatches(InterviewAssignment interviewPanel, InterviewPanelStagedApplicationResource stagedApplicationResource, Organisation leadOrganisation) {
+    private static void assertStagedApplicationResourceMatches(InterviewAssignment interviewPanel, InterviewAssignmentStagedApplicationResource stagedApplicationResource, Organisation leadOrganisation) {
         assertEquals(interviewPanel.getId(), (Long) stagedApplicationResource.getId());
         final Application application = interviewPanel.getTarget();
         assertEquals(application.getId(), (Long) stagedApplicationResource.getApplicationId());

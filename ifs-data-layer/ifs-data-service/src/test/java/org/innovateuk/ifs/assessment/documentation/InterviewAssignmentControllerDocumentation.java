@@ -19,9 +19,9 @@ import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceD
 import static org.innovateuk.ifs.documentation.AvailableApplicationResourceDocs.availableApplicationResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUserStagedInviteListResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUserStagedInviteResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewPanelCreatedInvitePageResourceDocs.interviewPanelCreatedInvitePageResourceBuilder;
-import static org.innovateuk.ifs.documentation.InterviewPanelCreatedInvitePageResourceDocs.interviewPanelCreatedInvitePageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewPanelCreatedInviteResourceDocs.interviewPanelCreatedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -95,7 +95,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
     public void getStagedApplications() throws Exception {
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        when(interviewAssignmentInviteServiceMock.getStagedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewPanelCreatedInvitePageResourceBuilder.build()));
+        when(interviewAssignmentInviteServiceMock.getStagedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentCreatedInvitePageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel/staged-applications/{competitionId}", 1L)
                 .param("size", "20")
@@ -114,8 +114,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                                 parameterWithName("sort").optional()
                                         .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
                         ),
-                        responseFields(interviewPanelCreatedInvitePageResourceFields)
-                                .andWithPrefix("content[].", interviewPanelCreatedInviteResourceFields)
+                        responseFields(interviewAssignmentCreatedInvitePageResourceFields)
+                                .andWithPrefix("content[].", interviewAssignmentCreatedInviteResourceFields)
                 ));
 
         verify(interviewAssignmentInviteServiceMock, only()).getStagedApplications(competitionId, pageable);

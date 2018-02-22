@@ -3,9 +3,10 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,19 +17,19 @@ import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResource
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInviteResourceBuilder.newInterviewPanelStagedApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
 
-public class InterviewPanelRestServiceImplTest extends BaseRestServiceUnitTest<InterviewPanelRestServiceImpl> {
+public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitTest<InterviewAssignmentRestServiceImpl> {
 
     private static final String REST_URL = "/interview-panel";
 
     @Override
-    protected InterviewPanelRestServiceImpl registerRestServiceUnderTest() {
-        return new InterviewPanelRestServiceImpl();
+    protected InterviewAssignmentRestServiceImpl registerRestServiceUnderTest() {
+        return new InterviewAssignmentRestServiceImpl();
     }
 
     @Test
@@ -90,13 +91,13 @@ public class InterviewPanelRestServiceImplTest extends BaseRestServiceUnitTest<I
     public void getStagedApplications() {
         long competitionId = 1L;
         int page = 1;
-        InterviewPanelStagedApplicationPageResource expected = newInterviewPanelStagedApplicationPageResource()
-                .withContent(newInterviewPanelStagedApplicationResource().build(2))
+        InterviewAssignmentStagedApplicationPageResource expected = newInterviewPanelStagedApplicationPageResource()
+                .withContent(newInterviewAssignmentStagedApplicationResource().build(2))
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "staged-applications", competitionId), InterviewPanelStagedApplicationPageResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "staged-applications", competitionId), InterviewAssignmentStagedApplicationPageResource.class, expected);
 
-        InterviewPanelStagedApplicationPageResource actual = service.getStagedApplications(competitionId, page).getSuccess();
+        InterviewAssignmentStagedApplicationPageResource actual = service.getStagedApplications(competitionId, page).getSuccess();
         assertEquals(expected, actual);
     }
 }

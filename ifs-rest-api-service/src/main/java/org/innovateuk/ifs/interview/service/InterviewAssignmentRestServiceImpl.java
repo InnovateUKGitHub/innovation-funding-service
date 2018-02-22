@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.assessment.service;
+package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
  * REST service for managing interview panel invites.
  */
 @Service
-public class InterviewPanelRestServiceImpl extends BaseRestService implements InterviewPanelRestService {
+public class InterviewAssignmentRestServiceImpl extends BaseRestService implements InterviewAssignmentRestService {
 
     private static final String REST_URL = "/interview-panel";
 
@@ -45,11 +45,11 @@ public class InterviewPanelRestServiceImpl extends BaseRestService implements In
     }
 
     @Override
-    public RestResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(long competitionId, int page) {
+    public RestResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, int page) {
         String baseUrl = format("%s/%s/%s", REST_URL, "staged-applications", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl).queryParam("page", page);
 
-        return getWithRestResult(builder.toUriString(), InterviewPanelStagedApplicationPageResource.class);
+        return getWithRestResult(builder.toUriString(), InterviewAssignmentStagedApplicationPageResource.class);
     }
 }

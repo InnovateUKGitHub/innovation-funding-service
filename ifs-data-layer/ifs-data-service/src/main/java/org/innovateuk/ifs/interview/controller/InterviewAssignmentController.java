@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -34,7 +34,7 @@ public class InterviewAssignmentController {
     }
 
     @GetMapping("/staged-applications/{competitionId}")
-    public RestResult<InterviewPanelStagedApplicationPageResource> getStagedApplications(
+    public RestResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"target.id"}, direction = Sort.Direction.ASC) Pageable pageable) {
         return interviewAssignmentInviteService.getStagedApplications(competitionId, pageable).toGetResponse();

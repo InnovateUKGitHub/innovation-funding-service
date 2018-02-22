@@ -4,9 +4,9 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class InterviewPanelCreatedInviteResourceDocs {
+public class InterviewAssignmentCreatedInviteResourceDocs {
 
-    public static final FieldDescriptor[] interviewPanelCreatedInviteResourceFields = {
+    public static final FieldDescriptor[] interviewAssignmentCreatedInviteResourceFields = {
             fieldWithPath("id").description("Id of the resource"),
             fieldWithPath("applicationId").description("Id of the application"),
             fieldWithPath("applicationName").description("Name of the application"),

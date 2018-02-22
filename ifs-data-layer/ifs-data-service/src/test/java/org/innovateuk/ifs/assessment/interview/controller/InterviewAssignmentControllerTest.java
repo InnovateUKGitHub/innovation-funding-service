@@ -15,8 +15,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInviteResourceBuilder.newInterviewPanelStagedApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -70,9 +70,9 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
         int page = 5;
         int pageSize = 30;
 
-        List<InterviewPanelStagedApplicationResource> expectedStagedApplicationResources = newInterviewPanelStagedApplicationResource().build(2);
+        List<InterviewAssignmentStagedApplicationResource> expectedStagedApplicationResources = newInterviewAssignmentStagedApplicationResource().build(2);
 
-        InterviewPanelStagedApplicationPageResource expectedStagedApplications = newInterviewPanelStagedApplicationPageResource()
+        InterviewAssignmentStagedApplicationPageResource expectedStagedApplications = newInterviewPanelStagedApplicationPageResource()
                 .withContent(expectedStagedApplicationResources)
                 .withNumber(page)
                 .withTotalElements(300L)
