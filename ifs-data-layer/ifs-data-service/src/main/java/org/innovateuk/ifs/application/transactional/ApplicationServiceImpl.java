@@ -39,6 +39,8 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -334,6 +336,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             });
             return applicationsToResources(applications);
         });
+    }
+
+    @Override
+    public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
+
+        //TODO - ZZZ - Check if you can put an order by clause for the id if the ids are not retrieved in order
+        Page<Application> pagedResult = applicationRepository.searchByIdLike(searchString, pageable);
+        List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override

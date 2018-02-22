@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -48,6 +49,10 @@ public interface ApplicationService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
+
+    //TODO - ZZZ - Put permissions in place - @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable);
 
     /**
      * This method saves only a few application attributes that
