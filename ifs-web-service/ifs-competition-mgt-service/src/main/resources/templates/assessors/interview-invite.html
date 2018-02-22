@@ -10,7 +10,7 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/interview/panel/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to interview panel',subTitle=${model.competitionName},size='heading-xlarge'" />
             <h2 class="heading-medium">Key statistics</h2>
@@ -73,7 +73,7 @@
                 </div>
             </div>
 
-            <form method="POST" th:action="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
+            <form method="POST" th:action="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
 
                 <div class="grid-row sorting">
                     <div class="column-half">
@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
-                        <a class="button disabled">Review and send invites</a>
+                        <a th:href="@{/interview/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
                     </div>
                 </div>
 
@@ -123,7 +123,7 @@
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">
-                            <td colspan="5">There are no assessors to be invited to this panel.</td>
+                            <td colspan="5">There are no assessors to be invited to this interview panel.</td>
                         </tr>
                         </tbody>
                     </table>
