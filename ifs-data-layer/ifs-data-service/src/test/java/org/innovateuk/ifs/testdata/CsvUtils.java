@@ -11,7 +11,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.resource.FinanceView;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -443,7 +443,7 @@ class CsvUtils {
         BigDecimal assessorPay;
         Boolean hasAssessmentPanel;
         Boolean hasInterviewStage;
-        FinanceView financeView;
+        AssessorFinanceView assessorFinanceView;
         boolean published;
         String shortDescription;
         String fundingRange;
@@ -498,7 +498,7 @@ class CsvUtils {
             assessorPay = nullableBigDecimal(line.get(i++));
             hasAssessmentPanel = nullableBoolean(line.get(i++));
             hasInterviewStage = nullableBoolean(line.get(i++));
-            financeView = nullableEnum(line.get(i++), FinanceView::valueOf);
+            assessorFinanceView = nullableEnum(line.get(i++), AssessorFinanceView::valueOf);
             published = nullableBoolean(line.get(i++));
             shortDescription = nullable(line.get(i++));
             fundingRange = nullable(line.get(i++));

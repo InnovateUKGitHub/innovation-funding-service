@@ -86,7 +86,7 @@ public class CompetitionResource {
     private boolean useResubmissionQuestion;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
-    private FinanceView financeView = FinanceView.OVERVIEW;
+    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
 
     private boolean nonIfs = false;
     private String nonIfsUrl;
@@ -558,12 +558,12 @@ public class CompetitionResource {
         this.hasInterviewStage = hasInterviewStage;
     }
 
-    public FinanceView getFinanceView() {
-        return financeView;
+    public AssessorFinanceView getAssessorFinanceView() {
+        return assessorFinanceView;
     }
 
-    public void setFinanceView(FinanceView financeView) {
-        this.financeView = financeView;
+    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
+        this.assessorFinanceView = assessorFinanceView;
     }
 
     @JsonIgnore
@@ -638,7 +638,7 @@ public class CompetitionResource {
                 .append(fullApplicationFinance, that.fullApplicationFinance)
                 .append(hasAssessmentPanel, that.hasAssessmentPanel)
                 .append(hasInterviewStage, that.hasInterviewStage)
-                .append(financeView, that.financeView)
+                .append(assessorFinanceView, that.assessorFinanceView)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
                 .isEquals();
@@ -691,7 +691,7 @@ public class CompetitionResource {
                 .append(useResubmissionQuestion)
                 .append(hasAssessmentPanel)
                 .append(hasInterviewStage)
-                .append(financeView)
+                .append(assessorFinanceView)
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)

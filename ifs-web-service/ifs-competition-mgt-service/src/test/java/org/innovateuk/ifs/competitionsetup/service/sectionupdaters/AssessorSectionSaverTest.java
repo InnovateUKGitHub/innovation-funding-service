@@ -20,7 +20,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.FinanceView.OVERVIEW;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.OVERVIEW;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -43,7 +43,7 @@ public class AssessorSectionSaverTest {
 		competitionSetupForm.setAssessorPay(BigDecimal.TEN);
 		competitionSetupForm.setHasAssessmentPanel(Boolean.FALSE);
 		competitionSetupForm.setHasInterviewStage(Boolean.FALSE);
-		competitionSetupForm.setFinanceView(OVERVIEW);
+		competitionSetupForm.setAssessorFinanceView(OVERVIEW);
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
@@ -62,7 +62,7 @@ public class AssessorSectionSaverTest {
 		assertEquals(BigDecimal.TEN, competition.getAssessorPay());
 		assertEquals(Boolean.FALSE, competition.isHasAssessmentPanel());
 		assertEquals(Boolean.FALSE, competition.isHasInterviewStage());
-		assertEquals(OVERVIEW, competition.getFinanceView());
+		assertEquals(OVERVIEW, competition.getAssessorFinanceView());
 
         verify(competitionService).getAssessorOptionsForCompetitionType(competition.getCompetitionType());
 		verify(competitionSetupRestService).update(competition);

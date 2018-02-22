@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competition.resource.FinanceView;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -26,8 +26,8 @@ public class AssessorsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.assessorsform.interviewStage.required}")
     private Boolean hasInterviewStage;
 
-    @NotNull(message = "{validation.assessorsform.financeView.required}")
-    private FinanceView financeView;
+    @NotNull(message = "{validation.assessorsform.assessorFinanceView.required}")
+    private AssessorFinanceView assessorFinanceView;
 
     public Integer getAssessorCount() {
         return assessorCount;
@@ -61,11 +61,11 @@ public class AssessorsForm extends CompetitionSetupForm {
         this.hasInterviewStage = hasInterviewStage;
     }
 
-    public FinanceView getFinanceView() {
-        return financeView;
+    public AssessorFinanceView getAssessorFinanceView() {
+        return assessorFinanceView;
     }
 
-    public void setFinanceView(FinanceView financeView) {
-        this.financeView = financeView;
+    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
+        this.assessorFinanceView = assessorFinanceView;
     }
 }

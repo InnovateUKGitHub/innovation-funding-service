@@ -65,7 +65,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 		competition.setAssessorCount(assessorsForm.getAssessorCount());
 		competition.setHasAssessmentPanel(assessorsForm.getHasAssessmentPanel());
 		competition.setHasInterviewStage(assessorsForm.getHasInterviewStage());
-		competition.setFinanceView(assessorsForm.getFinanceView());
+		competition.setAssessorFinanceView(assessorsForm.getAssessorFinanceView());
 	}
 
 	@Override

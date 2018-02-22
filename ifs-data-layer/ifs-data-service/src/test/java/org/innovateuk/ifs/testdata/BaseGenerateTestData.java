@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.competition.resource.FinanceView;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -788,7 +788,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .createNonIfsCompetition()
                 .withBasicData(line.name, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
-                        null, null, null, null, null, null, null, null, FinanceView.OVERVIEW, null,
+                        null, null, null, null, null, null, null, null, AssessorFinanceView.OVERVIEW, null,
                         null, emptyList(), null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
@@ -804,7 +804,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 withExistingCompetition(1L).
                 withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.financeView,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withFundersPanelEndDate(line.fundersPanelEndDate).
@@ -817,7 +817,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.financeView,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones()).

@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competition.resource;
 
-public enum FinanceView {
+public enum AssessorFinanceView {
     OVERVIEW("Overview"),
     DETAILED("Detailed");
 
     String viewType;
 
-    FinanceView(String viewType) {
+    AssessorFinanceView(String viewType) {
         this.viewType = viewType;
     }
 

@@ -92,7 +92,7 @@ public class Competition implements ProcessActivity {
     private Boolean hasInterviewStage;
 
     @Enumerated(EnumType.STRING)
-    private FinanceView financeView = FinanceView.OVERVIEW;
+    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -671,12 +671,12 @@ public class Competition implements ProcessActivity {
         this.hasInterviewStage = hasInterviewStage;
     }
 
-    public FinanceView getFinanceView() {
-        return financeView;
+    public AssessorFinanceView getAssessorFinanceView() {
+        return assessorFinanceView;
     }
 
-    public void setFinanceView(FinanceView financeView) {
-        this.financeView = financeView;
+    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
+        this.assessorFinanceView = assessorFinanceView;
     }
 
     public TermsAndConditions getTermsAndConditions() {

@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
-import static org.innovateuk.ifs.competition.resource.FinanceView.DETAILED;
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -77,7 +77,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withCompetitionStatus(expectedCompetitionStatus)
                 .withHasAssessmentPanel(true)
                 .withHasInterviewStage(true)
-                .withFinanceView(DETAILED)
+                .withAssessorFinanceView(DETAILED)
                 .build();
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
@@ -128,7 +128,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals(5, (int) model.getKeyStatistics().getStatFive());
         assertEquals(true, model.isAssessmentPanelEnabled());
         assertEquals(true, model.isInterviewPanelEnabled());
-        assertEquals(DETAILED, model.getFinanceView());
+        assertEquals(DETAILED, model.getAssessorFinanceView());
     }
 
     @Test
