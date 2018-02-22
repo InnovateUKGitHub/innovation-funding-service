@@ -241,7 +241,7 @@ Assign applicaitons to assessor upon acceting invite in panel
     And the user clicks the button/link       link=Invite
     When the user clicks the button/link      link=Review and send invites
     Then the user clicks the button/link      jQuery=button:contains("Send invite")
-    When log in as a different user           ${panel_assessor_madeleine}  ${short_password}
+    When log in as a different user           ${assessor_madeleine_email}  ${short_password}
     Then the user clicks the button/link      jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     And the user selects the radio button     acceptInvitation  true
     And the user clicks the button/link       css=button[type="submit"]  # Confirm
@@ -277,7 +277,7 @@ Assessor can attend Panel and see applications he has not assessed
 Assessor can attend Panel and see applications that he has assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]
-    [Setup]  log in as a different user         ${panel_assessor_madeleine}  ${short_password}
+    [Setup]  log in as a different user         ${assessor_madeleine_email}  ${short_password}
     Given the user clicks the button/link       jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
     And the user selects the radio button       reviewAccept  true
