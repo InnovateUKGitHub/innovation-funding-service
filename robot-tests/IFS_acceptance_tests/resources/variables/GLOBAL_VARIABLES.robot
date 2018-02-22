@@ -24,8 +24,6 @@ ${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}    ${DEFAULT_ACADEMIC_COSTS_WITH_
 ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}   200,903
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    202,903
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    92,000
-${EMPIRE_LTD_ID}    22
-${EMPIRE_LTD_NAME}    Empire Ltd
 
 ${manageExternalUsers}  ${server}/management/admin/external/users
 
@@ -176,6 +174,14 @@ ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPL
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}  ${competition_ids['${UPCOMING_COMPETITION_TO_ASSESS_NAME}']}
 ${CURRENTLY_WAITING_UNTIL}      false
+
+# Organisation variables
+${EMPIRE_LTD_NAME}         Empire Ltd
+${EMPIRE_LTD_ID}           ${organisation_ids["${EMPIRE_LTD_NAME}"]}
+${organisationLudlowName}  Ludlow
+${organisationLudlowId}    ${organisation_ids["${organisationLudlowName}"]}
+${organisationEggsName}    EGGS
+${organisationEggsId}      ${organisation_ids["${organisationEggsName}"]}
 
 # Organisation type ids
 ${BUSINESS_TYPE_ID}       1

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
-import org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder;
-import org.innovateuk.ifs.testdata.builders.ServiceLocator;
-import org.innovateuk.ifs.testdata.builders.TestService;
+import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +11,21 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
+import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
+import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
+import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitionFunders;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * TODO DW - document this class
@@ -45,14 +47,23 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     private GenericApplicationContext applicationContext;
 
     private CompetitionDataBuilder competitionDataBuilder;
+    private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
+    private PublicContentDateDataBuilder publicContentDateDataBuilder;
+    private CompetitionFunderDataBuilder competitionFunderDataBuilder;
 
     private List<CsvUtils.CompetitionLine> competitionLines;
+    private static List<CsvUtils.CompetitionFunderLine> competitionFunderLines;
 
     @PostConstruct
     public void readCsvs() {
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
         competitionDataBuilder = newCompetitionData(serviceLocator);
+        publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
+        publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
+        competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
+
         competitionLines = readCompetitions();
+        competitionFunderLines = readCompetitionFunders();
     }
 
     public List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
@@ -92,8 +103,34 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         });
     }
 
-    private CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {
+    public void createPublicContentGroup(CsvUtils.PublicContentGroupLine line) {
+        publicContentGroupDataBuilder.withPublicContentGroup(line.competitionName, line.heading, line.content, line.section)
+                .build();
+    }
+
+    public void createPublicContentDate(CsvUtils.PublicContentDateLine line) {
+        publicContentDateDataBuilder.withPublicContentDate(line.competitionName, line.date, line.content)
+                .build();
+    }
+
+    public void createCompetitionFunder(CompetitionData competition) {
+
+        Optional<CsvUtils.CompetitionFunderLine> funderLine = simpleFindFirst(competitionFunderLines, l ->
+                Objects.equals(competition.getCompetition().getName(), l.competitionName));
+
+        funderLine.ifPresent(line ->
+                competitionFunderDataBuilder.
+                        withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder).
+                        build());
+    }
+
+    public CompetitionData createCompetition(CsvUtils.CompetitionLine competitionLine) {
         return competitionBuilderWithBasicInformation(competitionLine).build();
+    }
+
+    public void moveCompetitionIntoOpenStatus(CompetitionData competition) {
+        CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
+        basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line) {

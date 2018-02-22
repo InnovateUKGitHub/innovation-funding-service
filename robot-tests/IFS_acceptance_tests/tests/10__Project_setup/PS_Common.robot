@@ -5,12 +5,12 @@ Resource    ../../resources/defaultResources.robot
 *** Variables ***
 #Project: London underground – enhancements to existing stock and logistics
 # GOL = Grant Offer Letter
-${Gabtype_Id}       52
-${Gabtype_Name}     Gabtype
-${Kazio_Id}         53
-${Kazio_Name}       Kazio
-${Cogilith_Id}      54
-${Cogilith_Name}    Cogilith
+${Gabtype_Name}   Gabtype
+${Gabtype_Id}     ${organisation_ids["${Gabtype_Name}"]}
+${Kazio_Name}     Kazio
+${Kazio_Id}       ${organisation_ids["${Kazio_Name}"]}
+${Cogilith_Name}  Cogilith
+${Cogilith_Id}    ${organisation_ids["${Cogilith_Name}"]}
 ${PS_GOL_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_GOL_APPLICATION_TITLE}      London underground - enhancements to existing stock and logistics
 ${PS_GOL_APPLICATION_NO}         ${application_ids["${PS_GOL_APPLICATION_TITLE}"]}
@@ -27,12 +27,12 @@ ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.c
 
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
-${Ooba_Id}          49
 ${Ooba_Name}        Ooba
-${Wordpedia_Id}     50
+${Ooba_Id}          ${organisation_ids["${Ooba_Name}"]}
 ${Wordpedia_Name}   Wordpedia
-${Jabbertype_Id}    51
+${Wordpedia_Id}     ${organisation_ids["${Wordpedia_Name}"]}
 ${Jabbertype_Name}  Jabbertype
+${Jabbertype_Id}    ${organisation_ids["${Jabbertype_Name}"]}
 ${PS_MD_Competition_Name}       Rolling stock future developments
 ${PS_MD_Competition_Id}         ${competition_ids["${PS_MD_Competition_Name}"]}
 ${PS_MD_APPLICATION_TITLE}      High-speed rail and its effects on air quality
@@ -49,12 +49,12 @@ ${PS_MD_APPLICATION_ACADEMIC_EMAIL}          antonio.jenkins@jabbertype.example.
 
 #Project: Point control and automated monitoring
 # SP = Spend Profile
-${Katz_Id}         46
-${Katz_Name}       Katz
-${Meembee_Id}      47
-${Meembee_Name}    Meembee
-${Zooveo_Id}       48
-${Zooveo_Name}     Zooveo
+${Katz_Name}     Katz
+${Katz_Id}       ${organisation_ids["${Katz_Name}"]}
+${Meembee_Name}  Meembee
+${Meembee_Id}    ${organisation_ids["${Meembee_Name}"]}
+${Zooveo_Name}   Zooveo
+${Zooveo_Id}     ${organisation_ids["${Zooveo_Name}"]}
 ${PS_SP_Competition_Name}       Rolling stock future developments
 ${PS_SP_Competition_Id}         ${competition_ids["${PS_SP_Competition_Name}"]}
 ${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
@@ -62,7 +62,6 @@ ${PS_SP_APPLICATION_NO}         ${application_ids["${PS_SP_APPLICATION_TITLE}"]}
 ${PS_SP_APPLICATION_NUMBER}     ${PS_SP_APPLICATION_NO}
 ${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_TITLE}
 ${PS_SP_APPLICATION_PROJECT}    ${project_ids["${PS_SP_APPLICATION_TITLE}"]}
-${PS_SP_APPLICATION_LEAD_ORGANISATION_ID}    ${Katz_Id}
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
 ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      theo.simpson@katz.example.com
 ${PS_SP_APPLICATION_PM_EMAIL}                phillip.ramos@katz.example.com
@@ -71,18 +70,17 @@ ${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
 
 #Project: Grade crossing manufacture and supply
 # BD = Bank Details
-${Vitruvius_Id}       32
-${Vitruvius_Name}     Vitruvius Stonework Limited
-${A_B_Cad_Services_Id}    44
+${Vitruvius_Name}  Vitruvius Stonework Limited
+${Vitruvius_Id}    ${organisation_ids["${Vitruvius_Name}"]}
 ${A_B_Cad_Services_Name}  A B Cad Services
-${Armstrong_Butler_Id}       45
-${Armstrong_Butler_Name}     Armstrong & Butler Ltd
+${A_B_Cad_Services_Id}    ${organisation_ids["${A_B_Cad_Services_Name}"]}
+${Armstrong_Butler_Name}  Armstrong & Butler Ltd
+${Armstrong_Butler_Id}    ${organisation_ids["${Armstrong_Butler_Name}"]}
 ${PS_BD_Competition_Id}         ${competition_ids["Rolling stock future developments"]}
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
-${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Vitruvius_Id}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}
 ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}      diane.scott@vitruvius.example.com
 ${PS_BD_APPLICATION_PM_EMAIL}                diane.scott@vitruvius.example.com
@@ -125,21 +123,16 @@ ${PROJECT_SETUP_APPLICATION_1}        ${application_ids["${PROJECT_SETUP_APPLICA
 ${PROJECT_SETUP_APPLICATION_1_NUMBER}    ${PROJECT_SETUP_APPLICATION_1}
 ${PROJECT_SETUP_APPLICATION_1_HEADER}    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 ${PROJECT_SETUP_APPLICATION_1_PROJECT}   ${project_ids["${PROJECT_SETUP_APPLICATION_1_TITLE}"]}
-${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    ${EMPIRE_LTD_ID}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
 ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}    4560000
 ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    1230
 ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${lead_applicant_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${test_mailbox_one}+projectsetuppm@gmail.com
-${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}    ${organisation_ids["Ludlow"]}
-${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}  Ludlow
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    53532322
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}    1230000
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}    4560
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}            ${collaborator1_credentials["email"]}
-${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}      40
-${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}    EGGS
 ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credentials["email"]}
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}    HIVE IT LIMITED
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}   ewan+1@hiveit.co.uk
@@ -250,9 +243,9 @@ project lead submits project details
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details
 
 partners submit their finance contacts
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
+    the partner submits their finance contact  ${EMPIRE_LTD_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
+    the partner submits their finance contact  ${organisationLudlowId}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
+    the partner submits their finance contact  ${organisationEggsId}    ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
 
 the partner submits their finance contact
     [Arguments]    ${org_id}  ${project}  &{credentials}
@@ -277,8 +270,8 @@ partners submit bank details
 the project finance user has approved bank details
     log in as a different user                          &{internal_finance_credentials}
     the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
-    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
-    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${organisationLudlowName}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${organisationEggsName}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 
 the project finance user approves bank details for
     [Arguments]    ${org_name}  ${org_id}

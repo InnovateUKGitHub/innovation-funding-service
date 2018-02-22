@@ -38,17 +38,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Component
 public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
-    private List<CsvUtils.AssessorResponseLine> assessorResponseLines;
-    private List<CsvUtils.AssessorUserLine> assessorUserLines;
-    private List<CsvUtils.InviteLine> inviteLines;
-
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private GenericApplicationContext applicationContext;
-
-    private List<CsvUtils.AssessmentLine> assessmentLines;
 
     private AssessmentDataBuilder assessmentBuilder;
     private AssessorDataBuilder assessorUserBuilder;
@@ -63,14 +57,9 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         assessorUserBuilder = newAssessorData(serviceLocator);
         assessorResponseBuilder = newAssessorResponseData(serviceLocator);
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
-
-        assessmentLines = readAssessments();
-        assessorUserLines = readAssessorUsers();
-        assessorResponseLines = readAssessorResponses();
-        inviteLines = readInvites();
     }
 
-    public void createAssessments(List<ApplicationData> applications) {
+    public void createAssessments(List<ApplicationData> applications, List<AssessmentLine> assessmentLines, List<AssessorResponseLine> assessorResponseLines) {
 
         applications.forEach(application -> {
 
@@ -165,23 +154,23 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         assessorResponsesForAssessment.forEach(this::createAssessorResponse);
     }
 
-    public void createAssessors(List<CompetitionData> competitions) {
+    public void createAssessors(List<CompetitionData> competitions, List<AssessorUserLine> assessorUserLines, List<InviteLine> assessorInviteLines) {
 
         competitions.forEach(competition -> {
 
             List<AssessorUserLine> assessorLinesForCompetition = simpleFilter(assessorUserLines, l ->
                     Objects.equals(l.competitionName, competition.getCompetition().getName()));
 
-            assessorLinesForCompetition.forEach(this::createAssessor);
+            assessorLinesForCompetition.forEach(assessorLine -> createAssessor(assessorLine, assessorInviteLines));
         });
     }
 
-    public void createNonRegisteredAssessorInvites(List<CompetitionData> competitions) {
+    public void createNonRegisteredAssessorInvites(List<CompetitionData> competitions, List<InviteLine> inviteLines) {
 
         competitions.forEach(competition -> {
 
             List<CsvUtils.InviteLine> assessorInvites = simpleFilter(inviteLines, invite ->
-                    "COMPETITION".equals(invite.type) && invite.targetName.equals(competition.getCompetition().getName()));
+                    invite.targetName.equals(competition.getCompetition().getName()));
 
             List<CsvUtils.InviteLine> nonRegisteredAssessorInvites = simpleFilter(assessorInvites, invite -> !userRepository.findByEmail(invite.email).isPresent());
 
@@ -236,10 +225,10 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 .build();
     }
 
-    private void createAssessor(AssessorUserLine line) {
+    private void createAssessor(AssessorUserLine line, List<InviteLine> inviteLines) {
 
         List<InviteLine> assessorInvitesForThisAssessor = simpleFilter(inviteLines, invite ->
-                invite.email.equals(line.emailAddress) && invite.type.equals("COMPETITION"));
+                invite.email.equals(line.emailAddress));
 
         AssessorDataBuilder builder = assessorUserBuilder;
 
