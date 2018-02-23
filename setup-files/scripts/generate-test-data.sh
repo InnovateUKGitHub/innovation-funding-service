@@ -30,7 +30,7 @@ do_baseline () {
 #    sed -i -e 's/@Ignore//' $generate_test_class
 
     # run generator test class
-    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED ./gradlew :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
     cd ifs-data-layer/ifs-data-service/src/main/resources/db/webtest/
 
