@@ -172,13 +172,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
-            if (data.getCompetition().getCompetitionTypeName().startsWith("Generic ")) {
+            if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
 
                 List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
                 Question question = questions.get(0);
                 question.setName("Generic question heading");
                 question.setShortName("Generic question title");
                 question.setDescription("Generic question description");
+                questionRepository.save(question);
             }
         });
     }
