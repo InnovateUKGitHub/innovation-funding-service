@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * Service for managing {@link CompetitionAssessmentInvite}s.
  */
-public interface CompetitionInviteService {
+public interface CompetitionAssessmentInviteService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_CREATED_INVITES",

@@ -16,7 +16,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
-import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
+import org.innovateuk.ifs.assessment.transactional.CompetitionAssessmentInviteService;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -146,7 +146,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionFunderRepository competitionFunderRepository;
     protected AssessorService assessorService;
     protected CompetitionParticipantRepository competitionParticipantRepository;
-    protected CompetitionInviteService competitionInviteService;
+    protected CompetitionAssessmentInviteService competitionAssessmentInviteService;
     protected TestService testService;
     protected AssessmentRepository assessmentRepository;
     protected AssessmentService assessmentService;
@@ -228,7 +228,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         assessorService = serviceLocator.getBean(AssessorService.class);
         competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
-        competitionInviteService = serviceLocator.getBean(CompetitionInviteService.class);
+        competitionAssessmentInviteService = serviceLocator.getBean(CompetitionAssessmentInviteService.class);
         testService = serviceLocator.getBean(TestService.class);
         assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
         assessmentService = serviceLocator.getBean(AssessmentService.class);

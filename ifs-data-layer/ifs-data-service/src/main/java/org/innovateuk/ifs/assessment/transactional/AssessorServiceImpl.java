@@ -60,7 +60,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private String webBaseUrl;
 
     @Autowired
-    private CompetitionInviteService competitionInviteService;
+    private CompetitionAssessmentInviteService competitionAssessmentInviteService;
 
     @Autowired
     private RegistrationService registrationService;
@@ -194,7 +194,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {
-        return competitionInviteService.getInvite(inviteHash);
+        return competitionAssessmentInviteService.getInvite(inviteHash);
     }
 
     private void assignCompetitionParticipantsToUser(User user) {

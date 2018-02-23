@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
+import org.innovateuk.ifs.assessment.transactional.CompetitionAssessmentInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -26,49 +26,49 @@ public class CompetitionInviteController {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     @Autowired
-    private CompetitionInviteService competitionInviteService;
+    private CompetitionAssessmentInviteService competitionAssessmentInviteService;
 
     @GetMapping("/getAllInvitesToSend/{competitionId}")
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(@PathVariable long competitionId) {
-        return competitionInviteService.getAllInvitesToSend(competitionId).toGetResponse();
+        return competitionAssessmentInviteService.getAllInvitesToSend(competitionId).toGetResponse();
     }
 
     @GetMapping("/getAllInvitesToResend/{competitionId}")
     public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(
             @PathVariable long competitionId,
             @RequestParam List<Long> inviteIds) {
-        return competitionInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
+        return competitionAssessmentInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
     }
 
     @GetMapping("/getInviteToSend/{inviteId}")
     public RestResult<AssessorInvitesToSendResource> getInviteToSend(@PathVariable long inviteId) {
-        return competitionInviteService.getInviteToSend(inviteId).toGetResponse();
+        return competitionAssessmentInviteService.getInviteToSend(inviteId).toGetResponse();
     }
 
     @GetMapping("/getInvite/{inviteHash}")
     public RestResult<CompetitionInviteResource> getInvite(@PathVariable String inviteHash) {
-        return competitionInviteService.getInvite(inviteHash).toGetResponse();
+        return competitionAssessmentInviteService.getInvite(inviteHash).toGetResponse();
     }
 
     @PostMapping("/openInvite/{inviteHash}")
     public RestResult<CompetitionInviteResource> openInvite(@PathVariable String inviteHash) {
-        return competitionInviteService.openInvite(inviteHash).toPostWithBodyResponse();
+        return competitionAssessmentInviteService.openInvite(inviteHash).toPostWithBodyResponse();
     }
 
     @PostMapping("/acceptInvite/{inviteHash}")
     public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
         final UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return competitionInviteService.acceptInvite(inviteHash, currentUser).toPostResponse();
+        return competitionAssessmentInviteService.acceptInvite(inviteHash, currentUser).toPostResponse();
     }
 
     @PostMapping("/rejectInvite/{inviteHash}")
     public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @Valid @RequestBody CompetitionRejectionResource rejection) {
-        return competitionInviteService.rejectInvite(inviteHash, rejection.getRejectReason(), Optional.ofNullable(rejection.getRejectComment())).toPostResponse();
+        return competitionAssessmentInviteService.rejectInvite(inviteHash, rejection.getRejectReason(), Optional.ofNullable(rejection.getRejectComment())).toPostResponse();
     }
 
     @GetMapping("/checkExistingUser/{inviteHash}")
     public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
-        return competitionInviteService.checkExistingUser(inviteHash).toGetResponse();
+        return competitionAssessmentInviteService.checkExistingUser(inviteHash).toGetResponse();
     }
 
     @GetMapping("/getAvailableAssessors/{competitionId}")
@@ -77,7 +77,7 @@ public class CompetitionInviteController {
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"firstName", "lastName"}, direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam Optional<Long> innovationArea
     ) {
-        return competitionInviteService.getAvailableAssessors(competitionId, pageable, innovationArea).toGetResponse();
+        return competitionAssessmentInviteService.getAvailableAssessors(competitionId, pageable, innovationArea).toGetResponse();
     }
 
     @GetMapping(value = "/getAvailableAssessors/{competitionId}", params = "all")
@@ -85,7 +85,7 @@ public class CompetitionInviteController {
             @PathVariable long competitionId,
             @RequestParam Optional<Long> innovationArea
     ) {
-        return competitionInviteService.getAvailableAssessorIds(competitionId, innovationArea).toGetResponse();
+        return competitionAssessmentInviteService.getAvailableAssessorIds(competitionId, innovationArea).toGetResponse();
     }
 
     @GetMapping(value = "/getAssessorsNotAcceptedInviteIds/{competitionId}")
@@ -94,7 +94,7 @@ public class CompetitionInviteController {
             @RequestParam Optional<Long> innovationArea,
             @RequestParam List<ParticipantStatus> statuses,
             @RequestParam Optional<Boolean> compliant) {
-        return competitionInviteService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant).toGetResponse();
+        return competitionAssessmentInviteService.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant).toGetResponse();
     }
 
     @GetMapping("/getCreatedInvites/{competitionId}")
@@ -102,7 +102,7 @@ public class CompetitionInviteController {
             @PathVariable long competitionId,
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return competitionInviteService.getCreatedInvites(competitionId, pageable).toGetResponse();
+        return competitionAssessmentInviteService.getCreatedInvites(competitionId, pageable).toGetResponse();
     }
 
     @GetMapping("/getInvitationOverview/{competitionId}")
@@ -113,58 +113,58 @@ public class CompetitionInviteController {
             @RequestParam List<ParticipantStatus> statuses,
             @RequestParam Optional<Boolean> compliant
     ) {
-        return competitionInviteService.getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant).toGetResponse();
+        return competitionAssessmentInviteService.getInvitationOverview(competitionId, pageable, innovationArea, statuses, compliant).toGetResponse();
     }
 
     @GetMapping("/getInviteStatistics/{competitionId}")
     public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(@PathVariable Long competitionId) {
-        return competitionInviteService.getInviteStatistics(competitionId).toGetResponse();
+        return competitionAssessmentInviteService.getInviteStatistics(competitionId).toGetResponse();
     }
 
     @PostMapping("/inviteUser")
     public RestResult<CompetitionInviteResource> inviteUser(@Valid @RequestBody ExistingUserStagedInviteResource existingUserStagedInvite) {
-        return competitionInviteService.inviteUser(existingUserStagedInvite).toPostWithBodyResponse();
+        return competitionAssessmentInviteService.inviteUser(existingUserStagedInvite).toPostWithBodyResponse();
     }
 
     @PostMapping("/inviteUsers")
     public RestResult<Void> inviteUsers(@Valid @RequestBody ExistingUserStagedInviteListResource existingUserStagedInvites) {
-        return competitionInviteService.inviteUsers(existingUserStagedInvites.getInvites()).toPostWithBodyResponse();
+        return competitionAssessmentInviteService.inviteUsers(existingUserStagedInvites.getInvites()).toPostWithBodyResponse();
     }
 
     @PostMapping("/inviteNewUser")
     public RestResult<CompetitionInviteResource> inviteNewUser(@Valid @RequestBody NewUserStagedInviteResource newUserStagedInvite) {
-        return competitionInviteService.inviteUser(newUserStagedInvite).toPostWithBodyResponse();
+        return competitionAssessmentInviteService.inviteUser(newUserStagedInvite).toPostWithBodyResponse();
     }
 
     @PostMapping("/inviteNewUsers/{competitionId}")
     public RestResult<Void> inviteNewUsers(@Valid @RequestBody NewUserStagedInviteListResource newUserStagedInvites,
                                            @PathVariable Long competitionId) {
-        return competitionInviteService.inviteNewUsers(newUserStagedInvites.getInvites(), competitionId).toPostWithBodyResponse();
+        return competitionAssessmentInviteService.inviteNewUsers(newUserStagedInvites.getInvites(), competitionId).toPostWithBodyResponse();
     }
 
     @DeleteMapping("/deleteInvite")
     public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam long competitionId) {
-        return competitionInviteService.deleteInvite(email, competitionId).toDeleteResponse();
+        return competitionAssessmentInviteService.deleteInvite(email, competitionId).toDeleteResponse();
     }
 
     @DeleteMapping("/deleteAllInvites")
     public RestResult<Void> deleteAllInvites(@RequestParam long competitionId) {
-        return competitionInviteService.deleteAllInvites(competitionId).toDeleteResponse();
+        return competitionAssessmentInviteService.deleteAllInvites(competitionId).toDeleteResponse();
     }
 
     @PostMapping("/sendAllInvites/{competitionId}")
     public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
                                            @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return competitionInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
+        return competitionAssessmentInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
     }
 
     @PostMapping("/resendInvite/{inviteId}")
     public RestResult<Void> resendInvite(@PathVariable long inviteId, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return competitionInviteService.resendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
+        return competitionAssessmentInviteService.resendInvite(inviteId, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
     @PostMapping("/resendInvites")
     public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return competitionInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
+        return competitionAssessmentInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
     }
 }

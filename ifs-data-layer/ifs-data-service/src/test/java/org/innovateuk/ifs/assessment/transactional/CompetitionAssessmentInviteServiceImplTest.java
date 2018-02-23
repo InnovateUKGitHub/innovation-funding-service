@@ -54,7 +54,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.assessment.transactional.CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP;
+import static org.innovateuk.ifs.assessment.transactional.CompetitionAssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -94,7 +94,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitTest<CompetitionInviteServiceImpl> {
+public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitTest<CompetitionAssessmentInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
@@ -108,8 +108,8 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
     private Role applicantRole;
 
     @Override
-    protected CompetitionInviteServiceImpl supplyServiceUnderTest() {
-        return new CompetitionInviteServiceImpl();
+    protected CompetitionAssessmentInviteServiceImpl supplyServiceUnderTest() {
+        return new CompetitionAssessmentInviteServiceImpl();
     }
 
     @Before
@@ -1042,7 +1042,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
 
         SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to = new ExternalUserNotificationTarget(name, email);
-        Notification notification = new Notification(from, singletonList(to), CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
+        Notification notification = new Notification(from, singletonList(to), CompetitionAssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(competitionParticipantRepositoryMock.getByInviteId(invite.getId())).thenReturn(competitionParticipant);
         when(competitionAssessmentInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);

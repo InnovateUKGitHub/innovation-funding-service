@@ -63,7 +63,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         long competitionId = 1L;
         AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
 
-        when(competitionInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+        when(competitionAssessmentInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
         mockMvc.perform(get("/competitioninvite/getAllInvitesToSend/{competitionId}", competitionId))
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         responseFields(assessorInvitesToSendResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAllInvitesToSend(competitionId);
+        verify(competitionAssessmentInviteServiceMock, only()).getAllInvitesToSend(competitionId);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         List<Long> inviteIds = asList(1L, 2L);
         AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
 
-        when(competitionInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+        when(competitionAssessmentInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
         mockMvc.perform(get("/competitioninvite/getAllInvitesToResend/{competitionId}", competitionId)
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
@@ -99,7 +99,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         responseFields(assessorInvitesToSendResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAllInvitesToResend(competitionId, inviteIds);
+        verify(competitionAssessmentInviteServiceMock, only()).getAllInvitesToResend(competitionId, inviteIds);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         long inviteId = 1L;
         AssessorInvitesToSendResource resource = assessorInvitesToSendResourceBuilder.build();
 
-        when(competitionInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
+        when(competitionAssessmentInviteServiceMock.getInviteToSend(inviteId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(get("/competitioninvite/getInviteToSend/{inviteId}", inviteId))
                 .andExpect(status().isOk())
@@ -124,7 +124,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         String hash = "invitehash";
         CompetitionInviteResource competitionInviteResource = competitionInviteResourceBuilder.build();
 
-        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
+        when(competitionAssessmentInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
 
         mockMvc.perform(get("/competitioninvite/getInvite/{hash}", hash))
                 .andExpect(status().isOk())
@@ -141,7 +141,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         String hash = "invitehash";
         CompetitionInviteResource competitionInviteResource = competitionInviteResourceBuilder.build();
 
-        when(competitionInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
+        when(competitionAssessmentInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
 
         mockMvc.perform(post("/competitioninvite/openInvite/{hash}", hash))
                 .andExpect(status().isOk())
@@ -160,7 +160,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
 
         login(user);
 
-        when(competitionInviteServiceMock.acceptInvite(hash, user)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.acceptInvite(hash, user)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/acceptInvite/{hash}", hash))
                 .andExpect(status().isOk())
@@ -176,7 +176,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         String hash = "invitehash";
         CompetitionRejectionResource compRejection = competitionInviteResource;
 
-        when(competitionInviteServiceMock.rejectInvite(hash, compRejection.getRejectReason(), ofNullable(compRejection.getRejectComment()))).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.rejectInvite(hash, compRejection.getRejectReason(), ofNullable(compRejection.getRejectComment()))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/rejectInvite/{hash}", hash)
                 .contentType(APPLICATION_JSON)
@@ -194,7 +194,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
     public void checkExistingUser() throws Exception {
         String hash = "invitehash";
 
-        when(competitionInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
+        when(competitionAssessmentInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(get("/competitioninvite/checkExistingUser/{hash}", hash))
                 .andExpect(status().isOk())
@@ -213,7 +213,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
 
-        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
+        when(competitionAssessmentInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
         mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId)
@@ -240,7 +240,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                                 .andWithPrefix("content[].", availableAssessorResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable, innovationArea);
+        verify(competitionAssessmentInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable, innovationArea);
     }
 
     @Test
@@ -249,7 +249,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        when(competitionInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
+        when(competitionAssessmentInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
         mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", 1L)
                 .param("size", "20")
@@ -272,7 +272,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                                 .andWithPrefix("content[]", assessorCreatedInviteResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
+        verify(competitionAssessmentInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }
 
     @Test
@@ -289,7 +289,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                 .withContent(content)
                 .build();
 
-        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
+        when(competitionAssessmentInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", 1L)
@@ -322,7 +322,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                                 .andWithPrefix("content[].", assessorInviteOverviewResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
+        verify(competitionAssessmentInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
     }
 
     @Test
@@ -334,7 +334,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
 
         List<Long> expectedInviteIds = asList(1L, 2L);
 
-        when(competitionInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
+        when(competitionAssessmentInviteServiceMock.getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant))
                 .thenReturn(serviceSuccess(expectedInviteIds));
 
         mockMvc.perform(get("/competitioninvite/getAssessorsNotAcceptedInviteIds/{competitionId}", 1L)
@@ -357,7 +357,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         responseFields(fieldWithPath("[]").description("List of invite ids of Assessors who have not accepted for a competition"))
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
+        verify(competitionAssessmentInviteServiceMock, only()).getAssessorsNotAcceptedInviteIds(competitionId, innovationArea, statuses, compliant);
     }
 
     @Test
@@ -365,7 +365,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         long competitionId = 1L;
         CompetitionInviteStatisticsResource statisticsResource = competitionInviteStatisticsResourceBuilder.build();
 
-        when(competitionInviteServiceMock.getInviteStatistics(competitionId)).thenReturn(serviceSuccess(statisticsResource));
+        when(competitionAssessmentInviteServiceMock.getInviteStatistics(competitionId)).thenReturn(serviceSuccess(statisticsResource));
 
         mockMvc.perform(get("/competitioninvite/getInviteStatistics/{competitionId}", competitionId))
                 .andExpect(status().isOk())
@@ -381,7 +381,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
     public void inviteUser() throws Exception {
         ExistingUserStagedInviteResource existingUserStagedInviteResource = existingUserStagedInviteResourceBuilder.build();
 
-        when(competitionInviteServiceMock.inviteUser(existingUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
+        when(competitionAssessmentInviteServiceMock.inviteUser(existingUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
 
         mockMvc.perform(post("/competitioninvite/inviteUser")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -392,14 +392,14 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         responseFields(competitionInviteFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).inviteUser(existingUserStagedInviteResource);
+        verify(competitionAssessmentInviteServiceMock, only()).inviteUser(existingUserStagedInviteResource);
     }
 
     @Test
     public void inviteNewUser() throws Exception {
         NewUserStagedInviteResource newUserStagedInviteResource = newUserStagedInviteResourceBuilder.build();
 
-        when(competitionInviteServiceMock.inviteUser(newUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
+        when(competitionAssessmentInviteServiceMock.inviteUser(newUserStagedInviteResource)).thenReturn(serviceSuccess(competitionInviteResourceBuilder.build()));
 
         mockMvc.perform(post("/competitioninvite/inviteNewUser")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -410,7 +410,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         responseFields(competitionInviteFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).inviteUser(newUserStagedInviteResource);
+        verify(competitionAssessmentInviteServiceMock, only()).inviteUser(newUserStagedInviteResource);
     }
 
     @Test
@@ -418,7 +418,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         ExistingUserStagedInviteListResource existingUserStagedInviteListResource = existingUserStagedInviteListResourceBuilder.build();
         List<ExistingUserStagedInviteResource> existingUserStagedInviteResources = existingUserStagedInviteListResource.getInvites();
 
-        when(competitionInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/inviteUsers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -430,7 +430,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         ).andWithPrefix("invites[].", existingUserStagedInviteResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).inviteUsers(existingUserStagedInviteResources);
+        verify(competitionAssessmentInviteServiceMock, only()).inviteUsers(existingUserStagedInviteResources);
     }
 
     @Test
@@ -440,7 +440,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         NewUserStagedInviteListResource newUserStagedInviteListResource = newUserStagedInviteListResourceBuilder.build();
         List<NewUserStagedInviteResource> newUserStagedInviteResources = newUserStagedInviteListResource.getInvites();
 
-        when(competitionInviteServiceMock.inviteNewUsers(newUserStagedInviteResources, competitionId)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.inviteNewUsers(newUserStagedInviteResources, competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/inviteNewUsers/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -455,7 +455,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         ).andWithPrefix("invites[].", newUserStagedInviteResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).inviteNewUsers(newUserStagedInviteResources, competitionId);
+        verify(competitionAssessmentInviteServiceMock, only()).inviteNewUsers(newUserStagedInviteResources, competitionId);
     }
 
     @Test
@@ -463,7 +463,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         String email = "firstname.lastname@email.com";
         long competitionId = 1L;
 
-        when(competitionInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/competitioninvite/deleteInvite")
                 .param("email", email)
@@ -476,14 +476,14 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         )
                 ));
 
-        verify(competitionInviteServiceMock, only()).deleteInvite(email, competitionId);
+        verify(competitionAssessmentInviteServiceMock, only()).deleteInvite(email, competitionId);
     }
 
     @Test
     public void deleteAllInvites() throws Exception {
         long competitionId = 1L;
 
-        when(competitionInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/competitioninvite/deleteAllInvites")
                 .param("competitionId", String.valueOf(competitionId)))
@@ -494,7 +494,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         )
                 ));
 
-        verify(competitionInviteServiceMock, only()).deleteAllInvites(competitionId);
+        verify(competitionAssessmentInviteServiceMock, only()).deleteAllInvites(competitionId);
     }
 
     @Test
@@ -502,7 +502,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         long competitionId = 1L;
 
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(competitionInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/sendAllInvites/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -518,7 +518,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
                         )
                 ));
 
-        verify(competitionInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
+        verify(competitionAssessmentInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
     }
 
     @Test
@@ -526,7 +526,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         long inviteId = 1L;
 
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(competitionInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -545,7 +545,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         List<Long> inviteIds = asList(1L, 2L);
 
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(competitionInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(competitionAssessmentInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/resendInvites")
                 .param("inviteIds", simpleJoiner(inviteIds, ","))

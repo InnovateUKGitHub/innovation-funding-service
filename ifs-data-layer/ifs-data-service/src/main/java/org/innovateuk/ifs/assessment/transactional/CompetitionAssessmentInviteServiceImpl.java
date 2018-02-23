@@ -82,7 +82,7 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
  */
 @Service
 @Transactional
-public class CompetitionInviteServiceImpl implements CompetitionInviteService {
+public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssessmentInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");

@@ -71,8 +71,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
 
             UserResource assessor = retrieveUserByEmail(assessorEmail);
 
-            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccess());
-            doAs(assessor, () -> competitionInviteService.acceptInvite(hash, assessor).getSuccess());
+            doAs(systemRegistrar(), () -> competitionAssessmentInviteService.openInvite(hash).getSuccess());
+            doAs(assessor, () -> competitionAssessmentInviteService.acceptInvite(hash, assessor).getSuccess());
         });
     }
 
@@ -85,8 +85,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid"));
 
-            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccess());
-            doAs(systemRegistrar(), () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccess());
+            doAs(systemRegistrar(), () -> competitionAssessmentInviteService.openInvite(hash).getSuccess());
+            doAs(systemRegistrar(), () -> competitionAssessmentInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccess());
         });
     }
 
