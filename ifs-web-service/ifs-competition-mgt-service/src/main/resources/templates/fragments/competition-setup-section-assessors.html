@@ -121,30 +121,35 @@
                             <span class="error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
                         </th:block>
                     </legend>
-                    <div class="multiple-choice">
-                        <input id="assessorFinanceView-0"
-                               type="radio"
-                               th:field="${competitionSetupForm.assessorFinanceView}"
-                               th:checked="${competitionSetupForm.assessorFinanceView == 'OVERVIEW'}"
-                               value="OVERVIEW"
-                               th:errorclass="field-error"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
-                        <label for="assessorFinanceView-0">
-                            Overview
-                        </label>
+                    <div th:if="${!model.general.state.inAssessmentState}">
+                        <div class="multiple-choice">
+                            <input id="assessorFinanceView-0"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.assessorFinanceView}"
+                                   th:checked="${competitionSetupForm.assessorFinanceView == 'OVERVIEW'}"
+                                   value="OVERVIEW"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
+                            <label for="assessorFinanceView-0">
+                                Overview
+                            </label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input id="assessorFinanceView-1"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.assessorFinanceView}"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   value="DETAILED"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
+                            <label for="assessorFinanceView-1">
+                                Detailed
+                            </label>
+                        </div>
                     </div>
-                    <div class="multiple-choice">
-                        <input id="assessorFinanceView-1"
-                               type="radio"
-                               th:field="${competitionSetupForm.assessorFinanceView}"
-                               th:errorclass="field-error"
-                               required="required"
-                               value="DETAILED"
-                               th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
-                        <label for="assessorFinanceView-1">
-                            Detailed
-                        </label>
+                    <div th:unless="${!model.general.state.inAssessmentState}">
+                        <span th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Asssessor Finance View</span>
                     </div>
             </div>
 
