@@ -26,8 +26,8 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
     }
 
     @Override
-    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long assessmentId) {
-        return getWithRestResult(format("%s/panel/%s", assessorFormInputResponseRestUrl, assessmentId), assessorFormInputResponseResourceListType());
+    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long applicationId) {
+        return getWithRestResult(format("%s/panel/%s", assessorFormInputResponseRestUrl, applicationId), assessorFormInputResponseResourceListType());
     }
 
     @Override

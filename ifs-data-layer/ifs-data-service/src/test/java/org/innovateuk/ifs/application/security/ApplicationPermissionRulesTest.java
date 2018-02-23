@@ -19,7 +19,10 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -195,12 +198,18 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         assertTrue(rules.userIsConnectedToApplicationResource(applicationResource1, leadOnApplication1));
     }
 
-
     @Test
     public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssessTest() {
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, assessor));
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, panelAssessor));
         assertFalse(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, compAdmin));
+    }
+
+    @Test
+    public void assessorCanSeeTheAssessmentScoresInApplicationsTheyAssessTest() {
+        assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, assessor));
+        assertTrue(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, panelAssessor));
+        assertFalse(rules.assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 
     @Test
