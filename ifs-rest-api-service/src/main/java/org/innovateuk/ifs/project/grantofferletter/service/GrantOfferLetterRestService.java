@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
@@ -34,7 +34,7 @@ public interface GrantOfferLetterRestService {
 
     RestResult<Void> sendGrantOfferLetter(Long projectId);
 
-    RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
+    RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource);
 
     RestResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
 

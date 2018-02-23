@@ -2,9 +2,9 @@ package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -71,8 +71,8 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     }
 
     @Override
-    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
-        return grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toServiceResult();
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
+        return grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource).toServiceResult();
     }
 
     @Override

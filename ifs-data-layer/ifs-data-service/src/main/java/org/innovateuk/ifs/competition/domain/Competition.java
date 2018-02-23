@@ -230,6 +230,9 @@ public class Competition implements ProcessActivity {
         return questions;
     }
 
+    @JsonIgnore
+    public boolean inProjectSetup() { return PROJECT_SETUP.equals(getCompetitionStatus()); }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -280,6 +283,14 @@ public class Competition implements ProcessActivity {
 
     public void setReleaseFeedbackDate(ZonedDateTime releaseFeedbackDate) {
         setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
+    }
+
+    public void setFeedbackReleasedDate(ZonedDateTime feedbackReleasedDate) {
+        setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, feedbackReleasedDate);
+    }
+
+    public ZonedDateTime getFeedbackReleasedDate() {
+        return getMilestoneDate(MilestoneType.FEEDBACK_RELEASED).orElse(null);
     }
 
     public ZonedDateTime getAssessmentPanelDate() {
