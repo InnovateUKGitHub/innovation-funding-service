@@ -8,11 +8,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import static org.innovateuk.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationFinanceResourceListType;
 
 /**
@@ -60,13 +58,9 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
         return getWithRestResult(applicationFinanceRestURL + "/getById/" + applicationFinanceId, ApplicationFinanceResource.class);
     }
 
-    // TODO DW - INFUND-1555 - remove usage of ObjectNode
     @Override
     public RestResult<Double> getResearchParticipationPercentage(Long applicationId){
-        return getWithRestResult(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, ObjectNode.class).andOnSuccess(jsonNode -> {
-            double percentage = jsonNode.get(RESEARCH_PARTICIPATION_PERCENTAGE).asDouble();
-            return restSuccess(percentage);
-        });
+        return getWithRestResult(applicationFinanceRestURL + "/getResearchParticipationPercentage/" + applicationId, Double.class);
     }
 
     @Override

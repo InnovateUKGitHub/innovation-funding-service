@@ -5,7 +5,8 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
@@ -41,7 +42,10 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceRowCostsService financeRowCostsService;
+
+    @Autowired
+    private FinanceService financeService;
 
     @Autowired
     private ProjectFinanceRowService projectFinanceRowService;
@@ -87,8 +91,8 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public List<ValidationMessages> validateCostItem(Long applicationId, Question question, Long markedAsCompleteById) {
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
-                financeRowService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
-                        financeRowService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems ->
+                financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
+                        financeRowCostsService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems ->
                                 validationUtil.validateCostItem(costItems, question)
                         )
                 )
@@ -97,7 +101,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowItem costItem) {
-        return financeRowService.getCostHandler(costItem.getId());
+        return financeRowCostsService.getCostHandler(costItem.getId());
     }
 
     @Override

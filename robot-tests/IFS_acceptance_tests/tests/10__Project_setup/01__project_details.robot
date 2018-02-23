@@ -615,11 +615,11 @@ Invited Finance contact is able to see the Finances
     [Tags]  HappyPath
     [Setup]  log in as a different user   ${invitedFinanceContact}  ${correct_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks
-    When the user clicks the button/link  link=View finances
+    When the user clicks the button/link  link=your finances
     Then the user should see the element  css=.table-overview
     And the user should not see an error in the page
     When the user clicks the button/link  link=Finance checks
-    And the user clicks the button/link   link=Project finance overview
+    And the user clicks the button/link   link=project finance overview
     Then the user should see the element  jQuery=h3:contains("Project cost breakdown")
     And the user should not see an error in the page
 

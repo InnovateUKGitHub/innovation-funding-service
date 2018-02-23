@@ -11,11 +11,15 @@ public class SecurityRuleUtil {
     }
 
     public static boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
+        return user.hasRole(UserRoleType.COMP_ADMIN) ||
+                user.hasRole(UserRoleType.PROJECT_FINANCE) ||
+                user.hasRole(UserRoleType.SUPPORT) ||
+                user.hasRole(UserRoleType.INNOVATION_LEAD);
     }
 
     public static boolean isInternalAdmin(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
+        return user.hasRole(UserRoleType.COMP_ADMIN) ||
+                user.hasRole(UserRoleType.PROJECT_FINANCE);
     }
 
     public static boolean isProjectFinanceUser(UserResource user) {

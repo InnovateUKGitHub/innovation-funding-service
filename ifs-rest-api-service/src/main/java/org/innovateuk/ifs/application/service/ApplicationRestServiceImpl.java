@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.Future;
-
-import static org.innovateuk.ifs.application.service.Futures.adapt;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link ApplicationResource}.
@@ -50,11 +47,9 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
         return putWithRestResult(applicationRestURL + "/updateApplicationState?applicationId=" + applicationId + "&state=" + state, Void.class);
     }
 
-    // TODO DW - INFUND-1555 - remove usage of ObjectNode if possible
     @Override
     public Future<RestResult<Double>> getCompleteQuestionsPercentage(Long applicationId) {
-        Future<RestResult<ObjectNode>> result = getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, ObjectNode.class);
-        return adapt(result, n -> n.andOnSuccessReturn(jsonResponse -> jsonResponse.get("completedPercentage").asDouble()));
+        return getWithRestResultAsync(applicationRestURL + "/getProgressPercentageByApplicationId/" + applicationId, Double.class);
     }
 
     @Override

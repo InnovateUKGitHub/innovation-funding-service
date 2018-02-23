@@ -11,6 +11,16 @@ public class FinanceCostTotalResource {
     private Long financeId;
     private String financeType;
 
+    public FinanceCostTotalResource() {
+    }
+
+    public FinanceCostTotalResource(String name, BigDecimal total, Long financeId, String financeType) {
+        this.name = name;
+        this.total = total;
+        this.financeId = financeId;
+        this.financeType = financeType;
+    }
+
     public String getName() {
         return name;
     }

@@ -38,7 +38,6 @@ public class GenerateTestData extends BaseGenerateTestData {
         List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
         Question question = questions.get(0);
         question.setName("Generic question heading");
-        question.setShortName("Generic question title");
         question.setDescription("Generic question description");
         questionRepository.save(question);
     }

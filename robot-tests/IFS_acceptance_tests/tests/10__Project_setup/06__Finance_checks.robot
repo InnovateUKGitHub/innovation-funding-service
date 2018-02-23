@@ -282,7 +282,7 @@ Lead Partner can review the external version of Finance Checks eligibility table
     Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user clicks the button/link    link=Finance checks
-    When the user clicks the button/link    link=View finances
+    When the user clicks the button/link    link=your finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances    3,081    0    100,200    552    90,000    5,970    1,100
     Then the user should see the element    css=input[id="total-cost"][value="£200,903"]
@@ -294,7 +294,7 @@ Partner can review only the external version of Finance Checks eligibility table
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user clicks the button/link    link=Finance checks
-    When the user clicks the button/link    link=View finances
+    When the user clicks the button/link    link=your finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     3,081    0     100,200    552    90,000    5,970     1,100
     Then the user should see the element    css=input[id="total-cost"][value="£200,903"]
@@ -647,7 +647,6 @@ Project finance user can see the partner's zero funding request
     [Documentation]    INFUND-9269
     [Tags]
     When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${organisationLudlowId}/eligibility
-    capture large screenshot
     Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
@@ -911,7 +910,7 @@ Project finance user can view Lead partner's changes for Labour
     Given the user clicks the button/link                                   link=Eligibility
     When the user clicks the button/link                                    link=View changes to finances
     Then the user verifies the action and section for revised finances     Change  Labour
-    And the revised categories are verified for specified Section          Change  Labour  0  Gross annual salary  200  120000
+    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
     And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
     And the revised cost is verified for the specified section             Change  Labour  2  52,000
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
@@ -989,7 +988,7 @@ Project finance user can view partner's revised changes for Labour
     Given the user clicks the button/link                                   link=Eligibility
     When the user clicks the button/link                                    link=View changes to finances
     Then the user verifies the action and section for revised finances     Change  Labour
-    And the revised categories are verified for specified Section          Change  Labour  0  Gross annual salary  200  120000
+    And the revised categories are verified for specified Section          Change  Labour  0  Gross employee cost  200  120000
     And the revised categories are verified for specified Section          Change  Labour  1  Days to be spent  200  100
     And the revised cost is verified for the specified section             Change  Labour  2  52,000
     And the user should see the text in the element                         css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
@@ -1034,7 +1033,7 @@ Finance contact can access the external view of the finance checks page
     And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     Then the user should not see an error in the page
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+    And the user should see the element     jQuery=.success-alert:contains("The checks have been completed and your finances approved.")
 
 Lead Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
@@ -1048,10 +1047,10 @@ Lead Partner can view finance checks page
 Lead partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-    When the user clicks the button/link    link=View finances
+    When the user clicks the button/link    link=finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £59,430    £1,954     £80,000    £5,050    £10,600    £10,000     £10,750
-    And the user should see the element    css=input[id="total-cost"][value="£177,784"]
+    And the user should see the element     css=input[id="total-cost"][value="£177,784"]
 
 Lead Partner can see the Finances amended
     [Documentation]  INFUND-8501
@@ -1067,8 +1066,7 @@ Academic user can view Finance checks page
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
-    And the user should not see the text in the page    View finances
+    Then the user should see the element    jQuery=.success-alert:contains("The checks have been completed and your finances approved.")
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${organisationEggsId}/finance-checks/eligibility    ${404_error_message}
     Then the user clicks the button/link    link=your dashboard
 
@@ -1080,15 +1078,15 @@ Non Lead Partner can view finance checks page
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(4):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(4):contains("Completed")
     When the user clicks the button/link    link=Finance checks
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+    And the user should see the element     jQuery=.success-alert:contains("The checks have been completed and your finances approved.")
 
 Non Lead-Partner can view only the external version of finance checks eligibility table
     [Documentation]    INFUND-8778, INFUND-8880
     [Tags]
-    When the user clicks the button/link    link=View finances
+    When the user clicks the button/link    link=finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £59,430    £1,954     £80,000    £5,050    £10,600    £10,000     £10,750
-    And the user should see the element    css=input[id="total-cost"][value="£177,784"]
+    And the user should see the element     css=input[id="total-cost"][value="£177,784"]
 
 Project finance user adds, modifies and removes labour rows
     [Documentation]    IFS-1904
@@ -1103,8 +1101,8 @@ Project finance user adds, modifies and removes labour rows
     And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               1    3%    £5,886
     When the user clicks the button/link           jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(2) button:contains('Remove')
-    And the user clears the text from the element  jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]
-    And the user enters text to a text field       jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]    100
+    And the user clears the text from the element  jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]
+    And the user enters text to a text field       jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossEmployeeCost"]    100
     And the user clicks the button/link            css=section:nth-of-type(1) .button[name=save-eligibility]
     Then verify percentage and total               1    2%    £4,748
     And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(3) td:contains("£1,626")

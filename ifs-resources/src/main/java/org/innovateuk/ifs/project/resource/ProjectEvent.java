@@ -8,7 +8,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 public enum ProjectEvent implements ProcessEvent {
 
     PROJECT_CREATED("project-created"),
-    GOL_APPROVED("gol-approved");
+    GOL_APPROVED("signed-gol-approved");
 
     String event;
 

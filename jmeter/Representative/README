@@ -5,9 +5,11 @@ For Example (JMeter)
 1) jmeter -Jinvite_user=1 -Japplicant_users=10 -Jregistration_users=1 -puat.properties -tload_test_representative.jmx
 
 Where
-invite_user        = number of users to run the invite_user group
-applicant_users    = number of users to run the applicant_users group
-registration_users = number of users to run the registration_users group
+invite_user                     = number of users to run the invite_user group
+applicant_users                 = number of users to run the applicant_users group
+registration_users              = number of users to run the registration_users group
+front_door_users                = number of users to run the front door group
+competition_management_users    = number of users to run competition management group
 uat.properties     = file that contains properties on uat invariants. Currently:
                      server_url        = the url of the uat servers
                      authorisation_url = the url of the shibboleth authentication servers

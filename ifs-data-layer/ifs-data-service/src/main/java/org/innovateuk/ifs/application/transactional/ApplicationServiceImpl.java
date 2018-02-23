@@ -50,6 +50,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -389,9 +390,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
-        if (Collections.singletonList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
-            return serviceFailure(CommonFailureKeys.APPLICATION_NOT_READY_TO_BE_SUBMITTED);
+        if (ApplicationState.SUBMITTED.equals(state) && !applicationReadyToSubmit(id)) {
+                return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
+
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
@@ -454,32 +456,50 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private boolean applicationReadyToSubmit(Long id) {
-        return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
-                sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
-                    Competition competition = application.getCompetition();
-                    BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
+        return find(application(id)).andOnSuccess(application -> {
+            BigDecimal progressPercentage = calculateApplicationProgress(application);
 
-                    boolean readyForSubmit = false;
-                    if (allSectionsComplete &&
-                            progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                            researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
-                        readyForSubmit = true;
-                    }
-                    return readyForSubmit;
-                })
-        ).getSuccess();
+            return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null)
+                    .andOnSuccessReturn(allSectionsComplete -> {
+                        Competition competition = application.getCompetition();
+                        BigDecimal researchParticipation =
+                                applicationFinanceHandler.getResearchParticipationPercentage(id);
+
+                        boolean readyForSubmit = false;
+
+                        if (allSectionsComplete
+                                && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+                                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
+                            readyForSubmit = true;
+                        }
+
+                        return readyForSubmit;
+                    });
+        }).getSuccess();
     }
 
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
-        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
         return serviceSuccess(applicationResults);
     }
 
     @Override
-    public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
-        return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
+    public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
+        Stream<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
+        return serviceSuccess(applicationResults);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
+            BigDecimal percentageProgress = calculateApplicationProgress(application);
+            application.setCompletion(percentageProgress);
+            return percentageProgress;
+        });
     }
 
     @Override
@@ -560,7 +580,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return notificationSender.sendEmailWithContent(notification, recipient, content);
     }
 
-    private BigDecimal progressPercentageForApplication(Application application) {
+    private BigDecimal calculateApplicationProgress(Application application) {
         List<Section> sections = application.getCompetition().getSections();
 
         List<Question> questions = sections.stream()

@@ -71,16 +71,31 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
 
-    @SuppressWarnings("unused")
-    private static final Predicate<CompetitionLine> ALL_COMPETITIONS_PREDICATE =
-            competitionLine -> true;
+    private static String competitionNameForFilter;
 
-    @SuppressWarnings("unused")
-    private static final Predicate<CompetitionLine> SPECIFIC_COMPETITIONS_PREDICATE =
-            competitionLine -> "Home and industrial efficiency programme".equals(competitionLine.name);
+    private enum CompetitionFilter implements Predicate<CompetitionLine> {
 
-    private static final Predicate<CompetitionLine> COMPETITIONS_FILTER =
-            SPECIFIC_COMPETITIONS_PREDICATE;
+        ALL_COMPETITIONS(competitionLine -> true),
+        NO_COMPETITIONS(competitionLine -> false),
+        BY_NAME(competitionLine -> {
+            assert competitionNameForFilter != null;
+            return competitionNameForFilter.equals(competitionLine.name);
+        });
+
+        private Predicate<CompetitionLine> test;
+
+        CompetitionFilter(Predicate<CompetitionLine> test) {
+            this.test = test;
+        }
+
+        @Override
+        public boolean test(CompetitionLine competitionLine) {
+            return test.test(competitionLine);
+        }
+    }
+
+    @Value("${ifs.generate.test.data.competition.filter:BY_NAME}")
+    private CompetitionFilter competitionFilter;
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -154,6 +169,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
+    @Value("${ifs.generate.test.data.competition.filter.name:Connected digital additive manufacturing}")
+    private void setCompetitionFilterName(String competitionNameForFilter) {
+        BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
+    }
+
     @Before
     public void setup() throws Exception {
         if (cleanDbFirst()) {
@@ -222,7 +242,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
 
-        List<CompetitionLine> competitionsToProcess = simpleFilter(competitionLines, COMPETITIONS_FILTER);
+        List<CompetitionLine> competitionsToProcess = simpleFilter(competitionLines, competitionFilter);
 
         List<CompletableFuture<CompetitionData>> createCompetitionFutures =
                 createCompetitions(competitionsToProcess);

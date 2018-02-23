@@ -46,17 +46,10 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
 ${assessment_panel}          ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-${assessor_ben}              Benjamin Nixon
-${assessor_joel}             Joel George
-${assessor_madeleine}        Madeleine Martin
-${assessor_riley}            Riley Butler
-${panel_assessor_ben}        benjamin.nixon@gmail.com
-${panel_assessor_joel}       joel.george@gmail.com
-${panel_assessor_madeleine}  madeleine.martin@gmail.com
-${panel_assessor_riley}      riley.butler@gmail.com
 ${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${computer_vision_application_name}  Computer vision and machine learning for transport networks
 ${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
@@ -92,23 +85,11 @@ There are no Assessors in Invite and Pending and rejected tab before sending inv
     Then the user clicks the button/link   link=Pending and rejected
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
-CompAdmin can add an assessor to invite list
+CompAdmin can add an assessors to invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link  link=Find
-    Given the user clicks the button/link    jQuery=tr:contains("${assessor_ben}") label
-    And the user clicks the button/link      jQuery=tr:contains("${assessor_joel}") label
-    And the user clicks the button/link      jquery=tr:contains("${assessor_madeleine}") label
-    And the user clicks the button/link      jquery=tr:contains("${assessor_riley}") label
-    When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
-    Then the user should see the element     jQuery=td:contains("${assessor_ben}") + td:contains("${panel_assessor_ben}")
-    And the user should see the element      jQuery=td:contains("${assessor_joel}") + td:contains("${panel_assessor_joel}")
-    And the user should see the element      jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
-    And the user should see the element      jQuery=td:contains("${assessor_riley}") + td:contains("${panel_assessor_riley}")
-    When the user clicks the button/link      link=Find
-    Then the user should not see the element  jQuery=td:contains("${assessor_ben}")
-    And the user should not see the element   jQuery=td:contains("${assessor_joel}")
-    And the user should not see the element   jquery=tr:contains("${assessor_madeleine}")
+    When the user clicks the button/link     link=Find
+    Then the competition admin invites assessors to the competition
 
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
@@ -135,8 +116,8 @@ Assessor recieves the invite to panel
     When the user clicks the button/link      jQuery=button:contains("Send invite")
     Then the user should see the element      jQuery=.column-quarter:contains("3") small:contains("Invited")
     And the user should see the element       jQuery=.column-quarter:contains("3") small:contains("Assessors on invite list")
-    And the user reads his email              ${panel_assessor_ben}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
-    And the user reads his email              ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user reads his email              ${assessor_ben_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user reads his email              ${assessor_joel_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
 
 Bulk add assessor to invite list
     [Documentation]  IFS-31
@@ -144,7 +125,7 @@ Bulk add assessor to invite list
     [Setup]  the user clicks the button/link  link=Find
     Given the user selects the checkbox       select-all-check
     And the user clicks the button/link       jQuery=button:contains("Add selected to invite list")
-    And the user should see the element       jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
+    And the user should see the element       jQuery=td:contains("${assessor_madeleine}") + td:contains("${assessor_madeleine_email}")
     When the user clicks the button/link      link=Find
     Then the user should see the element      jQuery=td:contains("No available assessors found")
 
@@ -163,7 +144,7 @@ CompAdmin resend invites to multiple assessors
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135  IFS-1566  IFS-1138
     [Tags]  HappyPath
-    [Setup]  Log in as a different user       ${panel_assessor_ben}  ${short_password}
+    [Setup]  Log in as a different user       ${assessor_ben_email}  ${short_password}
     Given the user clicks the button/link     jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button    acceptInvitation  true
     And The user clicks the button/link       css=button[type="submit"]  # Confirm
@@ -177,11 +158,11 @@ Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
     [Tags]
     [Setup]  Logout as user
-    Given the user reads his email and clicks the link  ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    Given the user reads his email and clicks the link  ${assessor_joel_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
     When the user selects the radio button              acceptInvitation  false
     And The user clicks the button/link                 jQuery=button:contains("Confirm")
     And the user clicks the button/link                 link=Sign in
-    And Logging in and Error Checking                   ${panel_assessor_joel}  ${short_password}
+    And Logging in and Error Checking                   ${assessor_joel_email}  ${short_password}
     Then the user should not see the element            jQuery=h2:contains("Invitations to attend panel")
 
 Comp Admin can see the rejected and accepted invitation
@@ -202,7 +183,7 @@ Assessor tries to accept expired invitation
     [Documentation]  IFS-2114
     [Tags]
     [Setup]   the assessment panel period changes in the db   2017-02-24 00:00:00
-    When the user reads his email and clicks the link   ${panel_assessor_riley}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    When the user reads his email and clicks the link   ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
     Then the user should see the text in the page       This invitation is now closed
     [Teardown]  the assessment panel period changes in the db   2018-02-24 00:00:00
 
@@ -260,7 +241,7 @@ Assign applicaitons to assessor upon acceting invite in panel
     And the user clicks the button/link       link=Invite
     When the user clicks the button/link      link=Review and send invites
     Then the user clicks the button/link      jQuery=button:contains("Send invite")
-    When log in as a different user           ${panel_assessor_madeleine}  ${short_password}
+    When log in as a different user           ${assessor_madeleine_email}  ${short_password}
     Then the user clicks the button/link      jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     And the user selects the radio button     acceptInvitation  true
     And the user clicks the button/link       css=button[type="submit"]  # Confirm
@@ -268,7 +249,7 @@ Assign applicaitons to assessor upon acceting invite in panel
 Assessors view of competition dashboard and applications in panel status
     [Documentation]  IFS-1138  IFS-388
     [Tags]
-    Given Log in as a different user            ${panel_assessor_ben}  ${short_password}
+    Given Log in as a different user            ${assessor_ben_email}  ${short_password}
     When the user clicks the button/link        jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user should see the element        jQuery=h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     When the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
@@ -297,7 +278,7 @@ Assessor can attend Panel and see applications he has not assessed
 Assessor can attend Panel and see applications that he has assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]
-    [Setup]  log in as a different user         ${panel_assessor_madeleine}  ${short_password}
+    [Setup]  log in as a different user         ${assessor_madeleine_email}  ${short_password}
     Given the user clicks the button/link       jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
     And the user selects the radio button       reviewAccept  true
