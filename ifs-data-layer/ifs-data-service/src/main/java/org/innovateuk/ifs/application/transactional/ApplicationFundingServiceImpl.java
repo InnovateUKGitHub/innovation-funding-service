@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -157,13 +158,18 @@ public class ApplicationFundingServiceImpl extends BaseTransactionalService impl
                 FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
                 resetNotificationSentDateIfNecessary(application, fundingDecision);
                 application.setFundingDecision(fundingDecision);
-                if(FundingDecisionStatus.FUNDED.equals(fundingDecision)) {
-                    applicationWorkflowHandler.approve(application);
-                }
+                updateApplicationWorkflowImmediatelyIfCompetitionIsInProjectSetup(application, fundingDecision);
             }
         });
 
         return serviceSuccess();
+    }
+
+    private void updateApplicationWorkflowImmediatelyIfCompetitionIsInProjectSetup(Application application, FundingDecisionStatus fundingDecision) {
+        if (FundingDecisionStatus.FUNDED.equals(fundingDecision) &&
+                application.getCompetition().inProjectSetup()) {
+            applicationWorkflowHandler.approve(application);
+        }
     }
 
     private void resetNotificationSentDateIfNecessary(Application application, FundingDecisionStatus newFundingDecision) {
