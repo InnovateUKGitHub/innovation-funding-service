@@ -143,7 +143,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
 
     private ServiceResult<File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
         try {
-            LOG.error("[FileLogging]  Copying temp file from " + tempFile.getAbsolutePath() + " to target directory " + targetFolder + " with targetFilename " + targetFilename);
+            LOG.info("[FileLogging]  Copying temp file from " + tempFile.getAbsolutePath() + " to target directory " + targetFolder + " with targetFilename " + targetFilename);
 
             File fileToCreate = new File(targetFolder.toString(), targetFilename);
 
