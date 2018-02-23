@@ -172,9 +172,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
-            // if any of this competition's question titles are blank (because they are based off of a competition
-            // template with blank question titles), fill in some default ones now
-            if (data.getCompetition().getName().equals("Generic innovation")) {
+            if (data.getCompetition().getCompetitionTypeName().startsWith("Generic ")) {
 
                 List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
                 Question question = questions.get(0);
