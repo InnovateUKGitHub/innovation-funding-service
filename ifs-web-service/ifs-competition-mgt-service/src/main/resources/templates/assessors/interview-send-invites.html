@@ -2,7 +2,7 @@
 
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to assessment panel',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to interview panel',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body th:with="context='comp-management'" class="competition-management competition-overview">
@@ -12,8 +12,8 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Invite assessors to attend',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Invite assessors to attend',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invite to assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
@@ -24,7 +24,7 @@
 
     <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
 
-    <form th:action="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+    <form th:action="@{/interview/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
         <div class="form-group extra-margin-bottom">
             <label class="form-label-bold" for="subject">Subject</label>
             <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
@@ -35,10 +35,10 @@
 
         <div class="form-group extra-margin">
             <label class="form-label-bold" for="message">Additional text</label>
-            <textarea
-                id="message" rows="8" class="form-control width-full"
-                th:field="*{content}">
-                    </textarea>
+            <div class="textarea-wrapped">
+                <textarea id="message" rows="8" data-editor="md" class="width-full" th:field="*{content}">
+                </textarea>
+            </div>
         </div>
 
         <p class="form-hint extra-margin">
@@ -53,7 +53,7 @@
 
         <div class="extra-margin">
             <button type="submit" class="button">Send invite</button>
-            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}"
                class="button button-clear">Cancel</a>
         </div>
 
