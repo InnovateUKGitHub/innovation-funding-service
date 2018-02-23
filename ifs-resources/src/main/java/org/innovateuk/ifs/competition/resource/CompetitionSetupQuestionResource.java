@@ -15,6 +15,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
@@ -22,9 +24,6 @@ import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 @FieldRequiredIf(required = "allowedFileTypesEnum", argument = "appendix", predicate = true, message = "{validation.field.must.not.be" + ".blank}")
 @FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
-    //@ZeroDownTime(reference = "IFS-2565", description = "Indicator on resource whether updated or not. To be removed during contraction.")
-    private boolean ZDDUpdated;
-
     private Long questionId;
 
     private CompetitionSetupQuestionType type;
@@ -48,7 +47,6 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private List<FileTypeCategory> allowedFileTypesEnum;
     private List<String> allowedFileTypes;
     private String fileUploadGuidance;
 
@@ -236,11 +234,11 @@ public class CompetitionSetupQuestionResource {
     }
 
     public List<FileTypeCategory> getAllowedFileTypesEnum() {
-        return allowedFileTypesEnum;
+        return simpleMap(allowedFileTypes, this::fromNameOrDisplayName);
     }
 
     public void setAllowedFileTypesEnum(List<FileTypeCategory> allowedFileTypes) {
-        this.allowedFileTypesEnum = allowedFileTypes;
+        this.allowedFileTypes = simpleMap(allowedFileTypes, FileTypeCategory::getDisplayName);
     }
 
     public String getFileUploadGuidance() {
@@ -255,13 +253,11 @@ public class CompetitionSetupQuestionResource {
         return asList(PDF, SPREADSHEET);
     }
 
-
-    public boolean isZDDUpdated() {
-        return ZDDUpdated;
-    }
-
-    public void setZDDUpdated(boolean ZDDUpdated) {
-        this.ZDDUpdated = ZDDUpdated;
+    public FileTypeCategory fromNameOrDisplayName(String name) {
+        return simpleFindFirst(FileTypeCategory.values(),
+                category -> category.getDisplayName().equals(name) ||
+                        category.name().equals(name))
+                .orElse(null);
     }
 
     @Override
@@ -293,7 +289,6 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows, that.guidanceRows)
                 .append(researchCategoryQuestion, that.researchCategoryQuestion)
                 .append(scope, that.scope)
-                .append(allowedFileTypesEnum, that.allowedFileTypesEnum)
                 .isEquals();
     }
 
@@ -320,7 +315,6 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows)
                 .append(researchCategoryQuestion)
                 .append(scope)
-                .append(allowedFileTypesEnum)
                 .toHashCode();
     }
 

@@ -27,13 +27,7 @@ public class CompetitionSetupQuestionRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        setZDDUpdatedIndicator(competitionSetupQuestionResource);
         return putWithRestResult(competitionsSetupRestURL + "/save", competitionSetupQuestionResource, Void.class);
-    }
-
-    @ZeroDowntime(reference = "IFS-2565", description = "Setting indicator so the data-service knows that resource is the new version.")
-    private void setZDDUpdatedIndicator(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        competitionSetupQuestionResource.setZDDUpdated(true);
     }
 
     @Override
