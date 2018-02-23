@@ -40,15 +40,23 @@ IFS.core.conditionalForms = (function () {
       if (isInverted) {
         radioStatus = !radioStatus
       }
-
       if (radioStatus) {
         target.attr('aria-hidden', 'false').removeClass('js-hidden')
       } else {
         target.attr('aria-hidden', 'true')
         if (clearForm) {
+          var formGroup = target.find('.form-group')
           target.find('input[type=checkbox]').prop('checked', false)
           target.find('textarea, input[type=text]').val('')
           target.find('.editor').html('')
+          // clear validation
+          formGroup.each(function () {
+            var field = jQuery(this).find('input, textarea')
+            var requiredAttribute = 'required'
+            var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
+            var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
+            IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+          })
         }
       }
     }
