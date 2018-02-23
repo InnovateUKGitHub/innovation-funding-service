@@ -16,9 +16,9 @@ dockerCompose {
 
     if (project.hasProperty('ifs.debug.disabled') ? project.property('ifs.debug.disabled').toBoolean() : false) {
         //Temp change to allow testing of compose HTTP_TIMEOUT issue
-        useComposeFiles = ['docker-compose-debug.yml']
+        useComposeFiles = ['docker-compose/docker-compose-debug.yml']
     } else {
-        useComposeFiles = ['docker-compose.yml']
+        useComposeFiles = ['docker-compose/docker-compose.yml']
     }
 
 
@@ -26,27 +26,27 @@ dockerCompose {
 
         if (project.hasProperty('ifs.debug.disabled') ? project.property('ifs.debug.disabled').toBoolean() : false) {
             //Temp change to allow testing of compose HTTP_TIMEOUT issue
-            useComposeFiles.add('docker-compose-full-debug.yml')
+            useComposeFiles.add('docker-compose/docker-compose-full-debug.yml')
         } else {
-            useComposeFiles.add('docker-compose-full.yml')
+            useComposeFiles.add('docker-compose/docker-compose-full.yml')
         }
     }
 
 
     if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-        useComposeFiles.add('docker-compose-zipkin.yml')
+        useComposeFiles.add('docker-compose/docker-compose-zipkin.yml')
     }
 
     if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
-        useComposeFiles.add('docker-compose-admin-console.yml')
+        useComposeFiles.add('docker-compose/docker-compose-admin-console.yml')
     }
 
     if (project.hasProperty('ifs.fractal.enabled') ? project.property('ifs.fractal.enabled').toBoolean() : false) {
-        useComposeFiles.add('docker-compose-fractal.yml')
+        useComposeFiles.add('docker-compose/docker-compose-fractal.yml')
     }
 
     if (project.property('ifsFinanceTotalsEnabled').toBoolean()) {
-        useComposeFiles.add('docker-compose-finance-totals.yml')
+        useComposeFiles.add('docker-compose/docker-compose-finance-totals.yml')
     }
 
 

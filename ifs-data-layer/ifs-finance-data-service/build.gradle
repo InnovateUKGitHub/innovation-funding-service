@@ -21,7 +21,7 @@ osStageLocal.tag = financeDataServiceVersion
 ext.dockerDir = "$project.parent.projectDir/docker/"
 ext.sqlContainer = "mysql-finance-totals"
 ext.testSchema = "ifs_finance_test"
-ext.dockerComposeFile = "docker-compose-finance-totals.yml"
+ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"

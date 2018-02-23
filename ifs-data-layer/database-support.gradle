@@ -1,6 +1,6 @@
 ext.sqlContainer = "mysql"
 ext.testSchema = "ifs_test"
-ext.dockerComposeFile = "docker-compose.yml"
+ext.dockerComposeFile = "docker-compose/docker-compose.yml"
 
 task startMySql(type: Exec) {
     workingDir '../../'
