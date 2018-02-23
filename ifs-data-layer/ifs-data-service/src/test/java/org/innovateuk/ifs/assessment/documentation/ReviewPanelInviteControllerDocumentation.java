@@ -146,7 +146,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(existingUserStagedInviteListResource)))
                 .andExpect(status().isOk())
-                .andDo(document("assessment-panel-invite/{method-name}",
+                .andDo(document("assessmentpanelinvite/{method-name}",
                         requestFields(
                                 fieldWithPath("invites[]").description("List of existing users to be invited to the assessment panel")
                         ).andWithPrefix("invites[].", existingUserStagedInviteResourceFields)
