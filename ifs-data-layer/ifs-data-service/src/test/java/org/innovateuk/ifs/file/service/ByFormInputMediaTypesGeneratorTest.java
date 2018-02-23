@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -26,16 +26,16 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void pdf() {
-        assertExpectedMediaTypesForFileTypeCategories(
-                singletonList(FileTypeCategories.PDF),
+        assertExpectedMediaTypesForFileTypeCategory(
+                singletonList(FileTypeCategory.PDF),
                 "application/pdf"
         );
     }
 
     @Test
     public void spreadsheet() {
-        assertExpectedMediaTypesForFileTypeCategories(
-                singletonList(FileTypeCategories.SPREADSHEET),
+        assertExpectedMediaTypesForFileTypeCategory(
+                singletonList(FileTypeCategory.SPREADSHEET),
                 "application/vnd.ms-excel",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "application/vnd.oasis.opendocument.spreadsheet"
@@ -44,8 +44,8 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void pdfAndSpreadsheet() {
-        assertExpectedMediaTypesForFileTypeCategories(
-                asList(FileTypeCategories.PDF, FileTypeCategories.SPREADSHEET),
+        assertExpectedMediaTypesForFileTypeCategory(
+                asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET),
                 "application/pdf",
                 "application/vnd.ms-excel",
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -55,17 +55,16 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
 
     @Test
     public void noneMatch() {
-        assertExpectedMediaTypesForFileTypeCategories(emptyList());
+        assertExpectedMediaTypesForFileTypeCategory(emptyList());
     }
 
-    private void assertExpectedMediaTypesForFileTypeCategories(
-            List<FileTypeCategories> fileTypeCategories,
+    private void assertExpectedMediaTypesForFileTypeCategory(
+            List<FileTypeCategory> FileTypeCategory,
             String... expectedMediaTypes
     ) {
         FormInputResource formInput = newFormInputResource()
-                .withAllowedFileTypes(fileTypeCategories)
+                .withAllowedFileTypes(FileTypeCategory)
                 .build();
-
         when(formInputServiceMock.findFormInput(formInput.getId())).thenReturn(serviceSuccess(formInput));
 
         List<MediaType> mediaTypes = generator.apply(formInput.getId());

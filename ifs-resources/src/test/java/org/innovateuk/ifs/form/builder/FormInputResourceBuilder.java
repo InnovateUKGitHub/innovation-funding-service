@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -64,7 +64,7 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
         return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
     }
 
-    public FormInputResourceBuilder withAllowedFileTypes(Collection<FileTypeCategories>... fileTypes) {
+    public FormInputResourceBuilder withAllowedFileTypes(Collection<FileTypeCategory>... fileTypes) {
         return withArray((types, formInput) -> setField("allowedFileTypes", newHashSet(types), formInput), fileTypes);
     }
 }

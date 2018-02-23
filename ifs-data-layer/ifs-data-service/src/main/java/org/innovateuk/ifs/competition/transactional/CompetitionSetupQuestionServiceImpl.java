@@ -7,11 +7,13 @@ import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -23,13 +25,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -88,7 +91,11 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAllowedFileTypes(asList(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())));
+                setupResource.setAllowedFileTypesEnum(
+                        simpleMap(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes()),
+                                FileTypeCategory::fromDisplayName));
+                setFileTypeCategoriesByString(setupResource, formInput);
+                setupResource.setFileUploadGuidance(formInput.getGuidanceAnswer());
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
@@ -96,6 +103,16 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setMaxWords(formInput.getWordCount());
                 break;
         }
+    }
+
+    @ZeroDowntime(
+            reference = "IFS-2565",
+            description = "Setting category String list still used in old comp-mgt service during deployment."
+    )
+    private void setFileTypeCategoriesByString(CompetitionSetupQuestionResource setupResource, FormInput formInput) {
+        setupResource.setAllowedFileTypes(
+                Arrays.asList(
+                        StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())));
     }
 
     private void mapAssessmentFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
@@ -170,11 +187,46 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     }
 
     private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD);
+        FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId,
+                FormInputScope.APPLICATION,
+                FormInputType.FILEUPLOAD);
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
-            appendixFormInput.setAllowedFileTypes(StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
+
+            if(competitionSetupQuestionResource.getAppendix()) {
+                setAppendixSubOptions(appendixFormInput, competitionSetupQuestionResource );
+            }
+            else {
+                resetAppendixSubOptions(appendixFormInput);
+            }
         }
+    }
+
+    private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        if(competitionSetupQuestionResource.isZDDUpdated()) {
+            appendixFormInput.setAllowedFileTypes(
+                    StringUtils.collectionToDelimitedString(
+                            simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName),
+                            ","));
+            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
+        }
+        else {
+            setAllowedFileTypesByResourceStringValue(appendixFormInput, competitionSetupQuestionResource);
+        }
+    }
+
+    @ZeroDowntime(
+            reference = "IFS-2565",
+            description = "If the resource is old, then use the String values to save selected preferences."
+    )
+    private void setAllowedFileTypesByResourceStringValue(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        appendixFormInput.setAllowedFileTypes(
+                StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
+    }
+
+    private void resetAppendixSubOptions(FormInput appendixFormInput) {
+        appendixFormInput.setAllowedFileTypes(null);
+        appendixFormInput.setGuidanceAnswer(null);
     }
 
     private void markScoredAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {

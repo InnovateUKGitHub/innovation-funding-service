@@ -7,8 +7,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 
-public enum FileTypeCategories {
-
+public enum FileTypeCategory {
     SPREADSHEET("Spreadsheet", asList(
             "application/vnd.ms-excel",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -19,7 +18,7 @@ public enum FileTypeCategories {
     private String displayName;
     private List<String> mediaTypes;
 
-    FileTypeCategories(String displayName, List<String> mediaTypes) {
+    FileTypeCategory(String displayName, List<String> mediaTypes) {
         this.displayName = displayName;
         this.mediaTypes = mediaTypes;
     }
@@ -36,9 +35,9 @@ public enum FileTypeCategories {
         return simpleJoiner(mediaTypes, ", ");
     }
 
-    public static FileTypeCategories fromDisplayName(String displayName) {
+    public static FileTypeCategory fromDisplayName(String displayName) {
         return simpleFindFirst(
-                FileTypeCategories.values(),
+                FileTypeCategory.values(),
                 category -> category.getDisplayName().equals(displayName)
         )
                 .orElse(null);

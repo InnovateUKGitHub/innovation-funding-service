@@ -12,6 +12,11 @@ IFS.core.conditionalForms = (function () {
         var dataTarget = dataTargetContainer.attr('data-target')
         var inputEl = dataTargetContainer.find('input[type="radio"],input[type="checkbox"]')
 
+        // for clearing the form elements in the hidden panel
+        var targetClearForm = false
+        if (dataTargetContainer.attr('data-target-clear-form')) {
+          targetClearForm = true
+        }
         // for having inverted show/hide
         var isInverted = false
         if (dataTargetContainer.attr('data-target-inverted')) {
@@ -19,18 +24,17 @@ IFS.core.conditionalForms = (function () {
         }
         if (inputEl && dataTarget) {
           var groupName = inputEl.attr('name')
-          // inputEl.attr('aria-controls',dataTarget);
           // execute on pageload
-          IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, isInverted)
+          IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, isInverted)
 
           // execute on click
           jQuery('input[name="' + groupName + '"]').on('click', function () {
-            IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, isInverted)
+            IFS.core.conditionalForms.toggleVisibility(inputEl, '#' + dataTarget, targetClearForm, isInverted)
           })
         }
       })
     },
-    toggleVisibility: function (input, target, isInverted) {
+    toggleVisibility: function (input, target, clearForm, isInverted) {
       target = jQuery(target)
       var radioStatus = input.is(':checked')
       if (isInverted) {
@@ -38,11 +42,14 @@ IFS.core.conditionalForms = (function () {
       }
 
       if (radioStatus) {
-        // input.attr('aria-expanded','true');
         target.attr('aria-hidden', 'false').removeClass('js-hidden')
       } else {
-        // input.attr('aria-expanded','false');
         target.attr('aria-hidden', 'true')
+        if (clearForm) {
+          target.find('input[type=checkbox]').prop('checked', false)
+          target.find('textarea, input[type=text]').val('')
+          target.find('.editor').html('')
+        }
       }
     }
   }

@@ -19,6 +19,8 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("maxWords").description("The maximum words allowed for the question response"),
             fieldWithPath("appendix").description("Does the question include an appendix section"),
             fieldWithPath("allowedFileTypes").description("Specifies types of files that will be allowed to be uploaded for appendix"),
+            fieldWithPath("allowedFileTypesEnum").description("Specifies types of files that will be allowed to be uploaded for appendix in enum type format"),
+            fieldWithPath("fileUploadGuidance").description("Guidance for the file upload field"),
             fieldWithPath("assessmentGuidance").description("Guidance for the assessor"),
             fieldWithPath("assessmentGuidanceTitle").description("Guidance title for the assessor"),
             fieldWithPath("assessmentMaxWords").description("Maximum words for the assessors feedback"),
@@ -34,6 +36,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("guidanceRows[].subject").description("The subject of the guidance"),
             fieldWithPath("guidanceRows[].justification").description("The justification of the guidance"),
             fieldWithPath("guidanceRows[].formInput").description("The id of the form input the guidance is linked to"),
+            fieldWithPath("zddupdated").description("Indicates if the web-service has been deployed with the new resource definition")
     };
 
     public static final CompetitionSetupQuestionResourceBuilder competitionSetupQuestionResourceBuilder = newCompetitionSetupQuestionResource()

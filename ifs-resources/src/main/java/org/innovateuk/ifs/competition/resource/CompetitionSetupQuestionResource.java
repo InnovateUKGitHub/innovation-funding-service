@@ -4,22 +4,27 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.file.resource.FileTypeCategories.PDF;
-import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedFileTypesEnum", argument = "appendix", predicate = true, message = "{validation.field.must.not.be" + ".blank}")
+@FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
+    //@ZeroDownTime(reference = "IFS-2565", description = "Indicator on resource whether updated or not. To be removed during contraction.")
+    private boolean ZDDUpdated;
+
     private Long questionId;
 
     private CompetitionSetupQuestionType type;
@@ -41,7 +46,11 @@ public class CompetitionSetupQuestionResource {
     @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
+
     private Boolean appendix;
+    private List<FileTypeCategory> allowedFileTypesEnum;
+    private List<String> allowedFileTypes;
+    private String fileUploadGuidance;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -57,8 +66,6 @@ public class CompetitionSetupQuestionResource {
 
     private Boolean researchCategoryQuestion;
     private Boolean scope;
-
-    private List<String> allowedFileTypes;
 
     public Long getQuestionId() {
         return questionId;
@@ -228,8 +235,33 @@ public class CompetitionSetupQuestionResource {
         this.allowedFileTypes = allowedFileTypes;
     }
 
-    public static List<FileTypeCategories> getSupportedTypeCategories(){
+    public List<FileTypeCategory> getAllowedFileTypesEnum() {
+        return allowedFileTypesEnum;
+    }
+
+    public void setAllowedFileTypesEnum(List<FileTypeCategory> allowedFileTypes) {
+        this.allowedFileTypesEnum = allowedFileTypes;
+    }
+
+    public String getFileUploadGuidance() {
+        return fileUploadGuidance;
+    }
+
+    public void setFileUploadGuidance(String fileUploadGuidance) {
+        this.fileUploadGuidance = fileUploadGuidance;
+    }
+
+    public static List<FileTypeCategory> getSupportedTypeCategories(){
         return asList(PDF, SPREADSHEET);
+    }
+
+
+    public boolean isZDDUpdated() {
+        return ZDDUpdated;
+    }
+
+    public void setZDDUpdated(boolean ZDDUpdated) {
+        this.ZDDUpdated = ZDDUpdated;
     }
 
     @Override
@@ -261,7 +293,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows, that.guidanceRows)
                 .append(researchCategoryQuestion, that.researchCategoryQuestion)
                 .append(scope, that.scope)
-                .append(allowedFileTypes, that.allowedFileTypes)
+                .append(allowedFileTypesEnum, that.allowedFileTypesEnum)
                 .isEquals();
     }
 
@@ -288,7 +320,8 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows)
                 .append(researchCategoryQuestion)
                 .append(scope)
-                .append(allowedFileTypes)
+                .append(allowedFileTypesEnum)
                 .toHashCode();
     }
+
 }

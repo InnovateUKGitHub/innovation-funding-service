@@ -7,15 +7,25 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,6 +61,62 @@ public class ApplicationQuestionSectionSaverTest {
 
         assertTrue(service.saveSection(competition, competitionSetupForm).isSuccess());
         verify(competitionSetupQuestionService).updateQuestion(question);
+    }
+
+    @Test
+    public void test_doSaveSectionShouldTriggerIrregularSaveActionAndAppendFileTypes() {
+        List<FileTypeCategory> fileTypeCategories = asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET);
+        List<String> fileTypeCategoriesStringList = simpleMap(fileTypeCategories, FileTypeCategory::name);
+        String fileTypeCategoriesString = String.join(",", fileTypeCategoriesStringList);
+
+        ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(1L);
+        competitionSetupForm.setQuestion(question);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("compcode").build();
+
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
+        when(competitionSetupQuestionService.updateQuestion(question)).thenReturn(serviceSuccess());
+
+        service.autoSaveSectionField(competition,
+                competitionSetupForm,
+                "allowedFileTypes",
+                fileTypeCategoriesString,
+                Optional.of(1L)
+                );
+
+        ArgumentCaptor<CompetitionSetupQuestionResource> captor = ArgumentCaptor.forClass(CompetitionSetupQuestionResource.class);
+        verify(competitionSetupQuestionService).updateQuestion(captor.capture());
+
+        assertThat(captor.getValue().getAllowedFileTypesEnum()).containsExactlyInAnyOrderElementsOf(fileTypeCategories);
+    }
+
+    @Test
+    public void test_doSaveSectionShouldTriggerIrregularSaveActionAndUpdateWithEmptyFileTypes() {
+        ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(1L);
+        competitionSetupForm.setQuestion(question);
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("compcode").build();
+
+        when(competitionSetupQuestionService.getQuestion(1L)).thenReturn(serviceSuccess(question));
+        when(competitionSetupQuestionService.updateQuestion(question)).thenReturn(serviceSuccess());
+
+        service.autoSaveSectionField(competition,
+                competitionSetupForm,
+                "allowedFileTypes",
+                "",
+                Optional.of(1L)
+        );
+
+        ArgumentCaptor<CompetitionSetupQuestionResource> captor = ArgumentCaptor.forClass(CompetitionSetupQuestionResource.class);
+        verify(competitionSetupQuestionService).updateQuestion(captor.capture());
+
+        assertThat(captor.getValue().getAllowedFileTypesEnum()).isEmpty();
     }
 
     @Test

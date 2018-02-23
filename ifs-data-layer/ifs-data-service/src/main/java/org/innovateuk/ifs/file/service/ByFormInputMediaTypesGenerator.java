@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.service;
 
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,9 @@ public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long>
     public List<MediaType> apply(Long formInputId) {
         FormInputResource formInput = formInputService.findFormInput(formInputId).getSuccess();
 
-        Set<FileTypeCategories> fileTypeCategories = formInput.getAllowedFileTypesSet();
+        Set<FileTypeCategory> fileTypeCategories = formInput.getAllowedFileTypesSet();
 
-        List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, FileTypeCategories::getMediaTypes));
+        List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, FileTypeCategory::getMediaTypes));
 
         return byStringGenerator.apply(mediaTypesStrings);
     }

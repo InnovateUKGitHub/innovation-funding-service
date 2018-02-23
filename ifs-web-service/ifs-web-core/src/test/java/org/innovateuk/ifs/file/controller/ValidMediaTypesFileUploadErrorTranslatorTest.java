@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.file.controller;
 
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,14 +17,14 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.PDF.getMediaTypesString())
+            singletonList(FileTypeCategory.PDF.getMediaTypesString())
     );
 
     private Error spreadsheetOnlyErrorFromDataLayer = fieldError(
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.SPREADSHEET.getMediaTypesString())
+            singletonList(FileTypeCategory.SPREADSHEET.getMediaTypesString())
     );
 
     private Error pdfOrSpreadsheetOnlyErrorFromDataLayer = fieldError(
@@ -32,8 +32,8 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
             singletonList(
-                    FileTypeCategories.SPREADSHEET.getMediaTypesString() + ", " +
-                            FileTypeCategories.PDF.getMediaTypesString()
+                    FileTypeCategory.SPREADSHEET.getMediaTypesString() + ", " +
+                            FileTypeCategory.PDF.getMediaTypesString()
             )
     );
 
@@ -41,9 +41,8 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategories.PDF.getMediaTypesString() + ", application/nomatch")
+            singletonList(FileTypeCategory.PDF.getMediaTypesString() + ", application/nomatch")
     );
-
 
     @Test
     public void testPdfOnlyMessage() {
