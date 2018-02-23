@@ -9,8 +9,8 @@ apply from: "../database-support.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
-apply from: rootProject.file("openshift-build.gradle")
-apply from: rootProject.file("prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 task('copyFreemarkerResources', type: Copy) {
 //Copy freemarker resources to build path to support running as a jar.
