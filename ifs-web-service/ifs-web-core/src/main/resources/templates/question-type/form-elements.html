@@ -45,13 +45,13 @@
 
 <!-- ========================= Form Guidance (Appendix) ===================== -->
 
-<th:block th:fragment="form-guidance-appendix (guidable)">
-    <details th:if="${guidable?.guidanceTitle}">
+<th:block th:fragment="form-guidance-appendix (formInput)">
+    <details th:if="${formInput?.guidanceTitle}">
         <summary>
-            <span class="summary" th:text="${guidable.guidanceTitle}"/>
+            <span class="summary" th:text="${formInput.guidanceTitle}"/>
         </summary>
         <div class="panel wysiwyg-styles">
-            <th:block ifs:utext="${guidable.guidanceAnswer}">
+            <th:block ifs:utext="${formInput.guidanceAnswer}">
             </th:block>
 
             <h4 class="heading-small no-margin">Accepted appendix file types</h4>
@@ -60,7 +60,7 @@
             TODO: IFS-2564 - Change to use 'allowedFileTypes' instead of 'allowedFileTypesSet' in ZDD migrate
             */-->
             <ul>
-                <li th:text="${allowedFileType.getDisplayName()}" th:each="allowedFileType : ${guidable.allowedFileTypesSet}">
+                <li th:text="${allowedFileType.getDisplayName()}" th:each="allowedFileType : ${formInput.allowedFileTypesSet}">
                     PDF
                 </li>
             </ul>
