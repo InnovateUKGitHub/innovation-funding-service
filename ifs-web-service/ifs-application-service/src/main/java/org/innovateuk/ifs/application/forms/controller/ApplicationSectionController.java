@@ -153,8 +153,21 @@ public class ApplicationSectionController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, applicantSection.getSection(), params, user.getId(), applicationId);
-        ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition().getId(), form, sectionId, user.getId(), request, response, validFinanceTerms);
+        boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(
+                form, bindingResult,
+                applicantSection.getSection(),
+                params,
+                user.getId());
+
+        ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(
+                applicantSection.getApplication(),
+                applicantSection.getCompetition().getId(),
+                form,
+                sectionId,
+                user.getId(),
+                request,
+                response,
+                validFinanceTerms);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             questionService.assignQuestion(applicationId, user, request);
@@ -189,7 +202,13 @@ public class ApplicationSectionController {
             validationHandler.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
     }
 
-    private boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params, Long userId, Long applicationId) {
+    private boolean validFinanceTermsForMarkAsComplete(
+            ApplicationForm form,
+            BindingResult bindingResult,
+            SectionResource section,
+            Map<String, String[]> params,
+            Long userId
+    ) {
 
         if (!isMarkSectionAsCompleteRequest(params)) {
             return true;
