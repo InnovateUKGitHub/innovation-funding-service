@@ -8,6 +8,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.assertArrayEquals;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
@@ -17,14 +18,14 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategory.PDF.getMediaTypesString())
+            singletonList(mediaTypesString(FileTypeCategory.PDF))
     );
 
     private Error spreadsheetOnlyErrorFromDataLayer = fieldError(
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategory.SPREADSHEET.getMediaTypesString())
+            singletonList(mediaTypesString(FileTypeCategory.SPREADSHEET))
     );
 
     private Error pdfOrSpreadsheetOnlyErrorFromDataLayer = fieldError(
@@ -32,8 +33,8 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
             singletonList(
-                    FileTypeCategory.SPREADSHEET.getMediaTypesString() + ", " +
-                            FileTypeCategory.PDF.getMediaTypesString()
+                    mediaTypesString(FileTypeCategory.SPREADSHEET) + ", " +
+                            mediaTypesString(FileTypeCategory.PDF)
             )
     );
 
@@ -41,7 +42,7 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
             null,
             "application/madeup",
             UNSUPPORTED_MEDIA_TYPE.name(),
-            singletonList(FileTypeCategory.PDF.getMediaTypesString() + ", application/nomatch")
+            singletonList(mediaTypesString(FileTypeCategory.PDF) + ", application/nomatch")
     );
 
     @Test
@@ -81,5 +82,9 @@ public class ValidMediaTypesFileUploadErrorTranslatorTest {
         Error expectedSpecialisedError = fieldError("formInput[123]", "application/madeup", expectedErrorKey);
 
         assertArrayEquals(new Error[] {expectedSpecialisedError}, errors.toArray());
+    }
+
+    private String mediaTypesString(FileTypeCategory fileTypeCategory) {
+        return simpleJoiner(fileTypeCategory.getMediaTypes(), ", ");
     }
 }
