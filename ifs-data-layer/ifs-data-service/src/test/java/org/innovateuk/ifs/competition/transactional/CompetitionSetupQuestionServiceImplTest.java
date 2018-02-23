@@ -233,7 +233,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
     @Test
     public void test_updateShouldNotChangeAppendixFormInputWhenItCantBeFound() {
-        setPrerequisitesForSuccessfulUpdate();
+        setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
@@ -250,7 +250,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                 .withGuidanceAnswer(guidanceAnswer)
                 .withAllowedFileTypes(allowedFileTypes)
                 .build();
-        //Override repository response set in prerequisites test prep function
+        //Override repository response set in setMocksForSuccessfulUpdate test prep function
         when(formInputRepository.findByQuestionIdAndScopeAndType(
                 1L,
                 FormInputScope.APPLICATION,
@@ -267,7 +267,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
     @Test
     public void test_updateShouldNotChangeAppendixFormInputWhenOptionIsNull() {
-        setPrerequisitesForSuccessfulUpdate();
+        setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
@@ -301,7 +301,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
     @Test
     public void test_updateShouldResetAppendixOptionsFormInputWhenItsNotSelected() {
-        setPrerequisitesForSuccessfulUpdate();
+        setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
@@ -327,12 +327,11 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertFalse(appendixFormInput.getActive());
         assertNull(appendixFormInput.getAllowedFileTypes());
         assertNull(appendixFormInput.getGuidanceAnswer());
-
     }
 
     @Test
     public void test_updateShouldSetAppendixOptionsFormInputWhenSelected() {
-        setPrerequisitesForSuccessfulUpdate();
+        setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
@@ -361,7 +360,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     public void test_updateShouldAppendFileTypeSeparatedByComma() {
         Long questionId = 1L;
 
-        setPrerequisitesForSuccessfulUpdate();
+        setMocksForSuccessfulUpdate();
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
@@ -377,6 +376,32 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         String appendedFileTypes = FileTypeCategory.PDF.getDisplayName() + "," + FileTypeCategory.SPREADSHEET.getDisplayName();
 
         assertEquals(appendedFileTypes, appendixFormInput.getAllowedFileTypes());
+    }
+
+    private void setMocksForSuccessfulUpdate() {
+        long questionId = 1L;
+        when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
+
+        Question question = newQuestion().
+                withShortName(CompetitionSetupQuestionType.SCOPE.getShortName()).build();
+
+        FormInput questionFormInput = newFormInput().build();
+        FormInput appendixFormInput = newFormInput().build();
+        FormInput researchCategoryQuestionFormInput = newFormInput().build();
+        FormInput scopeQuestionFormInput = newFormInput().build();
+        FormInput scoredQuestionFormInput = newFormInput().build();
+        FormInput writtenFeedbackFormInput = newFormInput().build();
+
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
+        when(questionRepository.findOne(questionId)).thenReturn(question);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
+        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
+
+        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
+        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
     }
 
     @Test
@@ -426,32 +451,6 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.getFailure().is(COMPETITION_NOT_EDITABLE));
     }
 
-    private void setPrerequisitesForSuccessfulUpdate() {
-        long questionId = 1L;
-        when(guidanceRowMapper.mapToDomain(anyList())).thenReturn(new ArrayList<>());
-
-        Question question = newQuestion().
-                withShortName(CompetitionSetupQuestionType.SCOPE.getShortName()).build();
-
-        FormInput questionFormInput = newFormInput().build();
-        FormInput appendixFormInput = newFormInput().build();
-        FormInput researchCategoryQuestionFormInput = newFormInput().build();
-        FormInput scopeQuestionFormInput = newFormInput().build();
-        FormInput scoredQuestionFormInput = newFormInput().build();
-        FormInput writtenFeedbackFormInput = newFormInput().build();
-
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.TEXTAREA)).thenReturn(questionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD)).thenReturn(appendixFormInput);
-        when(questionRepository.findOne(questionId)).thenReturn(question);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_RESEARCH_CATEGORY)).thenReturn(researchCategoryQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)).thenReturn(scopeQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.ASSESSOR_SCORE)).thenReturn(scoredQuestionFormInput);
-        when(formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.ASSESSMENT, FormInputType.TEXTAREA)).thenReturn(writtenFeedbackFormInput);
-
-        doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
-        when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
-    }
-
     private CompetitionSetupQuestionResource createValidQuestionResourceWithoutAppendixOptions() {
         CompetitionSetupQuestionResource resource = newCompetitionSetupQuestionResource()
                 .withAppendix(false)
@@ -471,9 +470,6 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                 .withScoreTotal(scoreTotal)
                 .withWrittenFeedback(true)
                 .build();
-
-        //Set temp ZDD option to true to trigger new functionality
-        resource.setZDDUpdated(true);
 
         return resource;
     }

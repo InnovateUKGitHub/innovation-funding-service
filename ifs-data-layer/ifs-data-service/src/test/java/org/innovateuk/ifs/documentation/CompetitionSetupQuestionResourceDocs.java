@@ -35,8 +35,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("guidanceRows[].id").description("The id of the guidance row in the database"),
             fieldWithPath("guidanceRows[].subject").description("The subject of the guidance"),
             fieldWithPath("guidanceRows[].justification").description("The justification of the guidance"),
-            fieldWithPath("guidanceRows[].formInput").description("The id of the form input the guidance is linked to"),
-            fieldWithPath("zddupdated").description("Indicates if the web-service has been deployed with the new resource definition")
+            fieldWithPath("guidanceRows[].formInput").description("The id of the form input the guidance is linked to")
     };
 
     public static final CompetitionSetupQuestionResourceBuilder competitionSetupQuestionResourceBuilder = newCompetitionSetupQuestionResource()
