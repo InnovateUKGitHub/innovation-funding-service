@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
@@ -173,18 +172,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             updateCompetitionInCompetitionData(data, competition.getId());
 
-            List<QuestionResource> questions = retrieveQuestionsByCompetitionId(competition.getId());
-
             // if any of this competition's question titles are blank (because they are based off of a competition
             // template with blank question titles), fill in some default ones now
-            simpleFilter(questions, q -> StringUtils.isBlank(q.getShortName())).forEach(q -> {
+            if (data.getCompetition().getName().equals("Generic innovation")) {
 
-                Question question = questionRepository.findOne(q.getId());
+                List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
+                Question question = questions.get(0);
                 question.setName("Generic question heading");
                 question.setShortName("Generic question title");
                 question.setDescription("Generic question description");
-                questionRepository.save(question);
-            });
+            }
         });
     }
 
