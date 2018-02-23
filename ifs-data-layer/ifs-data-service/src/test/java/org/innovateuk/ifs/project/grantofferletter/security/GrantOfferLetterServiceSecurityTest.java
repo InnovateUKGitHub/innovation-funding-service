@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
@@ -298,7 +299,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED), () -> {
+        assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null)), () -> {
             verify(projectGrantOfferPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -454,7 +455,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
             return null;
         }
 
