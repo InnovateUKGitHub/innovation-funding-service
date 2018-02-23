@@ -282,7 +282,7 @@ Lead Partner can review the external version of Finance Checks eligibility table
     Given log in as a different user        &{lead_applicant_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user clicks the button/link    link=Finance checks
-    When the user clicks the button/link    link=View finances
+    When the user clicks the button/link    link=your finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances    3,081    0    100,200    552    90,000    5,970    1,100
     Then the user should see the element    css=input[id="total-cost"][value="£200,903"]
@@ -294,7 +294,7 @@ Partner can review only the external version of Finance Checks eligibility table
     Given log in as a different user        &{collaborator1_credentials}
     When the user clicks the button/link    jQuery=.projects-in-setup a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     Then the user clicks the button/link    link=Finance checks
-    When the user clicks the button/link    link=View finances
+    When the user clicks the button/link    link=your finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     3,081    0     100,200    552    90,000    5,970     1,100
     Then the user should see the element    css=input[id="total-cost"][value="£200,903"]
