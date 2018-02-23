@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -129,12 +130,13 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     public void testApproveSignedGrantOfferLetter() {
         long projectId = 123L;
 
-        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/" + ApprovalType.APPROVED;
-        setupPostWithRestResultExpectations(expectedUrl, OK);
+        GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
+        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/";
+        setupPostWithRestResultExpectations(expectedUrl, grantOfferLetterApprovalResource, OK);
 
-        RestResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+        RestResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        setupPostWithRestResultVerifications(expectedUrl, Void.class, null);
+        setupPostWithRestResultVerifications(expectedUrl, Void.class, grantOfferLetterApprovalResource);
 
         assertTrue(result.isSuccess());
     }
