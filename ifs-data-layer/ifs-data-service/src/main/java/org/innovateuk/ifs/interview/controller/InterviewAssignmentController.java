@@ -5,6 +5,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServi
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,7 +47,7 @@ public class InterviewAssignmentController {
     }
 
     @PostMapping("/assign-applications")
-    public RestResult<Void> assignApplications(@Valid @RequestBody ExistingUserStagedInviteListResource existingUserStagedInvites) {
-        return interviewAssignmentInviteService.assignApplications(existingUserStagedInvites.getInvites()).toPostWithBodyResponse();
+    public RestResult<Void> assignApplications(@Valid @RequestBody StagedApplicationListResource stagedApplicationListResource) {
+        return interviewAssignmentInviteService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
     }
 }
