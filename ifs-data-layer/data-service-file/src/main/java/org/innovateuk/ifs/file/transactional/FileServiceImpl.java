@@ -73,8 +73,10 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
                         validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())),
                         validateContentLength(resource.getFilesizeBytes(), validationFile)).
                         andOnSuccess((mediaType, contentLength) ->
-                            saveFileEntry(resource).andOnSuccess(savedFileEntry ->
-                                    createFileForFileEntry(savedFileEntry, validationFile))
+                            saveFileEntry(resource).andOnSuccess(savedFileEntry -> {
+                                LOG.info("[FileLogging] New FileEntry record created with id " + savedFileEntry.getId());
+                                return createFileForFileEntry(savedFileEntry, validationFile);
+                            })
                         );
             } finally {
                 deleteFile(validationFile);
@@ -149,10 +151,15 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
                         findFileForDelete(fileEntry).
                                 andOnSuccess(fileAndStorageLocation -> {
                                     FileStorageStrategy storageLocation = fileAndStorageLocation.getValue();
-                                    return storageLocation.deleteFile(fileEntry).andOnSuccess(() -> fileEntryRepository.delete(fileEntry)).andOnSuccessReturn(() -> fileEntry);
+                                    return storageLocation.deleteFile(fileEntry).andOnSuccessReturn(() -> {
+                                        fileEntryRepository.delete(fileEntry);
+                                        LOG.info("[FileLogging] FileEntry with id " + fileEntryId + " deleted");
+                                        return fileEntry;
+                                    });
                                 }).
                                 andOnFailure(() -> {
                                     fileEntryRepository.delete(fileEntry);
+                                    LOG.info(String.format("[FileLogging] File associated with file entry %1d not found.  File entry record deleted.", fileEntry.getId()));
                                     LOG.error(String.format("File associated with file entry %1d not found.  File entry record deleted.", fileEntry.getId()));
                                     return serviceSuccess(fileEntry);
                                 })
@@ -239,7 +246,10 @@ public class FileServiceImpl extends RootTransactionalService implements FileSer
 
     private ServiceResult<Pair<File, FileEntry>> createFileForFileEntry(FileEntry savedFileEntry, File tempFile) {
         return temporaryHoldingFileStorageStrategy.createFile(savedFileEntry, tempFile).
-                andOnSuccessReturn(file -> Pair.of(file, savedFileEntry));
+                andOnSuccessReturn(file -> {
+                    LOG.info("[FileLogging] New file created with name " + file.getAbsolutePath() + " with new FileEntry Id " + savedFileEntry.getId());
+                    return Pair.of(file, savedFileEntry);
+                });
     }
 
     private ServiceResult<FileEntry> saveFileEntry(FileEntryResource resource) {

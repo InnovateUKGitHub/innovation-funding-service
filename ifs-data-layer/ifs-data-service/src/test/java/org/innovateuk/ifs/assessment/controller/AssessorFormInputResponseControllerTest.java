@@ -54,7 +54,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
         List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
                 .build(2);
 
-        Long applicationId = 1L;
+        long applicationId = 1L;
 
         when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponsesForPanel(applicationId)).thenReturn(serviceSuccess(expected));
 
