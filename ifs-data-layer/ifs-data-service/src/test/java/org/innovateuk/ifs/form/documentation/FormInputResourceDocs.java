@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.documentation;
 
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -33,5 +33,5 @@ public class FormInputResourceDocs {
             .withId(1L)
             .withType(TEXTAREA)
             .withWordCount(140)
-            .withAllowedFileTypes(asList(FileTypeCategories.SPREADSHEET, FileTypeCategories.PDF));
+            .withAllowedFileTypes(asList(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF));
 }

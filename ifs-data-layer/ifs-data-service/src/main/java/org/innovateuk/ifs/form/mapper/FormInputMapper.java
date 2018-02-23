@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.mapstruct.Mapper;
@@ -33,7 +32,7 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
     @Mappings({
             @Mapping(target = "responses", ignore = true),
             @Mapping(target = "guidanceRows", ignore = true),
-            @Mapping(target = "active", ignore = true),
+            @Mapping(target = "active", ignore = true)
     })
     @Override
     public abstract FormInput mapToDomain(FormInputResource resource);
@@ -52,11 +51,11 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
         return object.getId();
     }
 
-    Set<FileTypeCategories> mapToFileTypes(String fileTypes) {
+    Set<FileTypeCategory> mapToFileTypes(String fileTypes) {
         if (fileTypes == null) {
             return emptySet();
         }
 
-        return simpleMapSet(fileTypes.split(","), FileTypeCategories::fromDisplayName);
+        return simpleMapSet(fileTypes.split(","), FileTypeCategory::fromDisplayName);
     }
 }
