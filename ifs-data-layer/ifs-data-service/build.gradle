@@ -183,8 +183,8 @@ task generateMainMapperClasses(type: JavaCompile) {
 }
 
 task syncShib(type:Exec) {
-    workingDir '../'
-    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
+    workingDir '../../'
+    commandLine 'docker-compose', '-p', 'innovation-funding-service','-f', 'docker-compose/docker-compose.yml', 'exec',  '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
 compileJava.dependsOn generateMainMapperClasses

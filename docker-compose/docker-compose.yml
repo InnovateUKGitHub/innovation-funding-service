@@ -50,8 +50,6 @@ services:
       - "LDAP_PORT=8389"
     networks:
       - ifs
-    links:
-      - mysql:ifs-database
 
   registration-svc:
     image: innovateuk/registration-service
@@ -94,10 +92,6 @@ services:
         aliases:
           - ifs-data-service
     hostname: data-service
-    links:
-      - mail
-      - mysql:ifs-database
-      - sil-stub
     volumes:
       - .././robot-tests/upload_files/:/tmp/ifs-local
     ports:
@@ -115,8 +109,6 @@ services:
       networks:
         - ifs
       hostname: sil-stub
-      links:
-        - mail
       ports:
         - "8091:8080"
       environment:
@@ -130,7 +122,7 @@ services:
     networks:
       - ifs
 
-  mysql:
+  ifs-database:
     image: innovateuk/ifs-mysql:5.6.29
     ports:
       - "3306:3306"
