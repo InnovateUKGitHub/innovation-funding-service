@@ -12,7 +12,7 @@ public interface AssessorFormInputResponseRestService {
 
     RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId);
 
-    RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long assessmentId);
+    RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long applicationId);
 
     RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId);
 
