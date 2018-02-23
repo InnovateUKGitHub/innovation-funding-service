@@ -94,8 +94,8 @@ public class InterviewPanelInviteServiceImpl implements InterviewPanelInviteServ
     }
 
     @Override
-    public ServiceResult<Void> assignApplications(List<ExistingUserStagedInviteResource> stagedInvites) {
-        stagedInvites.forEach(invite -> getApplication(invite.getUserId()).andOnSuccess(this::assignApplicationToCompetition));
+    public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
+        stagedInvites.forEach(invite -> getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition));
         return serviceSuccess();
     }
 

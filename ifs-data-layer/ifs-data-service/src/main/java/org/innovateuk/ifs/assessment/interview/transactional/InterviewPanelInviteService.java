@@ -2,9 +2,7 @@ package org.innovateuk.ifs.assessment.interview.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -33,5 +31,5 @@ public interface InterviewPanelInviteService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATIONS",
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
-    ServiceResult<Void> assignApplications(List<ExistingUserStagedInviteResource> invites);
+    ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites);
 }

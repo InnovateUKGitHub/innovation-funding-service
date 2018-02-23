@@ -44,7 +44,7 @@ public class InterviewPanelController {
     }
 
     @PostMapping("/assign-applications")
-    public RestResult<Void> assignApplications(@Valid @RequestBody ExistingUserStagedInviteListResource existingUserStagedInvites) {
-        return interviewPanelInviteService.assignApplications(existingUserStagedInvites.getInvites()).toPostWithBodyResponse();
+    public RestResult<Void> assignApplications(@Valid @RequestBody StagedApplicationListResource stagedApplicationListResource) {
+        return interviewPanelInviteService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
     }
 }
