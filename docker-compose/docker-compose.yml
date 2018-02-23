@@ -99,7 +99,7 @@ services:
       - mysql:ifs-database
       - sil-stub
     volumes:
-      - ./robot-tests/upload_files/:/tmp/ifs-local
+      - .././robot-tests/upload_files/:/tmp/ifs-local
     ports:
       - "8086:8080"
       - "9006:8000"

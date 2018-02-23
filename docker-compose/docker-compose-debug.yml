@@ -89,7 +89,7 @@ services:
       - mysql:ifs-database
       - sil-stub
     volumes:
-      - ./robot-tests/upload_files/:/tmp/ifs-local
+      - .././robot-tests/upload_files/:/tmp/ifs-local
 
   sil-stub:
       image: innovateuk/sil-stub
