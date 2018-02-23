@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -19,6 +17,8 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationQuestionController {
 
-    private static final Log LOG = LogFactory.getLog(ApplicationQuestionController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
 
     @Autowired
     private QuestionModelPopulator questionModelPopulator;
@@ -93,7 +93,8 @@ public class ApplicationQuestionController {
     ) {
         markAsComplete.ifPresent(markAsCompleteSet -> {
             if (markAsCompleteSet) {
-                ValidationMessages errors = applicationSaver.saveApplicationForm(applicationId,
+                ValidationMessages errors = applicationSaver.saveApplicationForm(
+                        applicationId,
                         form,
                         questionId,
                         user.getId(),
@@ -138,14 +139,16 @@ public class ApplicationQuestionController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors = applicationSaver.saveApplicationForm(applicationId,
+                errors = applicationSaver.saveApplicationForm(
+                        applicationId,
                         form,
                         questionId,
                         user.getId(),
                         request,
                         response,
                         bindingResult.hasErrors(),
-                        Optional.empty());
+                        Optional.empty()
+                );
             }
 
             model.addAttribute("form", form);
@@ -192,7 +195,7 @@ public class ApplicationQuestionController {
         if (processRole != null) {
             questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
         } else {
-            LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+            LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
         populateShowQuestion(user, applicationId, questionId, model, form);
@@ -218,6 +221,7 @@ public class ApplicationQuestionController {
                         (questionStatusResource.getAssignee() == null
                                 || questionStatusResource.getAssigneeUserId().equals(userId))
                         && (questionStatusResource.getMarkedAsComplete() == null
-                                || !questionStatusResource.getMarkedAsComplete()));
+                                || !questionStatusResource.getMarkedAsComplete())
+                );
     }
 }
