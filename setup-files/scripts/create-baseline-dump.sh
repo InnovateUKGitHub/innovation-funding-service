@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 # A script to generate a dump from a database without any of the reference data tables in it
 
-baselineversion="V112_1_"
+baselineversion="V112_7_"
 
 echo "creating baseline for version ${baselineversion}"
 mysql -h ifs-database ifs -uroot -ppassword -e 'delete from user_role where exists (select 1 from user u where u.id = user_id and u.system_user = 1);'
