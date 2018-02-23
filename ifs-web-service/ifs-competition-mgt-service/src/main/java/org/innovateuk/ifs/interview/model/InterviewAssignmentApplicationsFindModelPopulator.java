@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.management.model;
+package org.innovateuk.ifs.interview.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationRowViewModel;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsFindViewModel;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
-import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationsFindViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Interview Panel Find view.
  */
 @Component
-public class InterviewPanelApplicationsFindModelPopulator {
+public class InterviewAssignmentApplicationsFindModelPopulator {
 
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -29,9 +29,9 @@ public class InterviewPanelApplicationsFindModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public InterviewPanelApplicationsFindViewModel populateModel(long competitionId,
-                                                                 int page,
-                                                                 String originQuery) {
+    public InterviewAssignmentApplicationsFindViewModel populateModel(long competitionId,
+                                                                      int page,
+                                                                      String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
@@ -41,9 +41,9 @@ public class InterviewPanelApplicationsFindModelPopulator {
                 page)
                 .getSuccess();
 
-        List<InterviewPanelApplicationRowViewModel> applications = simpleMap(pageResource.getContent(), this::getRowViewModel);
+        List<InterviewAssignmentApplicationRowViewModel> applications = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
-        return new InterviewPanelApplicationsFindViewModel(
+        return new InterviewAssignmentApplicationsFindViewModel(
                 competitionId,
                 competition.getName(),
                 competition.getInnovationSectorName(),
@@ -54,8 +54,8 @@ public class InterviewPanelApplicationsFindModelPopulator {
                 new PaginationViewModel(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
     }
 
-    private InterviewPanelApplicationRowViewModel getRowViewModel(AvailableApplicationResource availableApplicationResource) {
-        return new InterviewPanelApplicationRowViewModel(
+    private InterviewAssignmentApplicationRowViewModel getRowViewModel(AvailableApplicationResource availableApplicationResource) {
+        return new InterviewAssignmentApplicationRowViewModel(
                 availableApplicationResource.getId(),
                 availableApplicationResource.getName(),
                 availableApplicationResource.getLeadOrganisation()

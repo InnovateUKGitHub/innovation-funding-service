@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.viewmodel;
+package org.innovateuk.ifs.interview.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -6,17 +6,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Holder of model attributes for the available assessors shown in the 'Find' tab of the Assessment Panel Invite Assessors view.
  */
-public class InterviewPanelApplicationInviteRowViewModel {
+public class InterviewAssignmentApplicationRowViewModel {
 
     private final long id;
-    private final long applicationId;
-    private final String applicationName;
+    private final String name;
     private final String leadOrganisation;
 
-    public InterviewPanelApplicationInviteRowViewModel(long id, long applicationId, String applicationName, String leadOrganisation) {
+    public InterviewAssignmentApplicationRowViewModel(long id, String name, String leadOrganisation) {
         this.id = id;
-        this.applicationId = applicationId;
-        this.applicationName = applicationName;
+        this.name = name;
         this.leadOrganisation = leadOrganisation;
     }
 
@@ -24,12 +22,8 @@ public class InterviewPanelApplicationInviteRowViewModel {
         return id;
     }
 
-    public long getApplicationId() {
-        return applicationId;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
+    public String getName() {
+        return name;
     }
 
     public String getLeadOrganisation() {
@@ -42,12 +36,11 @@ public class InterviewPanelApplicationInviteRowViewModel {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        InterviewPanelApplicationInviteRowViewModel that = (InterviewPanelApplicationInviteRowViewModel) o;
+        InterviewAssignmentApplicationRowViewModel that = (InterviewAssignmentApplicationRowViewModel) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)
-                .append(applicationId, that.applicationId)
-                .append(applicationName, that.applicationName)
+                .append(name, that.name)
                 .append(leadOrganisation, that.leadOrganisation)
                 .isEquals();
     }
@@ -56,8 +49,7 @@ public class InterviewPanelApplicationInviteRowViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(applicationId)
-                .append(applicationName)
+                .append(name)
                 .append(leadOrganisation)
                 .toHashCode();
     }

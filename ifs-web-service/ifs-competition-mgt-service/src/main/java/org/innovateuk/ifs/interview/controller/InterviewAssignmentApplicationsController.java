@@ -5,14 +5,14 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
+import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsFindModelPopulator;
+import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsInviteModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsFindViewModel;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
-import org.innovateuk.ifs.management.model.InterviewPanelApplicationsFindModelPopulator;
-import org.innovateuk.ifs.management.model.InterviewPanelApplicationsInviteModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
-import org.innovateuk.ifs.management.viewmodel.InterviewPanelApplicationsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -48,10 +48,10 @@ public class InterviewAssignmentApplicationsController extends CompetitionManage
     private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @Autowired
-    private InterviewPanelApplicationsFindModelPopulator interviewPanelApplicationsFindModelPopulator;
+    private InterviewAssignmentApplicationsFindModelPopulator interviewAssignmentApplicationsFindModelPopulator;
 
     @Autowired
-    private InterviewPanelApplicationsInviteModelPopulator interviewPanelApplicationsInviteModelPopulator;
+    private InterviewAssignmentApplicationsInviteModelPopulator interviewAssignmentApplicationsInviteModelPopulator;
 
     @Override
     protected String getCookieName() {
@@ -76,8 +76,8 @@ public class InterviewAssignmentApplicationsController extends CompetitionManage
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm);
 
-        InterviewPanelApplicationsFindViewModel interviewPanelApplicationsFindModel =
-                interviewPanelApplicationsFindModelPopulator.populateModel(competitionId, page, originQuery);
+        InterviewAssignmentApplicationsFindViewModel interviewPanelApplicationsFindModel =
+                interviewAssignmentApplicationsFindModelPopulator.populateModel(competitionId, page, originQuery);
 
         model.addAttribute("model", interviewPanelApplicationsFindModel);
         model.addAttribute("originQuery", originQuery);
@@ -223,7 +223,7 @@ public class InterviewAssignmentApplicationsController extends CompetitionManage
 
         String originQuery = buildOriginQueryString(INTERVIEW_PANEL_INVITE, queryParams);
 
-        model.addAttribute("model", interviewPanelApplicationsInviteModelPopulator
+        model.addAttribute("model", interviewAssignmentApplicationsInviteModelPopulator
                 .populateModel(competitionId, page, originQuery));
         model.addAttribute("originQuery", originQuery);
 

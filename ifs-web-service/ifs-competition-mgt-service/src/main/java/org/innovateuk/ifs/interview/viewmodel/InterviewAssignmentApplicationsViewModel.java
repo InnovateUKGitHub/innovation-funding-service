@@ -1,11 +1,13 @@
-package org.innovateuk.ifs.management.viewmodel;
+package org.innovateuk.ifs.interview.viewmodel;
+
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
 
 /**
  * Base class for Assessment Interview Panel views.
  */
-public abstract class InterviewPanelApplicationsViewModel<T> {
+public abstract class InterviewAssignmentApplicationsViewModel<T> {
 
     private final long competitionId;
     private final String competitionName;
@@ -17,7 +19,7 @@ public abstract class InterviewPanelApplicationsViewModel<T> {
     private final int applicationsInCompetition;
     private final int applicationsInPanel;
 
-    protected InterviewPanelApplicationsViewModel(
+    protected InterviewAssignmentApplicationsViewModel(
             long competitionId,
             String competitionName,
             String innovationArea,

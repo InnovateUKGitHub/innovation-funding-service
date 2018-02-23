@@ -1,20 +1,22 @@
-package org.innovateuk.ifs.management.viewmodel;
+package org.innovateuk.ifs.interview.viewmodel;
+
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
 
 /**
  * Holder of model attributes for the Invite assessors for Assessment Interview Panel 'Find' view.
  */
-public class InterviewPanelApplicationsFindViewModel extends InterviewPanelApplicationsViewModel<InterviewPanelApplicationRowViewModel> {
+public class InterviewAssignmentApplicationsFindViewModel extends InterviewAssignmentApplicationsViewModel<InterviewAssignmentApplicationRowViewModel> {
 
     private final boolean selectAllDisabled;
 
-    public InterviewPanelApplicationsFindViewModel(
+    public InterviewAssignmentApplicationsFindViewModel(
             long competitionId,
             String competitionName,
             String innovationArea,
             String innovationSector,
-            List<InterviewPanelApplicationRowViewModel> applications,
+            List<InterviewAssignmentApplicationRowViewModel> applications,
             int applicationsInCompetition,
             int applicationsInPanel,
             PaginationViewModel pagination,
