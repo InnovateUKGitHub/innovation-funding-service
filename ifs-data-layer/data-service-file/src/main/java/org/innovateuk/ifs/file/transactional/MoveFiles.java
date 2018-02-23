@@ -38,7 +38,7 @@ public final class MoveFiles {
                     final File fileToMove = new File(pathElementsToFile(path.getKey()), path.getValue());
                     ServiceResult<File> moveResult= to.moveFile(id, fileToMove);
                     moveResult.ifSuccessful(movedFile -> {
-                        LOG.info("Moved file " + fileToMove.getAbsolutePath() + " to " + movedFile.getAbsolutePath() );
+                        LOG.info("[FileLogging] Moved file " + fileToMove.getAbsolutePath() + " to " + movedFile.getAbsolutePath() );
                     });
                     return moveResult;
                 }).
