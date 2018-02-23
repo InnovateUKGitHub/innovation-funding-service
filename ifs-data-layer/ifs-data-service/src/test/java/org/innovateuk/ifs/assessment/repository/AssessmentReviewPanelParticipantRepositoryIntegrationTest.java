@@ -1,27 +1,17 @@
 package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
-import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.AgreementRepository;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,36 +57,6 @@ public class AssessmentReviewPanelParticipantRepositoryIntegrationTest extends B
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
-    private RejectionReasonRepository rejectionReasonRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private AssessmentRepository assessmentRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private AgreementRepository agreementRepository;
-
-    @Autowired
-    private MilestoneRepository milestoneRepository;
-
-    @Autowired
-    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
-
-    @Autowired
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
@@ -128,7 +88,7 @@ public class AssessmentReviewPanelParticipantRepositoryIntegrationTest extends B
 
         List<AssessmentReviewPanelParticipant> retrievedParticipants = repository.findAll();
 
-        assertEquals(10, retrievedParticipants.size());  // Including 8 pre-existing paricipants added via patch
+        assertEquals(10, retrievedParticipants.size());  // Including 8 pre-existing participants added via patch
         assertEqualParticipants(savedParticipants, retrievedParticipants);
     }
 
@@ -184,7 +144,6 @@ public class AssessmentReviewPanelParticipantRepositoryIntegrationTest extends B
                         .build()
         );
 
-        RejectionReason reason = rejectionReasonRepository.findAll().get(0);
         savedParticipant.reject();
         flushAndClearSession();
 
@@ -260,6 +219,7 @@ public class AssessmentReviewPanelParticipantRepositoryIntegrationTest extends B
 
     @Test
     public void findByUserIdAndRole() {
+        loginSteveSmith();
 
         Competition competition = newCompetition()
                 .with(id(null))
