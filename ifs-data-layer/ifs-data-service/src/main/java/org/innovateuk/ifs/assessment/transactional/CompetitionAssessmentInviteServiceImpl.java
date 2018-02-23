@@ -19,8 +19,10 @@ import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -82,7 +84,7 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
  */
 @Service
 @Transactional
-public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssessmentInviteService {
+public class CompetitionAssessmentInviteServiceImpl extends InviteService<CompetitionAssessmentInvite> implements CompetitionAssessmentInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
@@ -139,6 +141,16 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
     enum Notifications {
         INVITE_ASSESSOR,
         INVITE_ASSESSOR_GROUP
+    }
+
+    @Override
+    protected Class<CompetitionAssessmentInvite> getInviteClass() {
+        return CompetitionAssessmentInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<CompetitionAssessmentInvite> getRepository() {
+        return competitionAssessmentInviteRepository;
     }
 
     @Override
@@ -609,10 +621,6 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturnVoid(competition ->
                         competitionAssessmentInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
-    }
-
-    private ServiceResult<CompetitionAssessmentInvite> getByHash(String inviteHash) {
-        return find(competitionAssessmentInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
     }
 
     private ServiceResult<CompetitionAssessmentInvite> getById(long id) {

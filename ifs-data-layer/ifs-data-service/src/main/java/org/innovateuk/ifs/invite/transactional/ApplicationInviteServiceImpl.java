@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -27,6 +29,7 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +62,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class ApplicationInviteServiceImpl extends BaseApplicationInviteService implements ApplicationInviteService {
+public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvite> implements ApplicationInviteService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationInviteServiceImpl.class);
 
@@ -83,6 +86,9 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
     private ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
@@ -101,6 +107,9 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
     private ApplicationService applicationService;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
     private QuestionReassignmentService questionReassignmentService;
 
     LocalValidatorFactoryBean validator;
@@ -109,6 +118,16 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
         validator = new LocalValidatorFactoryBean();
         validator.setProviderClass(HibernateValidator.class);
         validator.afterPropertiesSet();
+    }
+
+    @Override
+    protected Class<ApplicationInvite> getInviteClass() {
+        return ApplicationInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<ApplicationInvite> getRepository() {
+        return applicationInviteRepository;
     }
 
     @Override

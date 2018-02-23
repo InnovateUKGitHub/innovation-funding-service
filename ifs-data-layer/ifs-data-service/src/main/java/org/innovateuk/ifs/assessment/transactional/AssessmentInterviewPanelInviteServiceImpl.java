@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterview;
 import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
@@ -22,7 +21,9 @@ import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -33,9 +34,6 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -69,12 +67,12 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
-/*
+/**
  * Service for managing {@link AssessmentInterviewPanelInvite}s.
  */
 @Service
 @Transactional
-public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInterviewPanelInviteService {
+public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<AssessmentInterviewPanelInvite> implements AssessmentInterviewPanelInviteService {
 
     private static final String WEB_CONTEXT = "/interview";
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
@@ -104,9 +102,6 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     private AssessmentInterviewPanelParticipantMapper assessmentInterviewPanelParticipantMapper;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired
@@ -122,16 +117,7 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private AssessmentInterviewRepository assessmentInterviewRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     enum Notifications {
         INVITE_ASSESSOR_GROUP_TO_INTERVIEW
@@ -139,6 +125,16 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
+
+    @Override
+    protected Class<AssessmentInterviewPanelInvite> getInviteClass() {
+        return AssessmentInterviewPanelInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<AssessmentInterviewPanelInvite> getRepository() {
+        return assessmentInterviewPanelInviteRepository;
+    }
 
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
@@ -463,10 +459,6 @@ public class AssessmentInterviewPanelInviteServiceImpl implements AssessmentInte
 
             return userRepository.findByEmail(invite.getEmail()).isPresent();
         });
-    }
-
-    private ServiceResult<AssessmentInterviewPanelInvite> getByHash(String inviteHash) {
-        return find(assessmentInterviewPanelInviteRepository.getByHash(inviteHash), notFoundError(AssessmentInterviewPanelInvite.class, inviteHash));
     }
 
     private static ServiceResult<AssessmentInterviewPanelParticipant> accept(AssessmentInterviewPanelParticipant participant) {

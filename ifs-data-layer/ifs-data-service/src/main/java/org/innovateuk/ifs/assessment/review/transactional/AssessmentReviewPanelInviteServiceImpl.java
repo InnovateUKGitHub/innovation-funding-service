@@ -20,7 +20,9 @@ import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -78,7 +80,7 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 @Transactional
-public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewPanelInviteService {
+public class AssessmentReviewPanelInviteServiceImpl extends InviteService<AssessmentReviewPanelInvite> implements AssessmentReviewPanelInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
@@ -108,9 +110,6 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     private AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapper;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired
@@ -132,18 +131,25 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
     private AssessmentReviewRepository assessmentReviewRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private ActivityStateRepository activityStateRepository;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     enum Notifications {
         INVITE_ASSESSOR_TO_PANEL,
         INVITE_ASSESSOR_GROUP_TO_PANEL
     }
 
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
+    @Override
+    protected Class<AssessmentReviewPanelInvite> getInviteClass() {
+        return AssessmentReviewPanelInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<AssessmentReviewPanelInvite> getRepository() {
+        return assessmentReviewPanelInviteRepository;
+    }
 
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
@@ -496,10 +502,6 @@ public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewP
 
             return userRepository.findByEmail(invite.getEmail()).isPresent();
         });
-    }
-
-    private ServiceResult<AssessmentReviewPanelInvite> getByHash(String inviteHash) {
-        return find(assessmentReviewPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
     }
 
     private static ServiceResult<AssessmentReviewPanelParticipant> accept(AssessmentReviewPanelParticipant participant) {

@@ -2,24 +2,25 @@ package org.innovateuk.ifs.invite.transactional;
 
 
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -32,23 +33,22 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
-public class ProjectInviteServiceImpl extends BaseTransactionalService implements ProjectInviteService {
+public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> implements ProjectInviteService {
 
     private static final Log LOG = LogFactory.getLog(ProjectInviteServiceImpl.class);
 
@@ -70,12 +70,25 @@ public class ProjectInviteServiceImpl extends BaseTransactionalService implement
     @Autowired
     private ProjectUserRepository projectUserRepository;
 
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
     private LocalValidatorFactoryBean validator;
 
     public ProjectInviteServiceImpl() {
         validator = new LocalValidatorFactoryBean();
         validator.setProviderClass(HibernateValidator.class);
         validator.afterPropertiesSet();
+    }
+
+    @Override
+    protected Class<ProjectInvite> getInviteClass() {
+        return ProjectInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<ProjectInvite> getRepository() {
+        return projectInviteRepository;
     }
 
     @Override
@@ -198,13 +211,5 @@ public class ProjectInviteServiceImpl extends BaseTransactionalService implement
 
         return existingUserEntryForOrganisation == null ? serviceSuccess() :
                 serviceFailure(PROJECT_SETUP_INVITE_TARGET_USER_ALREADY_EXISTS_ON_PROJECT);
-    }
-
-    private Supplier<ServiceResult<ProjectInvite>> invite(final String hash) {
-        return () -> getByHash(hash);
-    }
-
-    private ServiceResult<ProjectInvite> getByHash(String hash) {
-        return find(projectInviteRepository.getByHash(hash), notFoundError(ProjectInvite.class, hash));
     }
 }
