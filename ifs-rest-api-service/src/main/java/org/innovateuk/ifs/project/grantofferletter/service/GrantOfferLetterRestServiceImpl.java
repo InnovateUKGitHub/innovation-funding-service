@@ -3,8 +3,8 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -68,8 +68,8 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
-    public RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/" + approvalType, Void.class);
+    public RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/", grantOfferLetterApprovalResource, Void.class);
     }
 
     @Override

@@ -12,15 +12,15 @@ include::{snippets}/interview-panel-invite/get-available-assessors/curl-request.
 
 === Get all available assessor ids by competition
 ==== Request
-include::{snippets}/interview-panel-invite/get-available-application-ids/http-request.adoc[]
-include::{snippets}/interview-panel-invite/get-available-application-ids/path-parameters.adoc[]
+include::{snippets}/interview-panel-invite/get-available-assessor-ids/http-request.adoc[]
+include::{snippets}/interview-panel-invite/get-available-assessor-ids/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/interview-panel-invite/get-available-application-ids/http-response.adoc[]
-include::{snippets}/interview-panel-invite/get-available-application-ids/response-fields.adoc[]
+include::{snippets}/interview-panel-invite/get-available-assessor-ids/http-response.adoc[]
+include::{snippets}/interview-panel-invite/get-available-assessor-ids/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/interview-panel-invite/get-available-application-ids/curl-request.adoc[]
+include::{snippets}/interview-panel-invite/get-available-assessor-ids/curl-request.adoc[]
 
 === Get the interview panel invite list for a competition
 ==== Request

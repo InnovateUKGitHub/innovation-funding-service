@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -40,8 +41,8 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
-    public RestResult<Void> assignApplications(ExistingUserStagedInviteListResource existingUserStagedInviteListResource) {
-        return postWithRestResult(format("%s/%s", REST_URL, "assign-applications"), existingUserStagedInviteListResource, Void.class);
+    public RestResult<Void> assignApplications(StagedApplicationListResource stagedApplicationListResource) {
+        return postWithRestResult(format("%s/%s", REST_URL, "assign-applications"), stagedApplicationListResource, Void.class);
     }
 
     @Override

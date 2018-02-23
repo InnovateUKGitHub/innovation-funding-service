@@ -8,6 +8,8 @@ import org.innovateuk.ifs.interview.form.InterviewSelectionForm;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
 import org.innovateuk.ifs.management.model.InterviewPanelApplicationsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InterviewPanelApplicationsInviteModelPopulator;
@@ -236,8 +238,8 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
                 .toUriString();
     }
 
-    private ExistingUserStagedInviteListResource newSelectionFormToResource(InterviewSelectionForm form, long competitionId) {
-        return new ExistingUserStagedInviteListResource(simpleMap(
-                form.getSelectedAssessorIds(), id -> new ExistingUserStagedInviteResource(id, competitionId)));
+    private StagedApplicationListResource newSelectionFormToResource(InterviewSelectionForm form, long competitionId) {
+        return new StagedApplicationListResource(simpleMap(
+                form.getSelectedAssessorIds(), applicationId -> new StagedApplicationResource(applicationId, competitionId)));
     }
 }

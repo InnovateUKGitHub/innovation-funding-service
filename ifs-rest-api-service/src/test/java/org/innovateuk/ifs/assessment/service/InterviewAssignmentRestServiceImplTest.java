@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.junit.Test;
@@ -19,6 +20,8 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListReso
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -71,18 +74,18 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
     public void assignApplications() {
         long competitionId = 1L;
 
-        ExistingUserStagedInviteListResource existingUserStagedInviteListResource = newExistingUserStagedInviteListResource()
+        StagedApplicationListResource stagedApplicationListResource = newStagedApplicationListResource()
                 .withInvites(
-                        newExistingUserStagedInviteResource()
-                                .withUserId(1L, 2L)
+                        newStagedApplicationResource()
+                                .withApplicationId(1L, 2L)
                                 .withCompetitionId(competitionId)
                                 .build(2)
                 )
                 .build();
 
-        setupPostWithRestResultExpectations(format("%s/%s", REST_URL, "assign-applications"), existingUserStagedInviteListResource, OK);
+        setupPostWithRestResultExpectations(format("%s/%s", REST_URL, "assign-applications"), stagedApplicationListResource, OK);
 
-        RestResult<Void> restResult = service.assignApplications(existingUserStagedInviteListResource);
+        RestResult<Void> restResult = service.assignApplications(stagedApplicationListResource);
         assertTrue(restResult.isSuccess());
 
     }
