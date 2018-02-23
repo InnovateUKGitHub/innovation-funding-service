@@ -45,7 +45,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class ReviewInviteAssessorsController extends CompetitionManagementCookieController<ReviewSelectionForm> {
 
-    private static final String SELECTION_FORM = "assessorPanelSelectionForm";
+    private static final String SELECTION_FORM = "reviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired

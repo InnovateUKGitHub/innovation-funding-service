@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.interview.form.InterviewSelectionForm;
+import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
@@ -38,11 +38,11 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/assessment/interview-panel/competition/{competitionId}/applications")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = InterviewApplicationsController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = InterviewAssignmentApplicationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class InterviewApplicationsController extends CompetitionManagementCookieController<InterviewSelectionForm> {
+public class InterviewAssignmentApplicationsController extends CompetitionManagementCookieController<InterviewAssignmentSelectionForm> {
 
-    private static final String SELECTION_FORM = "interviewPanelApplicationSelectionForm";
+    private static final String SELECTION_FORM = "interviewAssignmentApplicationSelectionForm";
 
     @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
@@ -59,13 +59,13 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
     }
 
     @Override
-    protected Class<InterviewSelectionForm> getFormType() {
-        return InterviewSelectionForm.class;
+    protected Class<InterviewAssignmentSelectionForm> getFormType() {
+        return InterviewAssignmentSelectionForm.class;
     }
 
     @GetMapping("/find")
     public String find(Model model,
-                       @ModelAttribute(name = SELECTION_FORM, binding = false) InterviewSelectionForm selectionForm,
+                       @ModelAttribute(name = SELECTION_FORM, binding = false) InterviewAssignmentSelectionForm selectionForm,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
@@ -88,25 +88,25 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
     private void updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long competitionId,
-                                     InterviewSelectionForm selectionForm) {
-        InterviewSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewSelectionForm());
+                                     InterviewAssignmentSelectionForm selectionForm) {
+        InterviewAssignmentSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewAssignmentSelectionForm());
 
-        InterviewSelectionForm trimmedApplicationsForm = trimSelectionByFilteredResult(storedSelectionForm, competitionId);
-        selectionForm.setSelectedAssessorIds(trimmedApplicationsForm.getSelectedAssessorIds());
+        InterviewAssignmentSelectionForm trimmedApplicationsForm = trimSelectionByFilteredResult(storedSelectionForm, competitionId);
+        selectionForm.setSelectedIds(trimmedApplicationsForm.getSelectedIds());
         selectionForm.setAllSelected(trimmedApplicationsForm.getAllSelected());
 
         saveFormToCookie(response, competitionId, selectionForm);
     }
 
-    private InterviewSelectionForm trimSelectionByFilteredResult(InterviewSelectionForm selectionForm,
+    private InterviewAssignmentSelectionForm trimSelectionByFilteredResult(InterviewAssignmentSelectionForm selectionForm,
                                                              long competitionId) {
         List<Long> filteredResults = getAvailableApplicationIds(competitionId);
-        InterviewSelectionForm updatedSelectionForm = new InterviewSelectionForm();
+        InterviewAssignmentSelectionForm updatedSelectionForm = new InterviewAssignmentSelectionForm();
 
-        selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
-        updatedSelectionForm.setSelectedAssessorIds(selectionForm.getSelectedAssessorIds());
+        selectionForm.getSelectedIds().retainAll(filteredResults);
+        updatedSelectionForm.setSelectedIds(selectionForm.getSelectedIds());
 
-        if (updatedSelectionForm.getSelectedAssessorIds().equals(filteredResults)  && !updatedSelectionForm.getSelectedAssessorIds().isEmpty()) {
+        if (updatedSelectionForm.getSelectedIds().equals(filteredResults)  && !updatedSelectionForm.getSelectedIds().isEmpty()) {
             updatedSelectionForm.setAllSelected(true);
         } else {
             updatedSelectionForm.setAllSelected(false);
@@ -126,23 +126,23 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
         boolean limitExceeded = false;
         try {
             List<Long> applicationIds = getAvailableApplicationIds(competitionId);
-            InterviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewSelectionForm());
+            InterviewAssignmentSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewAssignmentSelectionForm());
             if (isSelected) {
-                int predictedSize = selectionForm.getSelectedAssessorIds().size() + 1;
+                int predictedSize = selectionForm.getSelectedIds().size() + 1;
                 if(limitIsExceeded(predictedSize)){
                     limitExceeded = true;
                 } else {
-                    selectionForm.getSelectedAssessorIds().add(applicationId);
-                    if (selectionForm.getSelectedAssessorIds().containsAll(applicationIds)) {
+                    selectionForm.getSelectedIds().add(applicationId);
+                    if (selectionForm.getSelectedIds().containsAll(applicationIds)) {
                         selectionForm.setAllSelected(true);
                     }
                 }
             } else {
-                selectionForm.getSelectedAssessorIds().remove(applicationId);
+                selectionForm.getSelectedIds().remove(applicationId);
                 selectionForm.setAllSelected(false);
             }
             saveFormToCookie(response, competitionId, selectionForm);
-            return createJsonObjectNode(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), limitExceeded);
+            return createJsonObjectNode(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), limitExceeded);
         } catch (Exception e) {
             return createFailureResponse();
         }
@@ -155,23 +155,24 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
                                                                  HttpServletRequest request,
                                                                  HttpServletResponse response) {
         try {
-    InterviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewSelectionForm());
+            InterviewAssignmentSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId)
+                    .orElse(new InterviewAssignmentSelectionForm());
 
             if (addAll) {
-        selectionForm.setSelectedAssessorIds(getAvailableApplicationIds(competitionId));
-        selectionForm.setAllSelected(true);
-    } else {
-        selectionForm.getSelectedAssessorIds().clear();
-        selectionForm.setAllSelected(false);
+                selectionForm.setSelectedIds(getAvailableApplicationIds(competitionId));
+                selectionForm.setAllSelected(true);
+            } else {
+                selectionForm.getSelectedIds().clear();
+                selectionForm.setAllSelected(false);
+            }
+
+            saveFormToCookie(response, competitionId, selectionForm);
+
+            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedIds().size(), selectionForm.getAllSelected(), false);
+        } catch (Exception e) {
+            return createFailureResponse();
+        }
     }
-
-    saveFormToCookie(response, competitionId, selectionForm);
-
-            return createSuccessfulResponseWithSelectionStatus(selectionForm.getSelectedAssessorIds().size(), selectionForm.getAllSelected(), false);
-} catch (Exception e) {
-        return createFailureResponse();
-        }
-        }
 
     private List<Long> getAvailableApplicationIds(long competitionId) {
         return interviewAssignmentRestService.getAvailableApplicationIds(competitionId).getSuccess();
@@ -182,13 +183,13 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
                                                       @PathVariable("competitionId") long competitionId,
                                                       @RequestParam(defaultValue = "0") int page,
                                                       @RequestParam Optional<Long> innovationArea,
-                                                      @ModelAttribute(SELECTION_FORM) InterviewSelectionForm selectionForm,
+                                                      @ModelAttribute(SELECTION_FORM) InterviewAssignmentSelectionForm selectionForm,
                                                       ValidationHandler validationHandler,
                                                       HttpServletRequest request,
                                                       HttpServletResponse response) {
 
-        InterviewSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
-                .filter(form -> !form.getSelectedAssessorIds().isEmpty())
+        InterviewAssignmentSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
+                .filter(form -> !form.getSelectedIds().isEmpty())
                 .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
 
@@ -236,8 +237,8 @@ public class InterviewApplicationsController extends CompetitionManagementCookie
                 .toUriString();
     }
 
-    private StagedApplicationListResource newSelectionFormToResource(InterviewSelectionForm form, long competitionId) {
+    private StagedApplicationListResource newSelectionFormToResource(InterviewAssignmentSelectionForm form, long competitionId) {
         return new StagedApplicationListResource(simpleMap(
-                form.getSelectedAssessorIds(), applicationId -> new StagedApplicationResource(applicationId, competitionId)));
+                form.getSelectedIds(), applicationId -> new StagedApplicationResource(applicationId, competitionId)));
     }
 }

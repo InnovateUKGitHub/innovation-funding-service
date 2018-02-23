@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
- * This controller will handle all Competition Management requests related to inviting assessors to an Interview Interview.
+ * This controller will handle all Competition Management requests related to inviting assessors to an Interview Panel.
  */
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
@@ -44,7 +44,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class InterviewInviteAssessorsController extends CompetitionManagementCookieController<InterviewSelectionForm> {
 
-    private static final String SELECTION_FORM = "assessorInterviewPanelSelectionForm";
+    private static final String SELECTION_FORM = "interviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired

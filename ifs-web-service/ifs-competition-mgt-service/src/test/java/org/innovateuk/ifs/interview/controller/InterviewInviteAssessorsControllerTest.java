@@ -136,7 +136,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("assessors/interview-find"))
                 .andReturn();
 
-        InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("assessorInterviewPanelSelectionForm");
+        InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("interviewSelectionForm");
         assertTrue(selectionForm.getSelectedAssessorIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
@@ -166,7 +166,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("assessors/interview-find"))
                 .andReturn();
 
-        InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("assessorInterviewPanelSelectionForm");
+        InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("interviewSelectionForm");
         assertTrue(selectionForm.getSelectedAssessorIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
@@ -203,10 +203,10 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("assessors/interview-find"))
                 .andReturn();
 
-        InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("assessorInterviewPanelSelectionForm");
+        InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("interviewSelectionForm");
         assertEquals(expectedSelectionForm, selectionForm);
 
-        Optional<InterviewSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorInterviewPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewSelectionForm> resultForm = getInterviewSelectionFormFromCookie(result.getResponse(), format("interviewSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(expectedAssessorId));
 
         assertCompetitionDetails(competition, result);
@@ -237,7 +237,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<InterviewSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorInterviewPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewSelectionForm> resultForm = getInterviewSelectionFormFromCookie(result.getResponse(), format("interviewSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -258,7 +258,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<InterviewSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorInterviewPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewSelectionForm> resultForm = getInterviewSelectionFormFromCookie(result.getResponse(), format("interviewSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -277,7 +277,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<InterviewSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorInterviewPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewSelectionForm> resultForm = getInterviewSelectionFormFromCookie(result.getResponse(), format("interviewSelectionForm_comp_%s", competition.getId()));
         assertEquals(2, resultForm.get().getSelectedAssessorIds().size());
     }
 
@@ -301,7 +301,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<InterviewSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorInterviewPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewSelectionForm> resultForm = getInterviewSelectionFormFromCookie(result.getResponse(), format("interviewSelectionForm_comp_%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -325,7 +325,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<InterviewSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorInterviewPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewSelectionForm> resultForm = getInterviewSelectionFormFromCookie(result.getResponse(), format("interviewSelectionForm_comp_%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -514,10 +514,10 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
 
     private Cookie createFormCookie(InterviewSelectionForm form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
-        return new Cookie(format("assessorInterviewPanelSelectionForm_comp_%s", competition.getId()), getCompressedString(cookieContent));
+        return new Cookie(format("interviewSelectionForm_comp_%s", competition.getId()), getCompressedString(cookieContent));
     }
 
-    private Optional<InterviewSelectionForm> getAssessorPanelSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
+    private Optional<InterviewSelectionForm> getInterviewSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
         String value = getDecompressedString(response.getCookie(cookieName).getValue());
         String decodedFormJson  = URLDecoder.decode(value, CharEncoding.UTF_8);
 
