@@ -27,8 +27,7 @@ public class LabourCost extends AbstractFinanceRowItem {
     private String role;
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
-    @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, groups = Default.class, message = NO_DECIMAL_VALUES)
     private BigDecimal grossEmployeeCost;
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
