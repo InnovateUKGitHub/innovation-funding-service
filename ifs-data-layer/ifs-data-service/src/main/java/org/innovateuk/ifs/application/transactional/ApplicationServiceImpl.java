@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
@@ -72,6 +74,9 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+
+    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
+
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
@@ -162,16 +167,22 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
 
         return getOpenApplication(applicationId).andOnSuccess(application -> {
+
+            LOG.info("[FileLogging] Creating a new file for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId);
+
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
             // Removing and replacing if file already exists here
             if (existingResponse != null && existingResponse.getFileEntry() != null) {
+                LOG.info("[FileLogging] FormInputResponse for file already exists for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId + " , so deleting before creating...");
                 FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
                 final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);
 
                 if (deleteResult.isFailure()) {
                     return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
                 }
+
+                LOG.info("[FileLogging] Already existing FormInputResponse for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId + " deleted successfully");
             }
 
             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile ->
@@ -230,6 +241,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return find(formInputRepository.findOne(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).andOnSuccess(
                 formInput -> getFormInputResponseFileEntryResource(fileEntry, formInput).
                         andOnSuccess(formInputResponseFileEntryResource -> {
+
+                            LOG.info("[FileLogging] Deleting already existing FileEntryResource with id " + formInputResponseFileEntryResource.getFileEntryResource().getId() + " for application id " + formInputResponseFileEntryResource.getCompoundId().getApplicationId() + " processRoleId " + formInputResponseFileEntryResource.getCompoundId().getProcessRoleId() + " formInputId " + formInputResponseFileEntryResource.getCompoundId().getFormInputId() + " deleted successfully");
+
                             boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
                             return fileService.deleteFileIgnoreNotFound(formInputResponseFileEntryResource.getFileEntryResource().getId()).
                                     andOnSuccess(deletedFile -> {
@@ -278,7 +292,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
         formInputResponse.setFileEntry(null);
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
+        LOG.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() + " and application " + formInputResponse.getApplication());
         formInputResponseRepository.delete(formInputResponse);
+        LOG.info("[FileLogging] FormInputResponse with id " + unlinkedResponse.getId() + " deleted");
         return serviceSuccess(unlinkedResponse);
     }
 
