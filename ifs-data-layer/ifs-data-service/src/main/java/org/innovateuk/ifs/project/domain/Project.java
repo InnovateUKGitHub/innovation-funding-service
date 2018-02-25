@@ -52,6 +52,8 @@ public class Project implements ProcessActivity {
 
     private ZonedDateTime offerSubmittedDate;
 
+    private String grantOfferLetterRejectionReason;
+
     private ZonedDateTime spendProfileSubmittedDate;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -222,6 +224,14 @@ public class Project implements ProcessActivity {
 
     public void setOfferSubmittedDate(ZonedDateTime offerSubmittedDate) {
         this.offerSubmittedDate = offerSubmittedDate;
+    }
+
+    public String getGrantOfferLetterRejectionReason() {
+        return grantOfferLetterRejectionReason;
+    }
+
+    public void setGrantOfferLetterRejectionReason(String grantOfferLetterRejectionReason) {
+        this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
     }
 
     public FileEntry getCollaborationAgreement() {
