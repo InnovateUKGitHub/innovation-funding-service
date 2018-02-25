@@ -39,8 +39,8 @@ public class InterviewPanelApplicationsInviteModelPopulator {
         return new InterviewPanelApplicationsInviteViewModel(
                 competitionId,
                 competition.getName(),
-                competition.getInnovationSectorName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
+                competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
                 0,
                 0,
