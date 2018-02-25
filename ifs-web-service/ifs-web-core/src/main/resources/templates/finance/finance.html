@@ -400,6 +400,7 @@
                            required="required"
                            min="1"
                            max="9999999999999999999"
+                           step="1"
                            th:attr="data-field-errormessage=#{validation.field.non.decimal.format}"
                     />
                 </td>
@@ -810,8 +811,8 @@
                            min="1"
                            max="999999999"
                            required="required"
-                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
-                    />
+                           step="1"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}" />
                 </td>
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'form-group-error'">
                     <label th:for="|formInput[cost-${costIdentifier}-cost]|">
@@ -828,6 +829,7 @@
                            min="1"
                            max="9999999999999999999"
                            required="required"
+                           step="1"
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
                 </td>
                 <td>
@@ -983,6 +985,7 @@
                             min="1"
                             max="999999999"
                             required="required"
+                            step="1"
                             th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
                             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'form-control-error'"
                              />
@@ -1002,6 +1005,7 @@
                         min="1"
                         max="9999999999999999999"
                         required="required"
+
                         th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'form-control-error'" />
 
@@ -1021,6 +1025,7 @@
                         min="0"
                         max="9999999999999999999"
                         required="required"
+                        step="1"
                         th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
                         th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'form-control-error'"/>
                 </div>
@@ -1057,7 +1062,7 @@
                            readonly="readonly"
                            th:id="${'cost-capital_usage-'+costIdentifier+'-netCost'}"
                            th:name="${'capital_usage-netCost-' + question.id + '-' + costIdentifier}"
-                           th:value="'£' + ${cost.total &lt; 0 ? 0 : cost.total}"
+                           th:value="'£' + ${cost.total &lt; 0 ? 0 : #numbers.formatInteger(cost.total, 0, 'DEFAULT')}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'form-control-error'"
                            />
                 </div>
