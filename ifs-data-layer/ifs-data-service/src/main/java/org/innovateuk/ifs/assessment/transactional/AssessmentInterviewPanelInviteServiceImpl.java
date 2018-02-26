@@ -5,10 +5,9 @@ import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterview;
 import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState;
+import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
-import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -18,7 +17,6 @@ import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvi
 import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.mapper.AssessmentInterviewPanelParticipantMapper;
-import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -31,8 +29,6 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +38,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -87,16 +81,10 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private InnovationAreaMapper innovationAreaMapper;
-
-    @Autowired
     private AssessmentInterviewPanelInviteMapper assessmentInterviewPanelInviteMapper;
 
     @Autowired
     private AssessmentInterviewPanelParticipantMapper assessmentInterviewPanelParticipantMapper;
-
-    @Autowired
-    private ProfileRepository profileRepository;
 
     @Autowired
     private NotificationSender notificationSender;
@@ -118,6 +106,9 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
     @Autowired
     private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
+
+    @Autowired
+    private AssessorCreatedInviteMapper assessorCreatedInviteMapper;
 
     enum Notifications {
         INVITE_ASSESSOR_GROUP_TO_INTERVIEW
@@ -239,20 +230,7 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),
-                competitionInvite -> {
-                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
-                    assessorCreatedInvite.setName(competitionInvite.getName());
-                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
-                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
-                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
-                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
-
-                    if (competitionInvite.getUser() != null) {
-                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
-                    }
-
-                    return assessorCreatedInvite;
-                }
+                assessorCreatedInviteMapper::mapToResource
         );
 
         return serviceSuccess(new AssessorCreatedInvitePageResource(
@@ -370,20 +348,6 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
     private ServiceResult<AssessmentInterviewPanelInvite> getByEmailAndCompetition(String email, long competitionId) {
         return find(assessmentInterviewPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInterviewPanelInvite.class, email, competitionId));
-    }
-
-    private boolean isUserCompliant(AssessmentInterviewPanelInvite competitionInvite) {
-        if (competitionInvite == null || competitionInvite.getUser() == null) {
-            return false;
-        }
-        Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
-        return profile.isCompliant(competitionInvite.getUser());
-    }
-
-    private List<InnovationAreaResource> getInnovationAreasForInvite(AssessmentInterviewPanelInvite competitionInvite) {
-        return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
-                .map(innovationAreaMapper::mapToResource)
-                .collect(toList());
     }
 
     @Override

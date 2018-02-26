@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
@@ -17,7 +18,6 @@ import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
-import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
@@ -45,7 +45,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +56,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
@@ -113,9 +111,6 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
-    private ParticipantStatusMapper participantStatusMapper;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -138,6 +133,9 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
 
     @Autowired
     private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
+
+    @Autowired
+    private AssessorCreatedInviteMapper assessorCreatedInviteMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -469,10 +467,6 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
     }
 
-    private ServiceResult<User> getUserByEmail(String email) {
-        return find(userRepository.findByEmail(email), notFoundError(User.class, email));
-    }
-
     @Override
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
@@ -723,43 +717,12 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
         return participant.getInvite().getTarget().getName();
     }
 
-    private boolean isUserCompliant(CompetitionAssessmentInvite competitionAssessmentInvite) {
-        if (competitionAssessmentInvite == null || competitionAssessmentInvite.getUser() == null) {
-            return false;
-        }
-        Profile profile = profileRepository.findOne(competitionAssessmentInvite.getUser().getProfileId());
-        return profile.isCompliant(competitionAssessmentInvite.getUser());
-    }
-
-    private List<InnovationAreaResource> getInnovationAreasForInvite(CompetitionAssessmentInvite competitionAssessmentInvite) {
-        if (competitionAssessmentInvite.isNewAssessorInvite()) {
-            return singletonList(innovationAreaMapper.mapToResource(competitionAssessmentInvite.getInnovationArea()));
-        } else {
-            return profileRepository.findOne(competitionAssessmentInvite.getUser().getProfileId()).getInnovationAreas().stream()
-                    .map(innovationAreaMapper::mapToResource)
-                    .collect(toList());
-        }
-    }
-
     private ServiceResult<AssessorCreatedInvitePageResource> getInvitePageResource(long competitionId, Pageable pageable) {
         Page<CompetitionAssessmentInvite> pagedResult = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),
-                competitionInvite -> {
-                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
-                    assessorCreatedInvite.setName(competitionInvite.getName());
-                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
-                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
-                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
-                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
-
-                    if (competitionInvite.getUser() != null) {
-                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
-                    }
-
-                    return assessorCreatedInvite;
-                }
+                assessorCreatedInviteMapper::mapToResource
         );
 
         return serviceSuccess(new AssessorCreatedInvitePageResource(
