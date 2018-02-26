@@ -2,8 +2,8 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.interview.controller.InterviewPanelController;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +17,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceDocs.availableApplicationPageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceDocs.availableApplicationPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableApplicationResourceDocs.availableApplicationResourceFields;
-import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUserStagedInviteListResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUserStagedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationListResourceBuilder;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewPanelCreatedInvitePageResourceDocs.interviewPanelCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewPanelCreatedInvitePageResourceDocs.interviewPanelCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewPanelCreatedInviteResourceDocs.interviewPanelCreatedInviteResourceFields;
@@ -36,8 +36,8 @@ public class AssessmentInterviewPanelControllerDocumentation extends BaseControl
 
     private static final long competitionId = 1L;
 
-    ExistingUserStagedInviteListResource existingUserStagedInviteListResource = existingUserStagedInviteListResourceBuilder.build();
-    List<ExistingUserStagedInviteResource> existingUserStagedInviteResources = existingUserStagedInviteListResource.getInvites();
+    StagedApplicationListResource stagedApplicationInviteListResource = stagedApplicationListResourceBuilder.build();
+    List<StagedApplicationResource> stagedInviteResources = stagedApplicationInviteListResource.getInvites();
 
     @Override
     public InterviewPanelController supplyControllerUnderTest() {
@@ -46,19 +46,19 @@ public class AssessmentInterviewPanelControllerDocumentation extends BaseControl
 
     @Test
     public void assignApplication() throws Exception {
-        when(interviewPanelInviteServiceMock.assignApplications(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
+        when(interviewPanelInviteServiceMock.assignApplications(stagedInviteResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/assign-applications")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(existingUserStagedInviteListResource)))
+                .content(toJson(stagedApplicationInviteListResource)))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         requestFields(
-                                fieldWithPath("invites[]").description("List of existing users to be invited to the interview panel")
-                        ).andWithPrefix("invites[].", existingUserStagedInviteResourceFields)
+                                fieldWithPath("invites[]").description("List of applications to be invited to the interview panel")
+                        ).andWithPrefix("invites[].", stagedApplicationResourceFields)
                 ));
 
-        verify(interviewPanelInviteServiceMock, only()).assignApplications(existingUserStagedInviteResources);
+        verify(interviewPanelInviteServiceMock, only()).assignApplications(stagedInviteResources);
     }
 
     @Test
