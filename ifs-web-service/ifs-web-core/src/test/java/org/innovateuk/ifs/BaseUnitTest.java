@@ -249,6 +249,8 @@ public class BaseUnitTest {
     @Mock
     protected InterviewInviteRestService interviewInviteRestService;
     @Mock
+    protected InterviewPanelRestService interviewPanelRestService;
+    @Mock
     protected AssessorRestService assessorRestService;
     @Mock
     protected ApplicationSummaryRestService applicationSummaryRestService;

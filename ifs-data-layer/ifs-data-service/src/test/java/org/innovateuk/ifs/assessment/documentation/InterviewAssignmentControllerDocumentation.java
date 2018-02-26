@@ -4,6 +4,11 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.assessment.interview.controller.InterviewPanelController;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +27,8 @@ import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUse
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationListResourceBuilder;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -36,8 +43,8 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     private static final long competitionId = 1L;
 
-    ExistingUserStagedInviteListResource existingUserStagedInviteListResource = existingUserStagedInviteListResourceBuilder.build();
-    List<ExistingUserStagedInviteResource> existingUserStagedInviteResources = existingUserStagedInviteListResource.getInvites();
+    StagedApplicationListResource stagedApplicationInviteListResource = stagedApplicationListResourceBuilder.build();
+    List<StagedApplicationResource> stagedInviteResources = stagedApplicationInviteListResource.getInvites();
 
     @Override
     public InterviewAssignmentController supplyControllerUnderTest() {
@@ -46,19 +53,19 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void assignApplication() throws Exception {
-        when(interviewAssignmentInviteServiceMock.assignApplications(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
+        when(interviewAssignmentInviteServiceMock.assignApplications(stagedInviteResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/assign-applications")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(existingUserStagedInviteListResource)))
+                .content(toJson(stagedApplicationInviteListResource)))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         requestFields(
-                                fieldWithPath("invites[]").description("List of existing users to be invited to the interview panel")
-                        ).andWithPrefix("invites[].", existingUserStagedInviteResourceFields)
+                                fieldWithPath("invites[]").description("List of applications to be invited to the interview panel")
+                        ).andWithPrefix("invites[].", stagedApplicationResourceFields)
                 ));
 
-        verify(interviewAssignmentInviteServiceMock, only()).assignApplications(existingUserStagedInviteResources);
+        verify(interviewAssignmentInviteServiceMock, only()).assignApplications(stagedInviteResources);
     }
 
     @Test

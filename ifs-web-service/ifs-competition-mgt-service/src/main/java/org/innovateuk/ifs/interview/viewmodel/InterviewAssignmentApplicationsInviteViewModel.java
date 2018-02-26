@@ -12,14 +12,14 @@ public class InterviewAssignmentApplicationsInviteViewModel extends InterviewAss
     public InterviewAssignmentApplicationsInviteViewModel(
             long competitionId,
             String competitionName,
-            String innovationSector,
             String innovationArea,
+            String innovationSector,
             List<InterviewAssignmentApplicationInviteRowViewModel> applications,
             int applicationsInCompetition,
             int applicationsInPanel,
             PaginationViewModel pagination,
             String originQuery) {
-        super(competitionId, competitionName, innovationSector, innovationArea, applications, applicationsInCompetition,
+        super(competitionId, competitionName, innovationArea, innovationSector, applications, applicationsInCompetition,
                 applicationsInPanel, pagination, originQuery);
     }
 }

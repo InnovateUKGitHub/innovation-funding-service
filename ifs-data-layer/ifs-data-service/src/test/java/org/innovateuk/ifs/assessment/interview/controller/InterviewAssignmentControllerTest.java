@@ -14,9 +14,8 @@ import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
-import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -113,7 +112,9 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void assignApplications() throws Exception {
-        ExistingUserStagedInviteListResource applications = newExistingUserStagedInviteListResource().build();
+        StagedApplicationListResource applications = newStagedApplicationListResource()
+                .withInvites(newStagedApplicationResource().build(2))
+                .build();
 
         when(interviewAssignmentInviteServiceMock.assignApplications(applications.getInvites())).thenReturn(serviceSuccess());
 
