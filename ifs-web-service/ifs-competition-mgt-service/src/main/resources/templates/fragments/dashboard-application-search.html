@@ -11,9 +11,8 @@
             <tr>
                 <th scope="col">Application number</th>
                 <th scope="col">Project title</th>
-                <th scope="col">Application Status</th>
                 <th scope="col">Competition</th>
-                <th scope="col">Competition Status</th>
+                <th scope="col">Status</th>
 
             </tr>
             </thead>
@@ -21,7 +20,6 @@
             <tr th:each="app : ${applications}">
                 <td><a th:href="${'/management/competition/' + app.competition + '/application/' + app.id}" th:text="${app.id}"></a></td>
                 <td th:text="${app.name}"></td>
-                <td th:text="${app.getApplicationState().getDisplayName()}"></td>
                 <td><a th:href="${'/management/competition/' + app.competition + '/applications/all'}" th:text="${app.competitionName}"></a></td>
                 <td th:text="${app.getCompetitionStatus().getDisplayName()}"></td>
             </tr>
