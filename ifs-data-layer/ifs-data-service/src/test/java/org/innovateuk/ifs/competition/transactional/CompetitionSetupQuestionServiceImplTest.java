@@ -363,7 +363,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
-        resource.setAllowedFileTypesEnum(asSet(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF));
+        resource.setAllowedFileTypesEnum(asSet(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();

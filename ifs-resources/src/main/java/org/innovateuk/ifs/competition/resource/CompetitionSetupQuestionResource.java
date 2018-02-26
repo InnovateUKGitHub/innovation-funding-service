@@ -10,13 +10,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
@@ -47,7 +49,7 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private List<String> allowedFileTypes;
+    private Set<String> allowedFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
 
     private String assessmentGuidanceTitle;
@@ -225,11 +227,11 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public List<String> getAllowedFileTypes() {
+    public Set<String> getAllowedFileTypes() {
         return allowedFileTypes;
     }
 
-    public void setAllowedFileTypes(List<String> allowedFileTypes) {
+    public void setAllowedFileTypes(Set<String> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 
@@ -238,7 +240,7 @@ public class CompetitionSetupQuestionResource {
     }
 
     public void setAllowedFileTypesEnum(Set<FileTypeCategory> allowedFileTypes) {
-        this.allowedFileTypes = simpleMap(FileTypeCategory.values(), fileType -> fileType.getDisplayName());
+        this.allowedFileTypes = simpleMapSet(allowedFileTypes, FileTypeCategory::getDisplayName);
     }
 
     public String getAppendixGuidance() {
