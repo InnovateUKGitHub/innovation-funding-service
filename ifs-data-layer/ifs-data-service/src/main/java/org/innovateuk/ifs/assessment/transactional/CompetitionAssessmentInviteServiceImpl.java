@@ -460,7 +460,7 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
 
     @Override
     public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource stagedInvite) {
-        return getUserById(stagedInvite.getUserId())
+        return getUser(stagedInvite.getUserId())
                 .andOnSuccess(user -> inviteUserToCompetition(user, stagedInvite.getCompetitionId()))
                 .andOnSuccessReturn(competitionInviteMapper::mapToResource);
     }
@@ -468,7 +468,7 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
     @Override
     public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> stagedInvites) {
         return serviceSuccess(mapWithIndex(stagedInvites, (i, invite) ->
-                getUserById(invite.getUserId()).andOnSuccess(user ->
+                getUser(invite.getUserId()).andOnSuccess(user ->
                         getByEmailAndCompetition(user.getEmail(), invite.getCompetitionId()).andOnFailure(() ->
                                 inviteUserToCompetition(user, invite.getCompetitionId())
                         )))).andOnSuccessReturnVoid();
@@ -487,10 +487,6 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
 
     private ServiceResult<User> getUserByEmail(String email) {
         return find(userRepository.findByEmail(email), notFoundError(User.class, email));
-    }
-
-    private ServiceResult<User> getUserById(long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
     }
 
     @Override
@@ -610,10 +606,6 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturnVoid(competition ->
                         competitionAssessmentInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
-    }
-
-    private ServiceResult<CompetitionAssessmentInvite> getById(long id) {
-        return find(competitionAssessmentInviteRepository.findOne(id), notFoundError(CompetitionAssessmentInvite.class, id));
     }
 
     private ServiceResult<CompetitionAssessmentParticipant> getParticipantByInviteId(long inviteId) {

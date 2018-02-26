@@ -279,7 +279,7 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
     @Override
     public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> stagedInvites) {
         return serviceSuccess(mapWithIndex(stagedInvites, (i, invite) ->
-                getUserById(invite.getUserId()).andOnSuccess(user ->
+                getUser(invite.getUserId()).andOnSuccess(user ->
                         getByEmailAndCompetition(user.getEmail(), invite.getCompetitionId()).andOnFailure(() ->
                                 inviteUserToCompetition(user, invite.getCompetitionId())
                         )))).andOnSuccessReturnVoid();
@@ -408,10 +408,6 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
                 ));
 
         return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
-    }
-
-    private ServiceResult<User> getUserById(long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
     }
 
     private ServiceResult<AssessmentInterviewPanelInvite> getByEmailAndCompetition(String email, long competitionId) {

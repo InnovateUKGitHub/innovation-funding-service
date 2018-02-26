@@ -17,8 +17,8 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.mapper.AssessmentReviewPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
@@ -34,8 +34,6 @@ import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -45,7 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +50,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -297,7 +293,7 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
     @Override
     public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> stagedInvites) {
         return serviceSuccess(mapWithIndex(stagedInvites, (i, invite) ->
-                getUserById(invite.getUserId()).andOnSuccess(user ->
+                getUser(invite.getUserId()).andOnSuccess(user ->
                         getByEmailAndCompetition(user.getEmail(), invite.getCompetitionId()).andOnFailure(() ->
                                 inviteUserToCompetition(user, invite.getCompetitionId())
                         )))).andOnSuccessReturnVoid();
@@ -426,10 +422,6 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
                 ));
 
         return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
-    }
-
-    private ServiceResult<User> getUserById(long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
     }
 
     private ServiceResult<AssessmentReviewPanelInvite> getByEmailAndCompetition(String email, long competitionId) {
