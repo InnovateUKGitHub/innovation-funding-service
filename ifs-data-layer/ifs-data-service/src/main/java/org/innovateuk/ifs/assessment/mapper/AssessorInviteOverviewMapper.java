@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -95,7 +96,7 @@ public class AssessorInviteOverviewMapper {
         String details = null;
 
         if (participant.getStatus() == REJECTED) {
-            details = "Invite declined";
+            details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
         } else if (participant.getStatus() == PENDING) {
             if (participant.getInvite().getSentOn() != null) {
                 details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));

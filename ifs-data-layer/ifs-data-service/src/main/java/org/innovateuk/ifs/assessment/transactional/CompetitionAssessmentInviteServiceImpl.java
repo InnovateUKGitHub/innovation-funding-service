@@ -7,7 +7,6 @@ import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -59,8 +58,6 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -68,7 +65,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -414,20 +412,6 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
                 ))
                 .andOnSuccess(list -> aggregate(list))
                 .andOnSuccessReturnVoid();
-    }
-
-    private String getDetails(CompetitionParticipant participant) {
-        String details = null;
-
-        if (participant.getStatus() == REJECTED) {
-            details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
-        } else if (participant.getStatus() == PENDING) {
-            if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
-            }
-        }
-
-        return details;
     }
 
     private ServiceResult<InnovationArea> getInnovationArea(long innovationCategoryId) {
