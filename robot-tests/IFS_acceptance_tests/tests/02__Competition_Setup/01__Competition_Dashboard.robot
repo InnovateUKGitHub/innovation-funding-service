@@ -12,7 +12,7 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
-Suite Setup       the user logs-in in new browser  &{Comp_admin1_credentials}
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -129,6 +129,11 @@ Non IFS competitions do not appear in search results
     Then the result should be correct          0 competitions with the term ${NON_IFS_COMPETITION_NAME}
 
 *** Keywords ***
+Custom suite setup
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2019-02-24 00:00:00' WHERE type='OPEN_DATE' AND competition_id='${READY_TO_OPEN_COMPETITION}';
+    The user logs-in in new browser  &{Comp_admin1_credentials}
+
 the total calculation should be correct
     [Documentation]    This keyword is for the total of the search results with or without second page
     ${pagination}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    name=page
