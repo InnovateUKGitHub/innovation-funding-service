@@ -92,7 +92,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setAllowedFileTypesEnum(
                         simpleMap(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes()),
                                 FileTypeCategory::fromDisplayName));
-                setupResource.setFileUploadGuidance(formInput.getGuidanceAnswer());
+                setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
@@ -194,9 +194,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 StringUtils.collectionToDelimitedString(
                         simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName),
                         ","));
-        if(competitionSetupQuestionResource.getFileUploadGuidance() != null) {
+        if(competitionSetupQuestionResource.getAppendixGuidance() != null) {
 
-            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getFileUploadGuidance());
+            appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
         }
     }
 

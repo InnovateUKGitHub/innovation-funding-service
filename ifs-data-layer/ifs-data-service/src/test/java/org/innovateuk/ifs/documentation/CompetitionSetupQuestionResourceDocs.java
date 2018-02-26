@@ -20,7 +20,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("appendix").description("Does the question include an appendix section"),
             fieldWithPath("allowedFileTypes").description("Specifies types of files that will be allowed to be uploaded for appendix"),
             fieldWithPath("allowedFileTypesEnum").description("Specifies types of files that will be allowed to be uploaded for appendix in enum type format"),
-            fieldWithPath("fileUploadGuidance").description("Guidance for the file upload field"),
+            fieldWithPath("appendixGuidance").description("Guidance for the file upload field"),
             fieldWithPath("assessmentGuidance").description("Guidance for the assessor"),
             fieldWithPath("assessmentGuidanceTitle").description("Guidance title for the assessor"),
             fieldWithPath("assessmentMaxWords").description("Maximum words for the assessors feedback"),

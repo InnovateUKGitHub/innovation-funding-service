@@ -63,7 +63,7 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
     }
 
     public CompetitionSetupQuestionResourceBuilder withFileUploadGuidance(String fileUploadGuidance) {
-        return with(competition -> competition.setFileUploadGuidance(fileUploadGuidance));
+        return with(competition -> competition.setAppendixGuidance(fileUploadGuidance));
     }
 
 

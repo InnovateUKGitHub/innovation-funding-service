@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "allowedFileTypesEnum", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
@@ -48,7 +48,7 @@ public class CompetitionSetupQuestionResource {
 
     private Boolean appendix;
     private List<String> allowedFileTypes;
-    private String fileUploadGuidance;
+    private String appendixGuidance;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -241,12 +241,12 @@ public class CompetitionSetupQuestionResource {
         this.allowedFileTypes = simpleMap(allowedFileTypes, FileTypeCategory::getDisplayName);
     }
 
-    public String getFileUploadGuidance() {
-        return fileUploadGuidance;
+    public String getAppendixGuidance() {
+        return appendixGuidance;
     }
 
-    public void setFileUploadGuidance(String fileUploadGuidance) {
-        this.fileUploadGuidance = fileUploadGuidance;
+    public void setAppendixGuidance(String appendixGuidance) {
+        this.appendixGuidance = appendixGuidance;
     }
 
     public static List<FileTypeCategory> getSupportedTypeCategories(){

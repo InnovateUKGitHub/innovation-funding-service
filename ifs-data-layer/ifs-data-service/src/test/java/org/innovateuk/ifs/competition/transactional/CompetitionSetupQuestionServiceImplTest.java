@@ -153,7 +153,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getGuidance(), guidance);
         assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
         assertEquals(resource.getShortTitleEditable(), false);
-        assertEquals(resource.getFileUploadGuidance(), fileUploadGuidance);
+        assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
 
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }
@@ -238,7 +238,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(false);
         resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
-        resource.setFileUploadGuidance(fileUploadGuidance);
+        resource.setAppendixGuidance(fileUploadGuidance);
 
 
         boolean appendixEnabled = true;
@@ -272,7 +272,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(false);
         resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
-        resource.setFileUploadGuidance(fileUploadGuidance);
+        resource.setAppendixGuidance(fileUploadGuidance);
 
 
         boolean appendixEnabled = true;
@@ -306,7 +306,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(false);
         resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
-        resource.setFileUploadGuidance(fileUploadGuidance);
+        resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
                 .withActive(true)
@@ -336,7 +336,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
-        resource.setFileUploadGuidance(fileUploadGuidance);
+        resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
         //Override repository response set in prerequisites test prep function
@@ -365,7 +365,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         resource.setAppendix(true);
         resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET));
-        resource.setFileUploadGuidance(fileUploadGuidance);
+        resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
         //Override repository response set in prerequisites test prep function

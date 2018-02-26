@@ -36,7 +36,7 @@
                             </ul>
                         </dd>
                         <dt class="column-third">Appendix guidance</dt>
-                        <dd class="column-two-thirds wysiwyg-styles" ifs:utext="${question.fileUploadGuidance}"></dd>
+                        <dd class="column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
                     </th:block>
                 </th:block>
             </dl>
@@ -241,21 +241,21 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('question.fileUploadGuidance')} ? 'form-group-error'">
-                    <label class="form-label" for="question.fileUploadGuidance">
+                <div class="form-group" th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-group-error'">
+                    <label class="form-label" for="question.appendixGuidance">
                         <span class="form-label-bold">Appendix guidance</span>
-                        <th:block th:if="${#fields.hasErrors('question.fileUploadGuidance')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('question.fileUploadGuidance')}" th:text="${err}" ></span>
+                        <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('question.appendixGuidance')}" th:text="${err}" ></span>
                         </th:block>
                     </label>
                     <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
-                                  id="question.fileUploadGuidance"
-                                  th:classappend="${#fields.hasErrors('question.fileUploadGuidance')} ? 'form-control-error'"
-                                  th:name="question.fileUploadGuidance"
+                                  id="question.appendixGuidance"
+                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-control-error'"
+                                  th:name="question.appendixGuidance"
                                   required="required"
-                                  ifs:utext="${question.fileUploadGuidance}">
+                                  ifs:utext="${question.appendixGuidance}">
                         </textarea>
                         <div class="textarea-footer">
                             <span class="autosave-info"></span>
