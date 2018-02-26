@@ -73,6 +73,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         Pair<List<String>, String> absoluteFilePathAndName = getAbsoluteFilePathAndName(fileEntry);
         List<String> pathElements = absoluteFilePathAndName.getLeft();
         String filename = absoluteFilePathAndName.getRight();
+        LOG.info("[FileLogging] Creating file with FileEntry ID " + fileEntry.getId() + " and size: " + fileEntry.getFilesizeBytes());
         return createFileForFileEntry(pathElements, filename, temporaryFile);
     }
 
@@ -99,9 +100,13 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         String filename = absoluteFilePathAndName.getRight();
         File filePath = pathElementsToFile(combineLists(pathElements, filename));
 
+        LOG.info("[FileLogging] Deleting file " + filePath.getAbsolutePath()  + " for fileEntry with id " + fileEntry.getId());
+
         if (filePath.delete()) {
+            LOG.info("[FileLogging] File " + filename + " for fileEntry with id " + fileEntry.getId() + " deleted successfully");
             return serviceSuccess();
         } else {
+            LOG.info("[FileLogging] Cannot delete file " + filePath.getAbsolutePath() + " for fileEntry with id " + fileEntry.getId());
             return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, FileEntry.class, fileEntry.getId()));
         }
     }
@@ -131,24 +136,27 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
         try {
             return serviceSuccess(Files.createDirectories(path));
         } catch (IOException e) {
-            LOG.error("Error creating folders " + path, e);
+            LOG.error(" [FileLogging] Error creating folders " + path, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FOLDERS));
         }
     }
 
     private ServiceResult<File> copyTempFileToTargetFile(Path targetFolder, String targetFilename, File tempFile) {
         try {
+            LOG.info("[FileLogging]  Copying temp file from " + tempFile.getAbsolutePath() + " to target directory " + targetFolder + " with targetFilename " + targetFilename);
+
             File fileToCreate = new File(targetFolder.toString(), targetFilename);
 
             if (fileToCreate.exists()) {
-                LOG.error("File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
+                LOG.error("[FileLogging]  File " + targetFilename + " already existed in target path " + targetFolder + ".  Cannot create a new one here.");
                 return serviceFailure(new Error(FILES_DUPLICATE_FILE_CREATED));
             }
 
             Path targetFile = Files.copy(tempFile.toPath(), Paths.get(targetFolder.toString(), targetFilename));
+            LOG.info("[FileLogging] Path of file created: " + targetFile.toAbsolutePath());
             return serviceSuccess(targetFile.toFile());
         } catch (IOException e) {
-            LOG.error("Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
+            LOG.error("[FileLogging] Unable to copy temporary file " + tempFile + " to target folder " + targetFolder + " and file " + targetFilename, e);
             return serviceFailure(new Error(FILES_UNABLE_TO_CREATE_FILE));
         }
     }

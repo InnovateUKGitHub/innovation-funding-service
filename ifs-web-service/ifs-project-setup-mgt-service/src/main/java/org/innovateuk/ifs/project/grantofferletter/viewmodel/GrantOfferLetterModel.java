@@ -21,13 +21,14 @@ public class GrantOfferLetterModel {
     private Boolean additionalContractFileContentAvailable;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private GrantOfferLetterStateResource grantOfferState;
+    private String grantOfferLetterRejectionReason;
 
     public GrantOfferLetterModel(CompetitionSummaryResource competitionSummary,
                                  FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel additionalContractFile,
                                  Long projectId, String projectName, Long applicationId, Boolean grantOfferLetterFileContentAvailable, Boolean additionalContractFileContentAvailable,
                                  FileDetailsViewModel signedGrantOfferLetterFile,
-                                 GrantOfferLetterStateResource grantOfferState) {
+                                 GrantOfferLetterStateResource grantOfferState, String grantOfferLetterRejectionReason) {
 
         this.competitionSummary = competitionSummary;
         this.grantOfferLetterFile = grantOfferLetterFile;
@@ -39,6 +40,7 @@ public class GrantOfferLetterModel {
         this.additionalContractFileContentAvailable = additionalContractFileContentAvailable;
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.grantOfferState = grantOfferState;
+        this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
     }
 
     public CompetitionSummaryResource getCompetitionSummary() {
@@ -82,6 +84,10 @@ public class GrantOfferLetterModel {
         return grantOfferState.isSignedGrantOfferLetterRejected();
     }
 
+    public String getGrantOfferLetterRejectionReason() {
+        return grantOfferLetterRejectionReason;
+    }
+
     public boolean getSignedGrantOfferLetterFileAvailable() { return grantOfferState.isSignedGrantOfferLetterReceivedByInternalTeam(); }
 
     public boolean isShowRemoveOfferLetterButton() {
@@ -107,6 +113,7 @@ public class GrantOfferLetterModel {
                 .append(additionalContractFileContentAvailable, that.additionalContractFileContentAvailable)
                 .append(signedGrantOfferLetterFile, that.signedGrantOfferLetterFile)
                 .append(grantOfferState, that.grantOfferState)
+                .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
                 .isEquals();
     }
 
@@ -123,6 +130,7 @@ public class GrantOfferLetterModel {
                 .append(additionalContractFileContentAvailable)
                 .append(signedGrantOfferLetterFile)
                 .append(grantOfferState)
+                .append(grantOfferLetterRejectionReason)
                 .toHashCode();
     }
 }

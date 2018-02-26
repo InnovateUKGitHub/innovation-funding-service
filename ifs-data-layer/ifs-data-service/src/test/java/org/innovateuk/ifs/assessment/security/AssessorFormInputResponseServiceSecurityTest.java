@@ -55,12 +55,12 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
     @Test
     public void getAllAssessorFormInputResponsesForPanel() {
-        Long assessmentId = 1L;
+        long applicationId = 2L;
 
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
-                () -> classUnderTest.getAllAssessorFormInputResponsesForPanel(assessmentId),
-                () -> verify(assessmentPermissionRules).userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
+                () -> classUnderTest.getAllAssessorFormInputResponsesForPanel(applicationId),
+                () -> verify(applicationPermissionRules).assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 
@@ -89,7 +89,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
     @Test
     public void getApplicationAggregateScores() {
-        long applicationId = 2;
+        long applicationId = 2L;
 
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
@@ -116,7 +116,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
-        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long assessmentId) {
+        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long applicationId) {
             return null;
         }
 
