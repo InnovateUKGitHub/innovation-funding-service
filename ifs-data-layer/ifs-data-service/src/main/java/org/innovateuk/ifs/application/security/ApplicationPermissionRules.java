@@ -100,11 +100,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return !isInnovationLead(user) && isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Support or IFS Admin can search applications from competition dashboard")
-    public boolean supportOrIFSAdminCanSearchApplications(final ApplicationPageResource applicationPageResource, final UserResource user) {
-        return isSupport(user) || isIFSAdmin(user);
-    }
-
     @PermissionRule(value = "READ", description = "Innovation leads can see application resources for competitions assigned to them.")
     public boolean innovationLeadAssginedToCompetitionCanViewApplications(final ApplicationResource application, final UserResource user) {
         return application != null && application.getCompetition() != null && userIsInnovationLeadOnCompetition(application.getCompetition(), user.getId());

@@ -1,5 +1,5 @@
 <th:block th:fragment="application-search(applications, count, pagination)" xmlns:th="http://www.w3.org/1999/html">
-    
+
     <th:block th:insert="fragments/dashboard-application-search :: search-result-table(applications=${applications})" />
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${pagination})" />
 </th:block>
