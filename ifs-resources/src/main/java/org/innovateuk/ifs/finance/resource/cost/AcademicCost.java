@@ -8,7 +8,6 @@ public class AcademicCost extends AbstractFinanceRowItem {
     private String name;
 
     @DecimalMin(value = "0", message = VALUE_MUST_BE_HIGHER_MESSAGE)
-
     private BigDecimal cost;
 
     private String item;
