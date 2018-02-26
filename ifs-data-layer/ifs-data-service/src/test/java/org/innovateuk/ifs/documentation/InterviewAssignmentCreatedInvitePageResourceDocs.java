@@ -4,13 +4,13 @@ import org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPag
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 
 public class InterviewAssignmentCreatedInvitePageResourceDocs extends PageResourceDocs {
         public static final FieldDescriptor[] interviewAssignmentCreatedInvitePageResourceFields = pageResourceFields;
 
         public static final InterviewAssignmentStagedApplicationPageResourceBuilder interviewAssignmentCreatedInvitePageResourceBuilder =
-                newInterviewPanelStagedApplicationPageResource()
+                newInterviewAssignmentStagedApplicationPageResource()
                         .withContent(newInterviewAssignmentStagedApplicationResource().build(2))
                         .withSize(20)
                         .withTotalPages(5)

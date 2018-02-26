@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.management.controller;
+package org.innovateuk.ifs.interview.controller;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -6,17 +6,17 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
+import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsFindModelPopulator;
+import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsInviteModelPopulator;
+import org.innovateuk.ifs.interview.viewmodel.*;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.form.PanelSelectionForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
-import org.innovateuk.ifs.management.model.InterviewPanelApplicationsFindModelPopulator;
-import org.innovateuk.ifs.management.model.InterviewPanelApplicationsInviteModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,8 +47,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelCreatedInviteResourceBuilder.newInterviewPanelStagedApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewPanelStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
@@ -63,11 +63,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class CompetitionManagementInterviewPanelApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementInterviewPanelApplicationsController> {
+public class InterviewAssignmentApplicationsControllerTest extends BaseControllerMockMVCTest<InterviewAssignmentApplicationsController> {
 
     @Spy
     @InjectMocks
-    private InterviewPanelApplicationsFindModelPopulator interviewPanelApplicationsFindModelPopulator;
+    private InterviewAssignmentApplicationsFindModelPopulator interviewAssignmentApplicationsFindModelPopulator;
 
     @Spy
     @InjectMocks
@@ -75,13 +75,13 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
 
     @Spy
     @InjectMocks
-    private InterviewPanelApplicationsInviteModelPopulator interviewPanelApplicationsInviteModelPopulator;
+    private InterviewAssignmentApplicationsInviteModelPopulator interviewAssignmentApplicationsInviteModelPopulator;
 
     private CompetitionResource competition;
 
     @Override
-    protected CompetitionManagementInterviewPanelApplicationsController supplyControllerUnderTest() {
-        return new CompetitionManagementInterviewPanelApplicationsController();
+    protected InterviewAssignmentApplicationsController supplyControllerUnderTest() {
+        return new InterviewAssignmentApplicationsController();
     }
 
     @Override
@@ -108,8 +108,8 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .withContent(newAvailableApplicationResource().build(2))
                 .build();
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(singletonList(1L)));
-        when(interviewPanelRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(singletonList(1L)));
+        when(interviewAssignmentRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(get("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
                 .param("page", "2"))
@@ -118,16 +118,16 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(view().name("assessors/interview-panel-find"))
                 .andReturn();
 
-        PanelSelectionForm selectionForm = (PanelSelectionForm) result.getModelAndView().getModel().get("interviewPanelApplicationSelectionForm");
+        InterviewAssignmentSelectionForm selectionForm = (InterviewAssignmentSelectionForm) result.getModelAndView().getModel().get("interviewAssignmentApplicationSelectionForm");
         assertTrue(selectionForm.getSelectedIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
         assertAvailableApplications(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewPanelRestService);
-        inOrder.verify(interviewPanelRestService).getAvailableApplicationIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
+        inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(interviewPanelRestService).getAvailableApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -139,8 +139,8 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .withContent(newAvailableApplicationResource().build(2))
                 .build();
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(singletonList(1L)));
-        when(interviewPanelRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(singletonList(1L)));
+        when(interviewAssignmentRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(get("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId()))
                 .andExpect(status().isOk())
@@ -148,16 +148,16 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(view().name("assessors/interview-panel-find"))
                 .andReturn();
 
-        PanelSelectionForm selectionForm = (PanelSelectionForm) result.getModelAndView().getModel().get("interviewPanelApplicationSelectionForm");
+        InterviewAssignmentSelectionForm selectionForm = (InterviewAssignmentSelectionForm) result.getModelAndView().getModel().get("interviewAssignmentApplicationSelectionForm");
         assertTrue(selectionForm.getSelectedIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
         assertAvailableApplications(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewPanelRestService);
-        inOrder.verify(interviewPanelRestService).getAvailableApplicationIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
+        inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(interviewPanelRestService).getAvailableApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -166,7 +166,7 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
         int page = 0;
         long expectedApplicationId = 1L;
 
-        PanelSelectionForm expectedSelectionForm = new PanelSelectionForm();
+        InterviewAssignmentSelectionForm expectedSelectionForm = new InterviewAssignmentSelectionForm();
         expectedSelectionForm.getSelectedIds().add(expectedApplicationId);
         Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
 
@@ -174,8 +174,8 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .withContent(newAvailableApplicationResource().build(2))
                 .build();
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
-        when(interviewPanelRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(interviewAssignmentRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(get("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
                 .cookie(selectionFormCookie))
@@ -184,28 +184,28 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(view().name("assessors/interview-panel-find"))
                 .andReturn();
 
-        PanelSelectionForm selectionForm = (PanelSelectionForm) result.getModelAndView().getModel().get("interviewPanelApplicationSelectionForm");
+        InterviewAssignmentSelectionForm selectionForm = (InterviewAssignmentSelectionForm) result.getModelAndView().getModel().get("interviewAssignmentApplicationSelectionForm");
         assertEquals(expectedSelectionForm, selectionForm);
 
-        Optional<PanelSelectionForm> resultForm = getPanelSelectionFormFromCookie(result.getResponse(), format("interviewPanelApplicationSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewAssignmentSelectionForm> resultForm = getInterviewAssignmentSelectionFormFromCookie(result.getResponse(), format("interviewAssignmentApplicationSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedIds().contains(expectedApplicationId));
 
         assertCompetitionDetails(competition, result);
         assertAvailableApplications(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewPanelRestService);
-        inOrder.verify(interviewPanelRestService).getAvailableApplicationIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
+        inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(interviewPanelRestService).getAvailableApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void addApplicationSelectionFromFindView() throws Exception {
         long applicationId = 1L;
-        Cookie formCookie = createFormCookie(new PanelSelectionForm());
+        Cookie formCookie = createFormCookie(new InterviewAssignmentSelectionForm());
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
@@ -218,16 +218,16 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<PanelSelectionForm> resultForm = getPanelSelectionFormFromCookie(result.getResponse(), format("interviewPanelApplicationSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewAssignmentSelectionForm> resultForm = getInterviewAssignmentSelectionFormFromCookie(result.getResponse(), format("interviewAssignmentApplicationSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedIds().contains(applicationId));
     }
 
     @Test
     public void addApplicationSelectionFromFindView_defaultParams() throws Exception {
         long applicationId = 1L;
-        Cookie formCookie = createFormCookie(new PanelSelectionForm());
+        Cookie formCookie = createFormCookie(new InterviewAssignmentSelectionForm());
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
@@ -239,15 +239,15 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<PanelSelectionForm> resultForm = getPanelSelectionFormFromCookie(result.getResponse(), format("interviewPanelApplicationSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewAssignmentSelectionForm> resultForm = getInterviewAssignmentSelectionFormFromCookie(result.getResponse(), format("interviewAssignmentApplicationSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedIds().contains(applicationId));
     }
 
     @Test
     public void addAllApplicationsFromFindView_defaultParams() throws Exception {
-        Cookie formCookie = createFormCookie(new PanelSelectionForm());
+        Cookie formCookie = createFormCookie(new InterviewAssignmentSelectionForm());
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
                 .param("addAll", "true")
@@ -258,18 +258,18 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<PanelSelectionForm> resultForm = getPanelSelectionFormFromCookie(result.getResponse(), format("interviewPanelApplicationSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewAssignmentSelectionForm> resultForm = getInterviewAssignmentSelectionFormFromCookie(result.getResponse(), format("interviewAssignmentApplicationSelectionForm_comp_%s", competition.getId()));
         assertEquals(2, resultForm.get().getSelectedIds().size());
     }
 
     @Test
     public void removeApplicationSelectionFromFindView() throws Exception {
         long applicationId = 1L;
-        PanelSelectionForm form = new PanelSelectionForm();
+        InterviewAssignmentSelectionForm form = new InterviewAssignmentSelectionForm();
         form.getSelectedIds().add(applicationId);
         Cookie formCookie = createFormCookie(form);
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
@@ -282,7 +282,7 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<PanelSelectionForm> resultForm = getPanelSelectionFormFromCookie(result.getResponse(), format("interviewPanelApplicationSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewAssignmentSelectionForm> resultForm = getInterviewAssignmentSelectionFormFromCookie(result.getResponse(), format("interviewAssignmentApplicationSelectionForm_comp_%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedIds().contains(applicationId));
     }
 
@@ -290,11 +290,11 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
     public void removeApplicationSelectionFromFindView_defaultParams() throws Exception {
         long applicationId = 1L;
         Cookie formCookie;
-        PanelSelectionForm form = new PanelSelectionForm();
+        InterviewAssignmentSelectionForm form = new InterviewAssignmentSelectionForm();
         form.getSelectedIds().add(applicationId);
         formCookie = createFormCookie(form);
 
-        when(interviewPanelRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
+        when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
         MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
@@ -306,7 +306,7 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<PanelSelectionForm> resultForm = getPanelSelectionFormFromCookie(result.getResponse(), format("interviewPanelApplicationSelectionForm_comp_%s", competition.getId()));
+        Optional<InterviewAssignmentSelectionForm> resultForm = getInterviewAssignmentSelectionFormFromCookie(result.getResponse(), format("interviewAssignmentApplicationSelectionForm_comp_%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedIds().contains(applicationId));
     }
 
@@ -314,12 +314,12 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
     public void invite() throws Exception {
         int page = 0;
 
-        List<InterviewPanelStagedApplicationResource> interviewPanelStagedApplicationResources = setUpApplicationCreatedInviteResources();
-        InterviewPanelStagedApplicationPageResource interviewPanelStagedApplicationPageResource = newInterviewPanelStagedApplicationPageResource()
-                .withContent(interviewPanelStagedApplicationResources)
+        List<InterviewAssignmentStagedApplicationResource> interviewAssignmentStagedApplicationResources = setUpApplicationCreatedInviteResources();
+        InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = newInterviewAssignmentStagedApplicationPageResource()
+                .withContent(interviewAssignmentStagedApplicationResources)
                 .build();
 
-        setupDefaultInviteViewExpectations(page, interviewPanelStagedApplicationPageResource);
+        setupDefaultInviteViewExpectations(page, interviewAssignmentStagedApplicationPageResource);
 
         InviteNewAssessorsForm expectedForm = new InviteNewAssessorsForm();
         expectedForm.setInvites(singletonList(new InviteNewAssessorsRowForm()));
@@ -331,16 +331,16 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .andReturn();
 
         assertCompetitionDetails(competition, result);
-        assertInvitedApplications(interviewPanelStagedApplicationResources, result);
+        assertInvitedApplications(interviewAssignmentStagedApplicationResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewPanelRestService);
+        InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(interviewPanelRestService).getStagedApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getStagedApplications(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
-    private List<InterviewPanelStagedApplicationResource> setUpApplicationCreatedInviteResources() {
-        return newInterviewPanelStagedApplicationResource()
+    private List<InterviewAssignmentStagedApplicationResource> setUpApplicationCreatedInviteResources() {
+        return newInterviewAssignmentStagedApplicationResource()
                 .withId(1L, 2L)
                 .withApplicationId(3L, 4L)
                 .withApplicationName("App 1", "App 2")
@@ -349,27 +349,27 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
     }
 
     private void assertCompetitionDetails(CompetitionResource expectedCompetition, MvcResult result) {
-        InterviewPanelApplicationsViewModel model = (InterviewPanelApplicationsViewModel) result.getModelAndView().getModel().get("model");
+        InterviewAssignmentApplicationsViewModel model = (InterviewAssignmentApplicationsViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedCompetition.getId(), (Long) model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
         assertInnovationSectorAndArea(expectedCompetition, model);
     }
 
-    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InterviewPanelApplicationsViewModel model) {
+    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InterviewAssignmentApplicationsViewModel model) {
         assertEquals(expectedCompetition.getInnovationSectorName(), model.getInnovationSector());
         assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
     private void assertAvailableApplications(List<AvailableApplicationResource> expectedAvailableApplications, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InterviewPanelApplicationsFindViewModel);
-        InterviewPanelApplicationsFindViewModel model = (InterviewPanelApplicationsFindViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof InterviewAssignmentApplicationsFindViewModel);
+        InterviewAssignmentApplicationsFindViewModel model = (InterviewAssignmentApplicationsFindViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedAvailableApplications.size(), model.getApplications().size());
 
         forEachWithIndex(expectedAvailableApplications, (i, availableApplicationResource) -> {
-            InterviewPanelApplicationRowViewModel availableAssessorRowViewModel = model.getApplications().get(i);
-            assertEquals(availableApplicationResource.getName(), availableAssessorRowViewModel.getName());
+            InterviewAssignmentApplicationRowViewModel availableAssignmentRowViewModel = model.getApplications().get(i);
+            assertEquals(availableApplicationResource.getName(), availableAssignmentRowViewModel.getName());
         });
     }
 
@@ -379,36 +379,36 @@ public class CompetitionManagementInterviewPanelApplicationsControllerTest exten
                 .collect(joining(", "));
     }
 
-    private void assertInvitedApplications(List<InterviewPanelStagedApplicationResource> expectedCreatedInvites, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InterviewPanelApplicationsInviteViewModel);
-        InterviewPanelApplicationsInviteViewModel model = (InterviewPanelApplicationsInviteViewModel) result.getModelAndView().getModel().get("model");
+    private void assertInvitedApplications(List<InterviewAssignmentStagedApplicationResource> expectedCreatedInvites, MvcResult result) {
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof InterviewAssignmentApplicationsInviteViewModel);
+        InterviewAssignmentApplicationsInviteViewModel model = (InterviewAssignmentApplicationsInviteViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedCreatedInvites.size(), model.getApplications().size());
 
         forEachWithIndex(expectedCreatedInvites, (i, createdInviteResource) -> {
-            InterviewPanelApplicationInviteRowViewModel invitedApplicationRowViewModel = model.getApplications().get(i);
+            InterviewAssignmentApplicationInviteRowViewModel invitedApplicationRowViewModel = model.getApplications().get(i);
             assertEquals(createdInviteResource.getApplicationName(), invitedApplicationRowViewModel.getApplicationName());
             assertEquals(createdInviteResource.getLeadOrganisationName(), invitedApplicationRowViewModel.getLeadOrganisation());
         });
     }
 
     private void setupDefaultInviteViewExpectations(int page,
-                                                    InterviewPanelStagedApplicationPageResource interviewPanelStagedApplicationPageResource) {
+                                                    InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationResource) {
 
-        when(interviewPanelRestService.getStagedApplications(competition.getId(), page)).thenReturn(restSuccess(interviewPanelStagedApplicationPageResource));
+        when(interviewAssignmentRestService.getStagedApplications(competition.getId(), page)).thenReturn(restSuccess(interviewAssignmentStagedApplicationResource));
     }
 
-    private Cookie createFormCookie(PanelSelectionForm form) throws Exception {
+    private Cookie createFormCookie(InterviewAssignmentSelectionForm form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
-        return new Cookie(format("interviewPanelApplicationSelectionForm_comp_%s", competition.getId()), getCompressedString(cookieContent));
+        return new Cookie(format("interviewAssignmentApplicationSelectionForm_comp_%s", competition.getId()), getCompressedString(cookieContent));
     }
 
-    private Optional<PanelSelectionForm> getPanelSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
+    private Optional<InterviewAssignmentSelectionForm> getInterviewAssignmentSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
         String value = getDecompressedString(response.getCookie(cookieName).getValue());
         String decodedFormJson  = URLDecoder.decode(value, CharEncoding.UTF_8);
 
         if (isNotBlank(decodedFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(decodedFormJson, PanelSelectionForm.class));
+            return Optional.ofNullable(getObjectFromJson(decodedFormJson, InterviewAssignmentSelectionForm.class));
         } else {
             return Optional.empty();
         }

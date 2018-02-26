@@ -40,6 +40,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -249,7 +250,7 @@ public class BaseUnitTest {
     @Mock
     protected InterviewInviteRestService interviewInviteRestService;
     @Mock
-    protected InterviewPanelRestService interviewPanelRestService;
+    protected InterviewAssignmentRestService interviewAssignmentRestService;
     @Mock
     protected AssessorRestService assessorRestService;
     @Mock

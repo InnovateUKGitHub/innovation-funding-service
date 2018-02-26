@@ -16,7 +16,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
-import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.junit.Assert.assertEquals;
@@ -91,7 +91,7 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
     public void getStagedApplications() {
         long competitionId = 1L;
         int page = 1;
-        InterviewAssignmentStagedApplicationPageResource expected = newInterviewPanelStagedApplicationPageResource()
+        InterviewAssignmentStagedApplicationPageResource expected = newInterviewAssignmentStagedApplicationPageResource()
                 .withContent(newInterviewAssignmentStagedApplicationResource().build(2))
                 .build();
 

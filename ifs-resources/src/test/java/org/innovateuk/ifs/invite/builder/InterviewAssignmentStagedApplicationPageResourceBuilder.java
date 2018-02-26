@@ -12,7 +12,7 @@ import static org.assertj.core.util.Lists.emptyList;
 public class InterviewAssignmentStagedApplicationPageResourceBuilder
         extends PageResourceBuilder<InterviewAssignmentStagedApplicationPageResource, InterviewAssignmentStagedApplicationPageResourceBuilder, InterviewAssignmentStagedApplicationResource> {
 
-    public static InterviewAssignmentStagedApplicationPageResourceBuilder newInterviewPanelStagedApplicationPageResource() {
+    public static InterviewAssignmentStagedApplicationPageResourceBuilder newInterviewAssignmentStagedApplicationPageResource() {
         return new InterviewAssignmentStagedApplicationPageResourceBuilder(emptyList());
     }
 

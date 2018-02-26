@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewPanelStagedApplicationPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.junit.Assert.assertEquals;
 
 public class InterviewAssignmentStagedApplicationPageResourceBuilderTest {
@@ -19,7 +19,7 @@ public class InterviewAssignmentStagedApplicationPageResourceBuilderTest {
 
     @Test
     public void buildOne() throws Exception {
-        InterviewAssignmentStagedApplicationPageResource resource = newInterviewPanelStagedApplicationPageResource()
+        InterviewAssignmentStagedApplicationPageResource resource = newInterviewAssignmentStagedApplicationPageResource()
                 .withContent(contents[0])
                 .withNumber(numbers[0])
                 .withSize(sizes[0])
@@ -36,7 +36,7 @@ public class InterviewAssignmentStagedApplicationPageResourceBuilderTest {
 
     @Test
     public void buildMany() throws Exception {
-        List<InterviewAssignmentStagedApplicationPageResource> resources = newInterviewPanelStagedApplicationPageResource()
+        List<InterviewAssignmentStagedApplicationPageResource> resources = newInterviewAssignmentStagedApplicationPageResource()
                 .withContent(contents[0], contents[1])
                 .withNumber(numbers[0], numbers[1])
                 .withSize(sizes[0], sizes[1])

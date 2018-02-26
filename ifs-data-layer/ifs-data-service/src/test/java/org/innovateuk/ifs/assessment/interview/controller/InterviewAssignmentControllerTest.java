@@ -14,6 +14,8 @@ import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -71,7 +73,7 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
         List<InterviewAssignmentStagedApplicationResource> expectedStagedApplicationResources = newInterviewAssignmentStagedApplicationResource().build(2);
 
-        InterviewAssignmentStagedApplicationPageResource expectedStagedApplications = newInterviewPanelStagedApplicationPageResource()
+        InterviewAssignmentStagedApplicationPageResource expectedStagedApplications = newInterviewAssignmentStagedApplicationPageResource()
                 .withContent(expectedStagedApplicationResources)
                 .withNumber(page)
                 .withTotalElements(300L)
