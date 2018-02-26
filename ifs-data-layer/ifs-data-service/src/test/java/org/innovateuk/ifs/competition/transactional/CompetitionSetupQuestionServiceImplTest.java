@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.application.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
@@ -237,7 +238,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setAllowedFileTypesEnum(asSet(FileTypeCategory.PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
 
@@ -271,7 +272,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setAllowedFileTypesEnum(asSet(FileTypeCategory.PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
 
@@ -305,7 +306,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(false);
-        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setAllowedFileTypesEnum(asSet(FileTypeCategory.PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput()
@@ -335,7 +336,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
-        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF));
+        resource.setAllowedFileTypesEnum(asSet(FileTypeCategory.PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();
@@ -347,8 +348,6 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         )).thenReturn(appendixFormInput);
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
-
-        String appendedFileTypes = FileTypeCategory.PDF.getDisplayName() + "," + FileTypeCategory.SPREADSHEET.getDisplayName();
 
         assertEquals(true, result.isSuccess());
         assertTrue(appendixFormInput.getActive());
@@ -364,7 +363,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         CompetitionSetupQuestionResource resource = createValidQuestionResourceWithoutAppendixOptions();
 
         resource.setAppendix(true);
-        resource.setAllowedFileTypesEnum(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET));
+        resource.setAllowedFileTypesEnum(asSet(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF));
         resource.setAppendixGuidance(fileUploadGuidance);
 
         FormInput appendixFormInput = newFormInput().build();

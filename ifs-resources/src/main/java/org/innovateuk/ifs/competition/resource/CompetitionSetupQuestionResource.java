@@ -11,12 +11,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
@@ -233,12 +233,12 @@ public class CompetitionSetupQuestionResource {
         this.allowedFileTypes = allowedFileTypes;
     }
 
-    public List<FileTypeCategory> getAllowedFileTypesEnum() {
-        return simpleMap(allowedFileTypes, this::fromNameOrDisplayName);
+    public Set<FileTypeCategory> getAllowedFileTypesEnum() {
+        return simpleMapSet(allowedFileTypes, this::fromNameOrDisplayName);
     }
 
-    public void setAllowedFileTypesEnum(List<FileTypeCategory> allowedFileTypes) {
-        this.allowedFileTypes = simpleMap(allowedFileTypes, FileTypeCategory::getDisplayName);
+    public void setAllowedFileTypesEnum(Set<FileTypeCategory> allowedFileTypes) {
+        this.allowedFileTypes = simpleMap(FileTypeCategory.values(), fileType -> fileType.getDisplayName());
     }
 
     public String getAppendixGuidance() {

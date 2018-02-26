@@ -17,15 +17,14 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,7 +65,7 @@ public class ApplicationQuestionSectionSaverTest {
     @Test
     public void test_doSaveSectionShouldTriggerIrregularSaveActionAndAppendFileTypes() {
         List<FileTypeCategory> fileTypeCategories = asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET);
-        List<String> fileTypeCategoriesStringList = simpleMap(fileTypeCategories, FileTypeCategory::name);
+        Set<String> fileTypeCategoriesStringList = simpleMapSet(fileTypeCategories, FileTypeCategory::name);
         String fileTypeCategoriesString = String.join(",", fileTypeCategoriesStringList);
 
         ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
@@ -84,8 +83,7 @@ public class ApplicationQuestionSectionSaverTest {
                 competitionSetupForm,
                 "allowedFileTypes",
                 fileTypeCategoriesString,
-                Optional.of(1L)
-                );
+                Optional.of(1L));
 
         ArgumentCaptor<CompetitionSetupQuestionResource> captor = ArgumentCaptor.forClass(CompetitionSetupQuestionResource.class);
         verify(competitionSetupQuestionService).updateQuestion(captor.capture());

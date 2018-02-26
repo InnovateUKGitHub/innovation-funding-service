@@ -16,11 +16,12 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 
 public abstract class AbstractApplicationSectionSaver extends AbstractSectionSaver {
@@ -63,7 +64,7 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
     private ServiceResult<Void> updateAllowedFileTypes(Optional<Long> questionId, String value) {
         return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
             List<String> strings = asList(StringUtils.commaDelimitedListToStringArray(value));
-            List<FileTypeCategory> fileTypeCategories = simpleMap(strings, FileTypeCategory::valueOf);
+            Set<FileTypeCategory> fileTypeCategories = simpleMapSet(strings, FileTypeCategory::valueOf);
 
             question.setAllowedFileTypesEnum(fileTypeCategories);
 
