@@ -10,17 +10,16 @@ import java.util.List;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public enum ApplicationState implements ProcessState {
-    CREATED(State.CREATED, "Created"), // initial state
-    SUBMITTED(State.SUBMITTED, "Submitted"),
-    INELIGIBLE(State.NOT_APPLICABLE, "Ineligible"),
-    INELIGIBLE_INFORMED(State.NOT_APPLICABLE_INFORMED, "Ineligible Informed"),
-    APPROVED(State.ACCEPTED, "Approved"),
-    REJECTED(State.REJECTED, "Rejected"),
-    OPEN(State.OPEN, "Open"),
-    IN_PANEL(State.IN_PANEL, "In Panel");
+    CREATED(State.CREATED), // initial state
+    SUBMITTED(State.SUBMITTED),
+    INELIGIBLE(State.NOT_APPLICABLE),
+    INELIGIBLE_INFORMED(State.NOT_APPLICABLE_INFORMED),
+    APPROVED(State.ACCEPTED),
+    REJECTED(State.REJECTED),
+    OPEN(State.OPEN),
+    IN_PANEL(State.IN_PANEL);
 
     final State backingState;
-    private String displayName;
 
     public static final ImmutableSet<ApplicationState> submittedStates = Sets.immutableEnumSet(ApplicationState.SUBMITTED,
             ApplicationState.INELIGIBLE,
@@ -28,16 +27,9 @@ public enum ApplicationState implements ProcessState {
             ApplicationState.REJECTED,
             ApplicationState.INELIGIBLE_INFORMED);
 
-    ApplicationState(State backingState, String displayName) {
-        this.backingState = backingState;
-        this.displayName = displayName;
-    }
-
-/*
     ApplicationState(State backingState) {
         this.backingState = backingState;
     }
-*/
 
     public String getStateName() {
         return backingState.name();
@@ -45,10 +37,6 @@ public enum ApplicationState implements ProcessState {
 
     public State getBackingState() {
         return backingState;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 
     public static List<State> getBackingStates() {
