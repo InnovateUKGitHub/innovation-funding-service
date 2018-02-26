@@ -65,7 +65,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                 .param("page", "0")
                 .param("sort", "firstName,asc"))
                 .andExpect(status().isOk())
-                .andDo(document("assessmentpanelinvite/{method-name}",
+                .andDo(document("assessment-panel-invite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
