@@ -149,6 +149,7 @@
                         </div>
                     </div>
                     <div th:unless="${!model.general.state.inAssessmentState}">
+                        <input type="hidden" th:field="${competitionSetupForm.assessorFinanceView}" value="${competitionSetupForm.assessorFinanceView}"/>
                         <span th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Asssessor Finance View</span>
                     </div>
             </div>
