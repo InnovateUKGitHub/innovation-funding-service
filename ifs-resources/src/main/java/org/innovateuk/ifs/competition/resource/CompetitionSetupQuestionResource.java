@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedFileTypesEnum", argument = "appendix", predicate = true, message = "{validation.field.must.not.be" + ".blank}")
+@FieldRequiredIf(required = "allowedFileTypesEnum", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "fileUploadGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
