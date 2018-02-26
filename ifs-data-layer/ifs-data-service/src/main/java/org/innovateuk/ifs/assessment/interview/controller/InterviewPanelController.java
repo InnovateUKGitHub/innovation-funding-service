@@ -2,7 +2,9 @@ package org.innovateuk.ifs.assessment.interview.controller;
 
 import org.innovateuk.ifs.assessment.interview.transactional.InterviewPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Controller for managing Invites to Assessment Panels.
+ * Controller for managing application Invites to Assessment Panels.
  */
 @RestController
 @RequestMapping("/interview-panel")
