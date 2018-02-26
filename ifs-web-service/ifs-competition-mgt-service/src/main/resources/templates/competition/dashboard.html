@@ -12,7 +12,7 @@
                 <label class="visuallyhidden" for="searchQuery">Search for:</label>
                 <input type="search"
                        th:value="${searchQuery}"
-                       name="searchQuery"
+                       th:name="${searchType == 'applications' ? 'searchString' : 'searchQuery'}"
                        id="searchQuery"
                        class="search-query"
                        th:placeholder="${searchType == 'applications' ? 'Search applications' : 'Search competitions'}"/>
