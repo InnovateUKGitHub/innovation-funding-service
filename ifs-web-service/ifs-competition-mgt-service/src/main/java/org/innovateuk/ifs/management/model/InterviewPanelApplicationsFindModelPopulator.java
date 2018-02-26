@@ -46,8 +46,8 @@ public class InterviewPanelApplicationsFindModelPopulator {
         return new InterviewPanelApplicationsFindViewModel(
                 competitionId,
                 competition.getName(),
-                competition.getInnovationSectorName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
+                competition.getInnovationSectorName(),
                 applications,
                 0,
                 0,

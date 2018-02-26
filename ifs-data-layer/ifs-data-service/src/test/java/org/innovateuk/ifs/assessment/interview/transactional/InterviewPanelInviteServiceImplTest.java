@@ -25,7 +25,7 @@ import java.util.List;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelBuilder.newAssessmentInterviewPanel;
-import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -134,8 +134,8 @@ public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<Int
 
     @Test
     public void assignApplications() {
-        List<ExistingUserStagedInviteResource> expectedStagedApplications = newExistingUserStagedInviteResource()
-                .withUserId(simpleMap(EXPECTED_AVAILABLE_APPLICATIONS, Application::getId).toArray(new Long[TOTAL_APPLICATIONS]))
+        List<StagedApplicationResource> stagedApplications = newStagedApplicationResource()
+                .withApplicationId(simpleMap(EXPECTED_AVAILABLE_APPLICATIONS, Application::getId).toArray(new Long[TOTAL_APPLICATIONS]))
                 .withCompetitionId(COMPETITION_ID)
                 .build(TOTAL_APPLICATIONS);
 
@@ -153,7 +153,7 @@ public class InterviewPanelInviteServiceImplTest extends BaseServiceUnitTest<Int
             );
         });
 
-        service.assignApplications(expectedStagedApplications).getSuccess();
+        service.assignApplications(stagedApplications).getSuccess();
 
         InOrder inOrder = inOrder(applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock,
                 assessmentInterviewPanelRepositoryMock);

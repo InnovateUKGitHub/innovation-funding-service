@@ -7,12 +7,24 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterviewPanel;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewPanelRepository;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.InterviewPanelStagedApplicationPageResource;
+import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -29,9 +41,16 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelBuilder.newAssessmentInterviewPanel;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
-import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
+import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.*;
 
 public class InterviewPanelControllerIntegrationTest  extends BaseControllerIntegrationTest<InterviewPanelController> {
@@ -55,6 +74,24 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
     private AssessmentInterviewPanelRepository assessmentInterviewPanelRepository;
 
     @Autowired
+    private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private InnovationAreaRepository innovationAreaRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
     @Override
     public void setControllerUnderTest(InterviewPanelController controller) {
         this.controller = controller;
@@ -63,6 +100,7 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
     @Before
     public void setUp() {
         loginCompAdmin();
+        Organisation leadOrganisation = newOrganisation().withName("lead org").build();
 
         pageable = new PageRequest(1, 20);
 
@@ -78,6 +116,55 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build(2);
         applicationRepository.save(applications);
+
+        User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
+
+        List<InnovationArea> innovationAreas = newInnovationArea()
+                .withId()
+                .withName("Metallurgy", "Alchemy", "Forgemastery")
+                .build(3);
+
+        innovationAreaRepository.save(innovationAreas);
+
+        Profile profile = newProfile()
+                .withId()
+                .withBusinessType(ACADEMIC)
+                .withInnovationAreas(innovationAreas)
+                .build();
+
+        profileRepository.save(profile);
+
+        felixWilson.setProfileId(profile.getId());
+
+        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
+
+        List<ProcessRole> processRoles = newProcessRole()
+                .withId()
+                .withRole(assessorRole)
+                .withApplication(applications.get(0), applications.get(1))
+                .withUser(felixWilson, felixWilson)
+                .build(2);
+
+        User steveSmith = userRepository.findByEmail("steve.smith@empire.com").orElse(null);
+        List<Organisation> organisations = newOrganisation()
+                .withId()
+                .withName("Test Org 1", "Test Org 2", "Test Org 3")
+                .build(3);
+
+        organisationRepository.save(organisations);
+
+        Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
+
+        processRoles.addAll(
+                newProcessRole()
+                        .withRole(leadApplicantRole)
+                        .withApplication(applications.get(0), applications.get(1))
+                        .withUser(steveSmith)
+                        .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId())
+                        .build(2)
+        );
+
+        processRoleRepository.save(processRoles);
     }
 
     @After
@@ -88,10 +175,10 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
     @Test
     public void assignApplication() throws Exception {
 
-        ExistingUserStagedInviteListResource existingUserStagedInviteListResource = newExistingUserStagedInviteListResource()
+        StagedApplicationListResource stagedApplicationListResource = newStagedApplicationListResource()
                 .withInvites(
-                        newExistingUserStagedInviteResource()
-                                .withUserId(getPaulPlum().getId())
+                        newStagedApplicationResource()
+                                .withApplicationId(applications.get(0).getId())
                                 .withCompetitionId(competition.getId())
                                 .build(1)
                 )
@@ -100,12 +187,12 @@ public class InterviewPanelControllerIntegrationTest  extends BaseControllerInte
         flushAndClearSession();
 
         assertTrue(Iterables.toList(assessmentInterviewPanelRepository.findAll()).isEmpty());
-        controller.assignApplications(existingUserStagedInviteListResource);
+        controller.assignApplications(stagedApplicationListResource);
         assertFalse(Iterables.toList(assessmentInterviewPanelRepository.findAll()).isEmpty());
 
         AssessmentInterviewPanel interviewPanel = Iterables.toList(assessmentInterviewPanelRepository.findAll()).get(0);
 
-        assertEquals(getPaulPlum().getId(), interviewPanel.getParticipant().getApplicationId());
+        assertEquals(applications.get(0).getId(), interviewPanel.getParticipant().getApplicationId());
     }
 
     @Test
