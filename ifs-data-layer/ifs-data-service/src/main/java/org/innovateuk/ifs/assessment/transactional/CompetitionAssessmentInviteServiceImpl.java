@@ -252,17 +252,6 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
-            if (invite.getUser() != null) {
-                return TRUE;
-            }
-
-            return userRepository.findByEmail(invite.getEmail()).isPresent();
-        });
-    }
-
-    @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
         final Page<User> pagedResult = innovationArea.map(i -> competitionAssessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(competitionId, i, pageable))
                 .orElse(competitionAssessmentInviteRepository.findAssessorsByCompetition(competitionId, pageable));

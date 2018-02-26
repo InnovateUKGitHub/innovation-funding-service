@@ -493,17 +493,6 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
                 .andOnSuccessReturnVoid();
     }
 
-    @Override
-    public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
-            if (invite.getUser() != null) {
-                return TRUE;
-            }
-
-            return userRepository.findByEmail(invite.getEmail()).isPresent();
-        });
-    }
-
     private static ServiceResult<AssessmentReviewPanelParticipant> accept(AssessmentReviewPanelParticipant participant) {
         User user = participant.getUser();
         if (participant.getInvite().getStatus() != OPENED) {

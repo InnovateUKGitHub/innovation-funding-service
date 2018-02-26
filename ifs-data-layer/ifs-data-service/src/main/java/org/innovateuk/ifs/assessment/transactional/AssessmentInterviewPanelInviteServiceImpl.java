@@ -450,17 +450,6 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
         return find(assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash), notFoundError(AssessmentInterviewPanelParticipant.class, inviteHash));
     }
 
-    @Override
-    public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
-            if (invite.getUser() != null) {
-                return TRUE;
-            }
-
-            return userRepository.findByEmail(invite.getEmail()).isPresent();
-        });
-    }
-
     private static ServiceResult<AssessmentInterviewPanelParticipant> accept(AssessmentInterviewPanelParticipant participant) {
         User user = participant.getUser();
         if (participant.getInvite().getStatus() != OPENED) {
