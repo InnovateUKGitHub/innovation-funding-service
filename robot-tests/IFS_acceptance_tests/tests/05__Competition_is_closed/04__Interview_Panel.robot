@@ -23,7 +23,8 @@ User navigates to the Manage interview panel
 
 CompAdmin can add assessors to inivte list
     [Documentation]  IFS-2778
-    Given the user clicks the button/link  link=Find
+    Given the user clicks the button/link   link=Invite assessors
+    When the user clicks the button/link    link=Find
     Then the competition admin invites assessors to the competition
 
 Cancel sending invite returns to the invite tab
@@ -51,9 +52,8 @@ Assessors receives the invite to interview panel
 CompAdmin can add the applications to invite list
 #to assign applications to interview panel
     [Documentation]  IFS-2727
-    Given the user clicks the button/link   link=Competition
-    And the user clicks the button/link     link=Manage interview panel
-    When the user clicks the button/link    link=Assign applications
+    Given the user clicks the button/link        link=Manage interview panel
+    When the user clicks the button/link       link=Assign applications
     Then the competition admin select the applications and add to invite list
 
 *** Keywords ***
@@ -74,5 +74,6 @@ the competition admin select the applications and add to invite list
     the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     the user clicks the button/link    jQuery=tr:contains("${computer_vision_application}") label
     the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
+    the user should see the element    link=Review and send invites
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
