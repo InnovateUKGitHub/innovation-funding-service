@@ -13,6 +13,8 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
 ...
 ...               INFUND-8355: Project finance team - overheads
+...
+...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -143,6 +145,7 @@ File upload mandatory for Academic partner to mark section as complete
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
+    and the element should be disabled       id=mark-all-as-complete
     and the user clicks the button/link       jQuery=button:contains("Remove")
     When the user selects the checkbox       termsAgreed
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
