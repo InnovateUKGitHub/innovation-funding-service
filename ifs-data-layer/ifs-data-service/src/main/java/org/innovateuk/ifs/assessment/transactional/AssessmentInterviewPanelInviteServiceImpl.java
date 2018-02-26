@@ -38,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +45,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
@@ -56,7 +54,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
@@ -444,27 +441,6 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
     private AssessmentInterviewPanelInvite openInvite(AssessmentInterviewPanelInvite invite) {
         return assessmentInterviewPanelInviteRepository.save(invite.open());
-    }
-
-    private ServiceResult<AssessmentInterviewPanelParticipant> getParticipantByInviteHash(String inviteHash) {
-        return find(assessmentInterviewPanelParticipantRepository.getByInviteHash(inviteHash), notFoundError(AssessmentInterviewPanelParticipant.class, inviteHash));
-    }
-
-    private static ServiceResult<AssessmentInterviewPanelParticipant> accept(AssessmentInterviewPanelParticipant participant) {
-        User user = participant.getUser();
-        if (participant.getInvite().getStatus() != OPENED) {
-            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
-        } else if (participant.getStatus() == ACCEPTED) {
-            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
-        } else if (participant.getStatus() == REJECTED) {
-            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
-        } else {
-            return serviceSuccess( participant.acceptAndAssignUser(user));
-        }
-    }
-
-    private static String getInviteCompetitionName(AssessmentInterviewPanelParticipant participant) {
-        return participant.getInvite().getTarget().getName();
     }
 
     private ServiceResult<AssessmentInterviewPanelInvite> getByHashIfOpen(String inviteHash) {
