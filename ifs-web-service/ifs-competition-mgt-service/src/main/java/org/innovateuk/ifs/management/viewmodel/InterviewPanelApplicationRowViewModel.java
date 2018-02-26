@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Holder of model attributes for the available assessors shown in the 'Find' tab of the Assessment Interview Panel Invite Assessors view.
+ * Holder of model attributes for the available applications shown in the 'Find' tab of the Assessment Interview Panel invite applications view.
  */
 public class InterviewPanelApplicationRowViewModel {
 

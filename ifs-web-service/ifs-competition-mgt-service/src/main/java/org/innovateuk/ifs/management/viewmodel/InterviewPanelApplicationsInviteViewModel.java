@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.viewmodel;
 import java.util.List;
 
 /**
- * Holder of model attributes for the Invite assessors for Assessment Interview Panel 'Invite' view.
+ * Holder of model attributes for the invite applications for Assessment Interview Panel 'Invite' applications view.
  */
 public class InterviewPanelApplicationsInviteViewModel extends InterviewPanelApplicationsViewModel<InterviewPanelApplicationInviteRowViewModel> {
 
