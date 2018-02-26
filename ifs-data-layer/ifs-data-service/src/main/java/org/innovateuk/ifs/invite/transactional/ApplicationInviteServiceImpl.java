@@ -209,7 +209,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
 
     @Override
     public ServiceResult<ApplicationInvite> findOneByHash(String hash) {
-        return find(applicationInviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
+        return getByHash(hash);
     }
 
     @Override

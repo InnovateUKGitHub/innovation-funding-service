@@ -40,6 +40,10 @@ public abstract class InviteService<T extends Invite> {
         return find(getRepository().getByHash(hash), notFoundError(getInviteClass(), hash));
     }
 
+    protected ServiceResult<T> getById(long id) {
+        return find(getRepository().findOne(id), notFoundError(getInviteClass(), id));
+    }
+
     public ServiceResult<Boolean> checkExistingUser(@P("hash") String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(invite -> userRepository.findByEmail(invite.getEmail()))
