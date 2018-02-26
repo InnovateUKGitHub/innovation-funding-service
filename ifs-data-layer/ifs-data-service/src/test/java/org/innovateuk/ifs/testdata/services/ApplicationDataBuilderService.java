@@ -19,6 +19,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +46,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  * TODO DW - document this class
  */
 @Component
+@Lazy
 public class ApplicationDataBuilderService extends BaseDataBuilderService {
 
     @Autowired

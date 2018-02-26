@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.testdata.builders;
+package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 

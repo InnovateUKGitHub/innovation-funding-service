@@ -4,7 +4,7 @@ import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +12,6 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
@@ -25,17 +23,15 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
  * TODO DW - document this class
  */
 @Component
+@Lazy
 public class CompetitionDataBuilderService extends BaseDataBuilderService {
-
-    @Autowired
-    @Qualifier("generateTestDataExecutor")
-    private Executor taskExecutor;
 
     @Autowired
     private TestService testService;
@@ -64,14 +60,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
         competitionLines = readCompetitions();
         competitionFunderLines = readCompetitionFunders();
-    }
-
-    public List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
-
-        return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() -> {
-            testService.doWithinTransaction(this::setDefaultCompAdmin);
-            return createCompetition(line);
-        }, taskExecutor));
     }
 
     public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -15,9 +13,14 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -36,8 +39,14 @@ import static org.springframework.http.HttpStatus.OK;
  * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
  * and convert them into {@link RestErrorResponse} objects.
  */
-public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseIntegrationTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("integration-test")
+public class RestResultHandlingHttpMessageConverterIntegrationTest {
 
+    @LocalServerPort
+    @SuppressWarnings("unused")
+    private int port;
 
     @Test
     public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {

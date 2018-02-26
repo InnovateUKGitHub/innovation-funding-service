@@ -5,8 +5,9 @@ import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -22,7 +23,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * TODO DW - document this class
  */
-@Service
+@Component
+@Lazy
 public class UserDataBuilderService extends BaseDataBuilderService {
 
     @Autowired

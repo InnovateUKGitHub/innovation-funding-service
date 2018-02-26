@@ -5,8 +5,9 @@ import org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
@@ -16,7 +17,8 @@ import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJEC
 /**
  * TODO DW - document this class
  */
-@Service
+@Component
+@Lazy
 public class OrganisationDataBuilderService {
 
     @Autowired

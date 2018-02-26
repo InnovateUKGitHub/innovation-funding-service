@@ -1,22 +1,27 @@
 package org.innovateuk.ifs.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.security.authentication.token.Authentication;
 import org.innovateuk.ifs.commons.service.HttpHeadersUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -25,8 +30,14 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * This test tests that the {RestErrorController} is able to take low-level errors produced by Spring MVC and Spring Security
  * prior to any Controller code actually being called, and convert them into RestErrorResponses.
  */
-public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends BaseIntegrationTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("integration-test")
+public class RestErrorControllerMvcExceptionHandlingIntegrationTest {
 
+    @LocalServerPort
+    @SuppressWarnings("unused")
+    private int port;
 
     @Test
     public void testIncorrectUrl() throws Exception {
