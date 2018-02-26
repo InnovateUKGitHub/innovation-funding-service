@@ -137,14 +137,14 @@ Compadmin can open the jes-file in applications
     and the user navigates to the page  ${openCompetitionManagementRTO}
 
 File upload mandatory for Academic partner to mark section as complete
-    [Documentation]    INFUND-8469
+    [Documentation]    INFUND-8469  IFS-2879
     [Tags]    HappyPath
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
     and the user clicks the button/link       jQuery=button:contains("Remove")
-    When the user selects the checkbox      css=label[for="agree-terms-page"]
+    When the user selects the checkbox       termsAgreed
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     You must upload a Je-S file
 
