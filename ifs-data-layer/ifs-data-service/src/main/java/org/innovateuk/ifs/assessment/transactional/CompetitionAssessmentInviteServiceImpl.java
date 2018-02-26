@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -134,6 +135,9 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -331,28 +335,8 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
-                participant -> {
-                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
-                    assessorInviteOverview.setName(participant.getInvite().getName());
-                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
-                    assessorInviteOverview.setDetails(getDetails(participant));
-                    assessorInviteOverview.setInviteId(participant.getInvite().getId());
-
-                    if (participant.getUser() != null) {
-                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
-
-                        assessorInviteOverview.setId(participant.getUser().getId());
-                        assessorInviteOverview.setBusinessType(profile.getBusinessType());
-                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
-                        assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-                    } else {
-                        assessorInviteOverview.setInnovationAreas(singletonList(
-                                innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())
-                        ));
-                    }
-
-                    return assessorInviteOverview;
-                });
+                assessorInviteOverviewMapper::mapToResourceFromParticipant
+        );
 
         return serviceSuccess(new AssessorInviteOverviewPageResource(
                 pagedResult.getTotalElements(),

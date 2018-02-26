@@ -3,6 +3,9 @@ package org.innovateuk.ifs.assessment.review.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
+import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
@@ -79,7 +82,6 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 public class AssessmentReviewPanelInviteServiceImpl extends InviteService<AssessmentReviewPanelInvite> implements AssessmentReviewPanelInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
-    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
     private AssessmentReviewPanelInviteRepository assessmentReviewPanelInviteRepository;
@@ -98,9 +100,6 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
 
     @Autowired
     private AssessmentReviewPanelInviteMapper assessmentReviewPanelInviteMapper;
-
-    @Autowired
-    private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
     private AssessmentReviewPanelParticipantMapper assessmentReviewPanelParticipantMapper;
@@ -129,12 +128,18 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
+    @Autowired
+    private AvailableAssessorMapper availableAssessorMapper;
+
+    @Autowired
+    private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
     enum Notifications {
         INVITE_ASSESSOR_TO_PANEL,
-        INVITE_ASSESSOR_GROUP_TO_PANEL
+        INVITE_ASSESSOR_GROUP_TO_PANEL;
     }
 
     @Override
@@ -231,7 +236,7 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
                     pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
+                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResourceFromParticipant),
                     pagedResult.getNumber(),
                     pagedResult.getSize()
             ));
@@ -242,21 +247,6 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
         List<CompetitionAssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
-    }
-
-    private AvailableAssessorResource mapToAvailableAssessorResource(CompetitionParticipant participant) {
-        User assessor = participant.getUser();
-        Profile profile = profileRepository.findOne(assessor.getProfileId());
-
-        AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
-        availableAssessor.setId(assessor.getId());
-        availableAssessor.setEmail(assessor.getEmail());
-        availableAssessor.setName(assessor.getName());
-        availableAssessor.setBusinessType(profile.getBusinessType());
-        availableAssessor.setCompliant(profile.isCompliant(assessor));
-        availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-
-        return availableAssessor;
     }
 
     @Override
@@ -310,24 +300,8 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
-                participant -> {
-                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
-                    assessorInviteOverview.setName(participant.getInvite().getName());
-                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
-                    assessorInviteOverview.setDetails(getDetails(participant));
-                    assessorInviteOverview.setInviteId(participant.getInvite().getId());
-
-                    if (participant.getUser() != null) {
-                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
-
-                        assessorInviteOverview.setId(participant.getUser().getId());
-                        assessorInviteOverview.setBusinessType(profile.getBusinessType());
-                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
-                        assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-                    }
-
-                    return assessorInviteOverview;
-                });
+                assessorInviteOverviewMapper::mapToResourceFromParticipant
+        );
 
         return serviceSuccess(new AssessorInviteOverviewPageResource(
                 pagedResult.getTotalElements(),
@@ -337,21 +311,6 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
                 pagedResult.getSize()
         ));
     }
-
-    private String getDetails(AssessmentReviewPanelParticipant participant) {
-        String details = null;
-
-        if (participant.getStatus() == REJECTED) {
-            details = "Invite declined";
-        } else if (participant.getStatus() == PENDING) {
-            if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
-            }
-        }
-
-        return details;
-    }
-
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
         List<AssessmentReviewPanelParticipant> participants = assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(

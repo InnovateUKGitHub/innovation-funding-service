@@ -5,6 +5,8 @@ import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterview;
 import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -15,7 +17,6 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.mapper.AssessmentInterviewPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentInterviewPanelInviteRepository;
@@ -72,7 +73,6 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<AssessmentInterviewPanelInvite> implements AssessmentInterviewPanelInviteService {
 
     private static final String WEB_CONTEXT = "/interview";
-    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
     private AssessmentInterviewPanelInviteRepository assessmentInterviewPanelInviteRepository;
@@ -91,9 +91,6 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
     @Autowired
     private AssessmentInterviewPanelInviteMapper assessmentInterviewPanelInviteMapper;
-
-    @Autowired
-    private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
     private AssessmentInterviewPanelParticipantMapper assessmentInterviewPanelParticipantMapper;
@@ -115,6 +112,12 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
     @Autowired
     private AssessmentInterviewRepository assessmentInterviewRepository;
+
+    @Autowired
+    private AvailableAssessorMapper availableAssessorMapper;
+
+    @Autowired
+    private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
 
     enum Notifications {
         INVITE_ASSESSOR_GROUP_TO_INTERVIEW
@@ -217,7 +220,7 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
                     pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
+                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResourceFromParticipant),
                     pagedResult.getNumber(),
                     pagedResult.getSize()
             ));
@@ -228,21 +231,6 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
         List<CompetitionAssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
-    }
-
-    private AvailableAssessorResource mapToAvailableAssessorResource(CompetitionParticipant participant) {
-        User assessor = participant.getUser();
-        Profile profile = profileRepository.findOne(assessor.getProfileId());
-
-        AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
-        availableAssessor.setId(assessor.getId());
-        availableAssessor.setEmail(assessor.getEmail());
-        availableAssessor.setName(assessor.getName());
-        availableAssessor.setBusinessType(profile.getBusinessType());
-        availableAssessor.setCompliant(profile.isCompliant(assessor));
-        availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-
-        return availableAssessor;
     }
 
     @Override
@@ -296,24 +284,8 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
-                participant -> {
-                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
-                    assessorInviteOverview.setName(participant.getInvite().getName());
-                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
-                    assessorInviteOverview.setDetails(getDetails(participant));
-                    assessorInviteOverview.setInviteId(participant.getInvite().getId());
-
-                    if (participant.getUser() != null) {
-                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
-
-                        assessorInviteOverview.setId(participant.getUser().getId());
-                        assessorInviteOverview.setBusinessType(profile.getBusinessType());
-                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
-                        assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-                    }
-
-                    return assessorInviteOverview;
-                });
+                assessorInviteOverviewMapper::mapToResourceFromParticipant
+        );
 
         return serviceSuccess(new AssessorInviteOverviewPageResource(
                 pagedResult.getTotalElements(),
@@ -322,20 +294,6 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
                 pagedResult.getNumber(),
                 pagedResult.getSize()
         ));
-    }
-
-    private String getDetails(AssessmentInterviewPanelParticipant participant) {
-        String details = null;
-
-        if (participant.getStatus() == REJECTED) {
-            details = "Invite declined";
-        } else if (participant.getStatus() == PENDING) {
-            if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
-            }
-        }
-
-        return details;
     }
 
     @Override
