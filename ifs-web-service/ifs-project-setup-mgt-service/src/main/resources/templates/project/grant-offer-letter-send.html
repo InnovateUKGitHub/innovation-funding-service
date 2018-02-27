@@ -27,7 +27,10 @@
     </th:block>
 
     <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
-        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager. If you have not already done so, please contact the Project Manager to explain your decision.</p>
+        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+        <p>If you have not already done so, please contact the Project Manager to explain your decision.</p>
+        <p>Reason for rejection:</p>
+        <p th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
     </div>
 
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
@@ -119,24 +122,47 @@
                         Please confirm that these documents meet the requirements for the grant offer letter.
                     </legend>
                     <div class="multiple-choice">
-                        <input id="acceptGOL" value="APPROVED" type="radio" name="approvalType" required="required"
+                        <input id="acceptGOL"
+                               value="APPROVED"
+                               type="radio"
+                               name="approvalType"
+                               required="required"
                                data-switches-button-status="#submit-button"
                                data-switches-modal-target="#submit-button"
                                data-switches-modal-target-value="modal-accept-signed-gol"
-                               />
+                        />
                         <label for="acceptGOL">
                             Accept documents
                         </label>
                     </div>
-                    <div class="multiple-choice">
-                        <input id="rejectGOL" value="REJECTED" type="radio" name="approvalType" required="required"
-                               data-switches-button-status="#submit-button"
+                    <div class="multiple-choice" data-target="reject-gol">
+                        <input id="rejectGOL"
+                               value="REJECTED"
+                               type="radio"
+                               name="approvalType"
+                               required="required"
                                data-switches-modal-target="#submit-button"
                                data-switches-modal-target-value="modal-reject-signed-gol"
                         />
                         <label for="rejectGOL">
                             Reject documents
                         </label>
+                    </div>
+                    <div class="panel js-hidden" id="reject-gol">
+                        <div class="form-group">
+                            <label for="gol-reject-reason" class="form-label">
+                                Reason for rejection (this will not be seen by the project team)
+                            </label>
+                            <input type="text"
+                                   class="form-control width-full"
+                                   id="gol-reject-reason"
+                                   name="GOLRejectReason"
+                                   required="required"
+                                   maxlength="128"
+                                   data-switches-button-status="#submit-button"
+                                   th:attr="data-maxlength-errormessage=#{validation.rejection.gol.reason.has.too.many.characters}"
+                            />
+                        </div>
                     </div>
                 </fieldset>
             </div>

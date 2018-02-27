@@ -42,6 +42,7 @@ public class CompetitionResource {
     private ZonedDateTime assessorAcceptsDate;
     private ZonedDateTime assessorDeadlineDate;
     private ZonedDateTime releaseFeedbackDate;
+    private ZonedDateTime feedbackReleasedDate;
     private ZonedDateTime fundersPanelDate;
     private ZonedDateTime fundersPanelEndDate;
     private ZonedDateTime assessorFeedbackDate;
@@ -220,6 +221,12 @@ public class CompetitionResource {
 
     public void setReleaseFeedbackDate(ZonedDateTime releaseFeedbackDate) {
         this.releaseFeedbackDate = releaseFeedbackDate;
+    }
+
+    public ZonedDateTime getFeedbackReleasedDate() { return feedbackReleasedDate; }
+
+    public void setFeedbackReleasedDate(ZonedDateTime feedbackReleasedDate) {
+        this.feedbackReleasedDate = feedbackReleasedDate;
     }
 
     public ZonedDateTime getFundersPanelDate() {
@@ -611,6 +618,7 @@ public class CompetitionResource {
                 .append(assessorAcceptsDate, that.assessorAcceptsDate)
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
                 .append(releaseFeedbackDate, that.releaseFeedbackDate)
+                .append(feedbackReleasedDate, that.feedbackReleasedDate)
                 .append(fundersPanelDate, that.fundersPanelDate)
                 .append(fundersPanelEndDate, that.fundersPanelEndDate)
                 .append(assessorFeedbackDate, that.assessorFeedbackDate)
@@ -662,6 +670,7 @@ public class CompetitionResource {
                 .append(assessorAcceptsDate)
                 .append(assessorDeadlineDate)
                 .append(releaseFeedbackDate)
+                .append(feedbackReleasedDate)
                 .append(fundersPanelDate)
                 .append(fundersPanelEndDate)
                 .append(assessorFeedbackDate)
