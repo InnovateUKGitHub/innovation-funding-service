@@ -62,8 +62,8 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return withArray((fileType, competition) -> setField("allowedFileTypesEnum", fileType, competition), fileTypes);
     }
 
-    public CompetitionSetupQuestionResourceBuilder withFileUploadGuidance(String fileUploadGuidance) {
-        return with(competition -> competition.setAppendixGuidance(fileUploadGuidance));
+    public CompetitionSetupQuestionResourceBuilder withAppendixGuidance(String appendixGuidance) {
+        return with(competition -> competition.setAppendixGuidance(appendixGuidance));
     }
 
 

@@ -263,7 +263,6 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
     @Override
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
-                                                              CompetitionSetupForm competitionSetupForm,
                                                               String fieldName,
                                                               String value,
                                                               Optional<Long> questionId) {
@@ -288,7 +287,6 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
         return super.handleIrregularAutosaveCase(competitionResource,
-                competitionSetupForm,
                 fieldName,
                 value,
                 questionId);

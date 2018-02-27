@@ -95,7 +95,6 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
-                                                              CompetitionSetupForm form,
                                                               String fieldName,
                                                               String value,
                                                               Optional<Long> questionId) {

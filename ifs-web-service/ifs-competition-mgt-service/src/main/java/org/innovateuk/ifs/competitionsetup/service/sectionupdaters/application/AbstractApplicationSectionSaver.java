@@ -46,7 +46,6 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
 
     @Override
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
-                                                              CompetitionSetupForm competitionSetupForm,
                                                               String fieldName,
                                                               String value,
                                                               Optional<Long> questionId) {
@@ -57,7 +56,7 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
         } else if (fieldName.contains("allowedFileTypes")) {
             return updateAllowedFileTypes(questionId, value);
         } else {
-            return super.handleIrregularAutosaveCase(competitionResource, competitionSetupForm, fieldName, value, questionId);
+            return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
         }
     }
 

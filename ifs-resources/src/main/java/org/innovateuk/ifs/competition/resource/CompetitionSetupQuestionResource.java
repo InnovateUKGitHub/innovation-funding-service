@@ -50,7 +50,7 @@ public class CompetitionSetupQuestionResource {
     private Integer maxWords;
 
     private Boolean appendix;
-    private Set<String> allowedFileTypes = new LinkedHashSet<>();
+    private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
     private String appendixGuidance;
 
     private String assessmentGuidanceTitle;
@@ -229,21 +229,21 @@ public class CompetitionSetupQuestionResource {
     }
 
     public Set<String> getAllowedFileTypes() {
-        return allowedFileTypes;
+        return simpleMapSet(allowedFileTypes, type-> type.getDisplayName());
     }
 
     public void setAllowedFileTypes(Set<String> allowedFileTypes) {
-        this.allowedFileTypes = allowedFileTypes;
+        this.allowedFileTypes = simpleMapSet(allowedFileTypes, type -> fromNameOrDisplayName(type));
     }
 
     @JsonIgnore
     public Set<FileTypeCategory> getAllowedFileTypesEnum() {
-        return simpleMapSet(allowedFileTypes, this::fromNameOrDisplayName);
+        return allowedFileTypes;
     }
 
     @JsonIgnore
     public void setAllowedFileTypesEnum(Set<FileTypeCategory> allowedFileTypes) {
-        this.allowedFileTypes = simpleMapSet(allowedFileTypes, FileTypeCategory::getDisplayName);
+        this.allowedFileTypes = allowedFileTypes;
     }
 
     public String getAppendixGuidance() {
@@ -258,7 +258,7 @@ public class CompetitionSetupQuestionResource {
         return asList(PDF, SPREADSHEET);
     }
 
-    public FileTypeCategory fromNameOrDisplayName(String name) {
+    private FileTypeCategory fromNameOrDisplayName(String name) {
         return simpleFindFirst(FileTypeCategory.values(),
                 category -> category.getDisplayName().equals(name) ||
                         category.name().equals(name))
