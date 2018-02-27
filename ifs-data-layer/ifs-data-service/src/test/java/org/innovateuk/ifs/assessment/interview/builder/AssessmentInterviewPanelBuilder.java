@@ -50,4 +50,8 @@ public class AssessmentInterviewPanelBuilder extends BaseBuilder<AssessmentInter
     public AssessmentInterviewPanelBuilder withState(AssessmentInterviewPanelState... states) {
         return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_INTERVIEW_PANEL, state.getBackingState())), states);
     }
+
+    public AssessmentInterviewPanelBuilder withActivityState(ActivityState... states) {
+        return withArray((state, invite) -> invite.setActivityState(state), states);
+    }
 }

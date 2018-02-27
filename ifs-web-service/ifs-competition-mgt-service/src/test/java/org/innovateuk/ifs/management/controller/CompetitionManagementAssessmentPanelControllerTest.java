@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.AssessmentPanelModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
+import org.innovateuk.ifs.management.viewmodel.ReviewPanelDashboardViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -77,7 +77,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
                 .andExpect(view().name("competition/manage-assessment-panel"))
                 .andReturn();
 
-        AssessmentPanelViewModel model = (AssessmentPanelViewModel) result.getModelAndView().getModel().get("model");
+        ReviewPanelDashboardViewModel model = (ReviewPanelDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         verify(competitionService, only()).getById(competitionId);
 
