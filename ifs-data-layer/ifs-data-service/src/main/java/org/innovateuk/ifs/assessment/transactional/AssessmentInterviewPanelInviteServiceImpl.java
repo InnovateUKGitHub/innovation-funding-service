@@ -211,7 +211,7 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
                     pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResourceFromParticipant),
+                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResource),
                     pagedResult.getNumber(),
                     pagedResult.getSize()
             ));
@@ -262,7 +262,7 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
-                assessorInviteOverviewMapper::mapToResourceFromParticipant
+                assessorInviteOverviewMapper::mapToResource
         );
 
         return serviceSuccess(new AssessorInviteOverviewPageResource(

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.invite.domain.competition.CompetitionInvite;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,16 +37,19 @@ public class AssessorCreatedInviteMapper {
             assessorCreatedInvite.setInnovationAreas(
                     singletonList(innovationAreaMapper.mapToResource(competitionAssessmentInvite.getInnovationArea()))
             );
-        } else {
-            assessorCreatedInvite.setInnovationAreas(getUserInnovationAreas(competitionAssessmentInvite.getUser()));
+
+            return assessorCreatedInvite;
         }
 
-        return assessorCreatedInvite;
+        return mapUserProperties(competitionAssessmentInvite, assessorCreatedInvite);
     }
 
     public AssessorCreatedInviteResource mapToResource(CompetitionInvite<?> competitionInvite) {
         AssessorCreatedInviteResource assessorCreatedInvite = mapBaseProperties(competitionInvite);
-        assessorCreatedInvite.setInnovationAreas(getUserInnovationAreas(competitionInvite.getUser()));
+
+        if (competitionInvite.getUser() != null) {
+            return mapUserProperties(competitionInvite, assessorCreatedInvite);
+        }
 
         return assessorCreatedInvite;
     }
@@ -55,28 +57,30 @@ public class AssessorCreatedInviteMapper {
     private AssessorCreatedInviteResource mapBaseProperties(CompetitionInvite<?> competitionInvite) {
         AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
         assessorCreatedInvite.setName(competitionInvite.getName());
-        assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
         assessorCreatedInvite.setEmail(competitionInvite.getEmail());
         assessorCreatedInvite.setInviteId(competitionInvite.getId());
 
+        return assessorCreatedInvite;
+    }
+
+    private AssessorCreatedInviteResource mapUserProperties(
+            CompetitionInvite<?> competitionInvite,
+            AssessorCreatedInviteResource assessorCreatedInvite
+    ) {
         if (competitionInvite.getUser() != null) {
+            Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
+
             assessorCreatedInvite.setId(competitionInvite.getUser().getId());
+            assessorCreatedInvite.setInnovationAreas(mapInnovationAreas(profile));
+            assessorCreatedInvite.setCompliant(profile.isCompliant(competitionInvite.getUser()));
         }
 
         return assessorCreatedInvite;
     }
 
-    private List<InnovationAreaResource> getUserInnovationAreas(User user) {
-        return profileRepository.findOne(user.getProfileId()).getInnovationAreas().stream()
+    private List<InnovationAreaResource> mapInnovationAreas(Profile profile) {
+        return profile.getInnovationAreas().stream()
                 .map(innovationAreaMapper::mapToResource)
                 .collect(toList());
-    }
-
-    private boolean isUserCompliant(CompetitionInvite competitionInvite) {
-        if (competitionInvite == null || competitionInvite.getUser() == null) {
-            return false;
-        }
-        Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
-        return profile.isCompliant(competitionInvite.getUser());
     }
 }

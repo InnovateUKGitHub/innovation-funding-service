@@ -2167,7 +2167,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
                 .build(5);
 
-        when(assessorInviteOverviewMapperMock.mapToResourceFromParticipant(isA(CompetitionAssessmentParticipant.class)))
+        when(assessorInviteOverviewMapperMock.mapToResource(isA(CompetitionAssessmentParticipant.class)))
                 .thenReturn(
                         overviewResources.get(0),
                         overviewResources.get(1),
@@ -2191,7 +2191,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
                 compliant,
                 pageable
         );
-        verify(assessorInviteOverviewMapperMock, times(5)).mapToResourceFromParticipant(isA(CompetitionAssessmentParticipant.class));
+        verify(assessorInviteOverviewMapperMock, times(5)).mapToResource(isA(CompetitionAssessmentParticipant.class));
 
         assertTrue(result.isSuccess());
 
@@ -2238,7 +2238,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
                 .build(5);
 
-        when(assessorInviteOverviewMapperMock.mapToResourceFromParticipant(isA(CompetitionAssessmentParticipant.class)))
+        when(assessorInviteOverviewMapperMock.mapToResource(isA(CompetitionAssessmentParticipant.class)))
                 .thenReturn(
                         overviewResources.get(0),
                         overviewResources.get(1),
@@ -2251,7 +2251,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
         ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, empty(), singletonList(PENDING), empty());
 
         verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
-        verify(assessorInviteOverviewMapperMock, times(5)).mapToResourceFromParticipant(isA(CompetitionAssessmentParticipant.class));
+        verify(assessorInviteOverviewMapperMock, times(5)).mapToResource(isA(CompetitionAssessmentParticipant.class));
 
         assertTrue(result.isSuccess());
 

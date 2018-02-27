@@ -41,7 +41,7 @@ public class AssessorInviteOverviewMapper {
         this.innovationAreaMapper = innovationAreaMapper;
     }
 
-    public AssessorInviteOverviewResource mapToResourceFromParticipant(CompetitionParticipant<?> participant) {
+    public AssessorInviteOverviewResource mapToResource(CompetitionParticipant<?> participant) {
         AssessorInviteOverviewResource assessorInviteOverviewResource = mapParticipantToResource(participant);
 
         if (participant.getUser() != null) {
@@ -51,7 +51,7 @@ public class AssessorInviteOverviewMapper {
         return assessorInviteOverviewResource;
     }
 
-    public AssessorInviteOverviewResource mapToResourceFromParticipant(CompetitionAssessmentParticipant participant) {
+    public AssessorInviteOverviewResource mapToResource(CompetitionAssessmentParticipant participant) {
         AssessorInviteOverviewResource assessorInviteOverviewResource = mapParticipantToResource(participant);
 
         if (participant.getUser() != null) {

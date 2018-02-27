@@ -203,16 +203,16 @@ public class AssessmentInterviewPanelInviteServiceImplTest extends BaseServiceUn
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
-        when(availableAssessorMapper.mapToResourceFromParticipant(participants.get(0)))
+        when(availableAssessorMapper.mapToResource(participants.get(0)))
                 .thenReturn(assessorItems.get(0));
-        when(availableAssessorMapper.mapToResourceFromParticipant(participants.get(1)))
+        when(availableAssessorMapper.mapToResource(participants.get(1)))
                 .thenReturn(assessorItems.get(1));
 
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable).getSuccess();
 
         verify(competitionParticipantRepositoryMock).findParticipantsNotOnInterviewPanel(competitionId, pageable);
-        verify(availableAssessorMapper).mapToResourceFromParticipant(participants.get(0));
-        verify(availableAssessorMapper).mapToResourceFromParticipant(participants.get(1));
+        verify(availableAssessorMapper).mapToResource(participants.get(0));
+        verify(availableAssessorMapper).mapToResource(participants.get(1));
 
         assertEquals(expected.getNumber(), actual.getNumber());
         assertEquals(expected.getSize(), actual.getSize());
@@ -579,7 +579,7 @@ public class AssessmentInterviewPanelInviteServiceImplTest extends BaseServiceUn
                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
                 .build(5);
 
-        when(assessorInviteOverviewMapperMock.mapToResourceFromParticipant(isA(AssessmentInterviewPanelParticipant.class)))
+        when(assessorInviteOverviewMapperMock.mapToResource(isA(AssessmentInterviewPanelParticipant.class)))
                 .thenReturn(
                         overviewResources.get(0),
                         overviewResources.get(1),
@@ -594,7 +594,7 @@ public class AssessmentInterviewPanelInviteServiceImplTest extends BaseServiceUn
         verify(assessmentInterviewPanelParticipantRepositoryMock)
                 .getInterviewPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
         verify(assessorInviteOverviewMapperMock, times(5))
-                .mapToResourceFromParticipant(isA(AssessmentInterviewPanelParticipant.class));
+                .mapToResource(isA(AssessmentInterviewPanelParticipant.class));
 
         assertTrue(result.isSuccess());
 

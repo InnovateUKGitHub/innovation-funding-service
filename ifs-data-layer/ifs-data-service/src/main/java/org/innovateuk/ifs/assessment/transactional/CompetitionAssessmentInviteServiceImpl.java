@@ -331,7 +331,7 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
-                assessorInviteOverviewMapper::mapToResourceFromParticipant
+                assessorInviteOverviewMapper::mapToResource
         );
 
         return serviceSuccess(new AssessorInviteOverviewPageResource(

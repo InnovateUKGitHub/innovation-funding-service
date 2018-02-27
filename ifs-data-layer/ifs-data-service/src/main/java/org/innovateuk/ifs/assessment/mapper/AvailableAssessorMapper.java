@@ -26,7 +26,7 @@ public class AvailableAssessorMapper {
         this.innovationAreaMapper = innovationAreaMapper;
     }
 
-    public AvailableAssessorResource mapToResourceFromParticipant(CompetitionParticipant participant) {
+    public AvailableAssessorResource mapToResource(CompetitionParticipant<?> participant) {
         User assessor = participant.getUser();
         Profile profile = profileRepository.findOne(assessor.getProfileId());
 

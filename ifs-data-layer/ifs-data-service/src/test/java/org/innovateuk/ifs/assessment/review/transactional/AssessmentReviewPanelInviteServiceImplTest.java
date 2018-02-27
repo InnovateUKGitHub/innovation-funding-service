@@ -218,15 +218,15 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
-        when(availableAssessorMapperMock.mapToResourceFromParticipant(participants.get(0))).thenReturn(assessorItems.get(0));
-        when(availableAssessorMapperMock.mapToResourceFromParticipant(participants.get(1))).thenReturn(assessorItems.get(1));
+        when(availableAssessorMapperMock.mapToResource(participants.get(0))).thenReturn(assessorItems.get(0));
+        when(availableAssessorMapperMock.mapToResource(participants.get(1))).thenReturn(assessorItems.get(1));
 
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable)
                 .getSuccess();
 
         verify(competitionParticipantRepositoryMock).findParticipantsNotOnAssessmentPanel(competitionId, pageable);
-        verify(availableAssessorMapperMock).mapToResourceFromParticipant(participants.get(0));
-        verify(availableAssessorMapperMock).mapToResourceFromParticipant(participants.get(1));
+        verify(availableAssessorMapperMock).mapToResource(participants.get(0));
+        verify(availableAssessorMapperMock).mapToResource(participants.get(1));
 
         assertEquals(expected.getNumber(), actual.getNumber());
         assertEquals(expected.getSize(), actual.getSize());
@@ -722,7 +722,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
                 .build(5);
 
-        when(assessorInviteOverviewMapperMock.mapToResourceFromParticipant(isA(AssessmentReviewPanelParticipant.class)))
+        when(assessorInviteOverviewMapperMock.mapToResource(isA(AssessmentReviewPanelParticipant.class)))
                 .thenReturn(
                         overviewResources.get(0),
                         overviewResources.get(1),
@@ -737,7 +737,7 @@ public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitT
         verify(assessmentPanelParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
         verify(assessorInviteOverviewMapperMock, times(5))
-                .mapToResourceFromParticipant(isA(AssessmentReviewPanelParticipant.class));
+                .mapToResource(isA(AssessmentReviewPanelParticipant.class));
 
         assertTrue(result.isSuccess());
 
