@@ -40,13 +40,6 @@ import static org.mockito.Mockito.when;
 
 public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
 
-    @Mock
-    NotificationService notificationService;
-
-    @Mock
-    InviteOrganisationMapper inviteOrganisationMapper;
-
-
     @InjectMocks
     private ProjectInviteService projectInviteService = new ProjectInviteServiceImpl();
 
@@ -95,7 +88,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newProjectInvite().withEmail(user.getEmail()).withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(of(user));
-        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(projectInvite.getHash());
+        ServiceResult<Boolean> result = projectInviteService.checkExistingUser(projectInvite.getHash());
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccess());
     }
@@ -104,7 +97,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     public void testCheckUserExistingByInviteHashHashNotFound() throws Exception {
         String hash = "hash";
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
-        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(hash);
+        ServiceResult<Boolean> result = projectInviteService.checkExistingUser(hash);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(ProjectInvite.class, hash)));
     }
@@ -114,7 +107,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
-        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(projectInvite.getHash());
+        ServiceResult<Boolean> result = projectInviteService.checkExistingUser(projectInvite.getHash());
         assertTrue(result.isSuccess());
         assertFalse(result.getSuccess());
     }
