@@ -188,11 +188,11 @@ include::assessmentPanel.adoc[]
 
 [[assessment]]
 == Assessment Panel Invite
-include::assessmentReviewPanelInvite.adoc[]
+include::assessment-panel-invite.adoc[]
 
 [[assessment]]
 == Interview Panel
-include::assessmentInterviewPanel.adoc[]
+include::interviewPanel.adoc[]
 
 [[assessment]]
 == Interview Panel Invite

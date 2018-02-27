@@ -112,7 +112,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(participant)
-//                .append(target)  // TODO ??
+                .append(target)
                 .append(message)
                 .append(response)
                 .toHashCode();

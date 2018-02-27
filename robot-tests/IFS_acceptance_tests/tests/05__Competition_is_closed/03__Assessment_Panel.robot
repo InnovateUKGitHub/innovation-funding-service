@@ -182,7 +182,7 @@ Assessor tries to accept expired invitation
     [Setup]   the assessment panel period changes in the db   2017-02-24 00:00:00
     When the user reads his email and clicks the link   ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
     Then the user should see the text in the page       This invitation is now closed
-    [Teardown]  the assessment panel period changes in the db   2018-02-24 00:00:00
+    [Teardown]  the assessment panel period changes in the db   2068-02-24 00:00:00
 
 Assign application link decativated if competition is in close state
     [Documentation]   IFS-25
