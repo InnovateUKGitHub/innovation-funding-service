@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Controller for managing application Invites to Assessment Panels.
+ * Controller for managing application Invites to Interview Panels.
  */
 @RestController
 @RequestMapping("/interview-panel")
