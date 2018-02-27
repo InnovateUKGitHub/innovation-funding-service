@@ -25,7 +25,7 @@ import java.util.List;
  * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
  * required and the annotation added to that.
  */
-public class AbstractRestResultHandlingHttpMessageConverter extends MappingJackson2HttpMessageConverter {
+public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
     @Override
     protected void writeInternal(Object object, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
