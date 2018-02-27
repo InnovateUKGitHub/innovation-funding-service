@@ -324,9 +324,9 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
                 fieldError("description", "", "validation.field.must.not.be.blank"),
                 fieldError("existing", "", "validation.field.must.not.be.blank"),
                 fieldError("deprecation", -5, "validation.field.max.value.or.higher", 1),
-                fieldError("residualValue", new BigDecimal("-100000"), "validation.field.max.value.or.higher", 0),
+                fieldError("residualValue", new BigDecimal("-100000"), "validation.field.max.value.or.higher", 1),
                 fieldError("npv", new BigDecimal("-10000"), "validation.field.max.value.or.higher", 1),
-                fieldError("utilisation", -5, "validation.field.max.value.or.higher", 0));
+                fieldError("utilisation", -5, "validation.field.max.value.or.higher", 1));
 
         assertErrorsAsExpected(messages, expectedErrors);
     }
