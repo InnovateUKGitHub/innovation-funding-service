@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.dashboard.populator;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelParticipantResource;
@@ -32,7 +32,7 @@ public class AssessorDashboardModelPopulator {
     private ProfileRestService profileRestService;
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewPanelInviteRestService reviewPanelInviteRestService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -43,7 +43,7 @@ public class AssessorDashboardModelPopulator {
 
         UserProfileStatusResource profileStatusResource = profileRestService.getUserProfileStatus(userId).getSuccess();
 
-        List<AssessmentReviewPanelParticipantResource> assessmentReviewPanelParticipantResourceList = assessmentPanelInviteRestService.getAllInvitesByUser(userId).getSuccess();
+        List<AssessmentReviewPanelParticipantResource> assessmentReviewPanelParticipantResourceList = reviewPanelInviteRestService.getAllInvitesByUser(userId).getSuccess();
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),
