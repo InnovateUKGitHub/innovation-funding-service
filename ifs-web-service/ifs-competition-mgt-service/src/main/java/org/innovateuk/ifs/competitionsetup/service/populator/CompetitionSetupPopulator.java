@@ -50,6 +50,6 @@ public class CompetitionSetupPopulator {
         return new CompetitionStateSetupViewModel(section.preventEdit(competitionResource),
                 competitionResource.isSetupAndLive(),
                 competitionResource.getSetupComplete(),
-                competitionResource.isInAssessmentState());
+                competitionResource.getCompetitionStatus());
     }
 }

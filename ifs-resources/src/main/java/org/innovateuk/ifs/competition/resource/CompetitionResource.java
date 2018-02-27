@@ -126,11 +126,6 @@ public class CompetitionResource {
     }
 
     @JsonIgnore
-    public boolean isInAssessmentState() {
-        return competitionStatus.getDisplayName().equals(CompetitionStatus.IN_ASSESSMENT.getDisplayName());
-    }
-
-    @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
         return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(
                 ZonedDateTime.now()));

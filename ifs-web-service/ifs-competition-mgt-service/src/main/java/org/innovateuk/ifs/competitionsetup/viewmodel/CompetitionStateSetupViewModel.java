@@ -1,16 +1,18 @@
 package org.innovateuk.ifs.competitionsetup.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+
 public class CompetitionStateSetupViewModel {
     private boolean preventEdit;
     private boolean isSetupAndLive;
     private boolean setupComplete;
-    private boolean inPanelState;
+    private CompetitionStatus competitionStatus;
 
-    public CompetitionStateSetupViewModel(boolean preventEdit, boolean isSetupAndLive, boolean setupComplete, boolean inPanelState) {
+    public CompetitionStateSetupViewModel(boolean preventEdit, boolean isSetupAndLive, boolean setupComplete, CompetitionStatus competitionStatus) {
         this.preventEdit = preventEdit;
         this.isSetupAndLive = isSetupAndLive;
         this.setupComplete = setupComplete;
-        this.inPanelState = inPanelState;
+        this.competitionStatus = competitionStatus;
     }
 
     public boolean isPreventEdit() {
@@ -25,5 +27,7 @@ public class CompetitionStateSetupViewModel {
         return setupComplete;
     }
 
-    public boolean isInAssessmentState() { return inPanelState; }
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
+    }
 }
