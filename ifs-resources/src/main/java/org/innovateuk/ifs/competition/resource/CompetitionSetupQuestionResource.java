@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -235,10 +236,12 @@ public class CompetitionSetupQuestionResource {
         this.allowedFileTypes = allowedFileTypes;
     }
 
+    @JsonIgnore
     public Set<FileTypeCategory> getAllowedFileTypesEnum() {
         return simpleMapSet(allowedFileTypes, this::fromNameOrDisplayName);
     }
 
+    @JsonIgnore
     public void setAllowedFileTypesEnum(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = simpleMapSet(allowedFileTypes, FileTypeCategory::getDisplayName);
     }
