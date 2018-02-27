@@ -14,11 +14,11 @@ include::{snippets}/assessment-panel-invite/get-available-assessors/curl-request
 ==== Request
 include::{snippets}/assessment-panel-invite/get-available-assessor-ids/http-request.adoc[]
 include::{snippets}/assessment-panel-invite/get-available-assessor-ids/path-parameters.adoc[]
-R
+
 ==== Response
 include::{snippets}/assessment-panel-invite/get-available-assessor-ids/http-response.adoc[]
 include::{snippets}/assessment-panel-invite/get-available-assessor-ids/response-fields.adoc[]
-T
+
 ==== Curl Example
 include::{snippets}/assessment-panel-invite/get-available-assessor-ids/curl-request.adoc[]
 

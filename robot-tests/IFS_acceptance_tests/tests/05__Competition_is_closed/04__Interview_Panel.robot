@@ -6,7 +6,9 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-2778 Invite Assessor to Interview Panel: Find and Invite Tabs
 ...
 ...               IFS-2779 Invite Assessor to Interview Panel: Review and Send Invite
-Suite Setup       Custom Suite Setup
+...
+...               IFS-2727 Interview Panels - Assign applications 'Find' tab
+Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
@@ -59,14 +61,15 @@ Assessors receives the invite to interview panel
 CompAdmin can add the applications to invite list
 #to assign applications to interview panel
     [Documentation]  IFS-2727
-    Given the user clicks the button/link        link=Manage interview panel
-    When the user clicks the button/link       link=Assign applications
-    Then the competition admin select the applications and add to invite list
+    [Setup]  the user clicks the button/link    link=Manage interview panel
+    Given the user clicks the button/link       link=Competition
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Closed")
+    Run Keyword If  '${status}' == 'PASS'  the user move the closed competition to in panel
+    And the user clicks the button/link         link=Manage interview panel
+    When the user clicks the button/link        link=Assign applications
+    Then the competition admin selects the applications and add to invite list
 
 *** Keywords ***
-Custom Suite Setup
-    The user logs-in in new browser  &{Comp_admin1_credentials}
-
 the Interview Panel is activated in the db
     Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
@@ -76,7 +79,7 @@ the user sees the Interview panel page and the Interview links
     And the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
     #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2783
 
-the competition admin select the applications and add to invite list
+the competition admin selects the applications and add to invite list
 #compadmin selecting the applications checkbox
     the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     the user clicks the button/link    jQuery=tr:contains("${computer_vision_application}") label
