@@ -8,7 +8,6 @@ import java.util.function.BiConsumer;
 /**
  * Resource builder for AssessmentPanelKeyStatisticsResources
  */
-
 public class ReviewKeyStatisticsResourceBuilder
         extends BaseBuilder<ReviewKeyStatisticsResource, ReviewKeyStatisticsResourceBuilder> {
 

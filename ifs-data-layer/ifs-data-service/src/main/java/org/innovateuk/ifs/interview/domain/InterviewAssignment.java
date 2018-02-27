@@ -12,6 +12,9 @@ import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
 
+/**
+ * An invitation for an application to participate on an interview panel.
+ */
 @Entity
 public class InterviewAssignment extends Process<ProcessRole, Application, InterviewAssignmentState> {
 
