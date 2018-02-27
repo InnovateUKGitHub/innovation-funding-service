@@ -197,7 +197,6 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                         simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName),
                         ","));
         if(competitionSetupQuestionResource.getAppendixGuidance() != null) {
-
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
         }
     }
