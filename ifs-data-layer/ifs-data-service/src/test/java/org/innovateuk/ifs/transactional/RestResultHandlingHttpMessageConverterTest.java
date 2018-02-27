@@ -32,7 +32,7 @@ public class RestResultHandlingHttpMessageConverterTest extends BaseControllerMo
 
         RestErrorResponse errorResponse = new RestErrorResponse(badRequestError("Error!"));
 
-        mockMvc.perform(get(new URI("/bad-request"))).
+        mockMvc.perform(get(new URI("/rest-result-handling-test-controller/bad-request"))).
                 andExpect(status().isBadRequest()).
                 andExpect(content().json(toJson(errorResponse)));
     }

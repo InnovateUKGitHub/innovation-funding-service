@@ -20,11 +20,8 @@ import java.util.List;
  * a standard RestErrorResponse.
  *
  * In this way, we have a consistent error-handling mechanism over REST for Controller methods that are returning RestResults.
- *
- * Note that this does not have the {@link Component} annotation as doing so would force dependent projects to provide
- * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
- * required and the annotation added to that.
  */
+@Component
 public class RestResultHandlingHttpMessageConverter extends MappingJackson2HttpMessageConverter {
 
     @Override
