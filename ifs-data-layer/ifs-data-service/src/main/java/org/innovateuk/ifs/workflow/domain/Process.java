@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,7 +39,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
 
     @OneToMany(mappedBy="process", cascade = CascadeType.ALL)
     @OrderBy("id ASC")
-    protected List<ProcessOutcome> processOutcomes;
+    protected List<ProcessOutcome> processOutcomes = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="internal_participant_id", referencedColumnName = "id")
