@@ -14,7 +14,6 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.interview.resource.InterviewState.PENDING;
 
-
 /**
  * Provides the permissions around CRUD operations for {@link Interview} resources.
  */

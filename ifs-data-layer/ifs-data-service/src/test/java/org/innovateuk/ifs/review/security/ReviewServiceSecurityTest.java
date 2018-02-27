@@ -29,7 +29,6 @@ public class ReviewServiceSecurityTest extends BaseServiceSecurityTest<ReviewSer
     private ReviewPermissionRules reviewPermissionRules;
     private ReviewLookupStrategy reviewLookupStrategy;
 
-
     @Override
     protected Class<? extends ReviewService> getClassUnderTest() {
         return TestReviewService.class;

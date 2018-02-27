@@ -58,15 +58,15 @@ public class InterviewParticipant extends CompetitionParticipant<InterviewInvite
 
     private InterviewParticipant accept() {
         if (getUser() == null) {
-            throw new IllegalStateException("Illegal attempt to accept a InterviewInvite with no User");
+            throw new IllegalStateException("Illegal attempt to accept an InterviewInvite without a User");
         }
 
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a InterviewInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept an InterviewInvite that hasn't been opened");
         }
 
         if (getStatus() == REJECTED) {
-            throw new IllegalStateException("Cannot accept a InterviewInvite that has been rejected");
+            throw new IllegalStateException("Cannot accept an InterviewInvite that has been rejected");
         }
 
         if (getStatus() == ACCEPTED) {
@@ -89,13 +89,13 @@ public class InterviewParticipant extends CompetitionParticipant<InterviewInvite
 
     public InterviewParticipant reject() {
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a CompetitionAssessmentInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept an InterviewInvite that hasn't been opened");
         }
         if (getStatus() == ACCEPTED) {
-            throw new IllegalStateException("Cannot reject a CompetitionAssessmentInvite that has been accepted");
+            throw new IllegalStateException("Cannot reject an InterviewInvite that has been accepted");
         }
         if (getStatus() == REJECTED) {
-            throw new IllegalStateException("CompetitionAssessmentInvite has already been rejected");
+            throw new IllegalStateException("InterviewInvite has already been rejected");
         }
 
         super.setStatus(REJECTED);
