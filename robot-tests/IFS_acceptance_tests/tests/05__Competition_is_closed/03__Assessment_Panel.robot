@@ -195,8 +195,9 @@ Assign application link decativated if competition is in close state
 Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
     [Tags]
-    [Setup]  the user move the closed competition to in panel
-    Given the user should see the element  jQuery=h1:contains("Panel")
+    [Setup]  the user clicks the button/link     link=Competition
+    Given the user move the closed competition to in panel
+    And the user should see the element    jQuery=h1:contains("Panel")
     When the user clicks the button/link   link=Manage assessment panel
     And the user clicks the button/link    jQuery=a:contains("Assign applications to panel")
     Then the user should see the element   jQuery=h1:contains("Assign applications to panel")
@@ -306,11 +307,6 @@ the funders panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE `type`='FUNDERS_PANEL' AND `competition_id`='${CLOSED_COMPETITION}'
-
-the user move the closed competition to in panel
-    the user clicks the button/link     link=Competition
-    the user clicks the button/link     jQuery=button:contains("Notify assessors")
-    the user clicks the button/link     jQuery=button:contains("Close assessment")
 
 enable assessment panel for the competition
     the user clicks the button/link    link=View and update competition setup
