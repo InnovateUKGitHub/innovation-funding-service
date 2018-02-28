@@ -34,6 +34,7 @@ public interface FinanceRowItem {
     String MAX_DIGITS_MESSAGE = "{validation.field.max.number.of.digits}";
     String VALUE_MUST_BE_HIGHER_MESSAGE = "{validation.field.max.value.or.higher}";
     String VALUE_MUST_BE_LOWER_MESSAGE = "{validation.field.max.value.or.lower}";
+    String NO_DECIMAL_VALUES = "{validation.field.non.decimal.format}";
 
     Long getId();
     BigDecimal getTotal();
