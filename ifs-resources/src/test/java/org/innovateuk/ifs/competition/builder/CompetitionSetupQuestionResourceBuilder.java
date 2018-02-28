@@ -6,8 +6,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -59,7 +59,7 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
         return with(competition -> competition.setAppendix(appendix));
     }
 
-    public CompetitionSetupQuestionResourceBuilder withAllowedFileTypes(Collection<FileTypeCategory>... fileTypes) {
+    public CompetitionSetupQuestionResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {
         return withArray((fileType, competition) -> setField("allowedFileTypes", fileType, competition), fileTypes);
     }
 
