@@ -326,6 +326,7 @@ IFS.core.formValidation = (function () {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
 
       if (field.val() !== null) {
+        var value = field.val()
         if (field.is(':checkbox,:radio')) {
           var name = field.attr('name')
           if (typeof (name) !== 'undefined') {
@@ -343,7 +344,8 @@ IFS.core.formValidation = (function () {
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         } else {
-          if (field.val().length === 0) {
+          // check if the value has any characters OR if the value only contains spaces
+          if (value.length === 0 || !value.trim()) {
             IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
             return false
           } else {
