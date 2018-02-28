@@ -58,7 +58,7 @@ public interface ApplicationInviteService {
     @SecuredBySpring(value = "GET_USER_ON_HASH",
             description = "The System Registration user can see if there is a user for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash);
+    ServiceResult<UserResource> getUserByInviteHash(String hash);
 
     @PreAuthorize("hasPermission(#applicationInviteId, 'org.innovateuk.ifs.invite.resource.ApplicationInviteResource', 'DELETE')")
     ServiceResult<Void> removeApplicationInvite(long applicationInviteId);

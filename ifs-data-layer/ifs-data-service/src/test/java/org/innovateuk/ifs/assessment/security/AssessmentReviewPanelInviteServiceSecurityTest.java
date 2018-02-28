@@ -291,7 +291,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         }
 
         @Override
-        public ServiceResult<AssessmentReviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<AssessmentReviewPanelInviteResource> openInvite(String inviteHash) {
             return null;
         }
 
@@ -301,7 +301,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         }
 
         @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Void> rejectInvite(String inviteHash) {
             return null;
         }
 

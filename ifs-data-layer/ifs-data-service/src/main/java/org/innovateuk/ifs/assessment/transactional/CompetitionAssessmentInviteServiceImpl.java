@@ -85,7 +85,6 @@ public class CompetitionAssessmentInviteServiceImpl extends InviteService<Compet
 
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
-    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
     private CompetitionAssessmentInviteRepository competitionAssessmentInviteRepository;

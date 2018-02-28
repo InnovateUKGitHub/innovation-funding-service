@@ -206,12 +206,12 @@ public class AssessmentInterviewPanelInviteServiceSecurityTest extends BaseServi
         }
 
         @Override
-        public ServiceResult<AssessmentInterviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<AssessmentInterviewPanelInviteResource> openInvite(String inviteHash) {
             return null;
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
             return null;
         }
 

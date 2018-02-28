@@ -79,7 +79,7 @@ public interface AssessmentReviewPanelInviteService {
     @SecuredBySpring(value = "READ_PANEL_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<AssessmentReviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash);
+    ServiceResult<AssessmentReviewPanelInviteResource> openInvite(String inviteHash);
 
     @PreAuthorize("hasPermission(#inviteHash, 'org.innovateuk.ifs.invite.resource.AssessmentReviewPanelParticipantResource', 'ACCEPT')")
     @SecuredBySpring(value = "ACCEPT_PANEL_INVITE_ON_HASH",
@@ -91,7 +91,7 @@ public interface AssessmentReviewPanelInviteService {
     @SecuredBySpring(value = "REJECT_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash);
+    ServiceResult<Void> rejectInvite(String inviteHash);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CHECK_EXISTING_USER_ON_HASH",

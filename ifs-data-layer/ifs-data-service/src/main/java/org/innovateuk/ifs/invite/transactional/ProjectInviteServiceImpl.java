@@ -159,7 +159,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     }
 
     @Override
-    public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
+    public ServiceResult<UserResource> getUserByInviteHash(String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()).map(userMapper::mapToResource))
                 .andOnSuccess(u -> u.map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(notFoundError(UserResource.class))));

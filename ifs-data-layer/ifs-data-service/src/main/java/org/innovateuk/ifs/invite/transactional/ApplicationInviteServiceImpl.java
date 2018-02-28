@@ -35,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -267,7 +266,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     @Override
-    public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
+    public ServiceResult<UserResource> getUserByInviteHash(String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()).map(userMapper::mapToResource))
                 .andOnSuccess(u -> u.isPresent() ?

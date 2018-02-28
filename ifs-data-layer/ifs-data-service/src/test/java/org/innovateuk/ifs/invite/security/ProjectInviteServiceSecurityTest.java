@@ -103,12 +103,12 @@ public class ProjectInviteServiceSecurityTest extends BaseServiceSecurityTest<Pr
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("hash") String hash) {
+        public ServiceResult<Boolean> checkExistingUser(String hash) {
             return null;
         }
 
         @Override
-        public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
+        public ServiceResult<UserResource> getUserByInviteHash(String hash) {
             return null;
         }
     }
