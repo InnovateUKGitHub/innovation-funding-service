@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
+import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApprovalForm;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
@@ -71,8 +72,8 @@ public class GrantOfferLetterControllerSecurityTest extends BaseProjectSetupCont
     }
 
     @Test
-    public void testApproceOrRejectSignedGrantOfferLetter() {
-        assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(projectCompositeId.id(), ApprovalType.APPROVED));
+    public void testApproveOrRejectSignedGrantOfferLetter() {
+        assertSecured(() -> classUnderTest.signedGrantOfferLetterApproval(projectCompositeId.id(), new GrantOfferLetterApprovalForm(ApprovalType.APPROVED, null)));
     }
 
     @Test

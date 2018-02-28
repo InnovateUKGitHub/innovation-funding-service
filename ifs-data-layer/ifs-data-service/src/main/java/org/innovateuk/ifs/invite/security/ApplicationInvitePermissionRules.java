@@ -54,7 +54,7 @@ public class ApplicationInvitePermissionRules {
         return applicationIsEditableById(invite.getApplication()) && isLeadForInvite(invite, user);
     }
 
-    @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for thier organisation")
+    @PermissionRule(value = "SAVE", description = "collaborator can save invite to the application for their organisation")
     public boolean collaboratorCanSaveInviteToApplicationForTheirOrganisation(final ApplicationInviteResource invite, final UserResource user) {
         return applicationIsEditableById(invite.getApplication()) && isCollaboratorOnInvite(invite, user);
     }

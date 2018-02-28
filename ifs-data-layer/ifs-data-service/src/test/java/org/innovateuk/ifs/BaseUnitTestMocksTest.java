@@ -15,7 +15,9 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.interview.mapper.AssessmentInterviewPanelInviteMapper;
+import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewPanelRepository;
 import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
+import org.innovateuk.ifs.assessment.interview.transactional.InterviewPanelInviteService;
 import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
@@ -23,6 +25,8 @@ import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewPanelInviteMapper;
 import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelInviteService;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.assessment.review.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -58,7 +62,9 @@ import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -195,7 +201,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentInterviewPanelInviteRepository assessmentInterviewPanelInviteRepositoryMock;
 
     @Mock
-    protected AssessmentReviewPanelInviteService assessmentReviewPanelInviteServiceMock;
+    protected AssessmentPanelInviteService assessmentPanelInviteServiceMock;
 
     @Mock
     protected AssessmentPanelService assessmentPanelServiceMock;
@@ -207,7 +213,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentInterviewPanelParticipantRepository assessmentInterviewPanelParticipantRepositoryMock;
 
     @Mock
+    protected InterviewPanelInviteService interviewPanelInviteServiceMock;
+
+    @Mock
     protected AssessmentInterviewPanelInviteService assessmentInterviewPanelInviteServiceMock;
+
+    @Mock
+    protected AssessmentInterviewPanelRepository assessmentInterviewPanelRepositoryMock;
 
     @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
@@ -564,7 +576,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RejectionReasonService rejectionReasonServiceMock;
 
     @Mock
-    protected FinanceRowService financeRowServiceMock;
+    protected FinanceRowCostsService financeRowCostsServiceMock;
+
+    @Mock
+    protected FinanceService financeServiceMock;
+
+    @Mock
+    protected FinanceFileEntryService financeFileEntryServiceMock;
 
     @Mock
     protected ProjectFinanceRowService projectFinanceRowServiceMock;

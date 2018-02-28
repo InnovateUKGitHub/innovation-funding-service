@@ -79,13 +79,13 @@ public class ApplicationResearchCategoryServiceImplTest extends BaseServiceUnitT
         when(researchCategoryRepository.findById(researchCategoryId)).thenReturn(researchCategory);
         when(questionServiceMock.getQuestionByCompetitionIdAndFormInputType(competition.getId(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
         when(usersRolesServiceMock.getAssignableProcessRolesByApplicationId(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));
-        when(financeRowServiceMock.financeDetails(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));
+        when(financeServiceMock.financeDetails(applicationId)).thenReturn(ServiceResult.serviceSuccess(Collections.EMPTY_LIST));
 
         ServiceResult<ApplicationResource> result = service.setResearchCategory(applicationId, researchCategoryId);
 
         assertTrue(result.isSuccess());
 
-        verify(financeRowServiceMock, times(1)).financeDetails(applicationId);
+        verify(financeServiceMock, times(1)).financeDetails(applicationId);
         verify(applicationRepositoryMock, times(1)).save(any(Application.class));
     }
 
