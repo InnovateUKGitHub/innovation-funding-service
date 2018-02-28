@@ -78,7 +78,7 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 @Transactional
-public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteService {
+public class AssessmentReviewPanelInviteServiceImpl implements AssessmentReviewPanelInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
@@ -458,7 +458,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     @Override
     public ServiceResult<Void> acceptInvite(String inviteHash) {
         return getParticipantByInviteHash(inviteHash)
-                .andOnSuccess(AssessmentPanelInviteServiceImpl::accept)
+                .andOnSuccess(AssessmentReviewPanelInviteServiceImpl::accept)
                 .andOnSuccess(this::assignAllPanelApplicationsToParticipant)
                 .andOnSuccessReturnVoid();
     }

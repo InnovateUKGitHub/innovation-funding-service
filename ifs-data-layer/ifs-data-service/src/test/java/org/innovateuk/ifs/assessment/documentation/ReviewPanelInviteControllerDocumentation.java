@@ -57,7 +57,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
 
-        when(assessmentPanelInviteServiceMock.getAvailableAssessors(competitionId, pageable))
+        when(assessmentReviewPanelInviteServiceMock.getAvailableAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
         mockMvc.perform(get("/assessment-panel-invite/get-available-assessors/{competitionId}", competitionId)
@@ -81,14 +81,14 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                                 .andWithPrefix("content[].", availableAssessorResourceFields)
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable);
+        verify(assessmentReviewPanelInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable);
     }
 
     @Test
     public void getAvailableAssessorIds() throws Exception {
         long competitionId = 1L;
 
-        when(assessmentPanelInviteServiceMock.getAvailableAssessorIds(competitionId))
+        when(assessmentReviewPanelInviteServiceMock.getAvailableAssessorIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
         mockMvc.perform(get("/assessment-panel-invite/get-available-assessor-ids/{competitionId}", competitionId))
@@ -100,7 +100,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         responseFields(fieldWithPath("[]").description("List of available assessor ids "))
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).getAvailableAssessorIds(competitionId);
+        verify(assessmentReviewPanelInviteServiceMock, only()).getAvailableAssessorIds(competitionId);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        when(assessmentPanelInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
+        when(assessmentReviewPanelInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
 
         mockMvc.perform(get("/assessment-panel-invite/get-created-invites/{competitionId}", 1L)
                 .param("size", "20")
@@ -132,7 +132,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                                 .andWithPrefix("content[]", assessorCreatedInviteResourceFields)
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
+        verify(assessmentReviewPanelInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
         ExistingUserStagedInviteListResource existingUserStagedInviteListResource = existingUserStagedInviteListResourceBuilder.build();
         List<ExistingUserStagedInviteResource> existingUserStagedInviteResources = existingUserStagedInviteListResource.getInvites();
 
-        when(assessmentPanelInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
+        when(assessmentReviewPanelInviteServiceMock.inviteUsers(existingUserStagedInviteResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessment-panel-invite/invite-users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -152,7 +152,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         ).andWithPrefix("invites[].", existingUserStagedInviteResourceFields)
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).inviteUsers(existingUserStagedInviteResources);
+        verify(assessmentReviewPanelInviteServiceMock, only()).inviteUsers(existingUserStagedInviteResources);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
         long competitionId = 2L;
 
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(assessmentPanelInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(assessmentReviewPanelInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessment-panel-invite/send-all-invites/{competitionId}", competitionId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -176,7 +176,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         )
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
+        verify(assessmentReviewPanelInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
     }
 
     @Test
@@ -184,7 +184,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
         long competitionId = 1L;
         AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
 
-        when(assessmentPanelInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+        when(assessmentReviewPanelInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
         mockMvc.perform(get("/assessment-panel-invite/get-all-invites-to-send/{competitionId}", competitionId))
                 .andExpect(status().isOk())
@@ -195,14 +195,14 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         responseFields(assessorInvitesToSendResourceFields)
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(competitionId);
+        verify(assessmentReviewPanelInviteServiceMock, only()).getAllInvitesToSend(competitionId);
     }
 
     @Test
     public void getAllInvitesByUser() throws Exception {
         final long userId = 12L;
         AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
-        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(assessmentReviewPanelParticipantResource)));
+        when(assessmentReviewPanelInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         mockMvc.perform(get("/assessment-panel-invite/get-all-invites-by-user/{userId}", userId))
                 .andExpect(status().isOk())
@@ -220,7 +220,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
         List<Long> inviteIds = asList(1L, 2L);
         AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
 
-        when(assessmentPanelInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+        when(assessmentReviewPanelInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
 
         mockMvc.perform(get("/assessment-panel-invite/get-all-invites-to-resend/{competitionId}", competitionId)
                 .param("inviteIds", simpleJoiner(inviteIds, ",")))
@@ -236,7 +236,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         responseFields(assessorInvitesToSendResourceFields)
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToResend(competitionId, inviteIds);
+        verify(assessmentReviewPanelInviteServiceMock, only()).getAllInvitesToResend(competitionId, inviteIds);
     }
 
     @Test
@@ -244,7 +244,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
         List<Long> inviteIds = asList(1L, 2L);
 
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
-        when(assessmentPanelInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(assessmentReviewPanelInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessment-panel-invite/resend-invites")
                 .param("inviteIds", simpleJoiner(inviteIds, ","))
@@ -272,7 +272,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                 .withContent(content)
                 .build();
 
-        when(assessmentPanelInviteServiceMock.getInvitationOverview(competitionId, pageable, status))
+        when(assessmentReviewPanelInviteServiceMock.getInvitationOverview(competitionId, pageable, status))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/assessment-panel-invite/get-invitation-overview/{competitionId}", 1L)
@@ -299,7 +299,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                                 .andWithPrefix("content[].", assessorInviteOverviewResourceFields)
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
+        verify(assessmentReviewPanelInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
     }
 
     @Test
@@ -307,7 +307,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
         String hash = "invitehash";
         AssessmentReviewPanelInviteResource assessmentReviewPanelInviteResource = ASSESSMENT_REVIEW_PANEL_INVITE_RESOURCE_BUILDER.build();
 
-        when(assessmentPanelInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(assessmentReviewPanelInviteResource));
+        when(assessmentReviewPanelInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(assessmentReviewPanelInviteResource));
 
         mockMvc.perform(post("/assessment-panel-invite/open-invite/{hash}", hash))
                 .andExpect(status().isOk())
@@ -323,7 +323,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
     public void acceptInvite() throws Exception {
         String hash = "invitehash";
 
-        when(assessmentPanelInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
+        when(assessmentReviewPanelInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessment-panel-invite/accept-invite/{hash}", hash))
                 .andExpect(status().isOk())
@@ -338,7 +338,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
     public void rejectInvite() throws Exception {
         String hash = "invitehash";
 
-        when(assessmentPanelInviteServiceMock.rejectInvite(hash)).thenReturn(serviceSuccess());
+        when(assessmentReviewPanelInviteServiceMock.rejectInvite(hash)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessment-panel-invite/reject-invite/{hash}", hash))
                 .andExpect(status().isOk())
@@ -353,7 +353,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
     public void checkExistingUser() throws Exception {
         String hash = "invitehash";
 
-        when(assessmentPanelInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
+        when(assessmentReviewPanelInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(get("/assessment-panel-invite/check-existing-user/{hash}", hash))
                 .andExpect(status().isOk())
@@ -369,7 +369,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
     public void getNonAcceptedAssessorInviteIds() throws Exception {
         long competitionId = 1L;
 
-        when(assessmentPanelInviteServiceMock.getNonAcceptedAssessorInviteIds(competitionId))
+        when(assessmentReviewPanelInviteServiceMock.getNonAcceptedAssessorInviteIds(competitionId))
                 .thenReturn(serviceSuccess(asList(1L, 2L)));
 
         mockMvc.perform(get("/assessment-panel-invite/get-non-accepted-assessor-invite-ids/{competitionId}", competitionId))
@@ -381,7 +381,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         responseFields(fieldWithPath("[]").description("List of non accepted assessor invite ids "))
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).getNonAcceptedAssessorInviteIds(competitionId);
+        verify(assessmentReviewPanelInviteServiceMock, only()).getNonAcceptedAssessorInviteIds(competitionId);
     }
 
     @Test
@@ -389,7 +389,7 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
         String email = "firstname.lastname@email.com";
         long competitionId = 1L;
 
-        when(assessmentPanelInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
+        when(assessmentReviewPanelInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/assessment-panel-invite/delete-invite")
                 .param("email", email)
@@ -402,14 +402,14 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         )
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).deleteInvite(email, competitionId);
+        verify(assessmentReviewPanelInviteServiceMock, only()).deleteInvite(email, competitionId);
     }
 
     @Test
     public void deleteAllInvites() throws Exception {
         long competitionId = 1L;
 
-        when(assessmentPanelInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
+        when(assessmentReviewPanelInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/assessment-panel-invite/delete-all-invites")
                 .param("competitionId", String.valueOf(competitionId)))
@@ -420,6 +420,6 @@ public class ReviewPanelInviteControllerDocumentation extends BaseControllerMock
                         )
                 ));
 
-        verify(assessmentPanelInviteServiceMock, only()).deleteAllInvites(competitionId);
+        verify(assessmentReviewPanelInviteServiceMock, only()).deleteAllInvites(competitionId);
     }
 }
