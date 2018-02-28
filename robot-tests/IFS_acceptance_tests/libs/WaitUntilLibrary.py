@@ -16,11 +16,11 @@ def no_intermediate_screenshots(func):
         try:
           result = func(*args)
         except:
-          if take_screenshots_enabled:
-            capture_large_screenshot()
-          raise
+            if take_screenshots_enabled:
+                capture_large_screenshot()
+            raise
         finally:
-          currently_waiting_for_keyword_to_succeed = False
+            currently_waiting_for_keyword_to_succeed = False
         return result
 
     return decorator
