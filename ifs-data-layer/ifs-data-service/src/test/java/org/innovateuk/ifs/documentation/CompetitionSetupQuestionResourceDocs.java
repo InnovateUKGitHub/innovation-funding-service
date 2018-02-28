@@ -19,6 +19,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("maxWords").description("The maximum words allowed for the question response"),
             fieldWithPath("appendix").description("Does the question include an appendix section"),
             fieldWithPath("allowedFileTypes").description("Specifies types of files that will be allowed to be uploaded for appendix"),
+            fieldWithPath("appendixGuidance").description("Guidance for the file upload field"),
             fieldWithPath("assessmentGuidance").description("Guidance for the assessor"),
             fieldWithPath("assessmentGuidanceTitle").description("Guidance title for the assessor"),
             fieldWithPath("assessmentMaxWords").description("Maximum words for the assessors feedback"),
@@ -33,7 +34,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("guidanceRows[].id").description("The id of the guidance row in the database"),
             fieldWithPath("guidanceRows[].subject").description("The subject of the guidance"),
             fieldWithPath("guidanceRows[].justification").description("The justification of the guidance"),
-            fieldWithPath("guidanceRows[].formInput").description("The id of the form input the guidance is linked to"),
+            fieldWithPath("guidanceRows[].formInput").description("The id of the form input the guidance is linked to")
     };
 
     public static final CompetitionSetupQuestionResourceBuilder competitionSetupQuestionResourceBuilder = newCompetitionSetupQuestionResource()
