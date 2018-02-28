@@ -7,6 +7,10 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
 
+/**
+ * The {@code NotifyInterviewAssignmentAction} is used when an interview assignment is made to an application for an interview panel.
+ * For more info see {@link InterviewAssignmentWorkflow}
+ */
 @Component
 public class NotifyInterviewAssignmentAction extends BaseInterviewAssignmentAction {
 

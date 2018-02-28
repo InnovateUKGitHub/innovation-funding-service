@@ -54,5 +54,4 @@ public class InterviewAssignmentBuilder extends BaseBuilder<InterviewAssignment,
     public InterviewAssignmentBuilder withActivityState(ActivityState... states) {
         return withArray((state, invite) -> invite.setActivityState(state), states);
     }
-
 }

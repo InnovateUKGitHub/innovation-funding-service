@@ -46,6 +46,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
+/**
+ * Transactional and secured service providing operations around {@link org.innovateuk.ifs.review.domain.Review} data.
+ */
 @Service
 @Transactional
 public class ReviewServiceImpl implements ReviewService {

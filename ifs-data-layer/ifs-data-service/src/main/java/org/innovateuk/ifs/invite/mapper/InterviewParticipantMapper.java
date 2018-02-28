@@ -11,6 +11,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+/**
+ * Maps between domain and resource DTO for {@link org.innovateuk.ifs.invite.domain.competition.InterviewParticipant}.
+ */
 @Mapper(
     config = GlobalMapperConfig.class,
         uses = {
