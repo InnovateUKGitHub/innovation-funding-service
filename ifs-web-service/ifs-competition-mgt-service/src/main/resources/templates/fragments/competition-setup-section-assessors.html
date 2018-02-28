@@ -121,7 +121,7 @@
                             <span class="error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
                         </th:block>
                     </legend>
-                    <div th:if="${model.general.state.competitionStatus.name() != 'IN_ASSESSMENT'}">
+                    <div th:if="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
                         <div class="multiple-choice">
                             <input id="assessorFinanceView-0"
                                    type="radio"
@@ -149,7 +149,7 @@
                         </div>
                     </div>
 
-                <div th:unless="${model.general.state.competitionStatus.name() != 'IN_ASSESSMENT'}">
+                <div th:unless="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
                         <input type="hidden" th:field="${competitionSetupForm.assessorFinanceView}" value="${competitionSetupForm.assessorFinanceView}"/>
                         <span th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Assessor Finance View</span>
                 </div>
