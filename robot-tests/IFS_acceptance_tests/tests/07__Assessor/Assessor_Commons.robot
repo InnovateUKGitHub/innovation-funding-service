@@ -10,6 +10,9 @@ ${assessor_ben_email}        benjamin.nixon@gmail.com
 ${assessor_joel_email}       joel.george@gmail.com
 ${assessor_madeleine_email}  madeleine.martin@gmail.com
 ${assessor_riley_email}      riley.butler@gmail.com
+${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
+${computer_vision_application_name}  Computer vision and machine learning for transport networks
+${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
 
 *** Keywords ***
 Invited guest user log in
@@ -53,3 +56,7 @@ the competition admin should not see invited assessors on find tab
     Then the user should not see the element  jQuery=td:contains("${assessor_ben}")
     And the user should not see the element   jQuery=td:contains("${assessor_joel}")
     And the user should not see the element   jquery=tr:contains("${assessor_madeleine}")
+
+the user move the closed competition to in panel
+    the user clicks the button/link     jQuery=button:contains("Notify assessors")
+    the user clicks the button/link     jQuery=button:contains("Close assessment")
