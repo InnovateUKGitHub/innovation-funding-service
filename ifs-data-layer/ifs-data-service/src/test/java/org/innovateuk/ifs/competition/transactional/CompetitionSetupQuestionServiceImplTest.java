@@ -372,9 +372,8 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
 
-        String appendedFileTypes = FileTypeCategory.PDF.getDisplayName() + "," + FileTypeCategory.SPREADSHEET.getDisplayName();
-
-        assertEquals(appendedFileTypes, appendixFormInput.getAllowedFileTypes());
+        assertTrue(appendixFormInput.getAllowedFileTypes().contains(FileTypeCategory.PDF.getDisplayName()));
+        assertTrue(appendixFormInput.getAllowedFileTypes().contains(FileTypeCategory.SPREADSHEET.getDisplayName()));
     }
 
     private void setMocksForSuccessfulUpdate() {
