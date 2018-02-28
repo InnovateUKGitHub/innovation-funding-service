@@ -24,10 +24,10 @@ import java.time.ZonedDateTime;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
-import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelInviteBuilder.newAssessmentInterviewPanelInvite;
-import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelParticipantBuilder.newAssessmentInterviewPanelParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
+import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.newInterviewParticipant;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
@@ -160,9 +160,9 @@ public class AssessorInviteOverviewMapperTest {
 
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
 
-        CompetitionParticipant competitionAssessmentParticipant = newAssessmentInterviewPanelParticipant()
+        CompetitionParticipant competitionAssessmentParticipant = newInterviewParticipant()
                 .withInvite(
-                        newAssessmentInterviewPanelInvite()
+                        newInterviewInvite()
                                 .withName("Joe Bloggs")
                                 .withEmail("test@test.com")
                                 .withSentOn(ZonedDateTime.parse("2018-02-28T12:00:00Z"))
@@ -209,8 +209,8 @@ public class AssessorInviteOverviewMapperTest {
 
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(newInnovationAreaResource().build());
 
-        CompetitionParticipant competitionAssessmentParticipant = newAssessmentInterviewPanelParticipant()
-                .withInvite(newAssessmentInterviewPanelInvite().build())
+        CompetitionParticipant competitionAssessmentParticipant = newInterviewParticipant()
+                .withInvite(newInterviewInvite().build())
                 .withUser(
                         newUser()
                                 .withProfileId(profile.getId())

@@ -16,9 +16,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelInviteBuilder.newAssessmentInterviewPanelInvite;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -48,7 +48,7 @@ public class AssessorCreatedInviteMapperTest {
                 .withInnovationArea(innovationArea)
                 .build();
 
-        CompetitionInvite invite = newAssessmentInterviewPanelInvite()
+        CompetitionInvite invite = newInterviewInvite()
                 .withEmail("test@test.com")
                 .withName("Joe Bloggs")
                 .withUser(

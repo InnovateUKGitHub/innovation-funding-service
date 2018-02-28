@@ -396,7 +396,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         assertEquals(0, actual.getNumber());
         assertEquals(20, actual.getSize());
 
-        InOrder inOrder = inOrder(reviewInviteRepositoryMock, assessorCreatedInviteMapperMock);
+        InOrder inOrder = inOrder(interviewInviteRepositoryMock, assessorCreatedInviteMapperMock);
         inOrder.verify(interviewInviteRepositoryMock)
                 .getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
         inOrder.verify(assessorCreatedInviteMapperMock, times(4))
