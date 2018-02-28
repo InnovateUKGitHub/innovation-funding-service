@@ -42,7 +42,10 @@ public abstract class AbstractSectionSaver implements CompetitionSetupSaver {
 
     protected abstract ServiceResult<Void> doSaveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
+                                                              String fieldName,
+                                                              String value,
+                                                              Optional<Long> questionId) {
         return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
     }
 

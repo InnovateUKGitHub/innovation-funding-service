@@ -5,7 +5,7 @@ import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.review.security.AssessmentReviewLookupStrategy;
 import org.innovateuk.ifs.assessment.review.security.AssessmentReviewPermissionRules;
-import org.innovateuk.ifs.assessment.transactional.AssessmentPanelService;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;

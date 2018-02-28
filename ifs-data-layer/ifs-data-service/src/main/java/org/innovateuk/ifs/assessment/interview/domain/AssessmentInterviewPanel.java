@@ -2,15 +2,15 @@ package org.innovateuk.ifs.assessment.interview.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
-
-
-// TODO Who is the participant? Lead assessor -- probably as they submit responses
 
 @Entity
 public class AssessmentInterviewPanel extends Process<ProcessRole, Application, AssessmentInterviewPanelState> {
@@ -32,9 +32,25 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
     public AssessmentInterviewPanel() {
     }
 
-    public AssessmentInterviewPanel(Application target, ProcessRole participant) {
-        this.target = target;
+    public AssessmentInterviewPanel(Application application, ProcessRole participant, ActivityState createdState) {
+        if (application == null) throw new NullPointerException("target cannot be null");
+        if (participant == null) throw new NullPointerException("participant cannot be null");
+        if (createdState == null) throw new NullPointerException("createdState cannot be null");
+
+        if (createdState.getState() != AssessmentInterviewPanelState.CREATED.getBackingState())
+            throw new IllegalArgumentException("createdState must be CREATED");
+        if (!participant.getRole().isOfType(UserRoleType.INTERVIEW_LEAD_APPLICANT))
+            throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
+        if (!participant.getApplicationId().equals(application.getId()))
+            throw new IllegalArgumentException("participant application must match the application");
+        if (!participant.getOrganisationId().equals(application.getLeadOrganisationId()))
+            throw new IllegalArgumentException("participant organisation must match the application's lead organisation");
+        if (!participant.getUser().getId().equals(application.getLeadApplicant().getId()))
+            throw new IllegalArgumentException("participant user must match the application's lead user");
+
+        this.target = application;
         this.participant = participant;
+        setActivityState(createdState);
     }
 
     @Override
@@ -104,5 +120,18 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
 
     public AssessmentInterviewPanelMessageOutcome getMessage() {
         return message;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("participant", participant)
+                .append("target", target)
+                .append("message", message)
+                .append("response", response)
+                .append("activityState", activityState)
+                .append("processOutcomes", processOutcomes)
+                .append("internalParticipant", internalParticipant)
+                .toString();
     }
 }
