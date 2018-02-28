@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
-import org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelInviteService;
+import org.innovateuk.ifs.assessment.review.transactional.AssessmentReviewPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -24,7 +24,7 @@ public class ReviewPanelInviteController {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     @Autowired
-    private AssessmentPanelInviteService assessmentReviewPanelInviteService;
+    private AssessmentReviewPanelInviteService assessmentReviewPanelInviteService;
 
     @GetMapping({
             "/get-all-invites-to-send/{competitionId}"

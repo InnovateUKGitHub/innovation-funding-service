@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Service for managing {@link AssessmentReviewPanelInvite}s.
  */
-public interface AssessmentPanelInviteService {
+public interface AssessmentReviewPanelInviteService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_CREATED_PANEL_INVITES",

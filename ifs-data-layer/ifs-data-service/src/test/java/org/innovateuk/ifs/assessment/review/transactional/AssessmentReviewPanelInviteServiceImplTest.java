@@ -53,7 +53,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteR
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuilder.newAssessmentReview;
-import static org.innovateuk.ifs.assessment.review.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
+import static org.innovateuk.ifs.assessment.review.transactional.AssessmentReviewPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -90,14 +90,14 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentPanelInviteServiceImpl> {
+public class AssessmentReviewPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentReviewPanelInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
     private Role assessorRole;
 
     @Override
-    protected AssessmentPanelInviteServiceImpl supplyServiceUnderTest() {
-        return new AssessmentPanelInviteServiceImpl();
+    protected AssessmentReviewPanelInviteServiceImpl supplyServiceUnderTest() {
+        return new AssessmentReviewPanelInviteServiceImpl();
     }
 
     @Before
