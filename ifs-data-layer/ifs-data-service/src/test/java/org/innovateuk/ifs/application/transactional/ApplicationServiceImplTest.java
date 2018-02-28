@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.builder.ApplicationBuilder;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
@@ -36,6 +38,10 @@ import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
@@ -714,6 +720,60 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         assertEquals(2, applicationsForUser1.size());
         assertEquals(testApplication2Resource.getId(), applicationsForUser2.get(0).getId());
         assertEquals(testApplication3Resource.getId(), applicationsForUser2.get(1).getId());
+    }
+
+    @Test
+    public void wildcardSearchByIdWithResultsOnSinglePage() throws Exception {
+
+        String searchString = "12";
+        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
+
+        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 5);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 5, 1, 5);
+
+    }
+
+    @Test
+    public void wildcardSearchByIdWithResultsAcrossMultiplePages() throws Exception {
+
+        String searchString = "12";
+        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
+
+        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 2);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 2, 3, 5);
+
+    }
+
+    private Pageable setUpMockingWildcardSearchById(String searchString, ApplicationResource applicationResource,
+                                                    int pageSize) {
+
+        List<Application> applications = ApplicationBuilder.newApplication().build(5);
+
+        Pageable pageable = new PageRequest(0, pageSize);
+        Page<Application> pagedResult = new PageImpl<>(applications, pageable, applications.size());
+
+        when(applicationRepositoryMock.searchByIdLike(searchString, pageable)).thenReturn(pagedResult);
+        when(applicationMapperMock.mapToResource(any(Application.class))).thenReturn(applicationResource);
+
+        return pageable;
+    }
+
+    private void assertWildcardSearchById(ServiceResult<ApplicationPageResource> result, ApplicationResource applicationResource,
+                                          int pageSize, int totalPages, int contentSize) {
+        assertTrue(result.isSuccess());
+
+        ApplicationPageResource resultObject = result.getSuccess();
+
+        assertEquals(pageSize, resultObject.getSize());
+        assertEquals(totalPages, resultObject.getTotalPages());
+        assertEquals(contentSize, resultObject.getContent().size());
+        assertEquals(applicationResource, resultObject.getContent().get(0));
     }
 
     @Test
