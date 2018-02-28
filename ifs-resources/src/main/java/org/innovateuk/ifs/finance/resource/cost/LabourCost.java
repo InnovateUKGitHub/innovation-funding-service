@@ -28,7 +28,7 @@ public class LabourCost extends AbstractFinanceRowItem {
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, groups = Default.class, message = NO_DECIMAL_VALUES)
     private BigDecimal grossEmployeeCost;
 
     @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
@@ -37,8 +37,9 @@ public class LabourCost extends AbstractFinanceRowItem {
             @Min(value=1, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     })
     @Max(value=365, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_LOWER_MESSAGE)
-    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer labourDays;
+
     private BigDecimal rate; // calculated field, no validation
     private String description;
     private BigDecimal total; // calculated field, no validation
