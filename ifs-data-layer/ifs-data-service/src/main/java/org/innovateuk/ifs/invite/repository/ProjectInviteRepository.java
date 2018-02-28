@@ -10,7 +10,7 @@ public interface ProjectInviteRepository extends InviteRepository<ProjectInvite>
 
     List<ProjectInvite> findByOrganisationNameLikeAndStatusIn(String organisationName, Set<InviteStatus> status);
 
-    List<ProjectInvite> findByProjectId(Long projectId);
+    List<ProjectInvite> findByProjectId(long projectId);
 
-    List<ProjectInvite> findByProjectIdAndEmail(Long projectId, String email);
+    List<ProjectInvite> findByProjectIdAndEmail(long projectId, String email);
 }
