@@ -47,6 +47,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"AND (:funding IS NULL " +
 			"	OR (a.fundingDecision = :funding))";
 
+	String SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL = "SELECT a FROM Application a " +
+            "WHERE " +
+            "  a.competition.id = :competitionId AND " +
+            "  a.applicationProcess.activityState.state = org.innovateuk.ifs.workflow.resource.State.SUBMITTED AND " +
+            "  NOT EXISTS (SELECT 1 FROM AssessmentInterviewPanel i WHERE i.target = a )";
+
     @Override
     List<Application> findAll();
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);
@@ -75,6 +81,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																					  Pageable pageable);
 
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
+
+	Stream<Application> findByApplicationProcessActivityStateStateIn(Collection<State> applicationStates);
 
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
@@ -114,4 +122,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	List<Application> findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(long competitionId, State applicationState);
 	List<Application> findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(Competition competition, State applicationState);
+
+	@Query(SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL)
+    Page<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
+    @Query(SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL)
+    List<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId);
 }

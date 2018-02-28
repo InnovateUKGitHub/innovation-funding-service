@@ -24,9 +24,9 @@ public class AssessorFormInputResponseController {
         return assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId).toGetResponse();
     }
 
-    @GetMapping("/panel/{assessmentId}")
-    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(@PathVariable("assessmentId") long assessmentId) {
-        return assessorFormInputResponseService.getAllAssessorFormInputResponsesForPanel(assessmentId).toGetResponse();
+    @GetMapping("/panel/{applicationId}")
+    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(@PathVariable("applicationId") long applicationId) {
+        return assessorFormInputResponseService.getAllAssessorFormInputResponsesForPanel(applicationId).toGetResponse();
     }
 
     @GetMapping("/assessment/{assessmentId}/question/{questionId}")

@@ -1,4 +1,3 @@
-apply from: "database-support.gradle"
 
 subprojects {
     apply from: rootProject.file("java-spring-boot.gradle")
@@ -17,12 +16,7 @@ buildscript {
     }
 }
 
-task initDB {
-    createTestSchema.mustRunAfter startMySql
 
-    dependsOn startMySql
-    dependsOn createTestSchema
-}
 
 ext {
     snippetsDir = file('build/generated-snippets')

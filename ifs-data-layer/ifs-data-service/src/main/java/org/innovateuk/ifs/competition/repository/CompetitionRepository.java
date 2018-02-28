@@ -2,13 +2,13 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -139,24 +139,82 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 
-    String PENDING_SPEND_PROFILES_WHERE_CLAUSE = " WHERE c.id = :competitionId " +
-            " AND NOT EXISTS (SELECT v.id FROM ViabilityProcess v WHERE v.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
-            "   v.event = 'project-created' )" +
-            " AND NOT EXISTS (SELECT e.id FROM EligibilityProcess e WHERE e.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
-            "   e.event = 'project-created' )" +
-            " AND NOT EXISTS (SELECT sp.id FROM SpendProfile sp WHERE sp.project.id = p.id) ";
+    String GET_PENDING_SPEND_PROFILES_CRITERIA =
+                    " from project p, application a, competition c " +
+                    " where c.id = :competitionId " +
+                    " and a.competition = c.id " +
+                    " and p.application_id = a.id " +
 
-    String GET_PENDING_SPEND_PROFILES = "SELECT NEW org.innovateuk.ifs.competition.resource.SpendProfileStatusResource(" +
-            "p.application.id, p.id, p.name) " +
-            " FROM Project p " +
-            " JOIN p.application.competition c " +
-            PENDING_SPEND_PROFILES_WHERE_CLAUSE;
+                    // where all Viability is either Approved or Not Required
+                    " and not exists (select v.id from process v " +
+                                    " where v.process_type = 'ViabilityProcess' " +
+                                    " and v.target_id in (select po.id from partner_organisation po " +
+                                                        " where po.project_id = p.id " +
+                                                        " ) " +
+                                    " and v.event = 'project-created' " +
+                                    " ) " +
 
-    String COUNT_PENDING_SPEND_PROFILES = "SELECT COUNT(DISTINCT p.id)" +
-            " FROM Project p " +
-            " JOIN p.application.competition c " +
-            PENDING_SPEND_PROFILES_WHERE_CLAUSE;
+                    // and where all Eligibility is either Approved or Not Required
+                    " and not exists (select e.id from process e " +
+                                    " where e.process_type = 'EligibilityProcess' " +
+                                    " and e.target_id in (select po.id from partner_organisation po " +
+                                                        " where po.project_id = p.id " +
+                                                        " ) " +
+                                    " and e.event = 'project-created' " +
+                                    " ) " +
 
+                    // and where Spend Profile is not yet generated
+                    " and not exists (select sp.id from spend_profile sp " +
+                                    " where sp.project_id = p.id) " +
+                    " and p.id not in " +
+                    " ( " +
+                        " select result.project_id " +
+                        " from " +
+                        " ( " +
+                                // This is selection of all organisations which are seeking funding. In other words,
+                                // whose grant claim percentage is > 0
+                                " select po.* " +
+                                " from project p, partner_organisation po, application_finance af, finance_row fr " +
+                                " where po.project_id = p.id " +
+                                " and af.application_id = p.application_id " +
+                                " and af.organisation_id = po.organisation_id " +
+                                " and fr.target_id = af.id " +
+                                " and fr.row_type = 'ApplicationFinanceRow' " +
+                                " and fr.name = 'grant-claim' " +
+                                " and fr.quantity > 0 " +
+
+                                // and this has to be combined with
+                                " union " +
+
+                                // This is a selection of all organisations which are Research Organisations.
+                                // Research Organisations always seek funding and their 'seeking funding' nature is not
+                                // determined by the grant claim percentage used in the previous query.
+                                " select po.* " +
+                                " from project p, partner_organisation po, organisation o, organisation_type ot " +
+                                " where po.project_id = p.id " +
+                                " and o.id = po.organisation_id " +
+                                " and ot.id = o.organisation_type_id " +
+                                " and ot.name = 'Research' " +
+                        " ) as result " +
+
+                        // For the above selection of organisations, bank details are either expected to be manually approved
+                        // or automatically approved via Experian
+                        " where not exists (select bd.id " +
+                                            " from bank_details bd " +
+                                            " where bd.project_id = result.project_id " +
+                                            " and bd.organisation_id = result.organisation_id " +
+                                            " and (bd.manual_approval = TRUE " +
+                                                " or (bd.verified = TRUE and bd.registration_number_matched = TRUE and bd.company_name_score > 6 and bd.address_score > 6) " +
+                                                " ) " +
+                                         " ) " +
+                    " ) ";
+
+
+    String GET_PENDING_SPEND_PROFILES = " select p.application_id, p.id, p.name " +
+            GET_PENDING_SPEND_PROFILES_CRITERIA;
+
+    String COUNT_PENDING_SPEND_PROFILES = " select count(distinct p.id) " +
+            GET_PENDING_SPEND_PROFILES_CRITERIA;
 
     @Query(LIVE_QUERY)
     List<Competition> findLive();
@@ -235,10 +293,11 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query("SELECT c FROM Competition c INNER JOIN Application app ON app.competition = c INNER JOIN Assessment ass ON ass.target.id = app.id WHERE ass.id = :assessmentId")
     Competition findByAssessmentId(@Param("assessmentId") long assessmentId);
-    @Query(GET_PENDING_SPEND_PROFILES)
-    List<SpendProfileStatusResource> getPendingSpendProfiles(@Param("competitionId") long competitionId);
 
-    @Query(COUNT_PENDING_SPEND_PROFILES)
-    Long countPendingSpendProfiles(@Param("competitionId") Long competitionId);
+    @Query(value = GET_PENDING_SPEND_PROFILES, nativeQuery = true)
+    List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);
+
+    @Query(value = COUNT_PENDING_SPEND_PROFILES, nativeQuery = true)
+    BigDecimal countPendingSpendProfiles(@Param("competitionId") Long competitionId);
 
 }

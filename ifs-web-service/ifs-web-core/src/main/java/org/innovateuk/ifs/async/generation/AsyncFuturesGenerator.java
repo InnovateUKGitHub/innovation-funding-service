@@ -88,7 +88,12 @@ public class AsyncFuturesGenerator {
 
             // create and register the Future.  Once registered, release the Future to run
             CountDownLatch waitForRegistrationLatch = new CountDownLatch(1);
-            CompletableFuture<T> asyncBlock = self.asyncInternal(decoratedSupplier, waitForRegistrationLatch);
+
+            CompletableFuture<T> asyncBlock = self.asyncInternal(() -> {
+                waitForRegistrationLatch.await(1, TimeUnit.SECONDS);
+                return decoratedSupplier.get();
+            });
+
             CompletableFuture<T> registeredFuture = AsyncFuturesHolder.registerFuture(futureName, asyncBlock);
             waitForRegistrationLatch.countDown();
             return registeredFuture;
@@ -125,9 +130,8 @@ public class AsyncFuturesGenerator {
      * Package-private to allow Spring to proxy this method
      */
     @Async
-    <T> CompletableFuture<T> asyncInternal(ExceptionThrowingSupplier<T> supplier, CountDownLatch waitForRegistrationLatch) {
+    <T> CompletableFuture<T> asyncInternal(ExceptionThrowingSupplier<T> supplier) {
         try {
-            waitForRegistrationLatch.await(1, TimeUnit.SECONDS);
             T value = supplier.get();
             return CompletableFuture.completedFuture(value);
         } catch (Exception e) {

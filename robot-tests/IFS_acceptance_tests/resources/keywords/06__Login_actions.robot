@@ -39,6 +39,7 @@ The guest user clicks the log-in button
     Click Button    css=button[name="_eventId_proceed"]
 
 The guest user opens the browser
+    Register keyword to run on failure    capture page screenshot on failure
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'    Start Virtual Display    1920    1080
     Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
@@ -50,6 +51,11 @@ The user closes the browser
     Close any open browsers
 
 Logout as user
+    the user clicks the button/link    link=Sign out
+    The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
+    Run Keyword And Ignore Error Without Screenshots     Confirm Action
+
+Logout as user from the Dashboard
     the user clicks the button/link    id=proposition-name
     the user clicks the button/link    link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}

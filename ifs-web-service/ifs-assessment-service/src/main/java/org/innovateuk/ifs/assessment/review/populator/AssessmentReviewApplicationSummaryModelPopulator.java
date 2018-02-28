@@ -18,6 +18,7 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -111,16 +112,11 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
                                       UserResource user,
                                       Model model,
                                       long applicationId) {
-        List<ProcessRoleResource> processRoleResources = userApplicationRoles
-                .stream()
-                .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
-                .filter(processRoleResource -> processRoleResource.getRoleName().equals("assessor"))
-                .collect(toList());
 
-        if (!processRoleResources.isEmpty()){
+        if (isAssessorForApplication(userApplicationRoles, user)) {
 
             List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService
-                    .getAllAssessorFormInputResponsesForPanel(processRoleResources.get(0).getId())
+                    .getAllAssessorFormInputResponsesForPanel(applicationId)
                     .getSuccess();
 
             if(!inputResponse.isEmpty()) {
@@ -145,5 +141,12 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
                 model.addAttribute("feedbackSummary", feedbackSummary);
             }
         }
+    }
+
+    private boolean isAssessorForApplication(List<ProcessRoleResource> userApplicationRoles, UserResource user) {
+        return userApplicationRoles
+                .stream()
+                .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
+                .anyMatch(processRoleResource -> processRoleResource.getRoleName().equals(UserRoleType.ASSESSOR.getName()));
     }
 }

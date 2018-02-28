@@ -10,6 +10,15 @@ allprojects {
 
 }
 
+ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
+
+def isNamedEnv() {
+    return ["sysint", "uat", "demo", "perf", "production"].contains(openshiftEnv)
+}
+
+def isNotProductionEnv() {
+    !"production".equals(openshiftEnv)
+}
 
 apply from: "openshift-support.gradle"
 apply from: "zipkin-support.gradle"
@@ -20,13 +29,7 @@ if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
 }
 
-def isNamedEnv() {
-    return ["sysint", "uat", "demo", "perf", "production"].contains(openshiftEnv)
-}
 
-def isNotProductionEnv() {
-    !"production".equals(openshiftEnv)
-}
 
 configure(subprojects - project(":ifs-auth-service")) {
 
@@ -116,6 +119,7 @@ sonarqube {
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }
+
 
 
 task wrapper(type: Wrapper) {

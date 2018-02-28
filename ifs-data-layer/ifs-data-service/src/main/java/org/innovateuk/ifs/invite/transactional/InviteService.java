@@ -43,12 +43,6 @@ public interface InviteService {
     ServiceResult<InviteResultsResource> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);
 
     @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "ACCEPT_INVITE",
-            description = "The System Registration user can accept an invite for a given hash",
-            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> acceptInvite(String inviteHash, Long userId);
-
-    @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
