@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -60,6 +61,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
             fieldWithPath("hasAssessmentPanel").description("Indicates if the competition will have an assessment panel stage"),
             fieldWithPath("hasInterviewStage").description("Indicates if the competition will have an interview stage"),
+            fieldWithPath("assessorFinanceView").description("Indicates if the competition will display an overview or a detailed view of the finances for the assessor"),
             fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition")
     };
 
@@ -95,5 +97,6 @@ public class CompetitionResourceDocs {
             .withMilestones(asList(1L, 2L, 3L))
             .withHasAssessmentPanel(false)
             .withHasInterviewStage(false)
+            .withAssessorFinanceView(AssessorFinanceView.OVERVIEW)
             .withTermsAndConditions(new TermsAndConditionsResource("T&C", "terms-and-conditions-template", "1"));
 }
