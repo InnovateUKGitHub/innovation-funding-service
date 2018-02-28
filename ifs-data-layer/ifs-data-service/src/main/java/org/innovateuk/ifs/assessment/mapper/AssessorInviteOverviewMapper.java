@@ -21,6 +21,9 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
+/**
+ * Mapper for mapping to a {@link AssessorInviteOverviewResource}.
+ */
 @Component
 public class AssessorInviteOverviewMapper {
 

@@ -15,6 +15,9 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * Mapper for mapping to an {@link AssessorCreatedInviteResource}.
+ */
 @Component
 public class AssessorCreatedInviteMapper {
 

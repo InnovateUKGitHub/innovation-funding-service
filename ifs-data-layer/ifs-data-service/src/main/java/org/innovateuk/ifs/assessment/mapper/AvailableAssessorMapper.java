@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
+/**
+ * Mapper for mapping to an {@link AvailableAssessorResource}.
+ */
 @Component
 public class AvailableAssessorMapper {
 
