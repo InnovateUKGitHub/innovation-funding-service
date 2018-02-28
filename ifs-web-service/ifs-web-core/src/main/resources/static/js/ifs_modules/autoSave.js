@@ -38,9 +38,8 @@ IFS.core.autoSave = (function () {
     },
     fieldChanged: function (element) {
       var field = jQuery(element)
-
       // per field we handle the request on a promise base, this means that ajax calls should be per field sequental
-      // this menas we can still have async as two fields can still be processed at the same time
+      // this means we can still have async as two fields can still be processed at the same time
       // http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
       var promiseListName
       if (field.closest('[data-repeatable-row]').length) {
@@ -63,6 +62,8 @@ IFS.core.autoSave = (function () {
       var fieldInfo
       var dateField
       var dateValue
+      var list
+      var listValues
       switch (saveType) {
         case 'application':
           dateField = field.is('[data-date]')
@@ -99,6 +100,7 @@ IFS.core.autoSave = (function () {
           break
         case 'compSetup':
           dateField = field.is('[data-date]')
+          list = field.is('[data-autosave-list]')
           var objectId = form.attr('data-objectid')
           if (dateField) {
             fieldInfo = field.closest('.date-group').find('input[type="hidden"]')
@@ -106,6 +108,15 @@ IFS.core.autoSave = (function () {
               objectId: objectId,
               value: field.attr('data-date'),
               fieldName: fieldInfo.prop('name')
+            }
+          } else if (list) {
+            listValues = jQuery.map(field.closest('fieldset').find(':checkbox:checked'), function (n) {
+              return n.value
+            }).join(',')
+            jsonObj = {
+              objectId: objectId,
+              fieldName: field.prop('name'),
+              value: listValues
             }
           } else {
             jsonObj = {
