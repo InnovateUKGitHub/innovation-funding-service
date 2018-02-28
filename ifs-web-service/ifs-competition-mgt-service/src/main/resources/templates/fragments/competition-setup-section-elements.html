@@ -220,6 +220,9 @@
                     </div>
                 </fieldset>
             </div>
+            <!--/*
+            TODO: IFS-2565 - Change to use 'allowedFileTypes' instead of 'allowedFileTypesEnum' in ZDD migrate (contract: step 1)
+            */-->
             <div  id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('question.allowedFileTypesEnum')} ? 'form-group-error'">
                     <fieldset>

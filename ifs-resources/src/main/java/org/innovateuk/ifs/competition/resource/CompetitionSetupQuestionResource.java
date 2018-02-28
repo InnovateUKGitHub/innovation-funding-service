@@ -236,11 +236,13 @@ public class CompetitionSetupQuestionResource {
         this.allowedFileTypes = simpleMapSet(allowedFileTypes, type -> fromNameOrDisplayName(type));
     }
 
+    // TODO: IFS-2565 rename function to getAllowedFileTypes as part of ZDD cleanup (contract: step 2)
     @JsonIgnore
     public Set<FileTypeCategory> getAllowedFileTypesEnum() {
         return allowedFileTypes;
     }
 
+    // TODO: IFS-2565 rename function to setAllowedFileTypes as part of ZDD cleanup (contract: step 2)
     @JsonIgnore
     public void setAllowedFileTypesEnum(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
