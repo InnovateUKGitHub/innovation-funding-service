@@ -239,8 +239,9 @@ Custom suite setup
     set suite variable  ${month}
     ${nextYear} =  get next year
     Set suite variable  ${nextYear}
-    ${monthWord} =  get month as word
-    set suite variable  ${monthWord}
+    ${tomorrowMonthWord} =  get tomorrow month as word
+    set suite variable  ${tomorrowMonthWord}
+
 
 the user moves focus and waits for autosave
     focus    link=Sign out
@@ -415,9 +416,9 @@ the users waits until the page is autosaved
     Wait For Autosave
 
 the user should see the correct inputs in the Milestones form
-    the user should see the element  jQuery=tr:contains("Open date") td:contains("${monthWord} ${nextyear}")
-    the user should see the element  jQuery=tr:contains("Briefing event") td:contains("${monthWord} ${nextyear}")
-    the user should see the element  jQuery=tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${monthWord} ${nextyear}")
+    the user should see the element  jQuery=tr:contains("Open date") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery=tr:contains("Briefing event") td:contains("${tomorrowMonthWord} ${nextyear}")
+    the user should see the element  jQuery=tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${tomorrowMonthWord} ${nextyear}")
     the user should see the element  jQuery=button:contains("Edit")
 
 the user should see the correct inputs in the Applications questions form

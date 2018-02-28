@@ -1,24 +1,31 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.file.resource.FileTypeCategories.PDF;
-import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedFileTypesEnum", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
@@ -41,7 +48,10 @@ public class CompetitionSetupQuestionResource {
     @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     @NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
+
     private Boolean appendix;
+    private Set<FileTypeCategory> allowedFileTypes = new LinkedHashSet<>();
+    private String appendixGuidance;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
@@ -57,8 +67,6 @@ public class CompetitionSetupQuestionResource {
 
     private Boolean researchCategoryQuestion;
     private Boolean scope;
-
-    private List<String> allowedFileTypes;
 
     public Long getQuestionId() {
         return questionId;
@@ -220,16 +228,43 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public List<String> getAllowedFileTypes() {
+    public Set<String> getAllowedFileTypes() {
+        return simpleMapSet(allowedFileTypes, type-> type.getDisplayName());
+    }
+
+    public void setAllowedFileTypes(Set<String> allowedFileTypes) {
+        this.allowedFileTypes = simpleMapSet(allowedFileTypes, type -> fromNameOrDisplayName(type));
+    }
+
+    // TODO: IFS-2565 rename function to getAllowedFileTypes as part of ZDD cleanup (contract: step 2)
+    @JsonIgnore
+    public Set<FileTypeCategory> getAllowedFileTypesEnum() {
         return allowedFileTypes;
     }
 
-    public void setAllowedFileTypes(List<String> allowedFileTypes) {
+    // TODO: IFS-2565 rename function to setAllowedFileTypes as part of ZDD cleanup (contract: step 2)
+    @JsonIgnore
+    public void setAllowedFileTypesEnum(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 
-    public static List<FileTypeCategories> getSupportedTypeCategories(){
+    public String getAppendixGuidance() {
+        return appendixGuidance;
+    }
+
+    public void setAppendixGuidance(String appendixGuidance) {
+        this.appendixGuidance = appendixGuidance;
+    }
+
+    public static List<FileTypeCategory> getSupportedTypeCategories(){
         return asList(PDF, SPREADSHEET);
+    }
+
+    private FileTypeCategory fromNameOrDisplayName(String name) {
+        return simpleFindFirst(FileTypeCategory.values(),
+                category -> category.getDisplayName().equals(name) ||
+                        category.name().equals(name))
+                .orElse(null);
     }
 
     @Override
@@ -261,7 +296,6 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows, that.guidanceRows)
                 .append(researchCategoryQuestion, that.researchCategoryQuestion)
                 .append(scope, that.scope)
-                .append(allowedFileTypes, that.allowedFileTypes)
                 .isEquals();
     }
 
@@ -288,7 +322,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows)
                 .append(researchCategoryQuestion)
                 .append(scope)
-                .append(allowedFileTypes)
                 .toHashCode();
     }
+
 }

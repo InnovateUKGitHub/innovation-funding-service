@@ -4,11 +4,14 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<CompetitionSetupQuestionResource, CompetitionSetupQuestionResourceBuilder> {
 
@@ -55,6 +58,15 @@ public class CompetitionSetupQuestionResourceBuilder extends BaseBuilder<Competi
     public CompetitionSetupQuestionResourceBuilder withAppendix(Boolean appendix) {
         return with(competition -> competition.setAppendix(appendix));
     }
+
+    public CompetitionSetupQuestionResourceBuilder withAllowedFileTypes(Set<FileTypeCategory>... fileTypes) {
+        return withArray((fileType, competition) -> setField("allowedFileTypes", fileType, competition), fileTypes);
+    }
+
+    public CompetitionSetupQuestionResourceBuilder withAppendixGuidance(String appendixGuidance) {
+        return with(competition -> competition.setAppendixGuidance(appendixGuidance));
+    }
+
 
     public CompetitionSetupQuestionResourceBuilder withAssessmentGuidanceTitle(String assessmentGuidanceTitle) {
         return with(competition -> competition.setAssessmentGuidanceTitle(assessmentGuidanceTitle));
