@@ -5,11 +5,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -85,6 +88,19 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(jsonPath("[0]id", is(2)))
                 .andExpect(jsonPath("[1]name", is("testApplication3Name")))
                 .andExpect(jsonPath("[1]id", is(3)));
+    }
+
+    @Test
+    public void wildcardSearchById() throws Exception {
+
+        ApplicationPageResource applicationPageResource = new ApplicationPageResource();
+
+        PageRequest pageRequest = new PageRequest(0, 40);
+        when(applicationServiceMock.wildcardSearchById("", pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
+
+        mockMvc.perform(get("/application/wildcardSearchById"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)));
     }
 
     @Test

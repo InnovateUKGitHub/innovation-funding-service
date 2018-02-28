@@ -18,6 +18,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
@@ -401,6 +402,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<List<ApplicationResource>> findByUserId(Long userId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
             return null;
         }
 
