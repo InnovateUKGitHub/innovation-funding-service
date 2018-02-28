@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -718,7 +719,16 @@ public class CollectionFunctionsTest {
         } catch (IllegalArgumentException e){
             // Expected
         }
+    }
 
+    @Test
+    public void simpleMapSet_fromArray() {
+        String[] strings = {"a", "b", "c", "c"};
+        Set<String> expected = newHashSet(asList("A", "B", "C"));
+
+        Set<String> actual = simpleMapSet(strings, String::toUpperCase);
+
+        assertEquals(expected, actual);
     }
 }
 

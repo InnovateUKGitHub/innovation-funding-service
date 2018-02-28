@@ -23,26 +23,57 @@ public abstract class AbstractSectionPopulator<M extends AbstractSectionViewMode
     @Autowired
     private ApplicationNavigationPopulator navigationPopulator;
 
-    public M populate(ApplicantSectionResource section, ApplicationForm form, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
-        M viewModel = createNew(section, form, readOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+    public M populate(
+            ApplicantSectionResource section,
+            ApplicationForm form,
+            Model model,
+            BindingResult bindingResult,
+            Boolean readOnly,
+            Optional<Long> applicantOrganisationId,
+            Boolean readOnlyAllApplicantApplicationFinances
+    ) {
+        M viewModel = createNew(
+                section,
+                form,
+                readOnly,
+                applicantOrganisationId,
+                readOnlyAllApplicantApplicationFinances
+        );
         populateNoReturn(section, form, viewModel, model, bindingResult, readOnly, applicantOrganisationId);
         return viewModel;
     }
 
-    protected abstract void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, M viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId);
-    protected abstract M createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances);
+    protected abstract void populateNoReturn(
+            ApplicantSectionResource section,
+            ApplicationForm form,
+            M viewModel,
+            Model model,
+            BindingResult bindingResult,
+            Boolean readOnly,
+            Optional<Long> applicantOrganisationId
+    );
+
+    protected abstract M createNew(
+            ApplicantSectionResource section,
+            ApplicationForm form,
+            Boolean readOnly,
+            Optional<Long> applicantOrganisationId,
+            Boolean readOnlyAllApplicantApplicationFinances
+    );
 
     public abstract SectionType getSectionType();
 
     protected NavigationViewModel getNavigationViewModel(ApplicantSectionResource applicantSection) {
-        return navigationPopulator.addNavigation(applicantSection.getSection(),
+        return navigationPopulator.addNavigation(
+                applicantSection.getSection(),
                 applicantSection.getApplication().getId(),
-                getSectionTypesToSkip(applicantSection));
+                getSectionTypesToSkip(applicantSection)
+        );
 
     }
 
     private List<SectionType> getSectionTypesToSkip(ApplicantSectionResource applicantSection) {
-        if(applicantSection.getCurrentApplicant() != null) {
+        if (applicantSection.getCurrentApplicant() != null) {
             return SectionType.sectionsNotRequiredForOrganisationType(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
         } else {
             return Collections.emptyList();

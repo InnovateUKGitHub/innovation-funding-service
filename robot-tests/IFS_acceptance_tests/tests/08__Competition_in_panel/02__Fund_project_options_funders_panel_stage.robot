@@ -12,6 +12,8 @@ Documentation     INFUND-2601 As a competition administrator I want a view of al
 ...               INFUND-8854 Set competition state to Inform when ALL applications either set to Successful or Unsuccessful and final decision email sent
 ...
 ...               IFS-1620 Internal Project Setup dashboard: project visibility needed after successful notification not feedback released
+...
+...               IFS-2903 Identify root cause of failure in changing the Funding decision
 Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin  Applicant
@@ -64,7 +66,7 @@ Proj Finance user can send Fund Decision notification
     When the user clicks the button/link     css=button[data-js-modal="send-to-all-applicants-modal"]
     When the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     Then the user should see a field and summary error  Please enter the email message.
-    And the user cancels the process needs to re-select the reciepients
+    And the user cancels the process and needs to re-select the recipients
     When the internal sends the descision notification email to all applicants  ${onHoldMessage}
     Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
 
@@ -103,15 +105,16 @@ Unsuccessful Funding Decision
     [Documentation]  INFUND-7376 INFUND-7377
     [Tags]
     Given the internal user marks the application as  Unsuccessful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
-    And the internal user sends an email notification  Unsuccessful  ${application1Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    When the internal user sends an email notification  Unsuccessful  ${application1Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
     Then the external user reads his email and can see the correct status  Unsuccessful  ${application1Subject}  ${unsuccMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
 
 Successful Funding Decision
-    [Documentation]  INFUND-7376 INFUND-7377
+    [Documentation]  INFUND-7376 INFUND-7377  IFS-2903
     [Tags]  HappyPath
-    Given the internal user marks the application as  Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
-    And the internal user sends an email notification  Successful  ${application1Subject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
-    Then the external user reads his email and can see the correct status  Project in setup  ${application1Subject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
+    Given the internal user marks the application as                         Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
+    And the user checks that the statuses are changing correctly
+    When the internal user sends an email notification                       Successful  ${application1Subject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
+    Then the external user reads his email and can see the correct status    Project in setup  ${application1Subject}  ${successMessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${test_mailbox_one}+fundsuccess@gmail.com
 
 Once Successful and Sent you cannot change your mind
     [Documentation]  INFUND-8651
@@ -169,7 +172,7 @@ the user sets the funding decision of application
     the user selects the checkbox    ${checkbox}
     the user clicks the button/link    jQuery=button:contains("${decision_button}")
 
-the user cancels the process needs to re-select the reciepients
+the user cancels the process and needs to re-select the recipients
     the user clicks the button/link  jQuery=a:contains("Cancel")
     the user should see the element  jQuery=button[disabled]:contains("Write and send email")
     the user selects the checkbox    app-row-${application_ids["${FUNDERS_PANEL_APPLICATION_1_TITLE}"]}
@@ -209,3 +212,17 @@ verify the user has received the on hold email
     Given the external user reads his email and can see the correct status  Awaiting  ${application1Subject}  ${onholdmessage}  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  ${email_user}
     Then the user should not see the element  jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Unsuccessful")
     And the user should not see the element   jQuery=div:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + div:contains("Successful")
+
+the internal user changes the funding decision status
+    [Documentation]  IFS-2903
+    [Arguments]  ${decision}  ${application}  ${tr}
+    the user navigates to the page          ${funders_panel_competition_url}/funding
+    the user selects the checkbox           app-row-${tr}
+    the user clicks the button/link         jQuery=button:contains("${decision}")
+    the user should see the element         jQuery=td:contains("${application}") ~ td:contains("${decision}")
+
+the user checks that the statuses are changing correctly
+    [Documentation]  IFS-2903
+    the internal user changes the funding decision status    On hold  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
+    the internal user changes the funding decision status    Unsuccessful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1
+    the internal user changes the funding decision status    Successful  ${FUNDERS_PANEL_APPLICATION_1_TITLE}  1

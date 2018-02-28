@@ -47,6 +47,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"AND (:funding IS NULL " +
 			"	OR (a.fundingDecision = :funding))";
 
+	String SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL = "SELECT a FROM Application a " +
+            "WHERE " +
+            "  a.competition.id = :competitionId AND " +
+            "  a.applicationProcess.activityState.state = org.innovateuk.ifs.workflow.resource.State.SUBMITTED AND " +
+            "  NOT EXISTS (SELECT 1 FROM AssessmentInterviewPanel i WHERE i.target = a )";
+
     String SEARCH_BY_ID_LIKE = " SELECT a from Application a " +
                                " WHERE str(a.id) LIKE CONCAT('%', :searchString, '%') ";
 
@@ -122,4 +128,9 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	List<Application> findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(long competitionId, State applicationState);
 	List<Application> findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(Competition competition, State applicationState);
+
+	@Query(SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL)
+    Page<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
+    @Query(SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL)
+    List<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId);
 }
