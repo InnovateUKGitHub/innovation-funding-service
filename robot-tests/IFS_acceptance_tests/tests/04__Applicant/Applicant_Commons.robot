@@ -245,7 +245,7 @@ the user fills in the organisation information
 
 the user checks Your Funding section
     [Arguments]  ${Application}
-    ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
+    ${Research_category_selected}=  run keyword and return status without screenshots    Element Should Be Visible   link=Your funding
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
 
