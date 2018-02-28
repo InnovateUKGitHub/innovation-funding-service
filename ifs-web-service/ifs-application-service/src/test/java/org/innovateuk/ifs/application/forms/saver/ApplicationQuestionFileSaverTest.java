@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -115,17 +115,17 @@ public class ApplicationQuestionFileSaverTest {
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOnly() {
-        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY, FileTypeCategories.PDF.getMediaTypes());
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY, FileTypeCategory.PDF.getMediaTypes());
     }
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailureSpreadsheetsOnly() {
-        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY, FileTypeCategories.SPREADSHEET.getMediaTypes());
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY, FileTypeCategory.SPREADSHEET.getMediaTypes());
     }
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOrSpreadsheetsOnly() {
-        List<String> pdfAndSPreadsheetMediaTypes = combineLists(FileTypeCategories.PDF.getMediaTypes(), FileTypeCategories.SPREADSHEET.getMediaTypes());
+        List<String> pdfAndSPreadsheetMediaTypes = combineLists(FileTypeCategory.PDF.getMediaTypes(), FileTypeCategory.SPREADSHEET.getMediaTypes());
         assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY, pdfAndSPreadsheetMediaTypes);
     }
 

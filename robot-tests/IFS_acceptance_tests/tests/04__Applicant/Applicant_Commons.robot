@@ -34,7 +34,7 @@ Complete the org size section
     the user clicks the button/link    link=Robot test application
     the user clicks the button/link    link=Your finances
     the user clicks the button/link    link=Your organisation
-    ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit")
+    ${orgSizeReadonly}=  run keyword and return status without screenshots    Element Should Be Visible   jQuery=button:contains("Edit")
     Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit")
     the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
@@ -278,7 +278,7 @@ the user fills in the organisation information
 
 the user checks Your Funding section
     [Arguments]  ${Application}
-    ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
+    ${Research_category_selected}=  run keyword and return status without screenshots    Element Should Be Visible   link=Your funding
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
 
