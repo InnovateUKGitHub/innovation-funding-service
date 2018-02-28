@@ -74,7 +74,8 @@ Guest user can filter competitions by Innovation area
 
 Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
-    [Tags]
+    [Tags]  Pending
+    # TODO IFS-2986
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
@@ -98,7 +99,7 @@ Guest user can see the public information of a competition
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Home and industrial efficiency programme
+    Given the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     Then the user should see the element    jQuery=h1:contains("Home and industrial efficiency programme")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Friday 15 April 2016")
     And the user should see the element    jQuery=li:contains("Competition closes")
