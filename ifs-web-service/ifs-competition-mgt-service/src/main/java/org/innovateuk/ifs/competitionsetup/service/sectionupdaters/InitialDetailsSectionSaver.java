@@ -262,7 +262,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 	}
 
     @Override
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
+                                                              String fieldName,
+                                                              String value,
+                                                              Optional<Long> questionId) {
         if("openingDate".equals(fieldName)) {
             try {
                 ZonedDateTime startDate = parseDate(value);
@@ -283,7 +286,10 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             processInnovationAreas(value, competitionResource);
             return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
-        return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
+        return super.handleIrregularAutosaveCase(competitionResource,
+                fieldName,
+                value,
+                questionId);
     }
 
     private ZonedDateTime parseDate(String value) {
