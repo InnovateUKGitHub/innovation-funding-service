@@ -3,8 +3,8 @@ package org.innovateuk.ifs.assessment.mapper;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionInvite;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -24,9 +24,7 @@ import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuild
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AssessorCreatedInviteMapperTest {
@@ -50,7 +48,7 @@ public class AssessorCreatedInviteMapperTest {
                 .withInnovationArea(innovationArea)
                 .build();
 
-        AssessmentInterviewPanelInvite invite = newAssessmentInterviewPanelInvite()
+        CompetitionInvite invite = newAssessmentInterviewPanelInvite()
                 .withEmail("test@test.com")
                 .withName("Joe Bloggs")
                 .withUser(
