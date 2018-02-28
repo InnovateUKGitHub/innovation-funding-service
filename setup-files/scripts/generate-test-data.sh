@@ -25,10 +25,6 @@ do_baseline () {
     ./gradlew clean build buildDocker -x test
     ./gradlew processResources processTestResources
 
-    # unignore generator test class
-#    sed -i -e 's/import org.junit.Ignore;//' $generate_test_class
-#    sed -i -e 's/@Ignore//' $generate_test_class
-
     # run generator test class
     IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 

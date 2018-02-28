@@ -12,7 +12,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 /**
- * TODO DW - document this class
+ * Configuration for {@link BaseGenerateTestData} and its associated subclasses.  This provides an Executor for
+ * executing web test generation in either single- or multi-threaded mode.
  */
 @TestConfiguration
 public class GenerateTestDataConfiguration {

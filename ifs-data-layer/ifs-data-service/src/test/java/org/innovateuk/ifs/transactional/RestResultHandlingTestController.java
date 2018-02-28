@@ -10,9 +10,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
-/**
- * TODO DW - document this class
- */
 @Controller
 @RequestMapping("/rest-result-handling-test-controller")
 public class RestResultHandlingTestController {

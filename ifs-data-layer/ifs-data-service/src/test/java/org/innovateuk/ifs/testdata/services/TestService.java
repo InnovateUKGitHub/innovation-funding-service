@@ -15,7 +15,4 @@ public interface TestService {
 
     @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
     <T> T doWithinTransaction(Supplier<T> supplier);
-
-    @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
-    void flushAndClearSession();
 }

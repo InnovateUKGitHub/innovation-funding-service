@@ -27,7 +27,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
- * TODO DW - document this class
+ * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate Competition data.  While
+ * {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
 @Component
 @Lazy

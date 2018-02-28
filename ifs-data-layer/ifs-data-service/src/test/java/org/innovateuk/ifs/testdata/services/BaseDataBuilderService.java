@@ -27,7 +27,12 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 
 /**
- * TODO DW - document this class
+ * This base class represents a service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate
+ * data of a certain theme e.g. Applications, Assessments etc.
+ *
+ * While {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
 public abstract class BaseDataBuilderService {
 

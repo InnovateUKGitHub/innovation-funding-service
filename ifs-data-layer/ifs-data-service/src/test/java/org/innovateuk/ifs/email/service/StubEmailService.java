@@ -11,7 +11,8 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
- * TODO DW - document this class
+ * Stub (always succeeding) implementation of EmailService, available when we are not reliant on a SIL being present.
+ * Used as part of the integration tests when we don't rely on an HTTP server to be running.
  */
 @Component
 @ConditionalOnProperty(name = "sil.available", havingValue = "false")

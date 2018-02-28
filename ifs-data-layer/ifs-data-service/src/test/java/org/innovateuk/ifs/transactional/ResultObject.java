@@ -3,9 +3,6 @@ package org.innovateuk.ifs.transactional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-/**
- * TODO DW - document this class
- */
 class ResultObject {
 
     private String message;

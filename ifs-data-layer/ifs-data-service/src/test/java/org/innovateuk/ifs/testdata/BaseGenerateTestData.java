@@ -62,7 +62,29 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
+ * Generates web test data based upon CSVs in /src/test/resources/testdata, using Services of different data areas to
+ * generate the data.
+ *
+ * It it this class' responsibility to gather the information from the various CSVs and orchestrate the build of this
+ * data using the services available.
+ *
+ * This test class accepts some optional parameters to define what needs to be built and how:
+ *
+ * 1) ifs.generate.test.data.execution=(SINGLE_THREADED|MULTI_THREADED)
+ *
+ *    This defines whether to generate the data in sequence or in parallel.  MULTI_THREADED is good for development
+ *    as it is much faster.  SINGLE_THREADED is used to generate final dumps as it is consistent in its ordering.
+ *
+ * 2) ifs.generate.test.data.competition.filter=(ALL_COMPETITIONS|NO_COMPETITIONS|BY_NAME)
+ *
+ *    This defines which Competitions to generate (and all competition-specific data under them).  ALL_COMPETITIONS
+ *    and NO_COMPETITIONS are self-explanatory.  BY_NAME will generate a single Competition by name - if using this
+ *    parameter, we need to also supply "ifs.generate.test.data.competition.filter.name".
+ *
+ * 3) ifs.generate.test.data.competition.filter.name
+ *
+ *    In conjunction with "ifs.generate.test.data.competition.filter=BY_NAME", this parameter allows you to specify a
+ *    single Competition to generate.
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext

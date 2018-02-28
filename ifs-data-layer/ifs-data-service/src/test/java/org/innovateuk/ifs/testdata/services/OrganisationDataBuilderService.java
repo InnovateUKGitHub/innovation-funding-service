@@ -15,7 +15,10 @@ import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_A
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
 
 /**
- * TODO DW - document this class
+ * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate Organisation data.  While
+ * {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
 @Component
 @Lazy

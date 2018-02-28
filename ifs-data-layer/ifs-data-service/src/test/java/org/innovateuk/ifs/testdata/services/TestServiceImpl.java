@@ -24,10 +24,4 @@ public class TestServiceImpl implements TestService {
     public <T> T doWithinTransaction(Supplier<T> supplier) {
         return supplier.get();
     }
-
-    @Override
-    public void flushAndClearSession() {
-        em.flush();
-        em.clear();
-    }
 }
