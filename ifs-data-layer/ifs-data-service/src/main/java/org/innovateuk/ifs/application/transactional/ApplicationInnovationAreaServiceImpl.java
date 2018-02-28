@@ -42,9 +42,12 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> setInnovationArea(Long applicationId, Long innovationAreaId) {
-        return find(application(applicationId)).andOnSuccess(application ->
-                findInnovationAreaInAllowedList(application, innovationAreaId).andOnSuccess(innovationArea ->
-                        saveApplicationWithInnovationArea(application, innovationArea))).andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
+        return find(application(applicationId))
+                .andOnSuccess(application ->
+                        findInnovationAreaInAllowedList(application, innovationAreaId)
+                                .andOnSuccess(innovationArea ->
+                                        saveApplicationWithInnovationArea(application, innovationArea)))
+                .andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
     }
 
     @Override
@@ -80,15 +83,16 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
     }
 
     private ServiceResult<InnovationArea> findInnovationAreaInList(List<InnovationArea> innovationAreasList, Long innovationAreaId) {
-        Optional<InnovationArea> allowedInnovationArea = innovationAreasList.stream().filter(area ->
-                area.getId().equals(innovationAreaId)).findAny();
+        Optional<InnovationArea> allowedInnovationArea = innovationAreasList
+                .stream()
+                .filter(area -> area
+                        .getId()
+                        .equals(innovationAreaId))
+                .findAny();
 
-        if (allowedInnovationArea.isPresent()) {
-            return serviceSuccess(allowedInnovationArea.get());
-        }
-        else {
-            return serviceFailure(GENERAL_FORBIDDEN);
-        }
+        return allowedInnovationArea
+                .map(ServiceResult::serviceSuccess)
+                .orElseGet(() -> serviceFailure(GENERAL_FORBIDDEN));
     }
 
     private ServiceResult<Application> saveWithNoInnovationAreaApplies(Application application) {
