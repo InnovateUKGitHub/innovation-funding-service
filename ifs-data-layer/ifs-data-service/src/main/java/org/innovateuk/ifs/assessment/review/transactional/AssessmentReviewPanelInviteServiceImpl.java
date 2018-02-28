@@ -407,6 +407,11 @@ public class AssessmentReviewPanelInviteServiceImpl extends InviteService<Assess
                 .andOnSuccessReturnVoid();
     }
 
+    @Override
+    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
+        return super.checkExistingUser(inviteHash);
+    }
+
     private static ServiceResult<AssessmentReviewPanelParticipant> accept(AssessmentReviewPanelParticipant participant) {
         User user = participant.getUser();
         if (participant.getInvite().getStatus() != OPENED) {

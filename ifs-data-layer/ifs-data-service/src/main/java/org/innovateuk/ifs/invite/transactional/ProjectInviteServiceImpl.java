@@ -154,6 +154,11 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     }
 
     @Override
+    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
+        return super.checkExistingUser(inviteHash);
+    }
+
+    @Override
     public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()).map(userMapper::mapToResource))

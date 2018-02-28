@@ -261,6 +261,10 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
         return getByHash(hash).andOnSuccessReturn(this::mapInviteToInviteResource);
     }
 
+    @Override
+    public ServiceResult<Boolean> checkExistingUser(String hash) {
+        return super.checkExistingUser(hash);
+    }
 
     @Override
     public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {

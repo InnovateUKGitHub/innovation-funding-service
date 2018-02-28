@@ -361,6 +361,11 @@ public class AssessmentInterviewPanelInviteServiceImpl extends InviteService<Ass
         return assessmentInterviewPanelInviteRepository.save(invite.open());
     }
 
+    @Override
+    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
+        return super.checkExistingUser(inviteHash);
+    }
+
     private ServiceResult<AssessmentInterviewPanelInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
