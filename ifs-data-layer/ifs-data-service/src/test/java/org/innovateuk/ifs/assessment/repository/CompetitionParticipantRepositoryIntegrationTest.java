@@ -10,13 +10,13 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
-import org.innovateuk.ifs.invite.repository.AssessmentReviewPanelInviteRepository;
+import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
+import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
@@ -111,7 +111,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     private AgreementRepository agreementRepository;
 
     @Autowired
-    private AssessmentReviewPanelInviteRepository assessmentReviewPanelInviteRepository;
+    private ReviewInviteRepository reviewInviteRepository;
 
     @Autowired
     @Override
@@ -1011,8 +1011,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         );
         unavailableParticipant.acceptAndAssignUser(assessor);
 
-        AssessmentReviewPanelInvite invite = new AssessmentReviewPanelInvite(userMapper.mapToDomain(getFelixWilson()), "hash", competition);
-        assessmentReviewPanelInviteRepository.save(invite);
+        ReviewInvite invite = new ReviewInvite(userMapper.mapToDomain(getFelixWilson()), "hash", competition);
+        reviewInviteRepository.save(invite);
 
         flushAndClearSession();
 

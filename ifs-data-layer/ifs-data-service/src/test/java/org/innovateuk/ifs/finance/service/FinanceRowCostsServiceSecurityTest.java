@@ -38,7 +38,6 @@ import static org.innovateuk.ifs.finance.service.FinanceRowCostsServiceSecurityT
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
