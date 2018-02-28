@@ -245,6 +245,7 @@ the academic fills in the project costs
     the user should see the element       css=#total[data-calculation-rawvalue^="8999"]
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
+    the user selects the checkbox         termsAgreed
     the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
 
 the user fills the organisation details with Project growth table
