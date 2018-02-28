@@ -39,6 +39,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends BaseIntegrationTest {
 
     @LocalServerPort
+    @SuppressWarnings("unused")
     private int port;
 
     @Test
