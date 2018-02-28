@@ -253,7 +253,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleRepository roleRepositoryMock;
 
     @Mock
-    protected InviteRoleRepository inviteRoleRepositoryMock;
+    protected RoleInviteRepository roleInviteRepositoryMock;
 
     @Mock
     protected RoleService roleServiceMock;
@@ -373,7 +373,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
-    protected CompetitionInviteService competitionInviteServiceMock;
+    protected CompetitionAssessmentInviteService competitionAssessmentInviteServiceMock;
 
     @Mock
     protected CompetitionAssessmentParticipantMapper competitionAssessmentParticipantMapperMock;
@@ -391,10 +391,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewParticipantMapper interviewParticipantMapperMock;
 
     @Mock
-    protected InviteProjectRepository inviteProjectRepositoryMock;
+    protected ProjectInviteRepository projectInviteRepositoryMock;
 
     @Mock
-    protected InviteProjectService inviteProjectServiceMock;
+    protected ProjectInviteService projectInviteServiceMock;
 
     @Mock
     protected InviteUserService inviteUserServiceMock;
@@ -736,7 +736,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleInviteMapper roleInviteMapperMock;
 
     @Mock
-    protected InviteService inviteServiceMock;
+    protected ApplicationInviteService applicationInviteServiceMock;
 
     @Mock
     protected OrganisationInitialCreationService organisationInitialCreationServiceMock;
