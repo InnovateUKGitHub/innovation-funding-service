@@ -44,7 +44,7 @@ public class AssessmentInterviewPanelWorkflowHandler extends BaseWorkflowEventHa
 
     @Override
     protected AssessmentInterviewPanel createNewProcess(Application target, ProcessRole participant) {
-        return new AssessmentInterviewPanel(target, participant);
+        return new AssessmentInterviewPanel(target, participant, null);
     }
 
     public boolean notifyInterviewPanel(AssessmentInterviewPanel assessmentInterviewPanel, AssessmentInterviewPanelMessageOutcome messageOutcome) {
