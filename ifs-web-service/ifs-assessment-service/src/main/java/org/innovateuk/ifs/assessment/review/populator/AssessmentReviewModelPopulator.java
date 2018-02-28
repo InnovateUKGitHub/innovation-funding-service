@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.review.populator;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
+import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
@@ -33,21 +33,21 @@ public class AssessmentReviewModelPopulator {
     private OrganisationRestService organisationRestService;
 
     @Autowired
-    private AssessmentPanelRestService assessmentPanelRestService;
+    private ReviewRestService reviewRestService;
 
     public AssessmentReviewViewModel populateModel(long reviewId) {
-        AssessmentReviewResource assessmentReviewResource =
-                assessmentPanelRestService.getAssessmentReview(reviewId).getSuccess();
+        ReviewResource reviewResource =
+                reviewRestService.getAssessmentReview(reviewId).getSuccess();
 
-        String projectSummary = getProjectSummary(assessmentReviewResource);
-        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(assessmentReviewResource.getApplication());
+        String projectSummary = getProjectSummary(reviewResource);
+        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(reviewResource.getApplication());
         SortedSet<OrganisationResource> collaborators = getApplicationOrganisations(processRoles);
         OrganisationResource leadPartner = getApplicationLeadOrganisation(processRoles).orElse(null);
 
         return new AssessmentReviewViewModel(
                 reviewId,
-                assessmentReviewResource.getCompetition(),
-                assessmentReviewResource.getApplicationName(),
+                reviewResource.getCompetition(),
+                reviewResource.getApplicationName(),
                 collaborators,
                 leadPartner,
                 projectSummary);
@@ -72,9 +72,9 @@ public class AssessmentReviewModelPopulator {
                 .collect(Collectors.toCollection(supplier));
     }
 
-    private String getProjectSummary(AssessmentReviewResource assessmentReviewResource) {
+    private String getProjectSummary(ReviewResource reviewResource) {
         FormInputResponseResource formInputResponseResource = formInputResponseRestService.getByApplicationIdAndQuestionName(
-                assessmentReviewResource.getApplication(), "Project summary").getSuccess();
+                reviewResource.getApplication(), "Project summary").getSuccess();
         return formInputResponseResource.getValue();
     }
 }
