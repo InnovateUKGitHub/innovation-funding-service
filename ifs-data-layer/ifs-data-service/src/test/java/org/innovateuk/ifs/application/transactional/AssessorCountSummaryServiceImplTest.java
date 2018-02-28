@@ -56,7 +56,7 @@ public class AssessorCountSummaryServiceImplTest extends BaseServiceUnitTest<Ass
 
         AssessorCountSummaryPageResource result =
                 service.getAssessorCountSummariesByCompetitionId(competitionId, innovationSectorId, businessType, pageNumber, pageSize)
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
 
         assertEquals(expectedPageResource, result);
     }

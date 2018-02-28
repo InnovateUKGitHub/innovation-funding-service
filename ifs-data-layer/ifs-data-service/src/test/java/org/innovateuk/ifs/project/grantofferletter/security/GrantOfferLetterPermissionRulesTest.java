@@ -4,8 +4,11 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
+
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -235,7 +238,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserAsProjectManager(project, user);
 
-        assertTrue(rules.projectManagerSubmitGrantOfferLetter(project.getId(), user));
+        assertTrue(rules.projectManagerSubmitGrantOfferLetter(ProjectCompositeId.id(project.getId()), user));
 
     }
 
@@ -246,7 +249,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserNotAsProjectManager(user);
 
-        assertFalse(rules.projectManagerSubmitGrantOfferLetter(project.getId(), user));
+        assertFalse(rules.projectManagerSubmitGrantOfferLetter(ProjectCompositeId.id(project.getId()), user));
     }
 
     @Test
@@ -256,7 +259,6 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserAsCompAdmin(project, user);
 
-        assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
         assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
     }
 
@@ -267,7 +269,6 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserNotAsCompAdmin(project, user);
 
-        assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
         assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
     }
 
@@ -407,16 +408,58 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testPartnersOnProjectCanViewGrantOfferApprovedStatus(){
+    public void testPartnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
         setupUserNotAsPartner(project, user);
 
-        assertFalse(rules.partnersOnProjectCanViewGrantOfferApprovedStatus(project, user));
+        assertFalse(rules.partnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(project, user));
 
         setupUserAsPartner(project, user);
 
-        assertTrue(rules.partnersOnProjectCanViewGrantOfferApprovedStatus(project, user));
+        assertTrue(rules.partnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(project, user));
+    }
+
+    @Test
+    public void testInternalUsersCanViewSignedGrantOfferLetterApprovedStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.internalUsersCanViewSignedGrantOfferLetterApprovedStatus(project, user));
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.internalUsersCanViewSignedGrantOfferLetterApprovedStatus(project, user));
+    }
+
+    @Test
+    public void testInternalUsersCanViewSignedGrantOfferLetterRejectedStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.internalUsersCanViewSignedGrantOfferLetterRejectedStatus(project, user));
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.internalUsersCanViewSignedGrantOfferLetterRejectedStatus(project, user));
+    }
+
+    @Test
+    public void testProjectManagersCanViewSignedGrantOfferLetterRejectedStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectManager(user);
+
+        assertFalse(rules.projectManagerCanViewSignedGrantOfferLetterRejectedStatus(project, user));
+
+        setUpUserAsProjectManager(project, user);
+
+        assertTrue(rules.projectManagerCanViewSignedGrantOfferLetterRejectedStatus(project, user));
     }
 }

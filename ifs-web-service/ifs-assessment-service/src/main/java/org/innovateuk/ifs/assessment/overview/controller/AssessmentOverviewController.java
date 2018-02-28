@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.overview.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.overview.populator.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 
 @Controller
 @RequestMapping(value = "/{assessmentId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentOverviewController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentOverviewController {
 
@@ -75,10 +77,10 @@ public class AssessmentOverviewController {
         ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
 
         final ByteArrayResource resource = formInputResponseRestService
-                .getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+                .getFile(formInputId, applicationId, processRole.getId()).getSuccess();
 
         final FormInputResponseFileEntryResource fileDetails = formInputResponseRestService
-                .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+                .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccess();
 
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }

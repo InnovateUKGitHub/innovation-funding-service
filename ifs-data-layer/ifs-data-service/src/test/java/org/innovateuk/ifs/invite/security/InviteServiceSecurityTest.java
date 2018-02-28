@@ -76,22 +76,11 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     }
 
     @Test
-    public void testFindOne() {
-        final long inviteId = 1L;
-        assertAccessDenied(
-                () -> classUnderTest.findOne(inviteId),
-                () -> {
-                    verify(invitePermissionRules).collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
-                    verify(invitePermissionRules).leadApplicantReadInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
-                });
-    }
-
-    @Test
     public void testGetInvitesByApplication() {
         long applicationId = 1L;
         final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanViewAnyInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
-        assertTrue(results.getSuccessObject().isEmpty());
+        assertTrue(results.getSuccess().isEmpty());
     }
 
     @Test
@@ -123,11 +112,6 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<ApplicationInvite> findOne(Long id) {
-            return serviceSuccess(newApplicationInvite().build());
-        }
-
-        @Override
         public ServiceResult<ApplicationInvite> findOneByHash(String hash) {
             return serviceSuccess(newApplicationInvite().build());
         }
@@ -150,11 +134,6 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         @Override
         public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
             return serviceSuccess(newInviteResultResource().build());
-        }
-
-        @Override
-        public ServiceResult<Void> acceptInvite(String inviteHash, Long userId) {
-            return null;
         }
 
         @Override

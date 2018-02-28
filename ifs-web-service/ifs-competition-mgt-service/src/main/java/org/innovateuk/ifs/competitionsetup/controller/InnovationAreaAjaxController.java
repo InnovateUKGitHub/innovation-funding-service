@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionSpecialSectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/competition/setup")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = InnovationAreaAjaxController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class InnovationAreaAjaxController {
     @Autowired
@@ -29,12 +31,12 @@ public class InnovationAreaAjaxController {
     public List<InnovationAreaResource> getInnovationAreas(@PathVariable("innovationSectorId") Long innovationSectorId) {
 
         if (CompetitionSpecialSectors.isOpenSector().test(innovationSectorId)) {
-            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException();
+            List<InnovationAreaResource> returningList = categoryRestService.getInnovationAreas().getSuccess();
             returningList.add(0, createAllInnovationArea());
 
             return returningList;
         } else {
-            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccessObjectOrThrowException();
+            return categoryRestService.getInnovationAreasBySector(innovationSectorId).getSuccess();
         }
     }
 

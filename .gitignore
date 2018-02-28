@@ -34,12 +34,14 @@ bin/
 /ifs-web-service/ifs-project-setup-service/src/main/docker/Dockerfile
 
 /ifs-data-layer/ifs-data-service/src/main/docker/Dockerfile
+/ifs-data-layer/ifs-finance-data-service/src/main/docker/Dockerfile
 **/Dockerfile-base
 
 
 
 # ignore properties
 **/*-build.gradle
+!**/openshift-build.gradle
 !**/automated-build.gradle
 **/application-*.properties
 !**/application-local.properties
@@ -56,6 +58,7 @@ bin/
 .gradle
 build/
 out/
+reports/
 
 # Ignore Gradle GUI config
 gradle-app.setting

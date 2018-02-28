@@ -13,19 +13,22 @@ import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseFo
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -37,11 +40,7 @@ import org.springframework.validation.ObjectError;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -66,8 +65,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTest<FinanceChecksQueriesController> {
 
     private Long projectId = 3L;
-    private Long financeTeamUserId = 18L;
-    private Long applicantFinanceContactUserId = 55L;
     private Long innovateOrganisationId = 11L;
     private Long applicantOrganisationId = 22L;
     private Long projectFinanceId = 45L;
@@ -80,12 +77,12 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
     private OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
-    private ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
-    private ProjectUserResource projectApplicantFinanceContactUser = newProjectUserResource().withUser(applicantFinanceContactUserId).build();
-
     private RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
-    private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(singletonList(financeTeamRole)).build();
-    private UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
+    private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(singletonList(financeTeamRole)).build();
+    private UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
+    private ProjectUserResource financeContactProjectUser = newProjectUserResource().withUser(financeContactUser.getId()).withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
+    private UserResource financeContact2User = newUserResource().withFirstName("C").withLastName("Z").build();
+    private ProjectUserResource financeContact2ProjectUser = newProjectUserResource().withUser(financeContact2User.getId()).withOrganisation(applicantOrganisationId).build();
 
     private QueryResource thread;
     private QueryResource thread2;
@@ -96,37 +93,39 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Captor
     private ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
+    @Spy
+    @InjectMocks
+    @SuppressWarnings("unused")
+    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator();
+
     @Before
     public void setup() {
         super.setUp();
         this.setupCookieUtil();
-        when(userService.findById(financeTeamUserId)).thenReturn(financeTeamUser);
-        when(organisationService.getOrganisationForUser(financeTeamUserId)).thenReturn(innovateOrganisationResource);
-        when(userService.findById(applicantFinanceContactUserId)).thenReturn(projectManagerUser);
-        when(organisationService.getOrganisationForUser(applicantFinanceContactUserId)).thenReturn(leadOrganisationResource);
-        when(userService.findById(applicantFinanceContactUserId)).thenReturn(projectManagerUser);
+        when(userService.findById(financeTeamUser.getId())).thenReturn(financeTeamUser);
+        when(organisationService.getOrganisationForUser(financeTeamUser.getId())).thenReturn(innovateOrganisationResource);
+        when(userService.findById(financeContactUser.getId())).thenReturn(financeContactUser);
+        when(organisationService.getOrganisationForUser(financeContactUser.getId())).thenReturn(leadOrganisationResource);
+        when(userService.findById(financeContact2User.getId())).thenReturn(financeContact2User);
+        when(organisationService.getOrganisationForUser(financeContact2User.getId())).thenReturn(leadOrganisationResource);
 
         // populate viewmodel
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(asList(projectUser, projectApplicantFinanceContactUser));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(asList(financeContactProjectUser, financeContact2ProjectUser));
 
-        UserResource user1 = new UserResource();
-        user1.setId(18L);
-        PostResource firstPost = new PostResource(null, user1, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
-        UserResource user2 = new UserResource();
-        user2.setId(55L);
-        PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
-        thread = new QueryResource(1L, projectFinanceId, asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now());
+        PostResource firstPost = new PostResource(null, financeTeamUser, "Question", singletonList(new AttachmentResource(23L, "file1.txt", "txt", 1L, null)), ZonedDateTime.now().plusMinutes(10L));
+        PostResource firstResponse = new PostResource(null, financeContactUser, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
+        thread = new QueryResource(1L, projectFinanceId, asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now(), null, null);
 
-        PostResource firstPost2 = new PostResource(null, user1, "Question2", new ArrayList<>(), ZonedDateTime.now().plusMinutes(15L));
-        thread2 = new QueryResource(3L, projectFinanceId, singletonList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now());
+        PostResource firstPost2 = new PostResource(null, financeTeamUser, "Question2", new ArrayList<>(), ZonedDateTime.now().plusMinutes(15L));
+        thread2 = new QueryResource(3L, projectFinanceId, singletonList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now(), null, null);
 
-        PostResource firstPost1 = new PostResource(null, user1, "Question3", new ArrayList<>(), ZonedDateTime.now());
-        PostResource firstResponse1 = new PostResource(null, user2, "Response3", new ArrayList<>(), ZonedDateTime.now().plusMinutes(10L));
+        PostResource firstPost1 = new PostResource(null, financeTeamUser, "Question3", new ArrayList<>(), ZonedDateTime.now());
+        PostResource firstResponse1 = new PostResource(null, financeContactUser, "Response3", new ArrayList<>(), ZonedDateTime.now().plusMinutes(10L));
 
-        thread3 = new QueryResource(5L, projectFinanceId, asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now());
+        thread3 = new QueryResource(5L, projectFinanceId, asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now(), null, null);
 
         queries = asList(thread2, thread, thread3);
     }
@@ -157,53 +156,85 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(3, queryViewModel.getQueries().size());
         assertEquals("Query title", queryViewModel.getQueries().get(0).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(0).getSectionType());
-        assertEquals(false, queryViewModel.getQueries().get(0).isAwaitingResponse());
+        assertEquals(false, queryViewModel.getQueries().get(0).isLastPostByInternalUser());
         assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(0).getOrganisationId());
         assertEquals(projectId, queryViewModel.getQueries().get(0).getProjectId());
         assertEquals(1L, queryViewModel.getQueries().get(0).getId().longValue());
         assertEquals(2, queryViewModel.getQueries().get(0).getViewModelPosts().size());
         assertEquals("Question", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).body);
-        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).author.getId());
+        assertEquals(financeTeamUser.getId(), queryViewModel.getQueries().get(0).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate UK (Finance team)", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).createdOn));
         assertEquals(1, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.size());
         assertEquals(23L, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).id.longValue());
         assertEquals("file1.txt", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).name);
         assertEquals("Response", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).body);
-        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).author.getId());
+        assertEquals(financeContactUser.getId(), queryViewModel.getQueries().get(0).getViewModelPosts().get(1).author.getId());
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(20L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(1).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).attachments.size());
         assertEquals("Query2 title", queryViewModel.getQueries().get(1).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(1).getSectionType());
-        assertEquals(true, queryViewModel.getQueries().get(1).isAwaitingResponse());
+        assertEquals(true, queryViewModel.getQueries().get(1).isLastPostByInternalUser());
         assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(1).getOrganisationId());
         assertEquals(projectId, queryViewModel.getQueries().get(1).getProjectId());
         assertEquals(3L, queryViewModel.getQueries().get(1).getId().longValue());
         assertEquals(1, queryViewModel.getQueries().get(1).getViewModelPosts().size());
         assertEquals("Question2", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).body);
-        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).author.getId());
+        assertEquals(financeTeamUser.getId(), queryViewModel.getQueries().get(1).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate UK (Finance team)", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(15L).isAfter(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).attachments.size());
 
         assertEquals("Query title3", queryViewModel.getQueries().get(2).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(2).getSectionType());
-        assertEquals(false, queryViewModel.getQueries().get(2).isAwaitingResponse());
+        assertEquals(false, queryViewModel.getQueries().get(2).isLastPostByInternalUser());
         assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(2).getOrganisationId());
         assertEquals(projectId, queryViewModel.getQueries().get(2).getProjectId());
         assertEquals(5L, queryViewModel.getQueries().get(2).getId().longValue());
         assertEquals(2, queryViewModel.getQueries().get(2).getViewModelPosts().size());
         assertEquals("Question3", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).body);
-        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).author.getId());
+        assertEquals(financeTeamUser.getId(), queryViewModel.getQueries().get(2).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate UK (Finance team)", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(0).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).attachments.size());
         assertEquals("Response3", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).body);
-        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).author.getId());
+        assertEquals(financeContactUser.getId(), queryViewModel.getQueries().get(2).getViewModelPosts().get(1).author.getId());
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(1).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).attachments.size());
+    }
+
+    @Test
+    public void testThreadState() throws Exception {
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
+                .andExpect(view().name("project/financecheck/queries"))
+                .andReturn();
+
+        FinanceChecksQueriesViewModel queryViewModel = (FinanceChecksQueriesViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(true, queryViewModel.getQueries().get(0).isLastPostByExternalUser());
+        assertEquals(true, queryViewModel.getQueries().get(1).isLastPostByInternalUser());
+        assertEquals(true, queryViewModel.getQueries().get(2).isLastPostByExternalUser());
+
+    }
+
+    @Test
+    public void testCloseQuery() throws Exception {
+
+        Long queryId = 1L;
+        when(financeCheckServiceMock.closeQuery(queryId)).thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/{queryId}/close", queryId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query"))
+                .andReturn();
+
+        verify(financeCheckServiceMock).closeQuery(queryId);
     }
 
     @Test

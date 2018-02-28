@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementAssessorProfileController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class CompetitionManagementAssessorProfileController {
 
@@ -36,7 +38,9 @@ public class CompetitionManagementAssessorProfileController {
         PANEL_FIND("/assessment/panel/competition/{competitionId}/assessors/find"),
         PANEL_INVITE("/assessment/panel/competition/{competitionId}/assessors/invite"),
         PANEL_OVERVIEW("/assessment/panel/competition/{competitionId}/assessors/overview"),
-        PANEL_ACCEPTED("/assessment/panel/competition/{competitionId}/assessors/accepted");
+        PANEL_ACCEPTED("/assessment/panel/competition/{competitionId}/assessors/accepted"),
+        INTERVIEW_FIND("/assessment/interview/competition/{competitionId}/assessors/find"),
+        INTERVIEW_INVITE("/assessment/inteview/competition/{competitionId}/assessors/invite");
 
         private String baseOriginUrl;
 

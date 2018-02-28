@@ -15,14 +15,14 @@ the user reads his email from the second mailbox
 
 the user reads his email from the default mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    [Documentation]    Please note that we need to keep this keyword as some email addresses are alread in the database, so we cannot over-ride them with our own custom mailboxes during the tests
+    [Documentation]    Please note that we need to keep this keyword as some email addresses are already in the database, so we cannot over-ride them with our own custom mailboxes during the tests
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_one}
     ...    ${test_mailbox_one_password}
 
 the user reads his email from the second default mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    [Documentation]    Please note that we need to keep this keyword as some email addresses are alread in the database, so we cannot over-ride them with our own custom mailboxes during the tests
+    [Documentation]    Please note that we need to keep this keyword as some email addresses are already in the database, so we cannot over-ride them with our own custom mailboxes during the tests
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_two}
     ...    ${test_mailbox_two_password}

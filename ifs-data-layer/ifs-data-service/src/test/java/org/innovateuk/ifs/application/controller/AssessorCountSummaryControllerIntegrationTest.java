@@ -8,8 +8,8 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -120,7 +120,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
 
         assessmentRepository.save(assessment);
 
-        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), 0,3).getSuccessObject();
+        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), 0,3).getSuccess();
 
         assertEquals(2, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

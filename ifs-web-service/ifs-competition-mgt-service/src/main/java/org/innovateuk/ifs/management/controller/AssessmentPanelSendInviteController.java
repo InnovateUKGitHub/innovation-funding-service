@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.management.controller;
 
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.form.PanelOverviewSelectionForm;
+import org.innovateuk.ifs.management.form.AssessmentPanelOverviewSelectionForm;
 import org.innovateuk.ifs.management.form.ResendInviteForm;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
@@ -23,8 +24,10 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -32,13 +35,14 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/panel/competition/{competitionId}/assessors/invite")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentPanelSendInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class AssessmentPanelSendInviteController extends CompetitionManagementCookieController<PanelOverviewSelectionForm> {
+public class AssessmentPanelSendInviteController extends CompetitionManagementCookieController<AssessmentPanelOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewPanelInviteRestService reviewPanelInviteRestService;
 
     @Override
     protected String getCookieName() {
@@ -46,8 +50,8 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
     }
 
     @Override
-    protected Class<PanelOverviewSelectionForm> getFormType() {
-        return PanelOverviewSelectionForm.class;
+    protected Class<AssessmentPanelOverviewSelectionForm> getFormType() {
+        return AssessmentPanelOverviewSelectionForm.class;
     }
 
     @GetMapping("/send")
@@ -55,7 +59,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
                                    @PathVariable("competitionId") long competitionId,
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
-        AssessorInvitesToSendResource invites = assessmentPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource invites = reviewPanelInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToPanelOverviewTab(competitionId);
@@ -84,11 +88,11 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
         Supplier<String> failureView = () -> getInvitesToSend(model, competitionId, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> sendResult = assessmentPanelInviteRestService
+            ServiceResult<Void> sendResult = reviewPanelInviteRestService
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
 
-            return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+            return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
                     .failNowOrSucceedWith(failureView, () -> redirectToPanelOverviewTab(competitionId));
         });
     }
@@ -97,21 +101,21 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
     public String getInvitesToResend(Model model,
                                      @PathVariable("competitionId") long competitionId,
                                      @RequestParam(defaultValue = "0") int page,
-                                     @ModelAttribute(SELECTION_FORM) PanelOverviewSelectionForm selectionForm,
+                                     @ModelAttribute(SELECTION_FORM) AssessmentPanelOverviewSelectionForm selectionForm,
                                      @ModelAttribute(name = "form", binding = false) ResendInviteForm inviteform,
                                      ValidationHandler validationHandler,
                                      BindingResult bindingResult,
                                      HttpServletRequest request) {
 
-        PanelOverviewSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
+        AssessmentPanelOverviewSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
                 .filter(form -> !form.getSelectedInviteIds().isEmpty())
                 .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToOverview(competitionId, page);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            AssessorInvitesToSendResource invites = assessmentPanelInviteRestService.getAllInvitesToResend(
+            AssessorInvitesToSendResource invites = reviewPanelInviteRestService.getAllInvitesToResend(
                     competitionId,
-                    submittedSelectionForm.getSelectedInviteIds()).getSuccessObjectOrThrowException();
+                    submittedSelectionForm.getSelectedInviteIds()).getSuccess();
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),
                     invites.getCompetitionName(),
@@ -135,7 +139,7 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
         Supplier<String> failureView = () -> redirectToResendView(competitionId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> resendResult = assessmentPanelInviteRestService.resendInvites(form.getInviteIds(),
+            ServiceResult<Void> resendResult = reviewPanelInviteRestService.resendInvites(form.getInviteIds(),
                     new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
             removeCookie(response, competitionId);

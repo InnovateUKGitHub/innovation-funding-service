@@ -3,7 +3,9 @@ IFS.core.disableSubmitUntilChecked = (function () {
   var s
   return {
     settings: {
-      checkBoxesAttribute: 'data-switches-button-status'
+      checkBoxesAttribute: 'data-switches-button-status',
+      checkBoxRevealPanel: 'data-target',
+      checkRequiredInputs: '[aria-hidden="false"] input[type="text"][required][data-switches-button-status]'
     },
     init: function () {
       s = this.settings
@@ -11,8 +13,29 @@ IFS.core.disableSubmitUntilChecked = (function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
       })
 
+      // Check input value when panel revealed and reset errors
+      jQuery('body').on('change', '[' + s.checkBoxRevealPanel + ']', function () {
+        // Check if there are existing error classes inside the panel and remove them
+        var panelSelector = jQuery(this).attr(s.checkBoxRevealPanel)
+        var panelId = '#' + panelSelector
+        var inputError = jQuery(panelId + s.checkRequiredInputs)
+        var formGroupError = jQuery(inputError).parent()
+        inputError.removeClass('form-control-error')
+        formGroupError.removeClass('form-group-error')
+        // Set CTA state accordingly
+        IFS.core.disableSubmitUntilChecked.checkButtonStates(panelId + s.checkRequiredInputs)
+      })
+
       jQuery('[' + s.checkBoxesAttribute + ']').each(function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
+      })
+
+      // Checking that a required text input contains text when updating
+      jQuery('body').on('change keyup', s.checkRequiredInputs, function (e) {
+        if (e.type === 'keyup') {
+          // Wait until the user stops typing
+          IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
+        }
       })
     },
     checkButtonStates: function (el) {
@@ -43,10 +66,12 @@ IFS.core.disableSubmitUntilChecked = (function () {
       jQuery('[' + s.checkBoxesAttribute + '="' + submitButton + '"]').each(function () {
         var inst = jQuery(this)
         var state
-        if (inst.is('[type="checkbox"]')) {
+        if (inst.is('[type="checkbox"]') || inst.is('[type="radio"]')) {
           state = inst.prop('checked')
         } else if (inst.is('select')) {
           state = inst.val() !== 'UNSET'
+        } else if (inst.is('input[type="text"][required]')) {
+          state = inst.val().trim().length > 0
         }
         if (typeof (state) !== 'undefined') {
           buttonStates.push(state)

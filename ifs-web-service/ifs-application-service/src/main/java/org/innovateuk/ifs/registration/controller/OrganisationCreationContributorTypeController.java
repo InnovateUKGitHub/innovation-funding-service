@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/new-account-organisation-type")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationContributorTypeController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationContributorTypeController extends AbstractOrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationContributorTypeController.class);
@@ -49,13 +51,13 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
             validator.validate(form, bindingResult);
         }
 
-        if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
-            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();
+        if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
+            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
             types = types.stream()
                         .filter(t -> t.getParentOrganisationType() == null)
                         .collect(Collectors.toList());
             model.addAttribute("form", form);
-            model.addAttribute("model", new OrganisationCreationViewModel(types, invite.getSuccessObject()));
+            model.addAttribute("model", new OrganisationCreationViewModel(types, invite.getSuccess()));
         } else {
             return "redirect:/login";
         }

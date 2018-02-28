@@ -16,20 +16,20 @@ import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstrain
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,8 +43,8 @@ import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -53,7 +53,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * This Controller handles finance check queries activity for the finance team members
+ * This Controller handles finance check queries activity for the finance team members (internal)
  */
 @Controller
 @RequestMapping(FinanceChecksQueriesController.FINANCE_CHECKS_QUERIES_BASE_URL)
@@ -71,17 +71,17 @@ public class FinanceChecksQueriesController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private CookieUtil cookieUtil;
     @Autowired
     private ProjectFinanceService projectFinanceService;
     @Autowired
     private FinanceCheckService financeCheckService;
+    @Autowired
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping
-    public String showPage(@PathVariable Long projectId,
+    public String showPage(@P("projectId")@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
                            Model model) {
@@ -91,20 +91,32 @@ public class FinanceChecksQueriesController {
         return QUERIES_VIEW;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PostMapping("/{queryId}/close")
+    public String closeQuery(@PathVariable Long projectId,
+                             @PathVariable Long organisationId,
+                             @PathVariable Long queryId,
+                             Model model) {
+
+        financeCheckService.closeQuery(queryId);
+
+        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/query";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadAttachment(@P("projectId")@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId) {
         projectService.getPartnerOrganisation(projectId, organisationId);
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/{queryId}/new-response")
-    public String viewNewResponse(@PathVariable Long projectId,
+    public String viewNewResponse(@P("projectId")@PathVariable Long projectId,
                                   @PathVariable Long organisationId,
                                   @PathVariable Long queryId,
                                   @RequestParam(value = "query_section", required = false) String querySection,
@@ -130,10 +142,10 @@ public class FinanceChecksQueriesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping("/{queryId}/new-response")
     public String saveResponse(Model model,
-                               @PathVariable("projectId") final Long projectId,
+                               @P("projectId")@PathVariable("projectId") final Long projectId,
                                @PathVariable final Long organisationId,
                                @PathVariable final Long queryId,
                                @RequestParam(value = "query_section", required = false) String querySection,
@@ -187,10 +199,10 @@ public class FinanceChecksQueriesController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping(value = "/{queryId}/new-response", params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
-                                            @PathVariable("projectId") final Long projectId,
+                                            @P("projectId")@PathVariable("projectId") final Long projectId,
                                             @PathVariable Long organisationId,
                                             @PathVariable Long queryId,
                                             @RequestParam(value = "query_section", required = false) String querySection,
@@ -213,7 +225,7 @@ public class FinanceChecksQueriesController {
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             result.ifSuccessful(uploadedAttachment -> {
-                attachments.add(result.getSuccessObject().id);
+                attachments.add(result.getSuccess().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
                 saveFormToCookie(response, projectId, organisationId, queryId, form);
             });
@@ -223,11 +235,11 @@ public class FinanceChecksQueriesController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/{queryId}/new-response/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@P("projectId")@PathVariable Long projectId,
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
@@ -242,9 +254,9 @@ public class FinanceChecksQueriesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping(value = "/{queryId}/new-response", params = "removeAttachment")
-    public String removeAttachment(@PathVariable Long projectId,
+    public String removeAttachment(@P("projectId")@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @PathVariable Long queryId,
                                    @RequestParam(value = "query_section", required = false) final String querySection,
@@ -263,9 +275,9 @@ public class FinanceChecksQueriesController {
         return redirectTo(rootView(projectId, organisationId, queryId, querySection));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/{queryId}/new-response/cancel")
-    public String cancelNewForm(@PathVariable Long projectId,
+    public String cancelNewForm(@P("projectId")@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,
                                 @RequestParam(value = "query_section", required = false) String querySection,
@@ -279,44 +291,18 @@ public class FinanceChecksQueriesController {
 
     private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
 
-        List<ThreadViewModel> queryModel = new LinkedList<>();
-
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        financeCheckService.getQueries(projectFinance.getId()).ifSuccessful( queries -> {
-            // order queries by most recent post
-            List<QueryResource> sortedQueries = queries.stream().
-                    flatMap(t -> t.posts.stream()
-                            .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
-                    .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
-                    .map(m -> m.getKey())
-                    .distinct()
-                    .collect(Collectors.toList());
 
-            for (QueryResource query : sortedQueries) {
-                List<ThreadPostViewModel> posts = new LinkedList<>();
-                for (PostResource p : query.posts) {
-                    UserResource user = userService.findById(p.author.getId());
-                    ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
-                    if (user.hasRole(UserRoleType.PROJECT_FINANCE)) {
-                        post.setUsername(user.getName() + " - Innovate UK (Finance team)");
-                    } else {
-                        post.setUsername(user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
-                    }
-                    posts.add(post);
-                }
-                ThreadViewModel detail = new ThreadViewModel();
-                detail.setViewModelPosts(posts);
-                detail.setSectionType(query.section);
-                detail.setCreatedOn(query.createdOn);
-                detail.setAwaitingResponse(query.awaitingResponse);
-                detail.setTitle(query.title);
-                detail.setId(query.id);
-                detail.setProjectId(projectId);
-                detail.setOrganisationId(organisationId);
-                queryModel.add(detail);
-            }
-        });
-        return queryModel;
+        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
+
+        if (queriesResult.isSuccess()) {
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
+                    user.hasRole(UserRoleType.PROJECT_FINANCE) ?
+                        user.getName() + " - Innovate UK (Finance team)" :
+                        user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
+        } else {
+            return emptyList();
+        }
     }
 
     private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, Long queryId, String querySection, List<Long> attachments) {

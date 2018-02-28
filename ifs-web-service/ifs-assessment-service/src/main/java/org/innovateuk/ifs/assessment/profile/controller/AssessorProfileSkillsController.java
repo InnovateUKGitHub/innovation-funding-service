@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.profile.controller;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileSkillsForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditSkillsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileSkillsModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/profile/skills")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileSkillsController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileSkillsController {
 
@@ -44,7 +46,7 @@ public class AssessorProfileSkillsController {
     @GetMapping
     public String getReadonlySkills(Model model,
                                     UserResource loggedInUser) {
-        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccess();
         model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
         return "profile/skills";
     }
@@ -79,7 +81,7 @@ public class AssessorProfileSkillsController {
 
     private String doViewEditSkills(Model model, UserResource loggedInUser,
                                     AssessorProfileSkillsForm form, BindingResult bindingResult) {
-        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        ProfileSkillsResource profileSkillsResource = profileRestService.getProfileSkills(loggedInUser.getId()).getSuccess();
         if (!bindingResult.hasErrors()) {
             populateFormWithExistingValues(profileSkillsResource, form);
         }

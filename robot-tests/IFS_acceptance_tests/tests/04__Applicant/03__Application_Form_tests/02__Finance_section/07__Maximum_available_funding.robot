@@ -128,7 +128,7 @@ Research participation is correct for RTO lead application
    [Setup]  log in as a different user                 ${lead_rto_email}  ${correct_password}
     When the user clicks the button/link               link=${Application_name_RTO}
     And the user clicks the button/link                link=Finances overview
-    Then the user should see the element               jQuery=.success-alert:contains("The participation levels of this project are within the required range.")
+    Then the user should not see the element           jQuery=.warning-alert:contains("The participation levels of this project are not within the required range.")
     And the user should not see an error in the page
 
 *** Keywords ***

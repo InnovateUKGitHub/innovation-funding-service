@@ -1,0 +1,112 @@
+def targetBuild = hasProperty('profile') ? profile : 'docker'
+apply from: targetBuild + "-build.gradle"
+apply from: rootProject.file("openshift-build.gradle")
+apply from: rootProject.file("prepare-docker.gradle")
+
+
+apply plugin: 'base'
+apply plugin: 'org.flywaydb.flyway'
+apply from: "../database-support.gradle"
+
+configurations {
+    providedRuntime
+}
+
+project.version = financeDataServiceVersion
+tagDocker.tag = financeDataServiceVersion
+osStageRemote.tag = financeDataServiceVersion
+tagDockerLocal.tag = financeDataServiceVersion
+osStageLocal.tag = financeDataServiceVersion
+
+ext.dockerDir = "$project.parent.projectDir/docker/"
+ext.sqlContainer = "mysql-finance-totals"
+ext.testSchema = "ifs_finance_test"
+ext.dockerComposeFile = "docker-compose-finance-totals.yml"
+
+buildDocker.dependsOn prepareDockerInput
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
+sourceSets {
+    client {
+        java {
+            srcDir 'src/main/java'
+        }
+        main {
+            ext.originalJavaSrcDirs = java.srcDirs
+            java.srcDir "${generatedMapperSourcesDir}"
+        }
+    }
+}
+
+bootRun {
+    addResources = false
+}
+
+// Spring Boot 1.3 uses Spring REST Docs 1.0. To use 1.1, override the version
+ext['spring-restdocs.version'] = '1.1.2.RELEASE'
+
+jar {
+    baseName = 'ifs-finance-data-service'
+}
+
+configurations {
+    mapstruct
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'mysql:mysql-connector-java'
+    compile 'org.flywaydb:flyway-core:4.1.2'
+    compile 'org.mapstruct:mapstruct:1.2.0.Final'
+    mapstruct 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+
+    compile project(':ifs-commons')
+    compile project(':ifs-resources')
+    compile project(':ifs-data-layer:data-service-commons')
+
+    testCompile 'org.assertj:assertj-core:3.9.0'
+    testCompile project(':ifs-resources')
+    testCompile project(':ifs-commons')
+    testCompile project(':ifs-data-layer:data-service-commons')
+
+    testCompile project(':ifs-resources').sourceSets.test.output
+    testCompile project(':ifs-commons').sourceSets.test.output
+    testCompile project(':ifs-data-layer:data-service-commons').sourceSets.test.output
+}
+
+task generateMainMapperClasses(type: JavaCompile) {
+    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
+    destinationDir = aptDumpDir
+
+    classpath = compileJava.classpath + configurations.mapstruct
+    source = sourceSets.main.originalJavaSrcDirs
+    ext.sourceDestDir = file generatedMapperSourcesDir
+
+    options.define(
+            compilerArgs: [
+                    "-nowarn",
+                    "-proc:only",
+                    "-encoding", "UTF-8",
+                    "-processor", "org.mapstruct.ap.MappingProcessor",
+                    "-s", sourceDestDir.absolutePath,
+                    "-source", 1.8,
+                    "-target", 1.8,
+            ]
+    );
+
+    inputs.dir source
+    outputs.dir generatedMapperSourcesDir
+    doFirst {
+        sourceDestDir.mkdirs()
+    }
+    doLast {
+        aptDumpDir.delete()
+    }
+}
+
+flywayMigrate.dependsOn processResources
+flywayClean.dependsOn processResources
+compileJava.dependsOn generateMainMapperClasses

@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.project.bankdetails.transactional;
 
 import org.innovateuk.ifs.address.domain.AddressType;
-import org.innovateuk.ifs.address.mapper.AddressMapper;
 import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -71,8 +71,6 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     @Autowired
     private OrganisationAddressMapper organisationAddressMapper;
 
-    @Autowired
-    private AddressMapper addressMapper;
 
     @Autowired
     private BankDetailsRepository bankDetailsRepository;
@@ -96,7 +94,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     private ProjectUsersHelper projectUsersHelper;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceService financeService;
 
     private SILBankDetailsMapper silBankDetailsMapper = new SILBankDetailsMapper();
 
@@ -160,7 +158,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
-        Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
+        Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
         return result.map(Boolean::booleanValue).orElse(false);
     }
 
@@ -232,10 +230,13 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
                         validationResult -> {
-                            if (validationResult.isCheckPassed()) {
-                                return serviceSuccess(accountDetails);
-                            } else {
+                            if (validationResult
+                                    .getConditions()
+                                    .stream()
+                                    .anyMatch(condition -> condition.getSeverity().equals("error"))) {
                                 return serviceFailure(convertExperianValidationMsgToUserMsg(validationResult.getConditions()));
+                            } else {
+                                return serviceSuccess(accountDetails);
                             }
                         }
                 );
@@ -286,5 +287,21 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                     return globalError(EXPERIAN_VALIDATION_FAILED, singletonList(condition.getDescription()));
                 }).
                 collect(Collectors.toList());
+    }
+
+    @Override
+    public ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
+
+        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovals();
+
+        return serviceSuccess(pendingBankDetails);
+    }
+
+    @Override
+    public ServiceResult<Long> countPendingBankDetailsApprovals() {
+
+        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovals();
+
+        return serviceSuccess(countBankDetails);
     }
 }

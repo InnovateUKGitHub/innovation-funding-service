@@ -75,6 +75,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withName(expectedCompetitionName)
                 .withCompetitionStatus(expectedCompetitionStatus)
                 .withHasAssessmentPanel(true)
+                .withHasInterviewStage(true)
                 .build();
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
@@ -124,6 +125,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals(4, (int) model.getKeyStatistics().getStatFour());
         assertEquals(5, (int) model.getKeyStatistics().getStatFive());
         assertEquals(true, model.isAssessmentPanelEnabled());
+        assertEquals(true, model.isInterviewPanelEnabled());
     }
 
     @Test
@@ -205,13 +207,41 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void releaseFeedback() throws Exception {
         long competitionId = 1L;
 
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Programme")
+                .build();
+
         when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+        when(competitionService.getById(competitionId)).thenReturn(competition);
 
         mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard/project-setup"));
 
-        verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
-        verifyNoMoreInteractions(competitionService);
+        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionService);
+        inOrder.verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
+        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void releaseFeedbackEOICompetition() throws Exception {
+        long competitionId = 1L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Expression of interest")
+                .build();
+
+        when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+        when(competitionService.getById(competitionId)).thenReturn(competition);
+
+        mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard/previous"));
+
+        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionService);
+        inOrder.verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
+        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verifyNoMoreInteractions();
     }
 }

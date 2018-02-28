@@ -8,8 +8,8 @@ import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -140,7 +140,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     private QueryResource toResource(Query query) {
         return new QueryResource(query.id(), query.contextClassPk(), emptyList(),
-                query.section(), query.title(), query.isAwaitingResponse(), query.createdOn());
+                query.section(), query.title(), query.isAwaitingResponse(), query.createdOn(), null, null);
     }
 
     private Query query() {

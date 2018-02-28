@@ -2,7 +2,7 @@ package org.innovateuk.ifs.commons.validation;
 
 public class ValidationConstants {
 
-	public static final String EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX = "^[^{}|]*$";
-	
+	public static final String EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX = "^[a-zA-Z0-9._%+-^[^{}|]*$]+@[a-zA-Z0-9.-^[^{}|]*$]+\\.[a-zA-Z^[^0-9{}|]*$]{2,}$";
+
 	private ValidationConstants() {}
 }

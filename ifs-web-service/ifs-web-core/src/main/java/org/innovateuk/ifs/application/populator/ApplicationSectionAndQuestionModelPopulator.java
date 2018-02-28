@@ -104,9 +104,15 @@ public class ApplicationSectionAndQuestionModelPopulator {
         });
 
         List<FormInputResource> formInputResources = formInputRestService.getByCompetitionIdAndScope(
-                competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
+                competition.getId(), APPLICATION).getSuccess();
 
         model.addAttribute("sections", sections);
+
+        Optional<SectionResource> financeSection = allSections.stream()
+                .filter(section -> section.getType() == SectionType.FUNDING_FINANCES)
+                .findFirst();
+        model.addAttribute("fundingFinancesSection", financeSection.orElse(null));
+
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,
@@ -127,8 +133,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
         } else {
             applicantId = userId;
         }
-        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream).map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
-                .map(question -> formInputViewModelGenerator.fromQuestion(question, new ApplicationForm()))
+        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
+                .map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
+                .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
                 .flatMap(List::stream)
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
         model.addAttribute("formInputViewModels", formInputViewModels);
@@ -153,7 +160,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
             Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream()
                     .flatMap(Collection::stream)
                     .collect(Collectors.toMap(QuestionResource::getId, question ->
-                            formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException()));
+                            formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccess()));
 
             model.addAttribute("questionFormInputs", questionFormInputs);
             model.addAttribute("sectionQuestions", sectionQuestions);
@@ -209,7 +216,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
-        model.addAttribute("researchCategories", categoryRestService.getResearchCategories().getSuccessObjectOrThrowException());
+        model.addAttribute("researchCategories", categoryRestService.getResearchCategories().getSuccess());
 
         addFinanceDetails(model, application);
 
@@ -261,7 +268,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     private List<FormInputResponseResource> getFormInputResponses(ApplicationResource application) {
-        return formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
+        return formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {

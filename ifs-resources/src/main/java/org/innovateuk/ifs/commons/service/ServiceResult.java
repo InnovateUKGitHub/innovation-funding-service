@@ -4,11 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
-import org.innovateuk.ifs.commons.rest.RestFailure;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.util.Either;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -95,7 +96,7 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     @Override
     protected <R> BaseEitherBackedResult<R, ServiceFailure> createSuccess(FailingOrSucceedingResult<R, ServiceFailure> success) {
-        return serviceSuccess(success.getSuccessObject());
+        return serviceSuccess(success.getSuccess());
     }
 
     @Override
@@ -387,6 +388,22 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
         return aggregate(input);
     }
 
+    /**
+     * Aggregate results together to catch failures if any existed.  Upon success, return the same map as above, but "unpack"
+     * the individual ServiceResults from the Map values() and envelope the resultant map in an encompassing ServiceResult instead
+     *
+     * @param mapWithServiceResultLists
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public static <K, V> ServiceResult<Map<K, List<V>>> aggregateMap(Map<K, List<ServiceResult<V>>> mapWithServiceResultLists) {
+
+        ServiceResult<List<V>> overallResults = aggregate(flattenLists(new ArrayList<>(mapWithServiceResultLists.values())));
+
+        return overallResults.andOnSuccessReturn(() -> simpleToMap(mapWithServiceResultLists.entrySet(),
+                Map.Entry::getKey, q -> aggregate(q.getValue()).getSuccess()));
+    }
 
 
 }

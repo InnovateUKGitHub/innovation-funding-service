@@ -20,42 +20,66 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
-
 /**
  * populates the model for the eligibility competition setup section.
  */
 @Service
 public class EligibilityModelPopulator implements CompetitionSetupSectionModelPopulator {
 
-	@Autowired
-	private CategoryRestService categoryRestService;
-	
-	@Autowired
-	private CategoryFormatter categoryFormatter;
+    @Autowired
+    private CategoryRestService categoryRestService;
+
+    @Autowired
+    private CategoryFormatter categoryFormatter;
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
 
-	@Override
-	public CompetitionSetupSection sectionToPopulateModel() {
-		return CompetitionSetupSection.ELIGIBILITY;
-	}
+    @Override
+    public CompetitionSetupSection sectionToPopulateModel() {
+        return CompetitionSetupSection.ELIGIBILITY;
+    }
 
-	@Override
-	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
-        List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccessObject();
-        List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(organisationTypes, OrganisationTypeResource::getVisibleInSetup);
+    @Override
+    public CompetitionSetupViewModel populateModel(
+            GeneralSetupViewModel generalViewModel,
+            CompetitionResource competitionResource
+    ) {
+        List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccess();
+        List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(
+                organisationTypes,
+                OrganisationTypeResource::getVisibleInSetup
+        );
 
-		String leadApplicantTypesText = leadApplicantTypes.stream()
-				.filter(organisationTypeResource -> competitionResource.getLeadApplicantTypes().contains(organisationTypeResource.getId()))
-				.map(organisationTypeResource -> organisationTypeResource.getName())
-				.collect(Collectors.joining(", "));
+        String leadApplicantTypesText = leadApplicantTypes.stream()
+                .filter(organisationTypeResource ->
+                                competitionResource.getLeadApplicantTypes().contains(organisationTypeResource.getId())
+                )
+                .map(OrganisationTypeResource::getName)
+                .collect(Collectors.joining(", "));
 
-		List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
-		String researchCategoriesFormatted = categoryFormatter.format(competitionResource.getResearchCategories(), researchCategories);
-		return new EligibilityViewModel(generalViewModel,
-				ResearchParticipationAmount.values(), CollaborationLevel.values(),
-				leadApplicantTypes, leadApplicantTypesText,
-				researchCategories, researchCategoriesFormatted);
-	}
+        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
+        String researchCategoriesFormatted = categoryFormatter.format(
+                competitionResource.getResearchCategories(),
+                researchCategories
+        );
+
+        return new EligibilityViewModel(
+                generalViewModel,
+                getResearchParticipationAmounts(competitionResource),
+                CollaborationLevel.values(),
+                leadApplicantTypes,
+                leadApplicantTypesText,
+                researchCategories,
+                researchCategoriesFormatted
+        );
+    }
+
+    private ResearchParticipationAmount[] getResearchParticipationAmounts(CompetitionResource competitionResource) {
+        if (competitionResource.isFullApplicationFinance() != null) {
+            return ResearchParticipationAmount.values();
+        }
+
+        return new ResearchParticipationAmount[]{};
+    }
 }

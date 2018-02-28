@@ -109,6 +109,10 @@ include::affiliation.adoc[]
 == Alert
 include::alert.adoc[]
 
+[[analytics]]
+== Analytics
+include::analytics.adoc[]
+
 [[application]]
 == Application
 include::application.adoc[]
@@ -184,7 +188,15 @@ include::assessmentPanel.adoc[]
 
 [[assessment]]
 == Assessment Panel Invite
-include::assessmentPanelInvite.adoc[]
+include::assessment-panel-invite.adoc[]
+
+[[assessment]]
+== Interview Panel
+include::interview-panel.adoc[]
+
+[[assessment]]
+== Interview Panel Invite
+include::assessmentInterviewPanelInvite.adoc[]
 
 [[user]]
 == User

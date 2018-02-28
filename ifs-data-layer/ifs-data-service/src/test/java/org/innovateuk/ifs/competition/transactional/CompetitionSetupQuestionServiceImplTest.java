@@ -129,7 +129,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
         assertTrue(result.isSuccess());
 
-        CompetitionSetupQuestionResource resource = result.getSuccessObjectOrThrowException();
+        CompetitionSetupQuestionResource resource = result.getSuccess();
 
         assertEquals(resource.getAppendix(), true);
         assertEquals(resource.getScored(), true);
@@ -247,7 +247,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isSuccess());
 
-        CompetitionSetupQuestionResource resource = result.getSuccessObjectOrThrowException();
+        CompetitionSetupQuestionResource resource = result.getSuccess();
         assertEquals(questionId, resource.getQuestionId());
     }
 

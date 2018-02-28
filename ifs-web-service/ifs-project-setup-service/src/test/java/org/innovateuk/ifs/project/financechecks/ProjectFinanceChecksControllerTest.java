@@ -26,10 +26,11 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -101,6 +102,11 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     private ProjectResource project = newProjectResource().withId(1L).withName("Project1").withApplication(application).build();
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
+
+    @Spy
+    @InjectMocks
+    @SuppressWarnings("unused")
+    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator();
 
     @Before
     public void setUp() {
@@ -185,7 +191,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     }
 
     private QueryResource sampleQuery() {
-        return new QueryResource(null, null, Collections.emptyList(), null, null, false, ZonedDateTime.now());
+        return new QueryResource(null, null, Collections.emptyList(), null, null, false, ZonedDateTime.now(), null, null);
     }
 
     @Test

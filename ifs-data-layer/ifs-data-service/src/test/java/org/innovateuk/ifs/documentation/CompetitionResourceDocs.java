@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
@@ -23,7 +24,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("fundersPanelDate").description("date on which the funders panel begins"),
             fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
             fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
-            fieldWithPath("releaseFeedbackDate").description("date on which the feedback is released"),
+            fieldWithPath("releaseFeedbackDate").description("date on which the feedback is intended to be released"),
+            fieldWithPath("feedbackReleasedDate").description("date on which the feedback is released"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
             fieldWithPath("maxResearchRatio").description("maximum ratio of research participation"),
             fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics"),
@@ -52,11 +54,13 @@ public class CompetitionResourceDocs {
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question"),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
+            fieldWithPath("fullApplicationFinance").description("If full finances are required for applications"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
-            fieldWithPath("hasAssessmentPanel").description("indicates if the competition will have an assessment panel stage"),
-            fieldWithPath("hasInterviewStage").description("indicates if the competition will have an interview stage")
+            fieldWithPath("hasAssessmentPanel").description("Indicates if the competition will have an assessment panel stage"),
+            fieldWithPath("hasInterviewStage").description("Indicates if the competition will have an interview stage"),
+            fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -90,5 +94,6 @@ public class CompetitionResourceDocs {
             .withNonIfsUrl("https://google.co.uk")
             .withMilestones(asList(1L, 2L, 3L))
             .withHasAssessmentPanel(false)
-            .withHasInterviewStage(false);
+            .withHasInterviewStage(false)
+            .withTermsAndConditions(new TermsAndConditionsResource("T&C", "terms-and-conditions-template", "1"));
 }

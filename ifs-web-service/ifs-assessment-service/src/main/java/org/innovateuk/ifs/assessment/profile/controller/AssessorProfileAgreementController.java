@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileAgreementModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/profile/agreement")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileAgreementController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileAgreementController {
 
@@ -28,14 +30,14 @@ public class AssessorProfileAgreementController {
     @GetMapping
     public String getAgreement(Model model,
                                UserResource loggedInUser) {
-        ProfileAgreementResource profileAgreementResource = profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        ProfileAgreementResource profileAgreementResource = profileRestService.getProfileAgreement(loggedInUser.getId()).getSuccess();
         return doViewAgreement(model, profileAgreementResource);
     }
 
     @PostMapping
     public String submitAgreement(Model model,
                                   UserResource loggedInUser) {
-        profileRestService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
+        profileRestService.updateProfileAgreement(loggedInUser.getId()).getSuccess();
         return "redirect:/assessor/dashboard";
     }
 

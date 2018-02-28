@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
@@ -50,6 +52,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -71,6 +74,9 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+
+    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
+
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
@@ -161,16 +167,22 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
 
         return getOpenApplication(applicationId).andOnSuccess(application -> {
+
+            LOG.info("[FileLogging] Creating a new file for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId);
+
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
             // Removing and replacing if file already exists here
             if (existingResponse != null && existingResponse.getFileEntry() != null) {
+                LOG.info("[FileLogging] FormInputResponse for file already exists for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId + " , so deleting before creating...");
                 FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
                 final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);
 
                 if (deleteResult.isFailure()) {
                     return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
                 }
+
+                LOG.info("[FileLogging] Already existing FormInputResponse for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId + " deleted successfully");
             }
 
             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile ->
@@ -229,6 +241,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return find(formInputRepository.findOne(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).andOnSuccess(
                 formInput -> getFormInputResponseFileEntryResource(fileEntry, formInput).
                         andOnSuccess(formInputResponseFileEntryResource -> {
+
+                            LOG.info("[FileLogging] Deleting already existing FileEntryResource with id " + formInputResponseFileEntryResource.getFileEntryResource().getId() + " for application id " + formInputResponseFileEntryResource.getCompoundId().getApplicationId() + " processRoleId " + formInputResponseFileEntryResource.getCompoundId().getProcessRoleId() + " formInputId " + formInputResponseFileEntryResource.getCompoundId().getFormInputId() + " deleted successfully");
+
                             boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
                             return fileService.deleteFileIgnoreNotFound(formInputResponseFileEntryResource.getFileEntryResource().getId()).
                                     andOnSuccess(deletedFile -> {
@@ -277,7 +292,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ServiceResult<FormInputResponse> unlinkFileEntryFromFormInputResponse(FormInputResponse formInputResponse) {
         formInputResponse.setFileEntry(null);
         FormInputResponse unlinkedResponse = formInputResponseRepository.save(formInputResponse);
+        LOG.info("[FileLogging] Deleting FormInputResponse with id " + unlinkedResponse.getId() + " and application " + formInputResponse.getApplication());
         formInputResponseRepository.delete(formInputResponse);
+        LOG.info("[FileLogging] FormInputResponse with id " + unlinkedResponse.getId() + " deleted");
         return serviceSuccess(unlinkedResponse);
     }
 
@@ -389,9 +406,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
-        if (Collections.singletonList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
+        if (ApplicationState.SUBMITTED.equals(state) && !applicationReadyToSubmit(id)) {
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
+
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
@@ -454,32 +472,50 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     private boolean applicationReadyToSubmit(Long id) {
-        return find(application(id), () -> getProgressPercentageBigDecimalByApplicationId(id)).andOnSuccess((application, progressPercentage) ->
-                sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null).andOnSuccessReturn(allSectionsComplete -> {
-                    Competition competition = application.getCompetition();
-                    BigDecimal researchParticipation = applicationFinanceHandler.getResearchParticipationPercentage(id);
+        return find(application(id)).andOnSuccess(application -> {
+            BigDecimal progressPercentage = calculateApplicationProgress(application);
 
-                    boolean readyForSubmit = false;
-                    if (allSectionsComplete &&
-                            progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                            researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
-                        readyForSubmit = true;
-                    }
-                    return readyForSubmit;
-                })
-        ).getSuccessObject();
+            return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null)
+                    .andOnSuccessReturn(allSectionsComplete -> {
+                        Competition competition = application.getCompetition();
+                        BigDecimal researchParticipation =
+                                applicationFinanceHandler.getResearchParticipationPercentage(id);
+
+                        boolean readyForSubmit = false;
+
+                        if (allSectionsComplete
+                                && progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0
+                                && researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
+                            readyForSubmit = true;
+                        }
+
+                        return readyForSubmit;
+                    });
+        }).getSuccess();
     }
 
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
-        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
         return serviceSuccess(applicationResults);
     }
 
     @Override
-    public ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(final Long applicationId) {
-        return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
+    public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
+        Stream<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
+        return serviceSuccess(applicationResults);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
+            BigDecimal percentageProgress = calculateApplicationProgress(application);
+            application.setCompletion(percentageProgress);
+            return percentageProgress;
+        });
     }
 
     @Override
@@ -555,12 +591,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         "competitionName", application.getCompetition().getName(),
                         "dashboardUrl", webBaseUrl + "/" + processRole.getRole().getUrl()));
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
 
         return notificationSender.sendEmailWithContent(notification, recipient, content);
     }
 
-    private BigDecimal progressPercentageForApplication(Application application) {
+    private BigDecimal calculateApplicationProgress(Application application) {
         List<Section> sections = application.getCompetition().getSections();
 
         List<Question> questions = sections.stream()
@@ -579,12 +615,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
                         .filter(Question::getMarkAsCompletedEnabled)
-                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccessObject()).count())
+                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccess()).count())
                 .sum();
 
         Long countSingleStatusQuestionsCompleted = questions.stream()
                 .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccessObject()).count();
+                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess()).count();
 
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 

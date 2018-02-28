@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.profile.controller;
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileEditDetailsForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileEditDetailsModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
@@ -29,6 +30,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/profile/details")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDetailsController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileDetailsController {
 
@@ -89,7 +91,7 @@ public class AssessorProfileDetailsController {
 
     private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
-            UserProfileResource profileDetails = profileRestService.getUserProfile(loggedInUser.getId()).getSuccessObjectOrThrowException();
+            UserProfileResource profileDetails = profileRestService.getUserProfile(loggedInUser.getId()).getSuccess();
             form.setFirstName(profileDetails.getFirstName());
             form.setLastName(profileDetails.getLastName());
             form.setPhoneNumber(profileDetails.getPhoneNumber());

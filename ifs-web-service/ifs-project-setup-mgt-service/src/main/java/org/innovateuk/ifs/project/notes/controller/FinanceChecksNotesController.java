@@ -14,20 +14,19 @@ import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddCommentForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,7 +40,6 @@ import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -67,17 +65,17 @@ public class FinanceChecksNotesController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private CookieUtil cookieUtil;
     @Autowired
     private ProjectFinanceService projectFinanceService;
     @Autowired
     private FinanceCheckService financeCheckService;
+    @Autowired
+    private ThreadViewModelPopulator threadViewModelPopulator;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping
-    public String showPage(@PathVariable Long projectId,
+    public String showPage(@P("projectId")@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            Model model) {
         projectService.getPartnerOrganisation(projectId, organisationId);
@@ -86,11 +84,11 @@ public class FinanceChecksNotesController {
         return NOTES_VIEW;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping(value = "/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadAttachment(@P("projectId")@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
@@ -100,9 +98,9 @@ public class FinanceChecksNotesController {
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping("/{noteId}/new-comment")
-    public String viewNewComment(@PathVariable Long projectId,
+    public String viewNewComment(@P("projectId")@PathVariable Long projectId,
                                  @PathVariable Long organisationId,
                                  @PathVariable Long noteId,
                                  Model model,
@@ -130,10 +128,10 @@ public class FinanceChecksNotesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping(value = "/{noteId}/new-comment")
     public String saveComment(Model model,
-                              @PathVariable("projectId") final Long projectId,
+                              @P("projectId")@PathVariable("projectId") final Long projectId,
                               @PathVariable final Long organisationId,
                               @PathVariable final Long noteId,
                               @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksNotesAddCommentForm form,
@@ -183,10 +181,10 @@ public class FinanceChecksNotesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping(value = "/{noteId}/new-comment", params = "uploadAttachment")
     public String saveNewCommentAttachment(Model model,
-                                           @PathVariable("projectId") final Long projectId,
+                                           @P("projectId")@PathVariable("projectId") final Long projectId,
                                            @PathVariable Long organisationId,
                                            @PathVariable Long noteId,
                                            @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddCommentForm form,
@@ -222,10 +220,10 @@ public class FinanceChecksNotesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping("/{noteId}/new-comment/attachment/{attachmentId}")
     public @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@P("projectId")@PathVariable Long projectId,
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long noteId,
                                                                  @PathVariable Long attachmentId,
@@ -240,9 +238,9 @@ public class FinanceChecksNotesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping(value = "/{noteId}/new-comment", params = "removeAttachment")
-    public String removeAttachment(@PathVariable Long projectId,
+    public String removeAttachment(@P("projectId")@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @PathVariable Long noteId,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
@@ -268,9 +266,9 @@ public class FinanceChecksNotesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping("/{noteId}/new-comment/cancel")
-    public String cancelNewForm(@PathVariable Long projectId,
+    public String cancelNewForm(@P("projectId")@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @PathVariable Long noteId,
                                 Model model,
@@ -286,38 +284,15 @@ public class FinanceChecksNotesController {
 
     private List<ThreadViewModel> loadNoteModel(Long projectId, Long organisationId) {
 
-        List<ThreadViewModel> noteModel = new LinkedList<>();
-
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        financeCheckService.loadNotes(projectFinance.getId()).ifSuccessful(notes -> {
-            // order notes by most recent comment
-            List<NoteResource> sortedQueries = notes.stream().
-                    flatMap(t -> t.posts.stream()
-                            .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
-                    .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
-                    .map(m -> m.getKey())
-                    .distinct()
-                    .collect(Collectors.toList());
 
-            for (NoteResource note : sortedQueries) {
-                List<ThreadPostViewModel> posts = new LinkedList<>();
-                for (PostResource p : note.posts) {
-                    UserResource user = userService.findById(p.author.getId());
-                    ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
-                    post.setUsername(user.getName() + " - Innovate UK" + (user.hasRole(UserRoleType.PROJECT_FINANCE) ? " (Finance team)" : ""));
-                    posts.add(post);
-                }
-                ThreadViewModel detail = new ThreadViewModel();
-                detail.setViewModelPosts(posts);
-                detail.setCreatedOn(note.createdOn);
-                detail.setTitle(note.title);
-                detail.setId(note.id);
-                detail.setProjectId(projectId);
-                detail.setOrganisationId(organisationId);
-                noteModel.add(detail);
-            }
-        });
-        return noteModel;
+        ServiceResult<List<NoteResource>> notesResult = financeCheckService.loadNotes(projectFinance.getId());
+
+        if (notesResult.isSuccess()) {
+            return threadViewModelPopulator.threadViewModelListFromNotes(projectId, organisationId, notesResult.getSuccess());
+        } else {
+            return emptyList();
+        }
     }
 
     private FinanceChecksNotesViewModel populateNoteViewModel(Long projectId, Long organisationId, Long noteId, List<Long> attachments) {

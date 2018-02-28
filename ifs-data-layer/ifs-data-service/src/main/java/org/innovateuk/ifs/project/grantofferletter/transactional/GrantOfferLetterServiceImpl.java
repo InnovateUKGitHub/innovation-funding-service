@@ -25,8 +25,11 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
@@ -314,7 +317,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private boolean isProjectReadyForGrantOffer(Long projectId) {
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
-        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
+        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccess();
 
         return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
     }
@@ -365,10 +368,16 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
-                .andOnSuccess(project ->
-                        getSignedGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+                .andOnSuccess(project -> getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+                        if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
+                            return serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED);
+                        }
+
+                        return getSignedGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
                                 fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                        removeSignedGrantOfferLetterFileFromProject(project))));
+                                        removeSignedGrantOfferLetterFileFromProject(project)));
+                }));
     }
 
     private ServiceResult<FileEntry> getSignedGrantOfferLetterFileEntry(Project project) {
@@ -498,26 +507,43 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
 
-        return getProject(projectId).andOnSuccess(project -> {
-            if (golWorkflowHandler.isReadyToApprove(project)) {
-                if (ApprovalType.APPROVED == approvalType) {
-                    return approveGOL(project)
-                            .andOnSuccess(() -> {
-
-                                        if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-                                            LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
-                                            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                                        }
-                                        notifyProjectIsLive(projectId);
-                                        return serviceSuccess();
-                                    }
-                            );
+        return validateApprovalOrRejection(grantOfferLetterApprovalResource).andOnSuccess(() ->
+            getProject(projectId).andOnSuccess(project -> {
+                if (golWorkflowHandler.isReadyToApprove(project)) {
+                    if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+                        return approveGOL(project)
+                                .andOnSuccess(() -> moveProjectToLiveState(project));
+                    } else if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+                        return rejectGOL(project, grantOfferLetterApprovalResource.getRejectionReason());
+                    }
                 }
+                return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
+        }));
+    }
+
+    private ServiceResult<Void> validateApprovalOrRejection(GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
+        if (ApprovalType.REJECTED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+            if (org.apache.commons.lang3.StringUtils.isNotBlank(grantOfferLetterApprovalResource.getRejectionReason())) {
+                return serviceSuccess();
             }
-            return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
-        });
+        } else if (ApprovalType.APPROVED.equals(grantOfferLetterApprovalResource.getApprovalType())) {
+            return serviceSuccess();
+        }
+
+        return serviceFailure(GENERAL_INVALID_ARGUMENT);
+    }
+
+    private ServiceResult<Void> moveProjectToLiveState(Project project) {
+
+        if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
+            LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
+            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+        }
+
+        notifyProjectIsLive(project.getId());
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> approveGOL(Project project) {
@@ -533,14 +559,51 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         });
     }
 
+    private ServiceResult<Void> rejectGOL(Project project, String golRejectionReason) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterRejected(project, user)) {
+                project.setOfferSubmittedDate(null);
+                project.setGrantOfferLetterRejectionReason(golRejectionReason);
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
+        });
+    }
+
     @Override
     public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
     }
 
     @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.isRejected(project));
+    }
+
+    @Override
     public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
+    }
+
+    @Override
+    public ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
+
+        return getProject(projectId).andOnSuccess(project ->
+               getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+
+            GrantOfferLetterState state = golWorkflowHandler.getState(project);
+            GrantOfferLetterEvent lastProcessEvent = golWorkflowHandler.getLastProcessEvent(project);
+
+            if (project.isPartner(user) && !project.isProjectManager(user)) {
+                return GrantOfferLetterStateResource.stateInformationForPartnersView(state, lastProcessEvent);
+            } else {
+                return GrantOfferLetterStateResource.stateInformationForNonPartnersView(state, lastProcessEvent);
+            }
+        }));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

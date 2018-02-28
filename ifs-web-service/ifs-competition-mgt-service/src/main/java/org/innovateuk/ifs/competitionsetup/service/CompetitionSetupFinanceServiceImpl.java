@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinanceService {
 
+    private static final String COMPETITION_TYPE_EOI = "Expression of interest";
+
     @Autowired
     private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
 
@@ -23,8 +25,6 @@ public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinan
 
     @Override
     public CompetitionSetupFinanceResource getByCompetitionId(Long competitionId) {
-        return competitionSetupFinanceRestService.getByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+        return competitionSetupFinanceRestService.getByCompetitionId(competitionId).getSuccess();
     }
-
-
 }

@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage funding notifications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page</h2>
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
@@ -89,15 +89,22 @@
                    value="Notification regarding your application <application number>: <application title>" />
         </div>
 
+        <div class="form-group">
+            <span class="form-label-bold">Message</span>
+            <p class="form-hint">
+                Dear [recipient name]
+            </p>
+        </div>
+
         <div class="form-group" th:classappend="${#fields.hasErrors('message')} ? 'form-group-error'">
-            <label class="form-label" for="message">
-                <span class="form-label-bold">Message</span>
+            <label class="form-label" for="body-text">
+                <span class="form-label-bold">Body text</span>
                 <th:block th:if="${#fields.hasErrors('message')}">
                     <span class="error-message"  th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
                 </th:block>
             </label>
             <div class="textarea-wrapped">
-                    <textarea id="message"
+                    <textarea id="body-text"
                               th:field="${form.message}"
                               th:errorclass="form-control-error"
                               ifs:utext="${form.message}"
@@ -109,6 +116,17 @@
                               th:attr="data-required-errormessage=#{validation.manage.funding.notifications.message.required}">
                     </textarea>
             </div>
+        </div>
+
+        <div class="form-group">
+            <p class="form-hint">
+                Yours sincerely,
+            </p>
+            <p class="form-hint extra-margin">
+                Innovate UK <br />
+                Tel: 0300 321 4357 <br />
+                Email: competitions@innovateuk.gov.uk
+            </p>
         </div>
 
         <th:block th:each="entry : ${model.fundingDecisions}" >

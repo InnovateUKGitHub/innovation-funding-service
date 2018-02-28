@@ -244,7 +244,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             return new RestResult<>((RestResult<R>) success);
         }
 
-        return restSuccess(success.getSuccessObject());
+        return restSuccess(success.getSuccess());
     }
 
     @Override
@@ -374,8 +374,8 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         if (allExpectedSuccessStatusCodes.contains(response.getStatusCode())) {
             return RestResult.<T>restSuccess(response.getBody(), response.getStatusCode());
         } else {
-            return RestResult.<T>restFailure(new org.innovateuk.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
         }
+        return RestResult.<T>restFailure(new org.innovateuk.ifs.commons.error.Error(GENERAL_REST_RESULT_UNEXPECTED_STATUS_CODE, response.getStatusCode()));
     }
 
     /**

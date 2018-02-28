@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
@@ -27,7 +28,6 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -109,6 +109,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withName("My Application").
                 withDurationInMonths(5L).
                 withStartDate(LocalDate.of(2017, 3, 2)).
+                withFundingDecision(FundingDecisionStatus.FUNDED).
                 build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -195,7 +196,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
-        assertEquals(newProjectResource, project.getSuccessObject());
+        assertEquals(newProjectResource, project.getSuccess());
 
         verify(costCategoryTypeStrategyMock).getOrCreateCostCategoryTypeForSpendProfile(savedProject.getId(), organisation.getId());
         verify(financeChecksGeneratorMock).createMvpFinanceChecksFigures(savedProject, organisation, costCategoryTypeForOrganisation);
@@ -220,7 +221,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
         assertTrue(project.isSuccess());
-        assertEquals(existingProjectResource, project.getSuccessObject());
+        assertEquals(existingProjectResource, project.getSuccess());
 
         verify(projectRepositoryMock).findOneByApplicationId(applicationId);
         verify(projectMapperMock).mapToResource(existingProject);
@@ -255,7 +256,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         assertTrue(result.isSuccess());
 
-        assertEquals(result.getSuccessObject().size(), 1L);
+        assertEquals(result.getSuccess().size(), 1L);
     }
 
     @Test
@@ -433,8 +434,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<ProjectUserResource> foundProjectManager = service.getProjectManager(projectId);
         assertTrue(foundProjectManager.isSuccess());
-        assertTrue(foundProjectManager.getSuccessObject().getRoleName().equals(PROJECT_MANAGER.getName()));
-        assertTrue(foundProjectManager.getSuccessObject().getProject().equals(projectId));
+        assertTrue(foundProjectManager.getSuccess().getRoleName().equals(PROJECT_MANAGER.getName()));
+        assertTrue(foundProjectManager.getSuccess().getProject().equals(projectId));
     }
 
     @Override

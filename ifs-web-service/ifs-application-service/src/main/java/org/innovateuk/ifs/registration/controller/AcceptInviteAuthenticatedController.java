@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
+@SecuredBySpring(value="Controller", description = "TODO", securedType = AcceptInviteAuthenticatedController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteController {
     @Autowired
@@ -64,7 +66,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObject();
+        return view.getSuccess();
     }
 
     @GetMapping("/accept-invite-authenticated/confirm-invited-organisation/confirm")
@@ -80,12 +82,12 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
                     // Success
-                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccessObjectOrThrowException();
+                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccess();
                     clearDownInviteFlowCookies(response);
                     return "redirect:/application/" + invite.getApplication();
                 })
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObject();
+        return view.getSuccess();
     }
 
     private OrganisationResource getInviteOrganisationOrElseUserOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {

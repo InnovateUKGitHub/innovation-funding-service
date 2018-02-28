@@ -53,7 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -439,7 +439,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-        SpendProfileTableResource spendProfileTableResource = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+        SpendProfileTableResource spendProfileTableResource = getSpendProfileTable(projectOrganisationCompositeId).getSuccess();
         try {
             return serviceSuccess(generateSpendProfileCSVData(spendProfileTableResource, projectOrganisationCompositeId));
         } catch (IOException ioe) {
@@ -471,7 +471,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccess();
         if (table.getValidationMessages().hasErrors()) { // validate before marking as complete
             return serviceFailure(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE);
         } else {
@@ -482,7 +482,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+        SpendProfileTableResource table = getSpendProfileTable(projectOrganisationCompositeId).getSuccess();
         return saveSpendProfileData(projectOrganisationCompositeId, table, false);
     }
 

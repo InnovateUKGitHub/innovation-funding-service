@@ -34,7 +34,7 @@ public class ContentGroupRestServiceMocksTest extends BaseRestServiceUnitTest<Co
         setupFileUploadWithRestResultExpectations(
                 expectedUrl, content, contentType, contentLength, OK);
 
-        service.uploadFile(groupId, contentType, contentLength, originalFilename, content.getBytes()).getSuccessObjectOrThrowException();
+        service.uploadFile(groupId, contentType, contentLength, originalFilename, content.getBytes()).getSuccess();
 
     }
 
@@ -45,7 +45,7 @@ public class ContentGroupRestServiceMocksTest extends BaseRestServiceUnitTest<Co
 
         setupPostWithRestResultExpectations(expectedUrl, OK);
 
-        service.removeFile(groupId).getSuccessObjectOrThrowException();
+        service.removeFile(groupId).getSuccess();
 
     }
 
@@ -57,7 +57,7 @@ public class ContentGroupRestServiceMocksTest extends BaseRestServiceUnitTest<Co
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource actual = service.getFile(groupId).getSuccessObjectOrThrowException();
+        ByteArrayResource actual = service.getFile(groupId).getSuccess();
 
         assertThat(actual, equalTo(returnedFileContents));
 
@@ -71,7 +71,7 @@ public class ContentGroupRestServiceMocksTest extends BaseRestServiceUnitTest<Co
         FileEntryResource returnedFileEntry = new FileEntryResource();
         setupGetWithRestResultExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 
-        FileEntryResource actual =  service.getFileDetails(groupId).getSuccessObjectOrThrowException();
+        FileEntryResource actual =  service.getFileDetails(groupId).getSuccess();
 
         assertThat(actual, equalTo(returnedFileEntry));
     }
@@ -84,7 +84,7 @@ public class ContentGroupRestServiceMocksTest extends BaseRestServiceUnitTest<Co
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
         setupGetWithRestResultAnonymousExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource actual = service.getFileAnonymous(groupId).getSuccessObjectOrThrowException();
+        ByteArrayResource actual = service.getFileAnonymous(groupId).getSuccess();
 
         assertThat(actual, equalTo(returnedFileContents));
 
@@ -98,7 +98,7 @@ public class ContentGroupRestServiceMocksTest extends BaseRestServiceUnitTest<Co
         FileEntryResource returnedFileEntry = new FileEntryResource();
         setupGetWithRestResultAnonymousExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
 
-        FileEntryResource actual =  service.getFileDetailsAnonymous(groupId).getSuccessObjectOrThrowException();
+        FileEntryResource actual =  service.getFileDetailsAnonymous(groupId).getSuccess();
 
         assertThat(actual, equalTo(returnedFileEntry));
     }

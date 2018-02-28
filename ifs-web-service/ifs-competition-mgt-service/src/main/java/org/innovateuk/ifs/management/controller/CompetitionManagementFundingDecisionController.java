@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
@@ -37,6 +38,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingDecisionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementFundingDecisionController extends CompetitionManagementCookieController<FundingDecisionSelectionCookie> {
 
@@ -267,7 +269,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 PAGE_SIZE,
                 fundingDecisionFilterForm.getStringFilter(),
                 fundingDecisionFilterForm.getFundingFilter())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 
     private String populateSubmittedModel(Model model, long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
@@ -276,7 +278,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
         boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());

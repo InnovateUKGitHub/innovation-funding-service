@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.mapper.SILBankDetailsMapper;
@@ -17,10 +18,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
-import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
-import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
-import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
+import org.innovateuk.ifs.sil.experian.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -28,6 +26,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -89,7 +88,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsMapperMock.mapToResource(bankDetails)).thenReturn(bankDetailsResource);
         ServiceResult<BankDetailsResource> result = service.getByProjectAndOrganisation(project.getId(), organisation.getId());
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject(), bankDetailsResource);
+        assertEquals(result.getSuccess(), bankDetailsResource);
     }
 
     @Test
@@ -133,6 +132,11 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Test
     public void testBankDetailsAreNotSavedIfExperianValidationFails(){
         ValidationResult validationResult = new ValidationResult();
+        Condition condition = new Condition();
+        condition.setSeverity("error");
+        condition.setDescription("Invalid sort code");
+        condition.setCode(5);
+        validationResult.setConditions(singletonList(condition));
         validationResult.setCheckPassed(false);
         when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
@@ -211,7 +215,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisation.getId())).thenReturn(bankDetails);
         when(bankDetailsMapperMock.mapToResource(bankDetails)).thenReturn(bankDetailsResource);
         when(projectUsersHelperMock.getPartnerOrganisations(projectId)).thenReturn(singletonList(organisation));
-        when(financeRowServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
+        when(financeServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
         when(organisationRepositoryMock.findOne(leadApplicantRole.getOrganisationId())).thenReturn(organisation);
 
         List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource().withOrganisationId(organisation.getId()).withOrganisationName(organisation.getName()).withBankDetailsStatus(ProjectActivityStates.ACTION_REQUIRED).build(1);
@@ -224,7 +228,33 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         expected.setBankDetailsStatusResources(bankDetailsStatusResource);
         ServiceResult<ProjectBankDetailsStatusSummary> result = service.getProjectBankDetailsStatusSummary(projectId);
         assertTrue(result.isSuccess());
-        assertEquals(expected, result.getSuccessObject());
+        assertEquals(expected, result.getSuccess());
+    }
+
+    @Test
+    public void getPendingBankDetailsApprovals() throws Exception {
+
+        List<BankDetailsReviewResource> pendingBankDetails = Collections.singletonList(new BankDetailsReviewResource(1L, 11L, "Comp1", 12L, "project1", 22L, "Org1"));
+
+        when(bankDetailsRepositoryMock.getPendingBankDetailsApprovals()).thenReturn(pendingBankDetails);
+
+        ServiceResult<List<BankDetailsReviewResource>> result = service.getPendingBankDetailsApprovals();
+
+        assertTrue(result.isSuccess());
+        assertEquals(pendingBankDetails, result.getSuccess());
+    }
+
+    @Test
+    public void countPendingBankDetailsApprovals() throws Exception {
+
+        Long pendingBankDetailsCount = 8L;
+
+        when(bankDetailsRepositoryMock.countPendingBankDetailsApprovals()).thenReturn(pendingBankDetailsCount);
+
+        ServiceResult<Long> result = service.countPendingBankDetailsApprovals();
+
+        assertTrue(result.isSuccess());
+        assertEquals(pendingBankDetailsCount, result.getSuccess());
     }
 
     @Override

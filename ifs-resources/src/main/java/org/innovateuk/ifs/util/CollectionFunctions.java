@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.function.Function.identity;
@@ -45,6 +46,20 @@ public final class CollectionFunctions {
 
     public static <S, T> List<T> flattenLists(Collection<S> toFlatten, Function<S, ? extends Collection<T>> mapper) {
         return toFlatten.stream().filter(Objects::nonNull).map(mapper).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    /**
+     * Flatten the given 2-dimensional Set into a 1-dimensional Set
+     *
+     * @param lists
+     * @param <T>
+     * @return 1-dimensional list
+     */
+    public static <T> Set<T> flattenSets(Set<Set<T>> lists) {
+        return lists.stream()
+                .filter(l -> l != null)
+                .flatMap(Collection::stream)
+                .collect(toSet());
     }
 
     /**
@@ -263,8 +278,27 @@ public final class CollectionFunctions {
         return simpleMap(asList(list), mappingFn);
     }
 
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * Unlike {@link CollectionFunctions#simpleMap}, this method also provides the index of the item being mapped.
+     *
+     * @param list
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> simpleMapWithIndex(T[] list, BiFunction<T, Integer, R> mappingFn) {
+        return simpleMapWithIndex(asList(list), mappingFn);
+    }
+
     public static <T, R> Map<T, R> simpleFilter(Map<T, R> map, Predicate<T> filterFn) {
         return  simpleFilter(map, (k,v) -> filterFn.test(k));
+    }
+
+    public static <T, R> Map<T, R> simpleFilterNot(Map<T, R> map, Predicate<T> filterFn) {
+        return  simpleFilter(map, filterFn.negate());
     }
 
     public static <T, R, S> Map<S, Map<T,R>> simpleGroupBy(Map<T, R> map, Function<T, S> filterFn) {
@@ -347,7 +381,7 @@ public final class CollectionFunctions {
      */
     public static <T, R> Set<R> simpleMapSet(Set<T> list, Function<T, R> mappingFn) {
         if (null == list || list.isEmpty()) {
-            return Collections.emptySet();
+            return emptySet();
         }
         return list.stream().map(mappingFn).collect(toSet());
     }
@@ -358,7 +392,7 @@ public final class CollectionFunctions {
      */
     public static <T, R> Set<R> simpleMapSet(List<T> list, Function<T, R> mappingFn) {
         if (null == list || list.isEmpty()) {
-            return Collections.emptySet();
+            return emptySet();
         }
         return list.stream().map(mappingFn).collect(toSet());
     }
@@ -377,6 +411,31 @@ public final class CollectionFunctions {
             return emptyList();
         }
         return collection.stream().map(mappingFn).collect(toList());
+    }
+
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code.
+     *
+     * Unlike {@link CollectionFunctions#simpleMap}, this method also provides the index of the item being
+     * mapped.
+     *
+     * @param collection
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> simpleMapWithIndex(Collection<T> collection, BiFunction<T, Integer, R> mappingFn) {
+        if (collection == null || collection.isEmpty()) {
+            return emptyList();
+        }
+
+        List<T> asList = new ArrayList<>(collection);
+
+        return IntStream.range(0, collection.size()).
+                mapToObj(i -> mappingFn.apply(asList.get(i), i)).
+                collect(toList());
     }
 
     /**
@@ -442,7 +501,7 @@ public final class CollectionFunctions {
      * @return
      */
     public static <T, K, U> Map<K, U> simpleToMap(
-            List<T> list,
+            Collection<T> list,
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper) {
 
@@ -452,6 +511,40 @@ public final class CollectionFunctions {
 
         Map<K,U> map = new HashMap<K,U>();
         list.forEach(item -> map.put(keyMapper.apply(item), valueMapper.apply(item)));
+        return map;
+    }
+
+    /**
+     * A simple function to convert a list of items to a Map given a key generating function and a value generating function
+     *
+     * @param keyMapper
+     * @param valueMapper
+     * @param <T>
+     * @param <K>
+     * @param <U>
+     * @return
+     */
+    public static <T, K, U> Map<K, List<U>> simpleToMultiMap(
+            Collection<T> list,
+            Function<? super T, ? extends K> keyMapper,
+            Function<? super T, ? extends U> valueMapper) {
+
+        if (list == null || list.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<K,List<U>> map = new HashMap<>();
+        list.forEach(item -> {
+
+            K key = keyMapper.apply(item);
+            U value = valueMapper.apply(item);
+            List<U> valueList = map.get(key);
+            if (valueList == null) {
+                valueList = new ArrayList<>();
+                map.put(key, valueList);
+            }
+            valueList.add(value);
+        });
         return map;
     }
 
@@ -547,6 +640,21 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilter(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return emptyList();
+        }
+        return simpleFilter(asList(array), filterFn);
+    }
+
+    /**
      * A simple wrapper around a NEGATED 1-stage filter function, to remove boilerplate from production code
      *
      * @param list
@@ -554,7 +662,7 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> List<T> simpleFilterNot(List<? extends T> list, Predicate<T> filterFn) {
+    public static <T> List<T> simpleFilterNot(Collection<? extends T> list, Predicate<T> filterFn) {
         return simpleFilter(list, element -> !filterFn.test(element));
     }
 
@@ -566,11 +674,43 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> Optional<T> simpleFindFirst(List<T> list, Predicate<T> filterFn) {
+    public static <T> Optional<T> simpleFindFirst(Collection<T> list, Predicate<T> filterFn) {
         if (list == null || list.isEmpty()) {
             return empty();
         }
         return list.stream().filter(filterFn).findFirst();
+    }
+
+    /**
+     * A simple wrapper around a 1-stage find-first function that takes an array rather than a Collection, to remove
+     * boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> simpleFindFirst(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return empty();
+        }
+        return simpleFindFirst(asList(array), filterFn);
+    }
+
+    /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param list
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> T simpleFindFirstMandatory(Collection<T> list, Predicate<T> filterFn) {
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("Cannot find a mandatory matching value in an empty list");
+        }
+        return simpleFindFirst(list, filterFn).orElseThrow(() ->
+                new IllegalArgumentException("Was unable to find a matching mandatory result in list"));
     }
 
     /**
@@ -581,11 +721,28 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> boolean simpleAnyMatch(List<T> list, Predicate<T> filterFn) {
+    public static <T> boolean simpleAnyMatch(Collection<T> list, Predicate<T> filterFn) {
         if (list == null || list.isEmpty()) {
             return false;
         }
         return list.stream().anyMatch(filterFn);
+    }
+
+    /**
+     * A simple wrapper around an anyMatch function that takes an array, to remove boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean simpleAnyMatch(T[] array, Predicate<T> filterFn) {
+
+        if (array == null || array.length == 0) {
+            return false;
+        }
+
+        return simpleAnyMatch(asList(array), filterFn);
     }
 
     /**
@@ -597,7 +754,7 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> String simpleJoiner(List<T> list, String joinString) {
+    public static <T> String simpleJoiner(Collection<T> list, String joinString) {
         if (list == null || list.isEmpty()) {
             return "";
         }
@@ -673,9 +830,25 @@ public final class CollectionFunctions {
      * @param <T>
      * @return
      */
-    public static <T> List<T> removeDuplicates(List<T> list) {
-        Set<T> set = new LinkedHashSet<>(list);
-        return new ArrayList<>(set);
+    public static <T> List<T> removeDuplicates(Collection<T> list) {
+        if (list == null) {
+            return emptyList();
+        }
+        return list.stream().distinct().collect(toList());
+    }
+
+    /**
+     * Given a list, this method will remove any duplicate entries from it and return the list in the same order as it was given
+     *
+     * @param list
+     * @param <T>
+     * @return
+     */
+    public static <T> Set<T> removeDuplicates(Set<T> list) {
+        if (list == null) {
+            return emptySet();
+        }
+        return list.stream().distinct().collect(toSet());
     }
 
     /**
@@ -835,5 +1008,16 @@ public final class CollectionFunctions {
      */
     public static <T> List<T> nOf(int n, T t) {
         return range(0, n).mapToObj(x -> t).collect(Collectors.toList());
+    }
+
+    public static <T> List<T> union(List<? extends T> one, List<? extends T> two){
+        List<T> union = new ArrayList<>();
+        union.addAll(one);
+        union.addAll(two);
+        return union;
+    }
+
+    public static <T> List<T> flattenOptional(Collection<Optional<T>> toFlatten){
+        return  simpleMap(simpleFilter(toFlatten, Optional::isPresent), Optional::get);
     }
 }

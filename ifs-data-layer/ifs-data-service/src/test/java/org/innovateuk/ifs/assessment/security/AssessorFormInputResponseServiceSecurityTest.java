@@ -54,6 +54,17 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
+    public void getAllAssessorFormInputResponsesForPanel() {
+        long applicationId = 2L;
+
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getAllAssessorFormInputResponsesForPanel(applicationId),
+                () -> verify(applicationPermissionRules).assessorCanSeeTheAssessmentScoresInApplicationsTheyAssess(isA(ApplicationResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() {
         Long assessmentId = 1L;
         Long questionId = 3L;
@@ -78,7 +89,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
     @Test
     public void getApplicationAggregateScores() {
-        long applicationId = 2;
+        long applicationId = 2L;
 
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
@@ -105,6 +116,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
+        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long applicationId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
             return null;
         }
@@ -126,6 +142,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId) {
             return null;
         }
     }

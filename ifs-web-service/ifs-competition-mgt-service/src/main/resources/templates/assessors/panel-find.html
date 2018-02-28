@@ -11,7 +11,7 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start"/>
     <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}"/>
+              th:with="linkTitle='Manage assessment panel',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}"/>
 
     <th:block th:insert="fragments/layout :: page-title"
               th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='heading-xlarge'"/>
@@ -107,11 +107,11 @@
                     </label>
                 </div>
                 <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(assessorPanelSelectionForm.selectedAssessorIds)}"></span> assessors selected
+                    <span data-count-selected="" th:text="${#lists.size(assessorPanelSelectionForm.selectedIds)}"></span> assessors selected
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorPanelSelectionForm.selectedAssessorIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorPanelSelectionForm.selectedIds)}">
                     Add selected to invite list
                 </button>
             </div>
@@ -134,7 +134,7 @@
                         <div class="multiple-choice">
                             <input type="checkbox"
                                    th:id="|assessor-row-${index.count}|"
-                                   th:field="*{selectedAssessorIds}"
+                                   th:field="*{selectedIds}"
                                    th:value="${assessor.id}"/>
                             <label th:for="|assessor-row-${index.count}|">
                                 <span class="invisible">Add</span>
@@ -142,7 +142,7 @@
                         </div>
                     </td>
                     <td>
-                        <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                        <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
                            th:text="${assessor.name}">John Barnes
                         </a>
                     </td>

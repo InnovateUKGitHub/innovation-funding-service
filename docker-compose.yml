@@ -50,6 +50,8 @@ services:
       - "LDAP_PORT=8389"
     networks:
       - ifs
+    links:
+      - mysql:ifs-database
 
   registration-svc:
     image: innovateuk/registration-service
@@ -59,6 +61,12 @@ services:
       timeout: 8s
     networks:
       - ifs
+    hostname: registration-svc
+    ports:
+      - "8088:8080"
+      - "9008:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   application-svc:
     image: innovateuk/application-service
@@ -68,50 +76,12 @@ services:
       timeout: 8s
     networks:
       - ifs
-
-  assessment-svc:
-    image: innovateuk/assessment-service
-    healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/assessment/monitoring/health"]
-      interval: 15s
-      timeout: 8s
-    networks:
-      - ifs
-
-  competition-mgt-svc:
-    image: innovateuk/competition-management-service
-    healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/management/monitoring/health"]
-      interval: 15s
-      timeout: 8s
-    networks:
-      - ifs
-
-  project-setup-mgt-svc:
-    image: innovateuk/project-setup-management-service
-    healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup-management/monitoring/health"]
-      interval: 15s
-      timeout: 8s
-    networks:
-      - ifs
-
-  project-setup-svc:
-    image: innovateuk/project-setup-service
-    healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup/monitoring/health"]
-      interval: 15s
-      timeout: 8s
-    networks:
-      - ifs
-  front-door-svc:
-    image: innovateuk/front-door-service
-    healthcheck:
-      test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
-      interval: 15s
-      timeout: 8s
-    networks:
-      - ifs
+    hostname: application-svc
+    ports:
+      - "8089:8080"
+      - "9001:8000"
+    environment:
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   data-service:
     image: innovateuk/data-service
@@ -123,6 +93,18 @@ services:
       ifs:
         aliases:
           - ifs-data-service
+    hostname: data-service
+    links:
+      - mail
+      - mysql:ifs-database
+      - sil-stub
+    volumes:
+      - ./robot-tests/upload_files/:/tmp/ifs-local
+    ports:
+      - "8086:8080"
+      - "9006:8000"
+    environment:
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   sil-stub:
       image: innovateuk/sil-stub
@@ -132,7 +114,36 @@ services:
         timeout: 8s
       networks:
         - ifs
+      hostname: sil-stub
+      links:
+        - mail
+      ports:
+        - "8091:8080"
+      environment:
+        - JAVA_OPTS=-Xmx300m
+
+  mail:
+    image: innovateuk/mail-sink
+    ports:
+      - "9876:8143"
+      - "8765:8080"
+    networks:
+      - ifs
+
+  mysql:
+    image: innovateuk/ifs-mysql:5.6.29
+    ports:
+      - "3306:3306"
+    command: [--character-set-server=utf8, --collation-server=utf8_bin]
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ifs
+    restart: on-failure
+    networks:
+      - ifs
 
 networks:
   ifs:
     driver: bridge
+
+

@@ -1,32 +1,27 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+apply from: rootProject.file("java-spring-boot.gradle")
+apply from: rootProject.file("openshift-build.gradle")
 
 description = """"""
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
 repositories {
-     maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "http://repo.maven.apache.org/maven2" }
 }
 
 dependencies {
-    compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.2.2.Final'
-    compile group: 'org.springframework.ldap', name: 'spring-ldap-core', version:'2.0.4.RELEASE'
-    compile group: 'org.springframework.ldap', name: 'spring-ldap-odm', version:'2.0.4.RELEASE'
-    compile group: 'org.springframework.data', name: 'spring-data-commons', version:'1.11.2.RELEASE'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.2.2.Final'
+    compile group: 'org.springframework.ldap', name: 'spring-ldap-core', version: '2.0.4.RELEASE'
+    compile group: 'org.springframework.ldap', name: 'spring-ldap-odm', version: '2.0.4.RELEASE'
+    compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.11.2.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
-    testCompile group: 'com.jayway.jsonpath', name: 'json-path', version:'2.0.0'
-    testCompile group: 'org.springframework.ldap', name: 'spring-ldap-test', version:'2.0.4.RELEASE'
-    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version:'2.8.0'
+    testCompile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.0.0'
+    testCompile group: 'org.springframework.ldap', name: 'spring-ldap-test', version: '2.0.4.RELEASE'
+    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.8.0'
 }
 
-/**
- * CONFIGURATION FROM ifs-application-service/build.gradle
- */
 bootRun {
     addResources = false
 }
@@ -39,67 +34,16 @@ jar {
     baseName = 'ifs-registration-service'
 }
 
-/**
- * END OF.... CONFIGURATION FROM ifs-application-service/build.gradle
- */
+apply from: rootProject.file("prepare-docker.gradle")
 
 
-
-
-
-/**
- * CONFIGURATION FROM ifs-web-service/build.gradle
- */
-task getNewRelicAgent {
-    if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
-            !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
-        exec {
-            executable = 'curl'
-            args = ['--connect-timeout', '30',
-                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
-                    'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
-            ]
-        }
-        exec {
-            executable = 'curl'
-            args = ['--connect-timeout', '30',
-                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
-                    'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
-            ]
-        }
-    }
-}
-
-task prepareDockerInput {
-    dependsOn getNewRelicAgent
-    dependsOn build
+task prepareDockerInputRegService {
+    dependsOn prepareDockerInput
     dependsOn ':ifs-auth-service:prepareLDAPEncryptionSecrets'
 
     def inputDir = project.file("$project.buildDir/docker")
 
     doFirst {
-        copy {
-            from "${project.projectDir}/docker/"
-            into inputDir
-            include 'Dockerfile-template'
-            rename 'Dockerfile-template', 'Dockerfile'
-            filter {
-                it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
-            }
-        }
-        copy {
-            from jar
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
-            into inputDir
-        }
         copy {
             from file("${rootProject.projectDir}/ifs-auth-service/ifs-ldap-service/src/main/docker/certs/ldap-encryption.crt")
             into inputDir
@@ -107,23 +51,17 @@ task prepareDockerInput {
     }
 }
 
-task buildDocker(type: DockerBuildImage) {
-    dependsOn prepareDockerInput
-    tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-    inputDir = project.file("$project.buildDir/docker")
-}
+buildDocker.dependsOn ":docker:oracle-jre:buildDocker"
+buildDocker.dependsOn prepareDockerInputRegService
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+
+tagDocker.imageId="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+tagDockerLocal.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 
-// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
-// Can reinstate excludeDevtools in the bootRepackage task in next release
-springBoot {
-    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
-
-bootRepackage {
-    mainClass = 'org.innovateuk.ifs.Application'
-    //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
-/**
- * END OF CONFIGURATION FROM ifs-web-service/build.gradle
- */
+project.version = registrationServiceVersion
+tagDocker.tag = registrationServiceVersion
+osStageRemote.tag = registrationServiceVersion
+tagDockerLocal.tag = registrationServiceVersion
+osStageLocal.tag = registrationServiceVersion

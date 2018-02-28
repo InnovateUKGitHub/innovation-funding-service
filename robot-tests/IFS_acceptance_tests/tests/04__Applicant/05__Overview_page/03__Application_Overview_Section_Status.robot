@@ -37,4 +37,4 @@ Green check shows when finances are marked as complete
     [Setup]  The user navigates to the overview page of the Robot test application
     Given the Application details are completed
     And the user navigates to Your-finances page  Robot test application
-    Then the user marks the finances as complete  Robot test application  labour costs  n/a
+    Then the user marks the finances as complete  Robot test application  labour costs  n/a  no

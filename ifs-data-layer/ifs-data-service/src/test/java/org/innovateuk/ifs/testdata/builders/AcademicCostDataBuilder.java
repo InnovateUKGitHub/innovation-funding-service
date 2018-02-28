@@ -93,8 +93,8 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
 
             QuestionResource question = retrieveQuestionByCompetitionAndName(financeRowName, data.getCompetition().getId());
 
-            financeRowService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
-                    getSuccessObjectOrThrowException();
+            financeRowCostsService.addCost(data.getApplicationFinance().getId(), question.getId(), newCostItem).
+                    getSuccess();
         });
     }
 
@@ -121,8 +121,8 @@ public class AcademicCostDataBuilder extends BaseDataBuilder<AcademicCostData, A
     @Override
     protected void postProcess(int index, AcademicCostData instance) {
         super.postProcess(index, instance);
-        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccessObjectOrThrowException();
-        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccessObjectOrThrowException();
+        OrganisationResource organisation = organisationService.findById(instance.getApplicationFinance().getOrganisation()).getSuccess();
+        ApplicationResource application = applicationService.getApplicationById(instance.getApplicationFinance().getApplication()).getSuccess();
         LOG.info("Created Academic Costs for Application '{}', Organisation '{}'", application.getName(), organisation.getName());
     }
 }

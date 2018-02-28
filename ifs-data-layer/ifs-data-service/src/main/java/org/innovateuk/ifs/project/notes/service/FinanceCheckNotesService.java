@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.project.notes.service;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.service.ThreadService;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -25,6 +26,11 @@ public interface FinanceCheckNotesService extends ThreadService<NoteResource, Po
     ServiceResult<Long> create(@P("noteResource") NoteResource noteResource);
 
     @Override
-    @PreAuthorize("hasPermission(#noteId, 'org.innovateuk.threads.resource.NoteResource', 'PF_ADD_POST')")
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "CLOSE_NOTE", description = "Only project finance users can close notes")
+    ServiceResult<Void> close(Long noteId);
+
+    @Override
+    @PreAuthorize("hasPermission(#noteId, 'org.innovateuk.ifs.threads.resource.NoteResource', 'PF_ADD_POST')")
     ServiceResult<Void> addPost(PostResource post, @P("noteId") Long noteId);
 }

@@ -21,7 +21,7 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: innovateuk/sp-service:1.0-SNAPSHOT
+        - image: innovateuk/sp-service:${spVersion}
           name: shib
           livenessProbe:
             httpGet:
@@ -49,37 +49,37 @@ items:
           - name: SP_PROXY_KEY
             value: "<<SSLKEY>>"
           - name: SP_DOMAIN
-            value: <<SHIB-ADDRESS>>
+            value: ${SHIB_ADDRESS}
           - name: IDP_DOMAIN
-            value: <<SHIB-IDP-ADDRESS>>
+            value: ${SHIB_IDP_ADDRESS}
           - name: HTTPS_PORT
             value: "9443"
           - name: HTTP_PORT
             value: "9080"
           - name: MPM_STARTSERVERS
-            value: "<<SHIBBOLETH_SP_MPM_STARTSERVERS>>"
+            value: "${SHIBBOLETH_SP_MPM_STARTSERVERS}"
           - name: MPM_MINSPARETHREADS
-            value: "<<SHIBBOLETH_SP_MPM_MINSPARETHREADS>>"
+            value: "${SHIBBOLETH_SP_MPM_MINSPARETHREADS}"
           - name: MPM_MAXSPARETHREADS
-            value: "<<SHIBBOLETH_SP_MPM_MAXSPARETHREADS>>"
+            value: "${SHIBBOLETH_SP_MPM_MAXSPARETHREADS}"
           - name: MPM_THREADLIMIT
-            value: "<<SHIBBOLETH_SP_MPM_THREADLIMIT>>"
+            value: "${SHIBBOLETH_SP_MPM_THREADLIMIT}"
           - name: MPM_THREADSPERCHILD
-            value: "<<SHIBBOLETH_SP_MPM_THREADSPERCHILD>>"
+            value: "${SHIBBOLETH_SP_MPM_THREADSPERCHILD}"
           - name: MPM_MAXREQUESTWORKERS
-            value: "<<SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS>>"
+            value: "${SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS}"
           - name: MPM_MAXCONNECTIONSPERCHILD
-            value: "<<SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD>>"
+            value: "${SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD}"
           - name: MEMCACHE_ENDPOINT
-            value: "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
+            value: "${SHIBBOLETH_MEMCACHE_ENDPOINT}"
           ports:
           - containerPort: 9443
           - containerPort: 9080
           resources:
             limits:
-              memory: "<<SHIBBOLETH_SP_MEMORY_LIMIT>>"
+              memory: ${SHIBBOLETH_SP_MEMORY_LIMIT}
             requests:
-              memory: "<<SHIBBOLETH_SP_MEMORY_REQUEST>>"
+              memory: ${SHIBBOLETH_SP_MEMORY_REQUEST}
           test: false
     triggers:
     - type: ConfigChange
@@ -104,7 +104,7 @@ items:
     annotations:
       haproxy.router.openshift.io/balance: roundrobin
   spec:
-    host: <<SHIB-ADDRESS>>
+    host:  ${SHIB_ADDRESS}
     port:
       targetPort: 443-tcp
     tls:

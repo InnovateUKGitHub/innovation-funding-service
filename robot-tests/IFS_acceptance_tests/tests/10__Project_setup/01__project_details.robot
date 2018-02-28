@@ -46,6 +46,9 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
 ...
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
+...
+...               IFS-2642 Resend invites in Project Setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
@@ -78,7 +81,7 @@ Internal users can see Project Details not yet completed
     And the user should see the element            jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
+    [Documentation]    INFUND-4049, INFUND-5507, INFUND-5543
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
@@ -102,11 +105,8 @@ Non-lead partner can see the project setup page
     When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_TITLE}
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    And the user should see the element    css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
-    And the user should see the element    link=View application and feedback
-    And the user clicks the button/link    link=View the grant terms and conditions
+    And the user should see the element    link=view application feedback
+    And the user clicks the button/link    link=view the grant terms and conditions
     And the user should see the text in the page     Terms and conditions of an Innovate UK grant award
     And the user goes back to the previous page
     And the user should see the text in the page    Project details
@@ -115,10 +115,10 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Finance checks
     And the user should see the text in the page    Spend profile
     And the user should see the text in the page    Other documents
-    And the user should see the element    css=li.require-action:nth-of-type(2)    #Action required, seen by non-lead
+    And the user should see the element    css=li.require-action:nth-of-type(1)    #Action required, seen by non-lead
     And the user should see the text in the page    Grant offer letter
-    And the user should see the text in the page    status of my partners
-    When the user clicks the button/link    link=status of my partners
+    And the user should see the text in the page    View the status of partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should be redirected to the correct page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
@@ -128,8 +128,6 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
     Then the user should not see the element    link = Monitoring Officer
     And the user should not see the element    link = Bank details
     And the user should not see the element    link = Finance checks
@@ -149,7 +147,7 @@ Non-lead partner can see the application overview
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    Other documents
-    When the user clicks the button/link    link=View application and feedback
+    When the user clicks the button/link    link=view application feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
     And the user should see the text in the page    Application details
 
@@ -159,19 +157,16 @@ Lead partner can see the project setup page
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
-    Then the user should see the element    css=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
-    And the user should see the element    link=View application and feedback
-    And the user should see the element    link=View the grant terms and conditions
+    And the user should see the element    link=view application feedback
+    And the user should see the element    link=view the grant terms and conditions
     And the user should see the text in the page    Project details
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
     And the user should see the text in the page    Other documents
-    And the user should see the element    css=li.require-action:nth-of-type(2)    #Action required, seen by lead
+    And the user should see the element    css=li.require-action:nth-of-type(1)    #Action required, seen by lead
     And the user should see the text in the page    Grant offer letter
-    And the user should see the text in the page    status of my partners
-    When the user clicks the button/link    link=status of my partners
+    And the user should see the text in the page    View the status of partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should be redirected to the correct page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
@@ -187,7 +182,7 @@ Lead partner can see the application overview
     [Documentation]    INFUND-2612
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=View application and feedback
+    When the user clicks the button/link    link=view application feedback
     Then the user should see the element    jQuery=.success-alert h2:contains("Congratulations, your application has been successful")
     And the user should see the element     jQuery=h2:contains("Application details")
 
@@ -216,7 +211,8 @@ Lead partner can change the Start Date
     Given the user clicks the button/link    link=Target start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
-    Then the user should see a validation error    Please enter a future date.
+    And the user clicks the button/link                 jQuery=.button:contains("Save")
+    Then the user should see a field and summary error  Please enter a future date.
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
     When the user enters text to a text field    id=projectStartDate_month    1
     And the user enters text to a text field     id=projectStartDate_year    ${nextyear}
@@ -280,7 +276,13 @@ Partner invites a project manager
     And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
     And the user clicks the button/link    id=invite-project-manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    [Teardown]    logout as user
+
+Lead Applicant resends the invite to the Project manager
+    [Documentation]  IFS-2642
+    [Tags]    HappyPath    Email
+    When the user resends and clicks the button    Cancel
+    Then the user resends and clicks the button    Resend
+    [Teardown]  logout as user
 
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
@@ -352,7 +354,7 @@ Non lead partner invites finance contact
     [Tags]  HappyPath
     When Log in as a different user        &{collaborator1_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should not see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
@@ -373,8 +375,8 @@ Invited Fin Contact for non lead partner
     Then the user navigates to the page  ${project_in_setup_page}/details
     And the matching status checkbox is updated  project-details-finance  3  yes
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element   css=li.complete:nth-of-type(2)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element   css=li.complete:nth-of-type(1)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
@@ -384,11 +386,11 @@ Non lead partner not eligible for funding
     [Tags]  HappyPath
     Given log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=ul li.complete:nth-child(2)
-    Then the user should not see the element    css=ul li.require-action:nth-child(4)
+    And the user should see the element    css=ul li.complete:nth-child(1)
+    Then the user should not see the element    css=ul li.require-action:nth-child(3)
     When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     Then the user should be redirected to the correct page    ${project_in_setup_team_status_page}
     And the user should see the element    css=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
 
@@ -448,7 +450,13 @@ Partner invites a finance contact
     And the user enters text to a text field    id=email-finance-contact  ${invitedFinanceContact}
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    [Teardown]    logout as user
+
+Lead applicant resends the invite to the Finance contact
+    [Documentation]  IFS-2642
+    [Tags]    HappyPath    Email
+    When the user resends and clicks the button    Cancel
+    Then the user resends and clicks the button    Resend
+    [Teardown]  logout as user
 
 Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
@@ -505,10 +513,10 @@ Academic Partner nominates Finance contact
     [Tags]  HappyPath
     [Setup]    Log in as a different user   &{collaborator2_credentials}
     Then the user navigates to the page     ${project_in_setup_page}
-    When the user clicks the button/link    link=status of my partners
+    When the user clicks the button/link    link=View the status of partners
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     When the user clicks the button/link    link=Project setup status
-    Then the user should not see the element    jQuery=li.require-action:nth-child(4)
+    Then the user should not see the element    jQuery=li.require-action:nth-child(3)
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page  Finance contacts
     And the user should see the text in the page   Partner
@@ -519,9 +527,9 @@ Academic Partner nominates Finance contact
     And the matching status checkbox is updated  project-details-finance  2  yes
     And the user should see the element     link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
     When the user navigates to the page     ${project_in_setup_page}
-    Then the user should see the element    jQuery=li.complete:nth-of-type(2)
-    And the user should see the element    jQuery=li.require-action:nth-child(4)
-    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=li.complete:nth-of-type(1)
+    And the user should see the element    jQuery=li.require-action:nth-child(3)
+    When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
 Project details submission flow
@@ -531,17 +539,17 @@ Project details submission flow
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
     And the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=li.complete:nth-of-type(2)
+    Then the user should see the element    css=li.complete:nth-of-type(1)
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
     [Tags]  HappyPath
     [Setup]
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element   css=ul li.complete:nth-child(2)
-    And the user should see the element    css=ul li.require-action:nth-child(4)
-    And the user should see the element    css=ul li.waiting:nth-child(7)
-    When the user clicks the button/link   link=status of my partners
+    Then the user should see the element   css=ul li.complete:nth-child(1)
+    And the user should see the element    css=ul li.require-action:nth-child(3)
+    And the user should see the element    css=ul li.waiting:nth-child(6)
+    When the user clicks the button/link   link=View the status of partners
     Then the user should see the element   id=table-project-status
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
@@ -563,14 +571,14 @@ All partners can view submitted project details
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     When all the fields are completed
     And the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user         &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
     When all the fields are completed
     And the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=status of my partners
+    And the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
 
 Non-lead partner cannot change any project details
@@ -607,11 +615,11 @@ Invited Finance contact is able to see the Finances
     [Tags]  HappyPath
     [Setup]  log in as a different user   ${invitedFinanceContact}  ${correct_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks
-    When the user clicks the button/link  link=View finances
+    When the user clicks the button/link  link=your finances
     Then the user should see the element  css=.table-overview
     And the user should not see an error in the page
     When the user clicks the button/link  link=Finance checks
-    And the user clicks the button/link   link=Project finance overview
+    And the user clicks the button/link   link=project finance overview
     Then the user should see the element  jQuery=h3:contains("Project cost breakdown")
     And the user should not see an error in the page
 
@@ -687,3 +695,9 @@ the user accepts invitation and signs in
     the user reads his email and clicks the link  ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element               jQuery=h1:contains("Account verified")
     the user clicks the button/link               jQuery=.button:contains("Sign in")
+
+The user resends and clicks the button
+    [Arguments]  ${Resend_OR_Cancel}
+    The user clicks the button/link    jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+    The user should see the element    jQuery=h2:contains("Resend invite to team member")
+    The user clicks the button/link    jQuery=button:contains("${Resend_OR_Cancel}")

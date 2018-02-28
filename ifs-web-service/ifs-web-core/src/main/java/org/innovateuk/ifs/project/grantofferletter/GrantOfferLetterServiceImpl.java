@@ -2,9 +2,9 @@ package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -22,22 +22,22 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
 
     @Override
     public Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId) {
-        return grantOfferLetterRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getSignedGrantOfferLetterFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId) {
-        return grantOfferLetterRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccess();
     }
 
     @Override
     public Optional<ByteArrayResource> getGrantOfferFile(Long projectId) {
-        return grantOfferLetterRestService.getGrantOfferFile(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getGrantOfferFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getGrantOfferFileDetails(Long projectId) {
-        return grantOfferLetterRestService.getGrantOfferFileDetails(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getGrantOfferFileDetails(projectId).getSuccess();
     }
 
     @Override
@@ -71,38 +71,23 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     }
 
     @Override
-    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-        return grantOfferLetterRestService.isSendGrantOfferLetterAllowed(projectId).toServiceResult();
+    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
+        return grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-        return grantOfferLetterRestService.isGrantOfferLetterAlreadySent(projectId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType) {
-        return grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return grantOfferLetterRestService.isSignedGrantOfferLetterApproved(projectId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
-        return grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
+    public ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
+        return grantOfferLetterRestService.getGrantOfferLetterState(projectId).toServiceResult();
     }
 
     @Override
     public Optional<ByteArrayResource> getAdditionalContractFile(Long projectId) {
-        return grantOfferLetterRestService.getAdditionalContractFile(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getAdditionalContractFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId) {
-        return grantOfferLetterRestService.getAdditionalContractFileDetails(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getAdditionalContractFileDetails(projectId).getSuccess();
     }
 
     @Override

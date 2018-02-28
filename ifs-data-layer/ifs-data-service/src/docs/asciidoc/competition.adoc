@@ -224,6 +224,17 @@ include::{snippets}/competition/get-pending-spend-profiles/response-fields.adoc[
 ==== Curl Example
 include::{snippets}/competition/get-pending-spend-profiles/curl-request.adoc[]
 
+=== Get organisations for which Bank Details Approval is pending
+==== Request
+include::{snippets}/competitions/get-pending-bank-details-approvals/http-request.adoc[]
+
+==== Response
+include::{snippets}/competitions/get-pending-bank-details-approvals/http-response.adoc[]
+include::{snippets}/competitions/get-pending-bank-details-approvals/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitions/get-pending-bank-details-approvals/curl-request.adoc[]
+
 === Get count of projects for which Spend Profile generation is pending, for a given competition
 ==== Request
 include::{snippets}/competition/count-pending-spend-profiles/http-request.adoc[]
@@ -234,3 +245,15 @@ include::{snippets}/competition/count-pending-spend-profiles/http-response.adoc[
 
 ==== Curl Example
 include::{snippets}/competition/count-pending-spend-profiles/curl-request.adoc[]
+
+=== Get count of organisations for which Bank Details Approval is pending
+==== Request
+include::{snippets}/competitions/count-pending-bank-details-approvals/http-request.adoc[]
+
+==== Response
+include::{snippets}/competitions/count-pending-bank-details-approvals/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitions/count-pending-bank-details-approvals/curl-request.adoc[]
+
+

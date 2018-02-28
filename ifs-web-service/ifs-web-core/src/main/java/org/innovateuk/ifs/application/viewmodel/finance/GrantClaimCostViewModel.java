@@ -45,4 +45,8 @@ public class GrantClaimCostViewModel extends AbstractCostViewModel {
     public void setOrganisationGrantClaimPercentage(int organisationGrantClaimPercentage) {
         this.organisationGrantClaimPercentage = organisationGrantClaimPercentage;
     }
+
+    public boolean maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage() {
+        return maximumGrantClaimPercentage < organisationGrantClaimPercentage;
+    }
 }

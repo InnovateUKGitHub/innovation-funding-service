@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.PanelInviteViewModel;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
+import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelInviteResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
-import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder.newAssessmentReviewPanelInviteResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
@@ -73,7 +73,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/panel/hash/accept"));
 
-        verifyZeroInteractions(assessmentPanelInviteRestService);
+        verifyZeroInteractions(reviewPanelInviteRestService);
     }
 
     @Test
@@ -82,15 +82,15 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
         ZonedDateTime panelDate = ZonedDateTime.now();
         Boolean accept = true;
 
-        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource()
+        AssessmentReviewPanelInviteResource inviteResource = newAssessmentReviewPanelInviteResource()
                 .withCompetitionName("my competition")
                 .withPanelDate(panelDate)
                 .build();
 
         PanelInviteViewModel expectedViewModel = new PanelInviteViewModel("hash", inviteResource, false);
 
-        when(assessmentPanelInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
-        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(reviewPanelInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
+        when(reviewPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -99,67 +99,67 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessor-panel-accept-user-exists-but-not-logged-in"));
 
-        InOrder inOrder = inOrder(assessmentPanelInviteRestService);
-        inOrder.verify(assessmentPanelInviteRestService).checkExistingUser("hash");
-        inOrder.verify(assessmentPanelInviteRestService).openInvite("hash");
+        InOrder inOrder = inOrder(reviewPanelInviteRestService);
+        inOrder.verify(reviewPanelInviteRestService).checkExistingUser("hash");
+        inOrder.verify(reviewPanelInviteRestService).openInvite("hash");
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void confirmAcceptInvite() throws Exception {
-        when(assessmentPanelInviteRestService.acceptInvite("hash")).thenReturn(restSuccess());
+        when(reviewPanelInviteRestService.acceptInvite("hash")).thenReturn(restSuccess());
 
         mockMvc.perform(get("/invite-accept/panel/{inviteHash}/accept", "hash"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard"));
 
-        verify(assessmentPanelInviteRestService).acceptInvite("hash");
+        verify(reviewPanelInviteRestService).acceptInvite("hash");
     }
 
     @Test
     public void confirmAcceptInvite_hashNotExists() throws Exception {
-        when(assessmentPanelInviteRestService.acceptInvite("notExistHash")).thenReturn(restFailure(GENERAL_NOT_FOUND));
+        when(reviewPanelInviteRestService.acceptInvite("notExistHash")).thenReturn(restFailure(GENERAL_NOT_FOUND));
 
         mockMvc.perform(get("/invite-accept/panel/{inviteHash}/accept", "notExistHash"))
                 .andExpect(status().isNotFound());
 
-        verify(assessmentPanelInviteRestService).acceptInvite("notExistHash");
+        verify(reviewPanelInviteRestService).acceptInvite("notExistHash");
     }
 
     @Test
     public void openInvite() throws Exception {
         ZonedDateTime panelDate = ZonedDateTime.now();
 
-        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource().withCompetitionName("my competition")
+        AssessmentReviewPanelInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition")
                 .withPanelDate(panelDate)
                 .build();
 
         PanelInviteViewModel expectedViewModel = new PanelInviteViewModel("hash", inviteResource, true);
 
-        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(reviewPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-panel-invite"))
                 .andExpect(model().attribute("model", expectedViewModel));
 
-        verify(assessmentPanelInviteRestService).openInvite("hash");
+        verify(reviewPanelInviteRestService).openInvite("hash");
     }
 
     @Test
     public void openInvite_hashNotExists() throws Exception {
-        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentPanelInviteResource.class, "notExistHash")));
+        when(reviewPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentReviewPanelInviteResource.class, "notExistHash")));
         mockMvc.perform(get(restUrl + "{inviteHash}", "notExistHash"))
                 .andExpect(model().attributeDoesNotExist("model"))
                 .andExpect(status().isNotFound());
 
-        verify(assessmentPanelInviteRestService).openInvite("notExistHash");
+        verify(reviewPanelInviteRestService).openInvite("notExistHash");
     }
 
     @Test
     public void noDecisionMade() throws Exception {
-        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource().withCompetitionName("my competition").build();
+        AssessmentReviewPanelInviteResource inviteResource = newAssessmentReviewPanelInviteResource().withCompetitionName("my competition").build();
 
-        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(reviewPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         PanelInviteForm expectedForm = new PanelInviteForm();
 
@@ -187,15 +187,15 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
         assertTrue(bindingResult.hasFieldErrors("acceptInvitation"));
         assertEquals("Please indicate your decision.", bindingResult.getFieldError("acceptInvitation").getDefaultMessage());
 
-        verify(assessmentPanelInviteRestService).openInvite("hash");
-        verifyNoMoreInteractions(assessmentPanelInviteRestService);
+        verify(reviewPanelInviteRestService).openInvite("hash");
+        verifyNoMoreInteractions(reviewPanelInviteRestService);
     }
 
     @Test
     public void rejectInvite() throws Exception {
         Boolean accept = false;
 
-        when(assessmentPanelInviteRestService.rejectInvite("hash")).thenReturn(restSuccess());
+        when(reviewPanelInviteRestService.rejectInvite("hash")).thenReturn(restSuccess());
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -203,8 +203,8 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite/panel/hash/reject/thank-you"));
 
-        verify(assessmentPanelInviteRestService).rejectInvite("hash");
-        verifyNoMoreInteractions(assessmentPanelInviteRestService);
+        verify(reviewPanelInviteRestService).rejectInvite("hash");
+        verifyNoMoreInteractions(reviewPanelInviteRestService);
     }
 
     @Test
@@ -212,17 +212,17 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
         String comment = String.join(" ", nCopies(100, "comment"));
         Boolean accept = false;
 
-        when(assessmentPanelInviteRestService.rejectInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentPanelInviteResource.class, "notExistHash")));
-        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentPanelInviteResource.class, "notExistHash")));
+        when(reviewPanelInviteRestService.rejectInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentReviewPanelInviteResource.class, "notExistHash")));
+        when(reviewPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentReviewPanelInviteResource.class, "notExistHash")));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "notExistHash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("acceptInvitation", accept.toString()))
                 .andExpect(status().isNotFound());
 
-        InOrder inOrder = inOrder(assessmentPanelInviteRestService);
-        inOrder.verify(assessmentPanelInviteRestService).rejectInvite("notExistHash");
-        inOrder.verify(assessmentPanelInviteRestService).openInvite("notExistHash");
+        InOrder inOrder = inOrder(reviewPanelInviteRestService);
+        inOrder.verify(reviewPanelInviteRestService).rejectInvite("notExistHash");
+        inOrder.verify(reviewPanelInviteRestService).openInvite("notExistHash");
         inOrder.verifyNoMoreInteractions();
     }
 

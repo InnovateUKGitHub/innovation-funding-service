@@ -4,16 +4,21 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
+import org.innovateuk.ifs.file.resource.FileTypeCategories;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.file.resource.FileTypeCategories.PDF;
+import static org.innovateuk.ifs.file.resource.FileTypeCategories.SPREADSHEET;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
 
@@ -53,6 +58,7 @@ public class CompetitionSetupQuestionResource {
     private Boolean researchCategoryQuestion;
     private Boolean scope;
 
+    private List<String> allowedFileTypes;
 
     public Long getQuestionId() {
         return questionId;
@@ -214,6 +220,18 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
+    public List<String> getAllowedFileTypes() {
+        return allowedFileTypes;
+    }
+
+    public void setAllowedFileTypes(List<String> allowedFileTypes) {
+        this.allowedFileTypes = allowedFileTypes;
+    }
+
+    public static List<FileTypeCategories> getSupportedTypeCategories(){
+        return asList(PDF, SPREADSHEET);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -227,14 +245,15 @@ public class CompetitionSetupQuestionResource {
                 .append(type, that.type)
                 .append(number, that.number)
                 .append(shortTitle, that.shortTitle)
+                .append(shortTitleEditable, that.shortTitleEditable)
                 .append(title, that.title)
                 .append(subTitle, that.subTitle)
                 .append(guidanceTitle, that.guidanceTitle)
                 .append(guidance, that.guidance)
                 .append(maxWords, that.maxWords)
                 .append(appendix, that.appendix)
-                .append(assessmentGuidance, that.assessmentGuidance)
                 .append(assessmentGuidanceTitle, that.assessmentGuidanceTitle)
+                .append(assessmentGuidance, that.assessmentGuidance)
                 .append(assessmentMaxWords, that.assessmentMaxWords)
                 .append(scored, that.scored)
                 .append(scoreTotal, that.scoreTotal)
@@ -242,6 +261,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows, that.guidanceRows)
                 .append(researchCategoryQuestion, that.researchCategoryQuestion)
                 .append(scope, that.scope)
+                .append(allowedFileTypes, that.allowedFileTypes)
                 .isEquals();
     }
 
@@ -252,14 +272,15 @@ public class CompetitionSetupQuestionResource {
                 .append(type)
                 .append(number)
                 .append(shortTitle)
+                .append(shortTitleEditable)
                 .append(title)
                 .append(subTitle)
                 .append(guidanceTitle)
                 .append(guidance)
                 .append(maxWords)
                 .append(appendix)
-                .append(assessmentGuidance)
                 .append(assessmentGuidanceTitle)
+                .append(assessmentGuidance)
                 .append(assessmentMaxWords)
                 .append(scored)
                 .append(scoreTotal)
@@ -267,6 +288,7 @@ public class CompetitionSetupQuestionResource {
                 .append(guidanceRows)
                 .append(researchCategoryQuestion)
                 .append(scope)
+                .append(allowedFileTypes)
                 .toHashCode();
     }
 }

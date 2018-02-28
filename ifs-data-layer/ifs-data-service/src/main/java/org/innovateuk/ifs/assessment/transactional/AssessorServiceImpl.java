@@ -11,7 +11,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -180,7 +180,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))
         );
 
-        EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+        EmailContent content = notificationSender.renderTemplates(notification).getSuccess().get(recipient);
 
         return notificationSender.sendEmailWithContent(notification, recipient, content).andOnSuccessReturnVoid();
     }

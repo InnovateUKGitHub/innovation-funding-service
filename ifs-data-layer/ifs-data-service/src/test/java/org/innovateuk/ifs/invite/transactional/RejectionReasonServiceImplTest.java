@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -31,7 +31,7 @@ public class RejectionReasonServiceImplTest extends BaseUnitTestMocksTest {
         when(rejectionReasonMapperMock.mapToResource(same(rejectionReasons.get(0)))).thenReturn(rejectionReasonResources.get(0));
         when(rejectionReasonMapperMock.mapToResource(same(rejectionReasons.get(1)))).thenReturn(rejectionReasonResources.get(1));
 
-        List<RejectionReasonResource> found = rejectionReasonService.findAllActive().getSuccessObjectOrThrowException();
+        List<RejectionReasonResource> found = rejectionReasonService.findAllActive().getSuccess();
         assertEquals(rejectionReasonResources, found);
 
         InOrder inOrder = inOrder(rejectionReasonRepositoryMock, rejectionReasonMapperMock);
@@ -51,7 +51,7 @@ public class RejectionReasonServiceImplTest extends BaseUnitTestMocksTest {
         when(rejectionReasonRepositoryMock.findOne(rejectionReasonId)).thenReturn(rejectionReason);
         when(rejectionReasonMapperMock.mapToResource(same(rejectionReason))).thenReturn(rejectionReasonResource);
 
-        RejectionReasonResource found = rejectionReasonService.findById(rejectionReasonId).getSuccessObjectOrThrowException();
+        RejectionReasonResource found = rejectionReasonService.findById(rejectionReasonId).getSuccess();
         assertEquals(rejectionReasonResource, found);
 
         InOrder inOrder = inOrder(rejectionReasonRepositoryMock, rejectionReasonMapperMock);

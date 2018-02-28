@@ -31,7 +31,7 @@ Resource          ../../../10__Project_setup/PS_Common.robot
 # from the Competition: Predicting market trends programme
 
 *** Variables ***
-${allApplicationsForRTOComp}  ${applicationsForRTOComp}/all
+${allApplicationsForRTOComp}  ${SERVER}/management/competition/${openCompetitionBusinessRTO}/applications/all
 
 *** Test Cases ***
 Calculations for Lead applicant
@@ -85,8 +85,6 @@ Red warning should show when the finances are incomplete
     And the user clicks the button/link           link=${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user clicks the button/link           link=Finances overview
     Then the red warning should be visible
-    And the user should see the element           css=.warning-alert
-    And the user should see the text in the page  The following organisations have not marked their finances as complete:
 
 Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
@@ -101,13 +99,13 @@ Collaborator marks finances as complete
     [Tags]  HappyPath
     log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a
+    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email  HappyPath
-    Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation
+    Given Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
     When log in as a different user                ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     Then The user navigates to the academic application finances
     And The user clicks the button/link            link=Your project costs
@@ -127,74 +125,52 @@ Alert should not show If research participation is below the maximum level
     [Setup]
     When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
-    Then the user should see the text in the page  The participation levels of this project are within the required range
+    Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
     And the user navigates to the page             ${DASHBOARD_URL}
     And the user clicks the button/link            link=Academic robot test application
     And the user clicks the button/link            link=Review and submit
     And the user clicks the button/link            jquery=button:contains("Finances summary")
-    Then the user should see the text in the page  The participation levels of this project are within the required range
+    Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
 
-Support User can see read only summary link for each partner
+Support User can see the read only summary link for each partner
     [Documentation]  IFS-401
     [Tags]  Support
-    [Setup]  log in as a different user     &{support_user_credentials}
-    When the user navigates to the page     ${allApplicationsForRTOComp}
-    And the user clicks the button/link     link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the section        Finances summary
-    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("${EMPIRE_LTD_NAME}"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(2) th:contains("Ludlow"):contains("View finances")
-    And the user should see the element     jQuery=.finance-summary tbody tr:nth-of-type(3) th:contains("EGGS"):contains("View finances")
+    Given the support user navigates to the finances of the application
+    Then the user should see the element    jQuery=.finance-summary tbody tr:nth-of-type(1) th:contains("View finances")
 
-Support User can see read only summary for lead
+Support User can see the read only summary of finances
     [Documentation]  IFS-401
     [Tags]  Support
-    [Setup]  The user clicks the button/link       css=.finance-summary tbody tr:nth-of-type(1) th a
-    When the user should see the text in the page  Please complete your project finances.
-    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  0  8,000,000  0
+    [Setup]  The user clicks the button/link       link=View finances
+    The finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
-Support User can see read only summary for collaborator
-    [Documentation]  IFS-401
-    [Tags]  Support
-    [Setup]  log in as a different user           &{support_user_credentials}
-    When the user navigates to the page           ${allApplicationsForRTOComp}
-    And the user clicks the button/link           link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the section              Finances summary
-    When the user clicks the button/link          jQuery=.finance-summary tbody tr:contains("EGGS") th a
-    And the user should see the text in the page  Please complete your project finances.
-    Then the finance summary table in Your Finances has correct values for collaborator
-
-Support User can see read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
+Support User can see the read only view of collaborator Your project costs for Labour, Overhead Costs and Materials
     [Documentation]  IFS-401
     [Tags]  Support  HappyPath
-    [Setup]  log in as a different user   &{support_user_credentials}
-    When the user navigates to the page   ${allApplicationsForRTOComp}
-    And the user clicks the button/link   link=${OPEN_COMPETITION_APPLICATION_2_NUMBER}
-    And the user expands the section      Finances summary
-    When the user clicks the button/link  jQuery=.finance-summary tbody tr:contains("Ludlow") th a
-    Then the user should see the text in the page  Please complete your project finances.
-    When the user clicks the button/link  jQuery=a:contains("Your project costs")
-    And the user should see the text in the page  Provide the project costs for 'Ludlow'
-    When User verifies labour, overhead costs and materials
-    Then User verifies captial usage, subcontracting, travel and other costs
+    Given the support user navigates to the finances of the application
+    When the user clicks the button/link  link=View finances
+    And the user clicks the button/link  link=Your project costs
+    When the user verifies labour, overhead costs and materials
+    Then the user verifies captial usage, subcontracting, travel and other costs
 
-Support User can see read only view of Your organisation
+Support User can see the read only view of Your organisation
     [Documentation]  IFS-401
     [Tags]  Support
     When the user clicks the button/link           jQuery=a:contains("Your finances")
     Then the user should see the text in the page  Please complete your project finances.
-    When the user clicks the button/link           jQuery=a:contains("Your organisation")
-    Then the user should see the text in the page  Organisation size
-    And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
-    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("3")
+    When the user clicks the button/link           link=Your organisation
+    Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
+    And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("0")
 
-Support User can see read only view of Your funding
+Support User can see the read only view of Your funding
     [Documentation]  IFS-401
     [Tags]  Support
-    When the user clicks the button/link    jQuery=a:contains("Your finances")
-    Then the user should see the text in the page     Please complete your project finances.
-    When the user clicks the button/link    jQuery=a:contains("Your funding")
-    Then the user should see the element    jQuery=dt:contains("Funding level") + dd:contains("45%")
-    And the user should see the element     jQuery=p:contains("No other funding")
+    Given the user navigates to the page  ${server}/management/competition/${openCompetitionRTO}/application/${application_ids["Water balance creates a threshold in soil pH at the global scale"]}
+    And the user expands the section      Finances summary
+    Then the user clicks the button/link  link=View finances
+    When the user clicks the button/link  jQuery=a:contains("Your funding")
+    Then the user should see the element  jQuery=dt:contains("Funding level") + dd:contains("30%")
+    And the user should see the element   jQuery=th:contains("Lottery") ~ td:contains("£2,468")
 
 Innovation lead can see read only summary link for each partner
     [Documentation]  IFS-802
@@ -243,7 +219,7 @@ Innovation lead can see read only view of Your organisation
     When the user clicks the button/link           jQuery=a:contains("Your finances")
     Then the user should see the text in the page  Please complete your project finances.
     When the user clicks the button/link           jQuery=a:contains("Your organisation")
-    Then the user should see the text in the page  Organisation size
+    Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
     And the user should see the element            jQuery=dt:contains("employees") + dd:contains("4560")
 
 Innovation lead can see read only view of Your funding
@@ -373,30 +349,32 @@ User verifies labour, overhead costs and materials for innovation lead
     the user should see the element  jQuery=#material-costs-table td:contains("Generator") + td:contains("10") + td:contains("10,020") + td:contains("100,200")
     the user collapses the section   Materials
 
-User verifies captial usage, subcontracting, travel and other costs
+the user verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
-    the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5,000")
-    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£4,975")
+    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2,120")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
-    the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£1,000")
+    the user should see the element  jQuery=#subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£90,000")
     the user collapses the section   Subcontracting costs
     the user expands the section     Travel and subsistence
-    the user should see the element  jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£1,000")
+    the user should see the element  jQuery=#travel-costs-table td:contains("To visit colleagues") + td:contains("15") + td:contains("398") + td:contains("£5,970")
     the user collapses the section   Travel and subsistence
     the user expands the section     Other costs
-    the user should see the element  jQuery=#other-costs-table td:contains("some other costs") + td:contains("50")
+    the user should see the element  jQuery=#other-costs-table td:contains("Some more costs") + td:contains("1,100")
     the user collapses the section   Other costs
 
-User verifies labour, overhead costs and materials
+The user verifies labour, overhead costs and materials
     the user expands the section     Labour
-    the user should see the element  jQuery=dt:contains("Working days per year") ~ dd:contains("230")
-    the user should see the element  jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120,000") ~ td:contains("100")
+    the user should see the element  jQuery=dt:contains("Working days per year") ~ dd:contains("123")
+    the user should see the element  jQuery=.labour-costs-table td:contains("Role 1") ~ td:contains("200") ~ td:contains("2")
     the user collapses the section   Labour
-    the user expands the section     Overhead costs
-    the user should see the element  jQuery=th:contains("20% of labour costs")
-    the user clicks the button/link  jQuery=button:contains("Overhead costs")
-    the user collapses the section   Overhead costs
+    the user should see the element  jQuery=.collapsible:contains("Overhead"):contains("0")
     the user expands the section     Materials
-    the user should see the element  jQuery=#material-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("1,000")
+    the user should see the element  jQuery=#material-costs-table td:contains("Generator") + td:contains("10") + td:contains("10,020") + td:contains("£100,200")
     the user collapses the section   Materials
+
+the support user navigates to the finances of the application
+    log in as a different user       &{support_user_credentials}
+    the user navigates to the page   ${allApplicationsForRTOComp}
+    the user clicks the button/link  link=${application_ids["Networking home IOT devices"]}
+    the user expands the section     Finances summary

@@ -1,15 +1,17 @@
 *** Settings ***
 Documentation     IFS-604: IFS Admin user navigation to Manage users section
-...               IFS-605: Manage internal users: List of all internal users and roles
 ...               IFS-606: Manage internal users: Read only view of internal user profile
 ...               IFS-27:  Invite new internal user
 ...               IFS-642: Email to new internal user inviting them to register
 ...               IFS-643: Complete internal user registration
 ...               IFS-644: Disable or reenable user profile
 ...               IFS-983: Manage users: Pending registration tab
+...               IFS-2412: Internal users resend invites
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
+
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
@@ -82,9 +84,14 @@ Administrator can successfully invite a new user
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
     And the user clicks the button/link                      jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
-    Then the user should see the element                     jQuery=h1:contains("Manage users")
+
+Administrator can successfully finish the rest of the invitation
+    [Documentation]  IFS-27  IFS-983  IFS-2412
+    [Tags]  HappyPath
+    Given the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
     And the user should see the element                      jQuery=.selected:contains("Pending")
+    When the user resends the invite
     Then the user verifies pending tab content
     When the user clicks the button/link                     jQuery=a:contains("Active")
     Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
@@ -212,7 +219,7 @@ The internal user can login with his new role and sees no competitions assigned
 
 Administrator is able to disable internal users
     [Documentation]  IFS-644
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
     Given the user navigates to the View internal users details  Innovation Lead  active
     And the user clicks the button/link   link=Edit
@@ -221,8 +228,7 @@ Administrator is able to disable internal users
     Then the user clicks the button/link  jQuery=button:contains("Cancel")
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")
     And the user clicks the button/link   jQuery=button:contains("Yes, deactivate")
-    Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on")
-    #TODO Pending due to IFS-1191 add ${today}
+    Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on ${today}")
     When the user navigates to the page   ${server}/management/admin/users/inactive
     Then the user should see the element  jQuery=tr:contains("Innovation Lead")  #Checking the user swapped tab
 
@@ -240,9 +246,11 @@ Deactivated user cannot login until he is activated
     When the re-activated user tries to login
     Then the user should not see an error in the page
 
-# TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
-
 *** Keywords ***
+Custom suite setup
+    ${today} =  get today
+    set suite variable  ${today}
+
 User cannot see manage users page
     [Arguments]  ${email}  ${password}
     Log in as a different user  ${email}  ${password}
@@ -290,3 +298,7 @@ the re-activated user tries to login
     run keyword if  ${docker}==1  log in as a different user  ${localEmailInvtedUser}  ${correct_password}
     # On production the accepted domain is innovateuk.gov.uk
     run keyword if  ${docker}!=1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
+
+the user resends the invite
+    the user clicks the button/link    css=input.button.button-secondary
+    the user reads his email           ${localEmailInvtedUser}  Invitation to Innovation Funding  Your Innovation Funding Service

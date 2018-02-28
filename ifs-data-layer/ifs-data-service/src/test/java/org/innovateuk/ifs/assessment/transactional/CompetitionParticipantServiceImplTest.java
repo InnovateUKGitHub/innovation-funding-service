@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -60,7 +60,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult =
                 competitionParticipantService.getCompetitionParticipants(assessorId, CompetitionParticipantRoleResource.ASSESSOR);
 
-        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
+        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccess();
 
         assertEquals(1, found.size());
         assertSame(expected, found.get(0));
@@ -106,7 +106,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult =
                 competitionParticipantService.getCompetitionParticipants(assessorId, CompetitionParticipantRoleResource.ASSESSOR);
 
-        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
+        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccess();
 
         assertSame(expected, found.get(0));
         assertEquals(1L, found.get(0).getSubmittedAssessments());
@@ -145,7 +145,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult =
                 competitionParticipantService.getCompetitionParticipants(assessorId, CompetitionParticipantRoleResource.ASSESSOR);
 
-        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
+        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccess();
 
         assertSame(0, found.size());
 
@@ -180,7 +180,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult =
                 competitionParticipantService.getCompetitionParticipants(assessorId, CompetitionParticipantRoleResource.ASSESSOR);
 
-        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
+        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccess();
 
         assertEquals(1, found.size());
         assertSame(expected, found.get(0));
@@ -229,7 +229,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult =
                 competitionParticipantService.getCompetitionParticipants(assessorId, CompetitionParticipantRoleResource.ASSESSOR);
 
-        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccessObject();
+        List<CompetitionParticipantResource> found = competitionParticipantServiceResult.getSuccess();
 
         assertSame(0, found.size());
 

@@ -9,6 +9,11 @@ import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Series of rules to look up an {@link Application} or {@link ApplicationResource} from a {@link Long} application id.
+ * These can then be feed into methods marked with the {@link org.innovateuk.ifs.commons.security.PermissionRule}
+ * annotation as part of the Spring security mechanism.
+ */
 @Component
 @PermissionEntityLookupStrategies
 public class ApplicationLookupStrategy {

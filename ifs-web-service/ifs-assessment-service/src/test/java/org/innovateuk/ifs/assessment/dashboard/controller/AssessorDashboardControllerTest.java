@@ -1,18 +1,16 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.dashboard.controller.AssessorDashboardController;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
-import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
+import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource;
+import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelInviteResource;
+import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -26,24 +24,24 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.Clock;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder.newAssessmentReviewPanelInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
+import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
-import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -76,32 +74,44 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard() throws Exception {
+        final ZonedDateTime now = now();
+        final LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 23,59,59);
+        Instant instant = time.toInstant(ZoneOffset.UTC);
+
+        Clock clock = Clock.fixed(instant, systemDefault());
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundersPanelDate(now.plusDays(30))
+                .build();
+
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
-                .withCompetition(2L)
+                .withCompetition(competitionResource.getId())
                 .withCompetitionName("Juggling Craziness")
                 .withCompetitionStatus(IN_ASSESSMENT)
-                .withAssessorAcceptsDate(now().minusDays(2))
-                .withAssessorDeadlineDate(now().plusDays(4))
+                .withAssessorAcceptsDate(now.minusDays(2))
+                .withAssessorDeadlineDate(now.plusDays(4))
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
                 .withPendingAssessments(1L)
                 .build();
+        ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(false)
                 .withAgreementComplete(false)
                 .build();
 
-        AssessmentPanelInviteResource invite = newAssessmentPanelInviteResource()
+        AssessmentReviewPanelInviteResource invite = newAssessmentReviewPanelInviteResource()
                 .withInviteHash("")
-                .withCompetitionId(2L)
+                .withCompetitionId(competitionResource.getId())
                 .withCompetitionName("Juggling Craziness")
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
+                .withCompetition(competitionResource.getId())
                 .withCompetitionName("Juggling Craziness")
                 .withCompetitionParticipantRole(PANEL_ASSESSOR)
                 .withStatus(PENDING)
@@ -112,7 +122,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -123,15 +134,16 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3, 1,
-                        ZonedDateTime.now().plusDays(4).toLocalDate(),
+                new AssessorDashboardActiveCompetitionViewModel(competitionResource.getId(), "Juggling Craziness", 1, 3, 1,
+                        now.plusDays(4).toLocalDate(),
                         3,
                         50
                 )
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
-        AssessorDashboardAssessmentPanelInviteViewModel expectedAssessmentPanelInviteViewModel = new AssessorDashboardAssessmentPanelInviteViewModel("", "Juggling Craziness", 2L);
+        AssessorDashboardAssessmentPanelInviteViewModel expectedAssessmentPanelInviteViewModel =
+                new AssessorDashboardAssessmentPanelInviteViewModel("Juggling Craziness", competitionResource.getId(), "");
 
         assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
@@ -143,7 +155,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(model.getAssessmentPanelInvites().get(0).getInviteHash(), singletonList(expectedAssessmentPanelInviteViewModel).get(0).getInviteHash());
         assertEquals(model.getAssessmentPanelInvites(), singletonList(expectedAssessmentPanelInviteViewModel));
     }
-    
+
     @Test
     public void dashboard_activeStartsToday() throws Exception {
         ZonedDateTime now = now();
@@ -168,13 +180,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(false)
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
                 .withCompetitionName("Juggling Craziness")
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -217,13 +229,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(true)
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
                 .withCompetitionName("Juggling Craziness")
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -266,13 +278,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(true)
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
                 .withCompetitionName("Juggling Craziness")
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -307,13 +319,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(false)
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
                 .withCompetitionName("Juggling Craziness")
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -356,13 +368,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(true)
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
                 .withCompetitionName("Juggling Craziness")
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -411,13 +423,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAgreementComplete(true)
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
                 .withCompetitionName("Juggling Craziness")
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));
         when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
-        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
                 .andExpect(status().isOk())
@@ -440,6 +452,82 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
+    }
+
+    @Test
+    public void dashboard_acceptedPanels() throws Exception {
+        List<CompetitionInviteResource> inviteResources = newCompetitionInviteResource()
+                .withHash("inviteHash1")
+                .build(1);
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withFundersPanelDate(now().plusDays(30))
+                .build();
+
+        List<CompetitionParticipantResource> participantResources = newCompetitionParticipantResource()
+                .withInvite(inviteResources.get(0))
+                .withCompetitionParticipantRole(PANEL_ASSESSOR)
+                .withStatus(ACCEPTED)
+                .withUser(3L)
+                .withCompetition(competitionResource.getId())
+                .withCompetitionName("Sustainable living models for the future")
+                .withAssessorAcceptsDate(now().plusDays(10))
+                .withAssessorDeadlineDate(now().plusDays(20))
+                .withCompetitionStatus(FUNDERS_PANEL)
+                .build(1);
+
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withAgreementComplete(true)
+                .build();
+
+        AssessmentReviewPanelInviteResource invite = newAssessmentReviewPanelInviteResource()
+                .withInviteHash("")
+                .withCompetitionId(competitionResource.getId())
+                .withCompetitionName("Juggling Craziness")
+                .withPanelDate(now().plusDays(10))
+                .build();
+
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
+                .withUser(3L)
+                .withCompetition(competitionResource.getId())
+                .withStatus(ACCEPTED)
+                .withCompetitionParticipantRole(PANEL_ASSESSOR)
+                .withAwaitingApplications(1L)
+                .withCompetitionName("Juggling Craziness")
+                .withInvite(invite)
+                .build();
+
+
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(reviewPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentReviewPanelParticipantResource)));
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardAssessmentPanelAcceptedViewModel> expectedPanelAcceptedModel =
+                singletonList(new AssessorDashboardAssessmentPanelAcceptedViewModel(
+                        assessmentReviewPanelParticipantResource.getCompetitionName(),
+                        assessmentReviewPanelParticipantResource.getCompetitionId(),
+                        assessmentReviewPanelParticipantResource.getInvite().getPanelDate().toLocalDate(),
+                        assessmentReviewPanelParticipantResource.getInvite().getPanelDaysLeft(),
+                        assessmentReviewPanelParticipantResource.getAwaitingApplications()));
+
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+
+        assertTrue(model.getAssessmentPanelInvites().isEmpty());
+        assertFalse(model.getAssessmentPanelAccepted().isEmpty());
+        assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
+        assertEquals(expectedPanelAcceptedModel, model.getAssessmentPanelAccepted());
     }
 
     @Test

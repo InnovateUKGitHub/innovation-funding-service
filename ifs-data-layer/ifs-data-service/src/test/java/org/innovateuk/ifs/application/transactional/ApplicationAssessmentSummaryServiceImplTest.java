@@ -7,8 +7,8 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -80,7 +80,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         when(applicationAssessorMapperMock.mapToResource(participants.get(0), ofNullable(assessments.get(0)))).thenReturn(expected.get(0));
         when(applicationAssessorMapperMock.mapToResource(participants.get(1), ofNullable(assessments.get(1)))).thenReturn(expected.get(1));
 
-        List<ApplicationAssessorResource> found = service.getAssignedAssessors(application.getId()).getSuccessObjectOrThrowException();
+        List<ApplicationAssessorResource> found = service.getAssignedAssessors(application.getId()).getSuccess();
         assertEquals(expected, found);
     }
 
@@ -107,7 +107,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         when(applicationAssessorPageMapperMock.mapToResource(page)).thenReturn(expected);
 
-        ApplicationAssessorPageResource found = service.getAvailableAssessors(application.getId(), 0, 20, innovationArea).getSuccessObjectOrThrowException();
+        ApplicationAssessorPageResource found = service.getAvailableAssessors(application.getId(), 0, 20, innovationArea).getSuccess();
         assertEquals(expected, found);
     }
 
@@ -147,7 +147,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         Stream.of(organisations)
                 .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
 
-        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 
@@ -195,7 +195,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         Stream.of(organisations)
                 .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
 
-        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 
@@ -243,7 +243,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         Stream.of(organisations)
                 .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
 
-        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 
@@ -293,7 +293,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         Stream.of(organisations)
                 .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
 
-        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccess();
 
         assertEquals(expected, found);
 

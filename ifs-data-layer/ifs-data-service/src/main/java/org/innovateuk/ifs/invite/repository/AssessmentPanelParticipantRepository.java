@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.invite.domain.AssessmentPanelParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -18,35 +16,35 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface AssessmentPanelParticipantRepository extends PagingAndSortingRepository<AssessmentPanelParticipant, Long> {
+public interface AssessmentPanelParticipantRepository extends PagingAndSortingRepository<AssessmentReviewPanelParticipant, Long> {
 
     String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
-            "FROM AssessmentPanelInvite invite " +
+            "FROM AssessmentReviewPanelInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 
     String BY_COMP_AND_STATUS_ON_PANEL = "SELECT assessmentPanelParticipant " +
-            "FROM AssessmentPanelParticipant assessmentPanelParticipant " +
+            "FROM AssessmentReviewPanelParticipant assessmentPanelParticipant " +
             "WHERE assessmentPanelParticipant.competition.id = :competitionId " +
             "AND assessmentPanelParticipant.role = 'PANEL_ASSESSOR' " +
             "AND assessmentPanelParticipant.status IN :status " +
             "AND assessmentPanelParticipant.user.id IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
 
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
-    Page<AssessmentPanelParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                                 @Param("status") List<ParticipantStatus> status,
-                                                                                 Pageable pageable);
+    Page<AssessmentReviewPanelParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                                           @Param("status") List<ParticipantStatus> status,
+                                                                                           Pageable pageable);
 
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
-    List<AssessmentPanelParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                                 @Param("status") List<ParticipantStatus> status);
+    List<AssessmentReviewPanelParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                                           @Param("status") List<ParticipantStatus> status);
 
     @Override
-    List<AssessmentPanelParticipant> findAll();
+    List<AssessmentReviewPanelParticipant> findAll();
 
-    AssessmentPanelParticipant getByInviteHash(String hash);
+    AssessmentReviewPanelParticipant getByInviteHash(String hash);
 
-    List<AssessmentPanelParticipant> findByUserIdAndRole(long userId, CompetitionParticipantRole role);
+    List<AssessmentReviewPanelParticipant> findByUserIdAndRole(long userId, CompetitionParticipantRole role);
 
     int countByCompetitionIdAndRoleAndStatusAndInviteIdIn(long competitionId,
                                                           CompetitionParticipantRole role,

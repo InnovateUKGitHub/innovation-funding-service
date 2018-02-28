@@ -13,8 +13,21 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-heading" tabindex="-1">
-              <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-              <p>Please correct the errors in the form below.</p>
+              <h2 class="heading-medium error-summary-heading">We were unable to save your changes.</h2>
+              <ul class="error-summary-list">
+                  <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                      <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+                      <!--/* Add a 1 to radio button and checkbox inputs for error message links*/-->
+                      <div th:switch="${err.fieldName}">
+                          <a th:case="'accurateAccount'" th:href="|#accurateAccount1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasAppointments'" th:href="|#hasAppointments1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasFinancialInterests'" th:href="|#hasFinancialInterests1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasFamilyAffiliations'" th:href="|#hasFamilyAffiliations1|" th:text="${err.message}">The error message</a>
+                          <a th:case="'hasFamilyFinancialInterests'" th:href="|#hasFamilyFinancialInterests1|" th:text="${err.message}">The error message</a>
+                          <a th:case="*" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+                      </div>
+                  </li>
+              </ul>
             </div>
               <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='heading-xlarge extra-margin-bottom'" />
             <p>We need to record if you, or an immediate family member, is connected to a body which has any financial interests.</p>
@@ -127,6 +140,8 @@
                                     </label>
                                     <input aria-labelledby="aria-position-org" class="form-control width-full appointment-field" type="text"
                                            th:errorclass="form-control-error"
+                                           th:id="appointments[__${appointmentStat.index}__].organisation"
+                                           th:name="appointments[__${appointmentStat.index}__].organisation"
                                            th:field="*{appointments[__${appointmentStat.index}__].organisation}"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.organisation.required}" />
@@ -142,6 +157,8 @@
                                     </label>
                                     <input aria-labelledby="aria-position-pos" class="form-control width-full appointment-field" type="text"
                                            th:errorclass="form-control-error"
+                                           th:id="appointments[__${appointmentStat.index}__].position"
+                                           th:name="appointments[__${appointmentStat.index}__].position"
                                            th:field="*{appointments[__${appointmentStat.index}__].position}"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.position.required}" />
@@ -272,6 +289,8 @@
                                     </label>
                                     <input aria-labelledby="aria-family-rel" class="form-control width-full family-affiliation-field"
                                            th:errorclass="form-control-error" type="text"
+                                           th:id="familyAffiliations[__${familyAffiliationStat.index}__].relation"
+                                           th:name="familyAffiliations[__${familyAffiliationStat.index}__].relation"
                                            th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].relation}"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.relation.required}" />
@@ -286,6 +305,8 @@
                                     </label>
                                     <input aria-labelledby="aria-family-org" class="form-control width-full family-affiliation-field"
                                            th:errorclass="form-control-error" type="text"
+                                           th:id="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
+                                           th:name="familyAffiliations[__${familyAffiliationStat.index}__].organisation"
                                            th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].organisation}"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.organisation.required}" />
@@ -301,6 +322,8 @@
 
                                     <input aria-labelledby="aria-family-pos" class="form-control width-full family-affiliation-field"
                                            th:errorclass="form-control-error" type="text"
+                                           th:id="familyAffiliations[__${familyAffiliationStat.index}__].position"
+                                           th:name="familyAffiliations[__${familyAffiliationStat.index}__].position"
                                            th:field="*{familyAffiliations[__${familyAffiliationStat.index}__].position}"
                                            required="required"
                                            th:attr="data-required-errormessage=#{validation.assessorprofilefamilyaffiliationform.position.required}" />
@@ -379,7 +402,8 @@
                         </legend>
 
                         <div class="multiple-choice">
-                            <input type="checkbox" th:field="*{accurateAccount}"
+                            <input type="checkbox"
+                                   th:field="*{accurateAccount}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
                             <label th:for="${#ids.prev('accurateAccount')}">

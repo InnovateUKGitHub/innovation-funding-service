@@ -57,8 +57,8 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return doAsUser(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
-                            getSuccessObjectOrThrowException();
+                    financeRowCostsService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
+                            getSuccess();
 
             IndustrialCostDataBuilder baseFinanceBuilder = newIndustrialCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
@@ -73,8 +73,8 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
         return doAsUser(data -> {
 
             ApplicationFinanceResource applicationFinance =
-                    financeRowService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
-                            getSuccessObjectOrThrowException();
+                    financeRowCostsService.addCost(new ApplicationFinanceResourceId(data.getApplication().getId(), data.getOrganisation().getId())).
+                            getSuccess();
 
             AcademicCostDataBuilder baseFinanceBuilder = newAcademicCostData(serviceLocator).
                     withApplicationFinance(applicationFinance).
@@ -89,7 +89,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
             if (markAsComplete) {
                 List<QuestionResource> questions = questionService
                         .findByCompetition(data.getCompetition().getId())
-                        .getSuccessObjectOrThrowException();
+                        .getSuccess();
 
                 questions
                         .stream()
@@ -99,7 +99,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                                 processRoleRepository.findByUserIdAndApplicationId(
                                         data.getUser().getId(),
                                         data.getApplication().getId())
-                                        .getId()).getSuccessObjectOrThrowException());
+                                        .getId()).getSuccess());
             }
         });
     }

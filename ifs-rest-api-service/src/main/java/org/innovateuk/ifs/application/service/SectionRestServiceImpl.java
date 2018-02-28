@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 
@@ -67,16 +66,6 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     @Override
     public RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId) {
         return getWithRestResult(sectionRestURL + "/allSectionsMarkedAsComplete/" + applicationId, Boolean.class);
-    }
-
-    @Override
-    public Future<RestResult<SectionResource>> getPreviousSection(Long sectionId) {
-        return getWithRestResultAsync(sectionRestURL + "/getPreviousSection/" + sectionId, SectionResource.class);
-    }
-
-    @Override
-    public Future<RestResult<SectionResource>> getNextSection(Long sectionId) {
-        return getWithRestResultAsync(sectionRestURL + "/getNextSection/" + sectionId, SectionResource.class);
     }
 
     @Override

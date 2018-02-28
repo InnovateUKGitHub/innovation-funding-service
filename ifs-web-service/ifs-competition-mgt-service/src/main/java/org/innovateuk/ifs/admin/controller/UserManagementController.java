@@ -4,20 +4,25 @@ import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
+import org.innovateuk.ifs.async.util.AsyncAdaptor;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
+import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
+import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +34,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
@@ -40,7 +46,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin")
-public class UserManagementController {
+public class UserManagementController extends AsyncAdaptor {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
@@ -57,8 +63,10 @@ public class UserManagementController {
     @Autowired
     private InternalUserService internalUserService;
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewActive() method",
+            description = "Only IFS administrators can view active internal users")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
                              HttpServletRequest request,
@@ -67,8 +75,10 @@ public class UserManagementController {
         return view(model, "active", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewInactive() method",
+            description = "Only IFS administrators can view active internal users")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
                                HttpServletRequest request,
@@ -77,8 +87,10 @@ public class UserManagementController {
         return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
+    @AsyncMethod
+    @SecuredBySpring(value = "UserManagementController.viewPending() method",
+            description = "Only IFS administrators can view pending internal user invites")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
                                HttpServletRequest request,
@@ -88,39 +100,50 @@ public class UserManagementController {
     }
 
     private String view(Model model, String activeTab, int page, int size, String existingQueryString){
-        return userRestService.getActiveInternalUsers(page, size)
-                .andOnSuccessReturn(activeInternalUsers -> userRestService.getInactiveInternalUsers(page, size)
-                        .andOnSuccessReturn(inactiveInternalUsers -> inviteUserRestService.getPendingInternalUserInvites(page, size)
-                                .andOnSuccessReturn(pendingInternalUserInvites ->
-                                {
-                                    model.addAttribute("model",
-                                            new UserListViewModel(
-                                                    activeTab,
-                                                    activeInternalUsers.getContent(),
-                                                    inactiveInternalUsers.getContent(),
-                                                    pendingInternalUserInvites.getContent(),
-                                                    activeInternalUsers.getTotalElements(),
-                                                    inactiveInternalUsers.getTotalElements(),
-                                                    pendingInternalUserInvites.getTotalElements(),
-                                                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
-                                                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
-                                                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString)));
-                                    return "admin/users";
-                                }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
+
+        CompletableFuture<UserPageResource> activeUsers = async(() ->
+                userRestService.getActiveInternalUsers(page, size).getSuccess());
+
+        CompletableFuture<UserPageResource> inactiveUsers = async(() ->
+                userRestService.getInactiveInternalUsers(page, size).getSuccess());
+
+        CompletableFuture<RoleInvitePageResource> pendingUsers = async(() ->
+                inviteUserRestService.getPendingInternalUserInvites(page, size).getSuccess());
+
+        awaitAll(activeUsers, inactiveUsers, pendingUsers).thenAccept(
+                (activeInternalUsers, inactiveInternalUsers, pendingInternalUserInvites) -> {
+
+            UserListViewModel viewModel = new UserListViewModel(
+                    activeTab,
+                    activeInternalUsers.getContent(),
+                    inactiveInternalUsers.getContent(),
+                    pendingInternalUserInvites.getContent(),
+                    activeInternalUsers.getTotalElements(),
+                    inactiveInternalUsers.getTotalElements(),
+                    pendingInternalUserInvites.getTotalElements(),
+                    new PaginationViewModel(activeInternalUsers, "active?" + existingQueryString),
+                    new PaginationViewModel(inactiveInternalUsers, "inactive?" + existingQueryString),
+                    new PaginationViewModel(pendingInternalUserInvites, "pending?" + existingQueryString));
+
+            model.addAttribute("model",
+                    viewModel);
+        });
+
+        return "admin/users";
     }
 
-    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_INTERNAL_USER')")
     @GetMapping("/user/{userId}")
-    public String viewUser(@PathVariable Long userId, Model model){
+    public String viewUser(@P("userId")@PathVariable Long userId, Model model){
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
                     model.addAttribute("model", new EditUserViewModel(user));
                     return "admin/user";
-        }).getSuccessObjectOrThrowException();
+        }).getSuccess();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @GetMapping("/user/{userId}/edit")
-    public String viewEditUser(@PathVariable Long userId,
+    public String viewEditUser(@P("userId")@PathVariable Long userId,
                                Model model) {
 
         return viewEditUser(model, userId, new EditUserForm());
@@ -128,7 +151,7 @@ public class UserManagementController {
 
     private String viewEditUser(Model model, Long userId, EditUserForm form) {
 
-        UserResource userResource = userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
+        UserResource userResource = userRestService.retrieveUserById(userId).getSuccess();
         form.setFirstName(userResource.getFirstName());
         form.setLastName(userResource.getLastName());
         // userResource.getRolesString() will return a single role for internal users
@@ -141,9 +164,9 @@ public class UserManagementController {
 
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @PostMapping("/user/{userId}/edit")
-    public String updateUser(@PathVariable Long userId,
+    public String updateUser(@P("userId")@PathVariable Long userId,
                              Model model,
                              @Valid @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
                              @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
@@ -166,18 +189,18 @@ public class UserManagementController {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
-    public String deactivateUser(@PathVariable Long userId) {
+    public String deactivateUser(@P("userId")@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+                userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
-    public String reactivateUser(@PathVariable Long userId) {
+    public String reactivateUser(@P("userId") @PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
-                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+                userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccess();
     }
 
     @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
@@ -216,6 +239,14 @@ public class UserManagementController {
         }
     }
 
+    @SecuredBySpring(value = "RESEND_INTERNAL_USER_INVITE", description = "Only the IFS Administrators can resend invites to internal users")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @PostMapping("/users/pending/resend-invite")
+    public String resendInvite(@RequestParam("inviteId") long inviteId) {
+        inviteUserRestService.resendInternalUserInvite(inviteId).getSuccess();
+        return "redirect:/admin/users/pending";
+    }
+
     private String findExternalUsers(SearchExternalUsersForm form, ValidationHandler validationHandler, Model model) {
         Supplier<String> failureView = () -> viewFindExternalUsers(form, model);
 
@@ -225,7 +256,7 @@ public class UserManagementController {
                     failNowOrSucceedWith(failureView, () -> {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "users");
-                                model.addAttribute("users", users.getSuccessObjectOrThrowException());
+                                model.addAttribute("users", users.getSuccess());
                                 return "admin/search-external-users";
                             }
                     );
@@ -241,7 +272,7 @@ public class UserManagementController {
                     failNowOrSucceedWith(failureView, () -> {
                                 model.addAttribute("mode", "search");
                                 model.addAttribute("tab", "invites");
-                                model.addAttribute("invites", invites.getSuccessObjectOrThrowException());
+                                model.addAttribute("invites", invites.getSuccess());
                                 return "admin/search-external-users";
                             }
                     );

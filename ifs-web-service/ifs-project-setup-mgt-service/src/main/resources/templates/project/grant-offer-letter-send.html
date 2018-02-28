@@ -7,6 +7,7 @@
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
 <th:block th:insert="fragments/modals :: modal-accept-signed-gol" />
+<th:block th:insert="fragments/modals :: modal-reject-signed-gol" />
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -21,9 +22,17 @@
 
     <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
         <div class="success-alert extra-margin-bottom">
-            <h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted.</h2>
+            <h2 class="heading-small no-margin-top">These documents have been approved.</h2>
         </div>
     </th:block>
+
+    <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
+        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+        <p>If you have not already done so, please contact the Project Manager to explain your decision.</p>
+        <p>Reason for rejection:</p>
+        <p th:text="${model.getGrantOfferLetterRejectionReason()}"></p>
+    </div>
+
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
             <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
@@ -34,8 +43,6 @@
             </th:block>
         </th:block>
     </th:block>
-
-    <h2 th:text="${model.projectName}">Project Title</h2>
 
     <h2 class="heading-medium">Grant offer letter</h2>
 
@@ -107,9 +114,61 @@
         </div>
     </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
-        <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>
-        <p>Do the documents supplied meet the requirements for the grant offer letter?</p>
-        <button data-js-modal="modal-accept-signed-gol" class="button">Accept signed grant offer letter</button>
+        <h2 class="heading-medium">Confirm signed grant offer letter</h2>
+        <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" method="post" novalidate="novalidate">
+            <div class="form-group">
+                <fieldset>
+                    <legend id="decisionGOL" class="extra-margin-bottom">
+                        Please confirm that these documents meet the requirements for the grant offer letter.
+                    </legend>
+                    <div class="multiple-choice">
+                        <input id="acceptGOL"
+                               value="APPROVED"
+                               type="radio"
+                               name="approvalType"
+                               required="required"
+                               data-switches-button-status="#submit-button"
+                               data-switches-modal-target="#submit-button"
+                               data-switches-modal-target-value="modal-accept-signed-gol"
+                        />
+                        <label for="acceptGOL">
+                            Accept documents
+                        </label>
+                    </div>
+                    <div class="multiple-choice" data-target="reject-gol">
+                        <input id="rejectGOL"
+                               value="REJECTED"
+                               type="radio"
+                               name="approvalType"
+                               required="required"
+                               data-switches-modal-target="#submit-button"
+                               data-switches-modal-target-value="modal-reject-signed-gol"
+                        />
+                        <label for="rejectGOL">
+                            Reject documents
+                        </label>
+                    </div>
+                    <div class="panel js-hidden" id="reject-gol">
+                        <div class="form-group">
+                            <label for="gol-reject-reason" class="form-label">
+                                Reason for rejection (this will not be seen by the project team)
+                            </label>
+                            <input type="text"
+                                   class="form-control width-full"
+                                   id="gol-reject-reason"
+                                   name="GOLRejectReason"
+                                   required="required"
+                                   maxlength="128"
+                                   data-switches-button-status="#submit-button"
+                                   th:attr="data-maxlength-errormessage=#{validation.rejection.gol.reason.has.too.many.characters}"
+                            />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <button class="button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
+        </form>
+
     </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

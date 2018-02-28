@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,46 +56,46 @@ public class BankDetailsManagementController {
     @Autowired
     private BankDetailsReviewModelPopulator bankDetailsReviewModelPopulator;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping("/review-all-bank-details")
     public String viewPartnerBankDetails(
             Model model,
-            @PathVariable("projectId") Long projectId,
+            @P("projectId")@PathVariable("projectId") Long projectId,
             UserResource loggedInUser) {
         model.addAttribute("isCompAdminUser", loggedInUser.hasRole(UserRoleType.COMP_ADMIN));
         final ProjectBankDetailsStatusSummary bankDetailsStatusSummary = bankDetailsRestService.getBankDetailsStatusSummaryByProject(projectId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         return doViewBankDetailsSummaryPage(bankDetailsStatusSummary, model);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping("/organisation/{organisationId}/review-bank-details")
     public String viewBankDetails(
             Model model,
-            @PathVariable("projectId") Long projectId,
+            @P("projectId")@PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
-        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+        final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId()).getSuccess();
         return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, new ApproveBankDetailsForm());
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping("/organisation/{organisationId}/review-bank-details")
     public String approveBankDetails(
             Model model,
             @ModelAttribute(FORM_ATTR_NAME) ApproveBankDetailsForm form,
             BindingResult bindingResult,
             ValidationHandler validationHandler,
-            @PathVariable("projectId") Long projectId,
+            @P("projectId")@PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser) {
 
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
-                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+                projectId, organisationResource.getId()).getSuccess();
         if(bankDetailsResource.isManualApproval()) {
             return "redirect:/project/" + projectId + "/organisation/" + organisationId + "/review-bank-details";
         }
@@ -109,33 +110,33 @@ public class BankDetailsManagementController {
                 faliureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
                 () -> {
-                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccessObjectOrThrowException();
+                    Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccess();
                     return serviceSuccess(result);
                 }
         );
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping("/organisation/{organisationId}/review-bank-details/change")
     public String changeBankDetailsView(
             Model model,
-            @PathVariable("projectId") Long projectId,
+            @P("projectId")@PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser,
             @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ChangeBankDetailsForm form) {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource bankDetailsResource = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
-                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+                projectId, organisationResource.getId()).getSuccess();
         bankDetailsReviewModelPopulator.populateExitingBankDetailsInForm(organisationResource, bankDetailsResource, form);
         return doViewChangeBankDetailsNotUpdated(organisationResource, project, bankDetailsResource, model);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping("/organisation/{organisationId}/review-bank-details/change")
     public String changeBankDetails(
             Model model,
-            @PathVariable("projectId") Long projectId,
+            @P("projectId") @PathVariable("projectId") Long projectId,
             @PathVariable("organisationId") Long organisationId,
             UserResource loggedInUser,
             @Valid @ModelAttribute(FORM_ATTR_NAME) ChangeBankDetailsForm form,
@@ -144,7 +145,7 @@ public class BankDetailsManagementController {
         final OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         final ProjectResource project = projectService.getById(projectId);
         final BankDetailsResource existingBankDetails = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(
-                projectId, organisationResource.getId()).getSuccessObjectOrThrowException();
+                projectId, organisationResource.getId()).getSuccess();
 
         Supplier<String> failureView = () -> doViewChangeBankDetailsNotUpdated(organisationResource, project, existingBankDetails, model);
 

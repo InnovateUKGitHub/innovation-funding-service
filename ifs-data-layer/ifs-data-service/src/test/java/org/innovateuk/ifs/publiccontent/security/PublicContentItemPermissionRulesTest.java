@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,12 +26,12 @@ public class PublicContentItemPermissionRulesTest extends BasePermissionRulesTes
     @Test
     public void testCanViewAllPublishedContent() {
         when(contentRepository.findByCompetitionId(1L)).thenReturn(newPublicContent().withPublishDate(ZonedDateTime.now()).build());
-        assertTrue(rules.allUsersCanViewPublishedContent(1L, allGlobalRoleUsers.get(0)));
+        assertTrue(rules.allUsersCanViewPublishedContent(CompetitionCompositeId.id(1L), allGlobalRoleUsers.get(0)));
     }
 
     @Test
     public void testCannotViewUnpublishedContent() {
         when(contentRepository.findByCompetitionId(1L)).thenReturn(newPublicContent().build());
-        assertFalse(rules.allUsersCanViewPublishedContent(1L, allGlobalRoleUsers.get(0)));
+        assertFalse(rules.allUsersCanViewPublishedContent(CompetitionCompositeId.id(1L), allGlobalRoleUsers.get(0)));
     }
 }

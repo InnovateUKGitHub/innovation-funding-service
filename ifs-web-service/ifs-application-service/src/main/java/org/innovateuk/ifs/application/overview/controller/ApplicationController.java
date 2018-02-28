@@ -7,10 +7,12 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +37,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 
 @Controller
 @RequestMapping("/application")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationController {
     @Autowired
@@ -61,7 +64,7 @@ public class ApplicationController {
                                      @PathVariable("applicationId") long applicationId,
                                      UserResource user) {
         ApplicationResource application = applicationRestService.getApplicationById(applicationId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
             return format("redirect:/application/%s/summary", application.getId());
@@ -72,7 +75,7 @@ public class ApplicationController {
         }
 
         form.setApplication(application);
-        changeApplicationStatusToOpen(application);
+        changeApplicationStatusToOpen(application, user);
 
         Long userId = user.getId();
         model.addAttribute("form", form);
@@ -80,10 +83,16 @@ public class ApplicationController {
         return "application-details";
     }
 
-    private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
-        if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())) {
-            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
+    private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
+        if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())
+                && userIsLeadApplicant(userResource.getId(), applicationResource.getId())) {
+            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccess();
         }
+    }
+
+    private boolean userIsLeadApplicant(long userId, long applicationId) {
+        return processRoleService.findProcessRole(userId, applicationId)
+                .getRoleName().equals(UserRoleType.LEADAPPLICANT.getName());
     }
 
     @PostMapping(value = "/{applicationId}")
@@ -101,7 +110,7 @@ public class ApplicationController {
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         if (!applicationResource.getCompetitionStatus().isFeedbackReleased()) {
             return "redirect:/application/" + applicationId + "/summary";
         }

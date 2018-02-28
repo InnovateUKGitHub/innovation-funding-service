@@ -41,6 +41,13 @@ public class AssessmentController {
         return assessmentService.findByUserAndCompetition(userId, competitionId).toGetResponse();
     }
 
+    @GetMapping("/user/{userId}/application/{applicationId}")
+    public RestResult<List<AssessmentResource>> findByUserAndApplication(
+            @PathVariable("userId") long userId,
+            @PathVariable("applicationId") long applicationId) {
+        return assessmentService.findByUserAndApplication(userId, applicationId).toGetResponse();
+    }
+
     @GetMapping("/state/{state}/competition/{competitionId}/count")
     public RestResult<Integer> countByStateAndCompetition(
             @PathVariable("state") AssessmentState state,

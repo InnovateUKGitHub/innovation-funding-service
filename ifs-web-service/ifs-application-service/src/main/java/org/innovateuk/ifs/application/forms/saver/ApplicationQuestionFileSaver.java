@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
+import org.innovateuk.ifs.file.controller.FileUploadErrorTranslator;
+import org.innovateuk.ifs.file.controller.ValidMediaTypesFileUploadErrorTranslator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.REMOVE_UPLOADED_FILE;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.ValidationMessages.fromErrors;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
@@ -40,6 +42,8 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
     @Autowired
     private FormInputRestService formInputRestService;
 
+    private FileUploadErrorTranslator fileUploadErrorTranslator = new ValidMediaTypesFileUploadErrorTranslator();
+
     public ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                            final Map<String, String[]> params,
                                                            HttpServletRequest request,
@@ -47,7 +51,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
                                                            Long processRoleId) {
         ValidationMessages allErrors = new ValidationMessages();
         questions.forEach(question -> {
-            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccessObjectOrThrowException();
+            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(question.getId(), APPLICATION).getSuccess();
             formInputs.stream()
                     .filter(formInput1 -> FILEUPLOAD == formInput1.getType() && request instanceof MultipartHttpServletRequest)
                     .forEach(formInput ->
@@ -68,6 +72,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
     private ValidationMessages uploadFile(HttpServletRequest request, Long formInputId, Long applicationId, Long processRoleId) {
         final Map<String, MultipartFile> fileMap = ((MultipartHttpServletRequest) request).getFileMap();
         final MultipartFile file = fileMap.get(getFormInputKey(formInputId));
+
         if (file != null && !file.isEmpty()) {
             try {
                 RestResult<FileEntryResource> result = formInputResponseRestService.createFileEntry(formInputId,
@@ -78,26 +83,22 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
                         file.getOriginalFilename(),
                         file.getBytes());
 
-                if (result.isFailure()) {
-
-                    ValidationMessages errors = new ValidationMessages();
-                    result.getFailure().getErrors().forEach(e ->
-                            errors.addError(fieldError(getFormInputKey(formInputId), e.getFieldRejectedValue(), e.getErrorKey()))
-                    );
-                    return errors;
-                }
+                return result.handleSuccessOrFailure(
+                    failure -> fromErrors(fileUploadErrorTranslator.translateFileUploadErrors(e -> getFormInputKey(formInputId), failure.getErrors())),
+                    success -> noErrors()
+                );
 
             } catch (IOException e) {
                 LOG.error(e);
                 throw new UnableToReadUploadedFile();
             }
+        } else {
+            return noErrors();
         }
-
-        return noErrors();
     }
 
     private ValidationMessages removeUploadedFile(Long formInputId, Long applicationId, Long processRoleId) {
-        formInputResponseRestService.removeFileEntry(formInputId, applicationId, processRoleId).getSuccessObjectOrThrowException();
+        formInputResponseRestService.removeFileEntry(formInputId, applicationId, processRoleId).getSuccess();
         return noErrors();
     }
 }

@@ -2,7 +2,10 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
@@ -12,6 +15,7 @@ import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -27,7 +31,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject().get();
+        ByteArrayResource retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccess().get();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
@@ -39,7 +43,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
 
-        Optional<ByteArrayResource> retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject();
+        Optional<ByteArrayResource> retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccess();
 
         assertFalse(retrievedFileEntry.isPresent());
     }
@@ -52,7 +56,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject().get();
+        ByteArrayResource retrievedFileEntry = service.getGrantOfferFile(123L).getSuccess().get();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
@@ -64,7 +68,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
 
-        Optional<ByteArrayResource> retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject();
+        Optional<ByteArrayResource> retrievedFileEntry = service.getGrantOfferFile(123L).getSuccess();
 
         assertFalse(retrievedFileEntry.isPresent());
     }
@@ -123,68 +127,33 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testIsSendGrantOfferLetterAllowed() {
-        long projectId = 123L;
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/is-send-grant-offer-letter-allowed";
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.FALSE, OK);
-
-        RestResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.FALSE, result.getSuccessObject());
-    }
-
-    @Test
-    public void testIsGrantOfferLetterAlreadySent() {
-        long projectId = 123L;
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/is-grant-offer-letter-already-sent";
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
-
-        RestResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-    }
-
-    @Test
     public void testApproveSignedGrantOfferLetter() {
         long projectId = 123L;
 
-        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/" + ApprovalType.APPROVED;
-        setupPostWithRestResultExpectations(expectedUrl, OK);
+        GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
+        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval/";
+        setupPostWithRestResultExpectations(expectedUrl, grantOfferLetterApprovalResource, OK);
 
-        RestResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+        RestResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
 
-        setupPostWithRestResultVerifications(expectedUrl, Void.class, null);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testIsSignedGrantOfferLetterApproved() {
-        long projectId = 123L;
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval";
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
-
-        RestResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
+        setupPostWithRestResultVerifications(expectedUrl, Void.class, grantOfferLetterApprovalResource);
 
         assertTrue(result.isSuccess());
     }
 
     @Test
-    public void testGetGrantOfferLetterWorkflowState() {
+    public void testGetGrantOfferLetterState() {
         long projectId = 123L;
 
-        String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/state";
-        setupGetWithRestResultExpectations(nonBaseUrl, GrantOfferLetterState.class, GrantOfferLetterState.APPROVED, OK);
+        String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/current-state";
+        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.SIGNED_GOL_APPROVED);
 
-        RestResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
+        setupGetWithRestResultExpectations(nonBaseUrl, GrantOfferLetterStateResource.class, state, OK);
+
+        RestResult<GrantOfferLetterStateResource> result = service.getGrantOfferLetterState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
+        assertSame(state, result.getSuccess());
     }
 
     @Override

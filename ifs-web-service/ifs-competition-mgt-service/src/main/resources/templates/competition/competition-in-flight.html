@@ -108,16 +108,30 @@
                     </li>
                     <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
-                           th:if="${!model.assessmentPanelEnabled or
-                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                           th:if="${!model.assessmentPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
                             Manage assessment panel
                         </a>
-                        <a th:unless="${!model.assessmentPanelEnabled or
-                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                        <a th:unless="${!model.assessmentPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
                            th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
                             Manage assessment panel
+                        </a>
+                    </li>
+                    <li th:unless="${model.readOnly}">
+                        <a class="disabled" aria-disabled="true"
+                           th:if="${!model.interviewPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
+                            Manage interview panel
+                        </a>
+                        <a th:unless="${!model.interviewPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
+                           th:href="@{/interview/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
+                            Manage interview panel
                         </a>
                     </li>
                     <li th:unless="${model.readOnly}">
@@ -146,7 +160,7 @@
                             th:class="${(milestone.passed ? 'done' : 'not-done')}">
                             <h3 class="heading-small" th:text="${milestone.milestoneType.milestoneDescription}">
                                 Milestone</h3>
-                            <p th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'dd MMMM yyyy')}">
+                            <p th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')}">
                                 10 October 2017</p>
                         </li>
                         <th:block th:switch="${milestone.milestoneType}">

@@ -5,7 +5,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -101,7 +104,7 @@ public class Competition implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
-    private boolean fullApplicationFinance = true;
+    private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
     private boolean useResubmissionQuestion = true;
@@ -111,11 +114,15 @@ public class Competition implements ProcessActivity {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
+    private TermsAndConditions termsAndConditions;
+
     public Competition() {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate, TermsAndConditions termsAndConditions) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -125,6 +132,7 @@ public class Competition implements ProcessActivity {
         this.setEndDate(endDate);
         this.setRegistrationDate(registrationDate);
         this.setupComplete = true;
+        this.termsAndConditions = termsAndConditions;
     }
 
     public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
@@ -222,6 +230,9 @@ public class Competition implements ProcessActivity {
         return questions;
     }
 
+    @JsonIgnore
+    public boolean inProjectSetup() { return PROJECT_SETUP.equals(getCompetitionStatus()); }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -274,12 +285,28 @@ public class Competition implements ProcessActivity {
         setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
     }
 
+    public void setFeedbackReleasedDate(ZonedDateTime feedbackReleasedDate) {
+        setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, feedbackReleasedDate);
+    }
+
+    public ZonedDateTime getFeedbackReleasedDate() {
+        return getMilestoneDate(MilestoneType.FEEDBACK_RELEASED).orElse(null);
+    }
+
     public ZonedDateTime getAssessmentPanelDate() {
         return getMilestoneDate(MilestoneType.ASSESSMENT_PANEL).orElse(null);
     }
 
     public void setAssessmentPanelDate(ZonedDateTime assessmentPanelDate) {
         setMilestoneDate(MilestoneType.ASSESSMENT_PANEL, assessmentPanelDate);
+    }
+
+    public ZonedDateTime getPanelDate() {
+        return getMilestoneDate(MilestoneType.PANEL_DATE).orElse(null);
+    }
+
+    public void setPanelDate(ZonedDateTime panelDate) {
+        setMilestoneDate(MilestoneType.PANEL_DATE, panelDate);
     }
 
     public ZonedDateTime getFundersPanelDate() {
@@ -562,11 +589,11 @@ public class Competition implements ProcessActivity {
         return "";
     }
 
-    public boolean isFullApplicationFinance() {
+    public Boolean isFullApplicationFinance() {
         return fullApplicationFinance;
     }
 
-    public void setFullApplicationFinance(boolean fullApplicationFinance) {
+    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
         this.fullApplicationFinance = fullApplicationFinance;
     }
 
@@ -653,6 +680,14 @@ public class Competition implements ProcessActivity {
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public TermsAndConditions getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 }
 

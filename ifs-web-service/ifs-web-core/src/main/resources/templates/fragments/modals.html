@@ -31,7 +31,7 @@
 <!-- confirm submit application modal -->
 
 <th:block th:fragment="modal-confirm-submit-application (messageTitle, message, submitLink, submitText, submittedText, cancelText)">
-    <form method="post" th:action="${submitLink}">
+    <form id="submit-application-summary-form" method="post" th:action="${submitLink}">
         <div class="modal-confirm-submit-application" role="dialog" aria-hidden="true">
             <th:block th:insert="fragments/modals :: close-button" />
             <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
@@ -393,9 +393,31 @@
         <h2 class="heading-medium no-margin">Accept signed grant offer letter</h2>
         <p>This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
         <hr />
-        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed/APPROVED'}" method="post">
+        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
+            <input type="hidden" name="approvalType" value="APPROVED" />
             <div>
                 <button class="button" type="submit">Accept signed grant offer letter</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<!-- Confirmation of rejecting signed grant offer letter -->
+<th:block th:fragment="modal-reject-signed-gol">
+    <div class="modal-reject-signed-gol warning-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Reject signed grant offer letter</h2>
+            <p>This will be returned to the Project Manager. You should contact the Project Manager to explain why the
+                signed grant offer letter is being rejected.</p>
+        </div>
+        <hr />
+        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
+            <input type="hidden" name="approvalType" value="REJECTED" />
+            <input type="hidden" name="rejectionReason" data-mirror="#gol-reject-reason" value="" />
+            <div>
+                <button class="button" type="submit">Reject signed grant offer letter</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
@@ -475,6 +497,64 @@
             <button class="button" name="reactivateUser" type="submit">Yes, reactivate</button>
             <button class="buttonlink js-close" type="button">Cancel</button>
         </div>
+    </div>
+</th:block>
+
+<!-- confirmation of marking query as resolved -->
+<th:block th:fragment="modal-confirm-mark-resolved">
+    <div class="modal-confirm-mark-resolved" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Mark as resolved</h2>
+            <p>Are you sure you wish to close this query?</p>
+            <p>You won't be able to make any changes after this point.</p>
+        </div>
+        <hr />
+        <form th:action="'#'" method="post" novalidate="novalidate">
+            <div>
+                <button class="button" name="markAsResolved" type="submit">Submit</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<!-- confirmation of resending finance contact invite -->
+<th:block th:fragment="modal-resend-finance-contact">
+    <div class="modal-resend-finance-contact" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Resend invite to team member</h2>
+            <p>They will be resent an email inviting them to join the project.</p>
+        </div>
+        <hr />
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" value=""/>
+                <input type="hidden" id="organisation" name="organisation" value=""/>
+                <button class="button" type="submit">Resend</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<!-- confirmation of resending project manager invite -->
+<th:block th:fragment="modal-resend-project-manager">
+    <div class="modal-resend-project-manager" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Resend invite to team member</h2>
+            <p>They will be resent an email inviting them to join the project.</p>
+        </div>
+        <hr />
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" value=""/>
+                <button class="button" type="submit">Resend</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
     </div>
 </th:block>
 

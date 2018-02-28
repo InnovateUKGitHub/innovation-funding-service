@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
@@ -30,9 +31,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceReso
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationFinanceSectionSaverTest {
@@ -56,8 +55,9 @@ public class ApplicationFinanceSectionSaverTest {
 
     @Test
     public void testSaveCompetitionSetupSection() {
-        final boolean isFullApplicationFinance = true;
+        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.FULL;
         final boolean isIncludeGrowthTable = true;
+        final boolean isFullApplicationFinance = true;
         final Long competitionId = 1L;
         final Long sectionId = 234L;
         final String fundingRules = "Funding rules for competition are fun, right?";
@@ -67,17 +67,24 @@ public class ApplicationFinanceSectionSaverTest {
                 .withType(SectionType.OVERVIEW_FINANCES)
                 .build();
 
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES)).thenReturn(asList(overviewFinanceSection));
-        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(newQuestionResource()
-                .withName("FINANCE_OVERVIEW", null)
-                .withDescription("", fundingRules)
-                .build(2));
+        CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
+
+        assertTrue(competition.isFinanceType());
+
+        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES))
+                .thenReturn(asList(overviewFinanceSection));
+        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
+                .thenReturn(
+                        newQuestionResource()
+                                .withName("FINANCE_OVERVIEW", null)
+                                .withDescription("", fundingRules)
+                                .build(2)
+                );
 
         ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
-        competitionSetupForm.setFullApplicationFinance(isFullApplicationFinance);
-        CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
-        // Expectation
+        competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
+
         CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource().
                 withCompetitionId(competitionId).
                 withFullApplicationFinance(isFullApplicationFinance).
@@ -87,6 +94,28 @@ public class ApplicationFinanceSectionSaverTest {
         // Verify Expectations.
         verify(competitionSetupFinanceService).updateFinance(csfr);
         verify(questionService, times(1)).save(any(QuestionResource.class));
+    }
+
+    @Test
+    public void testSaveCompetitionSetupSectionNoneFinance() {
+        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.NONE;
+        final Long competitionId = 1L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .build();
+
+        assertTrue(competition.isNonFinanceType());
+
+        ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
+        competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
+
+        // Call the service under test
+        service.saveSection(competition, competitionSetupForm);
+        // Verify Expectations.
+        verify(competitionSetupFinanceService, never()).updateFinance(any());
+        verify(questionService, never()).save(any(QuestionResource.class));
     }
 
     @Test

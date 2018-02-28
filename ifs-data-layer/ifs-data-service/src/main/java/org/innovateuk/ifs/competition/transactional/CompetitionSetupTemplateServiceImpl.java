@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionCreator;
@@ -22,13 +23,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY;
@@ -68,6 +66,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     @Autowired
     private QuestionPriorityOrderService questionPriorityService;
 
+    @Autowired
+    private TermsAndConditionsRepository termsAndConditionsRepository;
+
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
@@ -91,10 +92,16 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
-        List<Section> sectionList = new ArrayList<>(template.getSections());
-        competition.setSections(sectionList);
+        Competition populatedCompetition = copyTemplatePropertiesToCompetition(template, competition);
+        return serviceSuccess(competitionTemplatePersistor.persistByEntity(populatedCompetition));
+    }
 
-        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
+    private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
+        competition.setSections(new ArrayList<>(template.getSections()));
+        competition.setFullApplicationFinance(template.isFullApplicationFinance());
+        competition.setTermsAndConditions(template.getTermsAndConditions());
+        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
+        return competition;
     }
 
     @Override
@@ -110,7 +117,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private ServiceResult<Question> initializeAndPersistQuestion(Section applicationQuestionsSection, Competition competition) {
         Question question = defaultApplicationQuestionCreator.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
-        question.setCompetition(competition);
 
         Question createdQuestion = questionTemplatePersistorServiceImpl.persistByEntity(Arrays.asList(question)).get(0);
         Question prioritizedQuestion = questionPriorityService.prioritiseAssessedQuestionAfterCreation(createdQuestion);

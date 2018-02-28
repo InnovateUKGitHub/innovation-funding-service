@@ -13,6 +13,12 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+
             <h2 class="heading-medium">Key statistics</h2>
 
             <div class="grid-row">
@@ -96,12 +102,13 @@
                                     class="form-control width-full"
                                     data-progressive-group-select="Innovation sector"
                                     data-progressive-group-select-instruction="Please select an innovation sector"
+                                    data-progressive-group-select-id="selectedInnovationArea"
                                     required="required"
                                     th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.selectedInnovationArea.required}"
                                     aria-labelledby="innovation-area"
                                     id="grouped-innovation-area">
                                 <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
-                                <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                <optgroup th:if="${innovationSector.name != 'Open'}" th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
                                     <option th:each="innovationArea : ${innovationSector.children}"
                                             th:value="${innovationArea.id}"
                                             th:text="${innovationArea.name}"
@@ -109,12 +116,7 @@
                                 </optgroup>
                             </select>
                         </div>
-
-                        <div class="form-group" th:classappend="${#fields.hasErrors('invites')} ? 'form-group-error'">
-                            <th:block th:if="${#fields.hasErrors('invites')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('invites')}" th:text="${err}"></span>
-                            </th:block>
-
+                        <div class="form-group">
                             <table id="invite-table">
                                 <thead>
                                 <tr>
@@ -143,6 +145,8 @@
                                                         data-minlength-errormessage=#{validation.standard.name.length.min(null,null,2)},
                                                         data-maxlength-errormessage=#{validation.standard.name.length.max(null,null,70)},
                                                         data-pattern-errormessage=#{validation.standard.name.invalid}"
+                                               th:name="invites[__${iterStat.index}__].name"
+                                               th:id="invites[__${iterStat.index}__].name"
                                                th:field="*{invites[__${iterStat.index}__].name}"
                                         />
                                     </td>
@@ -160,6 +164,8 @@
                                                         data-email-errormessage=#{validation.standard.email.format},
                                                         data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
                                                th:errorclass="form-control-error"
+                                               th:name="invites[__${iterStat.index}__].email"
+                                               th:id="invites[__${iterStat.index}__].email"
                                                th:field="*{invites[__${iterStat.index}__].email}"
                                         />
                                     </td>

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.junit.Assert;
@@ -35,7 +34,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(applicationFinanceRestURL + "/findByApplicationOrganisation/123/456", ApplicationFinanceResource.class, returnedResponse);
 
-        ApplicationFinanceResource finance = service.getApplicationFinance(123L, 456L).getSuccessObject();
+        ApplicationFinanceResource finance = service.getApplicationFinance(123L, 456L).getSuccess();
         Assert.assertEquals(returnedResponse, finance);
     }
 
@@ -50,7 +49,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
     public void test_getApplicationFinances_forApplicationId() {
         List<ApplicationFinanceResource> returnedResponse = Arrays.asList(1,2,3).stream().map(i -> new ApplicationFinanceResource()).collect(Collectors.toList());//.build(3);
         setupGetWithRestResultExpectations(applicationFinanceRestURL + "/findByApplication/123", applicationFinanceResourceListType(), returnedResponse);
-        List<ApplicationFinanceResource> finances = service.getApplicationFinances(123L).getSuccessObject();
+        List<ApplicationFinanceResource> finances = service.getApplicationFinances(123L).getSuccess();
         assertEquals(returnedResponse, finances);
     }
 
@@ -65,7 +64,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
         setupPostWithRestResultExpectations(applicationFinanceRestURL + "/add/123/456", ApplicationFinanceResource.class, null, returnedResponse, OK);
 
-        ApplicationFinanceResource finance = service.addApplicationFinanceForOrganisation(123L, 456L).getSuccessObject();
+        ApplicationFinanceResource finance = service.addApplicationFinanceForOrganisation(123L, 456L).getSuccess();
         Assert.assertEquals(returnedResponse, finance);
     }
 
@@ -76,7 +75,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
 
         setupGetWithRestResultExpectations(applicationFinanceRestURL + "/financeDocument/fileentry?applicationFinanceId=123", FileEntryResource.class, returnedResponse);
 
-        FileEntryResource fileDetails = service.getFileDetails(123L).getSuccessObject();
+        FileEntryResource fileDetails = service.getFileDetails(123L).getSuccess();
         Assert.assertEquals(returnedResponse, fileDetails);
     }
 
@@ -91,7 +90,7 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
     public void test_getApplicationFinanceDetails_forApplicationId() {
         List<ApplicationFinanceResource> returnedResponse = newApplicationFinanceResource().withApplication(1L).build(3);
         setupGetWithRestResultExpectations(applicationFinanceRestURL + "/financeDetails/123", applicationFinanceResourceListType(), returnedResponse);
-        List<ApplicationFinanceResource> finances = service.getFinanceDetails(123L).getSuccessObject();
+        List<ApplicationFinanceResource> finances = service.getFinanceDetails(123L).getSuccess();
         assertEquals(returnedResponse, finances);
     }
 }

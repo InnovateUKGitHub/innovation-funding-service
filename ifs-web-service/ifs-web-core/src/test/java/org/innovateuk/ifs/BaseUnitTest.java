@@ -239,7 +239,11 @@ public class BaseUnitTest {
     @Mock
     protected AssessmentRestService assessmentRestService;
     @Mock
-    protected AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    protected ReviewPanelInviteRestService reviewPanelInviteRestService;
+    @Mock
+    protected InterviewPanelInviteRestService interviewPanelInviteRestService;
+    @Mock
+    protected InterviewPanelRestService interviewPanelRestService;
     @Mock
     protected AssessorRestService assessorRestService;
     @Mock
@@ -260,6 +264,8 @@ public class BaseUnitTest {
     public GrantOfferLetterService grantOfferLetterService;
     @Mock
     public ApplicationFundingDecisionService applicationFundingDecisionService;
+    @Mock
+    protected AssessmentPanelRestService assessmentPanelRestService;
 
     @Spy
     @InjectMocks

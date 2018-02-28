@@ -31,14 +31,16 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
+import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.transactional.AcceptInviteService;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
@@ -91,12 +93,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
-    public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
     public static final String IFS_SYSTEM_REGISTRAR_USER_EMAIL = "ifs_web_user@innovateuk.org";
-    public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     protected ServiceLocator serviceLocator;
+    protected String compAdminEmail;
+    protected String projectFinanceEmail;
     protected BaseUserService baseUserService;
     protected UserService userService;
     protected CompetitionService competitionService;
@@ -106,6 +108,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InnovationSectorRepository innovationSectorRepository;
     protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
+    protected QuestionSetupService questionSetupService;
     protected PublicContentService publicContentService;
     protected PublicContentRepository publicContentRepository;
     protected ContentGroupRepository contentGroupRepository;
@@ -121,6 +124,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected TokenRepository tokenRepository;
     protected TokenService tokenService;
     protected InviteService inviteService;
+    protected AcceptInviteService acceptInviteService;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected QuestionService questionService;
@@ -131,13 +135,13 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectService projectService;
     protected ProjectDetailsService projectDetailsService;
     protected MonitoringOfficerService monitoringOfficerService;
-    protected FinanceRowService financeRowService;
+    protected FinanceRowCostsService financeRowCostsService;
     protected SectionService sectionService;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
     protected EthnicityRepository ethnicityRepository;
     protected RoleService roleService;
-    protected CompetitionInviteRepository competitionInviteRepository;
+    protected CompetitionAssessmentInviteRepository competitionAssessmentInviteRepository;
     protected CompetitionRepository competitionRepository;
     protected CompetitionFunderRepository competitionFunderRepository;
     protected AssessorService assessorService;
@@ -164,6 +168,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
+    protected ApplicationResearchCategoryService applicationResearchCategoryService;
+    protected FinanceService financeService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -200,6 +206,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         tokenRepository = serviceLocator.getBean(TokenRepository.class);
         tokenService = serviceLocator.getBean(TokenService.class);
         inviteService = serviceLocator.getBean(InviteService.class);
+        acceptInviteService = serviceLocator.getBean(AcceptInviteService.class);
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
@@ -210,13 +217,14 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         projectService = serviceLocator.getBean(ProjectService.class);
         projectDetailsService = serviceLocator.getBean(ProjectDetailsService.class);
         monitoringOfficerService = serviceLocator.getBean(MonitoringOfficerService.class);
-        financeRowService = serviceLocator.getBean(FinanceRowService.class);
+        financeRowCostsService = serviceLocator.getBean(FinanceRowCostsService.class);
+        financeService = serviceLocator.getBean(FinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
         ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
         roleService = serviceLocator.getBean(RoleService.class);
-        competitionInviteRepository = serviceLocator.getBean(CompetitionInviteRepository.class);
+        competitionAssessmentInviteRepository = serviceLocator.getBean(CompetitionAssessmentInviteRepository.class);
         competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         assessorService = serviceLocator.getBean(AssessorService.class);
         competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
@@ -229,6 +237,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
         sectionRepository = serviceLocator.getBean(SectionRepository.class);
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
+        questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
         applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
@@ -253,10 +262,13 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
         applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
         ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
+        applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
+        compAdminEmail = serviceLocator.getCompAdminEmail();
+        projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
     }
 
     protected UserResource compAdmin() {
-        return retrieveUserByEmailInternal(COMP_ADMIN_EMAIL, UserRoleType.COMP_ADMIN);
+        return retrieveUserByEmailInternal(compAdminEmail, UserRoleType.COMP_ADMIN);
     }
 
     protected UserResource systemRegistrar() {
@@ -264,7 +276,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource projectFinanceUser() {
-        return retrieveUserByEmail(PROJECT_FINANCE_EMAIL);
+        return retrieveUserByEmail(projectFinanceEmail);
     }
 
     protected UserResource ifsAdmin() {
@@ -273,11 +285,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
         return fromCache(emailAddress, usersByEmailAddress, () ->
-                doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException()));
+                doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccess()));
     }
 
     protected UserResource retrieveUserById(Long id) {
-        return fromCache(id, usersById, () -> doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccessObjectOrThrowException()));
+        return fromCache(id, usersById, () -> doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccess()));
     }
 
     protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {
@@ -285,7 +297,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             UserResource user = retrieveUserByEmail(emailAddress);
             return doAs(user, () ->
                     usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).
-                            getSuccessObjectOrThrowException());
+                            getSuccess());
         });
     }
 
@@ -294,7 +306,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(applicationId, leadApplicantsByApplicationId, () ->
                 doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccessObjectOrThrowException(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get()));
+                        getSuccess(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
@@ -311,18 +323,18 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
     protected List<QuestionResource> retrieveQuestionsByCompetitionId(Long competitionId) {
         return fromCache(competitionId, questionsByCompetitionId, () ->
-                questionService.findByCompetition(competitionId).getSuccessObjectOrThrowException());
+                questionService.findByCompetition(competitionId).getSuccess());
     }
 
     protected List<FormInputResource> retrieveFormInputsByQuestionId(QuestionResource question) {
         return fromCache(question.getId(), formInputsByQuestionId, () ->
-                formInputService.findByQuestionId(question.getId()).getSuccessObjectOrThrowException());
+                formInputService.findByQuestionId(question.getId()).getSuccess());
     }
 
     protected OrganisationResource retrieveOrganisationResourceByName(String organisationName) {
         return fromCache(organisationName, organisationsByName, () -> doAs(systemRegistrar(), () -> {
             Organisation organisation = retrieveOrganisationByName(organisationName);
-            return organisationService.findById(organisation.getId()).getSuccessObjectOrThrowException();
+            return organisationService.findById(organisation.getId()).getSuccess();
         }));
     }
 

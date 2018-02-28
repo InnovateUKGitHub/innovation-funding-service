@@ -2,7 +2,7 @@ package org.innovateuk.ifs.threads.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.threads.service.ThreadService;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +27,11 @@ public class CommonThreadController<R> {
     @PostMapping
     public RestResult<Long> create(@RequestBody R thread) {
         return service.create(thread).toPostCreateResponse();
+    }
+
+    @PostMapping("/thread/{threadId}/close")
+    public RestResult<Void> close(@PathVariable("threadId") final Long threadId) {
+        return service.close(threadId).toPostResponse();
     }
 
     @PostMapping("/{threadId}/post")

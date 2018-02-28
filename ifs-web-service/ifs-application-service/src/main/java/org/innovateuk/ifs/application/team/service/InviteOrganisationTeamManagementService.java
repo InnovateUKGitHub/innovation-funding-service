@@ -34,7 +34,7 @@ public class InviteOrganisationTeamManagementService extends AbstractTeamManagem
     }
 
     public boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationInviteId) {
-        InviteOrganisationResource organisation = inviteOrganisationRestService.getById(organisationInviteId).getSuccessObjectOrThrowException();
+        InviteOrganisationResource organisation = inviteOrganisationRestService.getById(organisationInviteId).getSuccess();
         if(organisation.getInviteResources().stream().anyMatch(applicationInviteResource -> applicationInviteResource.getApplication().equals(applicationId))) {
             return true;
         }
@@ -43,7 +43,7 @@ public class InviteOrganisationTeamManagementService extends AbstractTeamManagem
 
     public List<Long> getInviteIds(long applicationId, long organisationId) {
         List<ApplicationInviteResource> invites = inviteOrganisationRestService.getById(organisationId)
-                .getSuccessObjectOrThrowException()
+                .getSuccess()
                 .getInviteResources();
 
         if(invites != null) {

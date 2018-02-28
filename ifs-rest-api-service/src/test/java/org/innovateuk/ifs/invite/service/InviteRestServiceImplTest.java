@@ -55,8 +55,8 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         setupPostWithRestResultExpectations(inviteRestURL +  "/createApplicationInvites", InviteResultsResource.class, inviteOrganisationResource, expected, CREATED);
         RestResult<InviteResultsResource> response = service.createInvitesByInviteOrganisation(organisationName, invites);
         assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObject());
-        assertEquals(1, response.getSuccessObject().getInvitesSendSuccess());
+        assertEquals(expected, response.getSuccess());
+        assertEquals(1, response.getSuccess().getInvitesSendSuccess());
     }
 
     @Test
@@ -74,8 +74,8 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         setupPostWithRestResultExpectations(inviteRestURL +  "/createApplicationInvites", InviteResultsResource.class, inviteOrganisationResource, expected, CREATED);
         RestResult<InviteResultsResource> response = service.createInvitesByOrganisation(organisationId, invites);
         assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObject());
-        assertEquals(42, response.getSuccessObject().getInvitesSendSuccess());
+        assertEquals(expected, response.getSuccess());
+        assertEquals(42, response.getSuccess().getInvitesSendSuccess());
     }
 
     @Test
@@ -89,9 +89,9 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         setupPostWithRestResultExpectations(inviteRestURL +  "/saveInvites", InviteResultsResource.class, invites, expected, OK);
         RestResult<InviteResultsResource> response = service.saveInvites(invites);
         assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObject());
-        assertEquals(19, response.getSuccessObject().getInvitesSendFailure());
-        assertEquals(21, response.getSuccessObject().getInvitesSendSuccess());
+        assertEquals(expected, response.getSuccess());
+        assertEquals(19, response.getSuccess().getInvitesSendFailure());
+        assertEquals(21, response.getSuccess().getInvitesSendSuccess());
     }
 
 
@@ -121,7 +121,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         RestResult<Boolean> response = service.checkExistingUser(inviteHash);
 
         assertTrue(response.isSuccess());
-        assertEquals(TRUE, response.getSuccessObject());
+        assertEquals(TRUE, response.getSuccess());
     }
 
     @Test
@@ -133,7 +133,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         RestResult<UserResource> response = service.getUser(inviteHash);
 
         assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObject());
+        assertEquals(expected, response.getSuccess());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         RestResult<ApplicationInviteResource> response = service.getInviteByHash(inviteHash);
 
         assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObject());
+        assertEquals(expected, response.getSuccess());
     }
 
     @Test
@@ -158,7 +158,7 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         RestResult<InviteOrganisationResource> response = service.getInviteOrganisationByHash(inviteHash);
 
         assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObject());
+        assertEquals(expected, response.getSuccess());
     }
 
     @Test
@@ -170,6 +170,6 @@ public class InviteRestServiceImplTest extends BaseRestServiceUnitTest<InviteRes
         RestResult<List<InviteOrganisationResource>> response = service.getInvitesByApplication(applicationId);
 
         assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObject());
+        assertEquals(expected, response.getSuccess());
     }
 }

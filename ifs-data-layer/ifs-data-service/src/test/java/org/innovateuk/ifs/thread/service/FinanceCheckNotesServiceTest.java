@@ -5,8 +5,8 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Post;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
@@ -32,7 +32,7 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
         when(noteRepositoryMock.findOne(noteId)).thenReturn(note);
         when(noteMapper.mapToResource(note)).thenReturn(noteResource);
 
-        NoteResource response = service.findOne(noteId).getSuccessObjectOrThrowException();
+        NoteResource response = service.findOne(noteId).getSuccess();
 
         assertEquals(noteResource, response);
     }
@@ -54,7 +54,7 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
         when(noteMapper.mapToResource(note1)).thenReturn(noteResource1);
         when(noteMapper.mapToResource(note2)).thenReturn(noteResource2);
 
-        List<NoteResource> response = service.findAll(contextId).getSuccessObjectOrThrowException();
+        List<NoteResource> response = service.findAll(contextId).getSuccess();
 
         assertEquals(noteResources, response);
     }
@@ -73,7 +73,7 @@ public class FinanceCheckNotesServiceTest extends BaseUnitTestMocksTest {
         when(noteMapper.mapToResource(savedNote)).thenReturn(createdNote);
 
 
-        Long result = service.create(noteToCreate).getSuccessObjectOrThrowException();
+        Long result = service.create(noteToCreate).getSuccess();
 
         assertEquals(result, Long.valueOf(1L));
     }

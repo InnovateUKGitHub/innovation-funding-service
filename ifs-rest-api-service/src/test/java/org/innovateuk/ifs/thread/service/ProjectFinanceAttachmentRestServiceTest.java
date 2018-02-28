@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.upload.service.ProjectFinancePostAttachmentRestService;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 
@@ -22,7 +22,7 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
     public void test_find() throws Exception {
         AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235, null);
         setupGetWithRestResultExpectations(baseURL + "/199", AttachmentResource.class, expected, OK);
-        final AttachmentResource response = service.find(199L).getSuccessObject();
+        final AttachmentResource response = service.find(199L).getSuccess();
         assertSame(expected, response);
     }
 
@@ -40,7 +40,7 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
         setupFileUploadWithRestResultExpectations(url, AttachmentResource.class,
                 fileContentString, contentType, fileContent.length, expected, CREATED);
 
-        final AttachmentResource response = service.upload(projectId, contentType, fileContent.length, originalFilename, fileContent).getSuccessObject();
+        final AttachmentResource response = service.upload(projectId, contentType, fileContent.length, originalFilename, fileContent).getSuccess();
         assertSame(expected, response);
     }
 
@@ -57,7 +57,7 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
         final Long fileId = 912L;
         ByteArrayResource expected = new ByteArrayResource("1u6536748".getBytes());
         setupGetWithRestResultExpectations(baseURL + "/download/" + fileId, ByteArrayResource.class, expected, OK);
-        final ByteArrayResource response = service.download(fileId).getSuccessObject();
+        final ByteArrayResource response = service.download(fileId).getSuccess();
         assertSame(expected, response);
     }
 

@@ -40,7 +40,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), organisationResourceListType())).thenReturn(responseEntity);
 
-        List<OrganisationResource> response = service.getOrganisationsByApplicationId(123L).getSuccessObject();
+        List<OrganisationResource> response = service.getOrganisationsByApplicationId(123L).getSuccess();
         assertEquals(3, response.size());
         assertEquals(returnedResponse, response);
     }
@@ -54,7 +54,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         when(mockRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(), OrganisationResource.class)).thenReturn(responseEntity);
 
-        OrganisationResource response = service.getOrganisationById(123L).getSuccessObject();
+        OrganisationResource response = service.getOrganisationById(123L).getSuccess();
         Assert.assertEquals(returnedResponse, response);
     }
 
@@ -71,7 +71,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
         String organisationNameEncoded = UriUtils.encode(organisation.getName(), "UTF-8");
 
         setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class, null, organisation, OK);
-        OrganisationResource receivedResource = service.updateNameAndRegistration(organisation).getSuccessObject();
+        OrganisationResource receivedResource = service.updateNameAndRegistration(organisation).getSuccess();
 
         Assert.assertEquals(organisation, receivedResource);
     }
@@ -82,7 +82,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         setupPostWithRestResultAnonymousExpectations(format("%s/createOrMatch", organisationsUrl), OrganisationResource.class, expected, expected, OK);
 
-        OrganisationResource response = service.createOrMatch(expected).getSuccessObjectOrThrowException();
+        OrganisationResource response = service.createOrMatch(expected).getSuccess();
         assertEquals(expected, response);
     }
 
@@ -93,7 +93,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
         setupPostWithRestResultAnonymousExpectations(format("%s/createAndLinkByInvite?inviteHash=%s", organisationsUrl, inviteHash), OrganisationResource.class, expected, expected, OK);
 
-        OrganisationResource response = service.createAndLinkByInvite(expected, inviteHash).getSuccessObjectOrThrowException();
+        OrganisationResource response = service.createAndLinkByInvite(expected, inviteHash).getSuccess();
         assertEquals(expected, response);
     }
 }

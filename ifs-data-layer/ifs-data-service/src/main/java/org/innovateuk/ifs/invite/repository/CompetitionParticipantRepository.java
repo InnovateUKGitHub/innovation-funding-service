@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -19,16 +19,28 @@ import java.util.List;
 public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionAssessmentParticipant, Long> {
 
     String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
-            "FROM AssessmentPanelInvite invite " +
+            "FROM AssessmentReviewPanelInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 
-    String PARTICIPANTS_NOT_ON_PANEL = "SELECT competitionParticipant " +
+    String USERS_WITH_INTERVIEW_PANEL_INVITE = "SELECT invite.user.id " +
+            "FROM AssessmentInterviewPanelInvite invite " +
+            "WHERE invite.competition.id = :competitionId " +
+            "AND invite.user IS NOT NULL";
+
+    String PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL = "SELECT competitionParticipant " +
             "FROM CompetitionAssessmentParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
             "AND competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
             "AND competitionParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+
+    String PARTICIPANTS_NOT_ON_INTERVIEW_PANEL = "SELECT competitionParticipant " +
+            "FROM CompetitionAssessmentParticipant competitionParticipant " +
+            "WHERE competitionParticipant.competition.id = :competitionId " +
+            "AND competitionParticipant.role = 'ASSESSOR' " +
+            "AND competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
+            "AND competitionParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
 
     String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
             "FROM CompetitionAssessmentParticipant competitionParticipant " +
@@ -146,9 +158,15 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             @Param("status") ParticipantStatus status,
             @Param("appId") long applicationId);
 
-    @Query(PARTICIPANTS_NOT_ON_PANEL)
-    Page<CompetitionAssessmentParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId, Pageable pageable);
+    @Query(PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL)
+    Page<CompetitionAssessmentParticipant> findParticipantsNotOnAssessmentPanel(@Param("competitionId") long competitionId, Pageable pageable);
 
-    @Query(PARTICIPANTS_NOT_ON_PANEL)
-    List<CompetitionAssessmentParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId);
+    @Query(PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL)
+    List<CompetitionAssessmentParticipant> findParticipantsNotOnAssessmentPanel(@Param("competitionId") long competitionId);
+
+    @Query(PARTICIPANTS_NOT_ON_INTERVIEW_PANEL)
+    Page<CompetitionAssessmentParticipant> findParticipantsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
+
+    @Query(PARTICIPANTS_NOT_ON_INTERVIEW_PANEL)
+    List<CompetitionAssessmentParticipant> findParticipantsNotOnInterviewPanel(@Param("competitionId") long competitionId);
 }

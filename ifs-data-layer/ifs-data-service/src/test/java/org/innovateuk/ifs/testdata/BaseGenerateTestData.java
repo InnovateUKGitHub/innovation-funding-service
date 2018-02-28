@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
@@ -65,7 +66,6 @@ import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAsse
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.testdata.builders.AssessorResponseDataBuilder.newAssessorResponseData;
-import static org.innovateuk.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
@@ -74,9 +74,10 @@ import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOr
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.QuestionDataBuilder.newQuestionData;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -92,6 +93,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
 
+    public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
+    public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
+
     @Value("${flyway.url}")
     private String databaseUrl;
 
@@ -103,6 +107,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${flyway.locations}")
     private String locations;
+
+    @Value("${flyway.placeholders.ifs.system.user.uuid}")
+    private String systemUserUUID;
 
     @Autowired
     private GenericApplicationContext applicationContext;
@@ -135,6 +142,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private TestService testService;
 
     private CompetitionDataBuilder competitionDataBuilder;
+    private QuestionDataBuilder questionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
     private PublicContentDateDataBuilder publicContentDateDataBuilder;
@@ -153,6 +161,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
      * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private static List<CompetitionLine> competitionLines;
+
+    private static List<QuestionLine> questionLines;
 
     private static List<CompetitionFunderLine> competitionFunderLines;
 
@@ -223,6 +233,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     public void readCsvs() throws Exception {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
+        questionLines = readQuestions();
         competitionFunderLines = readCompetitionFunders();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
@@ -269,10 +280,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @PostConstruct
     public void setupBaseBuilders() {
 
-        ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
+        ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
 
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
+        questionDataBuilder = newQuestionData(serviceLocator);
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
@@ -293,6 +305,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
+        updateQuestions();
         createCompetitionFunders();
         createPublicContentGroups();
         createPublicContentDates();
@@ -305,6 +318,18 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+    }
+
+    private void updateQuestions() {
+        questionLines.forEach(this::updateQuestion);
+    }
+
+    private void updateQuestion(QuestionLine questionLine) {
+        this.questionDataBuilder.updateApplicationQuestionHeading(questionLine.ordinal,
+                        questionLine.competitionName,
+                        questionLine.heading,
+                        questionLine.title,
+                        questionLine.subtitle).build();
     }
 
     private void createProjects() {
@@ -768,6 +793,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .withSubmissionDate(line.submissionDate)
                 .withFundersPanelEndDate(line.fundersPanelEndDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
+                .withRegistrationDate(line.registrationDate)
                 .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }
@@ -847,9 +873,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations) {
+        Map<String, String> placeholders = ImmutableMap.of("ifs.system.user.uuid", systemUserUUID);
         Flyway f = new Flyway();
         f.setDataSource(databaseUrl, databaseUser, databasePassword);
         f.setLocations(patchLocations);
+        f.setPlaceholders(placeholders);
         f.clean();
         f.migrate();
     }
@@ -859,15 +887,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
-        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccess());
     }
 
     protected OrganisationResource retrieveOrganisationById(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccess());
     }
 
     protected OrganisationResource retrieveOrganisationByUserId(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccess());
     }
 
     protected UserResource systemRegistrar() {
@@ -1039,14 +1067,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected void setDefaultSystemRegistrar() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
         );
     }
 
     protected void setDefaultCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccess())
         );
     }
 }

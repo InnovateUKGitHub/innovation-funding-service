@@ -6,9 +6,9 @@ Resource          ../defaultResources.robot
 
 *** Keywords ***
 the assessment start period changes in the db in the past
-    ${today}=    get time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    [Arguments]   ${competition_id}
+    ${yesterday} =    get yesterday
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     And reload page
 
 the calculation of the remaining days should be correct
@@ -32,8 +32,7 @@ the total calculation in dashboard should be correct
     Page Should Contain    ${TEXT} (${NO_OF_COMP_OR_APPL})
 
 The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
-    ${today}=    get time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    ${yesterday} =   get yesterday
     When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
     And reload page
 
@@ -119,9 +118,8 @@ get next month
     ${month} =  Add time To Date  ${today}    31 days    result_format=%m    exclude_millis=true
     [Return]    ${month}
 
-get next month as word
-    ${today}=  get time
-    ${month} =  Add time To Date  ${today}    31 days    result_format=%B    exclude_millis=true
+get month as word
+    ${month} =  Get Current Date  UTC   result_format=%B    exclude_millis=true
     # This format is like June instead of 06
     [Return]    ${month}
 
@@ -167,3 +165,15 @@ verify first date is greater than or equal to second
     ${date_in_text_format2}=  Get text  ${selector2}
     ${date2}=  Convert Date  ${date_in_text_format2}  date_format=%d %B %Y  exclude_millis=true
     Should be true  '${date1}'>='${date2}'
+
+Set predefined date variables
+    ${month} =          get tomorrow month
+    set suite variable  ${month}
+    ${nextMonth} =  get next month
+    set suite variable  ${nextMonth}
+    ${nextyear} =       get next year
+    Set suite variable  ${nextyear}
+    ${tomorrowday} =    get tomorrow day
+    Set suite variable  ${tomorrowday}
+    ${monthWord} =      get month as word
+    set suite variable  ${monthWord}

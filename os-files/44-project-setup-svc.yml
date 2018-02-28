@@ -23,13 +23,13 @@ items:
           deploymentconfig: project-setup-svc
       spec:
         containers:
-        - image: innovateuk/project-setup-service:1.0-SNAPSHOT
+        - image: innovateuk/project-setup-service:${projectSetupServiceVersion}
           name: project-setup-svc
           livenessProbe:
             httpGet:
               path: /project-setup/monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
@@ -38,7 +38,7 @@ items:
             httpGet:
               path: /project-setup/monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
@@ -46,13 +46,13 @@ items:
           imagePullPolicy: Always
           env:
           - name: SPRING_APPLICATION_JSON
-            value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
+            value: '{"logout":{"url": "https://${SHIB_ADDRESS}/Logout/"}}'
           - name: JAVA_OPTS
             value: -Xms1000m -Xmx1000m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-project-setup-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-project-setup-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
-            value: "<<NEWRELIC-LICENCE-KEY>>"
+            value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           ports:

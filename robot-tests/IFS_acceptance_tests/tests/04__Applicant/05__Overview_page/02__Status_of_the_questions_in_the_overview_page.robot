@@ -32,7 +32,7 @@ Re-assign is possible from the overview page
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionRTO_name}  You will be joining as part of the organisation
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the Applicant edits the Project summary
     Clear Element Text                    css=.textarea-wrapped .editor
@@ -65,4 +65,4 @@ the blue flag should not be visible
     the user should not see the element  jQuery=li:contains("Project summary") > .action-required
 
 the assign button should say Assigned to you
-    Element Should Contain  jQuery=li:contains("Project summary") > .assign-container.action-required button    you
+    Element Should Contain  jQuery=li:contains("Project summary") > .assign-container.secondary-notification button    you

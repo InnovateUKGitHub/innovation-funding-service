@@ -39,4 +39,7 @@ public abstract class RootPermissionRules {
         return checkProcessRole(user, applicationId, ASSESSOR, processRoleRepository);
     }
 
+    protected boolean isPanelAssessor(long applicationId, UserResource user) {
+        return checkProcessRole(user, applicationId, PANEL_ASSESSOR, processRoleRepository);
+    }
 }

@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
-
-import java.time.ZonedDateTime;
 
 /**
  * A view model that backs the Project grant offer letter page
@@ -17,23 +16,20 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
-    private ZonedDateTime submitDate;
-    private boolean offerApproved;
-    private boolean isGrantOfferLetterSent;
+    private GrantOfferLetterStateResource golState;
 
     public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 ZonedDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
+                                 boolean projectManager, GrantOfferLetterStateResource golState) {
+
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
         this.grantOfferLetterFile = grantOfferLetterFile;
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
-        this.submitDate = submitDate;
-        this.offerApproved = offerApproved;
         this.projectManager = projectManager;
-        this.isGrantOfferLetterSent = isGrantOfferLetterSent;
+        this.golState = golState;
     }
 
     @Override
@@ -51,51 +47,27 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isSubmitted() {
-        return submitDate != null;
+        return golState.isSignedGrantOfferLetterReceivedByInternalTeam();
     }
 
     public FileDetailsViewModel getGrantOfferLetterFile() {
         return grantOfferLetterFile;
     }
 
-    public boolean isOfferApproved() {
-        return offerApproved;
-    }
-
-    public void setOfferApproved(boolean offerApproved) {
-        this.offerApproved = offerApproved;
-    }
-
-    public void setGrantOfferLetterFile(FileDetailsViewModel grantOfferLetterFile) {
-        this.grantOfferLetterFile = grantOfferLetterFile;
+    public boolean isGrantOfferLetterApproved() {
+        return golState.isSignedGrantOfferLetterApproved();
     }
 
     public FileDetailsViewModel getAdditionalContractFile() {
         return additionalContractFile;
     }
 
-    public void setAdditionalContractFile(FileDetailsViewModel additionalContractFile) {
-        this.additionalContractFile = additionalContractFile;
-    }
-
     public boolean isOfferSigned() {
         return signedGrantOfferLetterFile != null;
     }
 
-    public ZonedDateTime getSubmitDate() {
-        return submitDate;
-    }
-
-    public void setSubmitDate(ZonedDateTime submitDate) {
-        this.submitDate = submitDate;
-    }
-
     public FileDetailsViewModel getSignedGrantOfferLetterFile() {
         return signedGrantOfferLetterFile;
-    }
-
-    public void setSignedGrantOfferLetterFile(FileDetailsViewModel signedGrantOfferLetterFile) {
-        this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
     }
 
     public boolean isShowSubmitButton() {
@@ -103,7 +75,16 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isShowDisabledSubmitButton() {
-        return leadPartner && (!isOfferSigned() || !projectManager);
+
+        if (!projectManager) {
+            return false;
+        }
+
+        if (isSubmitted()) {
+            return false;
+        }
+
+        return !isOfferSigned();
     }
 
     public boolean isProjectManager() {
@@ -111,6 +92,70 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isGrantOfferLetterSent() {
-        return isGrantOfferLetterSent;
+        return golState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
+    }
+
+    public boolean isGrantOfferLetterRejected() {
+        return golState.isSignedGrantOfferLetterRejected();
+    }
+
+    public boolean isShowGrantOfferLetterRejectedMessage() {
+
+        if (!isProjectManager()) {
+            return false;
+        }
+
+        return isGrantOfferLetterRejected();
+    }
+
+    public boolean isAbleToRemoveSignedGrantOffer() {
+
+        if (getSignedGrantOfferLetterFile() == null) {
+            return false;
+        }
+
+        if (isGrantOfferLetterApproved()) {
+            return false;
+        }
+
+        if (isGrantOfferLetterRejected()) {
+            return isProjectManager();
+        }
+
+        if (!isSubmitted()) {
+            return isLeadPartner();
+        }
+
+        return false;
+    }
+
+    public boolean isShowGrantOfferLetterReceivedByInnovateMessage() {
+
+        if (isGrantOfferLetterRejected() && !isLeadPartner()) {
+            return true;
+        }
+
+        if (isGrantOfferLetterApproved()) {
+            return false;
+        }
+
+        return isSubmitted();
+    }
+
+    public boolean isShowAwaitingSignatureFromLeadPartnerMessage() {
+
+        if (isLeadPartner()) {
+            return false;
+        }
+
+        if (!isGrantOfferLetterSent()) {
+            return false;
+        }
+
+        return !isSubmitted();
+    }
+
+    public boolean isShowGrantOfferLetterApprovedByInnovateMessage() {
+        return isGrantOfferLetterApproved();
     }
 }

@@ -5,9 +5,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
@@ -47,6 +47,7 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
  */
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupApplicationController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupApplicationController {
 
@@ -74,9 +75,6 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupPopulator competitionSetupPopulator;
 
     @Autowired
-    private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
-
-    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
 
@@ -86,7 +84,7 @@ public class CompetitionSetupApplicationController {
 
         Function<CompetitionSetupQuestionResource, String> successViewFunction =
                 (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
-        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccessObjectOrThrowException());
+        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccess());
 
         return successView.get();
     }
@@ -183,6 +181,20 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                             Model model) {
 
+        return handleFinanceSaving(competitionId, model, form, validationHandler);
+    }
+
+    @PostMapping("/question/finance/none/edit")
+    public String submitApplicationNoFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+                                              BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
+                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              Model model) {
+
+       return handleFinanceSaving(competitionId, model, form, validationHandler);
+    }
+
+    private String handleFinanceSaving(long competitionId, Model model, ApplicationFinanceForm form, ValidationHandler validationHandler) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
@@ -194,7 +206,6 @@ public class CompetitionSetupApplicationController {
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
-
     }
 
     @GetMapping("/question/{questionId}")
@@ -372,7 +383,7 @@ public class CompetitionSetupApplicationController {
                     return questionView;
                 }).andOnFailure(() -> serviceSuccess("redirect:/non-ifs-competition/setup/" + questionId));
 
-        return view.getSuccessObjectOrThrowException();
+        return view.getSuccess();
     }
 
     private QuestionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable) {

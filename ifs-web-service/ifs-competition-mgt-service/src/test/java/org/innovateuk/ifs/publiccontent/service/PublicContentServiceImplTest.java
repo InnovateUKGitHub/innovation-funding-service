@@ -36,7 +36,7 @@ public class PublicContentServiceImplTest {
         PublicContentSectionType type = PublicContentSectionType.ELIGIBILITY;
         when(publicContentRestService.updateSection(resource, type)).thenReturn(restSuccess());
 
-        target.updateSection(resource, type).getSuccessObjectOrThrowException();
+        target.updateSection(resource, type).getSuccess();
     }
 
     @Test
@@ -45,7 +45,7 @@ public class PublicContentServiceImplTest {
         PublicContentSectionType type = PublicContentSectionType.ELIGIBILITY;
         when(publicContentRestService.markSectionAsComplete(resource, type)).thenReturn(restSuccess());
 
-        target.markSectionAsComplete(resource, type).getSuccessObjectOrThrowException();
+        target.markSectionAsComplete(resource, type).getSuccess();
     }
 
     @Test

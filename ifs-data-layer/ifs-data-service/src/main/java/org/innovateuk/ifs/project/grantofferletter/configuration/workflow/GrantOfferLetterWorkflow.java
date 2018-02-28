@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEven
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLet
  * Describes the workflow for the GOL section for Project Setup.
  */
 @Configuration
-@EnableStateMachine(name = "golStateMachine")
+@EnableStateMachineFactory(name = "golStateMachineFactory")
 public class GrantOfferLetterWorkflow extends StateMachineConfigurerAdapter<GrantOfferLetterState, GrantOfferLetterEvent> {
 
     @Override
@@ -61,12 +61,17 @@ public class GrantOfferLetterWorkflow extends StateMachineConfigurerAdapter<Gran
                     .and()
                 .withExternal()
                     .source(READY_TO_APPROVE)
-                    .event(GOL_REJECTED)
-                    .target(PENDING)
+                    .event(SIGNED_GOL_REJECTED)
+                    .target(SENT)
+                    .and()
+                .withExternal()
+                    .source(SENT)
+                    .event(SIGNED_GOL_REMOVED)
+                    .target(SENT)
                     .and()
                 .withExternal()
                     .source(READY_TO_APPROVE)
-                    .event(GOL_APPROVED)
+                    .event(SIGNED_GOL_APPROVED)
                     .target(APPROVED);
     }
 }

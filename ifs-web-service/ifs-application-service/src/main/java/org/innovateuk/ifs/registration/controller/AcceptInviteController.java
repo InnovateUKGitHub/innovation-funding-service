@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AcceptInviteController.class)
 @PreAuthorize("permitAll")
 public class AcceptInviteController extends AbstractAcceptInviteController {
 
@@ -46,6 +48,9 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
             UserResource loggedInUser,
             HttpServletResponse response,
             Model model) {
+
+        registrationCookieService.deleteAllRegistrationJourneyCookies(response);
+
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
                             if (!SENT.equals(invite.getStatus())) {
@@ -61,7 +66,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
+        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccess();
     }
 
     @GetMapping("/accept-invite/confirm-invited-organisation")
@@ -87,6 +92,6 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObject();
+        return view.getSuccess();
     }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
 
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectRegistrationController.class)
 @PreAuthorize("permitAll")
 public class ProjectRegistrationController {
 
@@ -57,7 +59,7 @@ public class ProjectRegistrationController {
                     model.addAttribute("registrationForm", new RegistrationForm().withEmail(invite.getEmail()));
                     return restSuccess(REGISTRATION_REGISTER_VIEW);
                 }
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     @PostMapping(REGISTER_MAPPING)
@@ -90,7 +92,7 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
-        }).getSuccessObject();
+        }).getSuccess();
     }
 
     private boolean emailExists(String email) {

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
@@ -23,8 +25,10 @@ import javax.validation.Valid;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
@@ -32,6 +36,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors/invite")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementSendInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementSendInviteController extends CompetitionManagementCookieController<OverviewSelectionForm> {
 
@@ -55,7 +60,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                    @PathVariable("competitionId") long competitionId,
                                    @ModelAttribute(name = "form", binding = false) SendInviteForm form,
                                    BindingResult bindingResult) {
-        AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToSend(competitionId).getSuccess();
 
         if (invites.getRecipients().isEmpty()) {
             return redirectToInviteListView(competitionId);
@@ -84,13 +89,11 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         Supplier<String> failureView = () -> getInvitesToSend(model, competitionId, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> sendResult = competitionInviteRestService.sendAllInvites(
+            RestResult<Void> sendResult = competitionInviteRestService.sendAllInvites(
                     competitionId,
-                    new AssessorInviteSendResource(form.getSubject(), form.getContent())
-            )
-                    .toServiceResult();
+                    new AssessorInviteSendResource(form.getSubject(), form.getContent()));
 
-            return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
+            return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
                     .failNowOrSucceedWith(failureView, () -> redirectToOverview(competitionId, 0));
         });
     }
@@ -113,7 +116,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
                     competitionId,
-                    submittedSelectionForm.getSelectedInviteIds()).getSuccessObjectOrThrowException();
+                    submittedSelectionForm.getSelectedInviteIds()).getSuccess();
             model.addAttribute("model", new SendInvitesViewModel(
                     invites.getCompetitionId(),
                     invites.getCompetitionName(),

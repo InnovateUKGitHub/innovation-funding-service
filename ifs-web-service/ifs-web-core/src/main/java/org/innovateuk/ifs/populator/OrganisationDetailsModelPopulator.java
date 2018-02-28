@@ -36,7 +36,6 @@ public class OrganisationDetailsModelPopulator {
     protected OrganisationRestService organisationRestService;
 
     public void populateModel(final Model model, final Long applicationId, final List<ProcessRoleResource> userApplicationRoles) {
-
         final List<OrganisationResource> organisations = getApplicationOrganisations(applicationId);
         final List<OrganisationResource> academicOrganisations = getAcademicOrganisations(organisations);
         final List<Long> academicOrganisationIds = academicOrganisations.stream().map(ao -> ao.getId()).collect(Collectors.toList());
@@ -66,7 +65,7 @@ public class OrganisationDetailsModelPopulator {
     }
 
     private List<OrganisationResource> getApplicationOrganisations(final Long applicationId) {
-        return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        return organisationRestService.getOrganisationsByApplicationId(applicationId).getSuccess();
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(final List<ProcessRoleResource> userApplicationRoles, List<OrganisationResource> organisations) {

@@ -4,6 +4,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -24,13 +25,13 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Controller for the 'Manage Applications' assessment panel page.
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentPanelManageApplicationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class AssessmentPanelManageApplicationsController {
     private static final int PAGE_SIZE  = 20;
@@ -56,7 +57,7 @@ public class AssessmentPanelManageApplicationsController {
                                      @RequestParam(value = "sort", defaultValue = "") String sortBy) {
         CompetitionResource competitionResource = competitionRestService
                 .getCompetitionById(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_APPLICATIONS_PANEL, queryParams);
         ApplicationSummaryPageResource applications = getSummaries(competitionResource.getId(), page, filter, sortBy);
         List<ApplicationSummaryResource> assignedApplications = getAssignedSummaries(competitionId);
@@ -81,12 +82,12 @@ public class AssessmentPanelManageApplicationsController {
     private ApplicationSummaryPageResource getSummaries(long competitionId, int page, String filter, String sortBy){
         return applicationSummaryRestService
                 .getSubmittedApplicationsWithPanelStatus(competitionId, sortBy, page, PAGE_SIZE, Optional.of(filter), Optional.empty(), Optional.of(false))
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 
     private List<ApplicationSummaryResource> getAssignedSummaries(long competitionId) {
         return applicationSummaryRestService
                 .getSubmittedApplicationsWithPanelStatus(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty(), Optional.of(true))
-                .getSuccessObjectOrThrowException().getContent();
+                .getSuccess().getContent();
     }
 }

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -29,7 +30,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public static CompetitionBuilder newCompetition() {
-        return new CompetitionBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Competition "));
+        return new CompetitionBuilder(emptyList()).
+                with(uniqueIds()).
+                with(idBasedNames("Competition ")).
+                with(competition -> {
+                    TermsAndConditions termsAndConditions = new TermsAndConditions();
+                    termsAndConditions.setId(1L);
+                    competition.setTermsAndConditions(termsAndConditions);
+                });
     }
 
     public CompetitionBuilder withSections(List<Section> sections) {
@@ -67,6 +75,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setFundersPanelEndDate(endDate));
     }
 
+    public CompetitionBuilder withFeedbackReleased(ZonedDateTime feedbackReleasedDate) {
+        return with(competition -> setField("feedbackReleasedDate", feedbackReleasedDate, competition));
+    }
+
     public CompetitionBuilder withResubmission(Boolean resubmission) {
         return with(competition -> setField("resubmission", resubmission, competition));
     }
@@ -75,12 +87,12 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("competitionType", competitionType, competition));
     }
 
-    public CompetitionBuilder withActitiyCode(String activityCode) {
-        return with(competition -> setField("activitiyCode", activityCode, competition));
+    public CompetitionBuilder withActivityCode(String activityCode) {
+        return with(competition -> setField("activityCode", activityCode, competition));
     }
 
-    public CompetitionBuilder withFullFinance(boolean fullFinance) {
-        return with(competition -> setField("fullApplicationFinance", fullFinance, competition));
+    public CompetitionBuilder withFullApplicationFinance(Boolean fullApplicationFinance) {
+        return with(competition -> setField("fullApplicationFinance", fullApplicationFinance, competition));
     }
 
     public CompetitionBuilder withInnovateBudget(String innovateBudget) {
@@ -126,6 +138,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
     }
 
+    public CompetitionBuilder withTermsAndConditions(TermsAndConditions... termsAndConditions) {
+        return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
+    }
+
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         ZonedDateTime now = ZonedDateTime.now();
         if(READY_TO_OPEN.equals(status)) {
@@ -163,14 +179,16 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
                     .withAssessmentClosedDate(now.minusDays(1L));
         } else if(PROJECT_SETUP.equals(status)) {
             return withSetupComplete(true)
-                    .withStartDate(now.minusDays(8L))
-                    .withEndDate(now.minusDays(7L))
-                    .withAssessorAcceptsDate(now.minusDays(6L))
-                    .withAssessorsNotifiedDate(now.minusDays(5L))
-                    .withFundersPanelDate(now.minusDays(4L))
-                    .withFundersPanelEndDate(now.minusDays(3L))
-                    .withAssessmentClosedDate(now.minusDays(2L))
-                    .withAssessorFeedbackDate(now.minusDays(1L));
+                    .withStartDate(now.minusDays(9L))
+                    .withEndDate(now.minusDays(8L))
+                    .withAssessorAcceptsDate(now.minusDays(7L))
+                    .withAssessorsNotifiedDate(now.minusDays(6L))
+                    .withFundersPanelDate(now.minusDays(5L))
+                    .withFundersPanelEndDate(now.minusDays(4L))
+                    .withAssessmentClosedDate(now.minusDays(3L))
+                    .withAssessorFeedbackDate(now.minusDays(2L))
+                    .withReleaseFeedbackDate(now.minusDays(10L))
+                    .withFeedbackReleased(now.minusDays(1L));
         } else if(COMPETITION_SETUP.equals(status)) {
             return withSetupComplete(false);
         } else {

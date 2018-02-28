@@ -2,12 +2,12 @@ package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesController;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.QueryFieldsDocs.queryResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -34,7 +35,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     public void findOne() throws Exception {
         final Long queryId = 3L;
         List<PostResource> posts = asList(new PostResource(97L, newUserResource().withId(7L).build(), "Post message", asList(), now()));
-        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now());
+        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now(), null, null);
         when(financeCheckQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
         mockMvc.perform(get("/project/finance/queries/{queryId}", queryId))
@@ -49,7 +50,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     public void findAll() throws Exception {
         final Long contextId = 22L;
         List<PostResource> posts = asList(new PostResource(33L, newUserResource().withId(7L).build(), "Post message", asList(), now()));
-        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now());
+        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now(), null, null);
         when(financeCheckQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
 
         mockMvc.perform(get("/project/finance/queries/all/{projectFinanceId}", contextId))
@@ -78,17 +79,32 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     @Test
     public void create() throws Exception {
         List<PostResource> posts = asList(new PostResource(null, newUserResource().withId(7L).build(), "Post message", asList(), null));
-        final QueryResource query = new QueryResource(null, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", false, null);
+        final QueryResource query = new QueryResource(null, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", false, null, null, null);
 
         when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(55L));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/project/finance/queries")
+        mockMvc.perform(post("/project/finance/queries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(query)))
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
                 .andExpect(status().isCreated())
                 .andDo(document("project/finance/queries/{method-name}",
                         requestFields(queryResourceFields())));
+    }
+
+    @Test
+    public void close() throws Exception {
+
+        Long threadId = 1L;
+        when(financeCheckQueriesService.close(threadId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/finance/queries/thread/{threadId}/close", threadId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("project/finance/queries/{method-name}",
+                        pathParameters(parameterWithName("threadId").description("Id of the Query which needs to be closed."))));
+
+        verify(financeCheckQueriesService).close(threadId);
     }
 
     @Override

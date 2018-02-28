@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.grantofferletter;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
-import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
@@ -31,17 +31,11 @@ public interface GrantOfferLetterService {
 
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 
-    ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
-
     ServiceResult<Void> sendGrantOfferLetter(Long projectId);
 
-    ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
+    ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource);
 
-    ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
-
-    ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
-
-    ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
+    ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
 
     Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);
 

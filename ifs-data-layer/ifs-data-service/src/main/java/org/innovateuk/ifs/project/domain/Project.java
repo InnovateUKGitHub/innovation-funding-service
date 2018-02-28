@@ -3,11 +3,12 @@ package org.innovateuk.ifs.project.domain;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -50,6 +51,8 @@ public class Project implements ProcessActivity {
     private ZonedDateTime documentsSubmittedDate;
 
     private ZonedDateTime offerSubmittedDate;
+
+    private String grantOfferLetterRejectionReason;
 
     private ZonedDateTime spendProfileSubmittedDate;
 
@@ -223,6 +226,14 @@ public class Project implements ProcessActivity {
         this.offerSubmittedDate = offerSubmittedDate;
     }
 
+    public String getGrantOfferLetterRejectionReason() {
+        return grantOfferLetterRejectionReason;
+    }
+
+    public void setGrantOfferLetterRejectionReason(String grantOfferLetterRejectionReason) {
+        this.grantOfferLetterRejectionReason = grantOfferLetterRejectionReason;
+    }
+
     public FileEntry getCollaborationAgreement() {
         return collaborationAgreement;
     }
@@ -285,5 +296,19 @@ public class Project implements ProcessActivity {
 
     public void setSpendProfiles(List<SpendProfile> spendProfiles) {
         this.spendProfiles = spendProfiles;
+    }
+
+    public boolean isPartner(User user) {
+        return !getProjectUsers(projectUser -> projectUserForUser(user, projectUser)).isEmpty();
+    }
+
+    public boolean isProjectManager(User user) {
+        return !getProjectUsers(projectUser ->
+                projectUserForUser(user, projectUser) &&
+                projectUser.isProjectManager()).isEmpty();
+    }
+
+    private boolean projectUserForUser(User user, ProjectUser projectUser) {
+        return projectUser.getUser().getId().equals(user.getId());
     }
 }

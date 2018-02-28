@@ -2,8 +2,9 @@ package org.innovateuk.ifs.assessment.invite.controller;
 
 import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
@@ -30,11 +31,12 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * Controller to manage Invites to an Assessment Panel.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = PanelInviteController.class)
 @PreAuthorize("permitAll")
 public class PanelInviteController {
 
     @Autowired
-    private AssessmentPanelInviteRestService inviteRestService;
+    private ReviewPanelInviteRestService inviteRestService;
 
     @Autowired
     private RejectionReasonRestService rejectionReasonRestService;
@@ -87,7 +89,7 @@ public class PanelInviteController {
                         return format("redirect:/registration/%s/start", inviteHash);
                     }
                 })
-                .getSuccessObject();
+                .getSuccess();
     }
 
     /**
@@ -95,9 +97,10 @@ public class PanelInviteController {
      * The /invite/ endpoints will not be authenticated and will not trigger a sign in screen.
      */
     @GetMapping("/invite-accept/panel/{inviteHash}/accept")
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('assessor')")
     public String confirmAcceptInvite(@PathVariable("inviteHash") String inviteHash) {
-        inviteRestService.acceptInvite(inviteHash).getSuccessObjectOrThrowException();
+        inviteRestService.acceptInvite(inviteHash).getSuccess();
         return "redirect:/assessor/dashboard";
     }
 
@@ -124,6 +127,6 @@ public class PanelInviteController {
 
     @ModelAttribute("rejectionReasons")
     public List<RejectionReasonResource> populateRejectionReasons() {
-        return rejectionReasonRestService.findAllActive().getSuccessObjectOrThrowException();
+        return rejectionReasonRestService.findAllActive().getSuccess();
     }
 }

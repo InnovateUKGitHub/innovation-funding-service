@@ -58,9 +58,13 @@ public class FormInputResponsePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they assess")
-    public boolean assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
-        final boolean isAssessor = checkProcessRole(user, response.getApplication(), ASSESSOR, processRoleRepository);
-        return isAssessor;
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
+        return checkProcessRole(user, response.getApplication(), ASSESSOR, processRoleRepository);
+    }
+
+    @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyReview(final FormInputResponseResource response, final UserResource user) {
+        return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository);
     }
 
     @PermissionRule(value = "READ", description = "An internal user can see form input responses for applications")
@@ -102,7 +106,6 @@ public class FormInputResponsePermissionRules {
         return questionStatusRepository.findByQuestionIdAndApplicationId(formInput.getQuestion().getId(), responseCommand.getApplicationId());
     }
 
-
     private boolean checkIfAssignedToQuestion(List<QuestionStatus> questionStatuses, final UserResource user) {
         boolean isAssigned = questionStatuses.stream()
                 .anyMatch(questionStatus -> questionStatus.getAssignee() == null
@@ -133,4 +136,3 @@ public class FormInputResponsePermissionRules {
         return checkProcessRole(user, applicationId, organisationId, userRoleType, roleRepository, processRoleRepository);
     }
 }
-

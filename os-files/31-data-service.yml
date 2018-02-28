@@ -23,13 +23,13 @@ items:
           deploymentconfig: data-service
       spec:
         containers:
-        - image: innovateuk/data-service:1.0-SNAPSHOT
+        - image: innovateuk/data-service:${dataServiceVersion}
           name: data-service
           livenessProbe:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 120
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
@@ -38,7 +38,7 @@ items:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 40
+            initialDelaySeconds: 120
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
@@ -46,15 +46,15 @@ items:
           imagePullPolicy: Always
           env:
           - name: IFS_WEB_BASEURL
-            value: 'https://<<SHIB-ADDRESS>>'
+            value: 'https://${SHIB_ADDRESS}'
           - name: IDP_REST_BASEURL
             value: 'http://registration-svc:8080'
           - name: JAVA_OPTS
             value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-data-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-data-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
-            value: "<<NEWRELIC-LICENCE-KEY>>"
+            value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
@@ -73,7 +73,7 @@ items:
         volumes:
           - name: dir-1
             persistentVolumeClaim:
-              claimName: file-upload-claim
+              claimName: ${FILE_UPLOAD_CLAIM}
     test: false
     triggers:
     - type: ConfigChange

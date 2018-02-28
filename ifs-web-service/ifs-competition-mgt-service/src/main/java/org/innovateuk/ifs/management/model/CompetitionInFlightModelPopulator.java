@@ -42,10 +42,10 @@ public class CompetitionInFlightModelPopulator {
     }
 
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition, UserResource user) {
-        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
+        List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccess();
         CompetitionInFlightStatsViewModel statsViewModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competition);
 
-        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, competition.getId()).getSuccessObjectOrThrowException();
+        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentState.CREATED, competition.getId()).getSuccess();
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
         return new CompetitionInFlightViewModel(
                 competition,

@@ -2,14 +2,14 @@ package org.innovateuk.ifs.thread.domain;
 
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +17,7 @@ import java.util.Optional;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.*;
 
 public class QueryTest {
 
@@ -44,18 +45,18 @@ public class QueryTest {
 
     @Test
     public void testItReturnsValuesAsTheyWereDefined() throws Exception {
-        Assert.assertEquals(query.id(), id);
-        Assert.assertEquals(query.contextClassPk(), classPk);
-        Assert.assertEquals(query.contextClassName(), className);
-        Assert.assertEquals(query.posts(), posts);
-        Assert.assertEquals(query.section(), section);
-        Assert.assertEquals(query.title(), title);
-        Assert.assertEquals(query.createdOn(), createdOn);
+        assertEquals(query.id(), id);
+        assertEquals(query.contextClassPk(), classPk);
+        assertEquals(query.contextClassName(), className);
+        assertEquals(query.posts(), posts);
+        assertEquals(query.section(), section);
+        assertEquals(query.title(), title);
+        assertEquals(query.createdOn(), createdOn);
     }
 
     @Test
     public void testItReturnsOptionalEmptyWhenNoPosts() {
-        Assert.assertEquals(query.latestPost(), Optional.empty());
+        assertEquals(query.latestPost(), Optional.empty());
     }
 
     @Test
@@ -64,19 +65,33 @@ public class QueryTest {
         final Post p2 = new Post(44L, null, null, null, null);
         query.addPost(p1);
         query.addPost(p2);
-        Assert.assertEquals(query.latestPost(), of(p2));
+        assertEquals(query.latestPost(), of(p2));
     }
 
     @Test
     public void testIsAwaitingResponsePositive() {
         addPostWithUserHavingRole(UserRoleType.PROJECT_FINANCE);
-        Assert.assertTrue(query.isAwaitingResponse());
+        assertTrue(query.isAwaitingResponse());
     }
 
     @Test
     public void testIsAwaitingResponseNegative() {
         addPostWithUserHavingRole(UserRoleType.FINANCE_CONTACT);
-        Assert.assertFalse(query.isAwaitingResponse());
+        assertFalse(query.isAwaitingResponse());
+    }
+
+    @Test
+    public void testCloseThread() {
+
+        User closingUser = new User();
+        query.closeThread(closingUser);
+
+        assertSame(closingUser, query.getClosedBy());
+        ZonedDateTime closedDate = query.getClosedDate();
+        ZonedDateTime closedDateWithTolerance = closedDate.plus(50, ChronoUnit.MILLIS);
+
+        ZonedDateTime now = ZonedDateTime.now();
+        assertTrue(closedDateWithTolerance.isAfter(now) && !closedDate.isAfter(now));
     }
 
     private void addPostWithUserHavingRole(UserRoleType role) {

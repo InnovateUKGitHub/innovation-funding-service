@@ -25,9 +25,6 @@ public interface InviteService {
     ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, @P("invite") ApplicationInvite invite);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ApplicationInvite> findOne(Long id);
-
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationInvite> findOneByHash(String hash);
 
     @PreAuthorize("hasPermission(#inviteOrganisationResource, 'CREATE_APPLICATION_INVITES')")
@@ -44,12 +41,6 @@ public interface InviteService {
 
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
     ServiceResult<InviteResultsResource> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);
-
-    @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "ACCEPT_INVITE",
-            description = "The System Registration user can accept an invite for a given hash",
-            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> acceptInvite(String inviteHash, Long userId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "READ_INVITE_ON_HASH",

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -33,7 +35,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"AND (:funding IS NULL " +
 			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
 			"	OR (a.fundingDecision = :funding)) " +
-			"AND (:inAssessmentPanel IS NULL OR a.inAssessmentPanel = :inAssessmentPanel)";
+			"AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
 
 	String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
@@ -44,6 +46,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"	OR (:sent = false AND a.manageFundingEmailDate IS NULL))" +
 			"AND (:funding IS NULL " +
 			"	OR (a.fundingDecision = :funding))";
+
+	String SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL = "SELECT a FROM Application a " +
+            "WHERE " +
+            "  a.competition.id = :competitionId AND " +
+            "  a.applicationProcess.activityState.state = org.innovateuk.ifs.workflow.resource.State.SUBMITTED AND " +
+            "  NOT EXISTS (SELECT 1 FROM AssessmentInterviewPanel i WHERE i.target = a )";
 
     @Override
     List<Application> findAll();
@@ -56,7 +64,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding,
-																							@Param("inAssessmentPanel") Boolean inAssessmentPanel,
+																							@Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
 																							Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
@@ -64,7 +72,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding,
-																							@Param("inAssessmentPanel") Boolean inAssessmentPanel);
+																							@Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
 
 	@Query(COMP_NOT_STATUS_FILTER)
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(@Param("compId") long competitionId,
@@ -73,6 +81,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																					  Pageable pageable);
 
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
+
+	Stream<Application> findByApplicationProcessActivityStateStateIn(Collection<State> applicationStates);
 
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
@@ -110,4 +120,11 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	int countByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 
+	List<Application> findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(long competitionId, State applicationState);
+	List<Application> findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(Competition competition, State applicationState);
+
+	@Query(SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL)
+    Page<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
+    @Query(SUBMITTED_APPLICATIONS_NOT_ON_INTERVIEW_PANEL)
+    List<Application> findSubmittedApplicationsNotOnInterviewPanel(@Param("competitionId") long competitionId);
 }

@@ -6,8 +6,8 @@ import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.threads.security.NoteLookupStrategy;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,7 +62,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         setLoggedInUser(null);
 
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
-        assertEquals(0, results.getSuccessObject().size());
+        assertEquals(0, results.getSuccess().size());
 
         verify(noteRules, times(2)).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(noteRules);
@@ -80,14 +80,13 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         });
     }
 
-
     public static class TestFinanceCheckNotesService implements FinanceCheckNotesService {
 
         @Override
         public ServiceResult<List<NoteResource>> findAll(Long contextClassPk) {
             List<NoteResource> notes = new ArrayList<>();
-            notes.add(findOne(2L).getSuccessObject());
-            notes.add(findOne(3L).getSuccessObject());
+            notes.add(findOne(2L).getSuccess());
+            notes.add(findOne(3L).getSuccess());
             return ServiceResult.serviceSuccess(notes);
         }
 
@@ -99,6 +98,11 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Long> create(NoteResource NoteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> close(Long noteId) {
             return null;
         }
 

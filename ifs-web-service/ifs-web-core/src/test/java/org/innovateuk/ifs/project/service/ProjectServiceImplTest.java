@@ -93,7 +93,7 @@ public class ProjectServiceImplTest {
 
         assertTrue(result.isSuccess());
 
-        assertEquals(result.getSuccessObject(), projects);
+        assertEquals(result.getSuccess(), projects);
 
         verify(projectRestService).findByUserId(1L);
     }
@@ -179,5 +179,14 @@ public class ProjectServiceImplTest {
     public void testGetPartnerOrganisationNotFound() {
         when(projectRestService.getPartnerOrganisation(123L, 234L)).thenThrow(new ObjectNotFoundException());
         service.getPartnerOrganisation(123L, 234L);
+    }
+
+    @Test
+    public void testCreateProjectFromApplication() {
+        Long applicationId = 2L;
+        ProjectResource projectResource = newProjectResource().build();
+        when(projectRestService.createProjectFromApplicationId(applicationId)).thenReturn(restSuccess(projectResource));
+        assertEquals(service.createProjectFromApplicationId(applicationId).getSuccess(), projectResource);
+
     }
 }

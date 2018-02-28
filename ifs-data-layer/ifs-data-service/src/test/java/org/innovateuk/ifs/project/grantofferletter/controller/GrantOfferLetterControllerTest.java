@@ -4,31 +4,57 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.GOL_SIGNED;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
 
+    private static final long projectId = 123L;
+    private static final long maxFilesize = 1234L;
+    private static final List<String> mediaTypes = singletonList("application/pdf");
+
+    @Mock(name = "fileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
+
+    @Override
+    protected GrantOfferLetterController supplyControllerUnderTest() {
+        GrantOfferLetterController controller = new GrantOfferLetterController();
+        ReflectionTestUtils.setField(controller, "maxFilesizeBytesForProjectSetupGrantOfferLetter", maxFilesize);
+        ReflectionTestUtils.setField(controller, "validMediaTypesForProjectSetupGrantOfferLetter", mediaTypes);
+        return controller;
+    }
+
     @Test
     public void getGrantOfferLetterFileContents() throws Exception {
-        Long projectId = 123L;
 
         Function<GrantOfferLetterService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getGrantOfferLetterFileAndContents(projectId);
@@ -40,7 +66,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Test
     public void getAdditionalContractFileContents() throws Exception {
-        Long projectId = 123L;
 
         Function<GrantOfferLetterService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getAdditionalContractFileAndContents(projectId);
@@ -52,7 +77,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Test
     public void getGrantOfferLetterFileEntryDetails() throws Exception {
-        Long projectId = 123L;
 
         Function<GrantOfferLetterService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getSignedGrantOfferLetterFileEntryDetails(projectId);
@@ -65,7 +89,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Test
     public void getAdditionalContractFileEntryDetails() throws Exception {
-        Long projectId = 123L;
 
         Function<GrantOfferLetterService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getAdditionalContractFileEntryDetails(projectId);
@@ -78,31 +101,27 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Test
     public void addGrantOfferLetter() throws Exception {
-        Long projectId = 123L;
 
         BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer/", grantOfferLetterServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer/", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
     public void addAdditionalContractFile() throws Exception {
-        Long projectId = 123L;
 
         BiFunction<GrantOfferLetterService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createAdditionalContractFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/additional-contract/", grantOfferLetterServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/additional-contract/", fileValidatorMock, mediaTypes, grantOfferLetterServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod("project/{method-name}"));
 
     }
 
     @Test
     public void removeGrantOfferLetterFile() throws Exception {
-
-        Long projectId = 123L;
 
         when(grantOfferLetterServiceMock.removeGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
@@ -114,8 +133,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void removeSignedGrantOfferLetterFile() throws Exception {
 
-        Long projectId = 123L;
-
         when(grantOfferLetterServiceMock.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
@@ -124,23 +141,60 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     }
 
     @Test
-    public void getGrantOfferLetterWorkflowState() throws Exception {
+    public void approveOrRejectSignedGrantOfferLetter() throws Exception {
 
-        Long projectId = 123L;
+        GrantOfferLetterApprovalResource grantOfferLetterApprovalResource = new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null);
+        when(grantOfferLetterServiceMock.approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/signed-grant-offer-letter/approval", projectId)
+                        .contentType(APPLICATION_JSON)
+                        .content(toJson(grantOfferLetterApprovalResource)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        verify(grantOfferLetterServiceMock).approveOrRejectSignedGrantOfferLetter(projectId, grantOfferLetterApprovalResource);
+    }
+
+    @Test
+    public void isSignedGrantOfferLetterRejected() throws Exception {
+
+        when(grantOfferLetterServiceMock.isSignedGrantOfferLetterRejected(projectId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/project/{projectId}/signed-grant-offer-letter/is-rejected", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"))
+                .andReturn();
+
+        verify(grantOfferLetterServiceMock).isSignedGrantOfferLetterRejected(projectId);
+    }
+
+    @Test
+    public void getGrantOfferLetterWorkflowState() throws Exception {
 
         when(grantOfferLetterServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(GrantOfferLetterState.APPROVED)))
-                .andDo(document("project/{method-name}"))
+                .andDo(document("project/grant-offer-letter/state/{method-name}"))
                 .andReturn();
 
         verify(grantOfferLetterServiceMock).getGrantOfferLetterWorkflowState(projectId);
     }
 
-    @Override
-    protected GrantOfferLetterController supplyControllerUnderTest() {
-        return new GrantOfferLetterController();
+    @Test
+    public void getGrantOfferLetterState() throws Exception {
+
+        GrantOfferLetterStateResource stateInformation = stateInformationForNonPartnersView(GrantOfferLetterState.APPROVED, GOL_SIGNED);
+
+        when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(stateInformation));
+
+        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/current-state", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(stateInformation)))
+                .andDo(document("project/grant-offer-letter/current-state/{method-name}"))
+                .andReturn();
+
+        verify(grantOfferLetterServiceMock).getGrantOfferLetterState(projectId);
     }
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -109,14 +110,5 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(null);
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
-    }
-
-    @Test
-    public void testSubmitIsAllowed() {
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-        setupUserAsPartner(project, user);
-
-        assertTrue(rules.submitIsAllowed(project.getId(), user));
     }
 }

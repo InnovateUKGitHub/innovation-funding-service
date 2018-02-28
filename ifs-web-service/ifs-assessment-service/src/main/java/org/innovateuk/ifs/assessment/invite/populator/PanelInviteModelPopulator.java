@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.invite.populator;
 
 import org.innovateuk.ifs.assessment.invite.viewmodel.PanelInviteViewModel;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
+import org.innovateuk.ifs.invite.resource.AssessmentReviewPanelInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 public class PanelInviteModelPopulator extends InviteModelPopulator<PanelInviteViewModel> {
 
     @Autowired
-    private AssessmentPanelInviteRestService inviteRestService;
+    private ReviewPanelInviteRestService inviteRestService;
 
     @Override
     public PanelInviteViewModel populateModel(String inviteHash, boolean userLoggedIn) {
-        AssessmentPanelInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
+        AssessmentReviewPanelInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccess();
 
         return new PanelInviteViewModel(inviteHash, invite, userLoggedIn);
     }

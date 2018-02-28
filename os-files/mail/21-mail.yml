@@ -19,12 +19,12 @@ items:
           deploymentconfig: mail
       spec:
         containers:
-        - image: davidrums/local-webmail-sink:preview
+        - image: innovateuk/mail-sink:${mailSinkVersion}
           name: mail
           imagePullPolicy: IfNotPresent
           env:
           - name: FQDN
-            value: <<MAIL-ADDRESS>>
+            value: ${MAIL_ADDRESS}
           ports:
           - containerPort: 8025
           - containerPort: 443
@@ -63,7 +63,7 @@ items:
   metadata:
     name: mail
   spec:
-    host: <<MAIL-ADDRESS>>
+    host: ${MAIL_ADDRESS}
     port:
       targetPort: 443-tcp
     tls:

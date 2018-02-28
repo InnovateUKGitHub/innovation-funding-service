@@ -18,7 +18,8 @@
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.question.shortName},subTitle=${applicationName},size='heading-xlarge'" />
     </th:block>
 
-    <h2 class="heading-medium no-margin" th:text="|${model.question.questionNumber}. ${model.question.name}|">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
+    <h2 class="heading-medium no-margin" th:unless="${model.question.name == 'Project summary'} or ${model.question.name == 'Public description'}"
+        th:text="(${model.question.questionNumber} ? ${model.question.questionNumber} + '. ' : ' ') + ${model.question.name} ">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
 
     <h3 class="heading-medium">Your answer:</h3>
     <th:block th:each="item : ${model.responses}">
@@ -32,8 +33,8 @@
         </th:block>
     </th:block>
 
-    <h2 class="heading-large" th:text="'Average score: '+${model.aggregateResource.avgScore}+ '/ ' + ${model.question.assessorMaximumScore}">Average score: 7/10</h2>
-    <h3 class="heading-medium no-margin">Your assessors' feedback</h3>
+    <h2 class="heading-large" th:text="${model.question.assessorMaximumScore} ? 'Average score: '+${model.aggregateResource.avgScore}+ '/ ' + ${model.question.assessorMaximumScore}">Average score: 7/10</h2>
+    <h3 class="heading-medium no-margin" th:if="${#lists.size(model.aggregateResource.feedback) > 0}">Your assessors' feedback</h3>
     <ul class="boxed-list">
         <li th:each="item, iterStat : ${model.aggregateResource.feedback}">
             <h4 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h4>

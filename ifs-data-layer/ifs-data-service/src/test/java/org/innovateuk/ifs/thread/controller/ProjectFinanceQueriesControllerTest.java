@@ -2,8 +2,8 @@ package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesController;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -36,7 +36,7 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testFindOne() throws Exception {
         final Long queryId = 22L;
-        QueryResource query = new QueryResource(queryId, null, null, null, null, false, null);
+        QueryResource query = new QueryResource(queryId, null, null, null, null, false, null, null, null);
         when(financeCheckQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
         mockMvc.perform(get("/project/finance/queries/{threadId}", queryId))
@@ -49,7 +49,7 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testFindAll() throws Exception {
         final Long contextId = 22L;
-        QueryResource query = new QueryResource(3L, null, null, null, null, false, null);
+        QueryResource query = new QueryResource(3L, null, null, null, null, false, null, null, null);
         when(financeCheckQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
 
         mockMvc.perform(get("/project/finance/queries/all/{contextClassId}", contextId))
@@ -62,7 +62,7 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testCreate() throws Exception {
         final Long contextId = 22L;
-        final QueryResource query = new QueryResource(35L, contextId, null, null, null, false, null);
+        final QueryResource query = new QueryResource(35L, contextId, null, null, null, false, null, null, null);
         when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(query.id));
 
         mockMvc.perform(post("/project/finance/queries")
@@ -72,6 +72,19 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().isCreated());
 
         verify(financeCheckQueriesService).create(query);
+    }
+
+    @Test
+    public void testClose() throws Exception {
+
+        Long threadId = 1L;
+        when(financeCheckQueriesService.close(threadId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/finance/queries/thread/{threadId}/close", threadId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(financeCheckQueriesService).close(threadId);
     }
 
     @Test

@@ -39,10 +39,14 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
     private OrganisationService organisationService;
 
     @Autowired
-    public ApplicationFinanceOverviewModelManager(ApplicationFinanceRestService applicationFinanceRestService, SectionService sectionService,
-                                                  FinanceService financeService, QuestionService questionService,
-                                                  FileEntryRestService fileEntryRestService,
-                                                  FormInputRestService formInputRestService) {
+    public ApplicationFinanceOverviewModelManager(
+            ApplicationFinanceRestService applicationFinanceRestService,
+            SectionService sectionService,
+            FinanceService financeService,
+            QuestionService questionService,
+            FileEntryRestService fileEntryRestService,
+            FormInputRestService formInputRestService
+    ) {
         this.applicationFinanceRestService = applicationFinanceRestService;
         this.sectionService = sectionService;
         this.financeService = financeService;
@@ -53,7 +57,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
 
     public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Optional<Long> organisationId) {
         addFinanceSections(competitionId, model);
-        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
+        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
+                financeService,
+                fileEntryRestService,
+                applicationId
+        );
 
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
@@ -63,14 +71,17 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
-        model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
+        model.addAttribute(
+                "researchParticipationPercentage",
+                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
+        );
         model.addAttribute("isApplicant", true);
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
         SectionResource section = sectionService.getFinanceSection(competitionId);
 
-        if(section == null) {
+        if (section == null) {
             return;
         }
 
@@ -88,7 +99,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
+                competitionId,
+                APPLICATION
+        )
+                .getSuccess();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
@@ -112,7 +127,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         ApplicationFinanceOverviewViewModel viewModel = new ApplicationFinanceOverviewViewModel();
 
         addFinanceSections(competitionId, viewModel);
-        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
+        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(
+                financeService,
+                fileEntryRestService,
+                applicationId
+        );
         viewModel.setFinanceTotal(organisationFinanceOverview.getTotal());
         viewModel.setFinanceTotalPerType(organisationFinanceOverview.getTotalPerType());
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
@@ -121,17 +140,19 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         viewModel.setTotalFundingSought(organisationFinanceOverview.getTotalFundingSought());
         viewModel.setTotalContribution(organisationFinanceOverview.getTotalContribution());
         viewModel.setTotalOtherFunding(organisationFinanceOverview.getTotalOtherFunding());
-        viewModel.setResearchParticipationPercentage(applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
+        viewModel.setResearchParticipationPercentage(
+                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess()
+        );
 
         return viewModel;
     }
 
     private void addFinanceSections(Long competitionId, BaseFinanceOverviewViewModel viewModel) {
-    	SectionResource section = sectionService.getFinanceSection(competitionId);
+        SectionResource section = sectionService.getFinanceSection(competitionId);
 
-    	if(section == null) {
-    		return;
-    	}
+        if (section == null) {
+            return;
+        }
 
         sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
@@ -147,7 +168,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId, APPLICATION).getSuccessObjectOrThrowException();
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
+                competitionId,
+                APPLICATION
+        )
+                .getSuccess();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
@@ -169,7 +194,10 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
 
     private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
+        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(
+                section.getChildSections(),
+                allSections
+        );
         List<SectionResource> financeSubSectionChildren = new ArrayList<>();
         financeSectionChildren.stream().forEach(sectionResource -> {
                     if (!sectionResource.getChildSections().isEmpty()) {
@@ -182,11 +210,12 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         return financeSubSectionChildren;
     }
 
-    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list){
+    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
         return simpleFilter(list, question -> ids.contains(question.getId()));
     }
 
-    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list){
-        return simpleFilter(list, input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
+    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list) {
+        return simpleFilter(list,
+                input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
     }
 }

@@ -1,245 +1,277 @@
-//support tasks for dealing with Openshift
-if(project.hasProperty('profile') && profile == 'automated') {
-    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
+buildscript {
+
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+    }
+
 }
 
-processResources {
+// use fully qualified class name
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 
-    from ('os-files') {
+//support tasks for dealing with Openshift
+if (project.hasProperty('profile') && profile == 'automated') {
+    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
+}
+//Workaround because of process resources.  dependency should be removed.
+apply from: rootProject.file("java-spring-boot.gradle")
+bootRepackage.enabled = false
+build.enabled = false
+// End workaround
+
+
+if (!isNamedEnv()) {
+    apply from: rootProject.file("non-named-env-properties.gradle")
+} else {
+    apply from: rootProject.file("named-env-properties.gradle")
+    if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
+        apply from: openshiftEnv + "-named-env-properties.gradle"
+    }
+}
+
+
+task prepareDeployment(type: Copy) {
+
+    destinationDir = file('build/resources/main')
+
+    from('os-files/') {
         include '**/*.yml'
     }
-    filesMatching("*.*") {
+    filesMatching("**/**.*") {
         expand project.properties
     }
 }
 
-// Production tasks
-
-task osStageProduction(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "production", project.version]
-}
-
-task osDeployProduction(type:Exec) {
-    dependsOn processResources
+task osDeployProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
-task osUpgradeProduction(type:Exec) {
-    dependsOn processResources
+task osUpgradeProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
-task dbAnonymisedDumpProduction(type:Exec) {
-    dependsOn processResources
+task dbAnonymisedDumpProduction(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "production", project.version]
 }
-
 
 // UAT tasks
 
-task osStageUat(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "uat", project.version]
-}
 
-task osDeployUat(type:Exec) {
-    dependsOn processResources
+task osDeployUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task osUpgradeUat(type:Exec) {
-    dependsOn processResources
+task osUpgradeUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task dbResetUat(type:Exec) {
-    dependsOn processResources
+task dbResetUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
-task dbAnonymisedDumpUat(type:Exec) {
-    dependsOn processResources
+task dbAnonymisedDumpUat(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
+task importAnonDataIntoUat(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
 
 // Demo tasks
 
-task osStageDemo(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "demo", project.version]
-}
 
-task osDeployDemo(type:Exec) {
-    dependsOn processResources
+task osDeployDemo(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
-task osUpgradeDemo(type:Exec) {
-    dependsOn processResources
+task osUpgradeDemo(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "demo", project.version]
 }
-
 
 // Sysint tasks
 
-task osStageSysint(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "sysint", project.version]
-}
 
-task osDeploySysint(type:Exec) {
-    dependsOn processResources
+task osDeploySysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task osUpgradeSysint(type:Exec) {
-    dependsOn processResources
+task osUpgradeSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task dbResetSysint(type:Exec) {
-    dependsOn processResources
+task dbResetSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-task osDeployFractalSysint(type:Exec) {
-    dependsOn processResources
+task osDeployFractalSysint(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
-
 // Perf tasks
 
-task osStagePerf(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "perf", project.version]
-}
 
-task osDeployPerf(type:Exec) {
-    dependsOn processResources
+task osDeployPerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
-task osUpgradePerf(type:Exec) {
-    dependsOn processResources
+task osUpgradePerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
-task dbResetPerf(type:Exec) {
-    dependsOn processResources
+task dbResetPerf(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
-
 // Local tasks
 
-task osInitClusterLocal(type:Exec) {
+task osInitClusterLocal(type: Exec) {
     executable = 'setup-files/scripts/openshift/init-local-cluster.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task osStageLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "local", project.version]
-}
-
-task osDeployLocal(type:Exec) {
-    dependsOn processResources
+task osDeployLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task osUpgradeLocal(type:Exec) {
-    dependsOn processResources
+task osUpgradeLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task dbResetLocal(type:Exec) {
-    dependsOn processResources
+task dbResetLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
-task dbAnonymisedDumpLocal(type:Exec) {
-    dependsOn processResources
+task dbAnonymisedDumpLocal(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
+task createProjectLocal(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv, "local"]
+}
+
+task importAnonDataIntoLocal(type:Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
+    args = [openshiftEnv, "local",  project.version]
+}
 
 // Remote tasks
 
-task osStageRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "remote", project.version]
+
+task createProject(type: Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv, "remote"]
 }
 
-task osDeployFractalRemote(type:Exec) {
-    dependsOn processResources
+task osDeployFractalRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task osDeployRemote(type:Exec) {
-    dependsOn processResources
+task osDeployRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task osUpgradeRemote(type:Exec) {
-    dependsOn processResources
+task osUpgradeRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task dbAnonymisedDumpRemote(type:Exec) {
-    dependsOn processResources
+task dbAnonymisedDumpRemote(type: Exec) {
+    dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
-task robotTestsFilter (type: Copy) {
+task importAnonDataIntoRemote(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task dbResetRemote(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task robotTestsFilter(type: Copy) {
     from 'robot-tests/IFS_acceptance_tests/resources/variables/'
     into 'robot-tests/IFS_acceptance_tests/resources/variables/'
     include 'EMAIL_VARIABLES_TEMPLATE.robot'
     rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
-    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
+    filter(ReplaceTokens, tokens: [test_mailbox_one_password: project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password: project.properties['ifs.robot.mailbox.two.password']])
 }
 
 import org.apache.tools.ant.filters.*
 
-task osTestRemote(type:Exec) {
+task osTestRemote(type: Exec) {
     dependsOn robotTestsFilter
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
     args = [openshiftEnv]
 }
 
-task osStopTests(type:Exec) {
+task osStopTests(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
     args = []
 }
 
-task osTestResults(type:Exec) {
+task osTestResults(type: Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
     args = []
 }
+
 

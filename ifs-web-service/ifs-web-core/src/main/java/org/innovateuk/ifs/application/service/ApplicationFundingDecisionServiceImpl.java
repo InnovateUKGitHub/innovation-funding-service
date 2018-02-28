@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.service;
 import org.apache.catalina.util.ParameterMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -18,6 +20,8 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
 public class ApplicationFundingDecisionServiceImpl implements ApplicationFundingDecisionService {
@@ -40,7 +44,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 
 		if(isAllowedFundingDecision(fundingDecision)) {
 			Map<Long, FundingDecision> applicationIdToFundingDecision = createSubmittedApplicationFundingDecisionMap(applicationIds, competitionId, fundingDecision);
-			applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
+			applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccess();
 		}
 		else {
 			return serviceFailure(new Error("Disallowed funding decision submitted", HttpStatus.BAD_REQUEST));
@@ -50,12 +54,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private boolean isAllowedFundingDecision(FundingDecision fundingDecision) {
-		if(fundingDecision.equals(FundingDecision.UNDECIDED)) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		return !fundingDecision.equals(FundingDecision.UNDECIDED);
 	}
 
 	public Optional<FundingDecision> getFundingDecisionForString(String val) {
@@ -72,8 +71,11 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
-		return applicationSummaryRestService.getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty()).getSuccessObjectOrThrowException().getContent()
-				.stream().map(summaryResource -> summaryResource.getId()).collect(Collectors.toList());
+
+		ApplicationSummaryPageResource results = applicationSummaryRestService.getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())
+				.getSuccess();
+
+		return simpleMap(results.getContent(), ApplicationSummaryResource::getId);
 	}
 
 	private Map<Long, FundingDecision> createSubmittedApplicationFundingDecisionMap(List<Long> applicationIds, Long competitionId, FundingDecision fundingDecision) {
@@ -85,9 +87,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 		Map<Long, FundingDecision> applicationIdToFundingDecision = new ParameterMap<>();
 
 		List<Long> ids = submittedApplicationIdsForCompetition(competitionId);
-		applicationIds.stream()
-				.filter(id -> ids.contains(id))
-				.forEach(id -> applicationIdToFundingDecision.put(id, fundingDecision));
+		simpleFilter(applicationIds, ids::contains).forEach(id -> applicationIdToFundingDecision.put(id, fundingDecision));
 
 		return applicationIdToFundingDecision;
 	}

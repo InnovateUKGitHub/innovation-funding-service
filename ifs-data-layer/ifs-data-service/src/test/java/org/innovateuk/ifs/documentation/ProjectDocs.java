@@ -28,6 +28,7 @@ public class ProjectDocs {
             fieldWithPath("additionalContractFile").description("Id of the File Entry that contains the additional contract file"),
             fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the generated Grant Offer Letter"),
             fieldWithPath("otherDocumentsApproved").description("Flag which indicates if Other Documents - Collaboration agreement and Exploitation plan, are approved or not"),
+            fieldWithPath("grantOfferLetterRejectionReason").description("Rejection reason when the Grant Offer Letter has been rejected"),
             fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the Project Manager.")
     };
 
@@ -48,6 +49,11 @@ public class ProjectDocs {
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
             fieldWithPath("roleSpecificGrantOfferLetterState").description("Map of specific user role type to Grant Offer Letter status"),
             fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent")
+    };
+
+    public static final FieldDescriptor[] grantOfferLetterStateResourceFields = {
+            fieldWithPath("state").description("The current workflow state of the grant offer letter"),
+            fieldWithPath("lastEvent").description("The last workflow event to take place on the grant offer letter"),
     };
 
     @SuppressWarnings("unchecked")

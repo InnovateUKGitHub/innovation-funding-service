@@ -88,7 +88,7 @@ public class OtherFundingValidator implements Validator {
         ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
         Long competitionId = applicationFinance.getApplication().getCompetition().getId();
         ServiceResult<Question> question = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FinanceRowType.OTHER_FUNDING.getFormInputType());
-        List<ApplicationFinanceRow> otherFundingRows = financeRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinance.getId(), COST_KEY, question.getSuccessObject().getId());
+        List<ApplicationFinanceRow> otherFundingRows = financeRowRepository.findByTargetIdAndNameAndQuestionId(applicationFinance.getId(), COST_KEY, question.getSuccess().getId());
         return otherFundingRows.size() > 0 && otherFundingRows.get(0).getItem().equals("Yes");
     }
 

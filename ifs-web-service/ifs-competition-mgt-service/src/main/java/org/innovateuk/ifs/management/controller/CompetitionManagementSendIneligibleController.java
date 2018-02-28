@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.form.InformIneligibleForm;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/competition/application/{applicationId}/ineligible")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementSendIneligibleController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementSendIneligibleController {
 
@@ -41,7 +43,7 @@ public class CompetitionManagementSendIneligibleController {
     public String getSendIneligible(Model model,
                                     @PathVariable("applicationId") long applicationId,
                                     @ModelAttribute("form") InformIneligibleForm form) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
         if (applicationResource.getApplicationState() != INELIGIBLE) {
             return getRedirect(applicationResource);
         }
@@ -54,7 +56,7 @@ public class CompetitionManagementSendIneligibleController {
                             @PathVariable("applicationId") long applicationId,
                             @ModelAttribute("form") @Valid InformIneligibleForm form,
                             ValidationHandler validationHandler) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
 
         Supplier<String> failureView = () -> getSendIneligible(model, applicationId, form);
 

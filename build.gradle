@@ -1,89 +1,41 @@
+apply from: "versions.gradle"
+
 allprojects {
     group 'innovateuk'
     version project.version
 
     apply plugin: 'idea'
-    apply plugin: 'java'
-    apply plugin: 'com.bmuschko.docker-remote-api'
     apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'org.owasp.dependencycheck'
 
+}
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+ext.ifsFinanceTotalsEnabled = project.properties['ifs.finance-totals.enabled'] ?: true
+
+def isNamedEnv() {
+    return ["sysint", "uat", "demo", "perf", "production"].contains(openshiftEnv)
+}
+
+def isNotProductionEnv() {
+    !"production".equals(openshiftEnv)
 }
 
 apply from: "openshift-support.gradle"
 apply from: "zipkin-support.gradle"
+apply from: "docker-compose.gradle"
+
 
 if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
 }
 
-build.enabled = false
-jar.enabled = false
+
 
 configure(subprojects - project(":ifs-auth-service")) {
-    apply plugin: 'org.springframework.boot'
+
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'jacoco'
-    apply plugin: 'org.owasp.dependencycheck'
-
-    findMainClass.enabled = false
-
-    jacocoTestReport {
-        afterEvaluate {
-            classDirectories = files(classDirectories.files.collect {
-                fileTree(dir: it,
-                        exclude: ['**/*Mapper**'])
-            })
-        }
-
-    }
-
-    task codeCoverage {
-        dependsOn cleanTest
-        dependsOn test
-        dependsOn jacocoTestReport
-    }
 
 
-    dependencies {
-        if (project.hasProperty("cloud") && project.cloud == "development") {
-            compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
-            compile "org.springframework.boot:spring-boot-actuator-docs"
-            compile "org.springframework.boot:spring-boot-devtools"
-        }
-
-        compile "org.springframework.boot:spring-boot-starter-actuator"
-        compile "org.springframework.boot:spring-boot-starter-web"
-        compile "com.fasterxml.jackson.core:jackson-databind"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
-        compile 'org.realityforge.gelf4j:gelf4j:1.10'
-
-        // Test Libraries
-        testCompile group: 'org.hamcrest', name: 'hamcrest-core'
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile 'org.springframework.boot:spring-boot-starter-test'
-        testCompile 'org.mockito:mockito-core'
-        testCompile group: 'org.hamcrest', name: 'hamcrest-library'
-
-    }
-
-    repositories {
-        maven { url "https://repo.spring.io/milestone" }
-        mavenCentral()
-    }
-
-    jar {
-        manifest.attributes provider: 'gradle'
-    }
-
-    test {
-        beforeTest { desc ->
-            println "Executing test ${desc.className}.${desc.name}"
-        }
-    }
 }
 
 buildscript {
@@ -91,8 +43,9 @@ buildscript {
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
 
     ext {
-        springBootVersion = '1.5.6.RELEASE'
+        springBootVersion = '1.5.9.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
+        springCloudVersion = 'Dalston.RELEASE'
     }
 
     repositories {
@@ -109,18 +62,15 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
-        classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
-        classpath 'org.flywaydb:flyway-core:4.0'
         classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-        classpath 'org.owasp:dependency-check-gradle:1.4.5'
-        classpath "com.avast.gradle:docker-compose-gradle-plugin:0.4.5"
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+        classpath 'org.owasp:dependency-check-gradle:3.1.0'
         classpath 'net.researchgate:gradle-release:2.6.0'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
+
 
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
@@ -138,7 +88,6 @@ dependencyUpdates.resolutionStrategy = {
 
 
 apply plugin: "org.sonarqube"
-apply plugin: 'docker-compose'
 apply plugin: 'net.researchgate.release'
 apply plugin: "com.github.hierynomus.license"
 
@@ -161,50 +110,20 @@ release {
     }
 }
 
-
-
 sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
         property "sonar.branch", "development"
-         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }
 
-dockerCompose {
 
-    useComposeFiles = ['docker-compose.yml', 'docker-compose-dev.yml']
-
-    if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false) {
-        useComposeFiles.add('docker-compose-zipkin.yml')
-    }
-
-    if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
-        useComposeFiles.add('docker-compose-admin-console.yml')
-    }
-
-    if (project.hasProperty('ifs.fractal.enabled') ? project.property('ifs.fractal.enabled').toBoolean() : false) {
-        useComposeFiles.add('docker-compose-fractal.yml')
-    }
-
-    removeContainers = false
-    removeImages = "Local" // Accepted values are: "All", "Local" and "None"
-    removeVolumes = false
-
-}
-
-task dockerTidy(type: Exec) {
-    executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
-    args = [project.version]
-}
-
-task happyRobotTests(type: Exec) {
-    workingDir 'robot-tests'
-    commandLine './micro_run_tests.sh', '-hnw'
-}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
 }
+
+ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false

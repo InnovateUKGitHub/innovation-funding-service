@@ -5,10 +5,6 @@ Resource    ../../resources/defaultResources.robot
 #CA = Competition Administration
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
-${compType_Programme}  Programme
-${compType_Sector}     Sector
-${compType_Generic}    Generic
-
 
 *** Keywords ***
 the user edits the assessed question information
@@ -53,18 +49,18 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id=activityCode  133t
     the user clicks the button/link       jQuery=button:contains("Generate code")
     sleep  2s  #This sleeps is intended as the competition Code needs some time
-    textfield should contain              css=input[name="competitionCode"]  18
+    textfield should contain              css=input[name="competitionCode"]  19
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
     the user should see the element       jQuery=div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
-    [Arguments]  ${organisationType}
+    [Arguments]  ${organisationType}  ${researchParticipation}
     the user clicks the button/link   link=Eligibility
     the user clicks the button twice  css=label[for="single-or-collaborative-collaborative"]
     the user clicks the button twice  css=label[for="research-categories-33"]
     the user clicks the button twice  css=label[for="lead-applicant-type-${organisationType}"]
-    the user selects the option from the drop-down menu  1  researchParticipation
+    the user selects Research Participation if required  ${researchParticipation}
     the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=button:contains("Done")
@@ -72,46 +68,21 @@ the user fills in the CS Eligibility
     the user should see the element   jQuery=div:contains("Eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
 
+the user selects Research Participation if required
+    [Arguments]  ${percentage}
+    ${status}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  id=researchParticipationAmountId
+    Run Keyword If  '${status}' == 'PASS'  the user selects the option from the drop-down menu  ${percentage}  researchParticipation
+    Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id=researchParticipation
+
 the user fills in the CS Milestones
-    [Arguments]  ${month}  ${nextMonth}  ${nextyear}
+    [Arguments]  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input  2
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  2
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
-    # the below dates need to be in a future date
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${nextMonth}
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.year input  ${nextyear}
+    ${i} =  Set Variable   1
+     :FOR   ${ELEMENT}   IN    @{milestones}
+      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.day input  ${i}
+      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.month input  ${month}
+      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
+      \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
     the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
@@ -119,43 +90,64 @@ the user fills in the CS Milestones
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
-    the user marks application details as complete
+    the user marks the Application details section as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
+    Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
+    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     #No need to mark generic competition assessed question as complete as they already are.
-    the user fills in the Finances questions  ${growthTable}
+    Run keyword If  '${comp_type}'!='${compType_EOI}'   the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
+the user fills in the CS Application section with custom questions
+    [Arguments]  ${growthTable}  ${competitionType}
+    the user clicks the button/link   link=Application
+    Remove previous rows              jQuery=li:last-of-type button[type="submit"]:contains("Remove")
+    the user clicks the button/link   jQuery=li:contains("1.") a  # Click the last question left - which now will be first
+    the user is able to configure the new question  How innovative is your project?
+    the user clicks the button/link   css=button[name="createQuestion"]
+    the user is able to configure the new question  Your approach regarding innovation.
+    the user clicks the button/link   css=button[name="createQuestion"]
+    the user is able to configure the new question  Your technical approach.
+    the user marks the Finance section as complete if it's present  ${growthTable}
+    the user marks the Application details section as complete  ${competitionType}
+    the user should see the element  jQuery=h1:contains("Application process")  # to check i am on the right page
+    the user clicks the button/link   jQuery=button:contains("Done")
+    the user clicks the button/link   link=Competition setup
+    the user should see the element   jQuery=div:contains("Application") ~ .task-status-complete
+
+the user marks the Finance section as complete if it's present
+    [Arguments]  ${growthTable}
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.heading-small a:contains("Finances")
+    Run Keyword If  '${status}' == 'PASS'  the user fills in the Finances questions  ${growthTable}
+
+the user opts no finances for EOI comp
+    the user clicks the button/link    link=Finances
+    the user selects the radio button  applicationFinanceType  NONE
+    the user clicks the button/link    jQuery=.button:contains("Done")
+
 the assessed questions are marked complete except finances(programme type)
-    the user marks each question as complete  Business opportunity
-    the user marks each question as complete  Potential market
-    the user marks each question as complete  Project exploitation
-    the user marks each question as complete  Economic benefit
-    the user marks each question as complete  Technical approach
-    the user marks each question as complete  Innovation
-    the user marks each question as complete  Risks
-    the user marks each question as complete  Project team
-    the user marks each question as complete  Funding
-    the user marks each question as complete  Adding value
+    :FOR   ${ELEMENT}   IN    @{programme_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+     the user should see the element           jQuery=button:contains("Add question")
 
 the assessed questions are marked complete except finances(sector type)
-    the user marks each question as complete  Need or challenge
-    the user marks each question as complete  Approach and innovation
-    the user marks each question as complete  Team and resources
-    the user marks each question as complete  Market awareness
-    the user marks each question as complete  Outcomes and route to market
-    the user marks each question as complete  Wider impacts
-    the user marks each question as complete  Project management
-    the user marks each question as complete  Risks
-    the user marks each question as complete  Additionality
-    the user marks each question as complete  Costs and value for money
+    :FOR   ${ELEMENT}   IN    @{sector_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+     the user should see the element           jQuery=button:contains("Add question")
 
-the user marks application details as complete
+the assessed questions are marked complete(EOI type)
+    :FOR   ${ELEMENT}   IN    @{EOI_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+    the user should see the element      jQuery=button:contains("Add question")
+
+the user marks the Application details section as complete
+    [Arguments]  ${compType}
     the user marks each question as complete  Application details
     the user marks each question as complete  Project summary
-    the user marks each question as complete  Public description
+    Run Keyword If    '${compType}'!='${compType_EOI}'    the user marks each question as complete  Public description
     the user marks each question as complete  Scope
 
 the user marks each question as complete
@@ -167,10 +159,10 @@ the user marks each question as complete
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link=Finances
-    the user clicks the button/link  jQuery=.button:contains("Done")
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]
+    the user should see the element       jQuery=li:contains("Finances") .task-status-complete
 
 the user fills in the CS Assessors
     the user clicks the button/link   link=Assessors
@@ -179,8 +171,7 @@ the user fills in the CS Assessors
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
-#    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
-# Plz uncomment this line TODO due to IFS-1527
+    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
     the user clicks the button/link   link=Competition setup
     the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 
@@ -239,6 +230,13 @@ the user fills in the Public content and publishes
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish content")
+
+The competitions date changes so it is now Open
+    [Arguments]  ${competition}
+    Connect to Database  @{database}
+    Change the open date of the Competition in the database to one day before  ${competition}
+    the user navigates to the page   ${CA_Live}
+    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
 
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
@@ -305,13 +303,17 @@ the user should see all live competitions
     the user should see the element  jQuery=h2:contains("Inform")
 
 the user is able to configure the new question
-    the user enters text to a text field  id=question.title  Please provide us with more inforrmation on how your project is different from pre-existing projects.
-    the user enters text to a text field  id=question.shortTitle  Tell us how your project is innovative.
+    [Arguments]  ${questionTitle}
+    the user enters text to a text field  id=question.title  Tell us how your project is innovative.
+    the user enters text to a text field  id=question.shortTitle  ${questionTitle}
     the user enters text to a text field  id=question.subTitle  Adding value on existing projects is important to InnovateUK.
     the user enters text to a text field  id=question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
+    ${status} =  Run Keyword And Return status   the user should see that the checkbox is selected    allowed-file-types-PDF
+    Run Keyword If  '${status}' == 'False'  the user clicks the button/link       css=label[for="allowed-file-types-PDF"]
+    the user clicks the button/link       css=label[for="allowed-file-types-Spreadsheet"]
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
@@ -324,16 +326,19 @@ the user is able to configure the new question
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
     the user clicks the button/link       css=button[type="submit"]
+    the user should see the element       jQuery=li:contains("${questionTitle}") .task-status-complete
 
 the user should be able to see the read only view of question correctly
-    the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
-    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
-    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
+    [Arguments]  ${questionTitle}
+    the user clicks the button/link  jQuery=a:contains("${questionTitle}")
+    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("${questionTitle}")
+    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Tell us how your project is innovative.")
     the user should see the element  jQuery=dt:contains("Question subtitle") + dd:contains("Adding value on existing projects is important to InnovateUK.")
     the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
     the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
     the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("500")
-    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("PDF")
+    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Spreadsheet")
     the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")
     the user should see the element  jQuery=dt:contains("Written feedback") + dd:contains("Yes")
@@ -352,3 +357,41 @@ the competition moves to Open state
     ${yesterday} =  get yesterday
     Connect to Database  @{database}
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
+
+# Note here we are passing the comp title not the comp ID to update the correct comp milestone
+the competition is open
+    [Arguments]  ${compTitle}
+    Connect to Database  @{database}
+    change the open date of the competition in the database to one day before  ${compTitle}
+
+moving competition to Closed
+    [Arguments]  ${compID}
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
+
+making the application a successful project
+    [Arguments]  ${compID}  ${appTitle}
+    the user navigates to the page      ${server}/management/competition/${compID}
+    the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css=button[type="submit"][formaction$="notify-assessors"]
+    ...    AND  the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    run keyword and ignore error     the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    the user clicks the button/link  link=Input and review funding decision
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
+    the user clicks the button/link  css=[type="submit"][value="FUNDED"]
+    the user navigates to the page   ${server}/management/competition/${compID}/manage-funding-applications
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
+    the user clicks the button/link  css=[name="write-and-send-email"]
+    the internal sends the descision notification email to all applicants  Successful!
+
+moving competition to Project Setup
+    [Arguments]   ${compID}
+    the user navigates to the page   ${server}/management/competition/${compID}
+    the user clicks the button/link  css=button[type="submit"][formaction$="release-feedback"]
+
+The project finance user is able to download the Overheads file
+    [Arguments]   ${ProjectID}  ${organisationId}
+    the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
+    remove the file from the operating system     ${excel_file}

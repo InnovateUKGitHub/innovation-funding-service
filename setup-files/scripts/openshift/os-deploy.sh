@@ -29,7 +29,7 @@ function deploy() {
     else
         oc create -f $(getBuildLocation)/shib/55-ldap.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mail/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f $(getBuildLocation)/mysql/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/3-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
     fi
@@ -37,6 +37,12 @@ function deploy() {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         oc create -f $(getBuildLocation)/sil-stub/ ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    # conditionally deploy finance totals stack
+    if ! $(isNamedEnvironment ${TARGET}); then
+        oc create -f $(getBuildLocation)/finance-data-service/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/mysql/3-finance-totals-mysql.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     oc create -f $(getBuildLocation)/ ${SVC_ACCOUNT_CLAUSE}
@@ -50,6 +56,12 @@ function shibInit() {
 
 # Entry point
 tailorAppInstance
+
+if [[ ${TARGET} == "local" ]]
+then
+    replacePersistentFileClaim
+fi
+
 useContainerRegistry
 deploy
 blockUntilServiceIsUp

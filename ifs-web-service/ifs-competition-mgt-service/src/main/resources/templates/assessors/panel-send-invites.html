@@ -2,7 +2,7 @@
 
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to assessment panel'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite to assessment panel',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body th:with="context='comp-management'" class="competition-management competition-overview">
@@ -11,8 +11,14 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Invite assessors to attend',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='heading-xlarge'" />
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
 
     <h2 class="heading-medium no-margin">Recipients</h2>
 
@@ -40,7 +46,6 @@
         </p>
 
         <p class="form-hint extra-margin">
-            Competitions Team <br />
             Innovate UK <br />
             Tel: 0300 321 4357 <br />
             Email: competitions@innovateuk.gov.uk

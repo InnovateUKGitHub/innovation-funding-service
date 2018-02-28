@@ -16,6 +16,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -49,6 +50,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Controller
 @RequestMapping("/{assessmentId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentFeedbackController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentFeedbackController {
 
@@ -103,7 +105,7 @@ public class AssessmentFeedbackController {
             @RequestParam("value") String value) {
         try {
             assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value)
-                    .getSuccessObjectOrThrowException();
+                    .getSuccess();
             return createJsonObjectNode(true);
         } catch (Exception e) {
             return createJsonObjectNode(false);
@@ -149,7 +151,7 @@ public class AssessmentFeedbackController {
 
     private List<AssessorFormInputResponseResource> getAssessorResponses(long assessmentId, long questionId) {
         return assessorFormInputResponseRestService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(
-                assessmentId, questionId).getSuccessObjectOrThrowException();
+                assessmentId, questionId).getSuccess();
     }
 
     private Form populateQuestionForm(Form form, long assessmentId, long questionId) {
@@ -173,7 +175,7 @@ public class AssessmentFeedbackController {
 
     private List<FormInputResource> getAssessmentFormInputsForQuestion(long questionId) {
         return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
     }
 
     private String doViewQuestion(Model model, long assessmentId, QuestionResource question) {
@@ -205,7 +207,7 @@ public class AssessmentFeedbackController {
     }
 
     private List<FormInputResource> getApplicationFormInputs(long questionId) {
-        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
+        return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccess();
     }
 
     private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {

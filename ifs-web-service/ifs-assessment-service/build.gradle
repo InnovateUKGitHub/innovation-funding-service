@@ -2,6 +2,12 @@ configurations {
     providedRuntime
 }
 
+project.version = assessmentServiceVersion
+tagDocker.tag = assessmentServiceVersion
+osStageRemote.tag = assessmentServiceVersion
+tagDockerLocal.tag = assessmentServiceVersion
+osStageLocal.tag = assessmentServiceVersion
+
 jar {
     baseName = 'assessment'
 }
@@ -21,11 +27,4 @@ dependencies {
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 
     testCompile "net.sf.opencsv:opencsv:2.3"
-}
-
-
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
 }

@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
@@ -45,6 +46,7 @@ import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 
 @Controller
 @RequestMapping("/registration")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = RegistrationController.class)
 @PreAuthorize("permitAll")
 public class RegistrationController {
     public static final String BASE_URL = "/registration/register";
@@ -139,7 +141,7 @@ public class RegistrationController {
     }
 
     private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+        return ethnicityRestService.findAllActive().getSuccess();
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {
@@ -169,8 +171,8 @@ public class RegistrationController {
         Optional<String> inviteHash = registrationCookieService.getInviteHashCookieValue(request);
         if (inviteHash.isPresent()) {
             RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(inviteHash.get());
-            if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
-                ApplicationInviteResource inviteResource = invite.getSuccessObject();
+            if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
+                ApplicationInviteResource inviteResource = invite.getSuccess();
                 registrationForm.setEmail(inviteResource.getEmail());
                 model.addAttribute("invitee", true);
                 return true;

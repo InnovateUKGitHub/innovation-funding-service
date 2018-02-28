@@ -60,8 +60,8 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
                 .filter(sectionResource -> sectionResource.getParentSection() == null)
                 .collect(Collectors.toList());
 
-        Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses = convertWithDefaultsIfNotPresent(competitionSetupRestService.getSubsectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException());
-        Map<Long, Boolean> questionStatuses = questionSetupRestService.getQuestionStatuses(competitionResource.getId(), sectionToPopulateModel()).getSuccessObjectOrThrowException();
+        Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses = convertWithDefaultsIfNotPresent(competitionSetupRestService.getSubsectionStatuses(competitionResource.getId()).getSuccess());
+        Map<Long, Boolean> questionStatuses = questionSetupRestService.getQuestionStatuses(competitionResource.getId(), sectionToPopulateModel()).getSuccess();
 
         List<QuestionResource> questions = getSortedQuestions(questionResources, parentSections);
         List<QuestionResource> projectDetails = getSortedProjectDetails(questionResources, parentSections);

@@ -159,7 +159,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
 
     public void ifSuccessful(Consumer<? super T> successHandler) {
         if (isSuccess()) {
-            successHandler.accept(getSuccessObject());
+            successHandler.accept(getSuccess());
         }
     }
 
@@ -179,8 +179,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public T getSuccessObject() {
-        return getRight();
+    public T getSuccess() {
+        return isRight() ? getRight() : findAndThrowException(getLeft());
     }
 
     @Override
@@ -203,10 +203,6 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         return isRight() ? getRight() : null;
     }
 
-    public T getSuccessObjectOrThrowException() {
-        return isRight() ? getRight() : findAndThrowException(getLeft());
-    }
-
     public abstract T findAndThrowException(FailureType failureType);
 
     protected <T1> T1 mapLeftOrRight(ExceptionThrowingFunction<? super FailureType, ? extends T1> lFunc, ExceptionThrowingFunction<? super T, ? extends T1> rFunc) {
@@ -222,7 +218,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         try {
             FailingOrSucceedingResult<R, FailureType> successResult = rFunc.apply(result.getRight());
             return successResult.isFailure() ? createFailure(successResult) : createSuccess(successResult);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }
@@ -237,7 +233,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         try {
             R successResult = rFunc.apply(result.getRight());
             return createSuccess(successResult);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }
@@ -295,7 +291,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         final List<FailureType> failures = new ArrayList<FailureType>();
         for (final Input i : input) {
             if (i.isSuccess()) {
-                items.add(i.getSuccessObject());
+                items.add(i.getSuccess());
             } else {
                 failures.add(i.getFailure());
             }

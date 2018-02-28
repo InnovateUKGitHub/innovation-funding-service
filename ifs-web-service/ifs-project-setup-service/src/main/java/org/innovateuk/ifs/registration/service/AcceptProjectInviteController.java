@@ -2,11 +2,11 @@ package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
  * This class is use as an entry point to accept a invite to a project, to a application.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AcceptProjectInviteController.class)
 @PreAuthorize("permitAll")
 public class AcceptProjectInviteController {
 
@@ -35,8 +36,6 @@ public class AcceptProjectInviteController {
 
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
-    @Autowired
-    private OrganisationRestService organisationRestService;
     @Autowired
     private CookieUtil cookieUtil;
 
@@ -79,7 +78,7 @@ public class AcceptProjectInviteController {
         if (result.isFailure()) {
             return ACCEPT_INVITE_FAILURE;
         } else {
-            return result.getSuccessObject();
+            return result.getSuccess();
         }
     }
 
@@ -117,7 +116,7 @@ public class AcceptProjectInviteController {
                     japvm.setProjectName(invite.getProjectName());
                     model.addAttribute("model", japvm);
                     return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);
-                }).getSuccessObjectOrThrowException();
+                }).getSuccess();
     }
 
     //======================================================
@@ -139,7 +138,7 @@ public class AcceptProjectInviteController {
                             RedirectUtils.redirectToApplicationService(request, "/applicant/dashboard"));
 
                 }
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
 

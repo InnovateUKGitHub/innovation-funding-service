@@ -47,7 +47,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         // Make sure that the booleans in the competition and the form inputs are the negation of what we are changing
         // them to so that we can check they've been altered. Note that isIncludeGrowthTable being true should result in
         // deactivated turn over and count form inputs and activated financial inputs.
-        Competition c = newCompetition().with(id(competitionId)).withFullFinance(!isFullFinance).build();
+        Competition c = newCompetition().with(id(competitionId)).withFullApplicationFinance(!isFullFinance).build();
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(isIncludeGrowthTable).build();
@@ -83,7 +83,7 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         Long competitionId = 1L;
 
         // Set up a competition with consistent active form inputs
-        Competition c = newCompetition().with(id(competitionId)).withFullFinance(isFullFinance).build();
+        Competition c = newCompetition().with(id(competitionId)).withFullApplicationFinance(isFullFinance).build();
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
 
         FormInputResponse headcount = newFormInputResponse().withValue("1").build();
@@ -103,8 +103,8 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
 
         // Assertions
         assertTrue(compSetupFinanceRes.isSuccess());
-        assertEquals(isFullFinance, compSetupFinanceRes.getSuccessObject().isFullApplicationFinance());
-        assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccessObject().isIncludeGrowthTable());
+        assertEquals(isFullFinance, compSetupFinanceRes.getSuccess().isFullApplicationFinance());
+        assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccess().isIncludeGrowthTable());
     }
 
 }

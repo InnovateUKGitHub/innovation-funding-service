@@ -90,7 +90,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("key wor"), Optional.of(0), 20);
 
         assertTrue(resultOne.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccess().getContent();
 
         assertEquals(1, publicContentItemResourcesOne.size());
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
@@ -98,7 +98,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultTwo = controller.findFilteredItems(Optional.of(innovationId), Optional.empty(), Optional.of(0),20);
 
         assertTrue(resultTwo.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesTwo = resultTwo.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesTwo = resultTwo.getSuccess().getContent();
 
         assertEquals(1, publicContentItemResourcesTwo.size());
         assertEquals(competition.getName(), publicContentItemResourcesTwo.get(0).getCompetitionTitle());
@@ -106,7 +106,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultThree = controller.findFilteredItems(Optional.empty(), Optional.of("key wor"), Optional.of(0), 20);
 
         assertTrue(resultThree.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesThree = resultThree.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesThree = resultThree.getSuccess().getContent();
 
         assertEquals(1, publicContentItemResourcesThree.size());
         assertEquals(competition.getName(), publicContentItemResourcesThree.get(0).getCompetitionTitle());
@@ -115,7 +115,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultFour = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 20);
 
         assertTrue(resultFour.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesFour = resultFour.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesFour = resultFour.getSuccess().getContent();
 
         assertEquals(1, publicContentItemResourcesFour.size());
         assertEquals(competition.getName(), publicContentItemResourcesFour.get(0).getCompetitionTitle());
@@ -124,7 +124,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultFive = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
 
         assertTrue(resultFive.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesFive = resultFive.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesFive = resultFive.getSuccess().getContent();
 
         assertEquals(1, publicContentItemResourcesFive.size());
         assertEquals(competition.getName(), publicContentItemResourcesFive.get(0).getCompetitionTitle());
@@ -141,9 +141,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccess().getContent();
 
-        assertEquals(2, resultOne.getSuccessObject().getTotalElements());
+        assertEquals(2, resultOne.getSuccess().getTotalElements());
         assertTrue(publicContentItemResourcesOne.get(0).getCompetitionOpenDate()
                 .isAfter(publicContentItemResourcesOne.get(1).getCompetitionOpenDate()));
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
@@ -162,7 +162,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccess().getContent();
 
         assertEquals(1, publicContentItemResourcesOne.size());
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
@@ -180,7 +180,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("Nothing key wor"), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccess().getContent();
 
         assertEquals(1, publicContentItemResourcesOne.size());
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
@@ -193,7 +193,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertEquals(1, publicContentItemResourcesFive.getTotalElements());
     }
@@ -205,7 +205,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
         assertTrue(result.isSuccess());
 
-        PublicContentItemResource resultObject = result.getSuccessObject();
+        PublicContentItemResource resultObject = result.getSuccess();
         assertEquals(COMPETITION_ID, resultObject.getPublicContentResource().getCompetitionId());
     }
 
@@ -215,7 +215,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }
@@ -229,7 +229,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }
@@ -242,7 +242,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }
@@ -256,7 +256,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }
@@ -269,7 +269,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.of(6L), Optional.empty(), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }
@@ -283,7 +283,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }
@@ -296,7 +296,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.of(6L), Optional.of("keywordoninviteonly"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertFalse(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }
@@ -310,7 +310,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
 
         assertTrue(result.isSuccess());
-        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccess();
 
         assertTrue(privateOrgPublicCompetitionIsInPage().test(publicContentItemResourcesFive));
     }

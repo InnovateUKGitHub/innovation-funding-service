@@ -6,6 +6,8 @@ Documentation     INFUND-7358 Inflight competition dashboards: Ready to open das
 ...               INFUND-7561 Inflight competition dashboards- View milestones
 ...
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
+...
+...               INF-2637 Manage interview panel link on competition dashboard - Internal
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -14,10 +16,10 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 Competition dashboard Open competition
-    [Documentation]    INFUND-7562
+    [Documentation]    INFUND-7562  INF-2637
     [Tags]
     When The user clicks the button/link    link=${openCompetitionRTO_name}
-    Then the user should see the element    jQuery=span:contains("16: Predicting market trends programme")
+    Then the user should see the element    jQuery=span:contains("Predicting market trends programme")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
@@ -29,6 +31,7 @@ Competition dashboard Open competition
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Manage assessments")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Manage assessment panel")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Manage interview panel")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Input and review funding decision")[aria-disabled="true"]
 
 Milestones for the Open Competitions
@@ -42,7 +45,7 @@ Key statistics for the open Competitions
     Then the counts of the open competition should be correct
 
 Competition dashboard ready to Open competition
-    [Documentation]    INFUND-7358
+    [Documentation]    INFUND-7358  INF-2637
     [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
@@ -59,6 +62,7 @@ Competition dashboard ready to Open competition
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Manage assessments")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Manage assessment panel")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Manage interview panel")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Input and review funding decision")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Applications: All, submitted, ineligible")[aria-disabled="true"]
 

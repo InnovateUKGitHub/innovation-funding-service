@@ -23,13 +23,13 @@ items:
           deploymentconfig: registration-svc
       spec:
         containers:
-        - image: innovateuk/registration-service:1.0-SNAPSHOT
+        - image: innovateuk/registration-service:${registrationServiceVersion}
           name: registration-svc
           livenessProbe:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
@@ -38,7 +38,7 @@ items:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
@@ -48,21 +48,21 @@ items:
           - name: JAVA_OPTS
             value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-registration-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-registration-service (${openshiftEnv})"
           - name: NEW_RELIC_LICENSE_KEY
-            value: "<<NEWRELIC-LICENCE-KEY>>"
+            value: "${NEW_RELIC_LICENCE_KEY}"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           - name: LDAP_URL
-            value: "<<LDAP-URL>>"
+            value: ${LDAP_URL}
           - name: SHIBBOLETH_LDAP_PORT
-            value: "<<SHIBBOLETH_LDAP_PORT>>"
+            value: "${SHIBBOLETH_LDAP_PORT}"
           - name: SHIBBOLETH_LDAP_BASE_DN
-            value: "<<SHIBBOLETH_LDAP_BASE_DN>>"
+            value: "${LDAP_BASEDN}"
           - name: SHIBBOLETH_LDAP_USER
-            value: "<<SHIBBOLETH_LDAP_USER>>"
+            value: "${SHIBBOLETH_LDAP_USER}"
           - name: LDAP_PASSWORD
-            value: "<<LDAP-PASSWORD>>"
+            value: "${LDAP_PASSWORD}"
           - name: SHIBBOLETH_API_KEYS
             value: "1234567890"
           ports:

@@ -10,7 +10,8 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
+import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -50,7 +51,10 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     private SectionService sectionService;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private FinanceRowCostsService financeRowCostsService;
+
+    @Autowired
+    private FinanceService financeService;
 
     @Autowired
     private UsersRolesService usersRolesService;
@@ -85,13 +89,13 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
 
     private void markAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
 
-        List<ProcessRoleResource> processRoles = usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).getSuccessObjectOrThrowException();
+        List<ProcessRoleResource> processRoles = usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).getSuccess();
 
         Set<Long> processRoleIds = processRoles.stream().filter(processRole -> processRole.getUser() != null).map(
                 processRole -> processRole.getId()).collect(Collectors.toSet());
 
         processRoleIds.stream().forEach(processRoleId ->
-                sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccessObjectOrThrowException().stream()
+                sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccess().stream()
                         .forEach(fundingSection ->
                                 sectionService.markSectionAsInComplete(fundingSection.getId(),
                                         applicationId, processRoleId))
@@ -101,13 +105,13 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     private void resetFundingLevels(Long competitionId, Long applicationId) {
         Optional<Question> financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getOptionalSuccessObject();
 
-        financeRowService.financeDetails(applicationId)
+        financeService.financeDetails(applicationId)
                 .getOptionalSuccessObject()
                 .ifPresent(applicationFinanceResources -> {
                     applicationFinanceResources.forEach(applicationFinance -> {
                         if (applicationFinance.getGrantClaim() != null && financeQuestion.isPresent()) {
                             applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-                            financeRowService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
+                            financeRowCostsService.addCost(applicationFinance.getId(), financeQuestion.get().getId(), applicationFinance.getGrantClaim());
                         }
                     });
                 });
