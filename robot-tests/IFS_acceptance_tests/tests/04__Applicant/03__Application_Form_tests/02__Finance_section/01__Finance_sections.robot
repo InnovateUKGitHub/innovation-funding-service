@@ -13,6 +13,8 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
 ...
 ...               INFUND-8355: Project finance team - overheads
+...
+...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -137,14 +139,15 @@ Compadmin can open the jes-file in applications
     and the user navigates to the page  ${openCompetitionManagementRTO}
 
 File upload mandatory for Academic partner to mark section as complete
-    [Documentation]    INFUND-8469
+    [Documentation]    INFUND-8469  IFS-2879
     [Tags]    HappyPath
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
+    and the element should be disabled       id=mark-all-as-complete
     and the user clicks the button/link       jQuery=button:contains("Remove")
-    When the user selects the checkbox      css=label[for="agree-terms-page"]
+    When the user selects the checkbox       termsAgreed
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     You must upload a Je-S file
 

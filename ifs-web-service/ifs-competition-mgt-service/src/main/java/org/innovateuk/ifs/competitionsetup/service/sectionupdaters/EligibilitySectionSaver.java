@@ -72,9 +72,9 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 
     @Override
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
-            String fieldName,
-            String value,
-            Optional<Long> questionId) {
+                                                              String fieldName,
+                                                              String value,
+                                                              Optional<Long> questionId) {
         if (RESEARCH_CATEGORY_ID.equals(fieldName)) {
             removeIfPresentAddIfNot(value, competitionResource.getResearchCategories());
             return competitionSetupRestService.update(competitionResource).toServiceResult();
@@ -83,7 +83,10 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
             removeIfPresentAddIfNot(value, competitionResource.getLeadApplicantTypes());
             return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
-        return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
+        return super.handleIrregularAutosaveCase(competitionResource,
+                fieldName,
+                value,
+                questionId);
     }
 
     private void removeIfPresentAddIfNot(String inputValue, Collection<Long> collection) {

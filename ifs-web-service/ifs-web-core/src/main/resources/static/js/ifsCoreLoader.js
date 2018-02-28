@@ -21,10 +21,10 @@ IFS.core.loadOrder = {
   common: {
     init: function () {
       IFS.core.collapsible.init()
-      IFS.core.conditionalForms.init()
       IFS.core.editor.init()
       IFS.core.autoSave.init()
       IFS.core.formValidation.init()
+      IFS.core.conditionalForms.init()
       IFS.core.wordCount.init()
       IFS.core.disableSubmitUntilChecked.init()
       IFS.core.finance.init()

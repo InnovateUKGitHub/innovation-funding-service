@@ -14,8 +14,22 @@ public class DefaultYourProjectCostsSectionViewModel extends AbstractYourProject
 
     private List<DefaultProjectCostSection> defaultProjectCostSections;
 
-    public DefaultYourProjectCostsSectionViewModel(ApplicantSectionResource applicantResource, List<AbstractFormInputViewModel> formInputViewModels, NavigationViewModel navigationViewModel, boolean allReadOnly, Optional<Long> applicantOrganisationId, boolean readOnlyAllApplicantApplicationFinances) {
-        super(applicantResource, formInputViewModels, navigationViewModel, allReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+    public DefaultYourProjectCostsSectionViewModel(
+            ApplicantSectionResource applicantResource,
+            List<AbstractFormInputViewModel> formInputViewModels,
+            NavigationViewModel navigationViewModel,
+            boolean allReadOnly,
+            Optional<Long> applicantOrganisationId,
+            boolean readOnlyAllApplicantApplicationFinances
+    ) {
+        super(
+                applicantResource,
+                formInputViewModels,
+                navigationViewModel,
+                allReadOnly,
+                applicantOrganisationId,
+                readOnlyAllApplicantApplicationFinances
+        );
     }
 
     @Override

@@ -94,7 +94,10 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         return MilestonesForm.class.equals(clazz);
     }
 
-    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
+    protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource,
+                                                              String fieldName,
+                                                              String value,
+                                                              Optional<Long> questionId) {
         List<Error> errors = updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
         if (!errors.isEmpty()) {
             return serviceFailure(errors);
