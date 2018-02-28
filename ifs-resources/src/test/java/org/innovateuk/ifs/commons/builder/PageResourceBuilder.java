@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.resource.PageResource;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public abstract class PageResourceBuilder<T extends PageResource, S extends PageResourceBuilder> extends BaseBuilder<T, S> {
+public abstract class PageResourceBuilder<T extends PageResource<C>, S extends PageResourceBuilder<T, S, C>, C> extends BaseBuilder<T, S> {
 
     protected PageResourceBuilder(List<BiConsumer<Integer, T>> newMultiActions) {
         super(newMultiActions);
@@ -20,7 +20,7 @@ public abstract class PageResourceBuilder<T extends PageResource, S extends Page
         return withArraySetFieldByReflection("totalPages", totalPages);
     }
 
-    public S withContent(List<?>... content) {
+    public S withContent(List<C>... content) {
         return withArraySetFieldByReflection("content", content);
     }
 

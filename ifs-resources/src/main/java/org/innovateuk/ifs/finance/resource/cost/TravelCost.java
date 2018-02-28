@@ -17,13 +17,15 @@ public class TravelCost extends AbstractFinanceRowItem {
     @NotBlank(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
     private String item;
+
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal cost;
+
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer quantity;
     private String name;
 

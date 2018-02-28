@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatistic
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
-import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
+import org.innovateuk.ifs.management.viewmodel.ReviewPanelDashboardViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class AssessmentPanelModelPopulator {
     @Autowired
     private AssessmentPanelRestService assessmentPanelRestService;
 
-    public AssessmentPanelViewModel populateModel(long competitionId) {
+    public ReviewPanelDashboardViewModel populateModel(long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessmentPanelKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService
                 .getAssessmentPanelKeyStatisticsByCompetition(competitionId)
@@ -35,7 +35,7 @@ public class AssessmentPanelModelPopulator {
                 .isPendingReviewNotifications(competitionId)
                 .getSuccess();
 
-        return new AssessmentPanelViewModel(
+        return new ReviewPanelDashboardViewModel(
                 competition.getId(),
                 competition.getName(),
                 competition.getCompetitionStatus(),
