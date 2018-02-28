@@ -2,6 +2,8 @@
 Documentation   IFS-1012 As a comp exec I am able to set Research and Public sector as an Eligible Lead applicant options in Competition setup
 ...
 ...             IFS-182 As a comp exec I am able to configure Assessed questions in Competition setup
+...
+...             IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
@@ -44,7 +46,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     Then the user should see the element          jQuery=li:contains("${customQuestion}")
 
 Applicant Applies to Research leading Competition
-    [Documentation]  IFS-1012
+    [Documentation]  IFS-1012  IFS-2879
     [Tags]  Applicant  HappyPath
     [Setup]  Log in as a different user                   antonio.jenkins@jabbertype.example.com  ${short_password}
     Given logged in user applies to competition           ${openCompetitionResearch_name}
