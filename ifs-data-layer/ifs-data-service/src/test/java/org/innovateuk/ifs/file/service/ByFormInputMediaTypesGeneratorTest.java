@@ -12,10 +12,10 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,38 +25,52 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
     private ByFormInputMediaTypesGenerator generator;
 
     @Test
-    public void testPdf() {
-        assertExpectedMediaTypesForFileTypeCategories(singletonList(FileTypeCategory.PDF), "application/pdf");
+    public void pdf() {
+        assertExpectedMediaTypesForFileTypeCategory(
+                singletonList(FileTypeCategory.PDF),
+                "application/pdf"
+        );
     }
 
     @Test
-    public void testSpreadsheet() {
-        assertExpectedMediaTypesForFileTypeCategories(singletonList(FileTypeCategory.SPREADSHEET),
-                "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
+    public void spreadsheet() {
+        assertExpectedMediaTypesForFileTypeCategory(
+                singletonList(FileTypeCategory.SPREADSHEET),
+                "application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.oasis.opendocument.spreadsheet"
+        );
     }
 
     @Test
-    public void testPdfAndSpreadsheet() {
-        assertExpectedMediaTypesForFileTypeCategories(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET),
-                "application/pdf", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "application/vnd.oasis.opendocument.spreadsheet");
+    public void pdfAndSpreadsheet() {
+        assertExpectedMediaTypesForFileTypeCategory(
+                asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET),
+                "application/pdf",
+                "application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.oasis.opendocument.spreadsheet"
+        );
     }
 
     @Test
-    public void testNone() {
-        assertExpectedMediaTypesForFileTypeCategories(emptyList());
+    public void noneMatch() {
+        assertExpectedMediaTypesForFileTypeCategory(emptyList());
     }
 
-    private void assertExpectedMediaTypesForFileTypeCategories(List<FileTypeCategory> fileTypeCategories, String... expectedMediaTypes) {
-
-        FormInputResource formInput = newFormInputResource().
-                withAllowedFileTypes(fileTypeCategories).
-                build();
-
+    private void assertExpectedMediaTypesForFileTypeCategory(
+            List<FileTypeCategory> FileTypeCategory,
+            String... expectedMediaTypes
+    ) {
+        FormInputResource formInput = newFormInputResource()
+                .withAllowedFileTypes(FileTypeCategory)
+                .build();
         when(formInputServiceMock.findFormInput(formInput.getId())).thenReturn(serviceSuccess(formInput));
 
         List<MediaType> mediaTypes = generator.apply(formInput.getId());
-        assertArrayEquals(expectedMediaTypes, simpleMap(mediaTypes, MediaType::toString).toArray());
+
+        assertThat(simpleMap(mediaTypes, MediaType::toString))
+                .containsOnlyOnce(expectedMediaTypes);
 
         verify(formInputServiceMock).findFormInput(formInput.getId());
     }

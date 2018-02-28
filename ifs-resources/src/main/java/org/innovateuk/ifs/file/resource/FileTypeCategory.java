@@ -1,37 +1,40 @@
 package org.innovateuk.ifs.file.resource;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public enum FileTypeCategory {
-    SPREADSHEET("Spreadsheet", "application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.oasis.opendocument.spreadsheet"),
-    PDF("PDF", "application/pdf");
+    SPREADSHEET("Spreadsheet", asList(
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.oasis.opendocument.spreadsheet"
+    )),
+    PDF("PDF", singletonList("application/pdf"));
 
     private String displayName;
-    private String mediaTypeString;
+    private List<String> mediaTypes;
 
-    FileTypeCategory(String displayName, String mediaTypeString) {
+    FileTypeCategory(String displayName, List<String> mediaTypes) {
         this.displayName = displayName;
-        this.mediaTypeString = mediaTypeString;
+        this.mediaTypes = mediaTypes;
     }
 
     public String getDisplayName() {
         return displayName;
     }
 
-    public String getMediaTypeString() {
-        return mediaTypeString;
-    }
-
     public List<String> getMediaTypes() {
-        return simpleMap(mediaTypeString.split(","), StringUtils::trim);
+        return mediaTypes;
     }
 
     public static FileTypeCategory fromDisplayName(String displayName) {
-        return simpleFindFirst(FileTypeCategory.values(), category -> category.getDisplayName().equals(displayName)).orElse(null);
+        return simpleFindFirst(
+                FileTypeCategory.values(),
+                category -> category.getDisplayName().equals(displayName)
+        )
+                .orElse(null);
     }
 }
