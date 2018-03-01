@@ -69,7 +69,7 @@
 
     <form method="POST"
           th:action="@{/assessment/interview-panel/competition/{competitionId}/applications/find/addSelected(competitionId=${model.competitionId})}"
-          th:object="${interviewPanelApplicationSelectionForm}"
+          th:object="${interviewAssignmentApplicationSelectionForm}"
           data-multipage-select=""
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
@@ -79,18 +79,18 @@
                     <input type="checkbox"
                            data-select-all=""
                            id="select-all-check"
-                           th:checked="${interviewPanelApplicationSelectionForm.getAllSelected()}"
+                           th:checked="${interviewAssignmentApplicationSelectionForm.getAllSelected()}"
                            th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
                     <label for="select-all-check">
                         Select all applications
                     </label>
                 </div>
                 <span class="form-hint">
-                    <span data-count-selected="" th:text="${#lists.size(interviewPanelApplicationSelectionForm.selectedIds)}"></span> applications selected
+                    <span data-count-selected="" th:text="${#lists.size(interviewAssignmentApplicationSelectionForm.selectedIds)}"></span> applications selected
                 </span>
             </div>
             <div class="column-half select-all alignright">
-                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewPanelApplicationSelectionForm.selectedIds)}">
+                <button class="button" name="addSelected" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewAssignmentApplicationSelectionForm.selectedIds)}">
                     Add selected to invite list
                 </button>
             </div>

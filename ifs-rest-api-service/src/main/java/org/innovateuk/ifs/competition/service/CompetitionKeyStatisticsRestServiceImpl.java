@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.stereotype.Service;
 
 import static java.lang.String.format;
@@ -47,12 +47,12 @@ public class CompetitionKeyStatisticsRestServiceImpl extends BaseRestService imp
     }
 
     @Override
-    public RestResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatisticsByCompetition(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL, competitionId, "panel"), AssessmentPanelKeyStatisticsResource.class);
+    public RestResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatisticsByCompetition(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL, competitionId, "panel"), ReviewKeyStatisticsResource.class);
     }
 
     @Override
-    public RestResult<AssessmentPanelInviteStatisticsResource> getAssessmentPanelInviteStatisticsByCompetition(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL, competitionId, "panelInvites"), AssessmentPanelInviteStatisticsResource.class);
+    public RestResult<ReviewInviteStatisticsResource> getAssessmentPanelInviteStatisticsByCompetition(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL, competitionId, "panelInvites"), ReviewInviteStatisticsResource.class);
     }
 }

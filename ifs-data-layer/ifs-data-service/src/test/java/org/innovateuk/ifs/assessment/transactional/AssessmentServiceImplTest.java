@@ -6,8 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,9 +13,11 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -46,7 +46,6 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResou
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
-import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -57,6 +56,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -867,7 +867,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentReviewPanelInvite> panelInvites = newAssessmentPanelInvite()
+        List<ReviewInvite> panelInvites = newReviewInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -876,7 +876,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withUser(user)
                 .build(2);
 
-        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentReviewPanelInvite::getId);
+        List<Long> panelInviteIds = simpleMap(panelInvites, ReviewInvite::getId);
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
@@ -885,30 +885,30 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, "",  null,true)).thenReturn(applications);
-        when(assessmentPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
-        when(assessmentPanelParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
+        when(reviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
+        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
                 .thenReturn(1);
-        when(assessmentPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT)))
+        when(reviewInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT)))
                 .thenReturn(1);
-        when(assessmentPanelParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
+        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.PENDING, panelInviteIds))
                 .thenReturn(1);
 
-        ServiceResult<AssessmentPanelKeyStatisticsResource> serviceResult = assessmentService.getAssessmentPanelKeyStatistics(competitionId);
+        ServiceResult<ReviewKeyStatisticsResource> serviceResult = assessmentService.getAssessmentPanelKeyStatistics(competitionId);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, assessmentPanelInviteRepositoryMock, assessmentPanelParticipantRepositoryMock);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).getByCompetitionId(competitionId);
+        InOrder inOrder = inOrder(applicationRepositoryMock, reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
+        inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);
         inOrder.verify(applicationRepositoryMock).findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
                 competitionId, SUBMITTED_STATES, "",  null,true);
 
-        inOrder.verify(assessmentPanelParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT));
+        inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
+        inOrder.verify(reviewInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, singleton(InviteStatus.SENT));
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
 
-        AssessmentPanelKeyStatisticsResource result = serviceResult.getSuccess();
+        ReviewKeyStatisticsResource result = serviceResult.getSuccess();
         assertEquals(2, result.getApplicationsInPanel());
         assertEquals(1, result.getAssessorsAccepted());
         assertEquals(1, result.getAssessorsPending());
@@ -931,7 +931,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentReviewPanelInvite> panelInvites = newAssessmentPanelInvite()
+        List<ReviewInvite> panelInvites = newReviewInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -940,29 +940,29 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withUser(user)
                 .build(2);
 
-        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentReviewPanelInvite::getId);
+        List<Long> panelInviteIds = simpleMap(panelInvites, ReviewInvite::getId);
 
-        when(assessmentPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(2);
-        when(assessmentPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
+        when(reviewInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(2);
+        when(reviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
 
-        when(assessmentPanelParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
+        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds))
                 .thenReturn(1);
-        when(assessmentPanelParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
+        when(reviewParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds))
                 .thenReturn(1);
 
-        ServiceResult<AssessmentPanelInviteStatisticsResource> serviceResult = assessmentService.getAssessmentPanelInviteStatistics(competitionId);
+        ServiceResult<ReviewInviteStatisticsResource> serviceResult = assessmentService.getAssessmentPanelInviteStatistics(competitionId);
 
-        InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock, assessmentPanelParticipantRepositoryMock);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).getByCompetitionId(competitionId);
-        inOrder.verify(assessmentPanelParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
-        inOrder.verify(assessmentPanelParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds);
+        InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
+        inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);
+        inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
+        inOrder.verify(reviewParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds);
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
 
-        AssessmentPanelInviteStatisticsResource result = serviceResult.getSuccess();
+        ReviewInviteStatisticsResource result = serviceResult.getSuccess();
         assertEquals(2, result.getInvited());
         assertEquals(1, result.getAccepted());
         assertEquals(1, result.getDeclined());

@@ -5,8 +5,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForPanelDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -27,10 +27,10 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
-import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
+import static org.innovateuk.ifs.review.resource.ReviewState.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -59,7 +59,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         CompetitionResource competition = buildTestCompetition();
         List<ApplicationResource> applications = buildTestApplications();
 
-        List<AssessmentReviewResource> assessmentReviews = newAssessmentReviewResource()
+        List<ReviewResource> assessmentReviews = newReviewResource()
                 .withId(1L, 2L, 3L, 4L)
                 .withApplication(applications.get(0).getId(), applications.get(1).getId(), applications.get(2).getId(), applications.get(3).getId())
                 .withCompetition(competition.getId())
@@ -74,7 +74,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .build(4);
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(assessmentPanelRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(assessmentReviews));
+        when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(assessmentReviews));
         applications.forEach(application -> when(applicationService.getById(application.getId())).thenReturn(application));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(0).getId())).thenReturn(asList(participants.get(0)));
         when(processRoleService.findProcessRolesByApplicationId(applications.get(1).getId())).thenReturn(asList(participants.get(1)));
@@ -89,9 +89,9 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .andExpect(view().name("assessor-competition-for-panel-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentPanelRestService, applicationService, processRoleService, organisationRestService);
+        InOrder inOrder = inOrder(competitionService, reviewRestService, applicationService, processRoleService, organisationRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(assessmentPanelRestService).getAssessmentReviews(userId, competition.getId());
+        inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
 
         assessmentReviews.forEach(assessmentReview -> {
             inOrder.verify(applicationService).getById(assessmentReview.getApplication());
@@ -102,10 +102,10 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         inOrder.verifyNoMoreInteractions();
 
         List<AssessorCompetitionForPanelDashboardApplicationViewModel> expectedReviews = asList(
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(0).getId(), assessmentReviews.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessmentReviews.get(0).getAssessmentReviewState()),
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(1).getId(), assessmentReviews.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessmentReviews.get(1).getAssessmentReviewState()),
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(2).getId(), assessmentReviews.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessmentReviews.get(2).getAssessmentReviewState()),
-                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(3).getId(), assessmentReviews.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessmentReviews.get(3).getAssessmentReviewState())
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(0).getId(), assessmentReviews.get(0).getId(), applications.get(0).getName(), organisations.get(0).getName(), assessmentReviews.get(0).getReviewState()),
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(1).getId(), assessmentReviews.get(1).getId(), applications.get(1).getName(), organisations.get(1).getName(), assessmentReviews.get(1).getReviewState()),
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(2).getId(), assessmentReviews.get(2).getId(), applications.get(2).getName(), organisations.get(2).getName(), assessmentReviews.get(2).getReviewState()),
+                new AssessorCompetitionForPanelDashboardApplicationViewModel(applications.get(3).getId(), assessmentReviews.get(3).getId(), applications.get(3).getName(), organisations.get(3).getName(), assessmentReviews.get(3).getReviewState())
         );
 
         AssessorCompetitionForPanelDashboardViewModel model = (AssessorCompetitionForPanelDashboardViewModel) result.getModelAndView().getModel().get("model");
@@ -123,7 +123,7 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
         CompetitionResource competition = buildTestCompetition();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
-        when(assessmentPanelRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(emptyList()));
+        when(reviewRestService.getAssessmentReviews(userId, competition.getId())).thenReturn(restSuccess(emptyList()));
 
         MvcResult result = mockMvc.perform(get("/assessor/dashboard/competition/{competitionId}/panel", competition.getId()))
                 .andExpect(status().isOk())
@@ -131,9 +131,9 @@ public class AssessorCompetitionForPanelDashboardControllerTest extends BaseCont
                 .andExpect(view().name("assessor-competition-for-panel-dashboard"))
                 .andReturn();
 
-        InOrder inOrder = inOrder(competitionService, assessmentPanelRestService);
+        InOrder inOrder = inOrder(competitionService, reviewRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(assessmentPanelRestService).getAssessmentReviews(userId, competition.getId());
+        inOrder.verify(reviewRestService).getAssessmentReviews(userId, competition.getId());
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(applicationService);
