@@ -71,9 +71,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         questionResponseDataBuilder = newApplicationQuestionResponseData(serviceLocator);
     }
 
-    public List<ApplicationQuestionResponseData> createApplicationQuestionResponses(ApplicationData applicationData,
-                                                                                    ApplicationLine applicationLine,
-                                                                                    List<ApplicationQuestionResponseLine> questionResponseLines) {
+    public List<ApplicationQuestionResponseData> createApplicationQuestionResponses(
+            ApplicationData applicationData,
+            ApplicationLine applicationLine,
+            List<ApplicationQuestionResponseLine> questionResponseLines) {
 
         QuestionResponseDataBuilder baseBuilder =
                 questionResponseDataBuilder.withApplication(applicationData.getApplication());
@@ -277,11 +278,16 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             String competitionName,
             List<ApplicationLine> applicationLines) {
 
-        List<CsvUtils.ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
+        List<CsvUtils.ApplicationLine> matchingApplications = simpleFilter(applicationLines, a ->
+                a.competitionName.equals(competitionName));
 
-        List<CsvUtils.ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
+        List<CsvUtils.ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a ->
+                asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
 
-        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
+        return simpleMap(applicationsWithDecisions, ma -> {
+            FundingDecision fundingDecision = ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED;
+            return Pair.of(ma.title, fundingDecision);
+        });
     }
 
     private List<QuestionResponseDataBuilder> questionResponsesFromCsv(
@@ -369,11 +375,15 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             case "Organisation size":
                 return builder.withOrganisationSize(Long.valueOf(financeRow.metadata.get(0)));
             case "Labour":
-                return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+                return builder.withLabourEntry(
+                        financeRow.metadata.get(0),
+                        Integer.valueOf(financeRow.metadata.get(1)),
+                        Integer.valueOf(financeRow.metadata.get(2)));
             case "Overheads":
                 switch (financeRow.metadata.get(0).toLowerCase()) {
                     case "custom":
-                        return builder.withAdministrationSupportCostsCustomRate(Integer.valueOf(financeRow.metadata.get(1)));
+                        return builder.withAdministrationSupportCostsCustomRate(
+                                Integer.valueOf(financeRow.metadata.get(1)));
                     case "default":
                         return builder.withAdministrationSupportCostsDefaultRate();
                     case "none":
@@ -382,25 +392,49 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
                 }
             case "Materials":
-                return builder.withMaterials(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+                return builder.withMaterials(
+                        financeRow.metadata.get(0),
+                        bd(financeRow.metadata.get(1)),
+                        Integer.valueOf(financeRow.metadata.get(2)));
             case "Capital usage":
-                return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(4)),
-                        financeRow.metadata.get(0), Boolean.parseBoolean(financeRow.metadata.get(1)),
-                        bd(financeRow.metadata.get(2)), bd(financeRow.metadata.get(3)), Integer.valueOf(financeRow.metadata.get(5)));
+                return builder.withCapitalUsage(
+                        Integer.valueOf(financeRow.metadata.get(4)),
+                        financeRow.metadata.get(0),
+                        Boolean.parseBoolean(financeRow.metadata.get(1)),
+                        bd(financeRow.metadata.get(2)),
+                        bd(financeRow.metadata.get(3)),
+                        Integer.valueOf(financeRow.metadata.get(5)));
             case "Subcontracting":
-                return builder.withSubcontractingCost(financeRow.metadata.get(0), financeRow.metadata.get(1), financeRow.metadata.get(2), bd(financeRow.metadata.get(3)));
+                return builder.withSubcontractingCost(
+                        financeRow.metadata.get(0),
+                        financeRow.metadata.get(1),
+                        financeRow.metadata.get(2),
+                        bd(financeRow.metadata.get(3)));
             case "Travel and subsistence":
-                return builder.withTravelAndSubsistence(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), bd(financeRow.metadata.get(2)));
+                return builder.withTravelAndSubsistence(
+                        financeRow.metadata.get(0),
+                        Integer.valueOf(financeRow.metadata.get(1)),
+                        bd(financeRow.metadata.get(2)));
             case "Other costs":
-                return builder.withOtherCosts(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)));
+                return builder.withOtherCosts(
+                        financeRow.metadata.get(0),
+                        bd(financeRow.metadata.get(1)));
             case "Other funding":
-                return builder.withOtherFunding(financeRow.metadata.get(0), LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN), bd(financeRow.metadata.get(2)));
+                return builder.withOtherFunding(
+                        financeRow.metadata.get(0),
+                        LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN),
+                        bd(financeRow.metadata.get(2)));
             default:
                 throw new RuntimeException("Unknown category " + financeRow.category);
         }
     }
 
-    private ApplicationFinanceDataBuilder generateIndustrialCostsFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName, CsvUtils.ApplicationOrganisationFinanceBlock organisationFinances) {
+    private ApplicationFinanceDataBuilder generateIndustrialCostsFromSuppliedData(
+            ApplicationResource application,
+            CompetitionResource competition,
+            String user,
+            String organisationName,
+            CsvUtils.ApplicationOrganisationFinanceBlock organisationFinances) {
 
         ApplicationFinanceDataBuilder finance = this.applicationFinanceDataBuilder.
                 withApplication(application).
@@ -426,7 +460,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 withIndustrialCosts(costBuilder);
     }
 
-    private ApplicationFinanceDataBuilder generateIndustrialCosts(ApplicationResource application, CompetitionResource competition, String user, String organisationName) {
+    private ApplicationFinanceDataBuilder generateIndustrialCosts(
+            ApplicationResource application,
+            CompetitionResource competition,
+            String user,
+            String organisationName) {
+
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
@@ -448,7 +487,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withOrganisationSize(1L));
     }
 
-    private ApplicationFinanceDataBuilder generateAcademicFinances(ApplicationResource application, CompetitionResource competition, String user, String organisationName) {
+    private ApplicationFinanceDataBuilder generateAcademicFinances(
+            ApplicationResource application,
+            CompetitionResource competition,
+            String user,
+            String organisationName) {
+
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).
@@ -468,7 +512,12 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                         withUploadedJesForm());
     }
 
-    private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(ApplicationResource application, CompetitionResource competition, String user, String organisationName) {
+    private ApplicationFinanceDataBuilder generateAcademicFinancesFromSuppliedData(
+            ApplicationResource application,
+            CompetitionResource competition,
+            String user,
+            String organisationName) {
+
         return applicationFinanceDataBuilder.
                 withApplication(application).
                 withCompetition(competition).

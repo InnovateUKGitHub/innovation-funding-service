@@ -35,7 +35,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
             CompetitionResource competition,
             UserResource user,
             OrganisationResource organisation) {
-        
+
         return with(data -> {
            data.setApplication(application);
            data.setCompetition(competition);
