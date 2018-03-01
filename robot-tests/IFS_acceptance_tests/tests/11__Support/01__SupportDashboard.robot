@@ -4,6 +4,8 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-1986 External users: search
 ...
 ...               IFS-1841 Basic view of all 'external' IFS users
+...
+...               IFS-2904 CSS Search by application number
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Support  CompAdmin
@@ -54,6 +56,14 @@ Support user is able to search pending external users
     Then the support user should be able to see him as  Not Verified  Active accounts
     When the invitee verifies his account
     Then the support user should be able to see him as  Verified  Active accounts
+
+Support user is able to search for Applications
+    [Documentation]  IFS-2904
+    [Tags]  HappyPath2
+    [Setup]  the user navigates to the page      ${server}/management/dashboard/live
+    Given the user enters text to a text field    id=searchQuery  ${applicationNumber}
+    When the user clicks the button/link          id=searchsubmit
+    Then the user should see the element          link=${applicationNumber}
 
 *** Keywords ***
 the user is searching for external users
