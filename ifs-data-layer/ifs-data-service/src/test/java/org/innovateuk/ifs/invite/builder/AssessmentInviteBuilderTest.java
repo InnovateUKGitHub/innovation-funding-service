@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -33,7 +33,7 @@ public class AssessmentInviteBuilderTest {
         User expectedSentBy = newUser().withId(6L).build();
         ZonedDateTime expectedSentOn = ZonedDateTime.now();
 
-        AssessmentInvite invite = newCompetitionAssessmentInvite()
+        AssessmentInvite invite = newAssessmentInvite()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withEmail(expectedEmail)
@@ -72,7 +72,7 @@ public class AssessmentInviteBuilderTest {
         User[] expectedSentBy = newUser().withId(6L, 12L).buildArray(2, User.class);
         ZonedDateTime[] expectedSentOn = { ZonedDateTime.now(), ZonedDateTime.now().plusMinutes(1) };
 
-        List<AssessmentInvite> invites = newCompetitionAssessmentInvite()
+        List<AssessmentInvite> invites = newAssessmentInvite()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withEmail(expectedEmails)

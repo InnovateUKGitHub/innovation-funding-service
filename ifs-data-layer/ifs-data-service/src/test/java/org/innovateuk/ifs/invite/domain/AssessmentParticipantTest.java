@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
@@ -27,7 +27,7 @@ public class AssessmentParticipantTest {
 
     @Before
     public void setup() {
-        invite = newCompetitionAssessmentInvite()
+        invite = newAssessmentInvite()
                 .withCompetition( newCompetition().withName("my competition") )
                 .withStatus(SENT)
                 .build();
@@ -37,7 +37,7 @@ public class AssessmentParticipantTest {
     @Test
     public void constructor() throws Exception {
         User user = newUser().build();
-        AssessmentInvite createdInvite = newCompetitionAssessmentInvite()
+        AssessmentInvite createdInvite = newAssessmentInvite()
                 .withCompetition(newCompetition().withName("my competition"))
                 .withStatus(SENT)
                 .withUser(user)
@@ -53,21 +53,21 @@ public class AssessmentParticipantTest {
 
     @Test(expected = NullPointerException.class)
     public void constructor_inviteNull() throws Exception {
-        AssessmentInvite competitionAssessmentInvite = null;
-        new AssessmentParticipant(competitionAssessmentInvite);
+        AssessmentInvite assessmentInvite = null;
+        new AssessmentParticipant(assessmentInvite);
     }
 
     @Test(expected = NullPointerException.class)
     public void constructor_inviteWithoutCompetition() throws Exception {
-        AssessmentInvite competitionAssessmentInvite = newCompetitionAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withStatus(SENT)
                 .build();
-        new AssessmentParticipant(competitionAssessmentInvite);
+        new AssessmentParticipant(assessmentInvite);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructor_inviteNotSentOrOpened() throws Exception {
-        AssessmentInvite createdInvite = newCompetitionAssessmentInvite()
+        AssessmentInvite createdInvite = newAssessmentInvite()
                 .withCompetition(newCompetition().withName("my competition"))
                 .withStatus(CREATED)
                 .build();

@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
@@ -122,7 +122,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .withAssessments(assessments, assessmentList, emptyList())
                 .build(3);
 
-        List<AssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .withId(1L, 2L, 3L)
                 .build(3);
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(1L, of(REJECTED, WITHDRAWN))).thenReturn(0L);

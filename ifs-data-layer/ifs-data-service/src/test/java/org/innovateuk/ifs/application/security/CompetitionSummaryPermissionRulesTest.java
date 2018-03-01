@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -46,7 +46,7 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
         List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
-        List<AssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionResource.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
 

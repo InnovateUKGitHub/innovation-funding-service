@@ -22,19 +22,19 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 /**
  * Builder for {@link AssessmentParticipant}s.
  */
-public class CompetitionAssessmentParticipantBuilder extends BaseBuilder<AssessmentParticipant, CompetitionAssessmentParticipantBuilder> {
+public class AssessmentParticipantBuilder extends BaseBuilder<AssessmentParticipant, AssessmentParticipantBuilder> {
 
-    public static CompetitionAssessmentParticipantBuilder newCompetitionAssessmentParticipant() {
-        return new CompetitionAssessmentParticipantBuilder(emptyList()).with(uniqueIds());
+    public static AssessmentParticipantBuilder newAssessmentParticipant() {
+        return new AssessmentParticipantBuilder(emptyList()).with(uniqueIds());
     }
 
-    private CompetitionAssessmentParticipantBuilder(List<BiConsumer<Integer, AssessmentParticipant>> multiActions) {
+    private AssessmentParticipantBuilder(List<BiConsumer<Integer, AssessmentParticipant>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected CompetitionAssessmentParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentParticipant>> actions) {
-        return new CompetitionAssessmentParticipantBuilder(actions);
+    protected AssessmentParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentParticipant>> actions) {
+        return new AssessmentParticipantBuilder(actions);
     }
 
     @Override
@@ -50,51 +50,51 @@ public class CompetitionAssessmentParticipantBuilder extends BaseBuilder<Assessm
         }
     }
 
-    public CompetitionAssessmentParticipantBuilder withId(Long... ids) {
+    public AssessmentParticipantBuilder withId(Long... ids) {
         return withArray((id, i) -> setField("id", id, i), ids);
     }
 
-    public CompetitionAssessmentParticipantBuilder withStatus(ParticipantStatus... states) {
+    public AssessmentParticipantBuilder withStatus(ParticipantStatus... states) {
         return withArray((status, s) -> setField("status", status, s), states);
     }
 
-    public CompetitionAssessmentParticipantBuilder withRole(CompetitionParticipantRole... roles) {
+    public AssessmentParticipantBuilder withRole(CompetitionParticipantRole... roles) {
         return withArray((role, r) -> setField("role", role, r), roles);
     }
 
-    public CompetitionAssessmentParticipantBuilder withCompetition(Competition... competitions) {
+    public AssessmentParticipantBuilder withCompetition(Competition... competitions) {
         return withArray((competition, p) -> setField("competition", competition, p), competitions);
     }
 
-    public CompetitionAssessmentParticipantBuilder withCompetition(Builder<Competition, ?> competitions) {
+    public AssessmentParticipantBuilder withCompetition(Builder<Competition, ?> competitions) {
         return withCompetition(competitions.build());
     }
 
-    public CompetitionAssessmentParticipantBuilder withInvite(AssessmentInvite... invites) {
+    public AssessmentParticipantBuilder withInvite(AssessmentInvite... invites) {
         return withArray((invite, i) -> setField("invite", invite, i), invites);
     }
 
-    public CompetitionAssessmentParticipantBuilder withInvite(Builder<AssessmentInvite, ?> invite) {
+    public AssessmentParticipantBuilder withInvite(Builder<AssessmentInvite, ?> invite) {
         return withInvite(invite.build());
     }
 
-    public CompetitionAssessmentParticipantBuilder withUser(User... users) {
+    public AssessmentParticipantBuilder withUser(User... users) {
         return withArray((user, u) -> setField("user", user, u), users);
     }
 
-    public CompetitionAssessmentParticipantBuilder withUser(Builder<User, ?> user) {
+    public AssessmentParticipantBuilder withUser(Builder<User, ?> user) {
         return withUser(user.build());
     }
 
-    public CompetitionAssessmentParticipantBuilder withRejectionReason(RejectionReason... rejectionReasons) {
+    public AssessmentParticipantBuilder withRejectionReason(RejectionReason... rejectionReasons) {
         return withArray((rejectionReason, r) -> setField("rejectionReason", rejectionReason, r), rejectionReasons);
     }
 
-    public CompetitionAssessmentParticipantBuilder withRejectionReason(Builder<RejectionReason, ?> rejectionReason) {
+    public AssessmentParticipantBuilder withRejectionReason(Builder<RejectionReason, ?> rejectionReason) {
         return withRejectionReason(rejectionReason.build());
     }
 
-    public CompetitionAssessmentParticipantBuilder withRejectionComment(String... rejectionReasonComments) {
+    public AssessmentParticipantBuilder withRejectionComment(String... rejectionReasonComments) {
         return withArray((rejectionComment, r) -> setField("rejectionReasonComment", rejectionComment, r), rejectionReasonComments);
     }
 }

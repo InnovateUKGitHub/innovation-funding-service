@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummar
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
@@ -54,7 +54,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
-        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newAssessmentParticipant()
                 .withUser(newUser()
                         .withId(1L, 2L)
                         .buildArray(2, User.class))

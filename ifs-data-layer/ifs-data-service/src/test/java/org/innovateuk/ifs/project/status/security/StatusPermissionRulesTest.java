@@ -20,7 +20,7 @@ import java.util.HashSet;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -49,7 +49,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(new HashSet<>(newRole().build(1))).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(innovationLeadRole)).build();
-        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadUserOnProject1).build();
+        AssessmentParticipant competitionParticipant = newAssessmentParticipant().withUser(innovationLeadUserOnProject1).build();
         Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         competitionResource = newCompetitionResource().withId(competition.getId()).build();
         Application application1 = newApplication().withCompetition(competition).build();

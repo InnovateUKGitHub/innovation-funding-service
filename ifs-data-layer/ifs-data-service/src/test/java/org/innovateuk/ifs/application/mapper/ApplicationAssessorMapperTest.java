@@ -19,7 +19,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -56,7 +56,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                                 .build())
                 .build();
 
-        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant()
+        AssessmentParticipant competitionParticipant = newAssessmentParticipant()
                 .withUser(newUser()
                         .withId(1L)
                         .withFirstName("John")
