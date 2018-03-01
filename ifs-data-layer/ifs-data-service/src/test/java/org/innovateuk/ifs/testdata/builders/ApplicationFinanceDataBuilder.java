@@ -30,7 +30,12 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationFinanceDataBuilder.class);
 
-    public ApplicationFinanceDataBuilder withExistingFinances(ApplicationResource application, CompetitionResource competition, UserResource user, OrganisationResource organisation) {
+    public ApplicationFinanceDataBuilder withExistingFinances(
+            ApplicationResource application,
+            CompetitionResource competition,
+            UserResource user,
+            OrganisationResource organisation) {
+        
         return with(data -> {
            data.setApplication(application);
            data.setCompetition(competition);

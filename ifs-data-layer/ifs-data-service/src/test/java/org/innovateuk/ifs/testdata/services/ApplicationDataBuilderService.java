@@ -26,11 +26,11 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -79,39 +79,54 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
                 questionResponseDataBuilder.withApplication(applicationData.getApplication());
 
         List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication =
-                simpleFilter(questionResponseLines, r -> r.competitionName.equals(applicationLine.competitionName) && r.applicationName.equals(applicationLine.title));
+                simpleFilter(questionResponseLines, r ->
+                        r.competitionName.equals(applicationLine.competitionName) &&
+                        r.applicationName.equals(applicationLine.title));
 
         // if we have specific answers for questions in the application-questions.csv file, fill them in here now
         if (!responsesForApplication.isEmpty()) {
 
-            List<QuestionResponseDataBuilder> responseBuilders = questionResponsesFromCsv(baseBuilder, applicationLine.leadApplicant, responsesForApplication);
+            List<QuestionResponseDataBuilder> responseBuilders = questionResponsesFromCsv(
+                    baseBuilder,
+                    applicationLine.leadApplicant,
+                    responsesForApplication);
 
             return simpleMap(responseBuilders, BaseBuilder::build);
         }
         // otherwise provide a default set of marked as complete questions if the application is to be submitted
         else if (applicationLine.submittedDate != null) {
 
-            List<QuestionResource> competitionQuestions = retrieveCachedQuestionsByCompetitionId(applicationData.getCompetition().getId());
+            Long competitionId = applicationData.getCompetition().getId();
 
-            List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
-                    q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
+            List<QuestionResource> competitionQuestions = retrieveCachedQuestionsByCompetitionId(competitionId);
+
+            List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions, q ->
+                    !q.getMultipleStatuses() &&
+                    q.getMarkAsCompletedEnabled() &&
+                    !"Application details".equals(q.getName()));
 
             List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
 
+                String answerValue = "This is the applicant response for " + question.getName().toLowerCase() + ".";
+                String leadApplicantEmail = applicationData.getLeadApplicant().getEmail();
+
                 QuestionResponseDataBuilder responseBuilder = baseBuilder.
                         forQuestion(question.getName()).
-                        withAssignee(applicationData.getLeadApplicant().getEmail()).
-                        withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", applicationData.getLeadApplicant().getEmail());
+                        withAssignee(leadApplicantEmail).
+                        withAnswer(answerValue, leadApplicantEmail);
 
                 List<FormInputResource> formInputs = retrieveCachedFormInputsByQuestionId(question);
 
                 if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
 
-                    String fileUploadName = (applicationData.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
+                    String applicationName = applicationData.getApplication().getName();
+                    String questionName = question.getShortName().toLowerCase();
+
+                    String fileUploadName = (applicationName + "-" + questionName + ".pdf")
                             .toLowerCase().replace(' ', '-') ;
 
                     responseBuilder = responseBuilder.
-                            withFileUploads(singletonList(fileUploadName), applicationData.getLeadApplicant().getEmail());
+                            withFileUploads(singletonList(fileUploadName), leadApplicantEmail);
                 }
 
                 return responseBuilder;
@@ -123,19 +138,24 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return emptyList();
     }
 
-    public List<ApplicationFinanceData> createApplicationFinances(ApplicationData applicationData, ApplicationLine applicationLine,
-                                                                  List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines) {
+    public List<ApplicationFinanceData> createApplicationFinances(
+            ApplicationData applicationData,
+            ApplicationLine applicationLine,
+            List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines) {
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 
         List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
+
             UserResource user = retrieveUserByEmail(email);
             OrganisationResource organisation = retrieveOrganisationByUserId(user.getId());
-            return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
+
+            return Triple.of(user.getEmail(), organisation.getName(),
+                    OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
         });
 
-        List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations =
-                simpleFilter(organisations, triple -> isUniqueOrFirstDuplicateOrganisation(triple, organisations));
+        List<Triple<String, String, OrganisationTypeEnum>> uniqueOrganisations = simpleFilter(organisations, triple ->
+                isUniqueOrFirstDuplicateOrganisation(triple, organisations));
 
         List<ApplicationFinanceDataBuilder> builders = simpleMap(uniqueOrganisations, orgDetails -> {
 
@@ -143,23 +163,41 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             String organisationName = orgDetails.getMiddle();
             OrganisationTypeEnum organisationType = orgDetails.getRight();
 
-            Optional<CsvUtils.ApplicationOrganisationFinanceBlock> organisationFinances = simpleFindFirst(applicationFinanceLines, finances ->
-                    finances.competitionName.equals(applicationLine.competitionName) &&
-                            finances.applicationName.equals(applicationLine.title) &&
-                            finances.organisationName.equals(organisationName));
+            Optional<CsvUtils.ApplicationOrganisationFinanceBlock> organisationFinances =
+                    simpleFindFirst(applicationFinanceLines, finances ->
+                        finances.competitionName.equals(applicationLine.competitionName) &&
+                        finances.applicationName.equals(applicationLine.title) &&
+                        finances.organisationName.equals(organisationName));
 
             if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
                 return organisationFinances.map(suppliedFinances ->
-                        generateAcademicFinancesFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                        generateAcademicFinancesFromSuppliedData(
+                                applicationData.getApplication(),
+                                applicationData.getCompetition(),
+                                user,
+                                organisationName)
                 ).orElseGet(() ->
-                        generateAcademicFinances(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                        generateAcademicFinances(
+                                applicationData.getApplication(),
+                                applicationData.getCompetition(),
+                                user,
+                                organisationName)
                 );
             } else {
                 return organisationFinances.map(suppliedFinances ->
-                        generateIndustrialCostsFromSuppliedData(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName, suppliedFinances)
+                        generateIndustrialCostsFromSuppliedData(
+                                applicationData.getApplication(),
+                                applicationData.getCompetition(),
+                                user,
+                                organisationName,
+                                suppliedFinances)
                 ).orElseGet(() ->
-                        generateIndustrialCosts(applicationData.getApplication(), applicationData.getCompetition(), user, organisationName)
+                        generateIndustrialCosts(
+                                applicationData.getApplication(),
+                                applicationData.getCompetition(),
+                                user,
+                                organisationName)
                 );
             }
 
@@ -168,7 +206,11 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return simpleMap(builders, BaseBuilder::build);
     }
 
-    public void completeApplication(ApplicationData applicationData, ApplicationLine applicationLine, List<ApplicationQuestionResponseData> questionResponseData, List<ApplicationFinanceData> financeData) {
+    public void completeApplication(
+            ApplicationData applicationData,
+            ApplicationLine applicationLine,
+            List<ApplicationQuestionResponseData> questionResponseData,
+            List<ApplicationFinanceData> financeData) {
 
         if (applicationLine.submittedDate != null) {
             forEachWithIndex(questionResponseData, (i, response) -> {
@@ -184,7 +226,11 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             forEachWithIndex(financeData, (i, finance) -> {
                 boolean lastElement = i == financeData.size() - 1;
                 applicationFinanceDataBuilder.
-                        withExistingFinances(finance.getApplication(), finance.getCompetition(), finance.getUser(), finance.getOrganisation()).
+                        withExistingFinances(
+                                finance.getApplication(),
+                                finance.getCompetition(),
+                                finance.getUser(),
+                                finance.getOrganisation()).
                         markAsComplete(true, lastElement).
                         build();
             });
@@ -198,8 +244,11 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             applicationBuilder = applicationBuilder.submitApplication();
         }
 
-        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).contains(applicationLine.status)) {
+        if (asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED).
+                contains(applicationLine.status)) {
+
             applicationBuilder = applicationBuilder.markApplicationIneligible(applicationLine.ineligibleReason);
+
             if (applicationLine.status == ApplicationState.INELIGIBLE_INFORMED) {
                 applicationBuilder = applicationBuilder.informApplicationIneligible();
             }
@@ -208,11 +257,14 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         applicationBuilder.build();
     }
 
-    public void createFundingDecisions(CompetitionData competition, CompetitionLine competitionLine, List<ApplicationLine> applicationLines) {
+    public void createFundingDecisions(
+            CompetitionData competition,
+            CompetitionLine competitionLine,
+            List<ApplicationLine> applicationLines) {
 
         CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competition);
 
-        if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
+        if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(now())) {
 
             basicCompetitionInformation.
                     moveCompetitionIntoFundersPanelStatus().
@@ -221,13 +273,21 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         }
     }
 
-    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName, List<ApplicationLine> applicationLines) {
+    private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(
+            String competitionName,
+            List<ApplicationLine> applicationLines) {
+
         List<CsvUtils.ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
+
         List<CsvUtils.ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationState.APPROVED, ApplicationState.REJECTED).contains(a.status));
+
         return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
-    private List<QuestionResponseDataBuilder> questionResponsesFromCsv(QuestionResponseDataBuilder baseBuilder, String leadApplicant, List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication) {
+    private List<QuestionResponseDataBuilder> questionResponsesFromCsv(
+            QuestionResponseDataBuilder baseBuilder,
+            String leadApplicant,
+            List<CsvUtils.ApplicationQuestionResponseLine> responsesForApplication) {
 
         return simpleMap(responsesForApplication, line -> {
 
@@ -255,7 +315,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         });
     }
 
-    public ApplicationData createApplication(CompetitionData competition, CsvUtils.ApplicationLine line, List<InviteLine> inviteLines) {
+    public ApplicationData createApplication(
+            CompetitionData competition,
+            CsvUtils.ApplicationLine line,
+            List<InviteLine> inviteLines) {
 
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
@@ -284,11 +347,19 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         return baseBuilder.build();
     }
 
-    private boolean isUniqueOrFirstDuplicateOrganisation(Triple<String, String, OrganisationTypeEnum> currentOrganisation, List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
-        return simpleFindFirstMandatory(organisationList, triple -> triple.getMiddle().equals(currentOrganisation.getMiddle())).equals(currentOrganisation);
+    private boolean isUniqueOrFirstDuplicateOrganisation(
+            Triple<String, String, OrganisationTypeEnum> currentOrganisation,
+            List<Triple<String, String, OrganisationTypeEnum>> organisationList) {
+
+        Triple<String, String, OrganisationTypeEnum> matchingRecord = simpleFindFirstMandatory(organisationList, triple ->
+                triple.getMiddle().equals(currentOrganisation.getMiddle()));
+
+        return matchingRecord.equals(currentOrganisation);
     }
 
-    private IndustrialCostDataBuilder addFinanceRow(IndustrialCostDataBuilder builder, CsvUtils.ApplicationFinanceRow financeRow) {
+    private IndustrialCostDataBuilder addFinanceRow(
+            IndustrialCostDataBuilder builder,
+            CsvUtils.ApplicationFinanceRow financeRow) {
 
         switch (financeRow.category) {
             case "Working days per year":
