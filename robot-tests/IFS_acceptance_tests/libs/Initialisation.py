@@ -95,6 +95,15 @@ for proj in cursor.fetchall():
     projectName = proj[1]
     project_ids[projectName] = str(projectId)
 
+# execute SQL query using execute() method, to fetch the Organisations
+cursor.execute("SELECT `id`,`name` FROM organisation")
+
+# Fetch the Organisation records
+organisation_ids = {}
+for org in cursor.fetchall():
+    organisationId = org[0]
+    organisationName = org[1]
+    organisation_ids[organisationName] = str(organisationId)
 
 # disconnect from server
 cursor.close()
@@ -106,8 +115,23 @@ db.close()
 def getProjectId(name):
     db, cursor = connectToDb()
 
-    # execute SQL query using execute() method, to fetch the Applications
+    # execute SQL query using execute() method, to fetch the Projects
     cursor.execute("SELECT `id` FROM project where `name` = '" + name + "'")
+
+    id = cursor.fetchone()[0]
+
+    # disconnect from server
+    cursor.close()
+    db.close()
+
+    return id
+
+# One can use this function in order to request the User Id of a user, by providing his email address.
+def getUserId(email):
+    db, cursor = connectToDb()
+
+    # execute SQL query using execute() method, to fetch the Users
+    cursor.execute("SELECT `id` FROM user where `email` = '" + email + "'")
 
     id = cursor.fetchone()[0]
 

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -74,6 +75,14 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             publicContentService.findByCompetitionId(competitionId).andOnFailure(() ->
                     publicContentService.initialiseByCompetitionId(competitionId).getSuccess());
+        });
+    }
+
+    public CompetitionDataBuilder withExistingCompetition(CompetitionData competitionData) {
+
+        return with(data -> {
+            data.setCompetition(competitionData.getCompetition());
+            competitionData.getOriginalMilestones().forEach(data::addOriginalMilestone);
         });
     }
 
@@ -163,6 +172,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     getSuccess();
 
             updateCompetitionInCompetitionData(data, competition.getId());
+
+            if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
+
+                List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
+                Question question = questions.get(0);
+                question.setName("Generic question heading");
+                question.setShortName("Generic question title");
+                question.setDescription("Generic question description");
+                questionRepository.save(question);
+            }
         });
     }
 

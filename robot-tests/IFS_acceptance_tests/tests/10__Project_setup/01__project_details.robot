@@ -358,7 +358,7 @@ Non lead partner invites finance contact
     Then the user should not see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
-    When the user clicks the button/link  link=${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    When the user clicks the button/link  link=${organisationLudlowName}
     And the user selects the radio button  financeContact  new
     Then the user enters text to a text field  css=#name-finance-contact  LudlowFinContact
     And the user enters text to a text field   css=#email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
@@ -520,12 +520,12 @@ Academic Partner nominates Finance contact
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page  Finance contacts
     And the user should see the text in the page   Partner
-    And the user clicks the button/link            link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    And the user clicks the button/link            link=${organisationEggsName}
     And the user selects the radio button          financeContact    financeContact1
     And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated  project-details-finance  2  yes
-    And the user should see the element     link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    And the user should see the element     link=${organisationEggsName}
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(1)
     And the user should see the element    jQuery=li.require-action:nth-child(3)
@@ -568,7 +568,7 @@ All partners can view submitted project details
     [Tags]  HappyPath
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
-    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    Then the user should see the text in the page  ${organisationLudlowName}
     When all the fields are completed
     And the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=View the status of partners
@@ -682,7 +682,7 @@ the invitee is able to assign himself as Finance Contact
     the user accepts invitation and signs in      ${email}  ${title}  ${pattern}  ${name}  ${famName}
     The guest user inserts user email and password  ${email}  ${correct_password}
     the guest user clicks the log-in button
-    the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}
+    the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/finance-contact?organisation=${organisationLudlowId}
     the user selects the radio button  financeContact  financeContact3
     the user clicks the button/link    jQuery=button:contains("Save finance contact")
 
