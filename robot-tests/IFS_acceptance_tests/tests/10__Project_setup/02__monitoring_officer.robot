@@ -61,8 +61,8 @@ Comp admin can view the Supporting information details on MO page
     And the user should see the text in the element    jQuery=p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page    Elmo Chenault
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    And the user should see the text in the page    ${organisationEggsName}
+    And the user should see the text in the page    ${organisationLudlowName}
 
 Project finance user can view MO page, and go on to assign MO
     [Documentation]    INFUND-5666, INFUND-5507
@@ -79,8 +79,8 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the element    jQuery=p:nth-child(11)    1 Jan ${nextyear}
     And the user should see the text in the page    Elmo Chenault
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    And the user should see the text in the page    ${organisationEggsName}
+    And the user should see the text in the page    ${organisationLudlowName}
     [Teardown]  the user clicks the button/link     link=Projects in setup
 
 
@@ -280,7 +280,7 @@ the academic partner fills in their finance contact
     log in as a different user    &{collaborator2_credentials}
     the user navigates to the page    ${project_in_setup_page}
     the user clicks the button/link   link=Project details
-    the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    the user clicks the button/link    link=${organisationEggsName}
     the user selects the radio button    financeContact  financeContact2
     the user clicks the button/link    jQuery=.button:contains("Save")
 
@@ -289,6 +289,6 @@ the industrial partner fills in their finance contact
     log in as a different user    &{collaborator1_credentials}
     the user navigates to the page    ${project_in_setup_page}
     the user clicks the button/link   link=Project details
-    the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    the user clicks the button/link    link=${organisationLudlowName}
     the user selects the radio button    financeContact  financeContact1
     the user clicks the button/link    jQuery=.button:contains("Save")

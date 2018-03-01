@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewModelPopulator;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
+import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Before;
@@ -21,11 +21,11 @@ import java.util.TreeSet;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparingLong;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
+import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -106,22 +106,22 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 PROJECT_SUMMARY_TEXT
         );
 
-        AssessmentReviewResource assessmentReviewResource = newAssessmentReviewResource()
+        ReviewResource reviewResource = newReviewResource()
                 .withId(REVIEW_ID)
                 .withApplication(APPLICATION_ID)
                 .withApplicationName(APPLICATION_NAME)
                 .withCompetition(COMPETITION_ID)
                 .build();
 
-        when(assessmentPanelRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(assessmentReviewResource));
+        when(reviewRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
 
         mockMvc.perform(get("/review/{reviewId}", REVIEW_ID))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedReviewViewModel))
                 .andExpect(view().name("assessment/review-invitation")).andReturn();
 
-        InOrder inOrder = inOrder(assessmentPanelRestService, formInputResponseRestService, processRoleService, organisationRestService);
-        inOrder.verify(assessmentPanelRestService).getAssessmentReview(REVIEW_ID);
+        InOrder inOrder = inOrder(reviewRestService, formInputResponseRestService, processRoleService, organisationRestService);
+        inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
         inOrder.verify(formInputResponseRestService).getByApplicationIdAndQuestionName(APPLICATION_ID, PROJECT_SUMMARY_QUESTION_NAME);
         inOrder.verify(processRoleService).findProcessRolesByApplicationId(APPLICATION_ID);
         asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
@@ -133,14 +133,14 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
     public void respondToAssignment_accept() throws Exception {
         final boolean accept = true;
 
-        AssessmentReviewResource assessmentReviewResource = newAssessmentReviewResource()
+        ReviewResource reviewResource = newReviewResource()
                 .with(id(REVIEW_ID))
                 .withApplication(APPLICATION_ID)
                 .withCompetition(COMPETITION_ID)
                 .build();
 
-        when(assessmentPanelRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(assessmentReviewResource));
-        when(assessmentPanelRestService.acceptAssessmentReview(REVIEW_ID)).thenReturn(restSuccess());
+        when(reviewRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
+        when(reviewRestService.acceptAssessmentReview(REVIEW_ID)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/review/{reviewId}/respond", REVIEW_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -148,9 +148,9 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%d/panel", COMPETITION_ID)));
 
-        InOrder inOrder = inOrder(assessmentPanelRestService);
-        inOrder.verify(assessmentPanelRestService).getAssessmentReview(REVIEW_ID);
-        inOrder.verify(assessmentPanelRestService).acceptAssessmentReview(REVIEW_ID);
+        InOrder inOrder = inOrder(reviewRestService);
+        inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
+        inOrder.verify(reviewRestService).acceptAssessmentReview(REVIEW_ID);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -159,18 +159,18 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
         final boolean accept = false;
         String comment = "comment";
 
-        AssessmentReviewResource assessmentReviewResource = newAssessmentReviewResource()
+        ReviewResource reviewResource = newReviewResource()
                 .with(id(REVIEW_ID))
                 .withApplication(APPLICATION_ID)
                 .withCompetition(COMPETITION_ID)
                 .build();
 
-        AssessmentReviewRejectOutcomeResource rejectOutcomeResource = newAssessmentReviewRejectOutcomeResource()
+        ReviewRejectOutcomeResource rejectOutcomeResource = newReviewRejectOutcomeResource()
                 .withReason(comment)
                 .build();
 
-        when(assessmentPanelRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(assessmentReviewResource));
-        when(assessmentPanelRestService.rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource)).thenReturn(restSuccess());
+        when(reviewRestService.getAssessmentReview(REVIEW_ID)).thenReturn(restSuccess(reviewResource));
+        when(reviewRestService.rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/review/{reviewId}/respond", REVIEW_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -179,9 +179,9 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%d/panel", COMPETITION_ID)));
 
-        InOrder inOrder = inOrder(assessmentPanelRestService);
-        inOrder.verify(assessmentPanelRestService).getAssessmentReview(REVIEW_ID);
-        inOrder.verify(assessmentPanelRestService).rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource);
+        InOrder inOrder = inOrder(reviewRestService);
+        inOrder.verify(reviewRestService).getAssessmentReview(REVIEW_ID);
+        inOrder.verify(reviewRestService).rejectAssessmentReview(REVIEW_ID, rejectOutcomeResource);
         inOrder.verifyNoMoreInteractions();
     }
 }

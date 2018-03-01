@@ -177,9 +177,9 @@ User Saves the Assessment as Recommended
     When The user clicks the button/link                     jQuery=.button:contains("Save assessment")
     Then The user should not see the text in the page        Please enter your feedback
     And The user should see the text in the page             Assessed
-    And the user should see the element                      css=li:nth-child(6) .positive
-    And the user should see the element                      css=li:nth-child(6) input[type="checkbox"] ~ label
-    And the application should have the correct status       css=.progress-list li:nth-child(6)    Assessed
+    And the user should see the element                      css=li:nth-child(7) .positive
+    And the user should see the element                      css=li:nth-child(7) input[type="checkbox"] ~ label
+    And the application should have the correct status       css=.progress-list li:nth-child(7)    Assessed
 
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712
@@ -197,10 +197,10 @@ User Saves the Assessment as Not Recommended
     When the user selects the radio button                   fundingConfirmation    false
     And the user enters text to a text field                 id=feedback    Negative feedback
     And The user clicks the button/link                      jQuery=.button:contains("Save assessment")
-    And The user should see the element                      css=li:nth-child(5) .negative
-    And The user should see the element                      css=li:nth-child(5) input[type="checkbox"] ~ label
-    And the application should have the correct status       css=.progress-list li:nth-child(5)    Assessed
+    And The user should see the element                      css=li:nth-child(6) .negative
+    And The user should see the element                      css=li:nth-child(6) input[type="checkbox"] ~ label
     And the application should have the correct status       css=.progress-list li:nth-child(6)    Assessed
+    And the application should have the correct status       css=.progress-list li:nth-child(7)    Assessed
 
 Submit Assessments
     [Documentation]    INFUND-5739
@@ -209,15 +209,15 @@ Submit Assessments
     ...
     ...    INFUND-6358
     [Tags]    HappyPath
-    Given the user should see the element    jQuery=.in-progress li:nth-child(6):contains("Intelligent Building")
+    Given the user should see the element    jQuery=.in-progress li:nth-child(7):contains("Intelligent Building")
     And the user should see that the element is disabled    id=submit-assessment-button
-    When the user clicks the button/link    css=.in-progress li:nth-child(6) input[type="checkbox"] ~ label
+    When the user clicks the button/link    css=.in-progress li:nth-child(7) input[type="checkbox"] ~ label
     And the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Cancel")
     And The user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
     Then the application should have the correct status    css=div.submitted    Submitted assessment
-    And the user should see the element    css=li:nth-child(5) input[type="checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
+    And the user should see the element    css=li:nth-child(6) input[type="checkbox"] ~ label    #This keyword verifies that only one applications has been submitted
     And The user should see the text in the page    Intelligent Building
     And The user should see the text in the page    98
     And The user should not see the element    link=Intelligent Building

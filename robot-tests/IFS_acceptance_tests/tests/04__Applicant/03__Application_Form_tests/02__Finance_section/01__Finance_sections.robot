@@ -173,19 +173,15 @@ Custom Suite Setup
     Applicant navigates to the finances of the Robot application
 
 the user adds three material rows
-    the user clicks the button/link    jQuery=button:contains("Materials")
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
-    the user moves focus to the element    jQuery=button:contains(Add another materials cost)
-    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    01
-    the user moves focus to the element    jQuery=button:contains(Add another materials cost)
-    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
-    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    01
-    the user moves the mouse away from the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
-    the user moves focus to the element    link=Please refer to our guide to project costs for further information.
+    the user expands the section          Materials
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
+    ${pagination}=  Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css=#material-costs-table tr:nth-of-type(2)
+    run keyword if    ${pagination} == 'PASS'  click element  jQuery=#material-costs-table tr:nth-of-type(2) .buttonlink:contains("Remove")
+    the user clicks the button/link       jQuery=button:contains("Add another materials cost")
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
+    the user clicks the button/link       jQuery=button:contains("Add another materials cost")
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
+    the user moves focus to the element   link=Please refer to our guide to project costs for further information.
 
 the user removes the materials rows
     [Documentation]    INFUND-2965

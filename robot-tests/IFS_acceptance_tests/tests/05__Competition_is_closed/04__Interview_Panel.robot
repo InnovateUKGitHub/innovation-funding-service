@@ -23,7 +23,7 @@ User navigates to the Manage interview panel
     Then the user clicks the button/link   link=Manage interview panel
     And the user sees the Interview panel page and the Interview links
 
-CompAdmin can add assessors to inivte list
+CompAdmin can add an assessors to invite list
     [Documentation]  IFS-2778
     Given the user clicks the button/link   link=Invite assessors
     When the user clicks the button/link    link=Find
