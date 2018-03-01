@@ -6,6 +6,8 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
 ...
 ...               INFUND-8347: Update 'Your project costs' for academics
+...
+...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Email    Applicant
@@ -27,12 +29,13 @@ Academic finances should be editable when lead marks them as complete
     [Teardown]    Lead applicant marks the finances as incomplete
 
 Academic finance validations
-    [Documentation]    INFUND-2399
+    [Documentation]    INFUND-2399  IFS-2879
     [Tags]
     [Setup]    Log in as a different user    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     And the user clicks the button/link  link=Your project costs
     And the applicant enters invalid inputs
+    And the element should be disabled       id=mark-all-as-complete
     And Mark academic finances as complete
     Then the user should see an error    This field should be 0 or higher.
     Then the user should see an error    This field cannot be left blank.
@@ -112,7 +115,7 @@ Academic finances JeS link showing
     Then the user can see JeS details
 
 Mark all as complete
-    [Documentation]    INFUND-918
+    [Documentation]    INFUND-918  IFS-2879
     [Tags]
     Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     And the user navigates to the academic application finances
@@ -120,6 +123,7 @@ Mark all as complete
     And the user should see the element            link=testing.pdf (opens in a new window)
     When the user enters text to a text field      css=input[name$="tsb_reference"]  123123
     Then textfield value should be                 css=input[name$="tsb_reference"]  123123
+    And the user selects the checkbox              termsAgreed
     When the user clicks the button/link           jQuery=button:contains("Mark as complete")
     Then the user should see the text in the page  Your finances
     And the user navigates to the finance overview of the academic
@@ -225,6 +229,7 @@ the field should not contain the currency symbol
     Textfield Value Should Be  id=incurred-staff    100
 
 Mark academic finances as complete
+    the user selects the checkbox        termsAgreed
     the user moves focus to the element  id=mark-all-as-complete
     the user clicks the button/link      id=mark-all-as-complete
 

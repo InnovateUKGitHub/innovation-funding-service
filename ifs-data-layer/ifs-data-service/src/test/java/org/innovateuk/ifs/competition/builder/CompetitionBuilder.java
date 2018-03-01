@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.domain.TermsAndConditions;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -136,6 +137,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
+    }
+
+    public CompetitionBuilder withAssessorFinanceView(AssessorFinanceView... assessorFinanceView) {
+        return withArraySetFieldByReflection("assessorFinanceView", assessorFinanceView);
     }
 
     public CompetitionBuilder withTermsAndConditions(TermsAndConditions... termsAndConditions) {

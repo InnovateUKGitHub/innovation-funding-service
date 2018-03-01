@@ -125,6 +125,7 @@ public class CompetitionSetupServiceImplTest {
         assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isPreventEdit());
         assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isSetupAndLive());
         assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isSetupComplete());
+        assertEquals(CompetitionStatus.COMPETITION_SETUP, viewModel.getGeneral().getState().getCompetitionStatus());
     }
 
     @Test
@@ -357,6 +358,7 @@ public class CompetitionSetupServiceImplTest {
         assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
         assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
         assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
+        assertEquals(CompetitionStatus.COMPETITION_SETUP, viewModel.getGeneral().getState().getCompetitionStatus());
     }
 
     @Test
@@ -384,6 +386,7 @@ public class CompetitionSetupServiceImplTest {
         assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
         assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
         assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
+        assertEquals(CompetitionStatus.COMPETITION_SETUP, viewModel.getGeneral().getState().getCompetitionStatus());
     }
 
     @Test
@@ -430,7 +433,7 @@ public class CompetitionSetupServiceImplTest {
     private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
         GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE);
         generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
-        generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE));
+        generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, CompetitionStatus.COMPETITION_SETUP));
 
         return generalSetupView;
     }
