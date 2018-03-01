@@ -2,7 +2,7 @@ package org.innovateuk.ifs.sil;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.innovateuk.ifs.org.innovateuk.ifs.rest.RestResultHandlingHttpMessageConverter;
+import org.innovateuk.ifs.commons.rest.RestResultHandlingHttpMessageConverter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.InjectMocks;

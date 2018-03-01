@@ -56,6 +56,6 @@ public class RootUidAuthenticationService implements UserAuthenticationService {
         }
 
         Optional<UserResource> user = validator.retrieveUserByUid(uid, expireCache).getOptionalSuccessObject();
-        return user.isPresent() ? new UserAuthentication(user.get()) : null;
+        return user.map(UserAuthentication::new).orElse(null);
     }
 }

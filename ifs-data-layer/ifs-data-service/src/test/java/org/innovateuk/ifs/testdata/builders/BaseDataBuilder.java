@@ -58,6 +58,7 @@ import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -71,7 +72,6 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -126,6 +126,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected QuestionService questionService;
+    protected TestQuestionService testQuestionService;
     protected FormInputService formInputService;
     protected FormInputResponseRepository formInputResponseRepository;
     protected ApplicationRepository applicationRepository;
@@ -208,6 +209,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
+        testQuestionService = serviceLocator.getBean(TestQuestionService.class);
         formInputService = serviceLocator.getBean(FormInputService.class);
         formInputResponseRepository = serviceLocator.getBean(FormInputResponseRepository.class);
         applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
@@ -278,7 +280,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource ifsAdmin() {
-        return newUserResource().withRolesGlobal(Collections.singletonList(newRoleResource().withType(UserRoleType.IFS_ADMINISTRATOR).build())).build();
+        return retrieveUserByEmailInternal("arden.pimenta@innovateuk.test", IFS_ADMINISTRATOR);
     }
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
