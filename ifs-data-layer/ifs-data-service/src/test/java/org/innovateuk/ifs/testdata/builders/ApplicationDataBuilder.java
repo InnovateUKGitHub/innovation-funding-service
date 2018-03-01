@@ -160,7 +160,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                     getSuccess();
 
             applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), ZonedDateTime.now()).getSuccess();
-            applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccess();
+            applicationNotificationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccess();
         });
     }
 
@@ -174,7 +174,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder informApplicationIneligible() {
         return asCompAdmin(data -> {
             ApplicationIneligibleSendResource resource = new ApplicationIneligibleSendResource("subject", "content");
-            applicationService.informIneligible(data.getApplication().getId(), resource);
+            applicationNotificationService.informIneligible(data.getApplication().getId(), resource);
         });
     }
 

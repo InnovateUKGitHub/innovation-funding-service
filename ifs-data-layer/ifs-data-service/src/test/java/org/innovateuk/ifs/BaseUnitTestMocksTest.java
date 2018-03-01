@@ -309,6 +309,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationService applicationServiceMock;
 
     @Mock
+    protected ApplicationNotificationService applicationNotificationServiceMock;
+
+    @Mock
+    protected ApplicationProgressService applicationProgressServiceMock;
+
+    @Mock
     protected ApplicationCountSummaryService applicationCountSummaryServiceMock;
 
     @Mock
