@@ -113,6 +113,11 @@ get tomorrow month
     ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%m    exclude_millis=true
     [Return]    ${tomorrow}
 
+get tomorrow month as word
+    ${today}=    get time
+    ${tomorrowMonthWord} =    Add time To Date    ${today}    1 day    result_format=%B    exclude_millis=true
+    [Return]    ${tomorrowMonthWord}
+
 get next month
     ${today}=  get time
     ${month} =  Add time To Date  ${today}    31 days    result_format=%m    exclude_millis=true
