@@ -1,16 +1,17 @@
-#!/bin/sh
+#!/bin/bash
+
+set -e
+
 cd "$(dirname "$0")"
 
-function reset_db() {
-    mysql -uroot -ppassword -hifs-database -e "drop database ifs";
+reset_db () {
+    mysql -uroot -ppassword -hifs-database -e "drop database if exists ifs";
     mysql -uroot -ppassword -hifs-database -e "create database ifs";
-    mysql -uroot -ppassword -hifs-database -e "drop database ifs_test";
+    mysql -uroot -ppassword -hifs-database -e "drop database if exists ifs_test";
     mysql -uroot -ppassword -hifs-database -e "create database ifs_test";
-
-    ./gradlew flywayClean flywayMigrate
 }
 
-function do_baseline() {
+do_baseline () {
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
     # navigate to project root
@@ -22,39 +23,27 @@ function do_baseline() {
     ./gradlew clean build buildDocker -x test
     ./gradlew processResources processTestResources
 
-    # unignore generator test class
-    sed -i -e 's/import org.junit.Ignore;//' $generate_test_class
-    sed -i -e 's/@Ignore//' $generate_test_class
-
     # run generator test class
-    ./gradlew :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
     cd ifs-data-layer/ifs-data-service/src/main/resources/db/webtest/
 
-    for i in ${oldversion}*; do mv $i ${i/${oldversion}/${newversion}}; done
+    # extract the current version of the webtest data
+    oldversion="`find . -name '*__Base_webtest_data.sql' | sed 's/.*\(V.*\)_[0-9]*__.*/\1/g'`_"
+
+    for i in ${oldversion}*; do mv $i ${i/${oldversion}/tmp_${newversion}}; done
+    rm -f ${newversion}*.sql
+    for i in tmp_${newversion}*; do mv $i ${i/tmp_${newversion}/${newversion}}; done
 
     cd ../../../../../../../
 
     # create baseline dump
     setup-files/scripts/create-baseline-dump.sh ${newversion}
 
-    # ignore generator test class
-    sed -i -e '/import/i \
-    import org.junit.Ignore;\
-    ' $generate_test_class
-
-    sed -i -e '/public class/i \
-     @Ignore\
-    ' $generate_test_class
-
     reset_db
 
     #verify correct build
-    ./gradlew clean build buildDocker
-
-    reset_db
-
-    ./gradlew composeUp syncShib
+    ./gradlew clean buildDocker initDB flywayClean flywayMigrate composeUp syncShib -x test
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -67,8 +56,8 @@ EOF
 
 }
 
-oldversion=${1?please specify the old baseline version(e.g. V100_11_)}
-newversion=${2?please specify the new baseline version(e.g. V100_12_)}
+newversion=${1?please specify the new baseline version(e.g. V100_12)}
+newversion="${newversion}_"
 
 
 cat << EOF

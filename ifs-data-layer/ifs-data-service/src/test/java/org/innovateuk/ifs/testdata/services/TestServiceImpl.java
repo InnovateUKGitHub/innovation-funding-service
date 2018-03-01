@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.testdata.builders;
+package org.innovateuk.ifs.testdata.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +23,5 @@ public class TestServiceImpl implements TestService {
     @Override
     public <T> T doWithinTransaction(Supplier<T> supplier) {
         return supplier.get();
-    }
-
-    @Override
-    public void flushAndClearSession() {
-        em.flush();
-        em.clear();
     }
 }

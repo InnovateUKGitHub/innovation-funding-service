@@ -23,13 +23,8 @@ update competition_type set template_competition_id = NULL where name = 'Generic
 update competition_type set template_competition_id = NULL where name = 'Expression of interest';
 update competition_type set template_competition_id = NULL where name = 'Advanced Propulsion Centre';
 update competition_type set template_competition_id = NULL where name = 'Aerospace Technology Institute';
-update competition_type set template_competition_id = NULL where name = 'The Prince\'s Trust';
+update competition_type set template_competition_id = NULL where name = "The Prince's Trust";
 
-delete from competition where id = 1;
-delete from competition where id = 2;
-delete from competition where id = 3;
-delete from competition where id = 4;
-delete from competition where id = 5;
-delete from competition where id = 6;
-delete from competition where id = 7;
-delete from competition where id = 8;
+delete from competition where id in (1,2,3,4,5,6,7,8);
+
+delete from terms_and_conditions;
