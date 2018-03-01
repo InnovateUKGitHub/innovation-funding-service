@@ -16,6 +16,8 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               IFS-401 Support team view of detailed finances in application form
 ...
 ...               IFS-802 Enable Innovation Lead user profile matching CSS permissions
+...
+...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -95,7 +97,7 @@ Green check should show when the finances are complete
     Then Green check should be visible
 
 Collaborator marks finances as complete
-    [Documentation]    INFUND-8397
+    [Documentation]    INFUND-8397  IFS-2879
     [Tags]  HappyPath
     log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
