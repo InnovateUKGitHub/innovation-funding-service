@@ -125,7 +125,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
                 QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId());
                 return updateApplicationCompletionStatus ?
                         questionService.markAsComplete(questionKey, lead.getId()) :
-                        questionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, lead.getId());
+                        testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, lead.getId());
             });
         });
     }

@@ -22,10 +22,10 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
+@Primary
 public class QuestionServiceImpl extends BaseTransactionalService implements QuestionService {
 
     @Autowired
@@ -95,13 +96,6 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
                                                 final Long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<List<ValidationMessages>> markAsCompleteWithoutApplicationCompletionStatusUpdate(final QuestionApplicationCompositeId ids,
-                                                                                                          final Long markedAsCompleteById) {
-        return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, false);
     }
 
     @Override
@@ -363,7 +357,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         .collect(toList());
     }
     
-    private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
+    protected ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus) {
         return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
                 -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete, updateApplicationCompleteStatus));
     }

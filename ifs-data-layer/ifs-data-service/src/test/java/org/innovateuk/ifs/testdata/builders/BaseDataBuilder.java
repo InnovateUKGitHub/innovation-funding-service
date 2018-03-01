@@ -126,6 +126,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
     protected QuestionService questionService;
+    protected TestQuestionService testQuestionService;
     protected FormInputService formInputService;
     protected FormInputResponseRepository formInputResponseRepository;
     protected ApplicationRepository applicationRepository;
@@ -208,6 +209,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
+        testQuestionService = serviceLocator.getBean(TestQuestionService.class);
         formInputService = serviceLocator.getBean(FormInputService.class);
         formInputResponseRepository = serviceLocator.getBean(FormInputResponseRepository.class);
         applicationRepository = serviceLocator.getBean(ApplicationRepository.class);

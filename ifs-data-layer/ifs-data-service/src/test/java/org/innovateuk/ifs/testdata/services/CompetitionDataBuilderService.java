@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -141,7 +142,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .createNonIfsCompetition()
                 .withBasicData(line.name, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
-                        null, null, null, null, null, null, null, null, null, null,
+                        null, null, null, null, null, null, null, null, AssessorFinanceView.OVERVIEW, null,
                         null, emptyList(), null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)

@@ -114,7 +114,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     if (lastElement && updateApplicationCompleteStatus) {
                         questionService.markAsComplete(questionKey, processRoleId).getSuccess();
                     } else {
-                        questionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccess();
+                        testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccess();
                     }
                 });
             }

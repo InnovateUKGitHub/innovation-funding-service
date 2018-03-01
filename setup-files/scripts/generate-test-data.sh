@@ -9,8 +9,6 @@ reset_db () {
     mysql -uroot -ppassword -hifs-database -e "create database ifs";
     mysql -uroot -ppassword -hifs-database -e "drop database if exists ifs_test";
     mysql -uroot -ppassword -hifs-database -e "create database ifs_test";
-
-    ./gradlew flywayClean flywayMigrate
 }
 
 do_baseline () {
@@ -45,7 +43,7 @@ do_baseline () {
     reset_db
 
     #verify correct build
-    ./gradlew clean buildDocker initDB composeUp syncShib -x test
+    ./gradlew clean buildDocker initDB flywayClean flywayMigrate composeUp syncShib -x test
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

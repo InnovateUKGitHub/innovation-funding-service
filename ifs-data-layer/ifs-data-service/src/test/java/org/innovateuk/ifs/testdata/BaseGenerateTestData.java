@@ -116,7 +116,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    @Value("${ifs.generate.test.data.competition.filter:BY_NAME}")
+    @Value("${ifs.generate.test.data.competition.filter:ALL_COMPETITIONS}")
     private CompetitionFilter competitionFilter;
 
     @Value("${flyway.url}")
