@@ -57,9 +57,9 @@ Support user is able to search pending external users
     When the invitee verifies his account
     Then the support user should be able to see him as  Verified  Active accounts
 
-Support user is able to search for Applications
+Support user is able to search for an Application
     [Documentation]  IFS-2904
-    [Tags]  HappyPath2
+    [Tags]  HappyPath
     [Setup]  the user navigates to the page      ${server}/management/dashboard/live
     Given the user enters text to a text field    id=searchQuery  ${applicationNumber}
     When the user clicks the button/link          id=searchsubmit
