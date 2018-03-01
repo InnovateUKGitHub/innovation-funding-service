@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
@@ -56,7 +56,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                                 .build())
                 .build();
 
-        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant()
+        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant()
                 .withUser(newUser()
                         .withId(1L)
                         .withFirstName("John")

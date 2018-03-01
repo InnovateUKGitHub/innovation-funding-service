@@ -12,7 +12,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.competition.*;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -190,13 +193,13 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionAssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
+        Page<AssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
@@ -226,7 +229,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionAssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
+        Page<AssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId, pageable))
                 .thenReturn(assessorPage);
@@ -273,7 +276,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
                 .withProfileId(profiles.get(0).getId(), profiles.get(1).getId())
                 .build(2);
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessorUsers.get(0), assessorUsers.get(1))
                 .build(2);
 

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
@@ -49,7 +49,7 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(new HashSet<>(newRole().build(1))).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(innovationLeadRole)).build();
-        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadUserOnProject1).build();
+        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadUserOnProject1).build();
         Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         competitionResource = newCompetitionResource().withId(competition.getId()).build();
         Application application1 = newApplication().withCompetition(competition).build();

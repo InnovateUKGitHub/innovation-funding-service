@@ -1,14 +1,15 @@
 package org.innovateuk.ifs.email.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailBody;
 import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
 import org.innovateuk.ifs.sil.email.service.SilEmailEndpoint;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Uses the Single Integration Layer (SIL) to send out emails, using a Single Integration Layer endpoint to do the actual communication
  */
 @Service
+@ConditionalOnProperty(name = "sil.available", havingValue = "true", matchIfMissing = true)
 public class SilEmailService implements EmailService {
 
     private static final Log LOG = LogFactory.getLog(SilEmailService.class);

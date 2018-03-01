@@ -18,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -39,24 +41,54 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
     @Override
-    public void populateNoReturn(ApplicantSectionResource section, ApplicationForm form, AbstractYourProjectCostsSectionViewModel viewModel, Model model, BindingResult bindingResult, Boolean readOnly, Optional<Long> applicantOrganisationId) {
-        List<ApplicantQuestionResource> costQuestions = section.allQuestions().filter(question -> QuestionType.COST.equals(question.getQuestion().getType())).collect(Collectors.toList());
-        financeHandler.getFinanceModelManager(section.getCurrentApplicant().getOrganisation().getOrganisationType()).addOrganisationFinanceDetails(model, section.getApplication().getId(), costQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), section.getCurrentUser().getId(), form, section.getCurrentApplicant().getOrganisation().getId());
+    public void populateNoReturn(
+            ApplicantSectionResource section,
+            ApplicationForm form,
+            AbstractYourProjectCostsSectionViewModel viewModel,
+            Model model,
+            BindingResult bindingResult,
+            Boolean readOnly,
+            Optional<Long> applicantOrganisationId
+    ) {
+        List<ApplicantQuestionResource> costQuestions =
+                section.allQuestions()
+                        .filter(question -> QuestionType.COST.equals(question.getQuestion().getType()))
+                        .collect(Collectors.toList());
+        financeHandler.getFinanceModelManager(
+                section.getCurrentApplicant().getOrganisation().getOrganisationType()
+        )
+                .addOrganisationFinanceDetails(
+                        model,
+                        section.getApplication().getId(),
+                        simpleMap(costQuestions, ApplicantQuestionResource::getQuestion),
+                        section.getCurrentUser().getId(),
+                        form,
+                        section.getCurrentApplicant().getOrganisation().getId()
+                );
+
         viewModel.setCostQuestions(costQuestions);
         viewModel.setApplicantQuestion(section.getApplicantQuestions().get(0));
-        List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
+        List<Long> completedSectionIds = sectionService.getCompleted(
+                section.getApplication().getId(),
+                section.getCurrentApplicant().getOrganisation().getId()
+        );
         viewModel.setComplete(completedSectionIds.contains(section.getSection().getId()));
-
 
         if (viewModel instanceof DefaultYourProjectCostsSectionViewModel) {
             DefaultYourProjectCostsSectionViewModel defaultViewModel = (DefaultYourProjectCostsSectionViewModel) viewModel;
-            defaultViewModel.setDefaultProjectCostSections(section.getApplicantChildrenSections().stream().map(childSection -> {
-                DefaultProjectCostSection costSection = new DefaultProjectCostSection();
-                costSection.setApplicantResource(section);
-                costSection.setApplicantSection(childSection);
-                costSection.setCostViews(formInputViewModelGenerator.fromSection(section, childSection, form, readOnly));
-                return costSection;
-            }).collect(Collectors.toList()));
+            defaultViewModel.setDefaultProjectCostSections(section.getApplicantChildrenSections().stream().map(
+                    childSection -> {
+                        DefaultProjectCostSection costSection = new DefaultProjectCostSection();
+                        costSection.setApplicantResource(section);
+                        costSection.setApplicantSection(childSection);
+                        costSection.setCostViews(formInputViewModelGenerator.fromSection(
+                                section,
+                                childSection,
+                                form,
+                                readOnly
+                        ));
+                        return costSection;
+                    }).collect(Collectors.toList()));
         } else if (viewModel instanceof JesYourProjectCostsSectionViewModel) {
             section.allQuestions().forEach(applicantQuestion -> {
                 applicantQuestion.getApplicantFormInputs().forEach(applicantFormInput -> {
@@ -71,13 +103,36 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     }
 
     @Override
-    protected AbstractYourProjectCostsSectionViewModel createNew(ApplicantSectionResource section, ApplicationForm form, Boolean readOnly, Optional<Long> applicantOrganisationId, Boolean readOnlyAllApplicantApplicationFinances) {
-        List<Long> completedSectionIds = sectionService.getCompleted(section.getApplication().getId(), section.getCurrentApplicant().getOrganisation().getId());
+    protected AbstractYourProjectCostsSectionViewModel createNew(
+            ApplicantSectionResource section,
+            ApplicationForm form,
+            Boolean readOnly,
+            Optional<Long> applicantOrganisationId,
+            Boolean readOnlyAllApplicantApplicationFinances
+    ) {
+        List<Long> completedSectionIds = sectionService.getCompleted(
+                section.getApplication().getId(),
+                section.getCurrentApplicant().getOrganisation().getId()
+        );
         boolean viewModelIsReadOnly = readOnly || completedSectionIds.contains(section.getSection().getId());
         if (section.getCurrentApplicant().isResearch()) {
-            return new JesYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+            return new JesYourProjectCostsSectionViewModel(
+                    section,
+                    Collections.emptyList(),
+                    getNavigationViewModel(section),
+                    viewModelIsReadOnly,
+                    applicantOrganisationId,
+                    readOnlyAllApplicantApplicationFinances
+            );
         } else {
-            return new DefaultYourProjectCostsSectionViewModel(section, Collections.emptyList(), getNavigationViewModel(section), viewModelIsReadOnly, applicantOrganisationId, readOnlyAllApplicantApplicationFinances);
+            return new DefaultYourProjectCostsSectionViewModel(
+                    section,
+                    Collections.emptyList(),
+                    getNavigationViewModel(section),
+                    viewModelIsReadOnly,
+                    applicantOrganisationId,
+                    readOnlyAllApplicantApplicationFinances
+            );
         }
     }
 

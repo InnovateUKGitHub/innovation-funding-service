@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -54,7 +54,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(newUser()
                         .withId(1L, 2L)
                         .buildArray(2, User.class))
@@ -91,7 +91,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
-        Page<CompetitionAssessmentParticipant> page = mock(Page.class);
+        Page<AssessmentParticipant> page = mock(Page.class);
         Long innovationArea = 4L;
 
         ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();

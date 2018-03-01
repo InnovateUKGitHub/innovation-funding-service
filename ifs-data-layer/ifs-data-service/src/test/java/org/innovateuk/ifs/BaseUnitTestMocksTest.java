@@ -352,7 +352,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
 
     @Mock
-    protected CompetitionAssessmentInviteRepository competitionAssessmentInviteRepositoryMock;
+    protected AssessmentInviteRepository assessmentInviteRepositoryMock;
 
     @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
@@ -373,10 +373,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
-    protected CompetitionAssessmentInviteService competitionAssessmentInviteServiceMock;
+    protected AssessmentInviteService assessmentInviteServiceMock;
 
     @Mock
-    protected CompetitionAssessmentParticipantMapper competitionAssessmentParticipantMapperMock;
+    protected AssessmentParticipantMapper assessmentParticipantMapperMock;
 
     @Mock
     protected CompetitionParticipantRoleMapper competitionParticipantRoleMapperMock;

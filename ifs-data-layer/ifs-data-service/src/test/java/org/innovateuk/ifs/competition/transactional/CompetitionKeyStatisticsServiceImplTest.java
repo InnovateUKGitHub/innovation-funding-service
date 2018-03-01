@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
@@ -54,7 +54,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .withAssessorsInvited(2)
                 .build();
 
-        when(competitionAssessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
+        when(assessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
 
         CompetitionReadyToOpenKeyStatisticsResource response = service.getReadyToOpenKeyStatisticsByCompetition(competitionId).getSuccess();
@@ -79,7 +79,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
 
         BigDecimal limit = new BigDecimal(50L);
 
-        when(competitionAssessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
+        when(assessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
         when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit)).thenReturn(keyStatisticsResource.getApplicationsStarted());
@@ -122,7 +122,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .withAssessments(assessments, assessmentList, emptyList())
                 .build(3);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withId(1L, 2L, 3L)
                 .build(3);
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(1L, of(REJECTED, WITHDRAWN))).thenReturn(0L);
@@ -132,7 +132,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(competitionParticipants);
         when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES)).thenReturn(applicationStatistics);
-        when(competitionAssessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
+        when(assessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
 
         CompetitionClosedKeyStatisticsResource response = service.getClosedKeyStatisticsByCompetition(competitionId).getSuccess();

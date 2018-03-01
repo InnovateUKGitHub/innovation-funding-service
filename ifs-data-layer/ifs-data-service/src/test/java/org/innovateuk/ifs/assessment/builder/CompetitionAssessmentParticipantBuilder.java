@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.*;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
@@ -20,29 +20,29 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
- * Builder for {@link CompetitionAssessmentParticipant}s.
+ * Builder for {@link AssessmentParticipant}s.
  */
-public class CompetitionAssessmentParticipantBuilder extends BaseBuilder<CompetitionAssessmentParticipant, CompetitionAssessmentParticipantBuilder> {
+public class CompetitionAssessmentParticipantBuilder extends BaseBuilder<AssessmentParticipant, CompetitionAssessmentParticipantBuilder> {
 
     public static CompetitionAssessmentParticipantBuilder newCompetitionAssessmentParticipant() {
         return new CompetitionAssessmentParticipantBuilder(emptyList()).with(uniqueIds());
     }
 
-    private CompetitionAssessmentParticipantBuilder(List<BiConsumer<Integer, CompetitionAssessmentParticipant>> multiActions) {
+    private CompetitionAssessmentParticipantBuilder(List<BiConsumer<Integer, AssessmentParticipant>> multiActions) {
         super(multiActions);
     }
 
     @Override
-    protected CompetitionAssessmentParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionAssessmentParticipant>> actions) {
+    protected CompetitionAssessmentParticipantBuilder createNewBuilderWithActions(List<BiConsumer<Integer, AssessmentParticipant>> actions) {
         return new CompetitionAssessmentParticipantBuilder(actions);
     }
 
     @Override
-    protected CompetitionAssessmentParticipant createInitial() {
+    protected AssessmentParticipant createInitial() {
         try {
-            Constructor c = CompetitionAssessmentParticipant.class.getDeclaredConstructor();
+            Constructor c = AssessmentParticipant.class.getDeclaredConstructor();
             c.setAccessible(true);
-            CompetitionAssessmentParticipant instance = (CompetitionAssessmentParticipant) c.newInstance();
+            AssessmentParticipant instance = (AssessmentParticipant) c.newInstance();
             setField("status", ParticipantStatus.PENDING, instance);
             return instance;
         } catch (NoSuchMethodException | IllegalAccessException |InstantiationException | InvocationTargetException e) {
@@ -70,11 +70,11 @@ public class CompetitionAssessmentParticipantBuilder extends BaseBuilder<Competi
         return withCompetition(competitions.build());
     }
 
-    public CompetitionAssessmentParticipantBuilder withInvite(CompetitionAssessmentInvite... invites) {
+    public CompetitionAssessmentParticipantBuilder withInvite(AssessmentInvite... invites) {
         return withArray((invite, i) -> setField("invite", invite, i), invites);
     }
 
-    public CompetitionAssessmentParticipantBuilder withInvite(Builder<CompetitionAssessmentInvite, ?> invite) {
+    public CompetitionAssessmentParticipantBuilder withInvite(Builder<AssessmentInvite, ?> invite) {
         return withInvite(invite.build());
     }
 

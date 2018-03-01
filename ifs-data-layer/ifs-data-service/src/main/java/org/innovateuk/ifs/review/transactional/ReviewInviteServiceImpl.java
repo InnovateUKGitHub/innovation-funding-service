@@ -220,7 +220,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            final Page<CompetitionAssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId, pageable);
+            final Page<AssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId, pageable);
 
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
@@ -233,7 +233,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        List<CompetitionAssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId);
+        List<AssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }
@@ -361,7 +361,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     }
 
     private ServiceResult<ReviewInvite> getByEmailAndCompetition(String email, long competitionId) {
-        return find(reviewInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
+        return find(reviewInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInvite.class, email, competitionId));
     }
 
     @Override

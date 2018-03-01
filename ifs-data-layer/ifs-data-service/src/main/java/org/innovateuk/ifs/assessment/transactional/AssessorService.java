@@ -4,12 +4,12 @@ import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * Transactional and secured service providing operations around {@link org.innovateuk.ifs.user.domain.User} and {@link CompetitionAssessmentInvite} data related to assesors.
+ * Transactional and secured service providing operations around {@link org.innovateuk.ifs.user.domain.User} and {@link AssessmentInvite} data related to assesors.
  */
 public interface AssessorService {
     @PreAuthorize("hasPermission(#user, 'CREATE')")
