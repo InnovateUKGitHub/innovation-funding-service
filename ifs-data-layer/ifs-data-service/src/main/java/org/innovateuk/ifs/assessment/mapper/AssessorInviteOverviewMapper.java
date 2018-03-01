@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.mapper;
 
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
@@ -44,7 +44,7 @@ public class AssessorInviteOverviewMapper {
         this.innovationAreaMapper = innovationAreaMapper;
     }
 
-    public AssessorInviteOverviewResource mapToResource(CompetitionAssessmentParticipant participant) {
+    public AssessorInviteOverviewResource mapToResource(AssessmentParticipant participant) {
         AssessorInviteOverviewResource assessorInviteOverviewResource = mapParticipantToResource(participant);
 
         if (participant.getUser() != null) {

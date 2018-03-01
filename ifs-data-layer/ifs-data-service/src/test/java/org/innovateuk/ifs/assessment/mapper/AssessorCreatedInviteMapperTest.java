@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.mapper;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionInvite;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -87,7 +87,7 @@ public class AssessorCreatedInviteMapperTest {
                 .withInnovationArea(innovationArea)
                 .build();
 
-        CompetitionAssessmentInvite invite = newCompetitionAssessmentInvite()
+        AssessmentInvite invite = newCompetitionAssessmentInvite()
                 .withEmail("test@test.com")
                 .withName("Joe Bloggs")
                 .withUser(
@@ -123,7 +123,7 @@ public class AssessorCreatedInviteMapperTest {
     public void mapFromCompetitionAssessmentInvite_newAssessorInvite() {
         InnovationArea innovationArea = newInnovationArea().build();
 
-        CompetitionAssessmentInvite invite = newCompetitionAssessmentInvite()
+        AssessmentInvite invite = newCompetitionAssessmentInvite()
                 .withEmail("test@test.com")
                 .withName("Joe Bloggs")
                 .withInnovationArea(innovationArea)

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.mapper;
 
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionInvite;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -33,7 +33,7 @@ public class AssessorCreatedInviteMapper {
         this.innovationAreaMapper = innovationAreaMapper;
     }
 
-    public AssessorCreatedInviteResource mapToResource(CompetitionAssessmentInvite competitionAssessmentInvite) {
+    public AssessorCreatedInviteResource mapToResource(AssessmentInvite competitionAssessmentInvite) {
         AssessorCreatedInviteResource assessorCreatedInvite = mapBaseProperties(competitionAssessmentInvite);
 
         if (competitionAssessmentInvite.isNewAssessorInvite()) {

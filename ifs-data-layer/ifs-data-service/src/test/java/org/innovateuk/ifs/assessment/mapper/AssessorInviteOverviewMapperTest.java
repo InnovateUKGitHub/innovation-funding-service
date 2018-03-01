@@ -5,7 +5,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
@@ -69,11 +69,10 @@ public class AssessorInviteOverviewMapperTest {
 
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
 
-        CompetitionAssessmentParticipant competitionAssessmentParticipant =
-                createCompetitionAssessmentParticipant(innovationArea);
+        AssessmentParticipant assessmentParticipant = createAssessmentParticipant(innovationArea);
 
         AssessorInviteOverviewResource assessorInviteOverviewResource =
-                assessorInviteOverviewMapper.mapToResource(competitionAssessmentParticipant);
+                assessorInviteOverviewMapper.mapToResource(assessmentParticipant);
 
         verify(participantStatusMapperMock).mapToResource(ParticipantStatus.PENDING);
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
@@ -81,7 +80,7 @@ public class AssessorInviteOverviewMapperTest {
         assertThat(assessorInviteOverviewResource).isEqualToComparingFieldByField(
                 newAssessorInviteOverviewResource()
                         .withName("Joe Bloggs")
-                        .withInviteId(competitionAssessmentParticipant.getInvite().getId())
+                        .withInviteId(assessmentParticipant.getInvite().getId())
                         .withDetails("Invite sent: 28 Feb 2018")
                         .withInnovationAreas(singletonList(innovationAreaResource))
                         .withStatus(ParticipantStatusResource.PENDING)
@@ -102,17 +101,17 @@ public class AssessorInviteOverviewMapperTest {
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
 
-        CompetitionAssessmentParticipant competitionAssessmentParticipant =
-                createCompetitionAssessmentParticipant(newInnovationArea().build());
+        AssessmentParticipant assessmentParticipant =
+                createAssessmentParticipant(newInnovationArea().build());
 
-        competitionAssessmentParticipant.setUser(
+        assessmentParticipant.setUser(
                 newUser()
                         .withProfileId(profile.getId())
                         .build()
         );
 
         AssessorInviteOverviewResource assessorInviteOverviewResource =
-                assessorInviteOverviewMapper.mapToResource(competitionAssessmentParticipant);
+                assessorInviteOverviewMapper.mapToResource(assessmentParticipant);
 
         verify(participantStatusMapperMock).mapToResource(ParticipantStatus.PENDING);
         verify(profileRepositoryMock).findOne(profile.getId());
@@ -120,9 +119,9 @@ public class AssessorInviteOverviewMapperTest {
 
         assertThat(assessorInviteOverviewResource).isEqualToComparingFieldByField(
                 newAssessorInviteOverviewResource()
-                        .withId(competitionAssessmentParticipant.getUser().getId())
+                        .withId(assessmentParticipant.getUser().getId())
                         .withName("Joe Bloggs")
-                        .withInviteId(competitionAssessmentParticipant.getInvite().getId())
+                        .withInviteId(assessmentParticipant.getInvite().getId())
                         .withBusinessType(profile.getBusinessType())
                         .withDetails("Invite sent: 28 Feb 2018")
                         .withInnovationAreas(singletonList(innovationAreaResource))
@@ -131,7 +130,7 @@ public class AssessorInviteOverviewMapperTest {
         );
     }
 
-    private CompetitionAssessmentParticipant createCompetitionAssessmentParticipant(InnovationArea innovationArea) {
+    private AssessmentParticipant createAssessmentParticipant(InnovationArea innovationArea) {
         return newCompetitionAssessmentParticipant()
                     .withInvite(
                             newCompetitionAssessmentInvite()
@@ -160,7 +159,7 @@ public class AssessorInviteOverviewMapperTest {
 
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
 
-        CompetitionParticipant competitionAssessmentParticipant = newInterviewParticipant()
+        CompetitionParticipant competitionParticipant = newInterviewParticipant()
                 .withInvite(
                         newInterviewInvite()
                                 .withName("Joe Bloggs")
@@ -179,7 +178,7 @@ public class AssessorInviteOverviewMapperTest {
                 .build();
 
         AssessorInviteOverviewResource assessorInviteOverviewResource =
-                assessorInviteOverviewMapper.mapToResource(competitionAssessmentParticipant);
+                assessorInviteOverviewMapper.mapToResource(competitionParticipant);
 
         verify(participantStatusMapperMock).mapToResource(ParticipantStatus.PENDING);
         verify(profileRepositoryMock).findOne(profile.getId());
@@ -187,9 +186,9 @@ public class AssessorInviteOverviewMapperTest {
 
         assertThat(assessorInviteOverviewResource).isEqualToComparingFieldByField(
                 newAssessorInviteOverviewResource()
-                        .withId(competitionAssessmentParticipant.getUser().getId())
+                        .withId(competitionParticipant.getUser().getId())
                         .withName("Joe Bloggs")
-                        .withInviteId(competitionAssessmentParticipant.getInvite().getId())
+                        .withInviteId(competitionParticipant.getInvite().getId())
                         .withBusinessType(profile.getBusinessType())
                         .withDetails("Invite sent: 28 Feb 2018")
                         .withInnovationAreas(singletonList(innovationAreaResource))
@@ -209,7 +208,7 @@ public class AssessorInviteOverviewMapperTest {
 
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(newInnovationAreaResource().build());
 
-        CompetitionParticipant competitionAssessmentParticipant = newInterviewParticipant()
+        CompetitionParticipant competitionParticipant = newInterviewParticipant()
                 .withInvite(newInterviewInvite().build())
                 .withUser(
                         newUser()
@@ -225,7 +224,7 @@ public class AssessorInviteOverviewMapperTest {
                 .build();
 
         AssessorInviteOverviewResource assessorInviteOverviewResource =
-                assessorInviteOverviewMapper.mapToResource(competitionAssessmentParticipant);
+                assessorInviteOverviewMapper.mapToResource(competitionParticipant);
 
         assertThat(assessorInviteOverviewResource.getStatus()).isEqualTo(ParticipantStatusResource.REJECTED);
         assertThat(assessorInviteOverviewResource.getDetails()).isEqualTo("Invite declined as could not attend");
