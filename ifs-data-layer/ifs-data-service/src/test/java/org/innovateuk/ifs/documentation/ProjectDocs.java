@@ -6,9 +6,9 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDate;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class ProjectDocs {

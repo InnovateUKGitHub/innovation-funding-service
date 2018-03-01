@@ -1,20 +1,19 @@
 package org.innovateuk.ifs.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.*;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_OPTIONAL_ENTRY_EXPECTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static java.util.Optional.ofNullable;
 
 /**
  * Utility class to provide common use case wrappers that can be used to wrap callbacks that require either an entity or
@@ -30,17 +29,17 @@ public class EntityLookupCallbacks {
             Error failureResponse) {
 
         if (result instanceof Collection && ((Collection) result).isEmpty()) {
-            return ServiceResult.serviceFailure(failureResponse);
+            return serviceFailure(failureResponse);
         }
         if (result instanceof Optional) {
-            return ((Optional<SuccessType>) result).map(ServiceResult::serviceSuccess).orElse(ServiceResult.serviceFailure(failureResponse));
+            return ((Optional<SuccessType>) result).map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(failureResponse));
         }
 
-        return ofNullable(result).map(ServiceResult::serviceSuccess).orElse(ServiceResult.serviceFailure(failureResponse));
+        return ofNullable(result).map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(failureResponse));
     }
 
     public static <T> ServiceResult<T> find(Optional<T> result, Error failureResponse) {
-        return result.map(ServiceResult::serviceSuccess).orElse(ServiceResult.serviceFailure(failureResponse));
+        return result.map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(failureResponse));
     }
 
     /**
@@ -143,14 +142,14 @@ public class EntityLookupCallbacks {
 
     public static <T> ServiceResult<T> getOnlyElementOrFail(Collection<T> list) {
         if (list == null || list.size() != 1) {
-            return ServiceResult.serviceFailure(new Error(GENERAL_SINGLE_ENTRY_EXPECTED, list != null ? list.size() : null));
+            return serviceFailure(new Error(GENERAL_SINGLE_ENTRY_EXPECTED, list != null ? list.size() : null));
         }
         return ServiceResult.serviceSuccess(list.iterator().next());
     }
 
     public static <T> ServiceResult<T> getOptionalElementOrFail(Optional<T> item) {
         if (!item.isPresent()) {
-            return ServiceResult.serviceFailure(GENERAL_OPTIONAL_ENTRY_EXPECTED);
+            return serviceFailure(GENERAL_OPTIONAL_ENTRY_EXPECTED);
         }
         return ServiceResult.serviceSuccess(item.get());
     }
