@@ -131,9 +131,9 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .build();
 
         innovationArea = newInnovationArea().build();
-        AssessmentInvite competitionAssessmentInvite = setUpCompetitionInvite(competition, SENT, innovationArea);
+        AssessmentInvite assessmentInvite = setUpCompetitionInvite(competition, SENT, innovationArea);
 
-        competitionParticipant = new AssessmentParticipant(competitionAssessmentInvite);
+        competitionParticipant = new AssessmentParticipant(assessmentInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(userId).build();
@@ -148,10 +148,10 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(senderResource));
         when(userMapperMock.mapToDomain(senderResource)).thenReturn(sender);
 
-        when(assessmentInviteRepositoryMock.getByHash(INVITE_HASH)).thenReturn(competitionAssessmentInvite);
+        when(assessmentInviteRepositoryMock.getByHash(INVITE_HASH)).thenReturn(assessmentInvite);
 
-        when(assessmentInviteRepositoryMock.save(same(competitionAssessmentInvite))).thenReturn(competitionAssessmentInvite);
-        when(competitionInviteMapperMock.mapToResource(same(competitionAssessmentInvite))).thenReturn(expected);
+        when(assessmentInviteRepositoryMock.save(same(assessmentInvite))).thenReturn(assessmentInvite);
+        when(competitionInviteMapperMock.mapToResource(same(assessmentInvite))).thenReturn(expected);
 
         when(competitionParticipantRepositoryMock.getByInviteHash(INVITE_HASH)).thenReturn(competitionParticipant);
 
@@ -477,12 +477,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
     @Test
     public void openInvite_inviteExpired() throws Exception {
-        AssessmentInvite competitionAssessmentInvite = setUpCompetitionInvite(newCompetition()
+        AssessmentInvite assessmentInvite = setUpCompetitionInvite(newCompetition()
                 .withName("my competition")
                 .withAssessorAcceptsDate(now().minusDays(1))
                 .build(), SENT, innovationArea);
 
-        when(assessmentInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(competitionAssessmentInvite);
+        when(assessmentInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(assessmentInvite);
 
         ServiceResult<CompetitionInviteResource> inviteServiceResult = service.openInvite("inviteHashExpired");
 
@@ -1078,12 +1078,12 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     public void checkExistingUser_userExistsOnInvite() throws Exception {
         User user = newUser().build();
 
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withUser(user)
                 .withEmail("test@test.com")
                 .build();
 
-        when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(competitionAssessmentInvite);
+        when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(assessmentInvite);
 
         assertTrue(service.checkExistingUser("hash").getSuccess());
 
@@ -1097,11 +1097,11 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     public void checkExistingUser_userExistsForEmail() throws Exception {
         User user = newUser().build();
 
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withEmail("test@test.com")
                 .build();
 
-        when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(competitionAssessmentInvite);
+        when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(assessmentInvite);
         when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(of(user));
 
         assertTrue(service.checkExistingUser("hash").getSuccess());
@@ -1114,11 +1114,11 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
     @Test
     public void checkExistingUser_userDoesNotExist() throws Exception {
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withEmail("test@test.com")
                 .build();
 
-        when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(competitionAssessmentInvite);
+        when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(assessmentInvite);
         when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(empty());
 
         assertFalse(service.checkExistingUser("hash").getSuccess());
@@ -1469,7 +1469,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withCompetitionId(competition.getId())
                 .build();
 
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
                 .withEmail(newUser.getEmail())
@@ -1484,8 +1484,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         AssessmentInvite inviteExpectation = createInviteExpectations(newUser.getName(), newUser.getEmail(), CREATED, competition, null);
 
-        when(assessmentInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionAssessmentInvite);
-        when(competitionInviteMapperMock.mapToResource(competitionAssessmentInvite)).thenReturn(expectedInviteResource);
+        when(assessmentInviteRepositoryMock.save(inviteExpectation)).thenReturn(assessmentInvite);
+        when(competitionInviteMapperMock.mapToResource(assessmentInvite)).thenReturn(expectedInviteResource);
 
         CompetitionInviteResource invite = service.inviteUser(existingAssessor).getSuccess();
 
@@ -1496,7 +1496,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         inOrder.verify(userRepositoryMock).findOne(newUser.getId());
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).save(createInviteExpectations(newUser.getName(), newUser.getEmail(), CREATED, competition, null));
-        inOrder.verify(competitionInviteMapperMock).mapToResource(competitionAssessmentInvite);
+        inOrder.verify(competitionInviteMapperMock).mapToResource(assessmentInvite);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1553,7 +1553,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 .withInnovationAreaId(innovationArea.getId())
                 .build();
 
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
                 .withName(newAssessorName)
@@ -1568,8 +1568,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByEmailAndCompetitionId(newAssessorEmail, competition.getId())).thenReturn(null);
 
         AssessmentInvite inviteExpectation = createInviteExpectations(newAssessorName, newAssessorEmail, CREATED, competition, innovationArea);
-        when(assessmentInviteRepositoryMock.save(inviteExpectation)).thenReturn(competitionAssessmentInvite);
-        when(competitionInviteMapperMock.mapToResource(competitionAssessmentInvite)).thenReturn(expectedInviteResource);
+        when(assessmentInviteRepositoryMock.save(inviteExpectation)).thenReturn(assessmentInvite);
+        when(competitionInviteMapperMock.mapToResource(assessmentInvite)).thenReturn(expectedInviteResource);
 
         ServiceResult<CompetitionInviteResource> serviceResult = service.inviteUser(newAssessor);
         assertTrue(serviceResult.isSuccess());
@@ -1583,7 +1583,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(innovationAreaRepositoryMock).findOne(innovationArea.getId());
         inOrder.verify(assessmentInviteRepositoryMock).save(createInviteExpectations(newAssessorName, newAssessorEmail, CREATED, competition, innovationArea));
-        inOrder.verify(competitionInviteMapperMock).mapToResource(competitionAssessmentInvite);
+        inOrder.verify(competitionInviteMapperMock).mapToResource(assessmentInvite);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1895,17 +1895,17 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         String email = "tom@poly.io";
         long competitionId = 11L;
 
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withStatus(CREATED)
                 .build();
 
-        when(assessmentInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(competitionAssessmentInvite);
+        when(assessmentInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentInvite);
 
         service.deleteInvite(email, competitionId).getSuccess();
 
         InOrder inOrder = inOrder(assessmentInviteRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByEmailAndCompetitionId(email, competitionId);
-        inOrder.verify(assessmentInviteRepositoryMock).delete(competitionAssessmentInvite);
+        inOrder.verify(assessmentInviteRepositoryMock).delete(assessmentInvite);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -1913,11 +1913,11 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     public void deleteInvite_sent() {
         String email = "tom@poly.io";
         long competitionId = 11L;
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withStatus(SENT)
                 .build();
 
-        when(assessmentInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(competitionAssessmentInvite);
+        when(assessmentInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentInvite);
 
         ServiceResult<Void> serviceResult = service.deleteInvite(email, competitionId);
 
@@ -2079,13 +2079,13 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         );
     }
 
-    private static AssessmentParticipant createCompetitionParticipantExpectations(AssessmentInvite competitionAssessmentInvite) {
+    private static AssessmentParticipant createCompetitionParticipantExpectations(AssessmentInvite assessmentInvite) {
         return createLambdaMatcher(competitionParticipant -> {
             assertNull(competitionParticipant.getId());
-            assertEquals(competitionAssessmentInvite.getTarget(), competitionParticipant.getProcess());
-            assertEquals(competitionAssessmentInvite, competitionParticipant.getInvite());
+            assertEquals(assessmentInvite.getTarget(), competitionParticipant.getProcess());
+            assertEquals(assessmentInvite, competitionParticipant.getInvite());
             assertEquals(ASSESSOR, competitionParticipant.getRole());
-            assertEquals(competitionAssessmentInvite.getUser(), competitionParticipant.getUser());
+            assertEquals(assessmentInvite.getUser(), competitionParticipant.getUser());
         });
     }
 

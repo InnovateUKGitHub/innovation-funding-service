@@ -53,16 +53,16 @@ public class AssessmentParticipantTest {
 
     @Test(expected = NullPointerException.class)
     public void constructor_inviteNull() throws Exception {
-        AssessmentInvite competitionAssessmentInvite = null;
-        new AssessmentParticipant(competitionAssessmentInvite);
+        AssessmentInvite assessmentInvite = null;
+        new AssessmentParticipant(assessmentInvite);
     }
 
     @Test(expected = NullPointerException.class)
     public void constructor_inviteWithoutCompetition() throws Exception {
-        AssessmentInvite competitionAssessmentInvite = newAssessmentInvite()
+        AssessmentInvite assessmentInvite = newAssessmentInvite()
                 .withStatus(SENT)
                 .build();
-        new AssessmentParticipant(competitionAssessmentInvite);
+        new AssessmentParticipant(assessmentInvite);
     }
 
     @Test(expected = IllegalArgumentException.class)

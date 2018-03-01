@@ -265,7 +265,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
 
         userRepository.save(user);
 
-        ReviewInvite competitionAssessmentInvite = newReviewInvite()
+        ReviewInvite reviewInvite = newReviewInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -274,9 +274,9 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        reviewInviteRepository.save(competitionAssessmentInvite);
+        reviewInviteRepository.save(reviewInvite);
 
-        ReviewParticipant reviewParticipant = new ReviewParticipant(competitionAssessmentInvite);
+        ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
         reviewParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
         reviewParticipantRepository.save(reviewParticipant);

@@ -758,11 +758,11 @@ public class AssessmentInviteServiceImpl implements AssessmentInviteService {
         return profile.isCompliant(competitionAssessmentInvite.getUser());
     }
 
-    private List<InnovationAreaResource> getInnovationAreasForInvite(AssessmentInvite competitionAssessmentInvite) {
-        if (competitionAssessmentInvite.isNewAssessorInvite()) {
-            return singletonList(innovationAreaMapper.mapToResource(competitionAssessmentInvite.getInnovationArea()));
+    private List<InnovationAreaResource> getInnovationAreasForInvite(AssessmentInvite assessmentInvite) {
+        if (assessmentInvite.isNewAssessorInvite()) {
+            return singletonList(innovationAreaMapper.mapToResource(assessmentInvite.getInnovationArea()));
         } else {
-            return profileRepository.findOne(competitionAssessmentInvite.getUser().getProfileId()).getInnovationAreas().stream()
+            return profileRepository.findOne(assessmentInvite.getUser().getProfileId()).getInnovationAreas().stream()
                     .map(innovationAreaMapper::mapToResource)
                     .collect(toList());
         }

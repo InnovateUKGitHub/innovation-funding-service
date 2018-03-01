@@ -59,7 +59,7 @@ public class AssessmentParticipantBuilderTest {
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         CompetitionParticipantRole[] expectedRoles = { ASSESSOR, ASSESSOR };
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
-        AssessmentInvite[] expectedCompetitionAssessmentInvites = newAssessmentInvite().buildArray(2, AssessmentInvite.class);
+        AssessmentInvite[] expectedAssessmentInvites = newAssessmentInvite().buildArray(2, AssessmentInvite.class);
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
@@ -69,7 +69,7 @@ public class AssessmentParticipantBuilderTest {
                 .withUser(expectedUsers)
                 .withRole(expectedRoles)
                 .withCompetition(expectedCompetitions)
-                .withInvite(expectedCompetitionAssessmentInvites)
+                .withInvite(expectedAssessmentInvites)
                 .withRejectionReason(expectedRejectionReasons)
                 .withRejectionComment(expectedRejectionComment)
                 .build(2);
@@ -80,7 +80,7 @@ public class AssessmentParticipantBuilderTest {
         assertEquals(expectedUsers[0], first.getUser());
         assertEquals(expectedRoles[0], first.getRole());
         assertEquals(expectedCompetitions[0], first.getProcess());
-        assertEquals(expectedCompetitionAssessmentInvites[0], first.getInvite());
+        assertEquals(expectedAssessmentInvites[0], first.getInvite());
         assertEquals(expectedRejectionReasons[0], first.getRejectionReason());
         assertEquals(expectedRejectionComment[0], first.getRejectionReasonComment());
 
@@ -90,7 +90,7 @@ public class AssessmentParticipantBuilderTest {
         assertEquals(expectedUsers[1], second.getUser());
         assertEquals(expectedRoles[1], second.getRole());
         assertEquals(expectedCompetitions[1], second.getProcess());
-        assertEquals(expectedCompetitionAssessmentInvites[1], second.getInvite());
+        assertEquals(expectedAssessmentInvites[1], second.getInvite());
         assertEquals(expectedRejectionReasons[1], second.getRejectionReason());
         assertEquals(expectedRejectionComment[1], second.getRejectionReasonComment());
     }
