@@ -54,7 +54,7 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionInviteWithoutId;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
@@ -130,7 +130,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void findAll() {
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name2")
                         .withEmail("test1@test.com", "test2@test.com")
                         .withHash(generateInviteHash(), generateInviteHash())
@@ -152,7 +152,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         String hash = generateInviteHash();
 
         AssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
                         .withHash(hash)
@@ -170,7 +170,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void save() {
         AssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
                         .withHash(generateInviteHash())
@@ -190,7 +190,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void save_accepted() {
         AssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1")
                         .withEmail(user.getEmail())
                         .withHash(Invite.generateInviteHash())
@@ -212,7 +212,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void save_rejected() {
         AssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
                         .withHash(Invite.generateInviteHash())
@@ -235,7 +235,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void getByUserRoleStatus() {
         AssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1")
                         .withEmail(user.getEmail())
                         .withHash(Invite.generateInviteHash())
@@ -256,7 +256,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
 
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name2")
                         .withEmail("test1@test.com", "test2@test.com")
                         .withHash(generateInviteHash(), generateInviteHash())
@@ -279,7 +279,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
 
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
                         .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
@@ -312,7 +312,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
                         .withUser(users.toArray(new User[users.size()]))
@@ -363,7 +363,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
                         .withUser(users.toArray(new User[users.size()]))
@@ -411,7 +411,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
 
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
                         .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
@@ -442,7 +442,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         competitionRepository.save(competitions);
 
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name1", "name2")
                         .withEmail("test1@test.com", "test1@test.com", "test2@test.com")
                         .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
@@ -460,7 +460,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void getByInviteId() {
         AssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
                         .withHash(generateInviteHash())
@@ -478,7 +478,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void countByCompetitionIdAndRole() throws Exception {
         saveNewCompetitionParticipants(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1", "name2")
                         .withEmail("test1@test.com", "test2@test.com")
                         .withHash(generateInviteHash(), generateInviteHash())
@@ -550,7 +550,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(acceptedUser);
 
-        List<AssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -648,7 +648,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(users);
 
-        List<AssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -692,7 +692,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_innovationArea() throws Exception {
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
 
-        List<AssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -740,7 +740,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(acceptedUser);
 
-        List<AssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -821,7 +821,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(users);
 
-        List<AssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -898,7 +898,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(users);
 
-        List<AssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -937,7 +937,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_noFilters() throws Exception {
-        List<AssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<AssessmentInvite> newAssessorInvites = newAssessmentInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -985,7 +985,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void findAssessorAvailableForAssessmentPanel() {
         AssessmentParticipant availableParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName("name1")
                         .withEmail(user.getEmail())
                         .withHash(Invite.generateInviteHash())
@@ -999,7 +999,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         User assessor = userMapper.mapToDomain(getFelixWilson());
         AssessmentParticipant unavailableParticipant = saveNewCompetitionParticipant(
-                newCompetitionInviteWithoutId()
+                newAssessmentInviteWithoutId()
                         .withName(assessor.getName())
                         .withEmail(assessor.getEmail())
                         .withHash(Invite.generateInviteHash())

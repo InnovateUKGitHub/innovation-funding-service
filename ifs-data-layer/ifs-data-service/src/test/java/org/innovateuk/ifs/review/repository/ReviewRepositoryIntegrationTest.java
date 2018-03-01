@@ -276,10 +276,10 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
 
         reviewInviteRepository.save(competitionAssessmentInvite);
 
-        ReviewParticipant competitionAssessmentParticipant = new ReviewParticipant(competitionAssessmentInvite);
-        competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
+        ReviewParticipant reviewParticipant = new ReviewParticipant(competitionAssessmentInvite);
+        reviewParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
-        reviewParticipantRepository.save(competitionAssessmentParticipant);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -331,9 +331,9 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                 .build();
         reviewInviteRepository.save(reviewInvite);
 
-        ReviewParticipant competitionAssessmentParticipant = new ReviewParticipant(reviewInvite);
-        competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
-        reviewParticipantRepository.save(competitionAssessmentParticipant);
+        ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
+        reviewParticipant.setStatus(ParticipantStatus.ACCEPTED);
+        reviewParticipantRepository.save(reviewParticipant);
 
         Application application = newApplication()
                 .with(id(null))

@@ -8,9 +8,9 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -29,9 +29,9 @@ public class AssessmentParticipantBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         RejectionReason expectedRejectionReason = newRejectionReason().withReason("Unavailable").build();
         String expectedRejectionComment = "Too busy";
-        AssessmentInvite expectedInvite = newCompetitionAssessmentInvite().build();
+        AssessmentInvite expectedInvite = newAssessmentInvite().build();
 
-        AssessmentParticipant participant = newCompetitionAssessmentParticipant()
+        AssessmentParticipant participant = newAssessmentParticipant()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withUser(expectedUser)
@@ -59,11 +59,11 @@ public class AssessmentParticipantBuilderTest {
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         CompetitionParticipantRole[] expectedRoles = { ASSESSOR, ASSESSOR };
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
-        AssessmentInvite[] expectedCompetitionAssessmentInvites = newCompetitionAssessmentInvite().buildArray(2, AssessmentInvite.class);
+        AssessmentInvite[] expectedCompetitionAssessmentInvites = newAssessmentInvite().buildArray(2, AssessmentInvite.class);
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
-        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newAssessmentParticipant()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withUser(expectedUsers)

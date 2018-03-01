@@ -35,7 +35,7 @@ import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -111,7 +111,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
     @Test
     public void getByInviteIds() {
-        List<AssessmentInvite> invites = newCompetitionAssessmentInvite()
+        List<AssessmentInvite> invites = newAssessmentInvite()
                 .withName("fred", "jake")
                 .withEmail("fred@test.com", "jake@test.com")
                 .withHash("hash1", "hash2")
@@ -153,7 +153,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     public void getByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newCompetitionAssessmentInvite()
+        repository.save(newAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -182,7 +182,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     public void getByCompetitionIdAndStatus_asList() throws Exception {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newCompetitionAssessmentInvite()
+        repository.save(newAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -207,7 +207,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
     public void countByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newCompetitionAssessmentInvite()
+        repository.save(newAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")

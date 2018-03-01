@@ -53,7 +53,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -120,7 +120,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         User user = UserBuilder.newUser().build();
         UserResource userResource = UserResourceBuilder.newUserResource().build();
-        List<AssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .withUser(user)
                 .build(4);
 
@@ -177,7 +177,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void removeInnovationLead() throws Exception {
         Long innovationLeadUserId = 2L;
 
-        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
+        AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(competitionParticipant);
 

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -207,8 +207,8 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         Long competitionId = 2L;
 
         List<AssessmentParticipant> competitionParticipants = new ArrayList<>();
-        AssessmentParticipant competitionParticipant1 = newCompetitionAssessmentParticipant().withId(1L).build();
-        AssessmentParticipant competitionParticipant2 = newCompetitionAssessmentParticipant().withId(2L).build();
+        AssessmentParticipant competitionParticipant1 = newAssessmentParticipant().withId(1L).build();
+        AssessmentParticipant competitionParticipant2 = newAssessmentParticipant().withId(2L).build();
 
         competitionParticipants.add(competitionParticipant1);
         competitionParticipants.add(competitionParticipant2);

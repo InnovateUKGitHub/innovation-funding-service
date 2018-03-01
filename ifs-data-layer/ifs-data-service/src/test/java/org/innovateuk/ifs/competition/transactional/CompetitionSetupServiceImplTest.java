@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -155,7 +155,7 @@ public class CompetitionSetupServiceImplTest {
 		Long newLeadTechnologistId = 7L;
 		User leadTechnologist = UserBuilder.newUser().withId(newLeadTechnologistId).build();
 
-		AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
+		AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
 				.withLeadTechnologist(newLeadTechnologistId)
@@ -196,7 +196,7 @@ public class CompetitionSetupServiceImplTest {
 		Long existingLeadTechnologistId = 5L;
 		Long newLeadTechnologistId = 7L;
 
-		AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
+		AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
 				.withLeadTechnologist(newLeadTechnologistId)
@@ -205,7 +205,7 @@ public class CompetitionSetupServiceImplTest {
 				.withId(competitionId)
 				.withLeadTechnologist(UserBuilder.newUser().withId(newLeadTechnologistId).build())
 				.build();
-		AssessmentParticipant newLeadTechCompetitionParticipant = newCompetitionAssessmentParticipant().withId(11L).build();
+		AssessmentParticipant newLeadTechCompetitionParticipant = newAssessmentParticipant().withId(11L).build();
 		when(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
 				existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipant);
 		when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);

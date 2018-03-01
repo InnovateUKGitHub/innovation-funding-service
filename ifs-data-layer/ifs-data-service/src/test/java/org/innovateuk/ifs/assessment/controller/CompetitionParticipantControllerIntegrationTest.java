@@ -20,10 +20,10 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
@@ -62,8 +62,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition1 = buildInAssessmentCompetition();
         Competition competition2 = buildInAssessmentCompetition();
 
-        AssessmentParticipant expectedParticipant1 = buildCompetitionAssessmentParticipant(competition1, SENT, PENDING);
-        AssessmentParticipant expectedParticipant2 = buildCompetitionAssessmentParticipant(competition2, OPENED, PENDING);
+        AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, SENT, PENDING);
+        AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
         competitionParticipantRepository.save(asList(
                 expectedParticipant1,
@@ -113,8 +113,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
 
         Competition competition2 = buildInAssessmentCompetition();
 
-        AssessmentParticipant expectedParticipant1 = buildCompetitionAssessmentParticipant(competition1, OPENED, ACCEPTED);
-        AssessmentParticipant expectedParticipant2 = buildCompetitionAssessmentParticipant(competition2, OPENED, PENDING);
+        AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
+        AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
         competitionParticipantRepository.save(asList(
                 expectedParticipant1,
@@ -145,7 +145,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
     @Test
     public void getParticipants_filtersRejected() throws Exception {
         Competition competition1 = buildInAssessmentCompetition();
-        AssessmentParticipant expectedParticipant1 = buildCompetitionAssessmentParticipant(competition1, OPENED, REJECTED);
+        AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, REJECTED);
 
         competitionParticipantRepository.save(singletonList(expectedParticipant1));
 
@@ -165,8 +165,8 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition1 = buildOutOfAssessmentCompetition();
         Competition competition2 = buildOutOfAssessmentCompetition();
 
-        AssessmentParticipant expectedParticipant1 = buildCompetitionAssessmentParticipant(competition1, OPENED, ACCEPTED);
-        AssessmentParticipant expectedParticipant2 = buildCompetitionAssessmentParticipant(competition2, OPENED, PENDING);
+        AssessmentParticipant expectedParticipant1 = buildAssessmentParticipant(competition1, OPENED, ACCEPTED);
+        AssessmentParticipant expectedParticipant2 = buildAssessmentParticipant(competition2, OPENED, PENDING);
 
         competitionParticipantRepository.save(asList(
                 expectedParticipant1,
@@ -207,15 +207,15 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         return competition;
     }
 
-    private AssessmentParticipant buildCompetitionAssessmentParticipant(Competition competition, InviteStatus inviteStatus, ParticipantStatus participantStatus) {
-        return newCompetitionAssessmentParticipant()
+    private AssessmentParticipant buildAssessmentParticipant(Competition competition, InviteStatus inviteStatus, ParticipantStatus participantStatus) {
+        return newAssessmentParticipant()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(newUser()
                         .withId(3L)
                         .withFirstName("Professor")
                 )
-                .withInvite(newCompetitionAssessmentInvite()
+                .withInvite(newAssessmentInvite()
                         .with(id(null))
                         .withName("name")
                         .withEmail("joe@test.com")

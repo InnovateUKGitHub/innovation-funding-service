@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 
 /**
  * Generates assessor invites and gives the ability to accept them
@@ -43,7 +43,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
             final Competition competition = retrieveCompetitionByName(competitionName);
             final InnovationArea innovationArea = retrieveInnovationAreaByName(innovationAreaName);
 
-            final AssessmentInvite invite = newCompetitionAssessmentInvite().
+            final AssessmentInvite invite = newAssessmentInvite().
                     withCompetition(competition).
                     withEmail(emailAddress).
                     withStatus(inviteStatus).

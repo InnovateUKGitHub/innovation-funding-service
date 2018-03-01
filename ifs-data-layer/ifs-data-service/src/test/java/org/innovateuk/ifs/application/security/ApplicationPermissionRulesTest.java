@@ -29,7 +29,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -84,7 +84,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         User innovationLeadOnApp1 = newUser().build();
         innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(innovationLeadRole)).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
-        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadOnApp1).build();
+        AssessmentParticipant competitionParticipant = newAssessmentParticipant().withUser(innovationLeadOnApp1).build();
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();
