@@ -48,9 +48,6 @@ ${openGenericCompetition}  Generic innovation
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 
-#Used by support users to search for applications on their dashboard. Can also be used by IFS admins
-${applicationNumber}    124
-
 # Using double quotes below, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_NAME}      Climate science the history of Greenland\'s ice
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}  ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}

@@ -59,11 +59,9 @@ Support user is able to search pending external users
 
 Support user is able to search for an Application
     [Documentation]  IFS-2904
-    [Tags]  HappyPath
-    [Setup]  the user navigates to the page      ${server}/management/dashboard/live
-    Given the user enters text to a text field    id=searchQuery  ${applicationNumber}
-    When the user clicks the button/link          id=searchsubmit
-    Then the user should see the element          link=${applicationNumber}
+    [Tags]  HappyPath2
+    When the user navigates to the page      ${server}/management/dashboard/live
+    Then the user enters the application id into the search field
 
 *** Keywords ***
 the user is searching for external users
@@ -101,3 +99,9 @@ the invitee has accepted the invitation but has not yet verified his account
 the invitee verifies his account
     the user reads his email and clicks the link       ${invitedCollaborator}  Please verify your email address  recently set up an account  1
     the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
+
+the user enters the application id into the search field
+    ${applicationID} =  get application id by name  Networking home IOT devices
+    the user enters text to a text field    id=searchQuery  ${applicationID}
+    the user clicks the button/link          id=searchsubmit
+    the user should see the element          jQuery=td:contains("${applicationID}")
