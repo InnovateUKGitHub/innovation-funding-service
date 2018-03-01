@@ -5,10 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
-import org.innovateuk.ifs.competition.resource.CollaborationLevel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -93,6 +90,9 @@ public class Competition implements ProcessActivity {
     private Boolean resubmission;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
+
+    @Enumerated(EnumType.STRING)
+    private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
 
     private String streamName;
     @Enumerated(EnumType.STRING)
@@ -680,6 +680,14 @@ public class Competition implements ProcessActivity {
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public AssessorFinanceView getAssessorFinanceView() {
+        return assessorFinanceView;
+    }
+
+    public void setAssessorFinanceView(AssessorFinanceView assessorFinanceView) {
+        this.assessorFinanceView = assessorFinanceView;
     }
 
     public TermsAndConditions getTermsAndConditions() {
