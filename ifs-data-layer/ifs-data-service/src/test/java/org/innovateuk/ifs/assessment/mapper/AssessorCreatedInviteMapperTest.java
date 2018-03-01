@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.mockito.Matchers.any;
@@ -87,7 +87,7 @@ public class AssessorCreatedInviteMapperTest {
                 .withInnovationArea(innovationArea)
                 .build();
 
-        AssessmentInvite invite = newCompetitionAssessmentInvite()
+        AssessmentInvite invite = newAssessmentInvite()
                 .withEmail("test@test.com")
                 .withName("Joe Bloggs")
                 .withUser(
@@ -123,7 +123,7 @@ public class AssessorCreatedInviteMapperTest {
     public void mapFromCompetitionAssessmentInvite_newAssessorInvite() {
         InnovationArea innovationArea = newInnovationArea().build();
 
-        AssessmentInvite invite = newCompetitionAssessmentInvite()
+        AssessmentInvite invite = newAssessmentInvite()
                 .withEmail("test@test.com")
                 .withName("Joe Bloggs")
                 .withInnovationArea(innovationArea)

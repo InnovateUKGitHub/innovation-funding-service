@@ -23,13 +23,13 @@ import java.time.ZonedDateTime;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteBuilder.newInterviewInvite;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantBuilder.newInterviewParticipant;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -131,9 +131,9 @@ public class AssessorInviteOverviewMapperTest {
     }
 
     private AssessmentParticipant createAssessmentParticipant(InnovationArea innovationArea) {
-        return newCompetitionAssessmentParticipant()
+        return newAssessmentParticipant()
                     .withInvite(
-                            newCompetitionAssessmentInvite()
+                            newAssessmentInvite()
                                     .withName("Joe Bloggs")
                                     .withEmail("test@test.com")
                                     .withSentOn(ZonedDateTime.parse("2018-02-28T12:00:00Z"))
