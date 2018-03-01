@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.transactional.CompetitionAssessmentInviteService;
+import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
@@ -29,14 +29,14 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
 
-public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionAssessmentInviteService> {
+public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentInviteService> {
 
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
 
     @Override
-    protected Class<? extends CompetitionAssessmentInviteService> getClassUnderTest() {
-        return TestCompetitionAssessmentAssessmentInviteService.class;
+    protected Class<? extends AssessmentInviteService> getClassUnderTest() {
+        return TestAssessmentAssessmentInviteService.class;
     }
 
     @Before
@@ -220,7 +220,7 @@ public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceS
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
-    public static class TestCompetitionAssessmentAssessmentInviteService implements CompetitionAssessmentInviteService {
+    public static class TestAssessmentAssessmentInviteService implements AssessmentInviteService {
 
         @Override
         public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {

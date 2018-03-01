@@ -60,7 +60,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
 
     /* Innovation leads should not access competitions in states: In preparation and Ready to open */
-    String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT cp.competition FROM CompetitionAssessmentParticipant cp LEFT JOIN cp.competition.milestones m LEFT JOIN cp.competition.competitionType ct " +
+    String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT cp.competition FROM AssessmentParticipant cp LEFT JOIN cp.competition.milestones m LEFT JOIN cp.competition.competitionType ct " +
             "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (cp.competition.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE " +
             "AND (cp.competition.setupComplete IS NOT NULL AND cp.competition.setupComplete != FALSE) " +
             "AND cp.user.id = :userId " +
@@ -81,21 +81,21 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + LIVE_QUERY_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_LIVE_COUNT_QUERY = "SELECT count(distinct cp.competition.id) " + "FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_LIVE_WHERE_CLAUSE;
+    String INNOVATION_LEAD_LIVE_COUNT_QUERY = "SELECT count(distinct cp.competition.id) " + "FROM AssessmentParticipant cp " + INNOVATION_LEAD_LIVE_WHERE_CLAUSE;
 
     String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
     String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_PROJECT_SETUP_QUERY = "SELECT cp.competition FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+    String INNOVATION_LEAD_PROJECT_SETUP_QUERY = "SELECT cp.competition FROM AssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+    String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM AssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
 
     String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c " + FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + FEEDBACK_RELEASED_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_FEEDBACK_RELEASED_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE;
+    String INNOVATION_LEAD_FEEDBACK_RELEASED_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM AssessmentParticipant cp " + INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
 

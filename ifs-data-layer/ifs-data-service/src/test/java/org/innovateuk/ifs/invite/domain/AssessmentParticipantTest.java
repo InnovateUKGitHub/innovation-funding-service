@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.invite.builder.RejectionReasonBuilder;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
@@ -20,9 +20,9 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 
-public class CompetitionAssessmentParticipantTest {
+public class AssessmentParticipantTest {
 
-    private CompetitionAssessmentInvite invite;
+    private AssessmentInvite invite;
     private RejectionReason rejectionReason;
 
     @Before
@@ -37,13 +37,13 @@ public class CompetitionAssessmentParticipantTest {
     @Test
     public void constructor() throws Exception {
         User user = newUser().build();
-        CompetitionAssessmentInvite createdInvite = newCompetitionAssessmentInvite()
+        AssessmentInvite createdInvite = newCompetitionAssessmentInvite()
                 .withCompetition(newCompetition().withName("my competition"))
                 .withStatus(SENT)
                 .withUser(user)
                 .build();
 
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(createdInvite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(createdInvite);
         assertSame(createdInvite.getUser(), competitionParticipant.getUser());
         assertSame(createdInvite.getTarget(), competitionParticipant.getProcess());
         assertSame(createdInvite, competitionParticipant.getInvite());
@@ -53,31 +53,31 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test(expected = NullPointerException.class)
     public void constructor_inviteNull() throws Exception {
-        CompetitionAssessmentInvite competitionAssessmentInvite = null;
-        new CompetitionAssessmentParticipant(competitionAssessmentInvite);
+        AssessmentInvite competitionAssessmentInvite = null;
+        new AssessmentParticipant(competitionAssessmentInvite);
     }
 
     @Test(expected = NullPointerException.class)
     public void constructor_inviteWithoutCompetition() throws Exception {
-        CompetitionAssessmentInvite competitionAssessmentInvite = newCompetitionAssessmentInvite()
+        AssessmentInvite competitionAssessmentInvite = newCompetitionAssessmentInvite()
                 .withStatus(SENT)
                 .build();
-        new CompetitionAssessmentParticipant(competitionAssessmentInvite);
+        new AssessmentParticipant(competitionAssessmentInvite);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void constructor_inviteNotSentOrOpened() throws Exception {
-        CompetitionAssessmentInvite createdInvite = newCompetitionAssessmentInvite()
+        AssessmentInvite createdInvite = newCompetitionAssessmentInvite()
                 .withCompetition(newCompetition().withName("my competition"))
                 .withStatus(CREATED)
                 .build();
 
-        new CompetitionAssessmentParticipant(createdInvite);
+        new AssessmentParticipant(createdInvite);
     }
 
     @Test
     public void accept() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         User user = newUser().build();
 
         invite.open();
@@ -88,7 +88,7 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test(expected = IllegalStateException.class)
     public void accept_unopened() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         User user = newUser().build();
 
         competitionParticipant.acceptAndAssignUser(user);
@@ -96,7 +96,7 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test(expected = IllegalStateException.class)
     public void accept_alreadyAccepted() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         User user = newUser().build();
 
         invite.open();
@@ -107,7 +107,7 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test(expected = IllegalStateException.class)
     public void accept_alreadyRejected() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         User user = newUser().build();
 
         invite.open();
@@ -118,7 +118,7 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test
     public void reject() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
         assertEquals(REJECTED, competitionParticipant.getStatus());
@@ -128,13 +128,13 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test(expected = IllegalStateException.class)
     public void reject_unopened() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
     }
 
     @Test(expected = IllegalStateException.class)
     public void reject_alreadyAccepted() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         User user = newUser().build();
 
         invite.open();
@@ -145,7 +145,7 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test(expected = IllegalStateException.class)
     public void reject_alreadyRejected() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
         competitionParticipant.reject(rejectionReason, Optional.of("too busy"));
@@ -153,21 +153,21 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test(expected = NullPointerException.class)
     public void reject_nullReason() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
         competitionParticipant.reject(null, Optional.of("too busy"));
     }
 
     @Test(expected = NullPointerException.class)
     public void reject_nullReasonComment() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, null);
     }
 
     @Test
     public void reject_emptyComment() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, Optional.of(""));
         assertEquals(REJECTED, competitionParticipant.getStatus());
@@ -177,7 +177,7 @@ public class CompetitionAssessmentParticipantTest {
 
     @Test
     public void reject_noComment() throws Exception {
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(invite);
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant(invite);
         invite.open();
         competitionParticipant.reject(rejectionReason, empty());
         assertEquals(REJECTED, competitionParticipant.getStatus());

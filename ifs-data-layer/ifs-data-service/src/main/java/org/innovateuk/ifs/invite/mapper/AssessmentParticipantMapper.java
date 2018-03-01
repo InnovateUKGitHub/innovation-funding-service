@@ -4,7 +4,7 @@ import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
@@ -22,7 +22,7 @@ import org.mapstruct.Mappings;
         ParticipantStatusMapper.class,
     }
 )
-public abstract class CompetitionAssessmentParticipantMapper extends BaseMapper<CompetitionAssessmentParticipant, CompetitionParticipantResource, Long> {
+public abstract class AssessmentParticipantMapper extends BaseMapper<AssessmentParticipant, CompetitionParticipantResource, Long> {
 
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),
@@ -36,16 +36,16 @@ public abstract class CompetitionAssessmentParticipantMapper extends BaseMapper<
             @Mapping(source = "process.competitionStatus", target = "competitionStatus"),
     })
     @Override
-    public abstract CompetitionParticipantResource mapToResource(CompetitionAssessmentParticipant domain);
+    public abstract CompetitionParticipantResource mapToResource(AssessmentParticipant domain);
 
     @Mappings({
             @Mapping(source = "userId", target = "user"),
             @Mapping(source = "competitionId", target = "process")
     })
     @Override
-    public abstract CompetitionAssessmentParticipant mapToDomain(CompetitionParticipantResource resource);
+    public abstract AssessmentParticipant mapToDomain(CompetitionParticipantResource resource);
 
-    public Long mapCompetitionParticipantToId(CompetitionAssessmentParticipant object) {
+    public Long mapCompetitionParticipantToId(AssessmentParticipant object) {
         if (object == null) {
             return null;
         }

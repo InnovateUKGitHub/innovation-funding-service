@@ -10,11 +10,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
-import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -73,7 +73,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionInviteController> {
+public class AssessmentInviteControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionInviteController> {
 
     private static final long INNOVATION_AREA_ID = 5L;
 
@@ -84,7 +84,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     }
 
     @Autowired
-    private CompetitionAssessmentInviteRepository competitionAssessmentInviteRepository;
+    private AssessmentInviteRepository assessmentInviteRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -136,7 +136,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     @Test
     public void getAllInvitesToSend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
-        competitionAssessmentInviteRepository.save(
+        assessmentInviteRepository.save(
                 newCompetitionAssessmentInvite()
                         .with(id(null))
                         .withName("James Smith", "Peter Mason")
@@ -167,7 +167,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     public void getAllInvitesToResend() {
         InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
 
-        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(competitionAssessmentInviteRepository.save(
+        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(assessmentInviteRepository.save(
                 newCompetitionAssessmentInvite()
                         .with(id(null))
                         .withName("James Smith", "Peter Mason")
@@ -178,7 +178,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                         .withStatus(SENT)
                         .withInnovationArea(innovationArea)
                         .build(2)
-        ).iterator()), CompetitionAssessmentInvite::getId);
+        ).iterator()), AssessmentInvite::getId);
 
         loginCompAdmin();
 
@@ -196,7 +196,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
     @Test
     public void getInvite() {
-        competitionAssessmentInviteRepository.save(newCompetitionAssessmentInvite()
+        assessmentInviteRepository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withName("tom poly")
                 .withEmail("tom@poly.io")
@@ -216,12 +216,12 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     public void getInvite_hashNotExists() {
         RestResult<CompetitionInviteResource> serviceResult = controller.getInvite("not exists hash");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "not exists hash")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(AssessmentInvite.class, "not exists hash")));
     }
 
     @Test
     public void openInvite() {
-        competitionAssessmentInviteRepository.save(newCompetitionAssessmentInvite()
+        assessmentInviteRepository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withName("name")
                 .withEmail("tom@poly.io")
@@ -241,7 +241,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     public void openInvite_hashNotExists() {
         RestResult<CompetitionInviteResource> serviceResult = controller.openInvite("not exists hash");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "not exists hash")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(AssessmentInvite.class, "not exists hash")));
     }
 
     @Test
@@ -253,7 +253,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 .build());
 
         // Save an invite for the User
-        competitionAssessmentInviteRepository.save(newCompetitionAssessmentInvite()
+        assessmentInviteRepository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withName("name")
                 .withEmail("tom@poly.io")
@@ -278,7 +278,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 .build());
 
         // Save an invite without a User but with an e-mail address for which a User exists
-        competitionAssessmentInviteRepository.save(newCompetitionAssessmentInvite()
+        assessmentInviteRepository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withName("name")
                 .withEmail("user-exists@for-this.address")
@@ -297,7 +297,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     @Test
     public void checkExistingUser_userNotExists() {
         // Save an invite without a User and with an e-mail address for which no User exists
-        competitionAssessmentInviteRepository.save(newCompetitionAssessmentInvite()
+        assessmentInviteRepository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withName("name")
                 .withEmail("no-user-exists@for-this.address")
@@ -318,7 +318,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     public void checkExistingUser_hashNotExists() {
         RestResult<Boolean> serviceResult = controller.checkExistingUser("not exists hash");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "not exists hash")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(AssessmentInvite.class, "not exists hash")));
     }
 
     @Test
@@ -730,7 +730,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     public void inviteNewUsers_userExists() throws Exception {
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
-        competitionAssessmentInviteRepository.save(new CompetitionAssessmentInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
+        assessmentInviteRepository.save(new AssessmentInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
 
         loginCompAdmin();
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
@@ -763,7 +763,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
     @Test
     public void sendAllInvites() throws Exception {
-        List<CompetitionAssessmentInvite> invitesToSend = newCompetitionAssessmentInvite()
+        List<AssessmentInvite> invitesToSend = newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withName("tom poly", "cari poly")
                 .withEmail("tom@poly.io", "cari@poly.io")
@@ -772,7 +772,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 .withCompetition(competition, competition)
                 .withStatus(CREATED, CREATED)
                 .build(2);
-        competitionAssessmentInviteRepository.save(invitesToSend);
+        assessmentInviteRepository.save(invitesToSend);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -788,7 +788,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     @Test
     public void resendInvites() throws Exception {
         ZonedDateTime initialInviteDate = ZonedDateTime.now();
-        List<CompetitionAssessmentInvite> invitesToResend = newCompetitionAssessmentInvite()
+        List<AssessmentInvite> invitesToResend = newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withName("tom poly", "cari poly")
                 .withEmail("tom@poly.io", "cari@poly.io")
@@ -798,10 +798,10 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 .withStatus(SENT, SENT)
                 .withSentOn(initialInviteDate)
                 .build(2);
-        competitionAssessmentInviteRepository.save(invitesToResend);
+        assessmentInviteRepository.save(invitesToResend);
 
-        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(competitionAssessmentInviteRepository.save(invitesToResend)
-                .iterator()), CompetitionAssessmentInvite::getId);
+        List<Long> inviteIds =  simpleMap(IteratorUtils.toList(assessmentInviteRepository.save(invitesToResend)
+                .iterator()), AssessmentInvite::getId);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -813,9 +813,9 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<Void> serviceResult = controller.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        CompetitionAssessmentInvite inviteOne = competitionAssessmentInviteRepository.findOne(inviteIds.get(0));
+        AssessmentInvite inviteOne = assessmentInviteRepository.findOne(inviteIds.get(0));
         ZonedDateTime inviteOneResendDate = inviteOne.getSentOn();
-        CompetitionAssessmentInvite inviteTwo = competitionAssessmentInviteRepository.findOne(inviteIds.get(1));
+        AssessmentInvite inviteTwo = assessmentInviteRepository.findOne(inviteIds.get(1));
         ZonedDateTime inviteTwoResendDate = inviteTwo.getSentOn();
 
         assertTrue(inviteOneResendDate.isAfter(initialInviteDate));
@@ -826,7 +826,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     public void sendAllInvites_toExistingApplicant() throws Exception {
         final UserResource applicantUser = getSteveSmith();
 
-        competitionAssessmentInviteRepository.save(
+        assessmentInviteRepository.save(
                 newCompetitionAssessmentInvite()
                         .with(id(null))
                         .withName(applicantUser.getName())
@@ -855,7 +855,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     @Test
     public void getInviteStatistics() throws Exception {
         loginCompAdmin();
-        competitionAssessmentInviteRepository.save(newCompetitionAssessmentInvite()
+        assessmentInviteRepository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withStatus(CREATED, SENT, OPENED)
                 .withCompetition(competition)
@@ -1098,7 +1098,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     private void addTestCreatedInvites() {
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
-        List<CompetitionAssessmentInvite> createdInvites = newCompetitionAssessmentInvite()
+        List<AssessmentInvite> createdInvites = newCompetitionAssessmentInvite()
                 .withId()
                 .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel")
                 .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com")
@@ -1107,7 +1107,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 .withInnovationArea(innovationArea)
                 .build(4);
 
-        List<CompetitionAssessmentInvite> existingUserInvites = newCompetitionAssessmentInvite()
+        List<AssessmentInvite> existingUserInvites = newCompetitionAssessmentInvite()
                 .withId()
                 .withName("Paul Plum", "Felix Wilson")
                 .withEmail("paul.plum@gmail.com", "felix.wilson@gmail.com")
@@ -1119,7 +1119,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         createdInvites.addAll(existingUserInvites);
 
-        competitionAssessmentInviteRepository.save(createdInvites);
+        assessmentInviteRepository.save(createdInvites);
         flushAndClearSession();
     }
 
@@ -1184,7 +1184,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         userRepository.save(asList(paulPlum, felixWilson));
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withId()
                 .withUser(null, null, null, null, paulPlum, felixWilson)
                 .withInvite(
@@ -1196,7 +1196,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                                 .withCompetition(competition)
                                 .withStatus(SENT)
                                 .withSentOn(now().minusDays(1))
-                                .buildArray(6, CompetitionAssessmentInvite.class)
+                                .buildArray(6, AssessmentInvite.class)
                 )
                 .withCompetition(competition)
                 .withStatus(PENDING)
@@ -1264,7 +1264,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         userRepository.save(asList(paulPlum, felixWilson));
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withId()
                 .withUser(null, null, null, null, paulPlum, felixWilson)
                 .withInvite(
@@ -1276,7 +1276,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                                 .withCompetition(competition)
                                 .withStatus(SENT)
                                 .withSentOn(now().minusDays(1))
-                                .buildArray(6, CompetitionAssessmentInvite.class)
+                                .buildArray(6, AssessmentInvite.class)
                 )
                 .withCompetition(competition)
                 .withStatus(PENDING)
@@ -1316,8 +1316,8 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
     public void deleteInvite() throws Exception {
         InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
 
-        CompetitionAssessmentInvite savedCompetition = competitionAssessmentInviteRepository.save(
-                new CompetitionAssessmentInvite("Test Tester", "test@test.com", "hash1", competition, innovationArea)
+        AssessmentInvite savedCompetition = assessmentInviteRepository.save(
+                new AssessmentInvite("Test Tester", "test@test.com", "hash1", competition, innovationArea)
         );
 
         flushAndClearSession();
@@ -1329,7 +1329,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         flushAndClearSession();
 
-        assertNull(competitionAssessmentInviteRepository.findOne(savedCompetition.getId()));
+        assertNull(assessmentInviteRepository.findOne(savedCompetition.getId()));
     }
 
 
@@ -1339,12 +1339,12 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
 
-        competitionAssessmentInviteRepository.save(asList(
-                new CompetitionAssessmentInvite("Test Tester 1", "test1@test.com", "hash1", competition, innovationArea),
-                new CompetitionAssessmentInvite("Test Tester 2", "test2@test.com", "hash2", competition, innovationArea)
+        assessmentInviteRepository.save(asList(
+                new AssessmentInvite("Test Tester 1", "test1@test.com", "hash1", competition, innovationArea),
+                new AssessmentInvite("Test Tester 2", "test2@test.com", "hash2", competition, innovationArea)
         ));
 
-        assertEquals(2, competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
+        assertEquals(2, assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
 
         flushAndClearSession();
         loginCompAdmin();
@@ -1355,6 +1355,6 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         flushAndClearSession();
 
-        assertEquals(0, competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
+        assertEquals(0, assessmentInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
     }
 }

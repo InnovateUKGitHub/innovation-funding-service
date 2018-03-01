@@ -12,12 +12,12 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
-import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
@@ -78,18 +78,18 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
 /**
- * Service for managing {@link CompetitionAssessmentInvite}s.
+ * Service for managing {@link AssessmentInvite}s.
  */
 @Service
 @Transactional
-public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssessmentInviteService {
+public class AssessmentInviteServiceImpl implements AssessmentInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
-    private CompetitionAssessmentInviteRepository competitionAssessmentInviteRepository;
+    private AssessmentInviteRepository assessmentInviteRepository;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
@@ -144,9 +144,9 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<CompetitionAssessmentInvite> invites = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+            List<AssessmentInvite> invites = assessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
-            List<String> recipients = simpleMap(invites, CompetitionAssessmentInvite::getName);
+            List<String> recipients = simpleMap(invites, AssessmentInvite::getName);
             recipients.sort(String::compareTo);
 
             return serviceSuccess(new AssessorInvitesToSendResource(
@@ -162,8 +162,8 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
 
-            List<CompetitionAssessmentInvite> invites = competitionAssessmentInviteRepository.getByIdIn(inviteIds);
-            List<String> recipients = simpleMap(invites, CompetitionAssessmentInvite::getName);
+            List<AssessmentInvite> invites = assessmentInviteRepository.getByIdIn(inviteIds);
+            List<String> recipients = simpleMap(invites, AssessmentInvite::getName);
             recipients.sort(String::compareTo);
 
             return serviceSuccess(new AssessorInvitesToSendResource(
@@ -187,7 +187,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         );
     }
 
-    private String getInviteContent(CompetitionAssessmentInvite invite) {
+    private String getInviteContent(AssessmentInvite invite) {
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
         Competition competition = invite.getTarget();
 
@@ -252,8 +252,8 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
 
     @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
-        final Page<User> pagedResult = innovationArea.map(i -> competitionAssessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(competitionId, i, pageable))
-                .orElse(competitionAssessmentInviteRepository.findAssessorsByCompetition(competitionId, pageable));
+        final Page<User> pagedResult = innovationArea.map(i -> assessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(competitionId, i, pageable))
+                .orElse(assessmentInviteRepository.findAssessorsByCompetition(competitionId, pageable));
 
         return serviceSuccess(new AvailableAssessorPageResource(
                 pagedResult.getTotalElements(),
@@ -267,9 +267,9 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
 
-        List<User> result = innovationArea.map(innovationAreaId -> competitionAssessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(
+        List<User> result = innovationArea.map(innovationAreaId -> assessmentInviteRepository.findAssessorsByCompetitionAndInnovationArea(
                 competitionId, innovationAreaId
-        )).orElseGet(() -> competitionAssessmentInviteRepository.findAssessorsByCompetition(competitionId));
+        )).orElseGet(() -> assessmentInviteRepository.findAssessorsByCompetition(competitionId));
 
         return serviceSuccess(simpleMap(result, User::getId));
     }
@@ -296,8 +296,8 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
     @Override
     public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
         CompetitionInviteStatisticsResource statisticsResource = new CompetitionInviteStatisticsResource();
-        statisticsResource.setInvited(competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
-        statisticsResource.setInviteList(competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED)));
+        statisticsResource.setInvited(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        statisticsResource.setInviteList(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED)));
         statisticsResource.setAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED));
         statisticsResource.setDeclined(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED));
         return serviceSuccess(statisticsResource);
@@ -309,7 +309,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
                                                                                    Optional<Long> innovationArea,
                                                                                    List<ParticipantStatus> statuses,
                                                                                    Optional<Boolean> compliant) {
-        Page<CompetitionAssessmentParticipant> pagedResult;
+        Page<AssessmentParticipant> pagedResult;
 
         if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
@@ -367,7 +367,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
                                                                       Optional<Long> innovationArea,
                                                                       List<ParticipantStatus> statuses,
                                                                       Optional<Boolean> compliant) {
-        List<CompetitionAssessmentParticipant> participants;
+        List<AssessmentParticipant> participants;
 
         if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
@@ -451,9 +451,9 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         return find(innovationAreaRepository.findOne(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
     }
 
-    private ServiceResult<CompetitionAssessmentInvite> inviteUserToCompetition(String name, String email, Competition competition, InnovationArea innovationArea) {
+    private ServiceResult<AssessmentInvite> inviteUserToCompetition(String name, String email, Competition competition, InnovationArea innovationArea) {
         return serviceSuccess(
-                competitionAssessmentInviteRepository.save(new CompetitionAssessmentInvite(name, email, generateInviteHash(), competition, innovationArea))
+                assessmentInviteRepository.save(new AssessmentInvite(name, email, generateInviteHash(), competition, innovationArea))
         );
     }
 
@@ -473,10 +473,10 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
                         )))).andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<CompetitionAssessmentInvite> inviteUserToCompetition(User user, long competitionId) {
+    private ServiceResult<AssessmentInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
-                        competition -> competitionAssessmentInviteRepository.save(new CompetitionAssessmentInvite(user, generateInviteHash(), competition))
+                        competition -> assessmentInviteRepository.save(new AssessmentInvite(user, generateInviteHash(), competition))
                 );
     }
 
@@ -500,10 +500,10 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
             String customTextHtml = plainTextToHtml(customTextPlain);
 
             return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
-                    competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
+                    assessmentInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         competitionParticipantRepository.save(
-                                new CompetitionAssessmentParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
+                                new AssessmentParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
                         );
 
                         if (invite.isNewAssessorInvite()) {
@@ -539,7 +539,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         String customTextHtml = plainTextToHtml(customTextPlain);
 
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
-                competitionAssessmentInviteRepository.getByIdIn(inviteIds),
+                assessmentInviteRepository.getByIdIn(inviteIds),
                 invite -> sendInviteNotification(
                         assessorInviteSendResource.getSubject(),
                         inviteFormatter,
@@ -551,7 +551,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         ));
     }
 
-    private ServiceResult<Notification> resendInviteNotification(CompetitionAssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
+    private ServiceResult<Notification> resendInviteNotification(AssessmentInvite invite, AssessorInviteSendResource assessorInviteSendResource) {
         // Strip any HTML that may have been added to the content by the user.
         String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
 
@@ -573,7 +573,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
                                                        DateTimeFormatter formatter,
                                                        String customTextPlain,
                                                        String customTextHtml,
-                                                       CompetitionAssessmentInvite invite,
+                                                       AssessmentInvite invite,
                                                        Notifications notificationType) {
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
@@ -608,18 +608,18 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
     public ServiceResult<Void> deleteAllInvites(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccessReturnVoid(competition ->
-                        competitionAssessmentInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
+                        assessmentInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
     }
 
-    private ServiceResult<CompetitionAssessmentInvite> getByHash(String inviteHash) {
-        return find(competitionAssessmentInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
+    private ServiceResult<AssessmentInvite> getByHash(String inviteHash) {
+        return find(assessmentInviteRepository.getByHash(inviteHash), notFoundError(AssessmentInvite.class, inviteHash));
     }
 
-    private ServiceResult<CompetitionAssessmentInvite> getById(long id) {
-        return find(competitionAssessmentInviteRepository.findOne(id), notFoundError(CompetitionAssessmentInvite.class, id));
+    private ServiceResult<AssessmentInvite> getById(long id) {
+        return find(assessmentInviteRepository.findOne(id), notFoundError(AssessmentInvite.class, id));
     }
 
-    private ServiceResult<CompetitionAssessmentParticipant> getParticipantByInviteId(long inviteId) {
+    private ServiceResult<AssessmentParticipant> getParticipantByInviteId(long inviteId) {
         return find(competitionParticipantRepository.getByInviteId(inviteId), notFoundError(CompetitionParticipant.class, inviteId));
     }
 
@@ -633,8 +633,8 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
                 arguments).getSuccess();
     }
 
-    private ServiceResult<CompetitionAssessmentInvite> getByEmailAndCompetition(String email, long competitionId) {
-        return find(competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
+    private ServiceResult<AssessmentInvite> getByEmailAndCompetition(String email, long competitionId) {
+        return find(assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInvite.class, email, competitionId));
     }
 
     private ServiceResult<Void> getByEmailAndCompetitionWithValidation(String email, long competitionId) {
@@ -655,23 +655,23 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
 
         boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
 
-        if (competitionAssessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null || !userIsAlreadyInvited || userExists.isPresent()) {
+        if (assessmentInviteRepository.getByEmailAndCompetitionId(email, competitionId) != null || !userIsAlreadyInvited || userExists.isPresent()) {
             return ServiceResult.serviceSuccess();
         } else {
             return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
         }
 }
 
-    private ServiceResult<Void> deleteInvite(CompetitionAssessmentInvite invite) {
+    private ServiceResult<Void> deleteInvite(AssessmentInvite invite) {
         if (invite.getStatus() != CREATED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CANNOT_DELETE_ONCE_SENT, invite.getEmail()));
         }
 
-        competitionAssessmentInviteRepository.delete(invite);
+        assessmentInviteRepository.delete(invite);
         return serviceSuccess();
     }
 
-    private ServiceResult<CompetitionAssessmentInvite> getByHashIfOpen(String inviteHash) {
+    private ServiceResult<AssessmentInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
             if (!EnumSet.of(READY_TO_OPEN, IN_ASSESSMENT, CLOSED, OPEN).contains(invite.getTarget().getCompetitionStatus())) {
@@ -691,15 +691,15 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         });
     }
 
-    private CompetitionAssessmentInvite openInvite(CompetitionAssessmentInvite invite) {
-        return competitionAssessmentInviteRepository.save(invite.open());
+    private AssessmentInvite openInvite(AssessmentInvite invite) {
+        return assessmentInviteRepository.save(invite.open());
     }
 
-    private ServiceResult<CompetitionAssessmentParticipant> getParticipantByInviteHash(String inviteHash) {
+    private ServiceResult<AssessmentParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
     }
 
-    private ServiceResult<CompetitionAssessmentParticipant> accept(CompetitionAssessmentParticipant participant, User user) {
+    private ServiceResult<AssessmentParticipant> accept(AssessmentParticipant participant, User user) {
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
@@ -713,7 +713,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         }
     }
 
-    private ServiceResult<Participant> applyInnovationAreaToUserProfile(CompetitionAssessmentParticipant participant, User user) {
+    private ServiceResult<Participant> applyInnovationAreaToUserProfile(AssessmentParticipant participant, User user) {
         if (participant.getInvite().isNewAssessorInvite()) {
             return getProfileForUser(user).andOnSuccessReturn(
                     profile -> {
@@ -730,7 +730,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         return find(profileRepository.findOne(user.getProfileId()), notFoundError(Profile.class, user.getProfileId()));
     }
 
-    private ServiceResult<CompetitionParticipant> reject(CompetitionAssessmentParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
+    private ServiceResult<CompetitionParticipant> reject(AssessmentParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
@@ -746,11 +746,11 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
     }
 
-    private String getInviteCompetitionName(CompetitionAssessmentParticipant participant) {
+    private String getInviteCompetitionName(AssessmentParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
 
-    private boolean isUserCompliant(CompetitionAssessmentInvite competitionAssessmentInvite) {
+    private boolean isUserCompliant(AssessmentInvite competitionAssessmentInvite) {
         if (competitionAssessmentInvite == null || competitionAssessmentInvite.getUser() == null) {
             return false;
         }
@@ -758,7 +758,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
         return profile.isCompliant(competitionAssessmentInvite.getUser());
     }
 
-    private List<InnovationAreaResource> getInnovationAreasForInvite(CompetitionAssessmentInvite competitionAssessmentInvite) {
+    private List<InnovationAreaResource> getInnovationAreasForInvite(AssessmentInvite competitionAssessmentInvite) {
         if (competitionAssessmentInvite.isNewAssessorInvite()) {
             return singletonList(innovationAreaMapper.mapToResource(competitionAssessmentInvite.getInnovationArea()));
         } else {
@@ -769,7 +769,7 @@ public class CompetitionAssessmentInviteServiceImpl implements CompetitionAssess
     }
 
     private ServiceResult<AssessorCreatedInvitePageResource> getInvitePageResource(long competitionId, Pageable pageable) {
-        Page<CompetitionAssessmentInvite> pagedResult = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
+        Page<AssessmentInvite> pagedResult = assessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),

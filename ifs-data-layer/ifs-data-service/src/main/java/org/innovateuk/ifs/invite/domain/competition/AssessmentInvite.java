@@ -17,20 +17,20 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
  */
 @Entity
 @DiscriminatorValue("COMPETITION")
-public class CompetitionAssessmentInvite extends CompetitionInvite<CompetitionAssessmentInvite> implements Serializable {
+public class AssessmentInvite extends CompetitionInvite<AssessmentInvite> implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="innovation_category_id", referencedColumnName = "id")
     private InnovationArea innovationArea;
 
-    public CompetitionAssessmentInvite() {
+    public AssessmentInvite() {
         super();
     }
 
     /**
      * A new User invited to a Competition.
      */
-    public CompetitionAssessmentInvite(final String name, final String email, final String hash, final Competition competition, final InnovationArea innovationArea) {
+    public AssessmentInvite(final String name, final String email, final String hash, final Competition competition, final InnovationArea innovationArea) {
         super(competition, name, email, hash, CREATED);
         if (innovationArea == null) {
             throw new NullPointerException("innovationArea cannot be null");
@@ -41,7 +41,7 @@ public class CompetitionAssessmentInvite extends CompetitionInvite<CompetitionAs
     /**
      * An existing User invited to a Competition.
      */
-    public CompetitionAssessmentInvite(final User existingUser, final String hash, Competition competition) {
+    public AssessmentInvite(final User existingUser, final String hash, Competition competition) {
         super(competition, existingUser.getName(), existingUser.getEmail(), hash, CREATED);
     }
 
@@ -54,7 +54,7 @@ public class CompetitionAssessmentInvite extends CompetitionInvite<CompetitionAs
         return innovationArea != null;
     }
 
-    public CompetitionAssessmentInvite ifNewAssessorInvite(Consumer<CompetitionAssessmentInvite> consumer) {
+    public AssessmentInvite ifNewAssessorInvite(Consumer<AssessmentInvite> consumer) {
         if (isNewAssessorInvite()) {
             consumer.accept(this);
         }
@@ -63,8 +63,8 @@ public class CompetitionAssessmentInvite extends CompetitionInvite<CompetitionAs
 
     public InnovationArea getInnovationArea() {
         if (!isNewAssessorInvite()) {
-            throw new IllegalStateException(("Cannot get InnovationArea for an existing assessor CompetitionAssessmentInvite"));
+            throw new IllegalStateException(("Cannot get InnovationArea for an existing assessor AssessmentInvite"));
         }
-        return requireNonNull(innovationArea, "Unexpected null innovationArea for new Assessor CompetitionAssessmentInvite");
+        return requireNonNull(innovationArea, "Unexpected null innovationArea for new Assessor AssessmentInvite");
     }
 }

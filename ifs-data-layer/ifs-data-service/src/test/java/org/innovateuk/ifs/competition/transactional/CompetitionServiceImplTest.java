@@ -17,7 +17,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -120,7 +120,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         User user = UserBuilder.newUser().build();
         UserResource userResource = UserResourceBuilder.newUserResource().build();
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withUser(user)
                 .build(4);
 
@@ -152,7 +152,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isSuccess());
 
-        CompetitionAssessmentParticipant savedCompetitionParticipant = new CompetitionAssessmentParticipant();
+        AssessmentParticipant savedCompetitionParticipant = new AssessmentParticipant();
         savedCompetitionParticipant.setProcess(competition);
         savedCompetitionParticipant.setUser(innovationLead);
         savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -177,7 +177,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void removeInnovationLead() throws Exception {
         Long innovationLeadUserId = 2L;
 
-        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
+        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(competitionParticipant);
 

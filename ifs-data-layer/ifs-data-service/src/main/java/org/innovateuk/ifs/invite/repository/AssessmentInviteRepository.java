@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,10 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CompetitionAssessmentInviteRepository extends CompetitionInviteRepository<CompetitionAssessmentInvite> {
+public interface AssessmentInviteRepository extends CompetitionInviteRepository<AssessmentInvite> {
 
     String USERS_WITH_COMPETITION_INVITE = "SELECT invite.user.id " +
-            "FROM CompetitionAssessmentInvite invite " +
+            "FROM AssessmentInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 

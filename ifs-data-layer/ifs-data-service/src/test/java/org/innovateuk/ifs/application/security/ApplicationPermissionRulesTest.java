@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -84,7 +84,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         User innovationLeadOnApp1 = newUser().build();
         innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(innovationLeadRole)).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
-        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadOnApp1).build();
+        AssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadOnApp1).build();
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();

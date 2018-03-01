@@ -196,13 +196,13 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionAssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
+        Page<AssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
@@ -233,7 +233,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionAssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
+        Page<AssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(assessorPage);
@@ -281,7 +281,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withProfileId(profiles.get(0).getId(), profiles.get(1).getId())
                 .build(2);
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessorUsers.get(0), assessorUsers.get(1))
                 .build(2);
 
@@ -992,7 +992,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertFalse(assessorInviteOverviewResource.isCompliant());
     }
 
-    private CompetitionAssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
+    private AssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
         return newCompetitionAssessmentInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())

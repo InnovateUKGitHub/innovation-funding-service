@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
-public class CompetitionAssessmentParticipantBuilderTest {
+public class AssessmentParticipantBuilderTest {
 
     @Test
     public void buildOne() {
@@ -29,9 +29,9 @@ public class CompetitionAssessmentParticipantBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         RejectionReason expectedRejectionReason = newRejectionReason().withReason("Unavailable").build();
         String expectedRejectionComment = "Too busy";
-        CompetitionAssessmentInvite expectedInvite = newCompetitionAssessmentInvite().build();
+        AssessmentInvite expectedInvite = newCompetitionAssessmentInvite().build();
 
-        CompetitionAssessmentParticipant participant = newCompetitionAssessmentParticipant()
+        AssessmentParticipant participant = newCompetitionAssessmentParticipant()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withUser(expectedUser)
@@ -59,11 +59,11 @@ public class CompetitionAssessmentParticipantBuilderTest {
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         CompetitionParticipantRole[] expectedRoles = { ASSESSOR, ASSESSOR };
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
-        CompetitionAssessmentInvite[] expectedCompetitionAssessmentInvites = newCompetitionAssessmentInvite().buildArray(2, CompetitionAssessmentInvite.class);
+        AssessmentInvite[] expectedCompetitionAssessmentInvites = newCompetitionAssessmentInvite().buildArray(2, AssessmentInvite.class);
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withUser(expectedUsers)
