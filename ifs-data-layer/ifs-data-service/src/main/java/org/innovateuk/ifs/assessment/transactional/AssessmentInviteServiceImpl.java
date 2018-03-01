@@ -148,7 +148,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    protected InviteRepository<AssessmentInvite> getRepository() {
+    protected InviteRepository<AssessmentInvite> getInviteRepository() {
         return assessmentInviteRepository;
     }
 
@@ -251,8 +251,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
-        return super.checkExistingUser(inviteHash);
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     @Override

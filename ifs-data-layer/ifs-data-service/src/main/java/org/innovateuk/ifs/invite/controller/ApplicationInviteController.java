@@ -74,7 +74,7 @@ public class ApplicationInviteController {
 
     @GetMapping("/checkExistingUser/{inviteHash}")
     public RestResult<Boolean> checkExistingUser(@PathVariable("inviteHash") String inviteHash) {
-        return applicationInviteService.checkExistingUser(inviteHash).toGetResponse();
+        return applicationInviteService.checkUserExistsForInvite(inviteHash).toGetResponse();
     }
 
     @GetMapping(GET_USER_BY_HASH_MAPPING + "{inviteHash}")

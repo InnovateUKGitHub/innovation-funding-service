@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
@@ -9,8 +8,6 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Supplier;
@@ -38,22 +35,22 @@ public abstract class InviteService<T extends Invite> {
 
     protected abstract Class<T> getInviteClass();
 
-    protected abstract InviteRepository<T> getRepository();
+    protected abstract InviteRepository<T> getInviteRepository();
 
     protected Supplier<ServiceResult<T>> invite(String hash) {
         return () -> getByHash(hash);
     }
 
     protected ServiceResult<T> getByHash(String hash) {
-        return find(getRepository().getByHash(hash), notFoundError(getInviteClass(), hash));
+        return find(getInviteRepository().getByHash(hash), notFoundError(getInviteClass(), hash));
     }
 
     protected ServiceResult<T> getById(long id) {
-        return find(getRepository().findOne(id), notFoundError(getInviteClass(), id));
+        return find(getInviteRepository().findOne(id), notFoundError(getInviteClass(), id));
     }
 
-    protected ServiceResult<Boolean> checkExistingUser(String hash) {
-        return getByHash(hash).andOnSuccessReturn(invite -> {
+    protected ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
             if (invite.getUser() != null) {
                 return true;
             }

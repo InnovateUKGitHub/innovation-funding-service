@@ -308,7 +308,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Boolean> checkUserExistsForInvite(@P("inviteHash") String inviteHash) {
             return null;
         }
 

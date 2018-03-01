@@ -194,9 +194,9 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
     public void checkExistingUser() throws Exception {
         String hash = "invitehash";
 
-        when(assessmentInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
+        when(assessmentInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(get("/competitioninvite/checkExistingUser/{hash}", hash))
+        mockMvc.perform(get("/competitioninvite/checkUserExistsForInvite/{hash}", hash))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andDo(document("competitioninvite/{method-name}",

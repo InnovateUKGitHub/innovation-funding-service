@@ -125,7 +125,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     @Override
-    protected InviteRepository<ApplicationInvite> getRepository() {
+    protected InviteRepository<ApplicationInvite> getInviteRepository() {
         return applicationInviteRepository;
     }
 
@@ -261,8 +261,8 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(String hash) {
-        return super.checkExistingUser(hash);
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     @Override

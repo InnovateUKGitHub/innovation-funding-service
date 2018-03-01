@@ -87,7 +87,7 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     }
 
     @Override
-    protected InviteRepository<ProjectInvite> getRepository() {
+    protected InviteRepository<ProjectInvite> getInviteRepository() {
         return projectInviteRepository;
     }
 
@@ -154,8 +154,8 @@ public class ProjectInviteServiceImpl extends InviteService<ProjectInvite> imple
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
-        return super.checkExistingUser(inviteHash);
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     @Override

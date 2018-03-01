@@ -212,7 +212,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
+        public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
             return null;
         }
 

@@ -323,7 +323,7 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
     public void checkExistingUser() throws Exception {
         String hash = "invitehash";
 
-        when(interviewInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
+        when(interviewInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(get("/interview-panel-invite/check-existing-user/{hash}", hash))
                 .andExpect(status().isOk())

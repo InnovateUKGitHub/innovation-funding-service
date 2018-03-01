@@ -100,10 +100,10 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
 
         when(inviteUserServiceMock.checkExistingUser("SomeHashString")).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/inviteUser/checkExistingUser/{inviteHash}", "SomeHashString"))
+        mockMvc.perform(get("/inviteUser/checkUserExistsForInvite/{inviteHash}", "SomeHashString"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
-                .andDo(document("inviteUser/checkExistingUser/{method-name}",
+                .andDo(document("inviteUser/checkUserExistsForInvite/{method-name}",
                         pathParameters(
                                 parameterWithName("inviteHash").description("hash of the invite being checked")
                         )

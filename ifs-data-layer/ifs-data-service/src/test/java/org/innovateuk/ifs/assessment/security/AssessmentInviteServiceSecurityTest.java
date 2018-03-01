@@ -258,7 +258,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
+        public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
             return null;
         }
 

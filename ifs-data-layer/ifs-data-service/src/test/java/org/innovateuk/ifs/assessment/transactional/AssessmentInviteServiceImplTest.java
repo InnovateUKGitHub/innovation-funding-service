@@ -1075,7 +1075,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     public void checkExistingUser_hashNotExists() throws Exception {
         when(assessmentInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(null);
 
-        ServiceResult<Boolean> result = service.checkExistingUser("hash");
+        ServiceResult<Boolean> result = service.checkUserExistsForInvite("hash");
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(AssessmentInvite.class, "hash")));
 
@@ -1096,7 +1096,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
 
         when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(assessmentInvite);
 
-        assertTrue(service.checkExistingUser("hash").getSuccess());
+        assertTrue(service.checkUserExistsForInvite("hash").getSuccess());
 
         InOrder inOrder = inOrder(assessmentInviteRepositoryMock, userRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash("hash");
@@ -1115,7 +1115,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(assessmentInvite);
         when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(of(user));
 
-        assertTrue(service.checkExistingUser("hash").getSuccess());
+        assertTrue(service.checkUserExistsForInvite("hash").getSuccess());
 
         InOrder inOrder = inOrder(assessmentInviteRepositoryMock, userRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash("hash");
@@ -1132,7 +1132,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByHash("hash")).thenReturn(assessmentInvite);
         when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(empty());
 
-        assertFalse(service.checkExistingUser("hash").getSuccess());
+        assertFalse(service.checkUserExistsForInvite("hash").getSuccess());
 
         InOrder inOrder = inOrder(assessmentInviteRepositoryMock, userRepositoryMock);
         inOrder.verify(assessmentInviteRepositoryMock).getByHash("hash");

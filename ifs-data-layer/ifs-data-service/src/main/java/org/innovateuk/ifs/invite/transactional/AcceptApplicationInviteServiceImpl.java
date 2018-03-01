@@ -55,7 +55,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
     }
 
     @Override
-    protected InviteRepository<ApplicationInvite> getRepository() {
+    protected InviteRepository<ApplicationInvite> getInviteRepository() {
         return applicationInviteRepository;
     }
 

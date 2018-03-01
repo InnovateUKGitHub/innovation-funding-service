@@ -123,7 +123,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     @Override
-    protected InviteRepository<InterviewInvite> getRepository() {
+    protected InviteRepository<InterviewInvite> getInviteRepository() {
         return interviewInviteRepository;
     }
 
@@ -363,8 +363,8 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
-        return super.checkExistingUser(inviteHash);
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     private ServiceResult<InterviewInvite> getByHashIfOpen(String inviteHash) {

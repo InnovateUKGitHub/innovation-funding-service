@@ -42,7 +42,7 @@ public class ProjectInviteServiceSecurityTest extends BaseServiceSecurityTest<Pr
 
     @Test
     public void testCheckUserExistingByInviteHashOnlyAllowedForSystemRegistrar() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.checkExistingUser("hash"), SYSTEM_REGISTRATION_USER);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.checkUserExistsForInvite("hash"), SYSTEM_REGISTRATION_USER);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ProjectInviteServiceSecurityTest extends BaseServiceSecurityTest<Pr
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(String hash) {
+        public ServiceResult<Boolean> checkUserExistsForInvite(String hash) {
             return null;
         }
 

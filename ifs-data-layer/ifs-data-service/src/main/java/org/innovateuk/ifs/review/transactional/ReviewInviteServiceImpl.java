@@ -137,7 +137,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     }
 
     @Override
-    protected InviteRepository<ReviewInvite> getRepository() {
+    protected InviteRepository<ReviewInvite> getInviteRepository() {
         return reviewInviteRepository;
     }
 
@@ -408,8 +408,8 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(String inviteHash) {
-        return super.checkExistingUser(inviteHash);
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     private static ServiceResult<ReviewParticipant> accept(ReviewParticipant participant) {
