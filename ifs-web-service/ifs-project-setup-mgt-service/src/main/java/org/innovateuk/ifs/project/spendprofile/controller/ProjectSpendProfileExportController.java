@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -38,12 +39,14 @@ public class ProjectSpendProfileExportController {
                                                       HttpServletResponse response) throws IOException {
         SpendProfileCSVResource spendProfileCSVResource = spendProfileService.getSpendProfileCSV(projectId, organisationId);
         response.setContentType(CONTENT_TYPE);
-        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName()));
+        //response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName()));
+        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName().replace(',', ' ')));
         response.getOutputStream().print(spendProfileCSVResource.getCsvData());
         response.getOutputStream().flush();
     }
 
     private String getCSVAttachmentHeader(String fileName) {
         return ATTACHMENT_HEADER + fileName;
+        //return StringEscapeUtils.escapeCsv(ATTACHMENT_HEADER + fileName);
     }
 }
