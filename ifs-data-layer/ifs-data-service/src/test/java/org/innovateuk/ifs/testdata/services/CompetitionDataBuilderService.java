@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.testdata.services;
 
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +13,6 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
@@ -25,17 +24,18 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
 /**
- * TODO DW - document this class
+ * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate Competition data.  While
+ * {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
 @Component
+@Lazy
 public class CompetitionDataBuilderService extends BaseDataBuilderService {
-
-    @Autowired
-    @Qualifier("generateTestDataExecutor")
-    private Executor taskExecutor;
 
     @Autowired
     private TestService testService;
@@ -64,14 +64,6 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
         competitionLines = readCompetitions();
         competitionFunderLines = readCompetitionFunders();
-    }
-
-    public List<CompletableFuture<CompetitionData>> createCompetitions(List<CsvUtils.CompetitionLine> competitionLines) {
-
-        return simpleMap(competitionLines, line -> CompletableFuture.supplyAsync(() -> {
-            testService.doWithinTransaction(this::setDefaultCompAdmin);
-            return createCompetition(line);
-        }, taskExecutor));
     }
 
     public void moveCompetitionsToCorrectFinalState(List<CompetitionData> competitions) {
@@ -150,7 +142,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 .createNonIfsCompetition()
                 .withBasicData(line.name, null, line.innovationAreas,
                         line.innovationSector, null, null, null,
-                        null, null, null, null, null, null, null, null, null,
+                        null, null, null, null, null, null, null, null, AssessorFinanceView.OVERVIEW, null,
                         null, emptyList(), null, null, line.nonIfsUrl)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
@@ -168,7 +160,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 createCompetition().
                 withBasicData(line.name, line.type, line.innovationAreas,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay, line.hasAssessmentPanel, line.hasInterviewStage, line.assessorFinanceView,
                         line.multiStream, line.collaborationLevel, line.leadApplicantTypes, line.researchRatio, line.resubmission, null).
                 withApplicationFormFromTemplate().
                 withNewMilestones().

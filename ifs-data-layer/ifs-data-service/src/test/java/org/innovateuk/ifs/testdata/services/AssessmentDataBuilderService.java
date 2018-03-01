@@ -11,6 +11,7 @@ import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -33,9 +34,13 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
- * TODO DW - document this class
+ * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate Assessment data.  While
+ * {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
 @Component
+@Lazy
 public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
     @Autowired
@@ -317,8 +322,5 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 Optional.of(line.sentOn)).
                 build();
     }
-
-
-
 }
 

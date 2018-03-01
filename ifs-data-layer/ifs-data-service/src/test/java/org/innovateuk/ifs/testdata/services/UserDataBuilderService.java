@@ -5,8 +5,9 @@ import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -20,9 +21,13 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * TODO DW - document this class
+ * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate User data.  While
+ * {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
-@Service
+@Component
+@Lazy
 public class UserDataBuilderService extends BaseDataBuilderService {
 
     @Autowired

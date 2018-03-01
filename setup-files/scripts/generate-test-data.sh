@@ -9,8 +9,6 @@ reset_db () {
     mysql -uroot -ppassword -hifs-database -e "create database ifs";
     mysql -uroot -ppassword -hifs-database -e "drop database if exists ifs_test";
     mysql -uroot -ppassword -hifs-database -e "create database ifs_test";
-
-    ./gradlew flywayClean flywayMigrate
 }
 
 do_baseline () {
@@ -25,12 +23,8 @@ do_baseline () {
     ./gradlew clean build buildDocker -x test
     ./gradlew processResources processTestResources
 
-    # unignore generator test class
-#    sed -i -e 's/import org.junit.Ignore;//' $generate_test_class
-#    sed -i -e 's/@Ignore//' $generate_test_class
-
     # run generator test class
-    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
     cd ifs-data-layer/ifs-data-service/src/main/resources/db/webtest/
 
@@ -49,7 +43,7 @@ do_baseline () {
     reset_db
 
     #verify correct build
-    ./gradlew clean buildDocker initDB composeUp syncShib -x test
+    ./gradlew clean buildDocker initDB flywayClean flywayMigrate composeUp syncShib -x test
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

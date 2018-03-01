@@ -129,9 +129,7 @@ public class ValidationMessages implements ErrorHolder, Serializable {
             List<Optional<Error>> optionalConversionsForThisError = simpleMap(combineLists(converter, otherConverters), fn -> fn.apply(e));
             Optional<Optional<Error>> successfullyConvertedErrorList = simpleFindFirst(optionalConversionsForThisError, Optional::isPresent);
 
-            if (successfullyConvertedErrorList.isPresent()) {
-                this.errors.add(successfullyConvertedErrorList.get().get());
-            }
+            successfullyConvertedErrorList.ifPresent(error -> this.errors.add(error.get()));
         });
     }
 

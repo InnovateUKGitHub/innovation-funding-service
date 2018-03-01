@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -87,7 +88,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withBasicData(String name, String competitionTypeName, List<String> innovationAreaNames,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
-                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel, Boolean hasInterviewStage,
+                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay, Boolean hasAssessmentPanel, Boolean hasInterviewStage, AssessorFinanceView assessorFinanceView,
                                                 Boolean multiStream, String collaborationLevelCode, List<OrganisationTypeEnum> leadApplicantTypes, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
 
         return asCompAdmin(data -> {
@@ -131,6 +132,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setAssessorCount(assessorCount);
                 competition.setHasAssessmentPanel(hasAssessmentPanel);
                 competition.setHasInterviewStage(hasInterviewStage);
+                competition.setAssessorFinanceView(assessorFinanceView);
                 competition.setNonIfsUrl(nonIfsUrl);
             });
         });
@@ -170,6 +172,16 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                     getSuccess();
 
             updateCompetitionInCompetitionData(data, competition.getId());
+
+            if (data.getCompetition().getCompetitionTypeName().equals("Generic")) {
+
+                List<Question> questions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), "Application questions");
+                Question question = questions.get(0);
+                question.setName("Generic question heading");
+                question.setShortName("Generic question title");
+                question.setDescription("Generic question description");
+                questionRepository.save(question);
+            }
         });
     }
 

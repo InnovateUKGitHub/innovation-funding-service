@@ -5,8 +5,9 @@ import org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
@@ -14,9 +15,13 @@ import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_A
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.PROJECT_FINANCE_EMAIL;
 
 /**
- * TODO DW - document this class
+ * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate Organisation data.  While
+ * {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
-@Service
+@Component
+@Lazy
 public class OrganisationDataBuilderService {
 
     @Autowired

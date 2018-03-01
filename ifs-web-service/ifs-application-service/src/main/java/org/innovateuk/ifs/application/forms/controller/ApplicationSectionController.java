@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * This controller will handle all submit requests that are related to the application form.
@@ -152,8 +153,21 @@ public class ApplicationSectionController {
 
         Map<String, String[]> params = request.getParameterMap();
 
-        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, applicantSection.getSection(), params, user.getId(), applicationId);
-        ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition().getId(), form, sectionId, user.getId(), request, response, validFinanceTerms);
+        boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(
+                form, bindingResult,
+                applicantSection.getSection(),
+                params,
+                user.getId());
+
+        ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(
+                applicantSection.getApplication(),
+                applicantSection.getCompetition().getId(),
+                form,
+                sectionId,
+                user.getId(),
+                request,
+                response,
+                validFinanceTerms);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             questionService.assignQuestion(applicationId, user, request);
@@ -188,40 +202,66 @@ public class ApplicationSectionController {
             validationHandler.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
     }
 
-    private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params, Long userId, Long applicationId) {
-        Boolean valid = Boolean.TRUE;
+    private boolean validFinanceTermsForMarkAsComplete(
+            ApplicationForm form,
+            BindingResult bindingResult,
+            SectionResource section,
+            Map<String, String[]> params,
+            Long userId
+    ) {
 
         if (!isMarkSectionAsCompleteRequest(params)) {
-            return valid;
+            return true;
         }
 
-        if (SectionType.FUNDING_FINANCES.equals(section.getType())) {
-            if (!form.isTermsAgreed()) {
-                bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
-                valid = Boolean.FALSE;
-            }
-        }
+        switch (section.getType()) {
 
-        if (SectionType.PROJECT_COST_FINANCES.equals(section.getType()) && !userIsResearch(userId)) {
-            if (!form.isStateAidAgreed()) {
-                bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
-                valid = Boolean.FALSE;
-            }
-        }
+            case FUNDING_FINANCES:
+                return validateTermsAndConditionsAgreement(form, bindingResult);
 
-        if (SectionType.ORGANISATION_FINANCES.equals(section.getType())) {
-            List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
-            Long organisationType = organisationService.getOrganisationType(userId, applicationId);
-            if (financePositionKeys.isEmpty() && !OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
-                bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
-                valid = Boolean.FALSE;
-            }
-        }
+            case PROJECT_COST_FINANCES:
+                return userIsResearch(userId) ?
+                        validateTermsAndConditionsAgreement(form, bindingResult) :
+                        validateStateAidAgreement(form, bindingResult);
 
-        return valid;
+            case ORGANISATION_FINANCES:
+                return validateOrganisationSizeSelected(params, userId, bindingResult);
+
+            default:
+                return true;
+        }
     }
 
     private boolean userIsResearch(Long userId) {
         return organisationService.getOrganisationForUser(userId).getOrganisationType().equals(OrganisationTypeEnum.RESEARCH.getId());
+    }
+
+    private boolean validateTermsAndConditionsAgreement(ApplicationForm form, BindingResult bindingResult) {
+        if (form.isTermsAgreed()) {
+            return true;
+        }
+        bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
+        return false;
+    }
+
+    private boolean validateStateAidAgreement(ApplicationForm form, BindingResult bindingResult) {
+        if (form.isStateAidAgreed()) {
+            return true;
+        }
+        bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
+        return false;
+    }
+
+    private boolean validateOrganisationSizeSelected(
+            Map<String, String[]> params,
+            Long userId,
+            BindingResult bindingResult
+    ) {
+        List<String> financePositionKeys = simpleFilter(params.keySet(), k -> k.contains("financePosition-"));
+        if (!financePositionKeys.isEmpty() || userIsResearch(userId)) {
+            return true;
+        }
+        bindingResult.rejectValue(ORGANISATION_SIZE_KEY, "APPLICATION_ORGANISATION_SIZE_REQUIRED");
+        return false;
     }
 }

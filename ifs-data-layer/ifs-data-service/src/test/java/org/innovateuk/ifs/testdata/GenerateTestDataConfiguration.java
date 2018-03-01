@@ -12,7 +12,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 /**
- * TODO DW - document this class
+ * Configuration for {@link BaseGenerateTestData} and its associated subclasses.  This provides an Executor for
+ * executing web test generation in either single- or multi-threaded mode.
  */
 @TestConfiguration
 public class GenerateTestDataConfiguration {
@@ -39,6 +40,9 @@ public class GenerateTestDataConfiguration {
         }
     }
 
+    /**
+     * Creates an Executor that {@link BaseGenerateTestData} can use to perform data generation work in parallel.
+     */
     private Executor multiThreadedExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(50);
@@ -50,6 +54,18 @@ public class GenerateTestDataConfiguration {
         return executor;
     }
 
+    /**
+     * Creates an Executor that {@link BaseGenerateTestData} can use to perform data generation work in series.
+     *
+     * We can't use a "real" Executor with a single Thread, because some of the work would be performed by the
+     * single Executor Thread, and some would be performed by the Test worker Thread, thus leading to non-sequential
+     * behaviour.  This is down to how some of the CompletableFuture behaviour works, in that either Thread could do
+     * some work.
+     *
+     * By using a mock Executor, all of the work is actually performed by the Test worker Thread, despite
+     * BaseGenerateTestData thinking that it is dealing with an Executor.  This way, we don't have any need to specify
+     * different code for running in series and running in parallel.
+     */
     private Executor singleThreadedExecutor() {
         Executor executor = mock(Executor.class);
         doAnswer(invocation -> {

@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+
 /**
  * {@code DefaultFinanceFormHandler} retrieves the costs and handles the finance data retrieved from the request, so it can be
  * transfered to view or stored. The costs retrieved from the {@link FinanceRowRestService} are converted
@@ -60,7 +62,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
 
         storeFinancePosition(request, applicationFinanceResource.getId(), competitionId, userId);
-        ValidationMessages errors = getAndStoreCostitems(request, applicationFinanceResource.getId(), (cost) -> financeRowRestService.update(cost));
+        ValidationMessages errors = getAndStoreCostitems(request, applicationFinanceResource.getId(), cost -> financeRowRestService.update(cost));
         addRemoveCostRows(request, applicationId, userId);
 
         return errors;
@@ -112,11 +114,11 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     // TODO DW - INFUND-1555 - handle rest results
     private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId, Long competitionId, Long userId) {
-        List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
+        List<String> financePositionKeys = simpleFilter(request.getParameterMap().keySet(), k -> k.contains("financePosition-"));
         if (!financePositionKeys.isEmpty()) {
             ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId).getSuccess();
 
-            financePositionKeys.stream().forEach(k -> {
+            financePositionKeys.forEach(k -> {
                 String values = request.getParameterValues(k)[0];
                 LOG.debug(String.format("finance position k : %s value: %s ", k, values));
                 updateFinancePosition(applicationFinance, k, values, competitionId, userId);

@@ -27,7 +27,7 @@ public class CompetitionManagementAssessorProfileController {
     @Autowired
     private AssessorProfileModelPopulator assessorProfileModelPopulator;
 
-    enum AssessorProfileOrigin {
+    public enum AssessorProfileOrigin {
         APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
         ASSESSOR_FIND("/competition/{competitionId}/assessors/find"),
         ASSESSOR_INVITE("/competition/{competitionId}/assessors/invite"),

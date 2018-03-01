@@ -4,9 +4,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.testdata.builders.ProjectDataBuilder;
 import org.innovateuk.ifs.testdata.builders.ServiceLocator;
-import org.innovateuk.ifs.testdata.builders.TestService;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +21,13 @@ import static org.innovateuk.ifs.testdata.services.CsvUtils.readProjects;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
- * TODO DW - document this class
+ * A service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate Project data.  While
+ * {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} is responsible for gathering CSV information and
+ * orchestarting the building of it, this service is responsible for taking the CSV data passed to it and using
+ * the appropriate builders to generate and update entities.
  */
 @Component
+@Lazy
 public class ProjectDataBuilderService extends BaseDataBuilderService {
 
     private List<CsvUtils.ProjectLine> projectLines;

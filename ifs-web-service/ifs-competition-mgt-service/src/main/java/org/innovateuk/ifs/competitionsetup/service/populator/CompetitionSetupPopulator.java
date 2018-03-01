@@ -49,6 +49,7 @@ public class CompetitionSetupPopulator {
     private CompetitionStateSetupViewModel populateCompetitionStateModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {
         return new CompetitionStateSetupViewModel(section.preventEdit(competitionResource),
                 competitionResource.isSetupAndLive(),
-                competitionResource.getSetupComplete());
+                competitionResource.getSetupComplete(),
+                competitionResource.getCompetitionStatus());
     }
 }

@@ -17,6 +17,8 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
+import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -58,6 +60,11 @@ public class CompetitionInviteDocs {
             fieldWithPath("competitionId").description("The id of the competition"),
     };
 
+    public static final FieldDescriptor[] stagedApplicationResourceFields = {
+            fieldWithPath("applicationId").description("The id of the application"),
+            fieldWithPath("competitionId").description("The id of the competition"),
+    };
+
     public static final FieldDescriptor[] newUserStagedInviteResourceFields = {
             fieldWithPath("email").description("Email of the recipient of the invite"),
             fieldWithPath("competitionId").description("The id of the competition"),
@@ -94,6 +101,9 @@ public class CompetitionInviteDocs {
             .withContent("E-mail body content which is editable")
             .withRecipients(singletonList("Paul Plum"));
 
+    public static final StagedApplicationResourceBuilder stagedApplicationResourceBuilder = newStagedApplicationResource()
+            .withCompetitionId(1L);
+
     public static final ExistingUserStagedInviteResourceBuilder existingUserStagedInviteResourceBuilder = newExistingUserStagedInviteResource()
             .withCompetitionId(1L);
 
@@ -108,4 +118,7 @@ public class CompetitionInviteDocs {
 
     public static final ExistingUserStagedInviteListResourceBuilder existingUserStagedInviteListResourceBuilder = newExistingUserStagedInviteListResource()
             .withInvites(existingUserStagedInviteResourceBuilder.build(2));
+
+    public static final StagedApplicationListResourceBuilder stagedApplicationListResourceBuilder = newStagedApplicationListResource()
+            .withInvites(stagedApplicationResourceBuilder.build(2));
 }
