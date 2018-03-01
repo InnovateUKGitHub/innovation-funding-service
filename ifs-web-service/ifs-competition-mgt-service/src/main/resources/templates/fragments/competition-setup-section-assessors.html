@@ -114,6 +114,46 @@
                     </div>
                 </fieldset>
             </div>
+            <div class="form-group" th:classappend="${#fields.hasErrors('assessorFinanceView')} ? 'form-group-error'">
+                    <legend class="heading-small">
+                        Assessor view of finances
+                        <th:block th:if="${#fields.hasErrors('assessorFinanceView')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('assessorFinanceView')}" th:text="${err}" />
+                        </th:block>
+                    </legend>
+                    <div th:if="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
+                        <div class="multiple-choice">
+                            <input id="assessorFinanceView-0"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.assessorFinanceView}"
+                                   th:checked="${competitionSetupForm.assessorFinanceView == 'OVERVIEW'}"
+                                   value="OVERVIEW"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
+                            <label for="assessorFinanceView-0">
+                                Overview
+                            </label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input id="assessorFinanceView-1"
+                                   type="radio"
+                                   th:field="${competitionSetupForm.assessorFinanceView}"
+                                   th:errorclass="field-error"
+                                   required="required"
+                                   value="DETAILED"
+                                   th:attr="data-required-errormessage=#{validation.assessorsform.assessorFinanceView.required}" />
+                            <label for="assessorFinanceView-1">
+                                Detailed
+                            </label>
+                        </div>
+                    </div>
+
+                <div th:unless="${model.general.state.competitionStatus != T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
+                        <input type="hidden" th:field="${competitionSetupForm.assessorFinanceView}" value="${competitionSetupForm.assessorFinanceView}"/>
+                        <span th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}">Assessor Finance View</span>
+                </div>
+            </div>
 
             <button class="button">Done</button>
         </th:block>
@@ -131,6 +171,9 @@
 
                 <dt>Enable interview stage for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Yes' : 'No' "/>
+
+                <dt>Assesor view of finances?</dt>
+                <dd th:text="${#strings.capitalize(#strings.toLowerCase(competitionSetupForm.assessorFinanceView))}"/>
             </dl>
 
            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
