@@ -75,7 +75,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
 
                 createAssessment(assessmentLine);
 
-                createAssessorResponses(assessmentLine, application.getCompetition());
+                createAssessorResponses(assessmentLine, assessorResponseLines, application.getCompetition());
 
                 submitAssessment(assessmentLine);
             });
@@ -83,7 +83,7 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
         });
     }
 
-    private void createAssessorResponses(AssessmentLine assessmentLine, CompetitionResource competition) {
+    private void createAssessorResponses(AssessmentLine assessmentLine, List<AssessorResponseLine> assessorResponseLines, CompetitionResource competition) {
 
         List<AssessorResponseLine> assessorResponsesForAssessment = simpleFilter(assessorResponseLines, l ->
                 Objects.equals(l.applicationName, assessmentLine.applicationName) &&

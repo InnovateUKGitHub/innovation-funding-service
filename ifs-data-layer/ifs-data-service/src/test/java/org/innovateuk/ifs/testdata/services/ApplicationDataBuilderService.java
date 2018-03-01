@@ -80,11 +80,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
         QuestionResponseDataBuilder baseBuilder =
                 questionResponseDataBuilder.withApplication(applicationData.getApplication());
 
-        CsvUtils.ApplicationLine applicationLine = simpleFindFirstMandatory(applicationLines, l ->
-                l.title.equals(applicationData.getApplication().getName()));
-
-        // TODO DW - this shoudn't be repurposed here for ignoring the question setup step
-        if (!applicationLine.createFinances) {
+        if (!applicationLine.createApplicationResponses) {
             return emptyList();
         }
 
@@ -152,6 +148,10 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             ApplicationData applicationData,
             ApplicationLine applicationLine,
             List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines) {
+
+        if (!applicationLine.createFinanceResponses) {
+            return emptyList();
+        }
 
         List<String> applicants = combineLists(applicationLine.leadApplicant, applicationLine.collaborators);
 
