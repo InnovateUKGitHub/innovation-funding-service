@@ -35,6 +35,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.ApplicationFinanceDataBuilder.newApplicationFinanceData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
@@ -104,7 +105,7 @@ public class ApplicationDataBuilderService extends BaseDataBuilderService {
             List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions, q ->
                     !q.getMultipleStatuses() &&
                     q.getMarkAsCompletedEnabled() &&
-                    !"Application details".equals(q.getName()));
+                    !APPLICATION_DETAILS.getShortName().equals(q.getName()));
 
             List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
 

@@ -25,6 +25,7 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
@@ -84,7 +85,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                                 .getCompetition()
                                 .getId())
                                 .getSuccess(),
-                        x -> "Application details".equals(x.getName())).get();
+                        x -> APPLICATION_DETAILS.getShortName().equals(x.getName())).get();
 
                 questionService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
