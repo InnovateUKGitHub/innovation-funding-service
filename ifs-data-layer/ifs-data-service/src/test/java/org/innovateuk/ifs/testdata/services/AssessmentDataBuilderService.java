@@ -220,8 +220,5 @@ public class AssessmentDataBuilderService extends BaseDataBuilderService {
                 Optional.of(line.sentOn)).
                 build();
     }
-
-
-
 }
 
