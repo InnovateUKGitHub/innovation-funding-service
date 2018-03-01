@@ -23,13 +23,6 @@ User navigates to the Manage interview panel
     Then the user clicks the button/link   link=Manage interview panel
     And the user sees the Interview panel page and the Interview links
 
-There are no Assessors in Invite tab before sending invite
-    [Documentation]  IFS-2779
-    [Tags]
-    Given the user clicks the button/link  link=Invite assessors
-    Then the user clicks the button/link   link=Invite
-    And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this interview panel.")
-
 CompAdmin can add an assessors to invite list
     [Documentation]  IFS-2778
     Given the user clicks the button/link   link=Invite assessors
