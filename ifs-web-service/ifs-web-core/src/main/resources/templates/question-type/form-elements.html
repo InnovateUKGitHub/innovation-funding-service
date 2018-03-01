@@ -60,7 +60,10 @@
             TODO: IFS-2564 - Change to use 'allowedFileTypes' instead of 'allowedFileTypesSet' in ZDD migrate
             */-->
             <ul>
-                <li th:text="${allowedFileType.getDisplayName()}" th:each="allowedFileType : ${formInput.allowedFileTypesSet}">
+                <!-- /*
+                TODO: IFS-2959 - Remove the strings.replace
+                */-->
+                <li th:text="${#strings.replace(allowedFileType.getDisplayName(),'Spreadsheet','spreadsheet')}" th:each="allowedFileType : ${formInput.allowedFileTypesSet}">
                     PDF
                 </li>
             </ul>
