@@ -98,6 +98,7 @@ include::{snippets}/project/get-additional-contract-file-entry-details/curl-requ
 ==== Request
 include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/http-request.adoc[]
 include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/path-parameters.adoc[]
+include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/http-response.adoc[]

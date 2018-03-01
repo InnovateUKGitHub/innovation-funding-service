@@ -21,7 +21,7 @@ public class OrganisationAddress {
     @ManyToOne(fetch = FetchType.LAZY)
     private Organisation organisation;
     @Valid
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private Address address;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.assessment.service.ReviewPanelInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
-import org.innovateuk.ifs.management.viewmodel.AssessmentPanelAvailableAssessorRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.AssessmentPanelInviteAssessorsFindViewModel;
-import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,29 +18,29 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Panel Find view.
  */
 @Component
-public class AssessmentPanelInviteAssessorsFindModelPopulator extends AssessmentPanelInviteAssessorsModelPopulator<AssessmentPanelInviteAssessorsFindViewModel> {
+public class AssessmentPanelInviteAssessorsFindModelPopulator extends AssessmentPanelInviteAssessorsModelPopulator<ReviewPanelInviteAssessorsFindViewModel> {
 
     @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
+    private ReviewPanelInviteRestService reviewPanelInviteRestService;
 
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public AssessmentPanelInviteAssessorsFindViewModel populateModel(long competitionId,
-                                                                     int page,
-                                                                     String originQuery) {
+    public ReviewPanelInviteAssessorsFindViewModel populateModel(long competitionId,
+                                                                 int page,
+                                                                 String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();
 
-        AssessmentPanelInviteAssessorsFindViewModel model = super.populateModel(competition);
+        ReviewPanelInviteAssessorsFindViewModel model = super.populateModel(competition);
 
-        AvailableAssessorPageResource pageResource = assessmentPanelInviteRestService.getAvailableAssessors(
+        AvailableAssessorPageResource pageResource = reviewPanelInviteRestService.getAvailableAssessors(
                 competition.getId(),
                 page)
                 .getSuccess();
 
-        List<AssessmentPanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+        List<ReviewPanelAvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
@@ -51,8 +49,8 @@ public class AssessmentPanelInviteAssessorsFindModelPopulator extends Assessment
         return model;
     }
 
-    private AssessmentPanelAvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource assessorInviteOverviewResource) {
-        return new AssessmentPanelAvailableAssessorRowViewModel(
+    private ReviewPanelAvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource assessorInviteOverviewResource) {
+        return new ReviewPanelAvailableAssessorRowViewModel(
                 assessorInviteOverviewResource.getId(),
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
@@ -62,7 +60,7 @@ public class AssessmentPanelInviteAssessorsFindModelPopulator extends Assessment
     }
 
     @Override
-    protected AssessmentPanelInviteAssessorsFindViewModel createModel() {
-        return new AssessmentPanelInviteAssessorsFindViewModel();
+    protected ReviewPanelInviteAssessorsFindViewModel createModel() {
+        return new ReviewPanelInviteAssessorsFindViewModel();
     }
 }
