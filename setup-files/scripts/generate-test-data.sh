@@ -43,7 +43,7 @@ do_baseline () {
     reset_db
 
     #verify correct build
-    ./gradlew clean buildDocker initDB flywayClean flywayMigrate composeUp syncShib -x test
+#    ./gradlew clean buildDocker initDB flywayClean flywayMigrate composeUp syncShib -x test
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
