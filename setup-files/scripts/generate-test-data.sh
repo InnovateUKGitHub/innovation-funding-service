@@ -29,11 +29,20 @@ done
 
 new_version="${new_version_or_current}_"
 
-reset_db () {
+run_flyway_clean () {
 
     cd ${project_root_dir}
 
-    ./gradlew -PopenshiftEnv=unused -Pcloud=automated -Pifs.company-house.key=unused flywayClean
+    ./gradlew -PopenshiftEnv=unused -Pcloud=automated -Pifs.company-house.key=unused ifs-data-layer:ifs-data-service:flywayClean
+
+    cd -
+}
+
+run_flyway_migrate() {
+
+    cd ${project_root_dir}
+
+    ./gradlew -PopenshiftEnv=unused -Pcloud=automated -Pifs.company-house.key=unused ifs-data-layer:ifs-data-service:flywayMigrate
 
     cd -
 }
@@ -43,7 +52,7 @@ do_baseline () {
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
     # clean database
-    reset_db
+    run_flyway_clean
 
     # navigate to project root
     cd ${project_root_dir}
@@ -68,7 +77,9 @@ do_baseline () {
 
     cd ${project_root_dir}
 
-    reset_db
+    # check that the new sequence of patches works
+    run_flyway_clean
+    run_flyway_migrate
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
