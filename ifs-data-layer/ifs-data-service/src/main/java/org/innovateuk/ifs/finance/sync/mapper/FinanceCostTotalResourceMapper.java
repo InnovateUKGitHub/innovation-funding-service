@@ -18,27 +18,34 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class FinanceCostTotalResourceMapper {
     public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceListToList(
-            List<ApplicationFinanceResource> applicationFinanceResources) {
+            List<ApplicationFinanceResource> applicationFinanceResources
+    ) {
         return flattenLists(applicationFinanceResources, this::mapFromApplicationFinanceResourceToList);
     }
 
     public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceToList(
-            ApplicationFinanceResource applicationFinanceResource) {
+            ApplicationFinanceResource applicationFinanceResource
+    ) {
         return simpleMap(applicationFinanceResource.getFinanceOrganisationDetails().entrySet(), cat ->
-                buildFinanceCostTotalResource(cat.getKey(),
+                buildFinanceCostTotalResource(
+                        FinanceType.APPLICATION,
+                        cat.getKey(),
                         cat.getValue(),
-                        FinanceType.APPLICATION.name(),
-                        applicationFinanceResource.getId()));
+                        applicationFinanceResource.getId()
+                ));
     }
 
-    private static FinanceCostTotalResource buildFinanceCostTotalResource(FinanceRowType financeRowType,
-                                                                          FinanceRowCostCategory financeRowItem,
-                                                                          String financeType,
-                                                                          Long financeId) {
+    private static FinanceCostTotalResource buildFinanceCostTotalResource(
+            FinanceType financeType,
+            FinanceRowType financeRowType,
+            FinanceRowCostCategory financeRowItem,
+            Long financeId
+    ) {
         return new FinanceCostTotalResource(
-                financeRowType.getType(),
+                financeType,
+                financeRowType,
                 financeRowItem.getTotal(),
-                financeId,
-                financeType);
+                financeId
+        );
     }
 }
