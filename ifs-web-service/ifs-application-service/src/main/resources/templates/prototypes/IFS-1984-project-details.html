@@ -13,16 +13,29 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'#'})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/IFS-1984-ps-dashboard'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Project details'}, ${null})" />
 
-    <div class="message-alert">
-        <p>Please supply the following project details within 30 days of our successful notification.</p>
-        <p>We need this information before your project can begin.</p>
+    <th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+        <div class="message-alert">
+            <p>Please supply the following project details within 30 days of our successful notification.</p>
+            <p>We need this information before your project can begin.</p>
+        </div>
+    </th:block>
+
+    <th:block th:if="${param.user != null and param.user[0] == 'nonLead'}">
+        <div class="message-alert">
+            <p>The lead must supply the project details within 30 days of our successful notification.</p>
+        </div>
+    </th:block>
+
+    <div class="success-alert hidden">
+        <p>Your project details are complete.</p>
+        <p>This can be edited up until your spend profile is generated.</p>
     </div>
 
 	<h2 class="heading-medium">Project information</h2>
@@ -97,7 +110,7 @@
 		<tbody>
 			<tr>
 				<td>
-					<a href="/prototypes/IFS-1984-finance-contact" th:unless="${param.user != null and param.user[0] == 'nonLead'}" >Aptrans Ltd</a>
+					<a href="/prototypes/IFS-1984-project-finance-contact" th:unless="${param.user != null and param.user[0] == 'nonLead'}" >Aptrans Ltd</a>
 					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Aptrans Ltd</span>
 				</td>
 				<td>
@@ -116,7 +129,7 @@
 			<tr>
 				<td>
 					<span th:unless="${param.user != null and param.user[0] == 'nonLead'}">Biotech Corp</span>
-					<a href="/prototypes/IFS-1984-finance-contact?user=nonLead" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Biotech Corp</a>
+					<a href="/prototypes/IFS-1984-project-finance-contact?user=nonLead" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Biotech Corp</a>
 				</td>
 				<td>
 					<span id="finance-partner-contact">-</span>
@@ -131,29 +144,15 @@
 					<span id="finance-partner-contact-status" class="no">No</span>
 				</td>
 			</tr>
-			<tr>
-				<td>
-					University of Cardiff
-				</td>
-				<td>
-					Paula Moore
-				</td>
-				<!-- <td>
-					<span id="finance-turnover">&pound;2,023,092</span>
-				</td>
-				<td>
-					<span id="finance-headcount">76</span>
-				</td> -->
-				<td>
-					<span id="finance-partner2-contact-status">Pending</span>
-				</td>
-			</tr>
 		</tbody>
 	</table>
 
     <div class="extra-margin">
 
-        <a href="/prototypes/IFS-1984-ps-dashboard" class="button button-large" th:unless="${param.user != null and param.user[0] == 'nonLead'}" disabled="disabled">Begin project setup</a>
+        <form action="/prototypes/IFS-1984-ps-dashboard">
+            <input type="hidden" name="status" id="statusUpdate" value="">
+            <button class="button button-large" th:unless="${param.user != null and param.user[0] == 'nonLead'}" disabled="disabled">Begin project setup</button>
+        </form>
 
     </div>
 
@@ -237,7 +236,7 @@
 		if (financesName != null && userType == null){
 			localStorage.setItem('financesName', financesName);
 			localStorage.removeItem('financesNamePending');
-		}else if(financesName != null && userType != null){
+		}else if(financesName != null && userType == 'nonLead'){
 			localStorage.setItem('financesPartnerName', financesName);
 			localStorage.removeItem('financesPartnerNamePending');
 		}
@@ -247,51 +246,12 @@
 		if (financesNamePending != null && userType == null){
 			localStorage.setItem('financesNamePending', financesNamePending);
 			localStorage.removeItem('financesName');
-		}else if (financesNamePending != null && userType != null){
+		}else if (financesNamePending != null && userType == 'nonLead'){
 			localStorage.setItem('financesPartnerNamePending', financesNamePending);
 			localStorage.removeItem('financesPartnerName');
 		}
 		var financesNamePending = localStorage.getItem('financesNamePending');
 		var financesPartnerNamePending = localStorage.getItem('financesPartnerNamePending');
-
-		/*if (userType == null && financesTurnover != null){ // LEAD VIEW
-			localStorage.setItem('financesTurnoverLead', '£'+financesTurnover);
-		}else if(userType == null && financesTurnover == null){
-			localStorage.setItem('financesTurnoverLead', '£1,000,012');
-			localStorage.setItem('financesTurnoverNonLead', '-');
-		}
-		var financesTurnoverLead = decodeURIComponent(localStorage.getItem('financesTurnoverLead'));
-
-		//alert('lead'+financesTurnoverLead);
-
-		if (userType != null && financesTurnover != null){ // PARTNER VIEW
-			localStorage.setItem('financesTurnoverNonLead', '£'+financesTurnover);
-		}else if(userType != null && financesTurnover == null){
-			//localStorage.setItem('financesTurnoverLead', '-');
-			localStorage.setItem('financesTurnoverNonLead', '-');
-		}
-		var financesTurnoverNonLead = decodeURIComponent(localStorage.getItem('financesTurnoverNonLead'));
-
-		//alert('non lead'+financesTurnoverNonLead);
-
-
-		if (userType == null && financesHeadcount != null){ // LEAD VIEW
-			localStorage.setItem('financesHeadcountLead', financesHeadcount);
-		}else if(userType == null && financesHeadcount == null){
-			localStorage.setItem('financesHeadcountLead', '50');
-		}
-		var financesHeadcountLead = decodeURIComponent(localStorage.getItem('financesHeadcountLead'));
-
-		//alert('lead'+financesHeadcountLead);
-
-		if (userType != null && financesHeadcount != null){ // PARTNER VIEW
-			localStorage.setItem('financesHeadcountPartner', financesHeadcount);
-		}else if(userType == null && financesHeadcount == null){
-			localStorage.setItem('financesHeadcountPartner', '-');
-		}
-		var financesHeadcountPartner = decodeURIComponent(localStorage.getItem('financesHeadcountPartner'));
-
-		*/
 
 
 		if(startDate == null){
@@ -341,31 +301,26 @@
 			}
 		}
 
-        if(startDate == null && projectAddress == null && pmName == null){
+        if(startDate == null || projectAddress == null || pmName == null || financesName == null){
             jQuery(".button-large").attr("disabled", "disabled");
         }else{
+            if(financesPartnerName != null){
+                jQuery(".success-alert").removeClass('hidden');
+                jQuery(".message-alert").hide();
+                jQuery("#statusUpdate").attr("value", "detailsComplete");
+            }else{
+                jQuery("#statusUpdate").attr("value", "detailsNotComplete");
+            }
             jQuery(".button-large").removeAttr("disabled");
         }
 
-		if(financesName == null & userType == null){
-			jQuery('#finance-contact').text('John Smith');
-			//jQuery('#finance-contact-status').text('No');
-			//jQuery('#finance-contact-status').addClass('no');
-			//jQuery('#finance-contact-status').removeClass('yes');
+		if(financesName == null && userType == null){
+			jQuery('#finance-contact').text('-');
+			jQuery('#finance-contact-status').text('No');
+			jQuery('#finance-contact-status').addClass('no');
+			jQuery('#finance-contact-status').removeClass('yes');
 
-			//jQuery('#finance-turnover').text(financesTurnoverLead);
-			//jQuery('#finance-headcount').text(financesHeadcountLead);
-			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
-			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
-
-			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
-
-		}else if(financesName != null & userType == null){
-
-			//jQuery('#finance-turnover').text(financesTurnoverLead);
-			//jQuery('#finance-headcount').text(financesHeadcountLead);
-			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
-			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
+		}else if(financesName != null && userType == null){
 
 			jQuery('#finance-contact').text(financesName.replace(/\+/g,' '));
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
@@ -380,17 +335,29 @@
 				jQuery('#finance-contact-status').removeClass('yes');
 				jQuery('#finance-contact-status').removeClass('no');
 			}
+
+            if(financesPartnerName != null){
+                if(financesPartnerNamePending == null){
+                    jQuery('#finance-partner-contact-status').text('Yes');
+                    jQuery('#finance-partner-contact-status').addClass('yes');
+                    jQuery('#finance-partner-contact-status').removeClass('no');
+                }else{
+                    jQuery('#finance-partner-contact').text(financesPartnerNamePending.replace(/\+/g,' '));
+                    jQuery('#finance-partner-contact-status').text('Pending');
+                    jQuery('#finance-partner-contact-status').removeClass('yes');
+                    jQuery('#finance-partner-contact-status').removeClass('no');
+                }
+            }
 		}
 
-		if(financesPartnerName == null & userType == 'nonLead'){
+		if(financesPartnerName == null && userType == 'nonLead'){
 			jQuery('#finance-partner-contact').text('-');
 			jQuery('#finance-partner-contact-status').text('No');
 			jQuery('#finance-partner-contact-status').addClass('no');
 			jQuery('#finance-partner-contact-status').removeClass('yes');
 
-			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
 
-		}else if(financesPartnerName != null & userType == 'nonLead'){
+		}else if(financesPartnerName != null && userType == 'nonLead'){
 
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
 
@@ -465,7 +432,6 @@
 			jQuery("#address-details").show();
 			jQuery("#select-address-block").hide();
 		});
-
 
 
 
