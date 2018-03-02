@@ -201,7 +201,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         when(projectInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceFailure(notFoundError(User.class)));
 
-        mockMvc.perform(get("/projectinvite/checkUserExistsForInvite/{hash}", hash)
+        mockMvc.perform(get("/projectinvite/checkExistingUser/{hash}", hash)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
@@ -216,7 +216,7 @@ public class InviteProjectControllerTest  extends BaseControllerMockMVCTest<Invi
 
         when(projectInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(true));
 
-        mockMvc.perform(get("/projectinvite/checkUserExistsForInvite/{hash}", hash)
+        mockMvc.perform(get("/projectinvite/checkExistingUser/{hash}", hash)
                 .accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 

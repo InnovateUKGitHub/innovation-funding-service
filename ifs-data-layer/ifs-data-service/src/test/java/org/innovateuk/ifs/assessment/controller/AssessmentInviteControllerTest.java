@@ -328,7 +328,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         when(assessmentInviteServiceMock.checkUserExistsForInvite("hash")).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(
-                get("/competitioninvite/checkUserExistsForInvite/{inviteHash}", "hash"))
+                get("/competitioninvite/checkExistingUser/{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 
@@ -340,7 +340,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         when(assessmentInviteServiceMock.checkUserExistsForInvite("hash")).thenReturn(serviceSuccess(Boolean.FALSE));
 
         mockMvc.perform(
-                get("/competitioninvite/checkUserExistsForInvite/{inviteHash}", "hash"))
+                get("/competitioninvite/checkExistingUser/{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("false"));
 
@@ -352,7 +352,7 @@ public class AssessmentInviteControllerTest extends BaseControllerMockMVCTest<Co
         when(assessmentInviteServiceMock.checkUserExistsForInvite("hashNotExists")).thenReturn(serviceFailure(notFoundError(AssessmentInvite.class, "hashNotExists")));
 
         MvcResult result = mockMvc.perform(
-                get("/competitioninvite/checkUserExistsForInvite/{inviteHash}", "hashNotExists"))
+                get("/competitioninvite/checkExistingUser/{inviteHash}", "hashNotExists"))
                 .andExpect(status().isNotFound())
                 .andReturn();
 

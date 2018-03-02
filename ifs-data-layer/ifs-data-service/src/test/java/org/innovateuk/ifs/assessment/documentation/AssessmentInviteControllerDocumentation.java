@@ -196,7 +196,7 @@ public class AssessmentInviteControllerDocumentation extends BaseControllerMockM
 
         when(assessmentInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
-        mockMvc.perform(get("/competitioninvite/checkUserExistsForInvite/{hash}", hash))
+        mockMvc.perform(get("/competitioninvite/checkExistingUser/{hash}", hash))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
                 .andDo(document("competitioninvite/{method-name}",
