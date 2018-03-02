@@ -33,7 +33,7 @@ reset_db () {
 
     cd ${project_root_dir}
 
-    ./gradlew flywayClean
+    ./gradlew -PopenshiftEnv=unused flywayClean
 
     cd -
 }
@@ -48,10 +48,10 @@ do_baseline () {
     # navigate to project root
     cd ${project_root_dir}
 
-    ./gradlew clean processResources processTestResources
+    ./gradlew -PopenshiftEnv=unused clean processResources processTestResources
 
     # run generator test class
-    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
     # extract the current version of the webtest data
     current_version="`get_current_patch_level`_"
