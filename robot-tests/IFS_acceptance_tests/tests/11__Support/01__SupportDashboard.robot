@@ -36,6 +36,12 @@ Back navigation is to dashboard
     And the user should see the element    jQuery=a:contains("Project setup")
     And the user should see the element    jQuery=a:contains("Previous")
 
+Support user is able to search for an Application
+    [Documentation]  IFS-2904
+    [Tags]  HappyPath
+    When the user navigates to the page       ${server}/management/dashboard/live
+    Then the user enters the application id into the search field
+
 Support user is able to search active external users
     [Documentation]  IFS-1986 IFS-1841
     [Tags]  HappyPath
@@ -56,12 +62,6 @@ Support user is able to search pending external users
     Then the support user should be able to see him as  Not Verified  Active accounts
     When the invitee verifies his account
     Then the support user should be able to see him as  Verified  Active accounts
-
-Support user is able to search for an Application
-    [Documentation]  IFS-2904
-    [Tags]  HappyPath2
-    When the user navigates to the page      ${server}/management/dashboard/live
-    Then the user enters the application id into the search field
 
 *** Keywords ***
 the user is searching for external users
