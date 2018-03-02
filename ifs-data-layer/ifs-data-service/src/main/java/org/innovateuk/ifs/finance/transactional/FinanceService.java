@@ -1,17 +1,13 @@
 package org.innovateuk.ifs.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.io.InputStream;
 import java.util.List;
-import java.util.function.Supplier;
 
 public interface FinanceService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")

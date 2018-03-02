@@ -12,11 +12,11 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

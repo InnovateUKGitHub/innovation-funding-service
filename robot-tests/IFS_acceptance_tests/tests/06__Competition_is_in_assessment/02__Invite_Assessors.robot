@@ -43,6 +43,7 @@ Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${assessor_to_add}    Alexis Kinney
+${invitedAssessor}    will.smith@gmail.com
 
 *** Test Cases ***
 Check the initial key statistics
@@ -67,12 +68,12 @@ Filtering in the Invite Pending and rejected page
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
     [Tags]
-    Given The user clicks the button/link          link=Find
-    And the user clicks the button/link            jQuery=a:contains("41 to")
-    When the user selects the checkbox             assessor-row-15
-    And the user should see the element            jQuery=.form-hint:contains("1 assessors selected")
-    And the user clicks the button/link            jQuery=button:contains("Add selected to invite list")
-    Then The user should see the text in the page  will.smith@gmail.com
+    Given The user clicks the button/link  link=Find
+    And the user clicks the button/link    jQuery=a:contains("41 to")
+    Then the user clicks the button/link   jQuery=input[value="${getUserId("${invitedAssessor}")}"] ~ label
+    And the user should see the element    jQuery=.form-hint:contains("1 assessors selected")
+    And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
+    Then The user should see the text in the page  ${invitedAssessor}
     And The user should see the element  jQuery=td:contains("Will Smith") ~ td .yes
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
     And the user should see the element  jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
@@ -86,7 +87,7 @@ The User can Add and Remove Assessors
 The user can remove all people from the list
     [Documentation]    IFS-36
     [Tags]
-    Given the user clicks the button/link          jQuery=a:contains("1 to 20")
+    Given the user clicks the button/link          link=1 to 20
     And the user invites multiple assessors
     And the user clicks the button/link            jQuery=button:contains("Add selected to invite list")
     And the user should see the element            jQuery=td:contains("${assessor_to_add}")
@@ -108,31 +109,21 @@ Filter on innovation area
 Next/Previous pagination on Find tab
     [Documentation]    INFUND-6403
     [Tags]
-    When the user clicks the button/link     jQuery=.pagination-label:contains("Next")
-    Then the user should see the element     jQuery=.pagination-part-title:contains("1 to 20")
-    And the user should see the element      jQuery=.pagination-part-title:contains("41 to")
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
-    And the user should not see the element  jQuery=.pagination-label:contains("Previous")
-    And the user should not see the element  jQuery=.pagination-part-title:contains("41 to")
-
-Page list pagination on Find tab
-    [Documentation]    INFUND-6403
-    [Tags]
-    When the user clicks the button/link     jQuery=a:contains("41 to")
-    Then the user should see the element     jQuery=.pagination-label:contains("Previous")
-    And the user should not see the element  jQuery=.pagination-label:contains("Next")
+    Given the user clicks the button/link  link=21 to 40
+    Then the user should see the element   jQuery=.pagination-label:contains("Previous")
+    And the user should see the element    jQuery=.pagination-label:contains("Next")
 
 The user can select the profile link
     [Documentation]    INFUND-6669
     [Tags]
-    [Setup]
-    When the user clicks the button/link           link=Will Smith
-    Then the user should see the text in the page  will.smith@gmail.com
-    And the user should see the text in the page   028572565937
-    And the user should see the text in the page   Solar energy research
-    And the user should see the text in the page   Precision medicine
-    And the user should see the text in the page   Business
-    [Teardown]    The user clicks the button/link  link=Back
+    Given the user clicks the button/link  jQuery=a:contains("41 to")
+    When the user clicks the button/link   link=Will Smith
+    Then the user should see the element   jQuery=h3:contains("Email address") + p:contains("${invitedAssessor}")
+    Then the user should see the element   jQuery=h3:contains("Phone") + p:contains("28572565937")
+    Then the user should see the element   jQuery=h3:contains("Skill areas") + p:contains("Solar energy research")
+    Then the user should see the element   jQuery=h3:contains("Innovation areas") + ul:contains("Precision medicine")
+    Then the user should see the element   jQuery=h3:contains("Assessor type") + p:contains("Business")
+    [Teardown]  The user clicks the button/link  link=Back
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
@@ -146,7 +137,7 @@ Innovation sector and area are correct
 Invite multiple assessors
     [Documentation]    INFUND-6414
     [Tags]
-    Given the user clicks the button/link              jQuery=a:contains("1 to 20")
+    Given the user clicks the button/link              link=1 to 20
     And the user invites multiple assessors
     And the user clicks the button/link                jQuery=button:contains("Add selected to invite list")
     When the user clicks the button/link               jQuery=a:contains("Review and send invites")

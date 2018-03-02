@@ -1,75 +1,85 @@
-#!/bin/sh
+#!/bin/bash
+
+set -e
+
 cd "$(dirname "$0")"
 
-function reset_db() {
-    mysql -uroot -ppassword -hifs-database -e "drop database ifs";
-    mysql -uroot -ppassword -hifs-database -e "create database ifs";
-    mysql -uroot -ppassword -hifs-database -e "drop database ifs_test";
-    mysql -uroot -ppassword -hifs-database -e "create database ifs_test";
+project_root_dir="`pwd`/../.."
+webtest_patches_dir="${project_root_dir}/ifs-data-layer/ifs-data-service/src/main/resources/db/webtest"
 
-    ./gradlew flywayClean flywayMigrate
+get_current_patch_level () {
+
+    # extract the current version of the webtest data
+    echo "`find ${webtest_patches_dir} -name '*__Base_webtest_data.sql' | sed 's/.*\(V.*\)_[0-9]*__.*/\1/g'`"
 }
 
-function do_baseline() {
-    generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
+new_version_or_current=`get_current_patch_level`
+force=""
 
-    # navigate to project root
-    cd ../../
+while getopts ":f :v:" opt ; do
+    case ${opt} in
+        v)
+            new_version_or_current="$OPTARG"
+        ;;
+        f)
+            force="true"
+        ;;
+    esac
+done
+
+new_version="${new_version_or_current}_"
+
+reset_db () {
+
+    cd ${project_root_dir}
+
+    ./gradlew flywayClean
+
+    cd -
+}
+
+do_baseline () {
+
+    generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
     # clean database
     reset_db
 
-    ./gradlew clean build buildDocker -x test
-    ./gradlew processResources processTestResources
+    # navigate to project root
+    cd ${project_root_dir}
 
-    # unignore generator test class
-    sed -i -e 's/import org.junit.Ignore;//' $generate_test_class
-    sed -i -e 's/@Ignore//' $generate_test_class
+    ./gradlew clean processResources processTestResources
 
     # run generator test class
-    ./gradlew :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
-    cd ifs-data-layer/ifs-data-service/src/main/resources/db/webtest/
+    # extract the current version of the webtest data
+    current_version="`get_current_patch_level`_"
 
-    for i in ${oldversion}*; do mv $i ${i/${oldversion}/${newversion}}; done
+    cd ${webtest_patches_dir}
+    for i in ${current_version}*; do mv $i ${i/${current_version}/tmp_${new_version}}; done
+    rm -f ${new_version}*.sql
+    for i in tmp_${new_version}*; do mv $i ${i/tmp_${new_version}/${new_version}}; done
 
-    cd ../../../../../../../
+    cd ${project_root_dir}/setup-files/scripts
 
     # create baseline dump
-    setup-files/scripts/create-baseline-dump.sh ${newversion}
+    ./create-baseline-dump.sh ${new_version}
 
-    # ignore generator test class
-    sed -i -e '/import/i \
-    import org.junit.Ignore;\
-    ' $generate_test_class
-
-    sed -i -e '/public class/i \
-     @Ignore\
-    ' $generate_test_class
+    cd ${project_root_dir}
 
     reset_db
-
-    #verify correct build
-    ./gradlew clean build buildDocker
-
-    reset_db
-
-    ./gradlew composeUp syncShib
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *                                                                       *
 *           You have successfully run a webtest baseline.               *
-*       please verify the changes by running a full acceptance suite    *
+*       Please verify the changes by running a full acceptance suite    *
 *                                                                       *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 EOF
 
 }
-
-oldversion=${1?please specify the old baseline version(e.g. V100_11_)}
-newversion=${2?please specify the new baseline version(e.g. V100_12_)}
-
 
 cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -77,17 +87,24 @@ cat << EOF
 *           You are about to run a webtest baseline.                    *
 *       This will take a while so make sure you are not in a rush       *
 *                                                                       *
+*                   Current version is `get_current_patch_level`                          *
+*                   New version will be ${new_version_or_current}                         *
+*                                                                       *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 EOF
 
-while true; do
-    read -p "Do you want to start the baseline? (y/N)" yn
-    case $yn in
-        [Yy]* ) do_baseline $1 $2; break;;
-        [Nn]* ) exit;;
-        * ) exit;;
-    esac
-done
+if [[ -z "${force}" ]]; then
+    while true; do
+        read -p "Do you want to start the baseline? (y/N)" yn
+        case $yn in
+            [Yy]* ) do_baseline; break;;
+            [Nn]* ) exit;;
+            * ) exit;;
+        esac
+    done
+else
+    do_baseline
+fi
 
 
 

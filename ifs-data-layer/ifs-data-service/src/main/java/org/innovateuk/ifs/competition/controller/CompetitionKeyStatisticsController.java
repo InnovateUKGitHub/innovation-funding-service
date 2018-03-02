@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelInviteStatisticsResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
+import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
+import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,12 +48,12 @@ public class CompetitionKeyStatisticsController {
     }
 
     @GetMapping("/panel")
-    public RestResult<AssessmentPanelKeyStatisticsResource> getInAssessmentPanelKeyStatistics(@PathVariable("id") long id) {
+    public RestResult<ReviewKeyStatisticsResource> getInAssessmentPanelKeyStatistics(@PathVariable("id") long id) {
         return assessmentService.getAssessmentPanelKeyStatistics(id).toGetResponse();
     }
 
     @GetMapping("/panelInvites")
-    public RestResult<AssessmentPanelInviteStatisticsResource> getInAssessmentPanelInviteStatistics(@PathVariable("id") long id) {
+    public RestResult<ReviewInviteStatisticsResource> getInAssessmentPanelInviteStatistics(@PathVariable("id") long id) {
         return assessmentService.getAssessmentPanelInviteStatistics(id).toGetResponse();
     }
 

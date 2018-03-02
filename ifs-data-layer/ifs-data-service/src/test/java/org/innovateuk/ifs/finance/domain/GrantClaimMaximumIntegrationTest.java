@@ -207,7 +207,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
         flushAndClearSession();
 
         CompetitionData competition = competitionDataBuilder.
-                withExistingCompetition(competitionCreation.getCompetition().getId()).
+                withExistingCompetition(competitionCreation).
                 withBasicData("APC Competition", "Advanced Propulsion Centre",
                         singletonList("Digital manufacturing"), "Materials and manufacturing",
                         researchCategory, "ian.cooper@innovateuk.test",
