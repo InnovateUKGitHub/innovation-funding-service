@@ -14,6 +14,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${invitedCollaborator}  stuart@empire.com
+${competitionName}      Networking home IOT devices
 
 *** Test Cases ***
 Support dashboard
@@ -101,7 +102,7 @@ the invitee verifies his account
     the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
 
 the user enters the application id into the search field
-    ${applicationID} =  get application id by name  Networking home IOT devices
+    ${applicationID} =  get application id by name  ${competitionName}
     the user enters text to a text field    id=searchQuery  ${applicationID}
     the user clicks the button/link          id=searchsubmit
     the user should see the element          jQuery=td:contains("${applicationID}")
