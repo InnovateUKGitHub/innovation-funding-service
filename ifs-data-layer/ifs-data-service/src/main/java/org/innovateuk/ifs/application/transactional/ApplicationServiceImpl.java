@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -106,18 +107,20 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
-        return getOpenApplicationBySupplier(() -> getApplication(id)).andOnSuccessReturn(existingApplication -> {
-            existingApplication.setName(application.getName());
-            existingApplication.setDurationInMonths(application.getDurationInMonths());
-            existingApplication.setStartDate(application.getStartDate());
-            existingApplication.setStateAidAgreed(application.getStateAidAgreed());
-            existingApplication.setResubmission(application.getResubmission());
-            existingApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
-            existingApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
+        return find(() -> getApplication(id)).andOnSuccess(
+                foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccessReturn(
+                        openApplication -> {
+                            openApplication.setName(application.getName());
+                            openApplication.setDurationInMonths(application.getDurationInMonths());
+                            openApplication.setStartDate(application.getStartDate());
+                            openApplication.setStateAidAgreed(application.getStateAidAgreed());
+                            openApplication.setResubmission(application.getResubmission());
+                            openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
+                            openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
 
-            Application savedApplication = applicationRepository.save(existingApplication);
-            return applicationMapper.mapToResource(savedApplication);
-        });
+                            Application savedApplication = applicationRepository.save(openApplication);
+                            return applicationMapper.mapToResource(savedApplication);
+                        }));
     }
 
     @Override

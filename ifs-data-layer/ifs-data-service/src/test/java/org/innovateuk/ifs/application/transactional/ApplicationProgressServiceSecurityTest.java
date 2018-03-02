@@ -44,7 +44,7 @@ public class ApplicationProgressServiceSecurityTest extends BaseServiceSecurityT
 
         assertAccessDenied(
                 () -> classUnderTest.applicationReadyForSubmit(1L),
-                () -> verify(applicationRules).applicantCanUpdateApplicationResource(
+                () -> verify(applicationRules).usersConnectedToTheApplicationCanView(
                         isA(ApplicationResource.class),
                         isA(UserResource.class)
                 ));

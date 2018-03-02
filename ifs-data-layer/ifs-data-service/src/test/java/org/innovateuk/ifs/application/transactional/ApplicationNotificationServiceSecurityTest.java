@@ -29,7 +29,7 @@ public class ApplicationNotificationServiceSecurityTest extends BaseServiceSecur
     }
 
     @Test
-    public void testSendNotificationApplicationSubmitted() {
+    public void sendNotificationApplicationSubmitted() {
         final long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
@@ -44,6 +44,13 @@ public class ApplicationNotificationServiceSecurityTest extends BaseServiceSecur
         ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.informIneligible(applicationId, applicationIneligibleSendResource),
+                PROJECT_FINANCE, COMP_ADMIN);
+    }
+
+    @Test
+    public void notifyApplicantsByCompetition() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.notifyApplicantsByCompetition(1L),
                 PROJECT_FINANCE, COMP_ADMIN);
     }
 

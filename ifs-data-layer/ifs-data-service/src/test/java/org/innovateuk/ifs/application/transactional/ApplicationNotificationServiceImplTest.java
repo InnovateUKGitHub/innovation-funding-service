@@ -60,9 +60,6 @@ import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
-/**
- * TODO: Add description
- */
 public class ApplicationNotificationServiceImplTest {
     @Mock
     private ApplicationRepository applicationRepositoryMock;
@@ -80,7 +77,7 @@ public class ApplicationNotificationServiceImplTest {
     private ApplicationWorkflowHandler applicationWorkflowHandlerMock;
 
     @InjectMocks
-    private ApplicationNotificationService service;
+    private ApplicationNotificationService service = new ApplicationNotificationServiceImpl();
 
     private static final String WEB_BASE_URL = "www.baseUrl.com" ;
     private static final Set<State> FUNDING_DECISIONS_MADE_STATUSES = simpleMapSet(asLinkedSet(

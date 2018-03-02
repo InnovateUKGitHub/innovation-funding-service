@@ -104,7 +104,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         formInput.setQuestion(question);
         question.setFormInputs(singletonList(formInput));
 
-
         when(applicationRepositoryMock.findOne(anyLong())).thenReturn(newApplication().build());
 
         orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -114,12 +113,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
         comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
 
-
         when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
         when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
         when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
         when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
-
     }
 
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.transactional.ApplicationProgressServiceImpl;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -47,7 +47,7 @@ public class AcceptInviteServiceImpl extends BaseApplicationInviteService implem
     private ProcessRoleRepository processRoleRepository;
 
     @Autowired
-    private ApplicationProgressServiceImpl applicationProgressService;
+    private ApplicationProgressService applicationProgressService;
 
     @Autowired
     private OrganisationRepository organisationRepository;

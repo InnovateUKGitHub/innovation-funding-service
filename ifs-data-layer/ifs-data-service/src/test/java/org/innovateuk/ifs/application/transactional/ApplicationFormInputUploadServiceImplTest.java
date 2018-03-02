@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.io.File;
 import java.io.InputStream;
@@ -43,11 +44,8 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ApplicationFormInputUploadServiceImplTest {
     @Mock
@@ -66,7 +64,7 @@ public class ApplicationFormInputUploadServiceImplTest {
     private ApplicationRepository applicationRepositoryMock;
 
     @InjectMocks
-    private ApplicationFormInputUploadService service;
+    private ApplicationFormInputUploadService service = new ApplicationFormInputUploadServiceImpl();
 
     private Application openApplication;
     private FileEntry existingFileEntry;
@@ -78,7 +76,7 @@ public class ApplicationFormInputUploadServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        initMocks(this);
+         MockitoAnnotations.initMocks(this);
 
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         openApplication = newApplication().withCompetition(openCompetition).build();
@@ -162,7 +160,6 @@ public class ApplicationFormInputUploadServiceImplTest {
 
     @Test
     public void createFormInputResponseFileUploadButFileServiceCallFails() {
-
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
@@ -179,7 +176,6 @@ public class ApplicationFormInputUploadServiceImplTest {
 
     @Test
     public void createFormInputResponseFileUploadWithAlreadyExistingFormInputResponse() {
-
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
         Supplier<InputStream> inputStreamSupplier = () -> null;
@@ -199,7 +195,6 @@ public class ApplicationFormInputUploadServiceImplTest {
         assertTrue(result.isSuccess());
         FormInputResponseFileEntryResource resultParts = result.getSuccess();
         assertEquals(Long.valueOf(999), resultParts.getFileEntryResource().getId());
-
         assertEquals(newFileEntry, existingFormInputResponse.getFileEntry());
     }
 
@@ -375,6 +370,8 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceFailure(internalServerErrorError()));
         when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn
                 (newFormInput().withType(FormInputType.FILEUPLOAD).build());
+        when(applicationRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getApplicationId())).thenReturn
+                (newApplication().withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).build());
 
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());

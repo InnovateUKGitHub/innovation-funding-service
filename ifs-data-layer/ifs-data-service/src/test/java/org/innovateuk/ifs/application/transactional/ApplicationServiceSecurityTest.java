@@ -68,6 +68,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         );
     }
 
+    @Test
     public void testCreateApplicationByAppNameForUserIdAndCompetitionId() {
         Long competitionId = 123L;
         Long userId = 456L;
@@ -126,9 +127,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         assertAccessDenied(
                 () -> classUnderTest.markAsIneligible(1L, newIneligibleOutcome().build()),
-                () -> {
-                    verify(applicationRules).markAsInelgibileAllowedBeforeAssesment(isA(ApplicationResource.class), isA(UserResource.class));
-                }
+                () -> verify(applicationRules).markAsInelgibileAllowedBeforeAssesment(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 

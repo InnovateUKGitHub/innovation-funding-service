@@ -49,7 +49,7 @@ public class ApplicationProgressServiceImplTest {
     private ApplicationFinanceHandler applicationFinanceHandlerMock;
 
     @InjectMocks
-    private ApplicationProgressService service;
+    private ApplicationProgressService service = new ApplicationProgressServiceImpl();
 
     private Application app;
     private List<ProcessRole> roles;

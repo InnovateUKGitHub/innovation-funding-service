@@ -32,11 +32,13 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.transactional.BaseTransactionalService.getOpenApplicationBySupplier;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
 
 /**
  * TODO: Add description
@@ -68,15 +70,17 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
         long processRoleId = formInputResponseFile.getCompoundId().getProcessRoleId();
         long formInputId = formInputResponseFile.getCompoundId().getFormInputId();
 
-        return getOpenApplicationBySupplier(() -> findApplicationById(applicationId)).andOnSuccess(application -> {
+        return findApplicationById(applicationId).andOnSuccess(
+                foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccess(
+                        openApplication -> {
 
-            LOG.info("[FileLogging] Creating a new file for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId);
+            LOG.info("[FileLogging] Creating a new file for application id " + openApplication + " processRoleId " + processRoleId + " formInputId " + formInputId);
 
             FormInputResponse existingResponse = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(applicationId, processRoleId, formInputId);
 
             // Removing and replacing if file already exists here
             if (existingResponse != null && existingResponse.getFileEntry() != null) {
-                LOG.info("[FileLogging] FormInputResponse for file already exists for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId + " , so deleting before creating...");
+                LOG.info("[FileLogging] FormInputResponse for file already exists for application id " + openApplication + " processRoleId " + processRoleId + " formInputId " + formInputId + " , so deleting before creating...");
                 FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
                 final ServiceResult<FormInputResponse> deleteResult = deleteFormInputResponseFileUpload(formInputResponseFileEntryId);
 
@@ -84,13 +88,14 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
                     return serviceFailure(new Error(FILES_UNABLE_TO_DELETE_FILE, existingResponse.getFileEntry().getId()));
                 }
 
-                LOG.info("[FileLogging] Already existing FormInputResponse for application id " + application + " processRoleId " + processRoleId + " formInputId " + formInputId + " deleted successfully");
+                LOG.info("[FileLogging] Already existing FormInputResponse for application id " + openApplication + " processRoleId " + processRoleId + " formInputId " + formInputId + " deleted successfully");
             }
 
             return fileService.createFile(formInputResponseFile.getFileEntryResource(), inputStreamSupplier).andOnSuccess(successfulFile ->
                     createFormInputResponseFileUpload(successfulFile, existingResponse, processRoleId, applicationId, formInputId, formInputResponseFile)
             );
-        });
+        }
+        ));
     }
 
     private ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(Pair<File, FileEntry> successfulFile, FormInputResponse existingResponse, long processRoleId, long applicationId, long formInputId, FormInputResponseFileEntryResource formInputResponseFile) {
@@ -136,14 +141,15 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
     @Override
     @Transactional
     public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(FormInputResponseFileEntryId fileEntry) {
-        return getOpenApplicationBySupplier(() -> findApplicationById(fileEntry.getApplicationId())).andOnSuccess(application -> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(fileEntry));
+        return getOpenApplicationBySupplier(
+                () -> findApplicationById(fileEntry.getApplicationId()))
+                .andOnSuccess(application -> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(fileEntry));
     }
 
     private ServiceResult<FormInputResponse> deleteFormInputResponseFileUploadonGetApplicationAndSuccess(FormInputResponseFileEntryId fileEntry) {
         return find(formInputRepository.findOne(fileEntry.getFormInputId()), notFoundError(FormInput.class, fileEntry.getFormInputId())).andOnSuccess(
-                formInput -> getFormInputResponseFileEntryResource(fileEntry, formInput).
-                        andOnSuccess(formInputResponseFileEntryResource -> {
-
+                formInput -> getFormInputResponseFileEntryResource(fileEntry, formInput)
+                        .andOnSuccess(formInputResponseFileEntryResource -> {
                             LOG.info("[FileLogging] Deleting already existing FileEntryResource with id " + formInputResponseFileEntryResource.getFileEntryResource().getId() + " for application id " + formInputResponseFileEntryResource.getCompoundId().getApplicationId() + " processRoleId " + formInputResponseFileEntryResource.getCompoundId().getProcessRoleId() + " formInputId " + formInputResponseFileEntryResource.getCompoundId().getFormInputId() + " deleted successfully");
 
                             boolean questionHasMultipleStatuses = questionHasMultipleStatuses(formInput);
@@ -239,4 +245,17 @@ public class ApplicationFormInputUploadServiceImpl implements ApplicationFormInp
     private ServiceResult<FormInput> findFormInputById(long formInputId) {
         return find(formInputRepository.findOne(formInputId), notFoundError(FormInput.class, formInputId));
     }
+
+    private static ServiceResult<Application> getOpenApplicationBySupplier(Supplier<ServiceResult<Application>> applicationFindFunction) {
+        return find(applicationFindFunction).andOnSuccess(application -> {
+                    if (application.getCompetition() != null && !OPEN.equals(application.getCompetition().getCompetitionStatus())) {
+                        return serviceFailure(COMPETITION_NOT_OPEN);
+                    } else {
+                        return serviceSuccess(application);
+                    }
+                }
+        );
+    }
+
+
 }

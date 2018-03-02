@@ -127,19 +127,4 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
     protected ServiceResult<Question> getQuestion(Long questionId) {
         return find(questionRepository.findOne(questionId), notFoundError(Question.class));
     }
-
-    public static Supplier<ServiceResult<Application>> getApplicationSupplier(Long id, ApplicationRepository applicationRepository) {
-        return () -> find(applicationRepository.findOne(id), notFoundError(Application.class, id));
-    }
-
-    public static ServiceResult<Application> getOpenApplicationBySupplier(Supplier<ServiceResult<Application>> applicationFindFunction) {
-        return find(applicationFindFunction).andOnSuccess(application -> {
-                    if (application.getCompetition() != null && !OPEN.equals(application.getCompetition().getCompetitionStatus())) {
-                        return serviceFailure(COMPETITION_NOT_OPEN);
-                    } else {
-                        return serviceSuccess(application);
-                    }
-                }
-        );
-    }
 }
