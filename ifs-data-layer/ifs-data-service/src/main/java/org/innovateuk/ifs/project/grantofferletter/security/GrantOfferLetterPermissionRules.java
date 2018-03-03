@@ -115,4 +115,33 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
         return isInternal(user);
     }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Internal users can view the send status of Grant Offer Letter for a project")
+    public boolean internalAdminUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isInternalAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Support users can view the send status of Grant Offer Letter for a project")
+    public boolean supportUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isSupport(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Innovation lead users can view the send status of Grant Offer Letter for a project from competition assigned to them")
+    public boolean innovationLeadUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Partners can view the send status of Grant Offer Letter for a project")
+    public boolean externalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isPartner(project.getId(), user.getId());
+    }
 }

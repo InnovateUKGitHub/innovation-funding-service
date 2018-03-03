@@ -10,6 +10,8 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -75,6 +77,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private GrantOfferLetterService grantOfferLetterService;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
@@ -359,6 +364,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
         ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
 
+        boolean grantOfferLetterSentToProjectTeam =
+                grantOfferLetterService.getGrantOfferLetterState(project.getId()).
+                        andOnSuccessReturn(GrantOfferLetterStateResource::isGeneratedGrantOfferLetterAlreadySentToProjectTeam).
+                        getSuccess();
+
         return new ProjectPartnerStatusResource(
                 partnerOrganisation.getId(),
                 partnerOrganisation.getName(),
@@ -371,7 +381,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 otherDocumentsStatus,
                 grantOfferLetterStatus,
                 financeContactStatus,
-                golWorkflowHandler.isAlreadySent(project),
+                grantOfferLetterSentToProjectTeam,
                 isLead);
     }
 }

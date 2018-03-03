@@ -483,29 +483,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-    public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if (!golWorkflowHandler.isSendAllowed(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-        return getProject(projectId)
-                .andOnSuccess(project -> {
-                    if (!golWorkflowHandler.isAlreadySent(project)) {
-                        return serviceSuccess(Boolean.FALSE);
-                    }
-                    return serviceSuccess(Boolean.TRUE);
-                });
-    }
-
-    @Override
     @Transactional
     public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
 
@@ -572,21 +549,6 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                 return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
             }
         });
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.isRejected(project));
-    }
-
-    @Override
-    public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
     }
 
     @Override
