@@ -303,13 +303,19 @@
 
         if(startDate == null || projectAddress == null || pmName == null || financesName == null){
             jQuery(".button-large").attr("disabled", "disabled");
+            jQuery(".link-back").attr("href", "#");
+            jQuery(".link-back").text("Dashboard");
         }else{
             if(financesPartnerName != null){
                 jQuery(".success-alert").removeClass('hidden');
                 jQuery(".message-alert").hide();
                 jQuery("#statusUpdate").attr("value", "detailsComplete");
+                jQuery(".link-back").attr("href", "/prototypes/IFS-1984-ps-dashboard?status=detailsComplete");
+                jQuery(".link-back").text("Application overview");
             }else{
                 jQuery("#statusUpdate").attr("value", "detailsNotComplete");
+                jQuery(".link-back").attr("href", "/prototypes/IFS-1984-ps-dashboard?status=detailsNotComplete");
+                jQuery(".link-back").text("Application overview");
             }
             jQuery(".button-large").removeAttr("disabled");
         }
