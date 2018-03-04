@@ -551,8 +551,8 @@ CompAdmin approves other documents
     Given the user navigates to the page    ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/partner/documents
     And the user should see the text in the page    Other documents
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    And the user should see the text in the page    ${organisationLudlowName}
+    And the user should see the text in the page    ${organisationEggsName}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}
     Then the user should see the element    jQuery=button:contains("Accept documents")
     And the user should see the element    jQuery=button:contains("Reject documents")
@@ -653,9 +653,9 @@ all previous sections of the project are completed
     project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
 all partners submit their finance contacts
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
+    the partner submits their finance contact  ${EMPIRE_LTD_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
+    the partner submits their finance contact  ${organisationLudlowId}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
+    the partner submits their finance contact  ${organisationEggsId}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
 
 the user uploads to the collaboration agreement question
     [Arguments]  ${file_name}

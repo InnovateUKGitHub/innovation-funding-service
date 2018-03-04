@@ -1,4 +1,7 @@
 Email,First name,Last name,Status,Organisation name,Phone number,Role
+arden.pimenta@innovateuk.test,Arden,Pimenta,ACTIVE,Innovate UK,,ifs_administrator&project_finance
+astle.pimenta@innovateuk.test,Astle,Pimenta,ACTIVE,Innovate UK,,ifs_administrator&project_finance
+rianne.almeida@innovateuk.test,Rianne,Almeida,ACTIVE,Innovate UK,,ifs_administrator&project_finance
 john.doe@innovateuk.test,John,Doe,ACTIVE,Innovate UK,,comp_admin
 robert.johnson@innovateuk.test,Robert,Johnson,ACTIVE,Innovate UK,,comp_admin
 lee.bowman@innovateuk.test,Lee,Bowman,ACTIVE,Innovate UK,,project_finance
@@ -11,9 +14,6 @@ worth.email.test+project.finance1@gmail.com,Owain,Walden,INACTIVE,Innovate UK,,p
 worth.email.test+admin1@gmail.com,Lucy,Cavanaugh,INACTIVE,Innovate UK,,comp_admin
 worth.email.test+admin2@gmail.com,Richard,Place,INACTIVE,Innovate UK,,comp_admin
 support@innovateuk.test,IFS,Support,ACTIVE,Innovate UK,,support
-arden.pimenta@innovateuk.test,Arden,Pimenta,ACTIVE,Innovate UK,,ifs_administrator&project_finance
-astle.pimenta@innovateuk.test,Astle,Pimenta,ACTIVE,Innovate UK,,ifs_administrator&project_finance
-rianne.almeida@innovateuk.test,Rianne,Almeida,ACTIVE,Innovate UK,,ifs_administrator&project_finance
 richard.nunes@innovateuk.test,Richard,Nunes,INACTIVE,Innovate UK,,comp_admin
 julie.nunes@innovateuk.test,Julie,Nunes,INACTIVE,Innovate UK,,project_finance
 ralph.nunes@innovateuk.test,Ralph,Nunes,INACTIVE,Innovate UK,,innovation_lead
