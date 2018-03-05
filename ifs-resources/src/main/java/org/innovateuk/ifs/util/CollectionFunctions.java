@@ -12,6 +12,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -395,6 +396,17 @@ public final class CollectionFunctions {
             return emptySet();
         }
         return list.stream().map(mappingFn).collect(toSet());
+    }
+
+    /**
+     * Map over an array of values, collecting the results into a {@link Set}.
+     */
+    public static <T, R> Set<R> simpleMapSet(T[] array, Function<T, R> mappingFn) {
+        if (null == array || array.length == 0) {
+            return emptySet();
+        }
+
+        return newHashSet(simpleMap(asList(array), mappingFn));
     }
 
     /**

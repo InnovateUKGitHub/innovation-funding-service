@@ -50,6 +50,23 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
     }
 
     @Test
+    public void getAllAssessorFormInputResponsesForPanel() throws Exception {
+        List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
+                .build(2);
+
+        long applicationId = 1L;
+
+        when(assessorFormInputResponseServiceMock.getAllAssessorFormInputResponsesForPanel(applicationId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessorFormInputResponse/panel/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(content().string(toJson(expected)));
+
+        verify(assessorFormInputResponseServiceMock, only()).getAllAssessorFormInputResponsesForPanel(applicationId);
+    }
+
+    @Test
     public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() throws Exception {
         List<AssessorFormInputResponseResource> expected = newAssessorFormInputResponseResource()
                 .build(2);

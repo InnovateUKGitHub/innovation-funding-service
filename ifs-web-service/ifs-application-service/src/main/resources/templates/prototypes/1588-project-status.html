@@ -19,16 +19,16 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project setup status'})" />
 
-	<dl class="dl-left extra-margin-bottom">
-		<dd>Application number:</dd>
-		<dt>194741</dt>
-		<dd>Competition:</dd>
-		<dt>Connected digital additive manufacturing</dt>
-		<dd>Funding body:</dd>
-		<dt>Innovate UK</dt>
+	<dl class="font-xsmall extra-margin-bottom">
+		<dt>Project number:</dt>
+		<dd>194741</dd>
+		<dt>Competition:</dt>
+		<dd>Connected digital additive manufacturing</dd>
+		<dt>Funding body:</dt>
+		<dd>Innovate UK</dd>
 	</dl>
 
-	<p class="form-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
+	<p class="form-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before you can start your project. All partners have individual steps to complete.</p>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'setup-complete'}">
 		<div class="success-alert extra-margin-bottom">
@@ -47,9 +47,9 @@
 
 	<strong th:unless="${param.status != null and param.status[0] == 'setup-complete'}"><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
 
-	<div class="project-setup-progress-list">
+	<div class="progress-list progress-list--individual-blocks">
 	  <ul th:classappend="${(param.status != null and param.status[0] == 'setup-complete' ? 'setup-complete' : '' )}" th:unless="${param.status != null and param.status[0] == 'noCompHouse'}">
-	    <li class="positive">
+	    <li class="complete">
         <div class="task">
           <h2 class="heading-small">Successful application</h2>
           <p>The application <strong>Machine learning in robots</strong> has been successful in the <strong>Technology inspired</strong> competition.</p>

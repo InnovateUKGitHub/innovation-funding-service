@@ -13,6 +13,8 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
 ...
 ...               INFUND-8355: Project finance team - overheads
+...
+...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -137,14 +139,15 @@ Compadmin can open the jes-file in applications
     and the user navigates to the page  ${openCompetitionManagementRTO}
 
 File upload mandatory for Academic partner to mark section as complete
-    [Documentation]    INFUND-8469
+    [Documentation]    INFUND-8469  IFS-2879
     [Tags]    HappyPath
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     # This will also check the auto-save as we haven't marked finances as complete yet
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
+    and the element should be disabled       id=mark-all-as-complete
     and the user clicks the button/link       jQuery=button:contains("Remove")
-    When the user selects the checkbox      css=label[for="agree-terms-page"]
+    When the user selects the checkbox       termsAgreed
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     You must upload a Je-S file
 
@@ -170,19 +173,15 @@ Custom Suite Setup
     Applicant navigates to the finances of the Robot application
 
 the user adds three material rows
-    the user clicks the button/link    jQuery=button:contains("Materials")
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
-    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
-    the user moves focus to the element    jQuery=button:contains(Add another materials cost)
-    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
-    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    01
-    the user moves focus to the element    jQuery=button:contains(Add another materials cost)
-    the user clicks the button/link    jQuery=button:contains(Add another materials cost)
-    the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
-    the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    01
-    the user moves the mouse away from the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
-    the user moves focus to the element    link=Please refer to our guide to project costs for further information.
+    the user expands the section          Materials
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input  01
+    ${pagination}=  Run Keyword And Ignore Error Without Screenshots  wait until element is visible  css=#material-costs-table tr:nth-of-type(2)
+    run keyword if    ${pagination} == 'PASS'  click element  jQuery=#material-costs-table tr:nth-of-type(2) .buttonlink:contains("Remove")
+    the user clicks the button/link       jQuery=button:contains("Add another materials cost")
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input  01
+    the user clicks the button/link       jQuery=button:contains("Add another materials cost")
+    the user enters text to a text field  css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input  01
+    the user moves focus to the element   link=Please refer to our guide to project costs for further information.
 
 the user removes the materials rows
     [Documentation]    INFUND-2965

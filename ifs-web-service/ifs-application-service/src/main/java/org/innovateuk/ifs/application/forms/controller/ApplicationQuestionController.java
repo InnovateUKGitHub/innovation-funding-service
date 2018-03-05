@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -19,6 +17,8 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -43,11 +43,11 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationQuestionController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationQuestionController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationQuestionController {
 
-    private static final Log LOG = LogFactory.getLog(ApplicationQuestionController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationQuestionController.class);
 
     @Autowired
     private QuestionModelPopulator questionModelPopulator;
@@ -79,20 +79,30 @@ public class ApplicationQuestionController {
     }
 
     @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
-    public String showQuestion(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
-                               @SuppressWarnings("unused") BindingResult bindingResult,
-                               ValidationHandler validationHandler,
-                               Model model,
-                               @PathVariable(APPLICATION_ID) final Long applicationId,
-                               @PathVariable(QUESTION_ID) final Long questionId,
-                               @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
-                               UserResource user,
-                               HttpServletRequest request,
-                               HttpServletResponse response) {
-
+    public String showQuestion(
+            @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @PathVariable(APPLICATION_ID) final Long applicationId,
+            @PathVariable(QUESTION_ID) final Long questionId,
+            @RequestParam("mark_as_complete") final Optional<Boolean> markAsComplete,
+            UserResource user,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         markAsComplete.ifPresent(markAsCompleteSet -> {
-            if(markAsCompleteSet) {
-                ValidationMessages errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user.getId(), request, response, bindingResult.hasErrors(), Optional.of(Boolean.TRUE));
+            if (markAsCompleteSet) {
+                ValidationMessages errors = applicationSaver.saveApplicationForm(
+                        applicationId,
+                        form,
+                        questionId,
+                        user.getId(),
+                        request,
+                        response,
+                        bindingResult.hasErrors(),
+                        Optional.of(Boolean.TRUE)
+                );
                 validationHandler.addAnyErrors(errors);
             }
         });
@@ -103,16 +113,17 @@ public class ApplicationQuestionController {
     }
 
     @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
-    public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
-                                     BindingResult bindingResult,
-                                     ValidationHandler validationHandler,
-                                     Model model,
-                                     @PathVariable(APPLICATION_ID) final Long applicationId,
-                                     @PathVariable(QUESTION_ID) final Long questionId,
-                                     UserResource user,
-                                     HttpServletRequest request,
-                                     HttpServletResponse response) {
-
+    public String questionFormSubmit(
+            @Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
+            BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @PathVariable(APPLICATION_ID) final Long applicationId,
+            @PathVariable(QUESTION_ID) final Long questionId,
+            UserResource user,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         Map<String, String[]> params = request.getParameterMap();
         ValidationMessages errors = new ValidationMessages();
 
@@ -128,7 +139,16 @@ public class ApplicationQuestionController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors = applicationSaver.saveApplicationForm(applicationId, form, questionId, user.getId(), request, response, bindingResult.hasErrors(), Optional.empty());
+                errors = applicationSaver.saveApplicationForm(
+                        applicationId,
+                        form,
+                        questionId,
+                        user.getId(),
+                        request,
+                        response,
+                        bindingResult.hasErrors(),
+                        Optional.empty()
+                );
             }
 
             model.addAttribute("form", form);
@@ -146,10 +166,17 @@ public class ApplicationQuestionController {
     }
 
     private boolean hasErrors(HttpServletRequest request, ValidationMessages errors, BindingResult bindingResult) {
-        return isUploadWithValidationErrors(request, errors) || isMarkAsCompleteRequestWithValidationErrors(request.getParameterMap(), errors, bindingResult);
+        return isUploadWithValidationErrors(request, errors)
+                || isMarkAsCompleteRequestWithValidationErrors(request.getParameterMap(), errors, bindingResult);
     }
 
-    private void populateShowQuestion(UserResource user, Long applicationId, Long questionId, Model model, ApplicationForm form) {
+    private void populateShowQuestion(
+            UserResource user,
+            Long applicationId,
+            Long questionId,
+            Model model,
+            ApplicationForm form
+    ) {
         ApplicantQuestionResource question = applicantRestService.getQuestion(user.getId(), applicationId, questionId);
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(question, model, form);
 
@@ -157,19 +184,27 @@ public class ApplicationQuestionController {
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null, Optional.empty());
     }
 
-    private String handleEditQuestion(ApplicationForm form, Model model, Long applicationId, Long questionId, UserResource user) {
+    private String handleEditQuestion(
+            ApplicationForm form,
+            Model model,
+            Long applicationId,
+            Long questionId,
+            UserResource user
+    ) {
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
         if (processRole != null) {
             questionService.markAsIncomplete(questionId, applicationId, processRole.getId());
         } else {
-            LOG.error("Not able to find process role for user " + user.getName() + " for application id " + applicationId);
+            LOG.error("Not able to find process role for user {} for application id ", user.getName(), applicationId);
         }
 
         populateShowQuestion(user, applicationId, questionId, model, form);
         return APPLICATION_FORM;
     }
 
-    private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params, ValidationMessages errors, BindingResult bindingResult) {
+    private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params,
+            ValidationMessages errors,
+            BindingResult bindingResult) {
         return ((errors.hasErrors() || bindingResult.hasErrors()) && isMarkQuestionRequest(params));
     }
 
@@ -178,10 +213,15 @@ public class ApplicationQuestionController {
     }
 
     private Boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {
-        List<QuestionStatusResource> questionStatuses = questionService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId);
+        List<QuestionStatusResource> questionStatuses = questionService.findQuestionStatusesByQuestionAndApplicationId(
+                questionId,
+                applicationId);
         return questionStatuses.isEmpty() || questionStatuses.stream()
-                .anyMatch(questionStatusResource -> (
-                        questionStatusResource.getAssignee() == null || questionStatusResource.getAssigneeUserId().equals(userId))
-                        && (questionStatusResource.getMarkedAsComplete() == null || !questionStatusResource.getMarkedAsComplete()));
+                .anyMatch(questionStatusResource ->
+                        (questionStatusResource.getAssignee() == null
+                                || questionStatusResource.getAssigneeUserId().equals(userId))
+                        && (questionStatusResource.getMarkedAsComplete() == null
+                                || !questionStatusResource.getMarkedAsComplete())
+                );
     }
 }

@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
+import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferLetterController;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterApprovalForm;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
-import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferLetterController;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

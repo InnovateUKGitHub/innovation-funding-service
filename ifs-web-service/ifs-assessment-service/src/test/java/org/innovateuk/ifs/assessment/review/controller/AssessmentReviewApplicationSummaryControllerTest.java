@@ -161,6 +161,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
                         leadOrganisation.getId(),
                         collaboratorOrganisation2.getId(),
                         otherOrganisation.getId())
+                .withApplication(application.getId())
                 .withUser(otherUsers.get(0), otherUsers.get(1), otherUsers.get(2), user)
                 .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName(), ASSESSOR.getName())
                 .build(4);
@@ -187,7 +188,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
 
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(processRoles);
         when(organisationService.getOrganisationById(otherOrganisation.getId())).thenReturn(otherOrganisation);
-        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoles.get(3).getId())).thenReturn(restSuccess(responses));
+        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoles.get(3).getApplicationId())).thenReturn(restSuccess(responses));
         when(assessmentRestService.getByUserAndApplication(user.getId(), application.getId())).thenReturn(restSuccess(assessment));
         when(formInputRestService.getById(responses.get(0).getFormInput())).thenReturn(restSuccess(formInputs.get(0)));
         when(formInputRestService.getById(responses.get(1).getFormInput())).thenReturn(restSuccess(formInputs.get(1)));

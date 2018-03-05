@@ -5,14 +5,14 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.testdata.builders.BaseDataBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.IfProfileValue;
 
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders and sits it atop existing
  * production data
  */
-@Ignore
+@IfProfileValue(name = "testGroups", values = {"applytestdatatoproductiondata"})
 public class ApplyTestDataToProductionData extends BaseGenerateTestData {
 
     @Autowired

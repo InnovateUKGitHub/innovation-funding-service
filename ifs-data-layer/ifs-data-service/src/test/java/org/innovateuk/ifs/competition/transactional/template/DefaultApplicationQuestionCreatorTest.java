@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -89,11 +90,12 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
     }
 
     @Test
-    public void buildQuestion_createQuestionShouldContainTheDefaultAllowedFileTypeForFileUpload() throws Exception {
+    public void buildQuestion_createQuestionShouldNotContainTheDefaultAllowedFileTypeAndGuidanceForFileUpload() throws Exception {
         Question defaultQuestion = service.buildQuestion(competition);
         FormInput fileUploadFormInput = defaultQuestion.getFormInputs().get(3);
 
         assertEquals(defaultQuestion.getFormInputs().size(), 4);
-        assertTrue(fileUploadFormInput.getAllowedFileTypes().contains("PD"));
+        assertNull(fileUploadFormInput.getAllowedFileTypes());
+        assertNull(fileUploadFormInput.getGuidanceAnswer());
     }
 }

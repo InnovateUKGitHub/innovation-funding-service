@@ -25,12 +25,19 @@
                 <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
                     <dt class="column-third">Appendix</dt>
-                    <dd class="column-two-thirds" th:if="${question.appendix}">
-                        <ul th:each="fileType : ${question.allowedFileTypes}">
-                            <li th:text="${fileType}"></li>
-                        </ul>
-                    </dd>
+                    <dd class="column-two-thirds" th:if="${question.appendix}">Yes</dd>
                     <dd class="column-two-thirds" th:unless="${question.appendix}">No</dd>
+                    <th:block th:if="${question.appendix}">
+                        <dt class="column-third">Accepted appendix file types</dt>
+                        <dd class="column-two-thirds">
+                            <ul>
+                                <li th:each="fileType : ${question.allowedFileTypes}"
+                                    th:text="${fileType}"></li>
+                            </ul>
+                        </dd>
+                        <dt class="column-third">Appendix guidance</dt>
+                        <dd class="column-two-thirds wysiwyg-styles" ifs:utext="${question.appendixGuidance}"></dd>
+                    </th:block>
                 </th:block>
             </dl>
         </fieldset>
@@ -169,7 +176,7 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('question.guidance')}" th:text="${err}" ></span>
                     </th:block>
                 </label>
-                <div class="textarea-wrapped ">
+                <div class="textarea-wrapped">
                         <textarea data-max_words="500"
                                   data-editor="html"
                                   id="question.guidance"
@@ -203,8 +210,8 @@
             <div class="form-group" th:if="${question.appendix != null}">
                 <fieldset class="inline">
                     <legend class="form-label-bold">Appendix</legend>
-                    <div class="multiple-choice" data-target="allowedFileTypesDiv">
-                        <input id="appendix-yes" th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio"/>
+                    <div class="multiple-choice" data-target="allowedFileTypesDiv" data-target-clear-form="true">
+                        <input id="appendix-yes" th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio"  />
                         <label for="appendix-yes">Yes</label>
                     </div>
                     <div class="multiple-choice">
@@ -213,24 +220,51 @@
                     </div>
                 </fieldset>
             </div>
-            <div  id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}" th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
-                <fieldset>
-                    <legend id="question.allowedFileTypes">
-                        <span class="form-label-bold visuallyhidden">Allowed file types</span>
-                        <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypes')}" th:text="${err}" ></span>
+            <!--/*
+            TODO: IFS-2565 - Change to use 'allowedFileTypes' instead of 'allowedFileTypesEnum' in ZDD migrate (contract: step 1)
+            */-->
+            <div  id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('question.allowedFileTypesEnum')} ? 'form-group-error'">
+                    <fieldset>
+                        <legend id="question.allowedFileTypesEnum">
+                            <span class="form-label-bold">Accepted appendix file types</span>
+                            <th:block th:if="${#fields.hasErrors('question.allowedFileTypesEnum')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypesEnum')}" th:text="${err}" ></span>
+                            </th:block>
+                        </legend>
+                        <div class="multiple-choice" th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
+                            <input type="checkbox"
+                                   th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
+                                   th:field="*{question.allowedFileTypesEnum}"
+                                   th:value="${fileTypeCategory.name()}"
+                                   name="allowedFileTypes"
+                                   required="required"
+                                   data-autosave-list />
+                            <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}" th:text="${fileTypeCategory.displayName}">PDF</label>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-group-error'">
+                    <label class="form-label" for="question.appendixGuidance">
+                        <span class="form-label-bold">Appendix guidance</span>
+                        <th:block th:if="${#fields.hasErrors('question.appendixGuidance')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('question.appendixGuidance')}" th:text="${err}" ></span>
                         </th:block>
-                    </legend>
-                    <div class="multiple-choice" th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
-                        <input type="checkbox"
-                               th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
-                               th:field="*{question.allowedFileTypes}"
-                               th:value="${fileTypeCategory.displayName}"
-                               name="allowedFileTypes"
-                               required="required" />
-                        <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}" th:text="${fileTypeCategory.displayName}">PDF</label>
+                    </label>
+                    <div class="textarea-wrapped">
+                        <textarea data-max_words="500"
+                                  data-editor="html"
+                                  id="question.appendixGuidance"
+                                  th:classappend="${#fields.hasErrors('question.appendixGuidance')} ? 'form-control-error'"
+                                  th:name="question.appendixGuidance"
+                                  required="required"
+                                  ifs:utext="${question.appendixGuidance}">
+                        </textarea>
+                        <div class="textarea-footer">
+                            <span class="autosave-info"></span>
+                        </div>
                     </div>
-                </fieldset>
+                </div>
             </div>
 
             <th:block th:if="${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).ASSESSED_QUESTION or competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE}">

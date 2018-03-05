@@ -38,6 +38,13 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
 
     private static Cache<Pair<Long, String>, List<FormInputResource>> formInputsByCompetitionIdAndQuestionName = CacheBuilder.newBuilder().build();
 
+    public QuestionResponseDataBuilder withExistingResponse(ApplicationQuestionResponseData response) {
+        return with(data -> {
+           data.setApplication(response.getApplication());
+           data.setQuestionName(response.getQuestionName());
+        });
+    }
+
     public QuestionResponseDataBuilder withApplication(ApplicationResource application) {
         return with(data -> data.setApplication(application));
     }
@@ -54,32 +61,40 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
     }
 
     public QuestionResponseDataBuilder withFileUploads(List<String> fileUploads, String uploadedBy) {
+
         return with(data -> {
+
             UserResource updateUser = retrieveUserByEmail(uploadedBy);
+
             doAs(updateUser, () -> {
-                List<FormInputResource> formInputs = getFormInputsForQuestion(data.getQuestionName(), data);
-                List<FormInputResource> fileUploadInputs = simpleFilter(formInputs, fi -> FormInputType.FILEUPLOAD == fi.getType());
 
-                zip(fileUploadInputs, fileUploads, (input, filename) -> {
+                testService.doWithinTransaction(() -> {
 
-                    FileEntry fileEntry = fileEntryRepository.save(new FileEntry(null, filename, "application/pdf", 7945));
+                    List<FormInputResource> formInputs = getFormInputsForQuestion(data.getQuestionName(), data);
+                    List<FormInputResource> fileUploadInputs = simpleFilter(formInputs, fi -> FormInputType.FILEUPLOAD == fi.getType());
 
-                    List<FormInputResponse> response = formInputResponseRepository.findByApplicationIdAndFormInputId(data.getApplication().getId(), input.getId());
+                    zip(fileUploadInputs, fileUploads, (input, filename) -> {
 
-                    Optional<FormInputResponse> formInputResponseForUser = simpleFindFirst(response, fir -> updateUser.getId().equals(fir.getUpdatedBy().getUser().getId()));
+                        FileEntry fileEntry = fileEntryRepository.save(new FileEntry(null, filename, "application/pdf", 7945));
 
-                    FormInputResponse formInputResponse = formInputResponseForUser.orElseGet(() -> {
+                        List<FormInputResponse> response = formInputResponseRepository.findByApplicationIdAndFormInputId(data.getApplication().getId(), input.getId());
 
-                        ProcessRoleResource processRole = retrieveApplicantByEmail(uploadedBy, data.getApplication().getId());
-                        ProcessRole processRoleEntity = processRoleRepository.findOne(processRole.getId());
-                        Application application = applicationRepository.findOne(data.getApplication().getId());
-                        FormInput formInputEntity = formInputRepository.findOne(input.getId());
-                        return new FormInputResponse(ZonedDateTime.now(), fileEntry, processRoleEntity, formInputEntity, application);
+                        Optional<FormInputResponse> formInputResponseForUser =
+                                simpleFindFirst(response, fir -> updateUser.getId().equals(fir.getUpdatedBy().getUser().getId()));
+
+                        FormInputResponse formInputResponse = formInputResponseForUser.orElseGet(() -> {
+
+                            ProcessRoleResource processRole = retrieveApplicantByEmail(uploadedBy, data.getApplication().getId());
+                            ProcessRole processRoleEntity = processRoleRepository.findOne(processRole.getId());
+                            Application application = applicationRepository.findOne(data.getApplication().getId());
+                            FormInput formInputEntity = formInputRepository.findOne(input.getId());
+                            return new FormInputResponse(ZonedDateTime.now(), fileEntry, processRoleEntity, formInputEntity, application);
+                        });
+
+                        formInputResponse.setFileEntry(fileEntry);
+                        formInputResponse.setUpdateDate(ZonedDateTime.now());
+                        formInputResponseRepository.save(formInputResponse);
                     });
-
-                    formInputResponse.setFileEntry(fileEntry);
-                    formInputResponse.setUpdateDate(ZonedDateTime.now());
-                    formInputResponseRepository.save(formInputResponse);
                 });
             });
         });
@@ -100,14 +115,18 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
         });
     }
 
-    public QuestionResponseDataBuilder markAsComplete() {
+    public QuestionResponseDataBuilder markAsComplete(boolean updateApplicationCompletionStatus) {
         return with(data -> {
             QuestionResource question = retrieveQuestionByCompetitionAndName(data.getQuestionName(), data.getApplication().getCompetition());
             ProcessRoleResource lead = retrieveLeadApplicant(data.getApplication().getId());
             UserResource leadUser = retrieveUserById(lead.getUser());
 
-            doAs(leadUser, () ->
-                questionService.markAsComplete(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()), lead.getId()));
+            doAs(leadUser, () -> {
+                QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId());
+                return updateApplicationCompletionStatus ?
+                        questionService.markAsComplete(questionKey, lead.getId()) :
+                        testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, lead.getId());
+            });
         });
     }
 

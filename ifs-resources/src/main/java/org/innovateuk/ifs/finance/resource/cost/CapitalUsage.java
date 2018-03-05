@@ -15,7 +15,7 @@ public class CapitalUsage extends AbstractFinanceRowItem {
     String name;
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer deprecation;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
@@ -30,17 +30,18 @@ public class CapitalUsage extends AbstractFinanceRowItem {
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal npv;
 
-    @DecimalMin(value = "0", message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
+    @NotNull(message = NOT_BLANK_MESSAGE)
+    @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal residualValue;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
-    @Min(value = 0, message = VALUE_MUST_BE_HIGHER_MESSAGE)
+    @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Max(value = 100, message = VALUE_MUST_BE_LOWER_MESSAGE)
-    @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
+    @Digits(integer = MAX_DIGITS_INT, fraction = 0, message = NO_DECIMAL_VALUES)
     private Integer utilisation;
 
     public CapitalUsage() {

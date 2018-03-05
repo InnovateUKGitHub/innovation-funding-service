@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation   IFS-2284 Assign new Ts and Cs for APC competition type template
 ...             IFS-2286 APC Competition type template
+...
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
