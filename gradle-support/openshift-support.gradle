@@ -20,16 +20,16 @@ if (project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 //Workaround because of process resources.  dependency should be removed.
-apply from: rootProject.file("java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 bootRepackage.enabled = false
 build.enabled = false
 // End workaround
 
 
 if (!isNamedEnv()) {
-    apply from: rootProject.file("non-named-env-properties.gradle")
+    apply from: rootProject.file("gradle-support/non-named-env-properties.gradle")
 } else {
-    apply from: rootProject.file("named-env-properties.gradle")
+    apply from: rootProject.file("gradle-support/named-env-properties.gradle")
     if(file(openshiftEnv + "-named-env-properties.gradle").exists()) {
         apply from: openshiftEnv + "-named-env-properties.gradle"
     }

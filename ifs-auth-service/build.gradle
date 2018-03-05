@@ -11,7 +11,7 @@ allprojects {
 }
 
 subprojects {
-    apply from: rootProject.file("openshift-build.gradle")
+    apply from: rootProject.file("gradle-support/openshift-build.gradle")
 
     buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
     buildDocker.inputDir=file("${project.buildDir}/docker")

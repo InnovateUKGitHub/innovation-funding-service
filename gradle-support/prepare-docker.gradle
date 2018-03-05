@@ -1,4 +1,5 @@
-apply from: rootProject.file("new-relic.gradle")
+
+apply from: rootProject.file("gradle-support/new-relic.gradle")
 
 /**
  * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
