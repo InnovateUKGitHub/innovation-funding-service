@@ -6,6 +6,7 @@ import org.innovateuk.ifs.finance.domain.CostTotal;
 import org.innovateuk.ifs.finance.repository.CostTotalRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.sync.FinanceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,8 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
                 .isEqualToComparingOnlyGivenFields(
                         newCostTotal()
                                 .withFinanceId(costTotalResource.getFinanceId())
-                                .withName(costTotalResource.getName())
-                                .withType(costTotalResource.getFinanceType())
+                                .withName(costTotalResource.getFinanceRowType().getName())
+                                .withType(costTotalResource.getFinanceType().name())
                                 .withTotal(costTotalResource.getTotal())
                                 .build()
                 );
@@ -82,8 +83,14 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
                 .containsExactlyInAnyOrder(
                         newCostTotal()
                                 .withFinanceId(financeId)
-                                .withName(costTotalResource1.getName(), costTotalResource2.getName())
-                                .withType(costTotalResource1.getFinanceType(), costTotalResource2.getFinanceType())
+                                .withName(
+                                        costTotalResource1.getFinanceRowType().getName(),
+                                        costTotalResource2.getFinanceRowType().getName()
+                                )
+                                .withType(
+                                        costTotalResource1.getFinanceType().name(),
+                                        costTotalResource2.getFinanceType().name()
+                                )
                                 .withTotal(costTotalResource1.getTotal(), costTotalResource2.getTotal())
                                 .buildArray(2, CostTotal.class)
                 );
@@ -96,8 +103,8 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
     ) {
         FinanceCostTotalResource costTotalResource = new FinanceCostTotalResource();
         costTotalResource.setFinanceId(financeId);
-        costTotalResource.setName(type.getName());
-        costTotalResource.setFinanceType("APPLICATION");
+        costTotalResource.setFinanceRowType(type);
+        costTotalResource.setFinanceType(FinanceType.APPLICATION);
         costTotalResource.setTotal(total);
         return costTotalResource;
     }
