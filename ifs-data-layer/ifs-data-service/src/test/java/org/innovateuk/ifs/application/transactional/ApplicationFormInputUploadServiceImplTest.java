@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -19,20 +20,28 @@ import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -43,9 +52,12 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ApplicationFormInputUploadServiceImplTest {
     @Mock
@@ -63,32 +75,82 @@ public class ApplicationFormInputUploadServiceImplTest {
     @Mock
     private ApplicationRepository applicationRepositoryMock;
 
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
     @InjectMocks
     private ApplicationFormInputUploadService service = new ApplicationFormInputUploadServiceImpl();
 
-    private Application openApplication;
-    private FileEntry existingFileEntry;
-    private FormInputResponse existingFormInputResponse;
-    private FormInputResponse unlinkedFormInputFileEntry;
-
+    private FormInput formInput;
+    private FormInputType formInputType;
+    private Question question;
     private FileEntryResource fileEntryResource;
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource;
+    private FileEntry existingFileEntry;
+    private FormInputResponse existingFormInputResponse;
+    private List<FormInputResponse> existingFormInputResponses;
+    private FormInputResponse unlinkedFormInputFileEntry;
+    private Long organisationId = 456L;
+
+    private Question multiAnswerQuestion;
+    private Question leadAnswerQuestion;
+
+    private OrganisationType orgType;
+    private Organisation org1;
+    private Organisation org2;
+    private Organisation org3;
+
+    private ProcessRole[] roles;
+    private Section section;
+    private Competition comp;
+    private Application app;
+
+    private Application openApplication;
 
     @Before
     public void setUp() throws Exception {
-         MockitoAnnotations.initMocks(this);
+        initMocks(this);
 
-        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
-        openApplication = newApplication().withCompetition(openCompetition).build();
+        question = QuestionBuilder.newQuestion().build();
 
-        existingFileEntry = newFileEntry().with(id(999L)).build();
-        existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
-        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
+        formInputType = FormInputType.FILEUPLOAD;
 
+        formInput = newFormInput().withType(formInputType).build();
+        formInput.setId(123L);
+        formInput.setQuestion(question);
+        question.setFormInputs(singletonList(formInput));
 
         fileEntryResource = newFileEntryResource().with(id(999L)).build();
         formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+
+        existingFileEntry = newFileEntry().with(id(999L)).build();
+        existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+        existingFormInputResponses = singletonList(existingFormInputResponse);
+        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        openApplication = newApplication().withCompetition(openCompetition).build();
+
+        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+
+        multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
+        leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
+
+        orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
+        org1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
+        org2 = newOrganisation().withId(345L).build();
+        org3 = newOrganisation().withId(456L).build();
+
+        roles = newProcessRole().withRole(UserRoleType.LEADAPPLICANT, UserRoleType.APPLICANT, UserRoleType.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
+        section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
+        comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
+        app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
+
+        when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
+        when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
+        when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
+        when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
     }
+
 
     @Test
     public void createFormInputResponseFileUpload() {
@@ -348,7 +410,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(formInputResponseRepositoryMock.save(existingFormInputResponse)).thenReturn(unlinkedFormInputFileEntry);
         when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceSuccess(existingFileEntry));
         when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn
-                (newFormInput().build());
+                (newFormInput().withQuestion(question).build());
 
         ServiceResult<FormInputResponse> result =
                 service.deleteFormInputResponseFileUpload(formInputResponseFileEntryResource.getCompoundId());
@@ -369,7 +431,7 @@ public class ApplicationFormInputUploadServiceImplTest {
         when(fileServiceMock.getFileByFileEntryId(existingFileEntry.getId())).thenReturn(serviceSuccess(inputStreamSupplier));
         when(fileServiceMock.deleteFileIgnoreNotFound(999L)).thenReturn(serviceFailure(internalServerErrorError()));
         when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn
-                (newFormInput().withType(FormInputType.FILEUPLOAD).build());
+                (newFormInput().withQuestion(question).withType(FormInputType.FILEUPLOAD).build());
         when(applicationRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getApplicationId())).thenReturn
                 (newApplication().withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).build());
 

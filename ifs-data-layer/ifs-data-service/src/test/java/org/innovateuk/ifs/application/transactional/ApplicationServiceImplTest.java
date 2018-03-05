@@ -11,6 +11,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
@@ -39,13 +40,17 @@ import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
+import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -77,6 +82,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private FormInputResponseFileEntryResource formInputResponseFileEntryResource;
     private FileEntry existingFileEntry;
     private FormInputResponse existingFormInputResponse;
+    private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
     private Long organisationId = 456L;
 
@@ -93,6 +99,8 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private Competition comp;
     private Application app;
 
+    private Application openApplication;
+
     @Before
     public void setUp() throws Exception {
         question = QuestionBuilder.newQuestion().build();
@@ -104,21 +112,36 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         formInput.setQuestion(question);
         question.setFormInputs(singletonList(formInput));
 
-        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(newApplication().build());
+        fileEntryResource = newFileEntryResource().with(id(999L)).build();
+        formInputResponseFileEntryResource = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
+
+        existingFileEntry = newFileEntry().with(id(999L)).build();
+        existingFormInputResponse = newFormInputResponse().withFileEntry(existingFileEntry).build();
+        existingFormInputResponses = singletonList(existingFormInputResponse);
+        unlinkedFormInputFileEntry = newFormInputResponse().with(id(existingFormInputResponse.getId())).withFileEntry(null).build();
+        final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        openApplication = newApplication().withCompetition(openCompetition).build();
+
+        when(applicationRepositoryMock.findOne(anyLong())).thenReturn(openApplication);
+
+        multiAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.TRUE).withId(123L).build();
+        leadAnswerQuestion = newQuestion().withMarksAsCompleteEnabled(Boolean.TRUE).withMultipleStatuses(Boolean.FALSE).withId(321L).build();
 
         orgType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-
+        org1 = newOrganisation().withOrganisationType(orgType).withId(234L).build();
+        org2 = newOrganisation().withId(345L).build();
+        org3 = newOrganisation().withId(456L).build();
 
         roles = newProcessRole().withRole(UserRoleType.LEADAPPLICANT, UserRoleType.APPLICANT, UserRoleType.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
         section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
         comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
+        app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
 
         when(applicationRepositoryMock.findOne(app.getId())).thenReturn(app);
         when(organisationRepositoryMock.findOne(234L)).thenReturn(org1);
         when(organisationRepositoryMock.findOne(345L)).thenReturn(org2);
         when(organisationRepositoryMock.findOne(456L)).thenReturn(org3);
     }
-
 
 
     @Test
