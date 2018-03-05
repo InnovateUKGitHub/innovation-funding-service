@@ -34,7 +34,7 @@ Complete the org size section
     the user clicks the button/link    link=Robot test application
     the user clicks the button/link    link=Your finances
     the user clicks the button/link    link=Your organisation
-    ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit")
+    ${orgSizeReadonly}=  run keyword and return status without screenshots    Element Should Be Visible   jQuery=button:contains("Edit")
     Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit")
     the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
@@ -127,6 +127,7 @@ the user fills in the project costs
     the user fills in Travel and subsistence
     the user fills in Other costs
     the user clicks the button/link  css=label[for="stateAidAgreed"]
+    the user selects the checkbox    termsAgreed
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
@@ -244,6 +245,7 @@ the academic fills in the project costs
     the user should see the element       css=#total[data-calculation-rawvalue^="8999"]
     the user uploads the file             css=.inputfile  ${valid_pdf}
     the user should see the element       link=testing.pdf (opens in a new window)
+    the user selects the checkbox         termsAgreed
     the user clicks the button/link       css=#mark-all-as-complete[type="submit"]
 
 the user fills the organisation details with Project growth table
@@ -276,7 +278,7 @@ the user fills in the organisation information
 
 the user checks Your Funding section
     [Arguments]  ${Application}
-    ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
+    ${Research_category_selected}=  run keyword and return status without screenshots    Element Should Be Visible   link=Your funding
     Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
 

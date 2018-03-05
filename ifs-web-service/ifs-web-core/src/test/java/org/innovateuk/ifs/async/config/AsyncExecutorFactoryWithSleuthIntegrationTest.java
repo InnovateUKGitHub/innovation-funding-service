@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  * this having alternative configuration with "spring.sleuth.enabled=true" available, this test causes a new embedded
  * container to spin up which attempts to use the same ports as other tests' embedded containers.
  */
-@TestPropertySource(properties = {"spring.sleuth.enabled=true", "tomcat.ajp.port=8010", "server.port=8081"})
+@TestPropertySource(properties = {"spring.sleuth.enabled=true"})
 @DirtiesContext
 public class AsyncExecutorFactoryWithSleuthIntegrationTest extends BaseIntegrationTest {
 

@@ -311,6 +311,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         when(fileServiceMock.createFile(fileEntryResource, inputStreamSupplier)).thenReturn(serviceSuccess(Pair.of(fileFound, alreadyExistingFileEntry)));
 
         when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
+        when(formInputResponseRepositoryMock.save(existingFormInputResponseWithLinkedFileEntry)).thenReturn(existingFormInputResponseWithLinkedFileEntry);
         when(processRoleRepositoryMock.findOne(789L)).thenReturn(newProcessRole().build());
         when(formInputRepositoryMock.findOne(123L)).thenReturn(formInputLocal);
         when(applicationRepositoryMock.findOne(456L)).thenReturn(openApplication);

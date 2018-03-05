@@ -1,17 +1,12 @@
 package org.innovateuk.ifs.testdata;
 
 
-import org.junit.Ignore;
-import org.innovateuk.ifs.publiccontent.domain.PublicContent;
-
+import org.springframework.test.annotation.IfProfileValue;
 
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-
-
-
-@Ignore
+@IfProfileValue(name = "testGroups", values = {"generatetestdata"})
 public class GenerateTestData extends BaseGenerateTestData {
 
     @Override
@@ -28,9 +23,5 @@ public class GenerateTestData extends BaseGenerateTestData {
      */
     @Override
     public void fixUpDatabase() {
-        // Remove the public content that is in place for competition one so that generation does not fail with
-        // PUBLIC_CONTENT_ALREADY_INITIALISED
-        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
-        publicContentRepository.delete(publicContentForCompetitionOne.getId());
     }
 }

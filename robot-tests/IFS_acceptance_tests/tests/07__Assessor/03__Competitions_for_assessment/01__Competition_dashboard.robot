@@ -81,7 +81,7 @@ Accept an application for assessment
     And the user selects the radio button                     assessmentAccept  true
     And The user clicks the button/link                       jQuery=button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the user should see the element                       jQuery=.in-progress li:nth-child(3):contains("Intelligent water system"):contains("Accepted")
+    And the user should see the element                       jQuery=.in-progress li:nth-child(6):contains("Intelligent water system"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
