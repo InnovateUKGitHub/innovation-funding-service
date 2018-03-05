@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.testdata.builders;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -26,11 +25,11 @@ import java.util.function.UnaryOperator;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 
 /**
@@ -86,7 +85,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                                 .getCompetition()
                                 .getId())
                                 .getSuccess(),
-                        x -> "Application details".equals(x.getName())).get();
+                        x -> APPLICATION_DETAILS.getShortName().equals(x.getName())).get();
 
                 questionService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
@@ -200,8 +199,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 withInviteResources(applicationInvite).
                 build(), Optional.of(data.getApplication().getId())).getSuccess();
 
-        testService.flushAndClearSession();
-
         List<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccess();
 
         InviteOrganisationResource newInvite = simpleFindFirst(invites, i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
@@ -274,43 +271,24 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    /**
-     * Generate a default set of responses to the basic application questions (project summary, scope, etc) for
-     * applications that need responses but don't have any specific values in the application-questions.csv
-     */
-    public ApplicationDataBuilder withDefaultQuestionResponses() {
-
+    public ApplicationDataBuilder withExistingApplication(ApplicationData applicationData) {
         return with(data -> {
+            data.setApplication(applicationData.getApplication());
+            data.setCompetition(applicationData.getCompetition());
+            data.setLeadApplicant(applicationData.getLeadApplicant());
+        });
+    }
 
-            QuestionResponseDataBuilder baseBuilder =
-                    newApplicationQuestionResponseData(serviceLocator).withApplication(data.getApplication());
-
-            List<QuestionResource> competitionQuestions = retrieveQuestionsByCompetitionId(data.getCompetition().getId());
-
-            List<QuestionResource> questionsToAnswer = simpleFilter(competitionQuestions,
-                    q -> !q.getMultipleStatuses() && q.getMarkAsCompletedEnabled() && !"Application details".equals(q.getName()));
-
-            List<QuestionResponseDataBuilder> responseBuilders = simpleMap(questionsToAnswer, question -> {
-
-                QuestionResponseDataBuilder responseBuilder = baseBuilder.
-                        forQuestion(question.getName()).
-                        withAssignee(data.getLeadApplicant().getEmail()).
-                        withAnswer("This is the applicant response for " + question.getName().toLowerCase() + ".", data.getLeadApplicant().getEmail());
-
-                List<FormInputResource> formInputs = retrieveFormInputsByQuestionId(question);
-
-                if (formInputs.stream().anyMatch(fi -> fi.getType().equals(FormInputType.FILEUPLOAD))) {
-
-                    String fileUploadName = (data.getApplication().getName() + "-" + question.getShortName().toLowerCase() + ".pdf")
-                            .toLowerCase().replace(' ', '-') ;
-
-                    responseBuilder = responseBuilder.withFileUploads(singletonList(fileUploadName), data.getLeadApplicant().getEmail());
-                }
-
-                return responseBuilder.markAsComplete();
+    public ApplicationDataBuilder withExistingApplication(String title) {
+        return asCompAdmin(data -> {
+            testService.doWithinTransaction(() -> {
+                Application applicationFromRepository = applicationRepository.findByName(title).get(0);
+                long applicationId = applicationFromRepository.getId();
+                ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccess();
+                data.setApplication(application);
+                data.setCompetition(competitionService.getCompetitionById(application.getCompetition()).getSuccess());
+                data.setLeadApplicant(userService.findByEmail(applicationFromRepository.getLeadApplicant().getEmail()).getSuccess());
             });
-
-            responseBuilders.forEach(QuestionResponseDataBuilder::build);
         });
     }
 

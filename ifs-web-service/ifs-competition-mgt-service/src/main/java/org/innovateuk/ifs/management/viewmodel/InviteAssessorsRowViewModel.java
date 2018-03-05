@@ -10,7 +10,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 /**
  * Abstract holder of model attributes for the assessors shown in the 'Invite Assessors' view.
  */
-abstract class InviteAssessorsRowViewModel {
+public abstract class InviteAssessorsRowViewModel {
 
     private Long id;
     private String name;

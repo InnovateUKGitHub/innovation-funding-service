@@ -2,10 +2,10 @@ package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
+import org.innovateuk.ifs.review.resource.ReviewState;
 
-import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.ACCEPTED;
-import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.PENDING;
+import static org.innovateuk.ifs.review.resource.ReviewState.ACCEPTED;
+import static org.innovateuk.ifs.review.resource.ReviewState.PENDING;
 
 /**
  * Holder of model attributes for the applications shown on the Assessor Competition for Panel Dashboard.
@@ -16,13 +16,13 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
     private long reviewId;
     private String displayLabel;
     private String leadOrganisation;
-    private AssessmentReviewState state;
+    private ReviewState state;
 
     public AssessorCompetitionForPanelDashboardApplicationViewModel(long applicationId,
                                                                     long reviewId,
                                                                     String displayLabel,
                                                                     String leadOrganisation,
-                                                                    AssessmentReviewState state) {
+                                                                    ReviewState state) {
         this.applicationId = applicationId;
         this.reviewId = reviewId;
         this.displayLabel = displayLabel;
@@ -46,7 +46,7 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
         return leadOrganisation;
     }
 
-    public AssessmentReviewState getState() {
+    public ReviewState getState() {
         return state;
     }
 
@@ -58,7 +58,7 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
         return isState(ACCEPTED);
     }
 
-    private boolean isState(AssessmentReviewState state) {
+    private boolean isState(ReviewState state) {
         return state == this.state;
     }
 

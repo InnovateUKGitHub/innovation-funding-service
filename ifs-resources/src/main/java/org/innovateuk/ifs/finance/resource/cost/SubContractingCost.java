@@ -15,7 +15,7 @@ public class SubContractingCost extends AbstractFinanceRowItem {
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
-    @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION)
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = NO_DECIMAL_VALUES)
     private BigDecimal cost;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)

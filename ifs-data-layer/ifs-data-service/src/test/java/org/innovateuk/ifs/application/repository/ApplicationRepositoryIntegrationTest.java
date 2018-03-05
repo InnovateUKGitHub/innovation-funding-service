@@ -3,11 +3,11 @@ package org.innovateuk.ifs.application.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterviewPanel;
-import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewPanelRepository;
-import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewPanelState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.interview.domain.InterviewAssignment;
+import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewPanelBuilder.newAssessmentInterviewPanel;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.junit.Assert.assertEquals;
 
 @Rollback
@@ -44,7 +44,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private AssessmentInterviewPanelRepository assessmentInterviewPanelRepository;
+    private InterviewAssignmentRepository interviewAssignmentRepository;
 
     @Autowired
     @Override
@@ -116,13 +116,13 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         applicationRepository.save(applications);
 
-        AssessmentInterviewPanel interviewPanel = newAssessmentInterviewPanel()
+        InterviewAssignment interviewPanel = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(AssessmentInterviewPanelState.CREATED))
+                .withActivityState(activityState(InterviewAssignmentState.CREATED))
                 .withTarget(applications.get(0))
                 .build();
 
-        assessmentInterviewPanelRepository.save(interviewPanel);
+        interviewAssignmentRepository.save(interviewPanel);
 
         Pageable pageable = new PageRequest(1, 20);
 
@@ -144,13 +144,13 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         applicationRepository.save(applications);
 
-        AssessmentInterviewPanel interviewPanel = newAssessmentInterviewPanel()
+        InterviewAssignment interviewAssignment = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(AssessmentInterviewPanelState.AWAITING_FEEDBACK_RESPONSE))
+                .withActivityState(activityState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE))
                 .withTarget(applications.get(0))
                 .build();
 
-        assessmentInterviewPanelRepository.save(interviewPanel);
+        interviewAssignmentRepository.save(interviewAssignment);
 
         Pageable pageable = new PageRequest(1, 20);
 
@@ -172,7 +172,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         return activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, applicationState.getBackingState());
     }
 
-    private ActivityState activityState(AssessmentInterviewPanelState applicationState) {
+    private ActivityState activityState(InterviewAssignmentState applicationState) {
         return activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, applicationState.getBackingState());
     }
 }
