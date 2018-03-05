@@ -15,12 +15,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @Component
 public class SpendProfileCostFilter {
     public List<FinanceCostTotalResource> filterBySpendProfile(List<FinanceCostTotalResource> financeCostTotalResources) {
-        return simpleFilter(financeCostTotalResources, financeResource -> isSpendProfile(financeResource.getName()));
+        return simpleFilter(
+                financeCostTotalResources,
+                financeResource -> isSpendProfile(financeResource.getFinanceRowType())
+        );
     }
 
-    private boolean isSpendProfile(String typeName) {
-        return FinanceRowType.getByTypeName(typeName)
-                .map(FinanceRowType::isIncludedInSpendProfile)
-                .orElse(false);
+    private boolean isSpendProfile(FinanceRowType rowType) {
+        return rowType.isIncludedInSpendProfile();
     }
 }
