@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
@@ -49,7 +49,7 @@ public class ApplicationSectionSaverTest {
     private OrganisationService organisationService;
 
     @Mock
-    private ApplicationFinanceHandler applicationFinanceHandler;
+    private FinanceViewHandler financeViewHandler;
 
     @Mock
     private ProcessRoleService processRoleService;
@@ -96,7 +96,7 @@ public class ApplicationSectionSaverTest {
         when(organisationService.getOrganisationType(userId, application.getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         FinanceFormHandler defaultFinanceFormHandler = mock(DefaultFinanceFormHandler.class);
         when(defaultFinanceFormHandler.update(request, userId, application.getId(), competitionId)).thenReturn(new ValidationMessages());
-        when(applicationFinanceHandler.getFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandler.getFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceFormHandler);
         when(overheadFileSaver.isOverheadFileRequest(request)).thenReturn(false);
     }
 

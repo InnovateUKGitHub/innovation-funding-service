@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator.finance;
 
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
-import org.innovateuk.ifs.application.finance.view.ApplicationFinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
 import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.application.viewmodel.finance.AbstractCostViewModel;
@@ -20,14 +20,14 @@ public abstract class AbstractCostPopulator<M extends AbstractCostViewModel> ext
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
-    private ApplicationFinanceHandler applicationFinanceHandler;
+    private FinanceViewHandler financeViewHandler;
 
     @Override
     protected void populate(AbstractApplicantResource resource, M viewModel) {
         ApplicationFinanceResource organisationFinances = applicationFinanceRestService.getFinanceDetails(resource.getApplication().getId(), resource.getCurrentApplicant().getOrganisation().getId()).getSuccess();
         FinanceRowCostCategory category = organisationFinances.getFinanceOrganisationDetails(viewModel.getFinanceRowType());
         if (viewModel.getQuestion().getType().equals(QuestionType.COST)) {
-            FinanceRowItem costItem = applicationFinanceHandler.getFinanceFormHandler(resource.getCurrentApplicant().getOrganisation().getOrganisationType()).addCostWithoutPersisting(resource.getApplication().getId(), resource.getCurrentUser().getId(), viewModel.getQuestion().getId());
+            FinanceRowItem costItem = financeViewHandler.getFinanceFormHandler(resource.getCurrentApplicant().getOrganisation().getOrganisationType()).addCostWithoutPersisting(resource.getApplication().getId(), resource.getCurrentUser().getId(), viewModel.getQuestion().getId());
             category.addCost(costItem);
         }
         viewModel.setCostCategory(category);

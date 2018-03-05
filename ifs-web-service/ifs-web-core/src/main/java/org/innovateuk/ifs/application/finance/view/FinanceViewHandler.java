@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceModelManager;
+import org.innovateuk.ifs.application.finance.view.jes.JESProjectFinanceModelManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
 
 @Component
 @Configuration
-public class ApplicationFinanceHandler implements FinanceHandler {
+public class FinanceViewHandler implements FinanceHandler {
 
     public FinanceFormHandler getFinanceFormHandler(Long organisationType) {
         if(RESEARCH.getId().equals(organisationType)) {
@@ -21,7 +22,11 @@ public class ApplicationFinanceHandler implements FinanceHandler {
     }
 
     public FinanceFormHandler getProjectFinanceFormHandler(Long organisationType) {
-        return null;
+        if(RESEARCH.getId().equals(organisationType)) {
+            return getJESFinanceFormHandler();
+        } else {
+            return getProjectFinanceFormHandler();
+        }
     }
 
     public FinanceModelManager getFinanceModelManager(Long organisationType) {
@@ -34,7 +39,11 @@ public class ApplicationFinanceHandler implements FinanceHandler {
 
 
     public FinanceModelManager getProjectFinanceModelManager(Long organisationType) {
-        return null;
+        if(RESEARCH.getId().equals(organisationType)) {
+            return getJESProjectFinanceModelManager();
+        } else {
+            return getDefaultProjectFinanceModelManager();
+        }
     }
 
     @Bean
@@ -55,6 +64,21 @@ public class ApplicationFinanceHandler implements FinanceHandler {
     @Bean
     protected FinanceModelManager getDefaultFinanceModelManager() {
         return new DefaultFinanceModelManager();
+    }
+
+    @Bean
+    protected FinanceModelManager getJESProjectFinanceModelManager() {
+        return new JESProjectFinanceModelManager();
+    }
+
+    @Bean
+    protected FinanceModelManager getDefaultProjectFinanceModelManager() {
+        return new DefaultProjectFinanceModelManager();
+    }
+
+    @Bean
+    protected FinanceFormHandler getProjectFinanceFormHandler() {
+        return new ProjectFinanceFormHandler();
     }
 }
 
