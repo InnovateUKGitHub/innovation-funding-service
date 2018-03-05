@@ -13,7 +13,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status?user=nonLead'})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -36,7 +36,7 @@
 			    </div>
 			</details>
 
-			<div class="form-group extra-margin">
+			<div class="form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 				<label for="finances-name-1" class="block-label selection-button-radio">
 					<input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
 					John Smith
@@ -52,6 +52,26 @@
 					<span id="finance-name">Ann Jones (pending)</span>
 				</label>
 			</div>
+
+            <div class="form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
+
+                <input type="hidden" name="user" value="nonLead">
+
+                <label for="finances-name-1" class="block-label selection-button-radio">
+                    <input id="finances-name-1" type="radio" name="finances-name-partner-group" value="Ray Reardon" checked="checked" />
+                    Ray Reardon
+                </label>
+
+                <label for="finances-name-2" class="block-label selection-button-radio">
+                    <input id="finances-name-2" type="radio" name="finances-name-partner-group" value="Tony Drago" />
+                    Tony Drago
+                </label>
+
+                <label for="finances-name-invite" class="block-label selection-button-radio" id="invited-finance-contact" style="display: none">
+                    <input id="finances-name-invite" type="radio" name="finances-name-partner-group" value="" />
+                    <span id="finance-name">Tony Drago (pending)</span>
+                </label>
+            </div>
 
 		</fieldset>
 
