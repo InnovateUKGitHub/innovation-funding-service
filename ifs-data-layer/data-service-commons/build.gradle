@@ -29,7 +29,8 @@ dependencies {
     testCompile project(':ifs-resources')
     testCompile project(":ifs-commons")
     testCompile "com.h2database:h2:1.4.196"
-
+    testCompile 'org.springframework.restdocs:spring-restdocs-asciidoctor:1.2.3.RELEASE'
+    testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:1.2.3.RELEASE'
 }
 
 sourceSets {
