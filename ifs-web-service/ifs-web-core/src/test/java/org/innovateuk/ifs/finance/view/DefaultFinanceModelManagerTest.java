@@ -2,8 +2,8 @@ package org.innovateuk.ifs.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
@@ -66,7 +66,7 @@ public class DefaultFinanceModelManagerTest {
     private OrganisationTypeRestService organisationTypeService;
 
     @Mock
-    private FinanceHandler financeHandler;
+    private ApplicationFinanceHandler applicationFinanceHandler;
 
     @Mock
     private OrganisationService organisationService;
@@ -173,7 +173,7 @@ public class DefaultFinanceModelManagerTest {
 
 		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
 		
-		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
+		when(applicationFinanceHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
     	when(formInputRestService.getByQuestionIdAndScope(isA(Long.class), eq(APPLICATION))).thenReturn(restSuccess(asList(newFormInputResource().withType(FormInputType.LABOUR).build())));
 

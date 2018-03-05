@@ -7,7 +7,6 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
@@ -36,6 +35,7 @@ import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.application.finance.view.ProjectFinanceHandler;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -105,7 +105,7 @@ public class FinanceChecksEligibilityController {
     private ProjectFinanceService projectFinanceService;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private ProjectFinanceHandler projectFinanceHandler;
 
     @Autowired
     private ProjectFinanceRowRestService projectFinanceRowRestService;
@@ -197,7 +197,7 @@ public class FinanceChecksEligibilityController {
 
         FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
         FinanceRowType costType = costItem.getCostType();
-        financeHandler.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
+        projectFinanceHandler.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
@@ -251,7 +251,7 @@ public class FinanceChecksEligibilityController {
                                                          HttpServletRequest request) {
         ValidationMessages errors = new ValidationMessages();
 
-        ValidationMessages saveErrors = financeHandler.getProjectFinanceFormHandler(organisationType).update(request, organisationId, projectId, competitionId);
+        ValidationMessages saveErrors = projectFinanceHandler.getProjectFinanceFormHandler(organisationType).update(request, organisationId, projectId, competitionId);
 
         removeCapitalUsageExistingErrors(saveErrors);
 
@@ -275,7 +275,7 @@ public class FinanceChecksEligibilityController {
     }
 
     private FinanceRowItem addCost(Long orgType, Long organisationId, Long projectId, Long questionId) {
-        return financeHandler.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
+        return projectFinanceHandler.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -387,7 +387,7 @@ public class FinanceChecksEligibilityController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)projectFinanceHandler
                 .getProjectFinanceModelManager(organisation.getOrganisationType()))
                     .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);

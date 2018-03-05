@@ -46,7 +46,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private OrganisationTypeRestService organisationTypeService;
     
     @Autowired
-    private FinanceHandler financeHandler;
+    private ApplicationFinanceHandler applicationFinanceHandler;
     
     @Autowired
     private OrganisationService organisationService;
@@ -144,7 +144,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 	        	FinanceRowType costType = costTypeForQuestion(question);
 	        	if(costType != null) {
 		        	FinanceRowCostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
-		            FinanceRowItem costItem = financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
+		            FinanceRowItem costItem = applicationFinanceHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
 		        	category.addCost(costItem);
 	        	}
 	        }
