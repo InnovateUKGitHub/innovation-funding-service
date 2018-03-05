@@ -33,6 +33,10 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
+
+/**
+ * Service provides notification emails functions to send emails for {@Application}s.
+ */
 @Service
 public class ApplicationNotificationServiceImpl implements ApplicationNotificationService {
     @Autowired
@@ -70,28 +74,32 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
     @Override
     @Transactional
-    public ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccess(application -> {
+    public ServiceResult<Void> informIneligible(long applicationId,
+                                                ApplicationIneligibleSendResource applicationIneligibleSendResource) {
+        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccess(application -> {
+                    if (!applicationWorkflowHandler.informIneligible(application)) {
+                        return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
+                    }
 
-            if (!applicationWorkflowHandler.informIneligible(application)) {
-                return serviceFailure(APPLICATION_MUST_BE_INELIGIBLE);
-            }
+                    applicationRepository.save(application);
+                    String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
+                    String bodyHtml = plainTextToHtml(bodyPlain);
 
-            applicationRepository.save(application);
-            String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
-            String bodyHtml = plainTextToHtml(bodyPlain);
-
-            NotificationTarget recipient =
-                    new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
-            Notification notification = new Notification(
-                    systemNotificationSource,
-                    singletonList(recipient),
-                    Notifications.APPLICATION_INELIGIBLE,
-                    asMap("subject", applicationIneligibleSendResource.getSubject(),
-                            "bodyPlain", bodyPlain,
-                            "bodyHtml", bodyHtml));
-            return notificationSender.sendNotification(notification);
-        }).andOnSuccessReturnVoid();
+                    NotificationTarget recipient = new ExternalUserNotificationTarget(
+                                    application.getLeadApplicant().getName(),
+                                    application.getLeadApplicant().getEmail()
+                    );
+                    Notification notification = new Notification(
+                            systemNotificationSource,
+                            singletonList(recipient),
+                            Notifications.APPLICATION_INELIGIBLE,
+                            asMap("subject", applicationIneligibleSendResource.getSubject(),
+                                    "bodyPlain", bodyPlain,
+                                    "bodyHtml", bodyHtml)
+                    );
+                    return notificationSender.sendNotification(notification);
+                }).andOnSuccessReturnVoid();
     }
 
     private ServiceResult<List<EmailAddress>> sendNotification(ProcessRole processRole) {
@@ -116,19 +124,28 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
 
     @Override
     public ServiceResult<Void> sendNotificationApplicationSubmitted(Long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccess(application -> {
-            NotificationSource from = systemNotificationSource;
-            NotificationTarget to = new ExternalUserNotificationTarget(application.getLeadApplicant().getName(), application.getLeadApplicant().getEmail());
+        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccess(application -> {
+                    NotificationSource from = systemNotificationSource;
+                    NotificationTarget to = new ExternalUserNotificationTarget(
+                            application.getLeadApplicant().getName(),
+                            application.getLeadApplicant().getEmail()
+                    );
 
-            Map<String, Object> notificationArguments = new HashMap<>();
-            Competition competition = application.getCompetition();
+                    Map<String, Object> notificationArguments = new HashMap<>();
+                    Competition competition = application.getCompetition();
 
-            notificationArguments.put("applicationName", application.getName());
-            notificationArguments.put("competitionName", competition.getName());
-            notificationArguments.put("webBaseUrl", webBaseUrl);
+                    notificationArguments.put("applicationName", application.getName());
+                    notificationArguments.put("competitionName", competition.getName());
+                    notificationArguments.put("webBaseUrl", webBaseUrl);
 
-            Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
-            return notificationService.sendNotification(notification, EMAIL);
+                    Notification notification = new Notification(
+                            from,
+                            singletonList(to),
+                            Notifications.APPLICATION_SUBMITTED,
+                            notificationArguments
+                    );
+                    return notificationService.sendNotification(notification, EMAIL);
         });
     }
 

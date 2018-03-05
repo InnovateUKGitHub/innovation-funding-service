@@ -26,6 +26,9 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
+/**
+ * Service for retrieving and updating an {@Application}s progress percentage number.
+ */
 @Service
 public class ApplicationProgressServiceImpl implements ApplicationProgressService {
     @Autowired
@@ -46,10 +49,11 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     @Override
     @Transactional
     public ServiceResult<BigDecimal> updateApplicationProgress(final Long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
-            BigDecimal percentageProgress = calculateApplicationProgress(application);
-            application.setCompletion(percentageProgress);
-            return percentageProgress;
+        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
+                .andOnSuccessReturn(application -> {
+                    BigDecimal percentageProgress = calculateApplicationProgress(application);
+                    application.setCompletion(percentageProgress);
+                    return percentageProgress;
         });
     }
 
@@ -92,7 +96,8 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
                 .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName())
                         || p.getRole().getName().equals(UserRoleType.APPLICANT.getName())
                         || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
-                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId())).collect(Collectors.toSet());
+                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()))
+                .collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
@@ -102,7 +107,8 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
 
         Long countSingleStatusQuestionsCompleted = questions.stream()
                 .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess()).count();
+                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess())
+                .count();
 
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
 

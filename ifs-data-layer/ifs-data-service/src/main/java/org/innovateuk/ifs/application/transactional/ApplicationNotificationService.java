@@ -6,6 +6,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+
+/**
+ * Security annotated interface for {@ApplicationNotificationServiceImpl}.
+ */
 public interface ApplicationNotificationService {
     @SecuredBySpring(value = "NOTIFY_APPLICANTS_OF_FEEDBACK",
                     description = "Comp admins and project finance users can notify applicants that their feedback is released")

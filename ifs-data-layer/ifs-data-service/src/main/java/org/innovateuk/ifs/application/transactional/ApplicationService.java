@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Transactional and secure service for Application processing work
+ * Security annotated interface for {@ApplicationServiceImpl}.
  */
 public interface ApplicationService {
 

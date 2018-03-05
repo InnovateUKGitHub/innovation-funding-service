@@ -9,6 +9,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
+
+/**
+ * Interface with security annotations for {@ApplicationFormInputUploadServiceImpl}.
+ */
 public interface ApplicationFormInputUploadService {
     @PreAuthorize("hasPermission(#fileEntry, 'UPDATE')")
     ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(FormInputResponseFileEntryResource fileEntry,

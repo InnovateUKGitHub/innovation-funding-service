@@ -41,7 +41,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
 
 /**
- * Transactional and secured service focused around the processing of Applications
+ * Transactional and secured service focused around the processing of Applications.
  */
 @Service
 public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
@@ -60,8 +60,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
-        return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
+    public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
+                                                                                                          Long competitionId,
+                                                                                                          Long userId) {
+        return find(user(userId), competition(competitionId))
+                .andOnSuccess((user, competition) ->
+                        createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
     }
 
     private void generateProcessRolesForApplication(User user, Role role, Application application) {
@@ -78,8 +82,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         applicationRepository.save(application);
     }
 
-    private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
-        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED);
+    private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName,
+                                                                                                           User user,
+                                                                                                           Competition competition) {
+        ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.APPLICATION,
+                State.CREATED
+        );
 
         Application application = new Application(applicationName, createdActivityState);
         application.setStartDate(null);
@@ -106,26 +115,28 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id, ApplicationResource application) {
+    public ServiceResult<ApplicationResource> saveApplicationDetails(final Long id,
+                                                                     ApplicationResource application) {
         return find(() -> getApplication(id)).andOnSuccess(
                 foundApplication -> verifyApplicationIsOpen(foundApplication).andOnSuccessReturn(
-                        openApplication -> {
-                            openApplication.setName(application.getName());
-                            openApplication.setDurationInMonths(application.getDurationInMonths());
-                            openApplication.setStartDate(application.getStartDate());
-                            openApplication.setStateAidAgreed(application.getStateAidAgreed());
-                            openApplication.setResubmission(application.getResubmission());
-                            openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
-                            openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
+                    openApplication -> {
+                        openApplication.setName(application.getName());
+                        openApplication.setDurationInMonths(application.getDurationInMonths());
+                        openApplication.setStartDate(application.getStartDate());
+                        openApplication.setStateAidAgreed(application.getStateAidAgreed());
+                        openApplication.setResubmission(application.getResubmission());
+                        openApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
+                        openApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
 
-                            Application savedApplication = applicationRepository.save(openApplication);
-                            return applicationMapper.mapToResource(savedApplication);
-                        }));
+                        Application savedApplication = applicationRepository.save(openApplication);
+                        return applicationMapper.mapToResource(savedApplication);
+                    }));
     }
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, ZonedDateTime date) {
+    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id,
+                                                                            ZonedDateTime date) {
         return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
@@ -135,7 +146,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final ZonedDateTime fundingEmailDateTime) {
+    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId,
+                                                                                 final ZonedDateTime fundingEmailDateTime) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             application.setManageFundingEmailDate(fundingEmailDateTime);
             Application savedApplication = applicationRepository.save(application);
@@ -145,7 +157,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
+    public ServiceResult<ApplicationResource> updateApplicationState(final Long id,
+                                                                     final ApplicationState state) {
         if (ApplicationState.SUBMITTED.equals(state) && !applicationProgressService.applicationReadyForSubmit(id)) {
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
@@ -157,11 +170,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         });
     }
 
-    private static boolean applicationContainsUserRole(List<ProcessRole> roles, final Long userId, UserRoleType role) {
+    private static boolean applicationContainsUserRole(List<ProcessRole> roles,
+                                                       final Long userId,
+                                                       UserRoleType role) {
         boolean contains = false;
         int i = 0;
         while (!contains && i < roles.size()) {
-            contains = roles.get(i).getUser().getId().equals(userId) && roles.get(i).getRole().getName().equals(role.getName());
+            contains = roles.get(i).getUser().getId().equals(userId)
+                    && roles.get(i).getRole().getName().equals(role.getName());
             i++;
         }
 
@@ -170,7 +186,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     @Transactional
-    public ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcome reason) {
+    public ServiceResult<Void> markAsIneligible(long applicationId,
+                                                IneligibleOutcome reason) {
         return find(application(applicationId)).andOnSuccess((application) -> {
             if (!applicationWorkflowHandler.markIneligible(application, reason)) {
                 return serviceFailure(APPLICATION_MUST_BE_SUBMITTED);
@@ -181,8 +198,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
-        return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess((user) -> serviceSuccess(org.innovateuk.ifs.security.SecurityRuleUtil.isInternal(user)));
+    public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
+                                                      Long userId) {
+        return find(userRepository.findOne(userId), notFoundError(User.class, userId))
+                .andOnSuccess((user) ->
+                        serviceSuccess(org.innovateuk.ifs.security.SecurityRuleUtil.isInternal(user)));
     }
 
     @Override
@@ -231,9 +251,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
+    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId,
+                                                                                   Collection<ApplicationState> applicationStates) {
         Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
+        List<Application> applicationResults =
+                applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(
+                        competitionId,
+                        states
+                );
         return serviceSuccess(applicationResults);
     }
 
