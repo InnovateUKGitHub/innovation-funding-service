@@ -6,9 +6,7 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'
-if (project.property('ifsFinanceTotalsEnabled').toBoolean()) {
-    apply from: "../database-support.gradle"
-}
+apply from: "../database-support.gradle"
 
 configurations {
     providedRuntime
