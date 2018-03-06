@@ -40,7 +40,6 @@ public class FinanceViewHandler implements FinanceHandler {
         }
     }
 
-
     public FinanceModelManager getProjectFinanceModelManager(Long organisationType) {
         if(RESEARCH.getId().equals(organisationType)) {
             return getJESProjectFinanceModelManager();
@@ -57,6 +56,11 @@ public class FinanceViewHandler implements FinanceHandler {
     @Bean
     protected FinanceFormHandler getDefaultFinanceFormHandler() {
         return new DefaultFinanceFormHandler();
+    }
+
+    @Bean
+    protected FinanceFormHandler getProjectFinanceFormHandler() {
+        return new ProjectFinanceFormHandler();
     }
 
     @Bean
@@ -77,11 +81,6 @@ public class FinanceViewHandler implements FinanceHandler {
     @Bean
     protected FinanceModelManager getDefaultProjectFinanceModelManager() {
         return new DefaultProjectFinanceModelManager();
-    }
-
-    @Bean
-    protected FinanceFormHandler getProjectFinanceFormHandler() {
-        return new ProjectFinanceFormHandler();
     }
 }
 
