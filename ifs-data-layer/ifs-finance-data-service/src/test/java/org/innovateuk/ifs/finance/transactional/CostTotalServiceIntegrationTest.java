@@ -70,6 +70,7 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
                 MATERIALS,
                 BigDecimal.valueOf(2500L)
         );
+
         List<FinanceCostTotalResource> costTotalResources = asList(costTotalResource1, costTotalResource2);
 
         ServiceResult<Void> result = costTotalService.saveCostTotals(costTotalResources);
@@ -84,8 +85,8 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
                         newCostTotal()
                                 .withFinanceId(financeId)
                                 .withName(
-                                        costTotalResource1.getFinanceRowType().getName(),
-                                        costTotalResource2.getFinanceRowType().getName()
+                                        costTotalResource1.getFinanceRowType().name(),
+                                        costTotalResource2.getFinanceRowType().name()
                                 )
                                 .withType(
                                         costTotalResource1.getFinanceType().name(),
@@ -101,11 +102,11 @@ public class CostTotalServiceIntegrationTest extends BaseIntegrationTest {
             FinanceRowType type,
             BigDecimal total
     ) {
-        FinanceCostTotalResource costTotalResource = new FinanceCostTotalResource();
-        costTotalResource.setFinanceId(financeId);
-        costTotalResource.setFinanceRowType(type);
-        costTotalResource.setFinanceType(FinanceType.APPLICATION);
-        costTotalResource.setTotal(total);
-        return costTotalResource;
+        return new FinanceCostTotalResource(
+                FinanceType.APPLICATION,
+                type,
+                total,
+                financeId
+        );
     }
 }
