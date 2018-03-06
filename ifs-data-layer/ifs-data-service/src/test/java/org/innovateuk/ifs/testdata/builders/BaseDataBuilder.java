@@ -125,6 +125,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected AcceptInviteService acceptInviteService;
     protected MilestoneService milestoneService;
     protected ApplicationService applicationService;
+    protected ApplicationNotificationService applicationNotificationService;
     protected QuestionService questionService;
     protected TestQuestionService testQuestionService;
     protected FormInputService formInputService;
@@ -208,6 +209,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         acceptInviteService = serviceLocator.getBean(AcceptInviteService.class);
         milestoneService = serviceLocator.getBean(MilestoneService.class);
         applicationService = serviceLocator.getBean(ApplicationService.class);
+        applicationNotificationService = serviceLocator.getBean(ApplicationNotificationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
         testQuestionService = serviceLocator.getBean(TestQuestionService.class);
         formInputService = serviceLocator.getBean(FormInputService.class);
