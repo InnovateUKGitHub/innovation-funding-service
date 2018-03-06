@@ -178,6 +178,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         );
     }
 
+    @Test
+    public void testWithdrawProject() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.withdrawProject(123L),
+                UserRoleType.IFS_ADMINISTRATOR);
+    }
+
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
@@ -233,6 +240,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         @Override
         public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
             return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
+        }
+
+        @Override
+        public ServiceResult<ProjectResource> withdrawProject(Long projectId) {
+            return null;
         }
 
     }

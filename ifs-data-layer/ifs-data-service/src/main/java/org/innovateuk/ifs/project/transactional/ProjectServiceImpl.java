@@ -42,9 +42,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_ORG_FOR_GIVEN_PROJECT_AND_USER;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CREATE_PROJECT_FROM_APPLICATION_FAILS;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
@@ -203,6 +201,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
             }
         });
+    }
+
+    @Override
+    public ServiceResult<ProjectResource> withdrawProject(Long projectId) {
+
+        Project project = projectRepository.findOne(projectId);
+        if (projectWorkflowHandler.projectWithdrawn(project)) {
+            return serviceSuccess(projectMapper.mapToResource(project));
+        }
+        return serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN);
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {

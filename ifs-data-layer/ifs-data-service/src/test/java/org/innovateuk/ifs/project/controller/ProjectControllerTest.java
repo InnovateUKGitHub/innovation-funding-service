@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -109,6 +110,30 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andExpect(content().json(toJson(expectedProject)));
 
         verify(projectServiceMock).createProjectFromApplication(applicationId);
+    }
+
+    @Test
+    public void testWithdrawProject() throws Exception {
+        Long projectId = 456L;
+        ProjectResource expectedProject = newProjectResource().withId(projectId).build();
+        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess(expectedProject));
+
+        mockMvc.perform(post("/project/withdraw-project/project/{projectId}", projectId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedProject)));
+
+        verify(projectServiceMock).withdrawProject(projectId);
+    }
+
+    @Test
+    public void testWithdrawProjectFails() throws Exception {
+        Long projectId = 789L;
+        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
+
+        mockMvc.perform(post("/project/withdraw-project/project/{projectId}", projectId))
+                .andExpect(status().isInternalServerError());
+
+        verify(projectServiceMock).withdrawProject(projectId);
     }
 }
 

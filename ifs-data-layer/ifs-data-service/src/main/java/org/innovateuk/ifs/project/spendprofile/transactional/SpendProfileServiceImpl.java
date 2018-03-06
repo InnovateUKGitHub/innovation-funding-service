@@ -75,6 +75,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
+import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
+import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -300,7 +302,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         Project project = projectRepository.findOne(projectId);
-        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) && Arrays.asList(ApprovalType.APPROVED, ApprovalType.REJECTED).stream().anyMatch(e -> e.equals(approvalType))) {
+        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) &&
+                (APPROVED.equals(approvalType) || REJECTED.equals(approvalType))) {
             updateApprovalOfSpendProfile(projectId, approvalType);
             return approveSpendProfile(approvalType, project);
         } else {
@@ -310,13 +313,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> approveSpendProfile(ApprovalType approvalType, Project project) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            if (approvalType.equals(ApprovalType.APPROVED)) {
+            if (approvalType.equals(APPROVED)) {
                 if (spendProfileWorkflowHandler.spendProfileApproved(project, user))
                     return grantOfferLetterService.generateGrantOfferLetterIfReady(project.getId());
                 else
                     return serviceFailure(SPEND_PROFILE_CANNOT_BE_APPROVED);
             }
-            if (approvalType.equals(ApprovalType.REJECTED)) {
+            if (approvalType.equals(REJECTED)) {
                 if (spendProfileWorkflowHandler.spendProfileRejected(project, user))
                     return serviceSuccess();
                 else
@@ -569,7 +572,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
-        if (ApprovalType.REJECTED.equals(approvalType)) {
+        if (REJECTED.equals(approvalType)) {
             rejectSpendProfileSubmission(projectId);
         }
 

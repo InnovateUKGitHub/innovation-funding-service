@@ -42,7 +42,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() throws Exception {
+    public void testProjectCreated() {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -68,7 +68,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterApproved() throws Exception {
+    public void testGrantOfferLetterApproved() {
 
         callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> projectWorkflowHandler.grantOfferLetterApproved(project, projectUser)),
 
@@ -101,6 +101,28 @@ public class ProjectWorkflowHandlerIntegrationTest extends
 
         // Ensure the correct event was fired by the workflow
         expectedProjectProcess.setProcessEvent(expectedEventToBeFired.getType());
+
+        verify(projectProcessRepositoryMock).save(expectedProjectProcess);
+    }
+
+    @Test
+    public void testProjectWithdrawn() {
+        Project project = newProject().build();
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState());
+        ProjectProcess projectProcess = new ProjectProcess(null, project, currentActivityState);
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
+
+        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState());
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState())).thenReturn(expectedActivityState);
+
+        boolean result = projectWorkflowHandler.projectWithdrawn(project);
+
+        assertTrue(result);
+
+        ProjectProcess expectedProjectProcess = new ProjectProcess(null, project, expectedActivityState);
+
+        // Ensure the correct event was fired by the workflow
+        expectedProjectProcess.setProcessEvent(ProjectEvent.PROJECT_WITHDRAWN.getType());
 
         verify(projectProcessRepositoryMock).save(expectedProjectProcess);
     }

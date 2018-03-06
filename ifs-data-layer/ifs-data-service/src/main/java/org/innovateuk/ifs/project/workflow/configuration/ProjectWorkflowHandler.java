@@ -49,6 +49,10 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
         return fireEvent(mandatoryValueAddedEvent(project, projectUser, ProjectEvent.GOL_APPROVED), project);
     }
 
+    public boolean projectWithdrawn(Project project) {
+        return fireEvent(projectWithdrawnEvent(project), project);
+    }
+
     public ProjectState getState(Project project) {
         return getCurrentProcess(project).getActivityState();
     }
@@ -101,5 +105,11 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
                 .withPayload(event)
                 .setHeader("target", project)
                 .setHeader("participant", projectUser);
+    }
+
+    private MessageBuilder<ProjectEvent> projectWithdrawnEvent(Project project) {
+        return MessageBuilder
+                .withPayload(ProjectEvent.PROJECT_WITHDRAWN)
+                .setHeader("target", project);
     }
 }

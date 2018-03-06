@@ -28,10 +28,10 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
@@ -232,6 +232,39 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+    }
+
+    @Test
+    public void testWithdrawProject() {
+        Long projectId = 123L;
+        Project project = newProject().withId(projectId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).build();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectMapperMock.mapToResource(project)).thenReturn(projectResource);
+        when(projectWorkflowHandlerMock.projectWithdrawn(project)).thenReturn(true);
+
+        ServiceResult<ProjectResource> result = service.withdrawProject(projectId);
+        assertTrue(result.isSuccess());
+        assertEquals(projectResource, result.getSuccess());
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(projectMapperMock).mapToResource(project);
+        verify(projectWorkflowHandlerMock).projectWithdrawn(project);
+    }
+
+    @Test
+    public void testWithDrawProjectFails() {
+        Long projectId = 321L;
+        Project project = newProject().withId(projectId).build();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.projectWithdrawn(project)).thenReturn(false);
+
+        ServiceResult<ProjectResource> result = service.withdrawProject(projectId);
+        assertTrue(result.isFailure());
+        assertEquals(PROJECT_CANNOT_BE_WITHDRAWN.getErrorKey(), result.getErrors().get(0).getErrorKey());
+        verify(projectRepositoryMock).findOne(projectId);
+        verifyZeroInteractions(projectMapperMock);
+        verify(projectWorkflowHandlerMock).projectWithdrawn(project);
     }
 
     @Test
