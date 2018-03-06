@@ -27,10 +27,9 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.RoleService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,9 +63,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
 
     @Autowired
     private RegistrationService registrationService;
-
-    @Autowired
-    private RoleService roleService;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
@@ -203,8 +199,8 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         competitionParticipantRepository.save(competitionParticipants);
     }
 
-    private ServiceResult<RoleResource> getAssessorRoleResource() {
-        return roleService.findByUserRoleType(ASSESSOR);
+    private ServiceResult<Role> getAssessorRoleResource() {
+        return serviceSuccess(Role.ASSESSOR);
     }
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {

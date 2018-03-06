@@ -40,9 +40,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     protected ProfileRepository profileRepository;
 
     @Autowired
-    protected RoleRepository roleRepository;
-
-    @Autowired
     protected InnovationAreaRepository innovationAreaRepository;
 
     @Test

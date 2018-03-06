@@ -15,7 +15,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
@@ -45,7 +45,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -103,12 +102,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         User application2LeadApplicant = newUser().build();
         User application3LeadApplicant = newUser().build();
 
-        Role leadApplicantRole = newRole().with(id(456L)).build();
-
         List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
                 withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant).
                 withApplication(application1, application2, application3).
-                withRole(leadApplicantRole, leadApplicantRole, leadApplicantRole).
+                withRole(Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.LEADAPPLICANT).
                 build(3);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant);
@@ -136,7 +133,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         List<Application> applications = asList(application1, application2, application3);
         when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
 
-        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
         leadApplicantProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
@@ -172,14 +168,11 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         User application2Collaborator = newUser().build();
         User application2Applicant = newUser().build();
 
-        Role leadApplicantRole = newRole().with(id(456L)).build();
-        Role collaboratorRole = newRole().with(id(789L)).build();
-        Role applicantRole = newRole().with(id(321L)).build();
 
         List<ProcessRole> allProcessRoles = newProcessRole().
                 withUser(application1LeadApplicant, application1Collaborator, application1Applicant, application2LeadApplicant, application2Collaborator, application2Applicant).
                 withApplication(application1, application1, application1, application2, application2, application2).
-                withRole(leadApplicantRole, collaboratorRole, applicantRole, leadApplicantRole, collaboratorRole, applicantRole).
+                withRole(Role.LEADAPPLICANT, Role.COLLABORATOR, Role.APPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR, Role.APPLICANT).
                 build(6);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant);
@@ -203,10 +196,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         asList(application1, application2).forEach(application ->
                 when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
         );
-
-        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
-        when(roleRepositoryMock.findOneByName(COLLABORATOR.getName())).thenReturn(collaboratorRole);
-        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
 
         allProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))

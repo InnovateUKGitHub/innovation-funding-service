@@ -6,16 +6,15 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
@@ -93,12 +92,7 @@ public class OverheadFilePermissionRulesTest extends BasePermissionRulesTest<Ove
         }
         //Setting internal user attributes
         {
-            internalUser = newUserResource().build();
-            RoleResource roleResource = new RoleResource();
-            roleResource.setName(UserRoleType.COMP_ADMIN.getName());
-            List<RoleResource> roleResourceList = new ArrayList<RoleResource>();
-            roleResourceList.add(roleResource);
-            internalUser.setRoles(roleResourceList);
+            internalUser = newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build();
         }
     }
 

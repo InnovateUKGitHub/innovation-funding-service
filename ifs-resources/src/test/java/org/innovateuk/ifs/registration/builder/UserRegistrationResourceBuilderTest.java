@@ -10,7 +10,6 @@ import java.util.List;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Disability.YES;
 import static org.innovateuk.ifs.user.resource.Gender.*;
@@ -33,7 +32,7 @@ public class UserRegistrationResourceBuilderTest {
         String expectedPassword = "Passw0rd123";
         AddressResource expectedAddress = newAddressResource().build();
         String expectedEmail = "tom@poly.io";
-        List<RoleResource> expectedRoles = asList(newRoleResource().buildArray(2, RoleResource.class));
+        List<Role> expectedRoles = asList(Role.COLLABORATOR, Role.APPLICANT);
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
                 .withTitle(expectedTitle)
@@ -74,9 +73,9 @@ public class UserRegistrationResourceBuilderTest {
         String[] expectedPasswords = {"Passw0rd123", "Passw0rd456"};
         AddressResource[] expectedAddresses = newAddressResource().buildArray(2, AddressResource.class);
         String[] expectedEmails = {"tom@poly.io", "geoff@poly.io"};
-        List<RoleResource>[] expectedRoles = new List[]{
-                asList(newRoleResource().buildArray(2, RoleResource.class)),
-                asList(newRoleResource().buildArray(2, RoleResource.class))
+        List<Role>[] expectedRoles = new List[]{
+                asList(Role.COLLABORATOR, Role.APPLICANT),
+                asList(Role.PARTNER, Role.INNOVATION_LEAD)
         };
 
         List<UserRegistrationResource> userRegistrationResources = newUserRegistrationResource()

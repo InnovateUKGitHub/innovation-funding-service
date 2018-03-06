@@ -30,9 +30,8 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -129,9 +128,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -595,7 +591,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private void addAssessorRoleToUser(User user) {
-        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+        Role assessorRole = Role.getByName(UserRoleType.ASSESSOR.getName());
         user.addRole(assessorRole);
     }
 

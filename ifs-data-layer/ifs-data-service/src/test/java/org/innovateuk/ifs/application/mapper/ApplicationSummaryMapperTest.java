@@ -10,7 +10,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.ApplicationSummarisationService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -30,9 +30,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -94,11 +92,7 @@ public class ApplicationSummaryMapperTest {
         source.addUserApplicationRole(collaboratorProcessRole3);
 
         ProcessRole assessorProcessRole1 = newProcessRole()
-                .withRole(
-                        newRole()
-                                .withName(ASSESSOR.getName())
-                                .build()
-                )
+                .withRole(Role.ASSESSOR)
                 .withOrganisationId(3L)
                 .build();
         source.addUserApplicationRole(assessorProcessRole1);
@@ -159,20 +153,16 @@ public class ApplicationSummaryMapperTest {
         ProcessRole leadProcessRole = new ProcessRole();
 
         leadProcessRole.setOrganisationId(organisation.getId());
-        Role role = new Role();
-        role.setName(LEADAPPLICANT.getName());
         leadProcessRole.setUser(newUser().build());
-        leadProcessRole.setRole(role);
+        leadProcessRole.setRole(Role.LEADAPPLICANT);
         return leadProcessRole;
     }
 
     private ProcessRole collaboratorProcessRole(Organisation organisation) {
         ProcessRole collaboratorProcessRole = new ProcessRole();
         collaboratorProcessRole.setOrganisationId(organisation.getId());
-        Role role = new Role();
-        role.setName(COLLABORATOR.getName());
 
-        collaboratorProcessRole.setRole(role);
+        collaboratorProcessRole.setRole(Role.COLLABORATOR);
         return collaboratorProcessRole;
     }
 }

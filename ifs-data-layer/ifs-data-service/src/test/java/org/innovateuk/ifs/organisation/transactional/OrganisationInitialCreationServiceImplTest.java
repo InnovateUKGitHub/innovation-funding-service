@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.service.OrganisationMatchingServiceImpl;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -209,7 +209,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                         newApplication()
                                 .withProcessRoles(
                                         newProcessRole()
-                                                .withRole(UserRoleType.LEADAPPLICANT)
+                                                .withRole(Role.LEADAPPLICANT)
                                                 .withOrganisationId(organisationId)
                                                 .build()
                                 )

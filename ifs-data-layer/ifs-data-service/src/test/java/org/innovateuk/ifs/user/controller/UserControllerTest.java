@@ -6,12 +6,7 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.RoleResource;
-import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.CrmService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.core.Is.is;
@@ -32,7 +28,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
@@ -297,13 +292,12 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void testCreateInternalUser() throws Exception {
-        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
-                .withRoles(roleResources)
+                .withRoles(asList(Role.PROJECT_FINANCE))
                 .build();
 
         when(registrationServiceMock.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());

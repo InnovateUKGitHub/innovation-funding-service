@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -41,7 +41,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Class for testing public functions of {@link CompetitionManagementDashboardController}
@@ -86,7 +85,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashboard() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 
         Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -108,7 +107,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void projectSetupDashboardWithNonProjectFinanceUser() throws Exception {
 
         Long countBankDetails = 0L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 
         Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
 
@@ -133,7 +132,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void projectSetupDashboardWithProjectFinanceUser() throws Exception {
 
         Long countBankDetails = 8L;
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
 
         Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
         when(bankDetailsRestService.countPendingBankDetailsApprovals()).thenReturn(restSuccess(countBankDetails));
@@ -291,7 +290,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void testLiveDashBoardSupportView() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
 
         Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
@@ -316,7 +315,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void testLiveDashBoardSupportViewInnovationLead() throws Exception {
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build());
 
         Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -14,7 +14,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertFalse;
@@ -60,9 +59,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(assessor.getId(), getRole(ASSESSOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
 
-            Role compAdminRole = newRole().withType(UserRoleType.COMP_ADMIN).build();
-
-            ProcessRole compAdminProcessRole = newProcessRole().withRole(compAdminRole).build();
+            ProcessRole compAdminProcessRole = newProcessRole().withRole(Role.COMP_ADMIN).build();
 
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), applicationId, LEADAPPLICANT.getName())).thenReturn(true);
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationId, COLLABORATOR.getName())).thenReturn(true);

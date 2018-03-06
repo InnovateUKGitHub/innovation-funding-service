@@ -21,12 +21,11 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -55,7 +54,6 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
@@ -64,7 +62,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -563,17 +560,16 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getApplicationTeamSuccess() {
-        Role leadRole = newRole().withType(UserRoleType.LEADAPPLICANT).build();
-        User leadOrgLeadUser = newUser().withFirstName("Lee").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
+        User leadOrgLeadUser = newUser().withFirstName("Lee").withLastName("Der").withRoles(singleton(Role.LEADAPPLICANT)).build();
         User leadOrgNonLeadUser1 = newUser().withFirstName("A").withLastName("Bee").build();
         User leadOrgNonLeadUser2 = newUser().withFirstName("Cee").withLastName("Dee").build();
-        User partnerOrgLeadUser1 = newUser().withFirstName("Zee").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
-        User partnerOrgLeadUser2 = newUser().withFirstName("Ay").withLastName("Der").withRoles(singletonList(leadRole).stream().collect(Collectors.toSet())).build();
+        User partnerOrgLeadUser1 = newUser().withFirstName("Zee").withLastName("Der").withRoles(singleton(Role.LEADAPPLICANT)).build();
+        User partnerOrgLeadUser2 = newUser().withFirstName("Ay").withLastName("Der").withRoles(singleton(Role.LEADAPPLICANT)).build();
 
-        ProcessRole lead = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(234L).withUser(leadOrgLeadUser).build();
-        ProcessRole leadOrgCollaborator1 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(234L).withUser(leadOrgNonLeadUser1).build();
-        ProcessRole collaborator1 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(345L).withUser(partnerOrgLeadUser1).build();
-        ProcessRole collaborator2 = newProcessRole().withRole(UserRoleType.COLLABORATOR).withOrganisationId(456L).withUser(partnerOrgLeadUser2).build();
+        ProcessRole lead = newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(234L).withUser(leadOrgLeadUser).build();
+        ProcessRole leadOrgCollaborator1 = newProcessRole().withRole(Role.COLLABORATOR).withOrganisationId(234L).withUser(leadOrgNonLeadUser1).build();
+        ProcessRole collaborator1 = newProcessRole().withRole(Role.COLLABORATOR).withOrganisationId(345L).withUser(partnerOrgLeadUser1).build();
+        ProcessRole collaborator2 = newProcessRole().withRole(Role.COLLABORATOR).withOrganisationId(456L).withUser(partnerOrgLeadUser2).build();
         Application app = newApplication().withProcessRoles(lead, leadOrgCollaborator1, collaborator1, collaborator2).build();
 
         AddressType registeredAddressType = newAddressType().withName("REGISTERED").build();

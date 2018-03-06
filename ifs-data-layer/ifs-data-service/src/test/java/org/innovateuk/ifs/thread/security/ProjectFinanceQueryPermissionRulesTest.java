@@ -2,6 +2,7 @@ package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.PostResource;
@@ -11,9 +12,10 @@ import org.junit.Test;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
@@ -35,8 +37,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         queryResource = queryWithoutPosts();
         queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), ZonedDateTime.now()));
 
-        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(newRoleResource()
-                .withType(PARTNER).build(1)).build();
+        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.PARTNER)).build();
         incorrectPartner.setId(1993L);
     }
 
@@ -66,7 +67,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     public void testThatNewQueryInitialPostAuthorMustBeTheCurrentUser() throws Exception {
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         UserResource anotherProjectFinanceUser = newUserResource().withId(675L)
-                .withRolesGlobal(newRoleResource().withType(PROJECT_FINANCE).build(1)).build();
+                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
         assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, anotherProjectFinanceUser));
     }
 

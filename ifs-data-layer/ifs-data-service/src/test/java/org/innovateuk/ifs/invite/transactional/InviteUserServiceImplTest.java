@@ -16,12 +16,10 @@ import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.transactional.EmailService;
-import org.innovateuk.ifs.user.builder.RoleBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -60,8 +58,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl.Notifications.INVITE_INTERNAL_USER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -145,10 +141,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         UserRoleType adminRoleType = UserRoleType.SUPPORT;
 
-        Role role = new Role(1L, "support");
+        Role role = Role.SUPPORT;
         RoleInvite roleInvite = new RoleInvite();
 
-        when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
         when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
 
@@ -163,7 +158,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         UserRoleType adminRoleType = UserRoleType.SUPPORT;
 
-        when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(null);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
@@ -174,14 +168,12 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void inviteInternalUserSendEmailSucceeds() throws Exception {
-        Role role = newRole().withName("ifs_administrator").build();
+        Role role = Role.IFS_ADMINISTRATOR;
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
-        when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
-        RoleResource roleResource = newRoleResource().withName("ifs_administrator").build();
-        when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
+        Role roleResource = Role.IFS_ADMINISTRATOR;
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(serviceSuccess());
@@ -223,15 +215,13 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void inviteInternalUserSendEmailFails() throws Exception {
-        Role role = newRole().withName("support").build();
+        Role role = Role.SUPPORT;
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
-        when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        RoleResource roleResource = newRoleResource().withName("support").build();
-        when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
+        Role roleResource = Role.SUPPORT;
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
@@ -261,14 +251,12 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void inviteInternalUserSendEmailInvalidRole() throws Exception {
-        Role role = newRole().withName("wibble").build();
+        Role role = Role.INNOVATION_LEAD;
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
-        when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
-        RoleResource roleResource = newRoleResource().withName("wibble").build();
-        when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
+        Role roleResource = Role.INNOVATION_LEAD;
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
@@ -289,14 +277,12 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void saveUserInviteWhenEmailAlreadyTaken() throws Exception {
-        Role role = newRole().withName("ifs_administrator").build();
+        Role role = Role.IFS_ADMINISTRATOR;
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
-        when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
-        RoleResource roleResource = newRoleResource().withName("ifs_administrator").build();
-        when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
+        Role roleResource = Role.IFS_ADMINISTRATOR;
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(serviceSuccess());
@@ -337,7 +323,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     public void findPendingInternalUsers() {
         Pageable pageable = new PageRequest(0, 5);
 
-        Role role = RoleBuilder.newRole().withName("ifs_administrator").build();
+        Role role = Role.IFS_ADMINISTRATOR;
 
         List<RoleInvite> roleInvites = RoleInviteBuilder.newRoleInvite()
                 .withRole(role)
@@ -369,7 +355,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     public void findPendingInternalUsersEnsureSortedByName() {
         Pageable pageable = new PageRequest(0, 5);
 
-        Role role = RoleBuilder.newRole().withName("ifs_administrator").build();
+        Role role = Role.IFS_ADMINISTRATOR;
 
         RoleInvite roleInvite1 = RoleInviteBuilder.newRoleInvite()
                 .withId(1L)
@@ -580,7 +566,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void resendInternalUserInvite() {
 
-        Role targetRole = newRole().build();
+        Role targetRole = Role.PROJECT_FINANCE;
 
         RoleInvite existingInvite = newRoleInvite().
                 withName("name").
@@ -591,8 +577,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(inviteRoleRepositoryMock.findOne(123L)).thenReturn(existingInvite);
 
-        RoleResource roleResource = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build();
-        when(roleMapperMock.mapIdToResource(targetRole.getId())).thenReturn(roleResource);
+        Role roleResource = Role.PROJECT_FINANCE;
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget(existingInvite.getName(), existingInvite.getEmail());
 
@@ -632,7 +617,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
         // in this case to explicitly save, but is reused code with creating invites also)
         verify(inviteRoleRepositoryMock).findOne(123L);
-        verifyNoMoreInteractions(inviteRoleRepositoryMock, roleMapperMock, emailService);
+        verifyNoMoreInteractions(inviteRoleRepositoryMock, emailService);
     }
 
     private List<ApplicationInvite> setUpMockingCreateApplicationInvites() {

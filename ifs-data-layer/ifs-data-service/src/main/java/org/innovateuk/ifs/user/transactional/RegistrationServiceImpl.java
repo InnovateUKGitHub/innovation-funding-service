@@ -21,12 +21,10 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
-import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -43,6 +41,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
@@ -96,9 +95,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private UserMapper userMapper;
 
     @Autowired
-    private RoleMapper roleMapper;
-
-    @Autowired
     private AddressMapper addressMapper;
 
     @Autowired
@@ -112,9 +108,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private InviteRoleRepository inviteRoleRepository;
-
-    @Autowired
-    private RoleService roleService;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -257,7 +250,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setGender(userResource.getGender());
         newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
         newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
-        newUser.setRoles(userResource.getRoles().stream().map( u -> roleMapper.mapToDomain(u)).collect(Collectors.toSet()));
+        newUser.setRoles(new HashSet<>(userResource.getRoles()));
 
         return newUser;
     }
@@ -319,18 +312,18 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 }));
     }
 
-    private ServiceResult<List<RoleResource>> getInternalRoleResources(Role role) {
+    private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
         UserRoleType roleType = UserRoleType.fromName(role.getName());
 
         return getInternalRoleResources(roleType);
     }
 
-    private ServiceResult<List<RoleResource>> getInternalRoleResources(UserRoleType roleType) {
+    private ServiceResult<List<Role>> getInternalRoleResources(UserRoleType roleType) {
 
         if(UserRoleType.IFS_ADMINISTRATOR.equals(roleType)){
             return getIFSAdminRoles(roleType); // IFS Admin has multiple roles
         } else {
-            return roleService.findByUserRoleType(roleType).andOnSuccess(roleResource -> serviceSuccess(singletonList(roleResource)));
+            return serviceSuccess(singletonList(Role.getByName(roleType.getName())));
         }
     }
 
@@ -351,15 +344,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         return serviceSuccess();
     }
 
-    private ServiceResult<List<RoleResource>> getIFSAdminRoles(UserRoleType roleType) {
-        List<RoleResource> roleResources = new ArrayList<>();
-        return roleService.findByUserRoleType(roleType).andOnSuccess(adminResource -> {
-            roleResources.add(adminResource);
-            return roleService.findByUserRoleType(PROJECT_FINANCE).andOnSuccessReturn(finResource -> {
-                roleResources.add(finResource);
-                return serviceSuccess(roleResources);
-            }).getSuccess();
-        });
+    private ServiceResult<List<Role>> getIFSAdminRoles(UserRoleType roleType) {
+        return serviceSuccess( asList(Role.getByName(roleType.getName()), Role.PROJECT_FINANCE) );
     }
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
@@ -387,7 +373,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findOne(userToEdit.getId()), notFoundError(User.class)))
                 .andOnSuccess(user -> getInternalRoleResources(userRoleType)
                     .andOnSuccess(roleResources -> {
-                        Set<Role> roleList = CollectionFunctions.simpleMapSet(roleResources, roleResource -> roleMapper.mapToDomain(roleResource));
+                        Set<Role> roleList = new HashSet<>(roleResources);
                         user.setFirstName(userToEdit.getFirstName());
                         user.setLastName(userToEdit.getLastName());
                         user.setRoles(roleList);

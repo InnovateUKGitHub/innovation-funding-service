@@ -9,11 +9,10 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +38,6 @@ public class AcceptInviteServiceImpl extends BaseApplicationInviteService implem
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -119,7 +115,7 @@ public class AcceptInviteServiceImpl extends BaseApplicationInviteService implem
 
     private void initializeInvitee(ApplicationInvite invite, User user) {
         Application application = invite.getTarget();
-        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
+        Role role = Role.COLLABORATOR;
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
 
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());

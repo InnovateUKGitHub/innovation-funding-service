@@ -19,7 +19,7 @@ import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -46,7 +46,6 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder.newSpendProfileResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -540,7 +539,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileResource spendProfileResource = newSpendProfileResource().build();
 
-        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PARTNER).build(1);
+        List<Role> roleResources = asList(Role.PARTNER);
 
         loggedInUser.setRoles(roleResources);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
         return withArray((id, processRoleResource) -> processRoleResource.setId(id), ids);
     }
 
-    public ProcessRoleResourceBuilder withRole(RoleResource... roles) {
+    public ProcessRoleResourceBuilder withRole(Role... roles) {
         return withArray((role, processRoleResource) -> {
             setField("role", role.getId(), processRoleResource);
             setField("roleName", role.getName(), processRoleResource);

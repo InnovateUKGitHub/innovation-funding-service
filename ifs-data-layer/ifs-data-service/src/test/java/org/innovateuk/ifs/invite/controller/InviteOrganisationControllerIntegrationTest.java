@@ -11,12 +11,11 @@ import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
@@ -58,9 +57,6 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -164,10 +160,6 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         assertEquals(inviteOrganisationResource, found);
     }
 
-    private Role getRoleByUserRoleType(UserRoleType userRoleType) {
-        return roleRepository.findOneByName(userRoleType.getName());
-    }
-
     private Organisation setupOrganisation(String name) {
         Organisation organisation = organisationRepository.save(newOrganisation()
                 .with(id(null))
@@ -179,8 +171,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     private User getLeadApplicantForApplication(Application application) {
-        List<ProcessRole> processRoles = processRoleRepository.findByApplicationIdAndRoleId(application.getId(),
-                getRoleByUserRoleType(LEADAPPLICANT).getId());
+        List<ProcessRole> processRoles = processRoleRepository.findByApplicationIdAndRoleId(application.getId(), Role.LEADAPPLICANT.getId());
         assertEquals(1, processRoles.size());
         return processRoles.get(0).getUser();
     }
@@ -197,7 +188,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         ProcessRole processRole = processRoleRepository.save(newProcessRole()
                 .with(id(null))
                 .withUser(user)
-                .withRole(getRoleByUserRoleType(COLLABORATOR))
+                .withRole(Role.COLLABORATOR)
                 .withOrganisationId(organisation.getId())
                 .build());
 

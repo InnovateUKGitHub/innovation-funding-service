@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,6 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
@@ -48,11 +48,7 @@ public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceS
     @Test
     public void acceptInvite() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
+                .withRolesGlobal(singletonList(Role.ASSESSOR)
                 ).build();
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource().build();
 
@@ -84,11 +80,7 @@ public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceS
     @Test
     public void acceptInvite_notSameUser() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
+                .withRolesGlobal(singletonList(Role.ASSESSOR)
                 ).build();
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource().build();
         when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash"))
@@ -110,11 +102,7 @@ public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceS
     @Test
     public void acceptInvite_hashNotExists() {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
+                .withRolesGlobal(singletonList(Role.ASSESSOR)
                 ).build();
 
         when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash not exists")).thenReturn(null);

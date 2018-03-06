@@ -11,10 +11,9 @@ import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,9 +66,6 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
 
     @Autowired
     private ProfileRepository profileRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
     @Override
@@ -354,14 +350,12 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
 
         Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
 
-        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
-
         List<User> users = newUser()
                 .withId()
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singleton(assessorRole))
+                .withRoles(singleton(Role.ASSESSOR))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

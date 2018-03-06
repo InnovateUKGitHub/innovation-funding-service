@@ -19,7 +19,7 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -58,7 +58,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -550,20 +549,19 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         User user = newUser().withId(assessorId).build();
         Application application = newApplication().withId(applicationId).build();
-        Role role = newRole().withType(ASSESSOR).build();
         ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, expectedBackingState);
 
         ProcessRole expectedProcessRole = newProcessRole()
                 .with(id(null))
                 .withApplication(application)
                 .withUser(user)
-                .withRole(role)
+                .withRole(Role.ASSESSOR)
                 .build();
         ProcessRole savedProcessRole = newProcessRole()
                 .withId(10L)
                 .withApplication(application)
                 .withUser(user)
-                .withRole(role)
+                .withRole(Role.ASSESSOR)
                 .build();
 
         Assessment expectedAssessment = newAssessment()
@@ -584,7 +582,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByIdAndRolesName(assessorId, ASSESSOR.getName())).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.empty());
-        when(roleRepositoryMock.findOneByName(ASSESSOR.getName())).thenReturn(role);
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState)).thenReturn(activityState);
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(assessorId, applicationId)).thenReturn(null);
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
@@ -599,14 +596,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
         InOrder inOrder = inOrder(
-                userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock,
+                userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock,
                 processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock
         );
 
         inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
-        inOrder.verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState);
         inOrder.verify(processRoleRepositoryMock).findByUserIdAndApplicationId(assessorId, applicationId);
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
@@ -627,14 +623,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         User user = newUser().withId(assessorId).build();
         Application application = newApplication().withId(applicationId).build();
-        Role role = newRole().withType(ASSESSOR).build();
         ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, expectedBackingState);
 
         ProcessRole expectedProcessRole = newProcessRole()
                 .withId(10L)
                 .withApplication(application)
                 .withUser(user)
-                .withRole(role)
+                .withRole(Role.ASSESSOR)
                 .build();
 
         Assessment expectedAssessment = newAssessment()
@@ -655,7 +650,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByIdAndRolesName(assessorId, ASSESSOR.getName())).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.empty());
-        when(roleRepositoryMock.findOneByName(ASSESSOR.getName())).thenReturn(role);
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState)).thenReturn(activityState);
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(assessorId, applicationId)).thenReturn(expectedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
@@ -669,14 +663,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
         InOrder inOrder = inOrder(
-                userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock,
+                userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock,
                 processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock
         );
 
         inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);
-        inOrder.verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState);
         inOrder.verify(processRoleRepositoryMock).findByUserIdAndApplicationId(assessorId, applicationId);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
@@ -697,7 +690,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         User user = newUser().withId(assessorId).build();
         Application application = newApplication().withId(applicationId).build();
-        Role role = newRole().withName(ASSESSOR.getName()).build();
 
         ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, expectedBackingState);
 
@@ -709,13 +701,13 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .with(id(null))
                 .withApplication(application)
                 .withUser(user)
-                .withRole(role)
+                .withRole(Role.ASSESSOR)
                 .build();
         ProcessRole savedProcessRole = newProcessRole()
                 .withId(10L)
                 .withApplication(application)
                 .withUser(user)
-                .withRole(role)
+                .withRole(Role.ASSESSOR)
                 .build();
 
         Assessment expectedAssessment = newAssessment()
@@ -736,7 +728,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(userRepositoryMock.findByIdAndRolesName(assessorId, ASSESSOR.getName())).thenReturn(Optional.of(user));
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId)).thenReturn(Optional.of(existingAssessment));
-        when(roleRepositoryMock.findOneByName(ASSESSOR.getName())).thenReturn(role);
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, CREATED.getBackingState())).thenReturn(activityState);
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(savedProcessRole);
         when(assessmentRepositoryMock.save(expectedAssessment)).thenReturn(savedAssessment);
@@ -750,13 +741,12 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
         InOrder inOrder = inOrder(
-                userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock,
+                userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock,
                 processRoleRepositoryMock, assessmentRepositoryMock, assessmentMapperMock
         );
 
         inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
-        inOrder.verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, CREATED.getBackingState());
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
@@ -781,7 +771,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
-        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
         inOrder.verifyNoMoreInteractions();
 
@@ -806,7 +796,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
-        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, activityStateRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verifyNoMoreInteractions();
@@ -839,7 +829,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<AssessmentResource> serviceResult = assessmentService.createAssessment(assessmentCreateResource);
 
-        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, assessmentRepositoryMock, roleRepositoryMock, activityStateRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, applicationRepositoryMock, assessmentRepositoryMock, activityStateRepositoryMock);
         inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
         inOrder.verify(applicationRepositoryMock).findOne(applicationId);
         inOrder.verify(assessmentRepositoryMock).findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessorId, applicationId);

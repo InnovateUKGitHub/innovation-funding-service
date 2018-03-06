@@ -13,7 +13,7 @@ import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -70,7 +70,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected boolean isLeadPartner(long projectId, long userId) {
 
         Project project = projectRepository.findOne(projectId);
-        Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
+        Role leadApplicantRole = Role.LEADAPPLICANT;
         ProcessRole leadApplicantProcessRole = processRoleRepository.findOneByApplicationIdAndRoleId(project.getApplication().getId(), leadApplicantRole.getId());
         Organisation leadOrganisation = organisationRepository.findOne(leadApplicantProcessRole.getOrganisationId());
 

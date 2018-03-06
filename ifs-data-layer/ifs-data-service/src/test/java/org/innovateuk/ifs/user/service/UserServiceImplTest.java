@@ -8,7 +8,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.builder.OrganisationBuilder;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -29,12 +29,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -158,10 +157,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.APPLICANT)
-                                        .build()))
+                        singletonList(Role.APPLICANT))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -181,13 +177,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        asList(
-                                newRoleResource()
-                                        .withType(UserRoleType.APPLICANT)
-                                        .build(),
-                                newRoleResource()
-                                        .withType(UserRoleType.ASSESSOR)
-                                        .build()))
+                        asList(Role.APPLICANT, Role.ASSESSOR))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -206,10 +196,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.ASSESSOR)
-                                        .build()))
+                        singletonList(Role.ASSESSOR))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -226,10 +213,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.PROJECT_FINANCE)
-                                        .build()))
+                        singletonList(Role.PROJECT_FINANCE))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -246,10 +230,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.COMP_ADMIN)
-                                        .build()))
+                        singletonList(Role.COMP_ADMIN))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -266,10 +247,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.COMP_EXEC)
-                                        .build()))
+                        singletonList(Role.COMP_EXEC))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -286,10 +264,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.INNOVATION_LEAD)
-                                        .build()))
+                        singletonList(Role.INNOVATION_LEAD))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -305,10 +280,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveLeadApplicantNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.LEADAPPLICANT)
-                                        .build()))
+                        singletonList(Role.LEADAPPLICANT))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -327,10 +299,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactivePartnerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.PARTNER)
-                                        .build()))
+                        singletonList(Role.PARTNER))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -349,10 +318,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveProjectManagerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.PROJECT_MANAGER)
-                                        .build()))
+                        singletonList(Role.PROJECT_MANAGER))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -372,10 +338,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.COLLABORATOR)
-                                        .build()))
+                        singletonList(Role.COLLABORATOR))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -395,10 +358,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        singletonList(
-                                newRoleResource()
-                                        .withType(UserRoleType.FINANCE_CONTACT)
-                                        .build()))
+                        singletonList(Role.FINANCE_CONTACT))
                 .withEmail("a@b.c")
                 .withFirstName("A")
                 .withLastName("Bee")
@@ -415,8 +375,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testFindActiveByProcessRoles(){
-        Set<Role> internalRoles = new HashSet<>();
-        internalRoles.add(newRole().withType(UserRoleType.PROJECT_FINANCE).build());
+        Set<Role> internalRoles = singleton(Role.PROJECT_FINANCE);
         Pageable pageable = new PageRequest(0, 5);
         List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
         Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
@@ -434,8 +393,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testFindActiveByProcessRolesEnsureSortedByFirstName(){
-        Set<Role> internalRoles = new HashSet<>();
-        internalRoles.add(newRole().withType(UserRoleType.PROJECT_FINANCE).build());
+        Set<Role> internalRoles = singleton(Role.PROJECT_FINANCE);
         Pageable pageable = new PageRequest(0, 5);
 
         User user1 = newUser()
@@ -477,8 +435,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testFindInactiveByProcessRoles(){
-        Set<Role> internalRoles = new HashSet<>();
-        internalRoles.add(newRole().withType(UserRoleType.COMP_ADMIN).build());
+        Set<Role> internalRoles = singleton(Role.COMP_ADMIN);
         Pageable pageable = new PageRequest(0, 5);
         List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
         Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
@@ -496,8 +453,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Test
     public void testFindInactiveByProcessRolesEnsureSortedByFirstName(){
-        Set<Role> internalRoles = new HashSet<>();
-        internalRoles.add(newRole().withType(UserRoleType.COMP_ADMIN).build());
+        Set<Role> internalRoles = singleton(Role.COMP_ADMIN);
         Pageable pageable = new PageRequest(0, 5);
 
         User user1 = newUser()

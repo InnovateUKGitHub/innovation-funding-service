@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

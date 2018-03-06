@@ -8,9 +8,8 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResourc
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
@@ -33,9 +33,6 @@ public class FormInputResponseFileUploadRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -62,7 +59,7 @@ public class FormInputResponseFileUploadRules {
     }
 
     private boolean userIsAssessorOnThisApplication(FormInputResponseFileEntryResource fileEntry, UserResource user) {
-        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
+        Role assessorRole = Role.ASSESSOR;
         ProcessRole assessorProcessRole = processRoleRepository.findByUserIdAndRoleAndApplicationId(user.getId(),
                 assessorRole,
                 fileEntry.getCompoundId().getApplicationId());
@@ -74,7 +71,7 @@ public class FormInputResponseFileUploadRules {
     }
 
     private boolean userIsApplicantOnThisApplication(long applicationId, UserResource user) {
-        List<Role> allApplicantRoles = roleRepository.findByNameIn(Arrays.asList(APPLICANT.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName()));
+        List<Role> allApplicantRoles = asList(Role.APPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR);
         List<ProcessRole> applicantProcessRoles = processRoleRepository.findByUserIdAndRoleInAndApplicationId(user.getId(), allApplicantRoles, applicationId);
         return !applicantProcessRoles.isEmpty();
     }

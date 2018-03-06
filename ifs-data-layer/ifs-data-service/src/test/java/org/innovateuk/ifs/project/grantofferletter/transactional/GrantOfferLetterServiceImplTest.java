@@ -26,7 +26,7 @@ import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -83,7 +83,6 @@ import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOff
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
@@ -146,8 +145,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withAddressLine2("test2")
                 .withPostcode("PST")
                 .withTown("town").build();
-
-        leadApplicantRole = newRole(UserRoleType.LEADAPPLICANT).build();
 
         user = newUser().
                 withId(userId).
@@ -507,9 +504,8 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         Competition comp = newCompetition().withName("Test Comp").build();
         Organisation o1 = newOrganisation().withName("OrgLeader").build();
-        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
         User u = newUser().withFirstName("ab").withLastName("cd").build();
-        ProcessRole leadAppProcessRole = newProcessRole().withOrganisationId(o1.getId()).withUser(u).withRole(leadAppRole).build();
+        ProcessRole leadAppProcessRole = newProcessRole().withOrganisationId(o1.getId()).withUser(u).withRole(Role.LEADAPPLICANT).build();
         Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o1).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
@@ -620,8 +616,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
                 .withName("Test Comp<")
                 .build();
 
-        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
-                .build();
         User u = newUser()
                 .withFirstName("ab")
                 .withLastName("cd")
@@ -629,7 +623,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         ProcessRole leadAppProcessRole = newProcessRole()
                 .withOrganisationId(o1.getId())
                 .withUser(u)
-                .withRole(leadAppRole)
+                .withRole(Role.LEADAPPLICANT)
                 .build();
         Application app = newApplication()
                 .withCompetition(comp)

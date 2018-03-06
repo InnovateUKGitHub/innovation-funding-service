@@ -2,10 +2,9 @@ package org.innovateuk.ifs.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -33,10 +32,6 @@ public abstract class RootTransactionalService {
     @Autowired
     protected UserRepository userRepository;
 
-    @Autowired
-    protected RoleRepository roleRepository;
-
-
     protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
         return () -> getProcessRole(processRoleId);
     }
@@ -48,8 +43,6 @@ public abstract class RootTransactionalService {
     protected ServiceResult<List<ProcessRole>> getProcessRoles(Long applicationId, UserRoleType roleType) {
         return getRole(roleType).andOnSuccess(role -> find(processRoleRepository.findByApplicationIdAndRoleId(applicationId, role.getId()), notFoundError(ProcessRole.class, applicationId, role.getId())));
     }
-
-
 
     protected Supplier<ServiceResult<User>> user(final Long id) {
         return () -> getUser(id);
@@ -72,7 +65,7 @@ public abstract class RootTransactionalService {
     }
 
     protected ServiceResult<Role> getRole(String roleName) {
-        return find(roleRepository.findOneByName(roleName), notFoundError(Role.class, roleName));
+        return find(Role.getByName(roleName), notFoundError(Role.class, roleName));
     }
 
 

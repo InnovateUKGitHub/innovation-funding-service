@@ -15,11 +15,11 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
-import org.innovateuk.ifs.user.builder.RoleBuilder;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.threads.resource.PostResource;
@@ -50,8 +50,6 @@ import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newP
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -299,7 +297,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(serviceSuccess(loggedInUser));
 
         setLoggedInUser(newUserResource().withId(loggedInUserId)
-                .withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+                .withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
 
         assertNull(queryInDB.getClosedBy());
         assertNull(queryInDB.getClosedDate());
@@ -315,8 +313,8 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     public void test_addPost() throws Exception {
         Long queryId = 1L;
 
-        User user = newUser().withId(33L).withRoles(singleton(newRole(UserRoleType.PROJECT_FINANCE).build())).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
+        User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -368,8 +366,8 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotFinanceTeam() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(singleton(newRole(UserRoleType.COMP_ADMIN).build())).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
+        User user = newUser().withId(33L).withRoles(singleton(Role.COMP_ADMIN)).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -396,7 +394,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostSuperAddPostFails() throws Exception {
         Long queryId = 1L;
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(null);
 
@@ -406,7 +404,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNoQueryToAddPostTo() throws Exception {
         Long queryId = 1L;
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build(), null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(null);
 
@@ -414,10 +412,10 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_addPostNoFinanceContact() throws Exception {
+    public void test_addPostNoFinanceContact() {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
+        User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
@@ -462,8 +460,8 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotificationNotSent() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(singleton(newRole(UserRoleType.PROJECT_FINANCE).build())).build();
-        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
+        User user = newUser().withId(33L).withRoles(singleton(Role.PROJECT_FINANCE)).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
         QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);

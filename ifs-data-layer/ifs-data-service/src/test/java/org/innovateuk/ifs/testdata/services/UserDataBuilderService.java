@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.services;
 
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +11,12 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -81,7 +82,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
     }
 
     private void setDefaultSystemRegistrar() {
-        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(Collections.singletonList(Role.SYSTEM_REGISTRATION_USER)).build());
         testService.doWithinTransaction(() ->
                 setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
         );

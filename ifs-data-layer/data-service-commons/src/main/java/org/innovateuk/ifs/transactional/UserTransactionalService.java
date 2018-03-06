@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public abstract class UserTransactionalService {
 
     @Autowired
     protected UserRepository userRepository;
-
-    @Autowired
-    protected RoleRepository roleRepository;
 
     protected Supplier<ServiceResult<User>> user(final Long id) {
         return () -> getUser(id);
@@ -49,6 +45,6 @@ public abstract class UserTransactionalService {
     }
 
     protected ServiceResult<Role> getRole(String roleName) {
-        return find(roleRepository.findOneByName(roleName), notFoundError(Role.class, roleName));
+        return find(Role.getByName(roleName), notFoundError(Role.class, roleName));
     }
 }

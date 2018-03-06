@@ -2,10 +2,9 @@ package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.security.evaluator.DefaultPermissionMethodHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
@@ -27,10 +26,9 @@ public class SecurityRuleUtil {
                                            final Long applicationId,
                                            final Long organisationId,
                                            final UserRoleType userRoleType,
-                                           final RoleRepository roleRepository,
                                            final ProcessRoleRepository processRoleRepository)
     {
-        final Role role = roleRepository.findOneByName(userRoleType.getName());
+        final Role role = Role.getByName(userRoleType.getName());
         final ProcessRole processRole = processRoleRepository.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(user.getId(), role.getId(), applicationId, organisationId);
         return processRole != null;
     }

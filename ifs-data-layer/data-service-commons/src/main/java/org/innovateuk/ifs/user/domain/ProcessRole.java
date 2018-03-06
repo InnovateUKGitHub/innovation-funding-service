@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 
 import javax.persistence.*;
 
