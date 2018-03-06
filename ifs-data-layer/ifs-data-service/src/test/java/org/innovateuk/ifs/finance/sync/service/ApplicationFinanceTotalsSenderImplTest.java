@@ -65,16 +65,18 @@ public class ApplicationFinanceTotalsSenderImplTest {
                 .build(1);
 
         List<FinanceCostTotalResource> expectedFinanceCostTotalResource = newFinanceCostTotalResource()
-                .withName(financeRowType.getType())
+                .withFinanceType(FinanceType.APPLICATION)
+                .withFinanceRowType(financeRowType)
                 .withFinanceId(1L)
                 .withTotal(new BigDecimal(10000))
-                .withType(FinanceType.APPLICATION).build(1);
+                .build(1);
 
         List<FinanceCostTotalResource> expectedFilteredFinanceCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.LABOUR.getType())
+                .withFinanceType(FinanceType.APPLICATION)
+                .withFinanceRowType(FinanceRowType.LABOUR)
                 .withFinanceId(1L)
                 .withTotal(new BigDecimal(10000))
-                .withType(FinanceType.APPLICATION).build(1);
+                .build(1);
 
         when(messageQueueServiceStub.sendFinanceTotals(any())).thenReturn(ServiceResult.serviceSuccess());
         when(applicationFinanceHandler.getApplicationFinances(applicationId)).thenReturn(applicationFinanceResource);

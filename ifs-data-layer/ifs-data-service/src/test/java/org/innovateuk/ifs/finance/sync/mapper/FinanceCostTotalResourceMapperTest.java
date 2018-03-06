@@ -61,15 +61,15 @@ public class FinanceCostTotalResourceMapperTest {
                 financeCostTotalResourceMapper.mapFromApplicationFinanceResourceToList(applicationFinanceResource);
 
         FinanceCostTotalResource expectedOtherCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.OTHER_COSTS.getType())
+                .withFinanceType(FinanceType.APPLICATION)
+                .withFinanceRowType(FinanceRowType.OTHER_COSTS)
                 .withTotal(BigDecimal.valueOf(1000))
-                .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
         FinanceCostTotalResource expectedMaterialCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.MATERIALS.getType())
+                .withFinanceType(FinanceType.APPLICATION)
+                .withFinanceRowType(FinanceRowType.MATERIALS)
                 .withTotal(BigDecimal.valueOf(5000))
-                .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
         assertThat(actualResult)
@@ -106,15 +106,15 @@ public class FinanceCostTotalResourceMapperTest {
                 financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
         FinanceCostTotalResource expectedOtherCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.OTHER_COSTS.getType())
+                .withFinanceType(FinanceType.APPLICATION)
+                .withFinanceRowType(FinanceRowType.OTHER_COSTS)
                 .withTotal(BigDecimal.valueOf(1000))
-                .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
         FinanceCostTotalResource expectedMaterialCostTotalResource = newFinanceCostTotalResource()
-                .withName(FinanceRowType.MATERIALS.getType())
+                .withFinanceType(FinanceType.APPLICATION)
+                .withFinanceRowType(FinanceRowType.MATERIALS)
                 .withTotal(BigDecimal.valueOf(5000))
-                .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
         assertThat(actualResult).usingFieldByFieldElementComparator().contains(expectedOtherCostTotalResource,
