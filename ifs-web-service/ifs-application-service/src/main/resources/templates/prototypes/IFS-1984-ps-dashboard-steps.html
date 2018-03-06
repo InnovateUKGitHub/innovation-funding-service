@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project setup status'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -84,7 +84,7 @@
                     <li class="require-action" th:if="${param.status == null or param.status[0] == 'step1'}">
                         <div class="task">
                             <h2 class="heading-small">
-                                <a href="#">Bank details</a>
+                                <a href="/prototypes/IFS-1984-ps-bank-details">Bank details</a>
                             </h2>
                             <p class="no-margin">
                                 Each organisation must submit their bank details to be reviewed.
