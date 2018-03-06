@@ -569,7 +569,7 @@
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
-                <input type="hidden" id="resend-internal-user-invite" name="resend-internal-user-invite" value=""/>
+                <input type="hidden" id="invite-id" name="inviteId" value="" />
                 <button class="button" type="submit">Resend</button>
                 <button class="buttonlink js-close" type="button">Cancel</button>
             </div>
