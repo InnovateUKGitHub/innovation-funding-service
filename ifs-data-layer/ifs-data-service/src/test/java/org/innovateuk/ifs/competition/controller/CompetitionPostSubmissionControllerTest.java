@@ -42,13 +42,13 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
         final Long competitionId = 1L;
 
         when(competitionServiceMock.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
-        when(applicationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
+        when(applicationNotificationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/postSubmission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).releaseFeedback(competitionId);
-        verify(applicationServiceMock).notifyApplicantsByCompetition(competitionId);
+        verify(applicationNotificationServiceMock).notifyApplicantsByCompetition(competitionId);
     }
 
     @Test
