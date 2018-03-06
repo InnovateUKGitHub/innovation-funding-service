@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
 
+/**
+ * Finance handler for application and project
+ */
 @Component
 @Configuration
 public class FinanceViewHandler implements FinanceHandler {
