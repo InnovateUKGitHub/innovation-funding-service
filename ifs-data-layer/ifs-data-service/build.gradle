@@ -9,8 +9,8 @@ apply from: "../database-support.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
-apply from: rootProject.file("openshift-build.gradle")
-apply from: rootProject.file("prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 task('copyFreemarkerResources', type: Copy) {
 //Copy freemarker resources to build path to support running as a jar.
@@ -183,8 +183,8 @@ task generateMainMapperClasses(type: JavaCompile) {
 }
 
 task syncShib(type:Exec) {
-    workingDir '../'
-    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
+    workingDir '../../'
+    commandLine 'docker-compose', '-p', 'innovation-funding-service','-f', 'docker-compose/docker-compose.yml', 'exec',  '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
 compileJava.dependsOn generateMainMapperClasses
