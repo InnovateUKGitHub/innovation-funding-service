@@ -1,6 +1,6 @@
 import com.bmuschko.gradle.docker.tasks.image.*
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-apply from: rootProject.file("openshift-methods.gradle")
+apply from: rootProject.file("gradle-support/openshift-methods.gradle")
 
 buildscript {
     repositories {
