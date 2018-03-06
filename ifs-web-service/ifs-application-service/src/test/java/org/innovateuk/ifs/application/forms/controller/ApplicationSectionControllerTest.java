@@ -10,8 +10,6 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOvervi
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
-import org.innovateuk.ifs.application.forms.populator.OrganisationDetailsViewModelPopulator;
-import org.innovateuk.ifs.application.forms.populator.QuestionModelPopulator;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
@@ -84,28 +82,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<ApplicationSectionController> {
-
-    @Spy
-    @InjectMocks
-    private QuestionModelPopulator questionModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private OpenSectionModelPopulator openSectionModel;
-
-    @Spy
-    @InjectMocks
-    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
-
-    @Spy
-    @InjectMocks
-    private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
-
-    @Mock
-    private ApplicationModelPopulator applicationModelPopulator;
-
-    @Mock
-    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
@@ -336,7 +312,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void testApplicationFinanceMarkAsCompleteSuccessWithoutStateAidForAcademic() throws Exception {
+    public void testApplicationFinanceMarkAsCompleteSuccessWithoutStateAidButWithTermsForAcademic() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.PROJECT_COST_FINANCES).build()).build());
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
@@ -345,6 +321,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(TERMS_AGREED_KEY, String.valueOf("1"))
         ).andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() + "/form/section/**"));
     }
@@ -352,6 +329,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
     @Test
     public void testApplicationYourOrganisationMarkAsCompleteFailWithoutOrganisationSize() throws Exception {
         when(applicantRestService.getSection(any(), any(), any())).thenReturn(sectionBuilder.withSection(newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build()).build());
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getId()).build());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(MARK_SECTION_AS_COMPLETE, String.valueOf("1"))

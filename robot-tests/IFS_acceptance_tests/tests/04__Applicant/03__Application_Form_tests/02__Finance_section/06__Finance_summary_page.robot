@@ -16,6 +16,8 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               IFS-401 Support team view of detailed finances in application form
 ...
 ...               IFS-802 Enable Innovation Lead user profile matching CSS permissions
+...
+...               IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
 Suite Setup       The user logs-in in new browser  &{lead_applicant_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant
@@ -95,7 +97,7 @@ Green check should show when the finances are complete
     Then Green check should be visible
 
 Collaborator marks finances as complete
-    [Documentation]    INFUND-8397
+    [Documentation]    INFUND-8397  IFS-2879
     [Tags]  HappyPath
     log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
@@ -240,8 +242,8 @@ the finance summary calculations should be correct
 
 the finance Funding breakdown calculations should be correct
     the user should see the element  jQuery=.project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}") + td:contains("£200,903")
-    the user should see the element  jQuery=.project-cost-breakdown th:contains("${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}") + td:contains("£990")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${organisationLudlowName}") + td:contains("£200,903")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("${organisationEggsName}") + td:contains("£990")
     the user should see the element  jQuery=.project-cost-breakdown th:contains("Total") + td:contains("£349,046")
 
 the finance summary table in Your Finances has correct values for lead
@@ -300,7 +302,7 @@ Lead enters a valid research participation value
 
 the user checks Your Funding section for the project
     [Arguments]  ${Application}
-    ${Research_category_selected}=  Run Keyword And Return Status  Element Should Be Visible  link=Your funding
+    ${Research_category_selected}=  run keyword and return status without screenshots  Element Should Be Visible  link=Your funding
     Run Keyword if  '${Research_category_selected}' == 'False'  the user selects research area via Your Funding section  ${Application}
     Run Keyword if  '${Research_category_selected}' == 'True'  the user fills in the funding information with bigger amount  ${Application}
 

@@ -278,7 +278,13 @@
                 </div>
             </div>
         </fieldset>
+
         <th:block th:insert="finance/academic-finance :: finance_upload (${model},${model.financeUploadQuestion},${model.financeUploadFormInput},${readonly})" />
+
+        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
+             th:with="fieldName='form.academicTermsAgreed'"
+             class="agree-to-terms-container extra-margin"
+             th:unless="${model.allReadOnly}"></div>
 
 </th:block>
 

@@ -108,9 +108,9 @@ all previous sections of the project are completed
     project finance submits monitoring officer  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  Grace  Harper  ${test_mailbox_two}+monitoringofficer@gmail.com  08549731414
 
 partners submit finance contacts
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
-    the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
+    the partner submits their finance contact  ${EMPIRE_LTD_ID}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
+    the partner submits their finance contact  ${organisationLudlowId}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator1_credentials}
+    the partner submits their finance contact  ${organisationEggsId}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  &{collaborator2_credentials}
 
 all partners submit their bank details
     partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}  ${account_one}  ${sortCode_one}
@@ -119,7 +119,7 @@ all partners submit their bank details
 project finance approves bank details
     log in as a different user                          &{internal_finance_credentials}
     the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
-    the project finance user approves bank details for  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
+    the project finance user approves bank details for  ${organisationEggsName}  ${PROJECT_SETUP_APPLICATION_1_PROJECT}
 
 
 

@@ -83,4 +83,3 @@ public class FinanceViewHandler implements FinanceHandler {
         return new DefaultProjectFinanceModelManager();
     }
 }
-

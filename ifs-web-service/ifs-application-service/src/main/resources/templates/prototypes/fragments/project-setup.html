@@ -33,28 +33,27 @@
 <div th:fragment="prototype-select-address">
     <fieldset>
         <legend class="visuallyhidden">Operating address</legend>
-        <div class="form-block">
+        <div class="multiple-choice">
+            <input id="address-use-org" type="radio" name="project-address-group" value="address-use-org" />
             <label class="block-label selection-button-radio" for="address-use-org">
-                <input id="address-use-org" type="radio" name="project-address-group" value="address-use-org" />
                 Use organisation address (<strong>BS1 4NT</strong>)
             </label>
         </div>
-        <div class="form-block">
+        <div class="multiple-choice">
+            <input id="address-use-operating" type="radio" name="project-address-group" value="address-use-operating" />
             <label class="block-label selection-button-radio" for="address-use-operating">
-                <input id="address-use-operating" type="radio" name="project-address-group" value="address-use-operating" />
                 Use operating address (<strong>SN1 2UE</strong>)
             </label>
         </div>
-        <div class="form-block">
+        <div class="multiple-choice">
+            <input id="address-add-project" type="radio" name="project-address-group" value="address-add-project" />
             <label class="block-label selection-button-radio" for="address-add-project">
-                <input id="address-add-project" type="radio" name="project-address-group" value="address-add-project" />
                 Enter an alternative address
             </label>
         </div>
     </fieldset>
 
-
-    <div id="selected-address" class="boxed extra-margin" style="display: none;">
+    <div id="selected-address" class="panel extra-margin" style="display: none;">
         <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
         <p><span class="street">Street</span> <br />
             <span class="street2"></span> <br />

@@ -23,15 +23,19 @@ public abstract class AbstractFormInputViewModel {
     protected ApplicantResource currentApplicant;
 
     protected abstract FormInputType formInputType();
+
     public SectionResource getSection() {
         return applicantSection.getSection();
     }
+
     public QuestionResource getQuestion() {
         return applicantQuestion.getQuestion();
     }
+
     public FormInputResource getFormInput() {
         return applicantFormInput.getFormInput();
     }
+
     public FormInputResponseResource getResponse() {
         return applicantResponse.getResponse();
     }

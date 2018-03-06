@@ -31,6 +31,7 @@
 <th:block th:fragment="form-hint (hint)">
     <span class="form-hint" th:if="${hint}" ifs:utext="${hint}"></span>
 </th:block>
+
 <!-- ========================= Form Guidance =========================== -->
 
 <th:block th:fragment="form-guidance (guidable)">
@@ -41,6 +42,36 @@
         <div class="panel wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </th:block>
+
+<!-- ========================= Form Guidance (Appendix) ===================== -->
+
+<th:block th:fragment="form-guidance-appendix (formInput)">
+    <details th:if="${formInput?.guidanceTitle}">
+        <summary>
+            <span class="summary" th:text="${formInput.guidanceTitle}"/>
+        </summary>
+        <div class="panel wysiwyg-styles">
+            <th:block ifs:utext="${formInput.guidanceAnswer}">
+            </th:block>
+
+            <h4 class="heading-small no-margin">Accepted appendix file types</h4>
+
+            <!--/*
+            TODO: IFS-2564 - Change to use 'allowedFileTypes' instead of 'allowedFileTypesSet' in ZDD migrate
+            */-->
+            <ul>
+                <!-- /*
+                TODO: IFS-2959 - Remove the strings.replace
+                */-->
+                <li th:text="${#strings.replace(allowedFileType.getDisplayName(),'Spreadsheet','spreadsheet')}" th:each="allowedFileType : ${formInput.allowedFileTypesSet}">
+                    PDF
+                </li>
+            </ul>
+            <p>It must be less than 1MB in size.</p>
+        </div>
+    </details>
+</th:block>
+
 <!-- ========================= input field type text =========================== -->
 
 <th:block th:fragment="form-textinput (id, response)">

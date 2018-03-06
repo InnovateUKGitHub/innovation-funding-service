@@ -5,7 +5,6 @@ import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
@@ -23,6 +22,7 @@ import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.*;
@@ -228,24 +228,24 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionParticipantResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AssessmentReviewPanelInviteResource>> assessmentPanelInviteResourceListType() {
-        return new ParameterizedTypeReference<List<AssessmentReviewPanelInviteResource>>() {};
+    public static ParameterizedTypeReference<List<ReviewInviteResource>> assessmentPanelInviteResourceListType() {
+        return new ParameterizedTypeReference<List<ReviewInviteResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AssessmentReviewPanelParticipantResource>> assessmentPanelParticipantResourceListType() {
-        return new ParameterizedTypeReference<List<AssessmentReviewPanelParticipantResource>>() {};
+    public static ParameterizedTypeReference<List<ReviewParticipantResource>> assessmentPanelParticipantResourceListType() {
+        return new ParameterizedTypeReference<List<ReviewParticipantResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AssessmentInterviewPanelParticipantResource>> assessmentInterviewPanelParticipantResourceListType() {
-        return new ParameterizedTypeReference<List<AssessmentInterviewPanelParticipantResource>>() {};
+    public static ParameterizedTypeReference<List<InterviewParticipantResource>> assessmentInterviewPanelParticipantResourceListType() {
+        return new ParameterizedTypeReference<List<InterviewParticipantResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceListType() {
         return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<AssessmentReviewResource>> assessmentReviewResourceListType() {
-        return new ParameterizedTypeReference<List<AssessmentReviewResource>>() {};
+    public static ParameterizedTypeReference<List<ReviewResource>> assessmentReviewResourceListType() {
+        return new ParameterizedTypeReference<List<ReviewResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<EthnicityResource>> ethnicityResourceListType() {

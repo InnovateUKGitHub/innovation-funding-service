@@ -13,7 +13,10 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.assessment.service.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -37,6 +40,8 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -58,6 +63,8 @@ import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
+import org.innovateuk.ifs.review.service.ReviewInviteRestService;
+import org.innovateuk.ifs.review.service.ReviewRestService;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -239,11 +246,11 @@ public class BaseUnitTest {
     @Mock
     protected AssessmentRestService assessmentRestService;
     @Mock
-    protected ReviewPanelInviteRestService reviewPanelInviteRestService;
+    protected ReviewInviteRestService reviewInviteRestService;
     @Mock
-    protected InterviewPanelInviteRestService interviewPanelInviteRestService;
+    protected InterviewInviteRestService interviewInviteRestService;
     @Mock
-    protected InterviewPanelRestService interviewPanelRestService;
+    protected InterviewAssignmentRestService interviewAssignmentRestService;
     @Mock
     protected AssessorRestService assessorRestService;
     @Mock
@@ -265,7 +272,7 @@ public class BaseUnitTest {
     @Mock
     public ApplicationFundingDecisionService applicationFundingDecisionService;
     @Mock
-    protected AssessmentPanelRestService assessmentPanelRestService;
+    protected ReviewRestService reviewRestService;
 
     @Spy
     @InjectMocks

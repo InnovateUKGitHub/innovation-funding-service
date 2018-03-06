@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;

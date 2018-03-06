@@ -103,4 +103,8 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
     public FormInputBuilder withActive(Boolean... active) {
         return withArraySetFieldByReflection("active", active);
     }
+
+    public FormInputBuilder withAllowedFileTypes(String... allowedFileTypes) {
+        return withArraySetFieldByReflection("allowedFileTypes", allowedFileTypes);
+    }
 }
