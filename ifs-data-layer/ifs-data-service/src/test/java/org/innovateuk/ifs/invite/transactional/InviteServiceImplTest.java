@@ -3,7 +3,7 @@ package org.innovateuk.ifs.invite.transactional;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressServiceImpl;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -87,7 +87,7 @@ public class InviteServiceImplTest {
     private QuestionReassignmentService questionReassignmentServiceMock;
 
     @Mock
-    private ApplicationService applicationServiceMock;
+    private ApplicationProgressServiceImpl applicationProgressServiceMock;
 
     @Mock
     private ApplicationInviteRepository applicationInviteRepositoryMock;
@@ -561,7 +561,7 @@ public class InviteServiceImplTest {
         when(applicationInviteMapper.mapIdToDomain(invite.getId())).thenReturn(invite);
         when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId()))
                 .thenReturn(inviteProcessRoles);
-        when(applicationServiceMock.updateApplicationProgress(application.getId()))
+        when(applicationProgressServiceMock.updateApplicationProgress(application.getId()))
                 .thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(invite.getId());
@@ -668,7 +668,7 @@ public class InviteServiceImplTest {
                 organisation.getId()
         ))
                 .thenReturn(applicationFinance);
-        when(applicationServiceMock.updateApplicationProgress(application.getId()))
+        when(applicationProgressServiceMock.updateApplicationProgress(application.getId()))
                 .thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
 
         ServiceResult<Void> applicationInviteResult =
