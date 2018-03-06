@@ -47,7 +47,9 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
     the user moves Application details in Edit mode
-    the user clicks the button/link            link=Application details
+    ${applicationId} =  get application id by name  ${applicationTitle}
+    the user navigates to the page   ${server}/application/${applicationId}
+    the user clicks the button/link  link=Application details
     the user fills in the Application details  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
 
 the user moves Application details in Edit mode
