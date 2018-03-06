@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.resource.sync;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**
@@ -9,9 +10,13 @@ import java.math.BigDecimal;
  */
 public class FinanceCostTotalResource {
 
+    @NotNull
     private FinanceType financeType;
+    @NotNull
     private FinanceRowType financeRowType;
+    @NotNull
     private BigDecimal total;
+    @NotNull
     private Long financeId;
 
     public FinanceCostTotalResource(

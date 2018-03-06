@@ -15,6 +15,9 @@ import java.util.Collection;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
+/**
+ * Service concerned with the {@link CostTotal} domain.
+ */
 @Transactional(readOnly = true)
 @Service
 public class CostTotalService {
