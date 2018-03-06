@@ -1,0 +1,28 @@
+task getNewRelicAgent {
+    if (!file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
+            !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists()) {
+        exec {
+            executable = 'curl'
+            args = ['--connect-timeout', '30',
+                    '-z', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
+                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
+                    'https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic.jar'
+            ]
+        }
+        exec {
+            executable = 'curl'
+            args = ['--connect-timeout', '30',
+                    '-z', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
+                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
+                    'https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic.yml'
+            ]
+        }
+        exec { /* make sure licence key is empty  */
+            executable = 'sed'
+            args = ['-i.bak',
+                    "s/license_key:.*/license_key: ''/g",
+                    "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml"
+            ]
+        }
+    }
+}
