@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Service
 public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTotalsSender {
+
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationFinanceTotalsSenderImpl.class);
 
     @Autowired
@@ -41,7 +42,7 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
         List<FinanceCostTotalResource> financeCostTotalResourceList = financeCostTotalResourceMapper
                 .mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
-        return (ServiceResult) messageQueueServiceStub
+        return messageQueueServiceStub
                 .sendFinanceTotals(spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList))
                 .andOnFailure(() -> LOG.error("Failed sending financeTotals for applicationId: {}", applicationId));
     }
