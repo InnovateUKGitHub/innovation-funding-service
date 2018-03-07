@@ -236,7 +236,7 @@ public class CompetitionSetupQuestionResource {
         this.allowedFileTypes = allowedFileTypes;
     }
 
-    // TODO: IFS-2565 ZDD cleanup - remove this helper method
+    // TODO: IFS-2565 remove function in ZDD contract
     @JsonProperty("allowedFileTypes")
     public void setAllowedFileTypesByDisplayName(List<String> names) {
         this.allowedFileTypes = names.stream().map(this::fromNameOrDisplayName).collect(toSet());
