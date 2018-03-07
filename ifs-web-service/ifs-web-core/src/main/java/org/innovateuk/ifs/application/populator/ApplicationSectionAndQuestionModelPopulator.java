@@ -128,7 +128,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         //Comp admin user doesn't have user organisation
         long applicantId;
         if (!userOrganisation.isPresent())  {
-            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
             applicantId = leadApplicantProcessRole.getUser();
         } else {
             applicantId = userId;

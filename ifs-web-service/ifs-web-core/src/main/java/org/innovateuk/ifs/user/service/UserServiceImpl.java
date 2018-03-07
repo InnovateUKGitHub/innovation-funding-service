@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -10,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(application.getId());
+    public ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId) {
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.getByApplicationId(applicationId);
         for(final ProcessRoleResource processRole : userApplicationRoles){
             if(processRole.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())){
                 return processRole;
@@ -69,9 +69,10 @@ public class UserServiceImpl implements UserService {
 				.collect(Collectors.toList());
 	}
 
+
     @Override
 	public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
-		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application);
+		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application.getId());
 		if(leadProcessRole == null) {
 			return new ArrayList<>();
 		}

@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.affiliation.service.AffiliationRestService;
 import org.innovateuk.ifs.alert.service.AlertRestService;
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
@@ -673,11 +673,11 @@ public class BaseUnitTest {
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getId());
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3))).thenReturn(processRole4);
-        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4))).thenReturn(processRole11);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0).getId())).thenReturn(processRole1);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1).getId())).thenReturn(processRole2);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2).getId())).thenReturn(processRole3);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3).getId())).thenReturn(processRole4);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4).getId())).thenReturn(processRole11);
 
         when(userService.findById(loggedInUser.getId())).thenReturn(loggedInUser);
 

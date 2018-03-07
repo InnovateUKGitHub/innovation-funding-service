@@ -207,7 +207,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
 
-        when(organisationServiceMock.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
+        when(projectServiceMock.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
         when(statusServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
@@ -235,7 +235,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(pu);
         when(statusServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(NOT_ACCESSIBLE);
-        when(organisationServiceMock.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
+        when(projectServiceMock.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
 
         assertFalse(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(123L), user));
 
@@ -259,7 +259,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
 
-        when(organisationServiceMock.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
+        when(projectServiceMock.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
         when(statusServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
@@ -279,7 +279,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
                         build()).
                 build();
 
-        when(organisationServiceMock.getOrganisationIdFromUser(123L, user)).thenReturn(456L);
+        when(projectServiceMock.getOrganisationIdFromUser(123L, user)).thenReturn(456L);
 
         when(statusServiceMock.getProjectTeamStatus(123L, Optional.of(user.getId()))).thenReturn(teamStatus);
 
@@ -320,7 +320,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
         when(statusServiceMock.getProjectTeamStatus(123L, Optional.of(user.getId()))).thenReturn(teamStatus);
 
-        when(organisationServiceMock.getOrganisationIdFromUser(123L, user)).thenReturn(789L);
+        when(projectServiceMock.getOrganisationIdFromUser(123L, user)).thenReturn(789L);
 
         OrganisationResource expectedOrganisation = new OrganisationResource();
         expectedOrganisation.setId(789L);
@@ -336,7 +336,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     private void assertNotOnProjectExpectations(Supplier<Boolean> ruleCheck) {
-        when(organisationServiceMock.getOrganisationIdFromUser(123L, user)).thenThrow(new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(123L)));
+        when(projectServiceMock.getOrganisationIdFromUser(123L, user)).thenThrow(new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(123L)));
 
         assertFalse(ruleCheck.get());
 
@@ -344,7 +344,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     private void assertForbiddenExpectations(Supplier<Boolean> ruleCheck) {
-        when(organisationServiceMock.getOrganisationIdFromUser(123L, user)).thenThrow(new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(123L)));
+        when(projectServiceMock.getOrganisationIdFromUser(123L, user)).thenThrow(new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(123L)));
 
         assertFalse(ruleCheck.get());
 

@@ -249,7 +249,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     public void testApplicationSubmitAgreeingToTerms() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(OPEN).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
+        when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(applicationRestService.updateApplicationState(app.getId(), SUBMITTED)).thenReturn(restSuccess());
@@ -268,7 +268,7 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
     public void testApplicationSubmitAppisNotSubmittable() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
         when(userService.isLeadApplicant(users.get(0).getId(), app)).thenReturn(true);
-        when(userService.getLeadApplicantProcessRoleOrNull(app)).thenReturn(new ProcessRoleResource());
+        when(userService.getLeadApplicantProcessRoleOrNull(app.getId())).thenReturn(new ProcessRoleResource());
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
