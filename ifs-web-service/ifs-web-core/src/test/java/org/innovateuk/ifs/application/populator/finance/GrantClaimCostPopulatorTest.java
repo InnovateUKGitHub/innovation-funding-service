@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator.finance;
 
 import org.innovateuk.ifs.applicant.resource.*;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.application.viewmodel.finance.GrantClaimCostViewModel;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -51,7 +51,7 @@ public class GrantClaimCostPopulatorTest {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Mock
-    private FinanceHandler financeHandler;
+    private FinanceViewHandler financeViewHandler;
 
     @Test
     public void testPopulate() {
@@ -83,7 +83,7 @@ public class GrantClaimCostPopulatorTest {
         GrantClaim grantClaim = mock(GrantClaim.class);
         when(applicationFinanceRestService.getFinanceDetails(section.getApplication().getId(), currentApplicant.getOrganisation().getId())).thenReturn(restSuccess(financeResource));
         when(financeResource.getFinanceOrganisationDetails(FinanceRowType.FINANCE)).thenReturn(category);
-        when(financeHandler.getFinanceFormHandler(currentApplicant.getOrganisation().getOrganisationType())).thenReturn(formHandler);
+        when(financeViewHandler.getFinanceFormHandler(currentApplicant.getOrganisation().getOrganisationType())).thenReturn(formHandler);
         when(formHandler.addCostWithoutPersisting(section.getApplication().getId(), section.getCurrentUser().getId(), question.getQuestion().getId())).thenReturn(rowItem);
         when(financeResource.getMaximumFundingLevel()).thenReturn(MAXIMUM_GRANT_CLAIM);
         when(financeResource.getGrantClaim()).thenReturn(grantClaim);

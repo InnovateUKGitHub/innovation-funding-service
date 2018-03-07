@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -33,7 +33,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandler financeViewHandler;
 
     @Override
     public BaseSectionViewModel populateModel(
@@ -98,7 +98,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
                 applicantSection.getCompetition().getId(),
                 applicantSection.getApplication().getId()
         ));
-        FinanceModelManager financeModelManager = financeHandler.getFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
+        FinanceModelManager financeModelManager = financeViewHandler.getFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
         financeSectionViewModel.setFinanceViewModel(financeModelManager.getFinanceViewModel(
                 applicantSection.getApplication().getId(),
                 simpleMap(costsQuestions, ApplicantQuestionResource::getQuestion),

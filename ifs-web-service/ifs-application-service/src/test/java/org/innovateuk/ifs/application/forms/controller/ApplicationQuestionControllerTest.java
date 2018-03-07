@@ -165,7 +165,7 @@ public class ApplicationQuestionControllerTest extends BaseControllerMockMVCTest
         when(formInputResponseRestService.saveQuestionResponse(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(restSuccess(noErrors()));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
-        when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
 
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(application).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());

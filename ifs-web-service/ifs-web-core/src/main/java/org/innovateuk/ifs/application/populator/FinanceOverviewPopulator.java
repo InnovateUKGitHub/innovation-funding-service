@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
@@ -37,7 +37,7 @@ public class FinanceOverviewPopulator {
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandler financeViewHandler;
 
     //TODO - INFUND-7482 - remove usages of Model model
     public void addOverviewDetails(OpenSectionViewModel openSectionViewModel, Model model, ApplicationForm form, ApplicantSectionResource applicantSection) {
@@ -54,7 +54,7 @@ public class FinanceOverviewPopulator {
             if(!form.isAdminMode()){
 
                 if(applicantSection.getCompetition().isOpen()) {
-                    openSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
+                    openSectionViewModel.setFinanceViewModel(financeViewHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
                 }
             }
         }

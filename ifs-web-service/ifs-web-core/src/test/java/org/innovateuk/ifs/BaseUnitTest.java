@@ -202,7 +202,7 @@ public class BaseUnitTest {
     @Mock
     protected DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
     @Mock
-    public FinanceHandler financeHandler;
+    public FinanceViewHandler financeViewHandler;
     @Mock
     protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
     @Mock
@@ -719,8 +719,8 @@ public class BaseUnitTest {
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupInvites() {

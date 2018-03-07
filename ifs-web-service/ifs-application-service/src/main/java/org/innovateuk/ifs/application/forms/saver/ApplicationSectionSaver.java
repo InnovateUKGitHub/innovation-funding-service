@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.saver;
 
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -39,7 +39,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     private OrganisationService organisationService;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandler financeViewHandler;
 
     @Autowired
     private ProcessRoleService processRoleService;
@@ -84,7 +84,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
             errors.addAll(saveQuestionResponses(request, questions, userId, processRole.getId(), applicationId, ignoreEmpty));
 
             Long organisationType = organisationService.getOrganisationType(userId, applicationId);
-            ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, userId, applicationId, competitionId);
+            ValidationMessages saveErrors = financeViewHandler.getFinanceFormHandler(organisationType).update(request, userId, applicationId, competitionId);
 
             if (overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
