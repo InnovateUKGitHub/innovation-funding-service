@@ -41,6 +41,11 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
+    public ServiceResult<Void> updateProjectDuration(Long projectId, Long durationInMonths) {
+        return projectDetailsRestService.updateProjectDuration(projectId, durationInMonths).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address) {
         return projectDetailsRestService.updateProjectAddress(leadOrganisationId, projectId, addressType, address).toServiceResult();
     }
