@@ -1,15 +1,19 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
+import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
+import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
-import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentFinancesSummaryViewModel;
+import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentDetailedFinancesViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -22,6 +26,7 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +37,13 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
-public class AssessmentFinancesSummaryModelPopulator {
+public class AssessmentDetailedFinancesModelPopulator {
 
     @Autowired
     private CompetitionService competitionService;
@@ -69,15 +75,33 @@ public class AssessmentFinancesSummaryModelPopulator {
     @Autowired
     private FinanceService financeService;
 
-    public AssessmentFinancesSummaryViewModel populateModel(Long assessmentId, Model model) {
+    @Autowired
+    private ApplicantRestService applicantRestService;
+
+    @Autowired
+    ProjectCostsSectionPopulator projectCostsSectionPopulator;
+
+    public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, UserResource loggedInUser, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
+        OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
 
         addApplicationAndOrganisationDetails(model, assessment.getApplication(), competition.getAssessorFinanceView());
         addFinanceDetails(model, competition.getId(), assessment.getApplication());
+        addDetailedFinances(model, competition.getId(), assessment.getApplication(), organisation.getId(), loggedInUser);
 
-        return new AssessmentFinancesSummaryViewModel(assessmentId, assessment.getApplication(),
-                assessment.getApplicationName(), competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage());
+        return new AssessmentDetailedFinancesViewModel(assessmentId, assessment.getApplication(),
+                assessment.getApplicationName(), "finance");
+    }
+
+    private void addDetailedFinances(Model model, long competitionId, long applicationId, long organisationId, UserResource loggedInUser) {
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
+        SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(46L, applicationId, section.getId());
+
+        AbstractSectionViewModel sectionViewModel = projectCostsSectionPopulator.populate(
+                applicantSection, new ApplicationForm(), model, null, true, Optional.of(organisationId), true);
+        model.addAttribute("detailedCostings", sectionViewModel);
     }
 
     private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {
@@ -127,7 +151,6 @@ public class AssessmentFinancesSummaryModelPopulator {
                 .filter(o -> OrganisationTypeEnum.RESEARCH.getId().equals(o.getOrganisationType()))
                 .collect(Collectors.toCollection(supplier));
     }
-
 
     public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
         addFinanceSections(competitionId, model);
