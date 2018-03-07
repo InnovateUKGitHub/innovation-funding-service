@@ -100,11 +100,11 @@ items:
           configMapKeyRef:
             name: ldap-config
             key: LDAP_DOMAIN
-      - name: ONLY_SYNC_LDAP
+      - name: DB_RESET_TASK
         valueFrom:
           configMapKeyRef:
             name: ldap-config
-            key: ONLY_SYNC_LDAP
+            key: DB_RESET_TASK
       - name: LDAP_SCHEME
         valueFrom:
           configMapKeyRef:

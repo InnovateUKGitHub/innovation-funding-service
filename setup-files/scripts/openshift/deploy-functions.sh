@@ -145,7 +145,7 @@ function injectFlywayVariables() {
 function injectLDAPVariables() {
     if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
     LDAP_PORT=${LDAP_PORT:-8389}
-    ONLY_SYNC_LDAP=${ONLY_SYNC_LDAP:false}
+    DB_RESET_TASK=${DB_RESET_TASK:false}
     sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" $(getBuildLocation)/db-reset/*.yml
