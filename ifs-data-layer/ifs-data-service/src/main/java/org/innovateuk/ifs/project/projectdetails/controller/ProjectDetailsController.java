@@ -39,6 +39,12 @@ public class ProjectDetailsController {
         return projectDetailsService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
     }
 
+    @PostMapping("/{projectId}/update-duration/{durationInMonths}")
+    public RestResult<Void> updateProjectDuration(@PathVariable("projectId") final Long projectId,
+                                                  @PathVariable("durationInMonths") final Long durationInMonths) {
+        return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
+    }
+
     @PostMapping("/{projectId}/address")
     public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
                                                  @RequestParam("leadOrganisationId") final Long leadOrganisationId,

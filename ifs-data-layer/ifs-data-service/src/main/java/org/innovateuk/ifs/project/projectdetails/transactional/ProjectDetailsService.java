@@ -20,6 +20,9 @@ public interface ProjectDetailsService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
+    //TODO - ZZZ - Add Security - @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    ServiceResult<Void> updateProjectDuration(Long projectId, Long durationInMonths);
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource addressResource);
 
