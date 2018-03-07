@@ -1,6 +1,10 @@
 #!/bin/bash
 # R Popple: Depending on environment variables clean migrate the database and sync it with ldap.
-if ! [ $ONLY_SYNC_LDAP = "true" ] ; then
-. /clean-migrate-db.sh
+if [ $DB_RESET_TASK = "ONLY_SYNC_LDAP" ] ; then
+    ./ldap-sync-from-ifs-db.sh
+elif [ $DB_RESET_TASK = "CLEAN_DB_AND_SYNC_LDAP" ] ; then
+    ./clean-migrate-db.sh
+    ./ldap-sync-from-ifs-db.sh
+elif [ $DB_RESET_TASK = "BASELINE_ONLY" ] ; then
+    ./baseline-db.sh
 fi
-. /ldap-sync-from-ifs-db.sh

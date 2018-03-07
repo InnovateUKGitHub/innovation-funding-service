@@ -18,6 +18,8 @@ items:
   data:
     FLYWAY_LOCATIONS: "<<FLYWAY-LOCATIONS>>"
     SYSTEM_USER_UUID: "<<SYSTEM-USER-UUID>>"
+    FLYWAY_BASELINE_VERSION: "<<FLYWAY-BASELINE-VERSION>>"
+    FLYWAY_BASELINE_DESCRIPTION: "<<FLYWAY-BASELINE-DESCRIPTION>>"
 - apiVersion: v1
   kind: ConfigMap
   metadata:
@@ -28,7 +30,7 @@ items:
     LDAP_PASS: "<<LDAP-PASS>>"
     LDAP_DOMAIN: "<<LDAP-DOMAIN>>"
     LDAP_SCHEME: "<<LDAP-SCHEME>>"
-    ONLY_SYNC_LDAP: "<<ONLY-SYNC-LDAP>>"
+    DB_RESET_TASK: "<<DB-RESET-TASK>>"
 - apiVersion: v1
   kind: Pod
   metadata:
@@ -48,6 +50,8 @@ items:
         flyway.placeholders.ifs.system.user.uuid=\$SYSTEM_USER_UUID
         flyway.user=\$DB_USER
         flyway.password=\$DB_PASS
+        flyway.baselineVersion=\$FLYWAY_BASELINE_VERSION
+        flyway.baselineDescription=\$FLYWAY_BASELINE_DESCRIPTION
         EOF
         . /clean-migrate-db-sync-ldap.sh
       env:
@@ -116,4 +120,14 @@ items:
           configMapKeyRef:
             name: flyway-config
             key: SYSTEM_USER_UUID
+      - name: FLYWAY_BASELINE_VERSION
+        valueFrom:
+          configMapKeyRef:
+            name: flyway-config
+            key: FLYWAY_BASELINE_VERSION
+      - name: FLYWAY_BASELINE_DESCRIPTION
+        valueFrom:
+          configMapKeyRef:
+            name: flyway-config
+            key: FLYWAY_BASELINE_DESCRIPTION
     restartPolicy: Never
