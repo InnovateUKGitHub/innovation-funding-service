@@ -1,3 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+
 buildscript {
 
 
