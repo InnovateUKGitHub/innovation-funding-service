@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank details'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/IFS-1984-ps-dashboard-steps?status=step2'})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Bank account'}, ${null})" />
+
+    <form>
+        <p>The bank account details below are being reviewed. We will contact you if we need any further information.</p>
+        <h2 class="heading-medium">Organisation information</h2>
+        <p class="extra-margin">
+            Empire Ltd <br />
+            Company no. 60674010
+        </p>
+        <h2 class="heading-medium no-margin-bottom">Account details</h2>
+        <dl class="standard-definition-list extra-margin">
+            <dt>Account number</dt>
+            <dd>
+                *****222
+            </dd>
+            <dt>Sort code</dt>
+            <dd>
+                ****11
+            </dd>
+        </dl>
+        <h2 class="heading-medium no-margin-bottom">Billing address</h2>
+        <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
+        <p class="extra-margin" >
+            1
+            Empire Road <br/>
+            Sheffield <br/>
+            South Yorkshire <br/>
+            S1 2ED <br/>
+        </p>
+    </form>
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+    // <![CDATA[
+
+    // ]]>
+</script>
+</body>
+</html>

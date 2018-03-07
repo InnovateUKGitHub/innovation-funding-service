@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.User;
@@ -22,7 +22,7 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -41,7 +41,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     public void setup() {
         User innovationLeadUserOnProject1 = newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build();
         innovationLeadUserResourceOnProject1 = newUserResource().withId(innovationLeadUserOnProject1.getId()).withRolesGlobal(singletonList(innovationLeadRole)).build();
-        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadUserOnProject1).build();
+        AssessmentParticipant competitionParticipant = newAssessmentParticipant().withUser(innovationLeadUserOnProject1).build();
         Competition competition = newCompetition().withLeadTechnologist(innovationLeadUserOnProject1).build();
         Application application1 = newApplication().withCompetition(competition).build();
         ApplicationResource applicationResource1 = newApplicationResource().withId(application1.getId()).withCompetition(competition.getId()).build();

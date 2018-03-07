@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Other documents'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/IFS-1984-ps-dashboard-steps?status=step2'})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Other documents'}, ${null})" />
+
+    <p>Only the Project Manager can upload and submit the exploitation plan to support your grant application.</p>
+
+    <div class="upload-section">
+        <h2 class="heading-medium no-margin">Exploitation plan</h2>
+        <p class="form-hint">This is a confirmation of the business plan that your project hopes to achieve. You should describe the partner activities that will exploit the results of the project.</p>
+        <details role="group">
+            <summary role="button" aria-controls="details-content-0" aria-expanded="false"><span class="summary">What should I include in the exploitation plan?</span></summary>
+            <div class="panel" id="details-content-0" aria-hidden="true">
+                <p>This plan will evolve and change during the lifetime of the project. Its aim is to confirm the business case for the project. It should also describe partner activities that will exploit the results of the project so that:</p>
+                <ul class="list list-bullet">
+                    <li>changes in the commercial environment can be monitored and accounted for</li>
+                    <li>adequate resources are committed to exploitation</li>
+                    <li>exploitation can be monitored by the stakeholders</li>
+                </ul>
+                <p>A framework of the exploitation plan is available for <a href="#">download</a>.</p>
+                <p>The uploaded exploitation plan must:</p>
+                <ul class="list list-bullet">
+                    <li>be in portable document format (PDF)</li>
+                    <li>be legible at 100% magnification</li>
+                    <li>be less than 1mb in file size</li>
+                </ul>
+            </div>
+        </details>
+        <form action="#" method="post">
+            <div>
+                <p class="uploaded-file">No file currently uploaded</p>
+                <label id="prototype-upload" class="button-secondary extra-margin">+ Upload</label>
+                <button name="uploadExploitationPlanClicked" class="button-secondary" type="submit" data-for-file-upload="exploitationPlan">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <p>You need to upload the document and submit it to us.</p>
+
+    <button id="prototype-cta" disabled="disabled" class="button extra-margin">Submit document</button>
+
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+<script type="text/javascript">
+    // <![CDATA[
+    jQuery(document).ready(function() {
+        jQuery('#prototype-upload').on('click', function () {
+            console.log('yo')
+            jQuery('#prototype-cta').prop('disabled', false);
+        });
+        jQuery('#prototype-cta').on('click', function () {
+            window.location.href = "/prototypes/IFS-1984-ps-dashboard-steps?status=step3";
+            return false;
+        });
+    });
+    // ]]>
+</script>
+</body>
+</html>

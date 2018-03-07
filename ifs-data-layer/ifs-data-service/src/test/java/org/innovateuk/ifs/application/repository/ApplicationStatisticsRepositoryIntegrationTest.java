@@ -13,7 +13,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -47,7 +47,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.AssessorCountSummaryResourceBuilder.newAssessorCountSummaryResource;
 import static org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository.SORT_BY_FIRSTNAME;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
@@ -240,7 +240,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)
@@ -312,7 +312,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)
@@ -404,7 +404,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)
@@ -479,7 +479,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)
@@ -551,7 +551,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)
@@ -624,7 +624,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)
@@ -633,7 +633,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         competitionParticipantRepository.save(competitionParticipants);
 
-        List<CompetitionAssessmentParticipant> otherCompetitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> otherCompetitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(otherCompetition)
@@ -706,7 +706,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)

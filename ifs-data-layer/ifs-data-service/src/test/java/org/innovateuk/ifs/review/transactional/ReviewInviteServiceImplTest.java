@@ -48,7 +48,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_PANEL_INVITE_EXPIRED;
@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilde
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
@@ -192,13 +192,13 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newAssessmentParticipant()
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionAssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
+        Page<AssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
@@ -229,7 +229,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionAssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
+        Page<AssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(assessorPage);
@@ -277,7 +277,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withProfileId(profiles.get(0).getId(), profiles.get(1).getId())
                 .build(2);
 
-        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
+        List<AssessmentParticipant> participants = newAssessmentParticipant()
                 .withUser(assessorUsers.get(0), assessorUsers.get(1))
                 .build(2);
 
@@ -983,8 +983,8 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertFalse(assessorInviteOverviewResource.isCompliant());
     }
 
-    private CompetitionAssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
-        return newCompetitionAssessmentInvite()
+    private AssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
+        return newAssessmentInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
                 .withStatus(status)

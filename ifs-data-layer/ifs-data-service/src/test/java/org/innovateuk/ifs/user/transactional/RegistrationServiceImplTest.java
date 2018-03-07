@@ -415,7 +415,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withRoles(singleton(Role.PROJECT_FINANCE))
                 .build();
 
-        when(inviteRoleRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
+        when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
         when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());

@@ -11,7 +11,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -58,7 +58,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private String webBaseUrl;
 
     @Autowired
-    private CompetitionInviteService competitionInviteService;
+    private AssessmentInviteService assessmentInviteService;
 
     @Autowired
     private RegistrationService registrationService;
@@ -189,11 +189,11 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {
-        return competitionInviteService.getInvite(inviteHash);
+        return assessmentInviteService.getInvite(inviteHash);
     }
 
     private void assignCompetitionParticipantsToUser(User user) {
-        List<CompetitionAssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
+        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
         competitionParticipants.forEach(competitionParticipant -> competitionParticipant.setUser(user));
         competitionParticipantRepository.save(competitionParticipants);
     }

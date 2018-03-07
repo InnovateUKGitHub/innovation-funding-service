@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -45,7 +45,7 @@ public class CompetitionSummaryPermissionRulesTest extends BasePermissionRulesTe
         List<Role> innovationLeadRoles = singletonList(Role.INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionResource.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
 

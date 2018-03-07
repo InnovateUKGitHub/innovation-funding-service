@@ -7,7 +7,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
-import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
+import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -104,7 +104,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private UserSurveyService userSurveyService;
 
     @Autowired
-    private InviteRoleRepository inviteRoleRepository;
+    private RoleInviteRepository roleInviteRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -335,7 +335,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
         roleInvite.open();
-        inviteRoleRepository.save(roleInvite);
+        roleInviteRepository.save(roleInvite);
         return serviceSuccess();
     }
 
@@ -344,7 +344,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
-        return find(inviteRoleRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+        return find(roleInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
     private ServiceResult<User> createUserWithUid(User user, String password) {

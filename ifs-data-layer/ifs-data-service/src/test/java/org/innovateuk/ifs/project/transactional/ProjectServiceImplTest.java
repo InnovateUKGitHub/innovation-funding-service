@@ -290,7 +290,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
         List<ProjectInvite> projectInvites = newProjectInvite().withUser(user).build(1);
         projectInvites.get(0).open();
-        when(inviteProjectRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
+        when(projectInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
 
         // Method under test
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
