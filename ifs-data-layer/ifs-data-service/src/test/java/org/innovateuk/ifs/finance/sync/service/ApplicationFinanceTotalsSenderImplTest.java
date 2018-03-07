@@ -9,10 +9,10 @@ import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
 import org.innovateuk.ifs.finance.resource.sync.FinanceType;
 import org.innovateuk.ifs.finance.sync.filter.SpendProfileCostFilter;
 import org.innovateuk.ifs.finance.sync.mapper.FinanceCostTotalResourceMapper;
+import org.innovateuk.ifs.finance.sync.queue.CostTotalMessageQueue;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -36,17 +36,21 @@ public class ApplicationFinanceTotalsSenderImplTest {
     private FinanceCostTotalResourceMapper financeCostTotalResourceMapper;
 
     @Mock
-    private MessageQueueServiceStub messageQueueServiceStub;
+    private CostTotalMessageQueue costTotalMessageQueue;
 
     @Mock
     private SpendProfileCostFilter spendProfileCostFilter;
 
-    @InjectMocks
     private ApplicationFinanceTotalsSender applicationFinanceTotalsSender;
 
     @Before
     public void setUp() throws Exception {
-        applicationFinanceTotalsSender = new ApplicationFinanceTotalsSenderImpl();
+        applicationFinanceTotalsSender = new ApplicationFinanceTotalsSenderImpl(
+                applicationFinanceHandler,
+                financeCostTotalResourceMapper,
+                spendProfileCostFilter,
+                costTotalMessageQueue
+        );
         MockitoAnnotations.initMocks(this);
     }
 
@@ -78,14 +82,14 @@ public class ApplicationFinanceTotalsSenderImplTest {
                 .withTotal(new BigDecimal(10000))
                 .build(1);
 
-        when(messageQueueServiceStub.sendFinanceTotals(any())).thenReturn(ServiceResult.serviceSuccess());
         when(applicationFinanceHandler.getApplicationFinances(applicationId)).thenReturn(applicationFinanceResource);
         when(financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(any())).thenReturn(expectedFinanceCostTotalResource);
         when(spendProfileCostFilter.filterBySpendProfile(expectedFinanceCostTotalResource)).thenReturn(expectedFilteredFinanceCostTotalResource);
+        when(costTotalMessageQueue.sendCostTotals(any())).thenReturn(ServiceResult.serviceSuccess());
+
         ServiceResult<Void> serviceResult = applicationFinanceTotalsSender.sendFinanceTotalsForApplication(applicationId);
 
-
         assertTrue(serviceResult.isSuccess());
-        verify(messageQueueServiceStub, times(1)).sendFinanceTotals(expectedFilteredFinanceCostTotalResource);
+        verify(costTotalMessageQueue, times(1)).sendCostTotals(expectedFilteredFinanceCostTotalResource);
     }
 }
