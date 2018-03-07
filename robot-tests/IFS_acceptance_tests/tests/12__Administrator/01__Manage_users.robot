@@ -300,5 +300,6 @@ the re-activated user tries to login
     run keyword if  ${docker}!=1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
 
 the user resends the invite
-    the user clicks the button/link    css=input.button.button-secondary
+    the user clicks the button/link         jQuery=.button[type="submit"]:contains("Resend invite")
+    the user clicks the button/link         jQuery=.modal-resend-internal-user button:contains("Resend")
     the user reads his email           ${localEmailInvtedUser}  Invitation to Innovation Funding  Your Innovation Funding Service
