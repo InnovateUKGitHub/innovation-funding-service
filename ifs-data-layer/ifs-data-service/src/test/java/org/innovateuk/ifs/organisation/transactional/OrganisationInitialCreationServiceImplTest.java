@@ -85,7 +85,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 )
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(inviteWithExistingOrganisation));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(inviteWithExistingOrganisation));
 
         service.createAndLinkByInvite(organisationResource, testInviteHash);
 
@@ -98,7 +98,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withInviteOrganisation(newInviteOrganisation().build())
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
         when(organisationMatchingService.findOrganisationMatch(organisationResource)).thenReturn(Optional.empty());
 
         expectOrganisationToBeCreatedAndLinked();
@@ -117,7 +117,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withId(1L)
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
@@ -149,7 +149,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withId(leadOrganisationId)
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
@@ -180,7 +180,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withId(1L)
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
