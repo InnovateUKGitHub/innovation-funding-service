@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
@@ -17,7 +16,6 @@ import java.util.Set;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.emptySet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 public class FormInputResource {
@@ -160,18 +158,7 @@ public class FormInputResource {
         this.scope = scope;
     }
 
-    /**
-     * TODO: IFS-2564 - Remove in ZDD migrate.
-     */
-    public String getAllowedFileTypes() {
-        return simpleJoiner(allowedFileTypes, ",");
-    }
-
-    /**
-     * TODO: IFS-2564 - Rename and remove JsonIgnore in ZDD migrate.
-     */
-    @JsonIgnore
-    public Set<FileTypeCategory> getAllowedFileTypesSet() {
+    public Set<FileTypeCategory> getAllowedFileTypes() {
         return this.allowedFileTypes;
     }
 

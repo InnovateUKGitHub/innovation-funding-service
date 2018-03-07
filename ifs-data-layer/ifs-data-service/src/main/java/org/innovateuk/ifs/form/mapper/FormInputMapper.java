@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.form.mapper;
 
 import org.innovateuk.ifs.application.mapper.QuestionMapper;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -37,10 +36,6 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
     @Override
     public abstract FormInput mapToDomain(FormInputResource resource);
 
-    @ZeroDowntime(reference = "IFS-2564", description = "Remove `allowedFileTypesSet` mapping in ZDD migrate phase.")
-    @Mappings({
-            @Mapping(target = "allowedFileTypesSet", ignore = true)
-    })
     @Override
     public abstract FormInputResource mapToResource(FormInput domain);
 
