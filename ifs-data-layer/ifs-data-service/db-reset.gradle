@@ -32,17 +32,20 @@ task dbResetDockerEnv {
             include 'db/**/*.sql'
             into inputDir
         }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db.sh")
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db-sync-ldap.sh")
-            into inputDir
+        // Not copying these scripts if production to avoid risk of them being executed on production DB.
+        if(isNotProductionEnv()) {
+            copy {
+                from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
+                into inputDir
+            }
+            copy {
+                from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db.sh")
+                into inputDir
+            }
+            copy {
+                from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db-sync-ldap.sh")
+                into inputDir
+            }
         }
         copy {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/baseline-db.sh")
