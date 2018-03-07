@@ -1,1 +1,0 @@
-ALTER TABLE `form_input_response` ADD UNIQUE `unique_application_form_input`(`form_input_id`, `application_id`);
