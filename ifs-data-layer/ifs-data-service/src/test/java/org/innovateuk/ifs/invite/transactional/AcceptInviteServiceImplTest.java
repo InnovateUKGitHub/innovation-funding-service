@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -50,7 +50,7 @@ public class AcceptInviteServiceImplTest {
     @Mock
     private ProcessRoleRepository processRoleRepositoryMock;
     @Mock
-    private ApplicationService applicationServiceMock;
+    private ApplicationProgressService applicationProgressService;
     @Mock
     private OrganisationRepository organisationRepositoryMock;
 
@@ -175,13 +175,13 @@ public class AcceptInviteServiceImplTest {
         );
 
         when(processRoleRepositoryMock.save(expectedProcessRole)).thenReturn(expectedProcessRole);
-        when(applicationServiceMock.updateApplicationProgress(invite.getTarget().getId()))
+        when(applicationProgressService.updateApplicationProgress(invite.getTarget().getId()))
                 .thenReturn(serviceSuccess(BigDecimal.ONE));
 
         ServiceResult<Void> result = service.acceptInvite(testInviteHash, user.getId());
 
         verify(processRoleRepositoryMock).save(expectedProcessRole);
-        verify(applicationServiceMock).updateApplicationProgress(invite.getTarget().getId());
+        verify(applicationProgressService).updateApplicationProgress(invite.getTarget().getId());
 
         assertThat(result.isSuccess()).isTrue();
         assertThat(invite.getTarget().getProcessRoles())

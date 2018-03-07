@@ -2,13 +2,13 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.ApplicationFormInputUploadService;
 import org.innovateuk.ifs.application.transactional.FormInputResponseFileAndContents;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,7 +32,7 @@ public class FormInputResponseFileUploadController {
     private Long maxFilesizeBytesForFormInputResponses;
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationFormInputUploadService applicationFormInputUploadService;
 
     @Autowired
     @Qualifier("formInputFileValidator")
@@ -50,7 +50,7 @@ public class FormInputResponseFileUploadController {
 
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
             FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
-            ServiceResult<FormInputResponseFileEntryResource> uploadResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
+            ServiceResult<FormInputResponseFileEntryResource> uploadResult = applicationFormInputUploadService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
             return uploadResult.andOnSuccessReturn(file -> new FormInputResponseFileEntryCreatedResponse(file.getFileEntryResource().getId()));
         });
     }
@@ -67,7 +67,7 @@ public class FormInputResponseFileUploadController {
 
         return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
             FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
-            return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
+            return applicationFormInputUploadService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
         });
     }
 
@@ -97,13 +97,13 @@ public class FormInputResponseFileUploadController {
             @RequestParam("processRoleId") long processRoleId) throws IOException {
 
         FormInputResponseFileEntryId compoundId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
-        ServiceResult<FormInputResponse> deleteResult = applicationService.deleteFormInputResponseFileUpload(compoundId);
+        ServiceResult<FormInputResponse> deleteResult = applicationFormInputUploadService.deleteFormInputResponseFileUpload(compoundId);
         return deleteResult.toDeleteResponse();
     }
 
     private ServiceResult<FormInputResponseFileAndContents> doGetFile(long formInputId, long applicationId, long processRoleId) {
         FormInputResponseFileEntryId formInputResponseFileEntryId = new FormInputResponseFileEntryId(formInputId, applicationId, processRoleId);
-        return applicationService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
+        return applicationFormInputUploadService.getFormInputResponseFileUpload(formInputResponseFileEntryId);
     }
 
     private FormInputResponseFileEntryResource createFormInputResponseFileEntry(FileHeaderAttributes fileAttributes, long formInputId, long applicationId, long processRoleId) {
