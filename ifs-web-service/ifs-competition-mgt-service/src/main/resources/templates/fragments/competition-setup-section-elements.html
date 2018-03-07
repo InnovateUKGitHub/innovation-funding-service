@@ -32,7 +32,7 @@
                         <dd class="column-two-thirds">
                             <ul>
                                 <li th:each="fileType : ${question.allowedFileTypes}"
-                                    th:text="${fileType}"></li>
+                                    th:text="${fileType.displayName}"></li>
                             </ul>
                         </dd>
                         <dt class="column-third">Appendix guidance</dt>
