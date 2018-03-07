@@ -15,7 +15,6 @@
 
     <div th:if="${#fields.hasErrors('${registrationForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
-        Please review
         <th:block th:insert="fragments/elements :: error-summary-list(registrationForm)" />
     </div>
 

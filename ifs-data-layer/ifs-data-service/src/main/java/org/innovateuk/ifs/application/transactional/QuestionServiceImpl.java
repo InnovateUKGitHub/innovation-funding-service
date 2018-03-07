@@ -62,7 +62,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     private UserService userService;
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationProgressServiceImpl applicationProgressService;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -391,14 +391,10 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         questionStatusRepository.save(questionStatus);
 
         if (updateApplicationCompleteStatus) {
-            updateApplicationCompleteStatus(application);
+            applicationProgressService.updateApplicationProgress(application.getId()).getSuccess();
         }
 
         return serviceSuccess(validationMessages);
-    }
-
-    private void updateApplicationCompleteStatus(Application application) {
-        applicationService.updateApplicationProgress(application.getId()).getSuccess();
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {

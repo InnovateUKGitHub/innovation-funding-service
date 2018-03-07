@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressServiceImpl;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -103,7 +103,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
     private ApplicationFinanceRepository applicationFinanceRepository;
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationProgressServiceImpl applicationProgressService;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -331,7 +331,7 @@ public class ApplicationInviteServiceImpl extends InviteService<ApplicationInvit
                 applicationFinanceRepository.delete(finance);
             }
         }
-        applicationService.updateApplicationProgress(application.getId());
+        applicationProgressService.updateApplicationProgress(application.getId());
     }
 
     private InviteResultsResource sendInvites(List<ApplicationInvite> invites) {
