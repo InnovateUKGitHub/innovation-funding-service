@@ -584,9 +584,12 @@ public final class CollectionFunctions {
     }
 
     /**
-     * A simple function to convert a list of items to a Map of keys against the original elements themselves, given a key generating function
+     * A simple function to convert a collection of items to a LinkedHashSet with the given mapping function
      *
+     * @param collection
+     * @param mappingFn
      * @param <T>
+     * @param <R>
      * @return
      */
     public static <T, R> LinkedHashSet<R> simpleToLinkedHashSet(Collection<T> collection, Function<T, R> mappingFn) {

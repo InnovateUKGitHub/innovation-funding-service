@@ -14,7 +14,7 @@ import org.mapstruct.Mappings;
 import java.util.Set;
 
 import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Mapper(
@@ -66,8 +66,7 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
         }
 
         return String.join(",",
-                formInputResource.getAllowedFileTypes().stream()
-                        .map(fileType -> fileType.getDisplayName())
-                        .collect(toList()));
+                simpleMap(formInputResource.getAllowedFileTypes(),
+                        FileTypeCategory::getDisplayName));
     }
 }
