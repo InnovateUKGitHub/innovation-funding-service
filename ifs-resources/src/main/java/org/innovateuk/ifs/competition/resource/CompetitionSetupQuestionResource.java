@@ -244,7 +244,7 @@ public class CompetitionSetupQuestionResource {
 
     // TODO: IFS-2565 rename function to setAllowedFileTypes as part of ZDD cleanup (contract: step 2)
     @JsonIgnore
-    public void setAllowedFileTypesEnum(Set<FileTypeCategory> allowedFileTypes) {
+    public void setAllowedFileTypesEnum(LinkedHashSet<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 

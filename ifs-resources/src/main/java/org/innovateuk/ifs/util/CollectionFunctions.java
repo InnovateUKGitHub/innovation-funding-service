@@ -497,9 +497,10 @@ public final class CollectionFunctions {
     public static <T, K, U> Collector<T, ?, Map<K, U>> toLinkedMap(
             Function<? super T, ? extends K> keyMapper,
             Function<? super T, ? extends U> valueMapper) {
-        return toMap(keyMapper, valueMapper, (u, v) -> {
-            throw new IllegalStateException(String.format("Duplicate key %s", u));
-        }, LinkedHashMap::new);
+        return toMap(keyMapper,
+                valueMapper,
+                (u, v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); },
+                LinkedHashMap::new);
     }
 
     /**
@@ -580,6 +581,19 @@ public final class CollectionFunctions {
         }
 
         return list.stream().collect(toMap(keyMapper, valueMapper, throwingMerger(), LinkedHashMap::new));
+    }
+
+    /**
+     * A simple function to convert a list of items to a Map of keys against the original elements themselves, given a key generating function
+     *
+     * @param <T>
+     * @return
+     */
+    public static <T, R> LinkedHashSet<R> simpleToLinkedHashSet(Collection<T> collection, Function<T, R> mappingFn) {
+        if (collection == null || collection.isEmpty()) {
+            return new LinkedHashSet<>();
+        }
+        return collection.stream().map(mappingFn).collect(toCollection(LinkedHashSet::new));
     }
 
     private static <T> BinaryOperator<T> throwingMerger() {
