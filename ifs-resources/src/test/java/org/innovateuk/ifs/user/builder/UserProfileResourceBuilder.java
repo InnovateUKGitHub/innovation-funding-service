@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;

@@ -32,7 +32,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -637,8 +636,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
-        assertEquals("Dashboard", model.getBackTitle());
-        assertEquals("/dashboard/live", model.getBackURL());
+        assertEquals("Applications", model.getBackTitle());
+        assertEquals("/competition/1/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
@@ -693,8 +692,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
-        assertEquals("Dashboard", model.getBackTitle());
-        assertEquals("/dashboard/live", model.getBackURL());
+        assertEquals("Applications", model.getBackTitle());
+        assertEquals("/competition/1/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
