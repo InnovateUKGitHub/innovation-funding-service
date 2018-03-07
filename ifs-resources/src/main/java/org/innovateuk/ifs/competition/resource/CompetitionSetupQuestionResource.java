@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -232,6 +234,12 @@ public class CompetitionSetupQuestionResource {
 
     public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
+    }
+
+    // TODO: IFS-2565 ZDD cleanup - remove this helper method
+    @JsonProperty("allowedFileTypes")
+    public void setAllowedFileTypesByDisplayName(List<String> names) {
+        this.allowedFileTypes = names.stream().map(this::fromNameOrDisplayName).collect(toSet());
     }
 
     public String getAppendixGuidance() {
