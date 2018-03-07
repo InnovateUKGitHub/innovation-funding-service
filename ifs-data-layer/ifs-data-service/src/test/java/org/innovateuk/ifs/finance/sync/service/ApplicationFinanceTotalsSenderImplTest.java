@@ -13,8 +13,10 @@ import org.innovateuk.ifs.finance.sync.queue.CostTotalMessageQueue;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,6 +29,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ApplicationFinanceTotalsSenderImplTest {
 
     @Mock
@@ -51,7 +54,6 @@ public class ApplicationFinanceTotalsSenderImplTest {
                 spendProfileCostFilter,
                 costTotalMessageQueue
         );
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test
