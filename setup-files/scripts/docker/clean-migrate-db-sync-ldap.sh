@@ -11,5 +11,5 @@ elif [ $DB_RESET_TASK = "BASELINE_ONLY" ] ; then
     echo "Baselining DB"
     ./baseline-db.sh
 else
-    echo "No database changes specified.  Use one of ONLY_SYNC_LDAP, CLEAN_DB_AND_SYNC_LDAP or BASELINE_ONLY as value of environment variable DB_RESET_TASK to perform appropriate task."
+    echo "No database changes specified.  Set DB_RESET_TASK to one of ONLY_SYNC_LDAP, CLEAN_DB_AND_SYNC_LDAP or BASELINE_ONLY to perform appropriate task."
 fi
