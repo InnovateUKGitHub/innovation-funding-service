@@ -56,7 +56,7 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
 
         // find the lead organisation
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
-        when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), Role.LEADAPPLICANT.getId())).thenReturn(leadApplicantProcessRole);
+        when(processRoleRepositoryMock.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(),  Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
         when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);

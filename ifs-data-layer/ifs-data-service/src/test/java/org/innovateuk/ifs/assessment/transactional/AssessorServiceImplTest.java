@@ -20,6 +20,7 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -65,7 +66,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
@@ -231,7 +231,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         UserResource userResource = newUserResource().build();
         ProfileResource profileResource = newProfileResource().build();
 
-        when(userRepositoryMock.findByIdAndRolesName(assessorId, ASSESSOR.getName())).thenReturn(user);
+        when(userRepositoryMock.findByIdAndRoles(assessorId, Role.ASSESSOR)).thenReturn(user);
         when(profileRepositoryMock.findOne(profileId)).thenReturn(profile);
         when(userMapperMock.mapToResource(user.get())).thenReturn(userResource);
         when(assessorProfileMapperMock.mapToResource(profile)).thenReturn(profileResource);
@@ -246,7 +246,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(expectedAssessorProfileResource, actualAssessorProfileResource);
 
         InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock, userMapperMock, assessorProfileMapperMock);
-        inOrder.verify(userRepositoryMock).findByIdAndRolesName(assessorId, ASSESSOR.getName());
+        inOrder.verify(userRepositoryMock).findByIdAndRoles(assessorId, Role.ASSESSOR);
         inOrder.verify(profileRepositoryMock).findOne(profileId);
         inOrder.verify(userMapperMock).mapToResource(user.get());
         inOrder.verify(assessorProfileMapperMock).mapToResource(profile);

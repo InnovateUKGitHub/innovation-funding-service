@@ -23,7 +23,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
@@ -125,7 +124,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
-        Role roleResource = Role.COMP_ADMIN;
+        Role roleResource = Role.FINANCE_CONTACT;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))

@@ -18,8 +18,8 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.junit.Assert.*;
@@ -128,21 +128,21 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void findByIdAndRolesName() throws Exception {
-        Optional<User> user = repository.findByIdAndRolesName(getPaulPlum().getId(), ASSESSOR.getName());
+        Optional<User> user = repository.findByIdAndRoles(getPaulPlum().getId(), ASSESSOR);
 
         assertTrue(user.isPresent());
     }
 
     @Test
     public void findByIdAndRolesName_wrongRole() throws Exception {
-        Optional<User> user = repository.findByIdAndRolesName(getPaulPlum().getId(), COMP_ADMIN.getName());
+        Optional<User> user = repository.findByIdAndRoles(getPaulPlum().getId(), COMP_ADMIN);
 
         assertFalse(user.isPresent());
     }
 
     @Test
     public void findByRolesName() throws Exception {
-        List<User> users = repository.findByRolesName(ASSESSOR.getName());
+        List<User> users = repository.findByRoles(ASSESSOR);
 
         assertEquals(2, users.size());
         assertEquals(getPaulPlum().getId(), users.get(0).getId());
@@ -151,7 +151,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void findByRolesNameOrderByFirstNameAscLastNameAsc() throws Exception {
-        List<User> users = repository.findByRolesNameOrderByFirstNameAscLastNameAsc(ASSESSOR.getName());
+        List<User> users = repository.findByRolesOrderByFirstNameAscLastNameAsc(ASSESSOR);
 
         assertEquals(2, users.size());
         assertEquals(getFelixWilson().getId(), users.get(0).getId());

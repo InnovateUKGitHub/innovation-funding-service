@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuild
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -264,7 +264,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
 
         addTestAssessors();
 
-        assertEquals(6, userRepository.findByRolesName(ASSESSOR.getName()).size());
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
         Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
@@ -290,7 +290,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
 
         addTestAssessors();
 
-        assertEquals(6, userRepository.findByRolesName(ASSESSOR.getName()).size());
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
@@ -317,7 +317,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
 
         addTestAssessors();
 
-        assertEquals(6, userRepository.findByRolesName(ASSESSOR.getName()).size());
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
@@ -355,7 +355,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singleton(Role.ASSESSOR))
+                .withRoles(singleton(ASSESSOR))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

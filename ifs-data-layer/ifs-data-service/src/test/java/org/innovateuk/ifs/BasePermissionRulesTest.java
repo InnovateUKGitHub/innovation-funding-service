@@ -167,14 +167,12 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
-        Role partnerRole = Role.PARTNER;
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, OrganisationResource organisation, boolean userIsPartner) {
-        Role partnerRole = Role.PARTNER;
         ProjectUser partnerProjectUser = newProjectUser().build();
 
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
@@ -192,14 +190,12 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
         org.innovateuk.ifs.application.domain.Application originalApplication = newApplication().build();
         Project projectEntity = newProject().withApplication(originalApplication).build();
-        Role leadApplicantRole = Role.LEADAPPLICANT;
-        Role partnerRole = Role.PARTNER;
         Organisation leadOrganisation = newOrganisation().build();
         ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
-        when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
+        when(processRoleRepositoryMock.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
         when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);

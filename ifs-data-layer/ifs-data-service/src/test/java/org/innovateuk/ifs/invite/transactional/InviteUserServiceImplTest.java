@@ -154,19 +154,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     }
 
     @Test
-    public void saveUserInviteWhenUserRoleDoesNotExist() throws Exception {
-
-        UserRoleType adminRoleType = UserRoleType.SUPPORT;
-
-        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
-
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(Role.class, adminRoleType.getName())));
-
-    }
-
-    @Test
     public void inviteInternalUserSendEmailSucceeds() throws Exception {
         Role role = Role.IFS_ADMINISTRATOR;
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
@@ -221,12 +208,10 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        Role roleResource = Role.SUPPORT;
-
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.SUPPORT);
 
         verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
@@ -247,32 +232,6 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertEquals(1, result.getErrors().size());
         assertEquals(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR.name(), result.getErrors().get(0).getErrorKey());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
-    }
-
-    @Test
-    public void inviteInternalUserSendEmailInvalidRole() throws Exception {
-        Role role = Role.INNOVATION_LEAD;
-        RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
-        // hash is random, so capture RoleInvite value to verify other fields
-        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
-
-        Role roleResource = Role.INNOVATION_LEAD;
-        when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
-
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
-
-        verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
-
-        List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
-        assertEquals("Astle.Pimenta@innovateuk.gov.uk", captured.get(0).getEmail());
-        assertEquals("Astle Pimenta", captured.get(0).getName());
-        assertEquals(role, captured.get(0).getTarget());
-        assertEquals(CREATED, captured.get(0).getStatus());
-
-        assertTrue(result.isFailure());
-        assertEquals(1, result.getErrors().size());
-        assertEquals(CommonFailureKeys.ADMIN_INVALID_USER_ROLE.name(), result.getErrors().get(0).getErrorKey());
-        assertEquals(HttpStatus.BAD_REQUEST, result.getErrors().get(0).getStatusCode());
     }
 
     @Test

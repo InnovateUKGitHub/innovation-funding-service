@@ -100,8 +100,8 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> getRole(adminRoleType))
-                .andOnSuccess(role -> saveInvite(invitedUser, role))
+                .andOnSuccess(() -> serviceSuccess(Role.getByName(adminRoleType.getName())))
+                .andOnSuccess(role -> saveInvite(invitedUser, Role.getByName(adminRoleType.getName())))
                 .andOnSuccess(this::inviteInternalUser);
     }
 

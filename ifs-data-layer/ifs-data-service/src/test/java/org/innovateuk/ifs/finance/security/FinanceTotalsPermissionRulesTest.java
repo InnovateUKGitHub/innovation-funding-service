@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -31,9 +30,9 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         UserResource userResource = newUserResource().withId(1L).build();
         ApplicationResource application = newApplicationResource().withId(1L).build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(userResource.getId(),
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(userResource.getId(),
                 application.getId(),
-                UserRoleType.LEADAPPLICANT.getName())).thenReturn(true);
+                Role.LEADAPPLICANT)).thenReturn(true);
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application, userResource);
 

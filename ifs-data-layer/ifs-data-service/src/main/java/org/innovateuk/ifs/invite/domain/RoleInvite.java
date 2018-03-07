@@ -14,8 +14,6 @@ import java.time.ZonedDateTime;
  */
 public class RoleInvite extends Invite<Role, RoleInvite> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Role role;
 
     public RoleInvite() {

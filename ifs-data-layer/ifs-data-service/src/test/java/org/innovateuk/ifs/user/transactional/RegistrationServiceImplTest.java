@@ -65,8 +65,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -90,10 +88,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     private User userInDB;
 
     private User updatedUserInDB;
-
-    private Role roleResource;
-
-    private Role role;
 
     @Mock
     private StandardPasswordEncoder standardPasswordEncoder;
@@ -291,29 +285,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateApplicantUserButRoleNotFound() {
-
-        UserResource userToCreate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr).
-                build();
-
-        Organisation selectedOrganisation = newOrganisation().build();
-
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-
-        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(Role.class, APPLICANT.getName())));
-    }
-
-    @Test
     public void testCreateApplicantUserButIdpCallFails() {
 
         UserResource userToCreate = newUserResource().
@@ -496,7 +467,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         assertTrue(result.isSuccess());
         verify(userRepositoryMock).save(userInDB);
-        assertTrue(userInDB.getRoles().stream().anyMatch(role1 -> role1.equals(role)));
+        assertTrue(userInDB.getRoles().stream().anyMatch(role1 -> role1.equals(Role.SUPPORT)));
         assertEquals(userInDB.getFirstName(), userToEdit.getFirstName());
         assertEquals(userInDB.getLastName(), userToEdit.getLastName());
 
@@ -683,7 +654,5 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withCreatedOn(ZonedDateTime.now())
                 .withModifiedOn(ZonedDateTime.now())
                 .build();
-
-        roleResource = Role.SUPPORT;
     }
 }

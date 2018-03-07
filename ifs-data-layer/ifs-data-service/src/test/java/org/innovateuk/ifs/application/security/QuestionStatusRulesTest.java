@@ -12,7 +12,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -65,13 +64,13 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         UserResource allowedAndConnectedUser = newUserResource().build();
         UserResource connectedUserAndNotAllowedUser = newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), questionStatusResource.getApplication(), Role.LEADAPPLICANT.getName()))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), questionStatusResource.getApplication(), Role.LEADAPPLICANT))
                 .thenReturn(true);
 
         ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
         when(processRoleRepository.findByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
                 .thenReturn(allowedProccesRole);
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), Role.APPLICANT.getName()))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), Role.APPLICANT))
                 .thenReturn(true);
         when(processRoleRepository.existsByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
                 .thenReturn(true);

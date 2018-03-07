@@ -21,8 +21,7 @@ public class ProcessRole {
 
     private Long applicationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="roleId", referencedColumnName="id")
+    @Column(name = "role_id")
     private Role role;
 
     private Long organisationId;

@@ -31,7 +31,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,7 +100,6 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     private Application application;
     private List<Organisation> organisations;
     private Organisation nonAcademicUnfunded;
-    private Role leadApplicantRole;
     private User user;
     private ProcessRole leadApplicantProcessRole;
     private ProjectUser leadPartnerProjectUser;
@@ -152,7 +150,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisations.get(0).getId()).
-                withRole(leadApplicantRole).
+                withRole(Role.LEADAPPLICANT).
                 withUser(user).
                 build();
 

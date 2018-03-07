@@ -37,10 +37,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -970,7 +967,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
         List<User> existingUsers = newUser()
                 .withFirstName("John", "Peter")
                 .withLastName("Barnes", "Jones")
-                .withRoles(singleton(Role.APPLICANT), singleton(Role.ASSESSOR))
+                .withRoles(new HashSet(singleton(Role.APPLICANT)), new HashSet(singleton(Role.ASSESSOR)))
                 .build(2);
 
         List<CompetitionAssessmentInvite> invites = newCompetitionAssessmentInvite()

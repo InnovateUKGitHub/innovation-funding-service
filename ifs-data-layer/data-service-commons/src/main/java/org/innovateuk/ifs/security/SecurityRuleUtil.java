@@ -29,12 +29,12 @@ public class SecurityRuleUtil {
                                            final ProcessRoleRepository processRoleRepository)
     {
         final Role role = Role.getByName(userRoleType.getName());
-        final ProcessRole processRole = processRoleRepository.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(user.getId(), role.getId(), applicationId, organisationId);
+        final ProcessRole processRole = processRoleRepository.findByUserIdAndRoleAndApplicationIdAndOrganisationId(user.getId(), role, applicationId, organisationId);
         return processRole != null;
     }
 
     public static boolean checkProcessRole(final UserResource user, final long applicationId, UserRoleType userRoleType, final ProcessRoleRepository processRoleRepository) {
-        return processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(user.getId(), applicationId, userRoleType.getName());
+        return processRoleRepository.existsByUserIdAndApplicationIdAndRole(user.getId(), applicationId, Role.getByName(userRoleType.getName()));
     }
 
     public static boolean isAnonymous(final UserResource user) {

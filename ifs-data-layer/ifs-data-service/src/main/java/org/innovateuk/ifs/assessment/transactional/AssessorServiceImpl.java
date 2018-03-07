@@ -45,7 +45,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_NOTIFY_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -186,7 +185,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<User> getAssessor(long assessorId) {
-        return find(userRepository.findByIdAndRolesName(assessorId, ASSESSOR.getName()), notFoundError(User.class, assessorId));
+        return find(userRepository.findByIdAndRoles(assessorId, Role.ASSESSOR), notFoundError(User.class, assessorId));
     }
 
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {

@@ -28,7 +28,6 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
@@ -50,7 +48,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -223,13 +220,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> addRoleToUser(User user, String roleName) {
-        return getRole(roleName).andOnSuccessReturn(role -> {
-            if (user.getRoles().stream().filter(r -> r.getId() == role.getId()).count() == 0) {
-                user.addRole(role);
-            }
-            return user;
-        });
-
+        Role role = Role.getByName(roleName);
+        if (user.getRoles().stream().filter(r -> r.getId() == role.getId()).count() == 0) {
+            user.addRole(role);
+        }
+        return serviceSuccess(user);
     }
 
     private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {

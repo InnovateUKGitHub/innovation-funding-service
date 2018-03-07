@@ -380,7 +380,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
         Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesNameIn(UserStatus.ACTIVE, UserRoleType.internalRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, UserRoleType.internalRoles().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
         ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(UserRoleType.internalRoles(), pageable);
@@ -421,7 +421,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .withLastName("Pimenta")
                 .build();
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesNameIn(UserStatus.ACTIVE, UserRoleType.internalRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, UserRoleType.internalRoles().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(user1)).thenReturn(userResource1);
         when(userMapperMock.mapToResource(user2)).thenReturn(userResource2);
 
@@ -440,7 +440,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
         Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, UserRoleType.internalRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, UserRoleType.internalRoles().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
         ServiceResult<UserPageResource> result = service.findInactiveByProcessRoles(UserRoleType.internalRoles(), pageable);
@@ -481,7 +481,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .withLastName("Pimenta")
                 .build();
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, UserRoleType.internalRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, UserRoleType.internalRoles().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(user1)).thenReturn(userResource1);
         when(userMapperMock.mapToResource(user2)).thenReturn(userResource2);
 
@@ -505,9 +505,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
         verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
     }
 
@@ -522,9 +522,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
         verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
     }
 
@@ -539,9 +539,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
         verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
     }
 
@@ -556,9 +556,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertTrue(result.isFailure());
         assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
-        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
         verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
     }
 
@@ -570,7 +570,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
 
-        when(userOrganisationRepositoryMock.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet())).thenReturn(userOrganisations);
+        when(userOrganisationRepositoryMock.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet())).thenReturn(userOrganisations);
 
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
@@ -579,9 +579,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals("Aaron Powell", result.getSuccess().get(0).getName());
         assertEquals("David Wellington", result.getSuccess().get(1).getName());
 
-        verify(userOrganisationRepositoryMock).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
     }
 
     private List<UserOrganisation> setUpMockingFindByProcessRolesAndSearchCriteria() {
@@ -612,7 +612,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
 
-        when(userOrganisationRepositoryMock.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
+        when(userOrganisationRepositoryMock.findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
 
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
@@ -621,9 +621,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals("Guitar Gods Ltd", result.getSuccess().get(0).getOrganisationName());
         assertEquals("Engine Equations Ltd", result.getSuccess().get(1).getOrganisationName());
 
-        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
-        verify(userOrganisationRepositoryMock).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
     }
 
     @Test
@@ -634,7 +634,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
 
-        when(userOrganisationRepositoryMock.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
+        when(userOrganisationRepositoryMock.findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
 
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
@@ -643,9 +643,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals("aaron.powell@example.com", result.getSuccess().get(0).getEmail());
         assertEquals("david.wellington@load.example.com", result.getSuccess().get(1).getEmail());
 
-        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
-        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
-        verify(userOrganisationRepositoryMock).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock).findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(anyString(), anySet());
     }
 
     @Override

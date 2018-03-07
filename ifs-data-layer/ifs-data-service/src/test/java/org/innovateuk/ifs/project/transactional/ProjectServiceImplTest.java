@@ -50,7 +50,6 @@ import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganis
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -68,7 +67,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     private Application application;
     private Organisation organisation;
-    private Role leadApplicantRole;
     private User user;
     private User u;
     private ProcessRole leadApplicantProcessRole;
@@ -91,7 +89,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisation.getId()).
-                withRole(leadApplicantRole).
+                withRole(Role.LEADAPPLICANT).
                 withUser(user).
                 build();
 
@@ -396,7 +394,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                 projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());
-                assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
+                assertEquals(Role.PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
                 assertEquals(project, matchingProjectUser.get(0).getProcess());
             });
 

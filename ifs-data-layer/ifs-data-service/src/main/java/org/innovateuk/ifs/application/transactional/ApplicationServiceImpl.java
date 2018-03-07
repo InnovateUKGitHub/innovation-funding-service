@@ -142,12 +142,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetition(competition);
         setInnovationArea(application, competition);
 
-        return getRole(LEADAPPLICANT).andOnSuccess(role -> {
-            Application savedApplication = applicationRepository.save(application);
-            generateProcessRolesForApplication(user, role, savedApplication);
-            savedApplication = applicationRepository.findOne(savedApplication.getId());
-            return serviceSuccess(applicationMapper.mapToResource(savedApplication));
-        });
+        Application savedApplication = applicationRepository.save(application);
+        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication);
+        savedApplication = applicationRepository.findOne(savedApplication.getId());
+        return serviceSuccess(applicationMapper.mapToResource(savedApplication));
     }
 
     // Default to the competition's innovation area if only one set.

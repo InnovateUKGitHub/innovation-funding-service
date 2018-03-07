@@ -43,7 +43,7 @@ public interface CompetitionAssessmentInviteRepository extends PagingAndSortingR
             "FROM User user " +
             "JOIN user.roles roles " +
             "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles.name = 'assessor' "+
+            "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR "+
             "GROUP BY user.id ";
 
     /**
@@ -66,7 +66,7 @@ public interface CompetitionAssessmentInviteRepository extends PagingAndSortingR
             "JOIN user.roles roles " +
             "WHERE (innovationAreas.category.id = :innovationArea OR :innovationArea IS NULL) " +
             "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
-            "AND roles.name = 'assessor' "+
+            "AND roles = org.innovateuk.ifs.user.resource.Role.ASSESSOR "+
             "GROUP BY user.id ";
 
     @Query(ASSESSORS_WITH_COMPETITION)

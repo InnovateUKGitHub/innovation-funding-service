@@ -51,12 +51,12 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 
-            if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
+            if (UserRoleType.PROJECT_FINANCE == role || UserRoleType.COMP_ADMIN == role) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
                     classUnderTest.generateSpendProfile(123L);
-                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
+                    fail();
                 } catch (AccessDeniedException e) {
                     // expected behaviour
                 }
