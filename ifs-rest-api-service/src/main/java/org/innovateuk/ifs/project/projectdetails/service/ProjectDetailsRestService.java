@@ -19,6 +19,8 @@ public interface ProjectDetailsRestService {
 
     RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
+    RestResult<Void> updateProjectDuration(Long projectId, Long durationInMonths);
+
     RestResult<Void> updateFinanceContact(ProjectOrganisationCompositeId compositeId, Long financeContactUserId);
 
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
