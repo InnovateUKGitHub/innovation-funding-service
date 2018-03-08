@@ -105,6 +105,11 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
+        public ServiceResult<Void> updateProjectDuration(Long projectId, Long durationInMonths) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> updateProjectAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource projectAddress) {
             return null;
         }

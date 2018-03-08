@@ -32,6 +32,22 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void updateProjectDuration() throws Exception {
+
+        Long projectId = 3L;
+        Long durationInMonths = 18L;
+
+        when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/update-duration/" + durationInMonths)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(projectDetailsServiceMock).updateProjectDuration(projectId, durationInMonths);
+    }
+
+    @Test
     public void updateFinanceContact() throws Exception {
 
         when(projectDetailsServiceMock.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 456L), 789L)).thenReturn(serviceSuccess());
