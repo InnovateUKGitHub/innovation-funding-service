@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.repository;
+package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.commons.util.IdentifiableEnumConverter;
 import org.innovateuk.ifs.user.resource.Role;
