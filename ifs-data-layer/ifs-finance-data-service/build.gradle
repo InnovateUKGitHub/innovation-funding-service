@@ -3,9 +3,10 @@ apply from: targetBuild + "-build.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-
 apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'org.asciidoctor.convert'
+
 apply from: "../database-support.gradle"
 
 configurations {
@@ -22,6 +23,10 @@ ext.dockerDir = "$project.parent.projectDir/docker/"
 ext.sqlContainer = "ifs-finance-database"
 ext.testSchema = "ifs_finance_test"
 ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
@@ -73,6 +78,25 @@ dependencies {
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(':ifs-commons').sourceSets.test.output
     testCompile project(':ifs-data-layer:data-service-commons').sourceSets.test.output
+}
+
+test {
+    outputs.dir snippetsDir
+    if (project.hasProperty('excludeTests')) {
+        exclude "${project.excludeTests}"
+    }
+
+    if (project.hasProperty('testGroups')) {
+        systemProperty 'testGroups', project.getProperty('testGroups')
+    }
+    finalizedBy asciidoctor
+}
+
+asciidoctor {
+    dependsOn test
+    attributes 'snippets': snippetsDir
+    backends 'html5'
+    inputs.dir snippetsDir
 }
 
 task generateMainMapperClasses(type: JavaCompile) {
