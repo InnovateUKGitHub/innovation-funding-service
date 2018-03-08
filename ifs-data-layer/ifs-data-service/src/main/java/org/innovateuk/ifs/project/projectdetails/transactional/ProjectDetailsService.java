@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.transactional;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -20,7 +21,8 @@ public interface ProjectDetailsService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
-    //TODO - ZZZ - Add Security - @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
+    @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only project finance or IFS Admin can update the project duration")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     ServiceResult<Void> updateProjectDuration(Long projectId, Long durationInMonths);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
