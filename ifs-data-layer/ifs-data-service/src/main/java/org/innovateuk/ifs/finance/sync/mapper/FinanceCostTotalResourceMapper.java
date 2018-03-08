@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 @Component
 public class FinanceCostTotalResourceMapper {
+
     public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceListToList(
             List<ApplicationFinanceResource> applicationFinanceResources
     ) {
@@ -26,13 +27,15 @@ public class FinanceCostTotalResourceMapper {
     public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceToList(
             ApplicationFinanceResource applicationFinanceResource
     ) {
-        return simpleMap(applicationFinanceResource.getFinanceOrganisationDetails().entrySet(), cat ->
-                buildFinanceCostTotalResource(
+        return simpleMap(
+                applicationFinanceResource.getFinanceOrganisationDetails().entrySet(),
+                cat -> buildFinanceCostTotalResource(
                         FinanceType.APPLICATION,
                         cat.getKey(),
                         cat.getValue(),
                         applicationFinanceResource.getId()
-                ));
+                )
+        );
     }
 
     private static FinanceCostTotalResource buildFinanceCostTotalResource(
