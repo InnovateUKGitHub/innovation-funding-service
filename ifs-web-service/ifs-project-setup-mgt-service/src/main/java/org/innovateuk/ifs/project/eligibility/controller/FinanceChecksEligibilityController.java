@@ -7,7 +7,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
@@ -105,7 +105,7 @@ public class FinanceChecksEligibilityController {
     private ProjectFinanceService projectFinanceService;
 
     @Autowired
-    private FinanceViewHandler financeViewHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
     private ProjectFinanceRowRestService projectFinanceRowRestService;
@@ -197,7 +197,7 @@ public class FinanceChecksEligibilityController {
 
         FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
         FinanceRowType costType = costItem.getCostType();
-        financeViewHandler.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
+        financeViewHandlerProvider.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
@@ -251,7 +251,7 @@ public class FinanceChecksEligibilityController {
                                                          HttpServletRequest request) {
         ValidationMessages errors = new ValidationMessages();
 
-        ValidationMessages saveErrors = financeViewHandler.getProjectFinanceFormHandler(organisationType).update(request, organisationId, projectId, competitionId);
+        ValidationMessages saveErrors = financeViewHandlerProvider.getProjectFinanceFormHandler(organisationType).update(request, organisationId, projectId, competitionId);
 
         removeCapitalUsageExistingErrors(saveErrors);
 
@@ -275,7 +275,7 @@ public class FinanceChecksEligibilityController {
     }
 
     private FinanceRowItem addCost(Long orgType, Long organisationId, Long projectId, Long questionId) {
-        return financeViewHandler.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
+        return financeViewHandlerProvider.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -387,7 +387,7 @@ public class FinanceChecksEligibilityController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeViewHandler
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager) financeViewHandlerProvider
                 .getProjectFinanceModelManager(organisation.getOrganisationType()))
                     .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
