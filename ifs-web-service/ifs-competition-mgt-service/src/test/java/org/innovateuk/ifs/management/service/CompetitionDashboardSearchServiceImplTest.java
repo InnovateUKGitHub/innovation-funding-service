@@ -2,6 +2,8 @@ package org.innovateuk.ifs.management.service;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.CompetitionServiceImpl;
 import org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -25,6 +27,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,6 +35,9 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    private ApplicationRestService applicationRestService;
 
     @Mock
     CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
@@ -124,6 +130,23 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
         CompetitionSearchResult actual = service.searchCompetitions(searchQuery, page);
 
         assertEquals(actual, results);
+    }
+
+    @Test
+    public void test_wildcardSearchByApplicationId() throws Exception {
+
+        String searchString = "12";
+        int pageNumber = 0;
+        int pageSize = 5;
+
+        ApplicationPageResource expectedPageResource = new ApplicationPageResource();
+        when(applicationRestService.wildcardSearchById(searchString, pageNumber, pageSize)).thenReturn(restSuccess(expectedPageResource));
+
+        ApplicationPageResource applicationPageResource = service.wildcardSearchByApplicationId(searchString, pageNumber, pageSize);
+
+        assertEquals(expectedPageResource, applicationPageResource);
+
+        verify(applicationRestService).wildcardSearchById(searchString, pageNumber, pageSize);
     }
 
     private CompetitionSearchResultItemBuilder newCompetitionSearchResultItem1() {

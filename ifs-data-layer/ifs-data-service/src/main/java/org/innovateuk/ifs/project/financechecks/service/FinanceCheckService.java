@@ -7,7 +7,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.domain.FinanceCheck;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 

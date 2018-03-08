@@ -8,7 +8,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.workflow.resource.State.*;
 public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalService implements CompetitionKeyStatisticsService {
 
     @Autowired
-    CompetitionAssessmentInviteRepository competitionAssessmentInviteRepository;
+    AssessmentInviteRepository assessmentInviteRepository;
 
     @Autowired
     ApplicationStatisticsRepository applicationStatisticsRepository;
@@ -46,7 +46,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatisticsByCompetition(long competitionId) {
         CompetitionReadyToOpenKeyStatisticsResource competitionKeyStatisticsResource = new CompetitionReadyToOpenKeyStatisticsResource();
-        competitionKeyStatisticsResource.setAssessorsInvited(competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        competitionKeyStatisticsResource.setAssessorsInvited(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         competitionKeyStatisticsResource.setAssessorsAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED));
         return serviceSuccess(competitionKeyStatisticsResource);
     }
@@ -56,7 +56,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
         BigDecimal limit = new BigDecimal(50L);
 
         CompetitionOpenKeyStatisticsResource competitionKeyStatisticsResource = new CompetitionOpenKeyStatisticsResource();
-        competitionKeyStatisticsResource.setAssessorsInvited(competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        competitionKeyStatisticsResource.setAssessorsInvited(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         competitionKeyStatisticsResource.setAssessorsAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED));
         competitionKeyStatisticsResource.setApplicationsPerAssessor(competitionRepository.findById(competitionId).getAssessorCount());
         competitionKeyStatisticsResource.setApplicationsStarted(applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(competitionId, CREATED_AND_OPEN_STATUSES, limit));
@@ -80,7 +80,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
                 .mapToInt(e -> 1)
                 .sum());
         competitionKeyStatisticsResource.setAssignmentCount(applicationStatisticsRepository.findByCompetitionAndApplicationProcessActivityStateStateIn(competitionId, SUBMITTED_STATES).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
-        competitionKeyStatisticsResource.setAssessorsInvited(competitionAssessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        competitionKeyStatisticsResource.setAssessorsInvited(assessmentInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         competitionKeyStatisticsResource.setAssessorsAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED));
 
         return serviceSuccess(competitionKeyStatisticsResource);

@@ -2,10 +2,6 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
-
-import java.util.List;
 
 /**
  * DTO for an assessor that is available to be invited.

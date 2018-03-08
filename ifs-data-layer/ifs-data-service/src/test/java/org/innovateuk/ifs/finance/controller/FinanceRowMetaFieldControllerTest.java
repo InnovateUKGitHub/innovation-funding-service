@@ -6,8 +6,8 @@ import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

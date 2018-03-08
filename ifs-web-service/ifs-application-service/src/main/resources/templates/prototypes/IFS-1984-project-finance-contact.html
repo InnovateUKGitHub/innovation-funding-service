@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/IFS-1984-project-details?user=nonLead':'/prototypes/1575-project-details')})" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Finance contact'}, ${null})" />
+
+    <p>We will ask the finance contact to:</p>
+
+    <ul class="list list-bullet">
+        <li>provide bank details for your organisation</li>
+        <li>confirm any queries we have with your project costs</li>
+        <li>review the spend profile of your project costs</li>
+    </ul>
+
+	<form action="#" class="extra-margin">
+
+		<fieldset>
+
+			<legend class="heading-medium no-margin">Finance contact</legend>
+            <p class="form-hint">Please select the person responsible for finances in your organisation</p>
+
+			<div class="form-group extra-margin" th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+                <div class="multiple-choice">
+                    <input id="finances-name-1" type="radio" name="finances-name-group" value="John Smith" checked="checked" />
+                    <label for="finances-name-1" class="block-label selection-button-radio">
+                        John Smith
+                    </label>
+                </div>
+
+                <div class="multiple-choice">
+                    <input id="finances-name-2" type="radio" name="finances-name-group" value="Ann Jones" />
+                    <label for="finances-name-2" class="block-label selection-button-radio">
+                        Ann Jones
+                    </label>
+                </div>
+
+                <div class="multiple-choice">
+                    <input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
+                    <label for="finances-name-invite" class="block-label selection-button-radio" id="invited-finance-contact" style="display: none">
+                        <span id="finance-name">Ann Jones (pending)</span>
+                    </label>
+                </div>
+			</div>
+
+            <div class="form-group extra-margin" th:if="${param.user != null and param.user[0] == 'nonLead'}">
+
+                <input type="hidden" name="user" value="nonLead">
+
+                <div class="multiple-choice">
+                    <input id="finances-name-1" type="radio" name="finances-name-group" value="Ray Reardon" checked="checked" />
+                    <label for="finances-name-1" class="block-label selection-button-radio">
+                        Ray Reardon
+                    </label>
+                </div>
+
+                <div class="multiple-choice">
+                    <input id="finances-name-2" type="radio" name="finances-name-group" value="Tony Drago" />
+                    <label for="finances-name-2" class="block-label selection-button-radio">
+                        Tony Drago
+                    </label>
+                </div>
+
+                <div class="multiple-choice">
+                    <label for="finances-name-invite" class="block-label selection-button-radio" id="invited-finance-contact" style="display: none">
+                        <input id="finances-name-invite" type="radio" name="finances-name-group" value="" />
+                        <span id="finance-name">Tony Drago (pending)</span>
+                    </label>
+                </div>
+            </div>
+
+		</fieldset>
+
+		<div class="extra-margin">
+			<button class="buttonlink" id="add-finance-contact">Add new team member</button>
+		</div>
+
+		<th:block th:insert="prototypes/fragments/project-setup :: prototype-add-users('finance-contact')" />
+
+        <button class="button button-large extra-margin" formaction="/prototypes/IFS-1984-project-details">Save finance contact</button>
+
+	</form>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		jQuery('#add-finance-contact').on('click',function(e){
+			e.preventDefault();
+			jQuery('#finance-contact-table').show();
+		});
+
+		jQuery('#invite-finance-contact').on('click',function(e){
+			e.preventDefault();
+
+			var financeContact = jQuery('#name-finance-contact1').val();
+
+			jQuery('#finance-name').text(financeContact + ' (Pending)')
+			jQuery("#finances-name-invite").attr('checked', 'checked');
+			jQuery('#finance-contact-table').hide();
+			jQuery('#invited-finance-contact').show();
+
+		});
+
+	});
+	// ]]>
+</script>
+</body>
+</html>

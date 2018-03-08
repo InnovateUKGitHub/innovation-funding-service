@@ -1,11 +1,11 @@
-ext.sqlContainer = "mysql"
+ext.sqlContainer = "ifs-database"
 ext.testSchema = "ifs_test"
-ext.dockerComposeFile = "docker-compose.yml"
+ext.dockerComposeFile = "docker-compose/docker-compose.yml"
 
 task startMySql(type: Exec) {
     workingDir '../../'
     doFirst {
-        commandLine 'docker-compose', '-f', dockerComposeFile, 'up', '-d', sqlContainer
+        commandLine 'docker-compose', '-p', 'innovation-funding-service', '-f', dockerComposeFile, 'up', '-d', sqlContainer
     }
     doLast {
         exec {
@@ -20,7 +20,7 @@ task startMySql(type: Exec) {
 task createTestSchema(type: Exec) {
     workingDir '../../'
     doFirst {
-        commandLine 'docker-compose', '-f', dockerComposeFile, 'exec', '-T', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
+        commandLine 'docker-compose', '-p', 'innovation-funding-service', '-f', dockerComposeFile, 'exec', '-T', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
     }
 }
 

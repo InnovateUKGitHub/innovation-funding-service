@@ -23,20 +23,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.handler.item.GrantClaimHandler.GRANT_CLAIM;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class FinanceServiceImplTest extends BaseServiceUnitTest<FinanceServiceImpl> {
 
