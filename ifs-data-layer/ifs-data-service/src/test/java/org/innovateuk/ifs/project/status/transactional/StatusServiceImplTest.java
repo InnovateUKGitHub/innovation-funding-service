@@ -983,7 +983,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(golWorkflowHandlerMock.getState(p)).thenReturn(GrantOfferLetterState.PENDING);
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ProjectPartnerStatusResource expectedLeadPartnerOrganisationStatus = newProjectPartnerStatusResource().
                 withName(organisations.get(0).getName()).
@@ -1114,7 +1114,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(golWorkflowHandlerMock.getState(p)).thenReturn(GrantOfferLetterState.SENT);
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1146,7 +1146,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsNotSent = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1195,7 +1195,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         GrantOfferLetterStateResource sentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.SENT, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(sentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(sentGrantOfferLetterState));
 
         // Same flow but when GOL is in Ready To Approve state.
         Mockito.when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(TRUE);
@@ -1235,7 +1235,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1259,7 +1259,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1280,7 +1280,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1302,7 +1302,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1326,7 +1326,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1350,7 +1350,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1372,7 +1372,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -1395,7 +1395,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(FALSE));
         GrantOfferLetterStateResource unsentGrantOfferLetterState =
                 GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.PENDING, null);
-        Mockito.when(grantOfferLetterServiceMock.getGrantOfferLetterState(p.getId())).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
+        Mockito.when(golWorkflowHandlerMock.getExtendedState(p)).thenReturn(serviceSuccess(unsentGrantOfferLetterState));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 

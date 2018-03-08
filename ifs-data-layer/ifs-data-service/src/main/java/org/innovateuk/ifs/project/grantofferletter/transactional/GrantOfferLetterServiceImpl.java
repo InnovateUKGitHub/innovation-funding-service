@@ -27,8 +27,6 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -71,13 +69,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Service
 public class GrantOfferLetterServiceImpl extends BaseTransactionalService implements GrantOfferLetterService {
 
-    public static final String GOL_CONTENT_TYPE = "application/pdf";
+    private static final String GOL_CONTENT_TYPE = "application/pdf";
 
-    public static final String DEFAULT_GOL_NAME = "grant_offer_letter.pdf";
+    private static final String DEFAULT_GOL_NAME = "grant_offer_letter.pdf";
 
-    public static final Long DEFAULT_GOL_SIZE = 1L;
+    private static final Long DEFAULT_GOL_SIZE = 1L;
 
-    public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
+    private static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
     private static final Log LOG = LogFactory.getLog(GrantOfferLetterServiceImpl.class);
 
@@ -255,17 +253,15 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
-        ServiceResult<Supplier<InputStream>> pdfSupplier = null;
         try {
-            pdfSupplier = createPDF("", inputStreamSupplier, fileEntryResource);
+            return createPDF("", inputStreamSupplier, fileEntryResource);
         } catch (IOException e) {
-            LOG.error("An IO Exception occured" + e);
+            LOG.error("An IO Exception occurred" + e);
             return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
         } catch (DocumentException e) {
             LOG.error("A Document Exception occured" + e);
             return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
         }
-        return pdfSupplier;
     }
 
     private static ServiceResult<Supplier<InputStream>> createPDF(String url, Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource)
@@ -519,7 +515,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
 
-        notifyProjectIsLive(project.getId());
+        notifyProjectIsLive(project.getId()).getSuccess();
         return serviceSuccess();
     }
 
@@ -553,19 +549,8 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     @Override
     public ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
-
-        return getProject(projectId).andOnSuccess(project ->
-               getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
-
-            GrantOfferLetterState state = golWorkflowHandler.getState(project);
-            GrantOfferLetterEvent lastProcessEvent = golWorkflowHandler.getLastProcessEvent(project);
-
-            if (project.isPartner(user) && !project.isProjectManager(user)) {
-                return GrantOfferLetterStateResource.stateInformationForPartnersView(state, lastProcessEvent);
-            } else {
-                return GrantOfferLetterStateResource.stateInformationForNonPartnersView(state, lastProcessEvent);
-            }
-        }));
+        return getProject(projectId).andOnSuccess(
+                golWorkflowHandler::getExtendedState);
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
