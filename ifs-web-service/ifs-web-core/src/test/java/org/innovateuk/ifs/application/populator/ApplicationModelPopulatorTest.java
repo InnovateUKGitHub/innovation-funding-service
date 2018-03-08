@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -70,7 +70,7 @@ public class ApplicationModelPopulatorTest {
     protected OrganisationService organisationService;
 
     @Mock
-    protected FinanceViewHandler financeViewHandler;
+    protected FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Mock
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -178,7 +178,7 @@ public class ApplicationModelPopulatorTest {
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
         when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
-        when(financeViewHandler.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole  = newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));

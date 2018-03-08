@@ -5,7 +5,7 @@ import org.innovateuk.ifs.applicant.resource.ApplicantResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -109,7 +109,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
-    private FinanceViewHandler financeViewHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Mock
     private BindingResult bindingResult;
@@ -248,7 +248,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.of(newOrganisationResource().build()));
 
         DefaultFinanceModelManager financeManager = mock(DefaultFinanceModelManager.class);
-        when(financeViewHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(financeManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(financeManager);
 
         QuestionResource question = newQuestionResource().build();
         when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), eq(FormInputType.APPLICATION_DETAILS))).thenReturn(ServiceResult.serviceSuccess(question));
