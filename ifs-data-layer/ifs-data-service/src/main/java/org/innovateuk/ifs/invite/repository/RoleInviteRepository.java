@@ -7,8 +7,5 @@ import java.util.Optional;
 
 public interface RoleInviteRepository extends InviteRepository<RoleInvite> {
 
-//    List<RoleInvite> findByRole(long roleId);
-//
-//    Optional<RoleInvite> findOneByRoleIdAndEmail(long roleId, String email);
 }
 

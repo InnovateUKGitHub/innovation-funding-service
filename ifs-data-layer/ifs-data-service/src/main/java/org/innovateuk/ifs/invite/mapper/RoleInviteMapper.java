@@ -11,11 +11,7 @@ import org.mapstruct.Mappings;
  * Mapper for converting between RoleInvite domain and resource objects
  */
 
-@Mapper(
-        componentModel = "spring",
-        uses = {
-        }
-)
+@Mapper(componentModel = "spring")
 public abstract class RoleInviteMapper extends BaseMapper<RoleInvite, RoleInviteResource, Long> {
 
     @Mappings({
@@ -25,7 +21,7 @@ public abstract class RoleInviteMapper extends BaseMapper<RoleInvite, RoleInvite
     @Override
     public abstract RoleInviteResource mapToResource(RoleInvite domain);
 
-    public Long mapInviteToId(RoleInvite     object) {
+    public Long mapInviteToId(RoleInvite object) {
         if (object == null) {
             return null;
         }
