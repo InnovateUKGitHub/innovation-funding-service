@@ -69,7 +69,6 @@ public class UserServiceImpl implements UserService {
 				.collect(Collectors.toList());
 	}
 
-
     @Override
 	public List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource application) {
 		ProcessRoleResource leadProcessRole = getLeadApplicantProcessRoleOrNull(application.getId());

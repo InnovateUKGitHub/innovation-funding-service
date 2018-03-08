@@ -4,17 +4,20 @@ import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.ProjectServiceImpl;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +34,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static junit.framework.TestCase.assertEquals;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -47,7 +51,14 @@ public class ProjectServiceImplTest {
     private ProjectRestService projectRestService;
 
     @Mock
-    private ApplicationService applicationService;
+    private UserService userService;
+
+    @Mock
+    private OrganisationService organisationService;
+
+    @Mock
+    private ProjectService projectService;
+
 
     @Test
     public void testGetById() {
@@ -109,15 +120,24 @@ public class ProjectServiceImplTest {
 
     @Test
     public void testGetLeadOrganisation() {
+
         OrganisationResource organisationResource = newOrganisationResource().build();
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
         ProjectResource projectResource = newProjectResource().withApplication(applicationResource).build();
 
+        ProcessRoleResource processRoleResource = newProcessRoleResource()
+                .withApplication(applicationResource.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(UserRoleType.LEADAPPLICANT.getName())
+                .build();
+
         when(projectRestService.getProjectById(projectResource.getId())).thenReturn(restSuccess(projectResource));
 
-        when(applicationService.getLeadOrganisation(projectResource.getApplication())).thenReturn(organisationResource);
+        when(userService.getLeadApplicantProcessRoleOrNull(projectResource.getApplication())).thenReturn(processRoleResource);
+
+        when(organisationService.getOrganisationById(processRoleResource.getOrganisationId())).thenReturn(organisationResource);
 
         OrganisationResource returnedOrganisationResource = service.getLeadOrganisation(projectResource.getId());
 
@@ -125,7 +145,6 @@ public class ProjectServiceImplTest {
 
         verify(projectRestService).getProjectById(projectResource.getId());
 
-        verify(applicationService).getLeadOrganisation(projectResource.getApplication());
     }
 
     @Test
@@ -208,10 +227,9 @@ public class ProjectServiceImplTest {
 
         setLoggedInUser(userResource);
 
-        when(service.getProjectUsersForProject(projectId)).
-                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+        when(projectService.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId)).thenReturn(true);
 
-        boolean result = service.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
+        boolean result = projectService.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
 
         assertTrue(result);
     }
@@ -227,10 +245,10 @@ public class ProjectServiceImplTest {
 
         setLoggedInUser(userResource);
 
-        when(service.getProjectUsersForProject(projectId)).
+        when(projectService.getProjectUsersForProject(projectId)).
                 thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
 
-        boolean result = service.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
+        boolean result = projectService.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
 
         TestCase.assertFalse(result);
     }
@@ -246,10 +264,9 @@ public class ProjectServiceImplTest {
 
         setLoggedInUser(userResource);
 
-        when(service.getProjectUsersForProject(projectId)).
-                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+        when(projectService.getOrganisationIdFromUser(projectId, userResource)).thenReturn(expectedOrgId);
 
-        Long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, userResource);
 
         Assert.assertEquals(expectedOrgId, organisationId);
     }
@@ -264,9 +281,9 @@ public class ProjectServiceImplTest {
 
         setLoggedInUser(userResource);
 
-        when(service.getProjectUsersForProject(projectId)).thenReturn(emptyList());
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(emptyList());
 
-        Long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, userResource);
 
         Assert.assertEquals(expectedOrgId, organisationId);
     }

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -77,8 +78,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public OrganisationResource getLeadOrganisation(Long projectId) {
         ProjectResource project = projectRestService.getProjectById(projectId).getSuccess();
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(project.getApplication());
-        return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
+
+        if (project.getApplication() == null){
+            return null;
+        } else {
+            Long id = project.getApplication();
+            ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(project.getApplication());
+            return organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
+        }
     }
 
     @Override
