@@ -6,7 +6,7 @@ if (project.hasProperty("profile")) {
     }
 }
 
-apply from: rootProject.file("java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 
 jar {
     baseName = 'ifs-rest-api-service'

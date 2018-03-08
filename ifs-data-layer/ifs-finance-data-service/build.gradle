@@ -1,7 +1,7 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
-apply from: rootProject.file("openshift-build.gradle")
-apply from: rootProject.file("prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 
 apply plugin: 'base'
@@ -19,9 +19,9 @@ tagDockerLocal.tag = financeDataServiceVersion
 osStageLocal.tag = financeDataServiceVersion
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
-ext.sqlContainer = "mysql-finance-totals"
+ext.sqlContainer = "ifs-finance-database"
 ext.testSchema = "ifs_finance_test"
-ext.dockerComposeFile = "docker-compose-finance-totals.yml"
+ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 
 buildDocker.dependsOn prepareDockerInput
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"

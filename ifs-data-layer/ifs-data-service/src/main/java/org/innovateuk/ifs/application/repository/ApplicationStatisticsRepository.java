@@ -69,27 +69,27 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  concat(user.firstName, ' ', user.lastName), " +
             "  profile.skillsAreas, " +
             "  sum(case when activityState.state NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
-            "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
-            "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
-            "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
+            "  sum(case when assessmentParticipant.competition.id = :compId AND activityState.state NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
+            "  sum(case when assessmentParticipant.competition.id = :compId AND activityState.state NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
+            "  sum(case when assessmentParticipant.competition.id = :compId AND activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM User user " +
-            "JOIN CompetitionAssessmentParticipant competitionParticipant ON competitionParticipant.user.id = user.id " +
+            "JOIN AssessmentParticipant assessmentParticipant ON assessmentParticipant.user.id = user.id " +
             "JOIN Profile profile ON profile.id = user.profileId " +
             // join on all applications for each invited assessor on the system
             "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id " +
             "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id " +
-            "LEFT JOIN Application application ON assessment.target.id = application.id AND application.competition.id = competitionParticipant.competition.id  " +
+            "LEFT JOIN Application application ON assessment.target.id = application.id AND application.competition.id = assessmentParticipant.competition.id  " +
             "LEFT JOIN ActivityState activityState ON application.id IS NOT NULL AND assessment.activityState.id = activityState.id " +
             "WHERE " +
-            "  competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
-            "  competitionParticipant.role = 'ASSESSOR' AND " +
+            "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
+            "  assessmentParticipant.role = 'ASSESSOR' AND " +
             " (:innovationSectorId IS NULL OR :innovationSectorId IN (SELECT innovationAreaLink.category.sector.id " +
             "                                             FROM ProfileInnovationAreaLink innovationAreaLink" +
             "                                             WHERE innovationAreaLink.profile = profile)) AND " +
             "  (:businessType IS NULL OR profile.businessType = :businessType) " +
             "GROUP BY user " +
-            "HAVING sum(case when competitionParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
+            "HAVING sum(case when assessmentParticipant.competition.id = :compId THEN 1 ELSE 0 END) > 0")
     Page<AssessorCountSummaryResource> getAssessorCountSummaryByCompetition(@Param("compId") long competitionId,
                                                                             @Param("innovationSectorId") Optional<Long> innovationSectorId,
                                                                             @Param("businessType") Optional<BusinessType> businessType,

@@ -65,7 +65,7 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
             List<String> strings = asList(StringUtils.commaDelimitedListToStringArray(value));
             Set<FileTypeCategory> fileTypeCategories = simpleMapSet(strings, FileTypeCategory::valueOf);
 
-            question.setAllowedFileTypesEnum(fileTypeCategories);
+            question.setAllowedFileTypes(fileTypeCategories);
 
             return competitionSetupQuestionService.updateQuestion(question);
         });

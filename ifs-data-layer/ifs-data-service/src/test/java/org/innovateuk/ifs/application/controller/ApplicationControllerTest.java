@@ -32,7 +32,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
-
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -122,7 +121,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         Application app = newApplication().build();
 
-        when(applicationServiceMock.applicationReadyForSubmit(app.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationProgressServiceMock.applicationReadyForSubmit(app.getId())).thenReturn(true);
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", app.getId()))
                 .andExpect(status().isOk())
@@ -157,7 +156,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void informIneligible() throws Exception {
         long applicationId = 1L;
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource().build();
-        when(applicationServiceMock.informIneligible(applicationId, resource)).thenReturn(serviceSuccess());
+        when(applicationNotificationServiceMock.informIneligible(applicationId, resource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
                 .contentType(APPLICATION_JSON)

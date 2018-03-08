@@ -6,8 +6,8 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
-import org.innovateuk.ifs.invite.transactional.AcceptInviteService;
-import org.innovateuk.ifs.invite.transactional.InviteService;
+import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -37,10 +37,10 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Mock
-    private InviteService inviteService;
+    private ApplicationInviteService applicationInviteService;
 
     @Mock
-    private AcceptInviteService acceptInviteService;
+    private AcceptApplicationInviteService acceptApplicationInviteService;
 
     @Before
     public void setUp() {
@@ -67,7 +67,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
-        when(inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess(inviteResultsResource));
+        when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceSuccess(inviteResultsResource));
 
         mockMvc.perform(post("/invite/createApplicationInvites/" + applicationId, "json")
                 .contentType(APPLICATION_JSON)
@@ -75,7 +75,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(status().isCreated())
                 .andDo(document("invite/createApplicationInvites/" + applicationId));
 
-        verify(inviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
+        verify(applicationInviteService, times(1)).createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
 
         String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
-        when(inviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceFailure(badRequestError("no invites")));
+        when(applicationInviteService.createApplicationInvites(inviteOrganisationResource, Optional.of(applicationId))).thenReturn(serviceFailure(badRequestError("no invites")));
 
         mockMvc.perform(post("/invite/createApplicationInvites/"+applicationId, "json")
                 .contentType(APPLICATION_JSON)
@@ -108,11 +108,11 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
         String hash = "abcdef";
         long userId = 1L;
 
-        when(acceptInviteService.acceptInvite(hash, userId)).thenReturn(serviceSuccess());
+        when(acceptApplicationInviteService.acceptInvite(hash, userId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/invite/acceptInvite/{hash}/{userId}", hash, userId))
                 .andExpect(status().isOk());
 
-        verify(acceptInviteService).acceptInvite(hash, userId);
+        verify(acceptApplicationInviteService).acceptInvite(hash, userId);
     }
 }
