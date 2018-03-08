@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -92,7 +91,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
                 setupResource.setAllowedFileTypes(
-                        simpleToLinkedHashSet(Arrays.asList(formInput.getAllowedFileTypes().split(",")),
+                        simpleToLinkedHashSet(formInput.getAllowedFileTypes().split(","),
                                 FileTypeCategory::fromDisplayName));
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;

@@ -349,21 +349,41 @@ public class CollectionFunctionsTest {
     }
 
     @Test
-    public void test_simpleToLinkedHashSet() {
+    public void test_simpleToLinkedHashSetWithCollection() {
         assertEquals(new LinkedHashSet<>(asList("123 string", "456 string")),
                 CollectionFunctions.simpleToLinkedHashSet(asList(123, 456), i -> i + " string"));
     }
 
     @Test
-    public void test_simpleToLinkedHashSet_nullList() {
+    public void test_simpleToLinkedHashSetWithCollection_nullList() {
         assertEquals(new LinkedHashSet<String>(),
-                CollectionFunctions.simpleToLinkedHashSet(null, i -> i + " string"));
+                CollectionFunctions.simpleToLinkedHashSet((List<?>) null, i -> i + " string"));
     }
 
     @Test
-    public void test_simpleToLinkedHashSet_nullElements() {
+    public void test_arrayToLinkedHashSetWithCollection_nullElements() {
         assertEquals(new LinkedHashSet<>(asList("123 string", "null string")),
                 CollectionFunctions.simpleToLinkedHashSet(asList(123, null), i -> i + " string"));
+    }
+
+    @Test
+    public void test_toLinkedHashSetWithArray() {
+        assertEquals(new LinkedHashSet<>(asList("123 string", "456 string")),
+                CollectionFunctions.simpleToLinkedHashSet(new Integer[]{123, 456}, i -> i + " string"));
+    }
+
+    @Test
+    public void test_arrayToLinkedHashSetWithArray_nullArray() {
+        String[] stringArray = null;
+
+        assertEquals(new LinkedHashSet<String>(),
+                CollectionFunctions.simpleToLinkedHashSet(stringArray, i -> i + " string"));
+    }
+
+    @Test
+    public void test_simpleToLinkedHashSetWithArray_nullElements() {
+        assertEquals(new LinkedHashSet<>(asList("123 string", "null string")),
+                CollectionFunctions.simpleToLinkedHashSet(new Integer[]{123, null}, i -> i + " string"));
     }
 
     @Test

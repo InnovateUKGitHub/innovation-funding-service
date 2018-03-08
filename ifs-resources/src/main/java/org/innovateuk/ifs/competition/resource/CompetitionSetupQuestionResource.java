@@ -232,7 +232,7 @@ public class CompetitionSetupQuestionResource {
         return allowedFileTypes;
     }
 
-    public void setAllowedFileTypes(LinkedHashSet<FileTypeCategory> allowedFileTypes) {
+    public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 

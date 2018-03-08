@@ -584,6 +584,17 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple function to convert an array of items to a LinkedHashSet with the given mapping function.
+     */
+    public static <T, R> LinkedHashSet<R> simpleToLinkedHashSet(T[] array,
+                                                                Function<T, R> mappingFn) {
+        if (array == null) {
+            return new LinkedHashSet<>();
+        }
+        return simpleToLinkedHashSet(asList(array), mappingFn);
+    }
+
+    /**
      * A simple function to convert a collection of items to a LinkedHashSet with the given mapping function.
      */
     public static <T, R> LinkedHashSet<R> simpleToLinkedHashSet(Collection<T> collection,

@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.junit.Assert.assertEquals;
@@ -44,7 +44,7 @@ public class FormInputMapperTest {
         when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
 
         FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(Arrays.asList(FileTypeCategory.PDF))
+                .withAllowedFileTypes(singletonList(FileTypeCategory.PDF))
                 .build();
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
@@ -60,7 +60,7 @@ public class FormInputMapperTest {
         when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
 
         FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(Arrays.asList(FileTypeCategory.SPREADSHEET))
+                .withAllowedFileTypes(singletonList(FileTypeCategory.SPREADSHEET))
                 .build();
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
@@ -78,7 +78,7 @@ public class FormInputMapperTest {
         System.out.println("what");
 
         FormInputResource formInputResource = newFormInputResource()
-                .withAllowedFileTypes(Arrays.asList(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF))
+                .withAllowedFileTypes(asList(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF))
                 .build();
 
         FormInput result = formInputMapperImpl.mapToDomain(formInputResource);
