@@ -34,7 +34,7 @@
         <dt>Total &#37; grant</dt>
         <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
       </dl>
-      <a href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}">View finances</a>
+      <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}">View finances</a>
     </div>
     <div class="column-half">
       <h2 class="heading-medium">Project details</h2>
@@ -46,11 +46,11 @@
         <dt>Duration</dt>
         <dd th:text="${model.financeCheckSummaryResource.durationInMonths+' months'}"></dd>
       </dl>
-      <a href="@{/competition/{competitionId}/project/{projectId}/edit-duration}">Edit</a>
+      <a th:href="@{/competition/{competitionId}/project/{projectId}/edit-duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}">Edit</a>
     </div>
   </div>
 
- <th:block th:if="${model.financeCheckSummaryResource.researchParticipationPercentage &gt; model.financeCheckSummaryResource.competitionMaximumResearchPercentage}"
+  <th:block th:if="${model.financeCheckSummaryResource.researchParticipationPercentage &gt; model.financeCheckSummaryResource.competitionMaximumResearchPercentage}"
             th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.financeCheckSummaryResource.researchParticipationPercentage},maxResearchPercentage=${model.financeCheckSummaryResource.competitionMaximumResearchPercentage})" />
 
   <h2 class="heading-medium">Partner finances</h2>
