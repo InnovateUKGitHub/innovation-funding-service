@@ -333,6 +333,56 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
+    public void testUpdateProjectDurationWhenDurationLessThanAMonth() {
+
+        Long projectId = 123L;
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 0L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
+
+        ServiceResult<Void> updateResult2 = service.updateProjectDuration(projectId, -3L);
+        assertTrue(updateResult2.isFailure());
+        assertTrue(updateResult2.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
+    }
+
+    @Test
+    public void testUpdateProjectDurationWhenSpendProfileAlreadyGenerated() {
+
+        Long projectId = 123L;
+
+        List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfiles);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
+    }
+
+    @Test
+    public void testUpdateProjectDurationWhenProjectDoesNotExist() {
+
+        Long projectId = 123L;
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+    }
+
+    @Test
+    public void testUpdateProjectDurationSuccess() {
+
+        Long projectId = 123L;
+        Long durationInMonths = 36L;
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, durationInMonths);
+        assertTrue(updateResult.isSuccess());
+        assertEquals(durationInMonths, existingProject.getDurationInMonths());
+    }
+
+    @Test
     public void testUpdateFinanceContact() {
 
         Project project = newProject().withId(123L).build();

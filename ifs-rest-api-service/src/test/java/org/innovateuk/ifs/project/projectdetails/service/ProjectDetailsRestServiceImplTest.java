@@ -23,6 +23,18 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
+    public void testUpdateProjectDuration() {
+        Long projectId = 3L;
+        Long durationInMonths = 18L;
+
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/update-duration/" + durationInMonths, null, OK);
+        RestResult<Void> result = service.updateProjectDuration(projectId, durationInMonths);
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/update-duration/" + durationInMonths, Void.class, null);
+    }
+
+    @Test
     public void testUpdateFinanceContact() {
         setupPostWithRestResultExpectations(projectRestURL + "/123/organisation/5/finance-contact?financeContact=6", null, OK);
         RestResult<Void> result = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 6L);

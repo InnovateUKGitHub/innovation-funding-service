@@ -58,6 +58,7 @@ public class ProjectDetailsServiceImplTest {
         verify(projectDetailsRestService).updateProjectManager(1L, 2L);
     }
 
+    @Test
     public void testUpdateProjectStartDate() {
         LocalDate date = LocalDate.now();
 
@@ -67,7 +68,22 @@ public class ProjectDetailsServiceImplTest {
 
         assertTrue(result.isSuccess());
 
-        verify(projectDetailsRestService).updateProjectStartDate(1L, date).toServiceResult();
+        verify(projectDetailsRestService).updateProjectStartDate(1L, date);
+    }
+
+    @Test
+    public void testUpdateProjectDuration() {
+
+        Long projectId = 3L;
+        Long durationInMonths = 18L;
+
+        when(projectDetailsRestService.updateProjectDuration(projectId, durationInMonths)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.updateProjectDuration(projectId, durationInMonths);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectDetailsRestService).updateProjectDuration(projectId, durationInMonths);
     }
 
     @Test
