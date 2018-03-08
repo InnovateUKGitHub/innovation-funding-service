@@ -7,6 +7,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-644: Disable or reenable user profile
 ...               IFS-983: Manage users: Pending registration tab
 ...               IFS-2412: Internal users resend invites
+...               IFS-2842: Add modals to the resending of invites to internal users
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
@@ -86,7 +87,7 @@ Administrator can successfully invite a new user
     Then the user cannot see a validation error in the page
 
 Administrator can successfully finish the rest of the invitation
-    [Documentation]  IFS-27  IFS-983  IFS-2412
+    [Documentation]  IFS-27  IFS-983  IFS-2412  IFS-2842
     [Tags]  HappyPath
     Given the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
@@ -300,5 +301,6 @@ the re-activated user tries to login
     run keyword if  ${docker}!=1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
 
 the user resends the invite
-    the user clicks the button/link    css=input.button.button-secondary
+    the user clicks the button/link    css=.button-secondary[type="submit"]     #Resend invite
+    the user clicks the button/link    jQuery=button:contains("Resend")
     the user reads his email           ${localEmailInvtedUser}  Invitation to Innovation Funding  Your Innovation Funding Service
