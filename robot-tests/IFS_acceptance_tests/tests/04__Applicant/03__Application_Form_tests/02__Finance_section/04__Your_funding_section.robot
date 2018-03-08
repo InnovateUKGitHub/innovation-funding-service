@@ -113,6 +113,8 @@ Read only view of the other funding
 Custom Suite Setup
     Set predefined date variables
     log in and create new application if there is not one already  Robot test application
+    ${applicationId} =  get application id by name  Robot test application
+    the user navigates to the page  ${server}/application/${applicationId}
     the user clicks the button/link  link=Application details
     the user fills in the Application details  Robot test application  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Complete the org size section
