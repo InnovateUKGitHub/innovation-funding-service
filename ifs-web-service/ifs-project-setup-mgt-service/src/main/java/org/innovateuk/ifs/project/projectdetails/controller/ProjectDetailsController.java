@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -93,10 +94,10 @@ public class ProjectDetailsController {
         return "project/edit-duration";
     }
 
-    @PostMapping("/{projectId}/update-duration/{durationInMonths}")
+    @PostMapping("/{projectId}/update-duration")
     public String updateProjectDuration(@PathVariable("competitionId") final Long competitionId,
                                         @PathVariable("projectId") final Long projectId,
-                                        @PathVariable(value = "durationInMonths") final Long durationInMonths,
+                                        @RequestParam(value = "durationInMonths") final Long durationInMonths,
                                         Model model,
                                         UserResource loggedInUser) {
 
