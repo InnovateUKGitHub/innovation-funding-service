@@ -58,7 +58,7 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
 
     private ReviewParticipant accept() {
         if (getUser() == null) {
-            throw new IllegalStateException("Illegal attempt to accept a CompetitionAssessmentParticipant with no User");
+            throw new IllegalStateException("Illegal attempt to accept a AssessmentParticipant with no User");
         }
 
         if (getInvite().getStatus() != OPENED) {
@@ -89,13 +89,13 @@ public class ReviewParticipant extends CompetitionParticipant<ReviewInvite> {
 
     public ReviewParticipant reject() {
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a CompetitionAssessmentInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a AssessmentInvite that hasn't been opened");
         }
         if (getStatus() == ACCEPTED) {
-            throw new IllegalStateException("Cannot reject a CompetitionAssessmentInvite that has been accepted");
+            throw new IllegalStateException("Cannot reject a AssessmentInvite that has been accepted");
         }
         if (getStatus() == REJECTED) {
-            throw new IllegalStateException("CompetitionAssessmentInvite has already been rejected");
+            throw new IllegalStateException("AssessmentInvite has already been rejected");
         }
 
         super.setStatus(REJECTED);
