@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
-@FieldRequiredIf(required = "allowedFileTypesEnum", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "allowedFileTypes", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "appendixGuidance", argument = "appendix", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
@@ -228,24 +228,18 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public Set<String> getAllowedFileTypes() {
-        return simpleMapSet(allowedFileTypes, type-> type.getDisplayName());
-    }
-
-    public void setAllowedFileTypes(Set<String> allowedFileTypes) {
-        this.allowedFileTypes = simpleMapSet(allowedFileTypes, type -> fromNameOrDisplayName(type));
-    }
-
-    // TODO: IFS-2565 rename function to getAllowedFileTypes as part of ZDD cleanup (contract: step 2)
-    @JsonIgnore
-    public Set<FileTypeCategory> getAllowedFileTypesEnum() {
+    public Set<FileTypeCategory> getAllowedFileTypes() {
         return allowedFileTypes;
     }
 
-    // TODO: IFS-2565 rename function to setAllowedFileTypes as part of ZDD cleanup (contract: step 2)
-    @JsonIgnore
-    public void setAllowedFileTypesEnum(LinkedHashSet<FileTypeCategory> allowedFileTypes) {
+    public void setAllowedFileTypes(LinkedHashSet<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
+    }
+
+    // TODO: IFS-2565 remove function in ZDD contract
+    @JsonProperty("allowedFileTypes")
+    public void setAllowedFileTypesByDisplayName(List<String> names) {
+        this.allowedFileTypes = names.stream().map(this::fromNameOrDisplayName).collect(toSet());
     }
 
     public String getAppendixGuidance() {

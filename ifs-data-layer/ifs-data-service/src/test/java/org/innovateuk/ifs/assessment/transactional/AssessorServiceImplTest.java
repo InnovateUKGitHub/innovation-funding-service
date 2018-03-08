@@ -11,8 +11,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -118,7 +118,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(profileRepositoryMock.findOne(anyLong())).thenReturn(newProfile().build());
         when(innovationAreaMapperMock.mapToDomain(innovationAreaResource)).thenReturn(newInnovationArea().build());
 
-        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
+        when(assessmentInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
         when(roleServiceMock.findByUserRoleType(ASSESSOR)).thenReturn(serviceSuccess(roleResource));
 
         UserResource createdUserResource = newUserResource().build();
@@ -126,13 +126,13 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withEmailAddress(email)
                 .build();
 
-        List<CompetitionAssessmentParticipant> participantsForOtherInvites = Stream.generate(
-                () -> Mockito.spy(new CompetitionAssessmentParticipant())).limit(2).collect(Collectors.toList());
+        List<AssessmentParticipant> participantsForOtherInvites = Stream.generate(
+                () -> Mockito.spy(new AssessmentParticipant())).limit(2).collect(Collectors.toList());
 
         when(registrationServiceMock.createUser(userRegistrationResource)).thenReturn(serviceSuccess(createdUserResource));
 
         when(registrationServiceMock.activateAssessorAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
-        when(competitionInviteServiceMock.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
+        when(assessmentInviteServiceMock.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
         when(userRepositoryMock.findOne(createdUserResource.getId())).thenReturn(createdUser);
         when(competitionParticipantRepositoryMock.getByInviteEmail(email)).thenReturn(participantsForOtherInvites);
 
@@ -140,9 +140,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock,
-                userRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, profileRepositoryMock);
-        inOrder.verify(competitionInviteServiceMock).getInvite(hash);
+        InOrder inOrder = inOrder(assessmentInviteServiceMock, roleServiceMock, registrationServiceMock,
+                                  userRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, profileRepositoryMock);
+        inOrder.verify(assessmentInviteServiceMock).getInvite(hash);
         inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
         inOrder.verify(registrationServiceMock).createUser(userRegistrationResource);
         inOrder.verify(registrationServiceMock).activateAssessorAndSendDiversitySurvey(createdUserResource.getId());
@@ -174,19 +174,19 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withPassword("Password123")
                 .build();
 
-        ServiceResult<CompetitionInviteResource> inviteResult = serviceFailure(notFoundError(CompetitionAssessmentInvite.class, hash));
+        ServiceResult<CompetitionInviteResource> inviteResult = serviceFailure(notFoundError(AssessmentInvite.class, hash));
 
-        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(inviteResult);
+        when(assessmentInviteServiceMock.getInvite(hash)).thenReturn(inviteResult);
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
-        verify(competitionInviteServiceMock).getInvite(hash);
+        verify(assessmentInviteServiceMock).getInvite(hash);
         verifyNoMoreInteractions(roleServiceMock);
         verifyNoMoreInteractions(registrationServiceMock);
-        verifyNoMoreInteractions(competitionInviteServiceMock);
+        verifyNoMoreInteractions(assessmentInviteServiceMock);
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "inviteHashNotExists")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(AssessmentInvite.class, "inviteHashNotExists")));
     }
 
     @Test
@@ -210,15 +210,15 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withEmail("email@example.com")
                 .build();
 
-        when(competitionInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
+        when(assessmentInviteServiceMock.getInvite(hash)).thenReturn(serviceSuccess(competitionInviteResource));
         when(roleServiceMock.findByUserRoleType(ASSESSOR)).thenReturn(serviceSuccess(roleResource));
 
         when(registrationServiceMock.createUser(userRegistrationResource)).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
-        InOrder inOrder = inOrder(competitionInviteServiceMock, roleServiceMock, registrationServiceMock);
-        inOrder.verify(competitionInviteServiceMock).getInvite(hash);
+        InOrder inOrder = inOrder(assessmentInviteServiceMock, roleServiceMock, registrationServiceMock);
+        inOrder.verify(assessmentInviteServiceMock).getInvite(hash);
         inOrder.verify(roleServiceMock).findByUserRoleType(ASSESSOR);
         inOrder.verify(registrationServiceMock).createUser(userRegistrationResource);
         inOrder.verifyNoMoreInteractions();

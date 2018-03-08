@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
-import org.innovateuk.ifs.invite.transactional.InviteService;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.service.OrganisationMatchingServiceImpl;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -32,7 +32,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     private OrganisationMatchingServiceImpl organisationMatchingService;
 
     @Autowired
-    private InviteService inviteService;
+    private ApplicationInviteService applicationInviteService;
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
@@ -58,7 +58,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
             OrganisationResource organisationToCreate,
             String inviteHash
     ) {
-        ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccess();
+        ApplicationInvite invite = applicationInviteService.findOneByHash(inviteHash).getSuccess();
 
         InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();

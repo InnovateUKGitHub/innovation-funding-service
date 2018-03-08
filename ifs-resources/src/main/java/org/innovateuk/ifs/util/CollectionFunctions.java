@@ -584,15 +584,10 @@ public final class CollectionFunctions {
     }
 
     /**
-     * A simple function to convert a collection of items to a LinkedHashSet with the given mapping function
-     *
-     * @param collection
-     * @param mappingFn
-     * @param <T>
-     * @param <R>
-     * @return
+     * A simple function to convert a collection of items to a LinkedHashSet with the given mapping function.
      */
-    public static <T, R> LinkedHashSet<R> simpleToLinkedHashSet(Collection<T> collection, Function<T, R> mappingFn) {
+    public static <T, R> LinkedHashSet<R> simpleToLinkedHashSet(Collection<T> collection,
+                                                                Function<T, R> mappingFn) {
         if (collection == null || collection.isEmpty()) {
             return new LinkedHashSet<>();
         }
