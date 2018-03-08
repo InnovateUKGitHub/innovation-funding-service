@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.finance.view;
 
-public interface FinanceHandler {
+public interface FinanceHandlerProvider {
 
     FinanceFormHandler getFinanceFormHandler(long organisationType);
     FinanceFormHandler getProjectFinanceFormHandler(long organisationType);

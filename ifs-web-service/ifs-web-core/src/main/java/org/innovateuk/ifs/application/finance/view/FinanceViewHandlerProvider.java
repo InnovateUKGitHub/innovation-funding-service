@@ -14,7 +14,7 @@ import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
  */
 @Component
 @Configuration
-public class FinanceViewHandlerProvider implements FinanceHandler {
+public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
 
     public FinanceFormHandler getFinanceFormHandler(long organisationType) {
         if(RESEARCH.getId() == organisationType) {
