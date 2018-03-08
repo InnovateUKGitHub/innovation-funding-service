@@ -16,146 +16,16 @@ INSERT INTO `activity_state` VALUES (1,'APPLICATION_ASSESSMENT','PENDING'),(2,'A
 /*!40000 ALTER TABLE `activity_state` ENABLE KEYS */;
 UNLOCK TABLES;
 
-LOCK TABLES `address` WRITE;
-/*!40000 ALTER TABLE `address` DISABLE KEYS */;
-/*!40000 ALTER TABLE `address` ENABLE KEYS */;
-UNLOCK TABLES;
-
 LOCK TABLES `address_type` WRITE;
 /*!40000 ALTER TABLE `address_type` DISABLE KEYS */;
 INSERT INTO `address_type` VALUES (1,'REGISTERED'),(2,'OPERATING'),(3,'PROJECT'),(4,'BANK_DETAILS');
 /*!40000 ALTER TABLE `address_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
-LOCK TABLES `affiliation` WRITE;
-/*!40000 ALTER TABLE `affiliation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `affiliation` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `alert` WRITE;
-/*!40000 ALTER TABLE `alert` DISABLE KEYS */;
-/*!40000 ALTER TABLE `alert` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `application` WRITE;
-/*!40000 ALTER TABLE `application` DISABLE KEYS */;
-/*!40000 ALTER TABLE `application` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `application_finance` WRITE;
-/*!40000 ALTER TABLE `application_finance` DISABLE KEYS */;
-/*!40000 ALTER TABLE `application_finance` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `assessor_form_input_response` WRITE;
-/*!40000 ALTER TABLE `assessor_form_input_response` DISABLE KEYS */;
-/*!40000 ALTER TABLE `assessor_form_input_response` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `attachment` WRITE;
-/*!40000 ALTER TABLE `attachment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `attachment` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `bank_details` WRITE;
-/*!40000 ALTER TABLE `bank_details` DISABLE KEYS */;
-/*!40000 ALTER TABLE `bank_details` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `category_link` WRITE;
-/*!40000 ALTER TABLE `category_link` DISABLE KEYS */;
-/*!40000 ALTER TABLE `category_link` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `competition_funder` WRITE;
-/*!40000 ALTER TABLE `competition_funder` DISABLE KEYS */;
-/*!40000 ALTER TABLE `competition_funder` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `competition_user` WRITE;
-/*!40000 ALTER TABLE `competition_user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `competition_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `content_event` WRITE;
-/*!40000 ALTER TABLE `content_event` DISABLE KEYS */;
-/*!40000 ALTER TABLE `content_event` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `content_group` WRITE;
-/*!40000 ALTER TABLE `content_group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `content_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `content_section` WRITE;
-/*!40000 ALTER TABLE `content_section` DISABLE KEYS */;
-/*!40000 ALTER TABLE `content_section` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `cost` WRITE;
-/*!40000 ALTER TABLE `cost` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cost` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `cost_categorization` WRITE;
-/*!40000 ALTER TABLE `cost_categorization` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cost_categorization` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `cost_category` WRITE;
-/*!40000 ALTER TABLE `cost_category` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cost_category` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `cost_category_group` WRITE;
-/*!40000 ALTER TABLE `cost_category_group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cost_category_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `cost_category_type` WRITE;
-/*!40000 ALTER TABLE `cost_category_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cost_category_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `cost_group` WRITE;
-/*!40000 ALTER TABLE `cost_group` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cost_group` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `cost_time_period` WRITE;
-/*!40000 ALTER TABLE `cost_time_period` DISABLE KEYS */;
-/*!40000 ALTER TABLE `cost_time_period` ENABLE KEYS */;
-UNLOCK TABLES;
-
 LOCK TABLES `ethnicity` WRITE;
 /*!40000 ALTER TABLE `ethnicity` DISABLE KEYS */;
 INSERT INTO `ethnicity` VALUES (1,'WHITE','White',1,1),(2,'MIXED','Mixed/Multiple ethnic groups',2,1),(3,'ASIAN','Asian/Asian British',3,1),(4,'BLACK','Black/African/Caribbean',4,1),(5,'BLACK_BRITISH','Black British',5,1),(6,'OTHER','Other ethnic group',6,1),(7,'NOT_STATED','Prefer not to say',7,1);
 /*!40000 ALTER TABLE `ethnicity` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `file_entry` WRITE;
-/*!40000 ALTER TABLE `file_entry` DISABLE KEYS */;
-/*!40000 ALTER TABLE `file_entry` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `finance_check` WRITE;
-/*!40000 ALTER TABLE `finance_check` DISABLE KEYS */;
-/*!40000 ALTER TABLE `finance_check` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `finance_row` WRITE;
-/*!40000 ALTER TABLE `finance_row` DISABLE KEYS */;
-/*!40000 ALTER TABLE `finance_row` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `finance_row_meta_value` WRITE;
-/*!40000 ALTER TABLE `finance_row_meta_value` DISABLE KEYS */;
-/*!40000 ALTER TABLE `finance_row_meta_value` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `form_input_response` WRITE;
-/*!40000 ALTER TABLE `form_input_response` DISABLE KEYS */;
-/*!40000 ALTER TABLE `form_input_response` ENABLE KEYS */;
 UNLOCK TABLES;
 
 LOCK TABLES `form_input_type` WRITE;
@@ -168,41 +38,6 @@ LOCK TABLES `form_validator` WRITE;
 /*!40000 ALTER TABLE `form_validator` DISABLE KEYS */;
 INSERT INTO `form_validator` VALUES (1,'org.innovateuk.ifs.validator.EmailValidator','EmailValidator'),(2,'org.innovateuk.ifs.validator.NotEmptyValidator','NotEmptyValidator'),(3,'org.innovateuk.ifs.validator.WordCountValidator','WordCountValidator'),(4,'org.innovateuk.ifs.validator.NonNegativeLongIntegerValidator','NonNegativeLongIntegerValidator'),(5,'org.innovateuk.ifs.validator.SignedLongIntegerValidator','SignedLongIntegerValidator'),(6,'org.innovateuk.ifs.validator.PastMMYYYYValidator','PastMMYYYYValidator'),(7,'org.innovateuk.ifs.validator.AssessorScoreValidator','AssessorScoreValidator'),(8,'org.innovateuk.ifs.validator.ResearchCategoryValidator','ResearchCategoryValidator'),(9,'org.innovateuk.ifs.validator.AssessorScopeValidator','AssessorScopeValidator');
 /*!40000 ALTER TABLE `form_validator` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `invite` WRITE;
-/*!40000 ALTER TABLE `invite` DISABLE KEYS */;
-/*!40000 ALTER TABLE `invite` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `invite_organisation` WRITE;
-/*!40000 ALTER TABLE `invite_organisation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `invite_organisation` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `keyword` WRITE;
-/*!40000 ALTER TABLE `keyword` DISABLE KEYS */;
-/*!40000 ALTER TABLE `keyword` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `lead_applicant_type` WRITE;
-/*!40000 ALTER TABLE `lead_applicant_type` DISABLE KEYS */;
-/*!40000 ALTER TABLE `lead_applicant_type` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `monitoring_officer` WRITE;
-/*!40000 ALTER TABLE `monitoring_officer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `monitoring_officer` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `organisation` WRITE;
-/*!40000 ALTER TABLE `organisation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `organisation` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `organisation_address` WRITE;
-/*!40000 ALTER TABLE `organisation_address` DISABLE KEYS */;
-/*!40000 ALTER TABLE `organisation_address` ENABLE KEYS */;
 UNLOCK TABLES;
 
 LOCK TABLES `organisation_size` WRITE;
@@ -223,65 +58,10 @@ INSERT INTO `participant_status` VALUES (2,'ACCEPTED'),(1,'PENDING'),(3,'REJECTE
 /*!40000 ALTER TABLE `participant_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
-LOCK TABLES `partner_organisation` WRITE;
-/*!40000 ALTER TABLE `partner_organisation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `partner_organisation` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `post` WRITE;
-/*!40000 ALTER TABLE `post` DISABLE KEYS */;
-/*!40000 ALTER TABLE `post` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `post_attachment` WRITE;
-/*!40000 ALTER TABLE `post_attachment` DISABLE KEYS */;
-/*!40000 ALTER TABLE `post_attachment` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `process` WRITE;
-/*!40000 ALTER TABLE `process` DISABLE KEYS */;
-/*!40000 ALTER TABLE `process` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `process_outcome` WRITE;
-/*!40000 ALTER TABLE `process_outcome` DISABLE KEYS */;
-/*!40000 ALTER TABLE `process_outcome` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `process_role` WRITE;
-/*!40000 ALTER TABLE `process_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `process_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `profile` WRITE;
-/*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `profile` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `project` WRITE;
-/*!40000 ALTER TABLE `project` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `project_finance` WRITE;
-/*!40000 ALTER TABLE `project_finance` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project_finance` ENABLE KEYS */;
-UNLOCK TABLES;
-
 LOCK TABLES `project_role` WRITE;
 /*!40000 ALTER TABLE `project_role` DISABLE KEYS */;
 INSERT INTO `project_role` VALUES (3,'PROJECT_FINANCE_CONTACT'),(2,'PROJECT_MANAGER'),(1,'PROJECT_PARTNER');
 /*!40000 ALTER TABLE `project_role` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `project_user` WRITE;
-/*!40000 ALTER TABLE `project_user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project_user` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `question_status` WRITE;
-/*!40000 ALTER TABLE `question_status` DISABLE KEYS */;
-/*!40000 ALTER TABLE `question_status` ENABLE KEYS */;
 UNLOCK TABLES;
 
 LOCK TABLES `rejection_reason` WRITE;
@@ -295,36 +75,6 @@ LOCK TABLES `role` WRITE;
 INSERT INTO `role` VALUES (1,'leadapplicant','applicant/dashboard'),(2,'collaborator','applicant/dashboard'),(3,'assessor','assessment/assessor/dashboard'),(4,'applicant','applicant/dashboard'),(5,'comp_admin','management/dashboard'),(6,'system_registrar',''),(7,'system_maintainer',''),(8,'project_finance','management/dashboard'),(9,'finance_contact',NULL),(10,'partner',NULL),(11,'project_manager',NULL),(12,'competition_executive',NULL),(13,'innovation_lead','management/dashboard'),(14,'ifs_administrator','management/dashboard'),(15,'support','management/dashboard'),(16,'panel_assessor',NULL),(17,'interview_assessor',NULL),(18,'interview_lead_applicant',NULL);
 /*!40000 ALTER TABLE `role` ENABLE KEYS */;
 UNLOCK TABLES;
-
-LOCK TABLES `setup_status` WRITE;
-/*!40000 ALTER TABLE `setup_status` DISABLE KEYS */;
-/*!40000 ALTER TABLE `setup_status` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `spend_profile` WRITE;
-/*!40000 ALTER TABLE `spend_profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `spend_profile` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `thread` WRITE;
-/*!40000 ALTER TABLE `thread` DISABLE KEYS */;
-/*!40000 ALTER TABLE `thread` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `token` WRITE;
-/*!40000 ALTER TABLE `token` DISABLE KEYS */;
-/*!40000 ALTER TABLE `token` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `user_organisation` WRITE;
-/*!40000 ALTER TABLE `user_organisation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_organisation` ENABLE KEYS */;
-UNLOCK TABLES;
-
-LOCK TABLES `verification_condition` WRITE;
-/*!40000 ALTER TABLE `verification_condition` DISABLE KEYS */;
-/*!40000 ALTER TABLE `verification_condition` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -334,4 +84,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
