@@ -331,7 +331,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         userRepository.save(user);
 
-        ReviewInvite competitionAssessmentInvite = newReviewInvite()
+        ReviewInvite reviewInvite = newReviewInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -340,9 +340,9 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withName("tom baldwin")
                 .build();
 
-        reviewInviteRepository.save(competitionAssessmentInvite);
+        reviewInviteRepository.save(reviewInvite);
 
-        ReviewParticipant reviewParticipant = new ReviewParticipant(competitionAssessmentInvite);
+        ReviewParticipant reviewParticipant = new ReviewParticipant(reviewInvite);
         reviewParticipant.getInvite().open();
         reviewParticipant.acceptAndAssignUser(user);
 

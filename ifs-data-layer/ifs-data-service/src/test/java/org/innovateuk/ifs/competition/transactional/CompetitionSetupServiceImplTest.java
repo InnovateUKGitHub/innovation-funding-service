@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -133,11 +133,11 @@ public class CompetitionSetupServiceImplTest {
 
 		assertTrue(result.isSuccess());
 		verify(competitionParticipantRepository, never()).getByCompetitionIdAndUserIdAndRole(competitionId, existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
-		verify(competitionParticipantRepository, never()).delete(Mockito.any(CompetitionAssessmentParticipant.class));
+		verify(competitionParticipantRepository, never()).delete(Mockito.any(AssessmentParticipant.class));
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 
-		CompetitionAssessmentParticipant savedCompetitionParticipant = new CompetitionAssessmentParticipant();
+		AssessmentParticipant savedCompetitionParticipant = new AssessmentParticipant();
 		savedCompetitionParticipant.setProcess(competition);
 		savedCompetitionParticipant.setUser(leadTechnologist);
 		savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -155,7 +155,7 @@ public class CompetitionSetupServiceImplTest {
 		Long newLeadTechnologistId = 7L;
 		User leadTechnologist = UserBuilder.newUser().withId(newLeadTechnologistId).build();
 
-		CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
+		AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
 				.withLeadTechnologist(newLeadTechnologistId)
@@ -179,7 +179,7 @@ public class CompetitionSetupServiceImplTest {
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 
-		CompetitionAssessmentParticipant savedCompetitionParticipant = new CompetitionAssessmentParticipant();
+		AssessmentParticipant savedCompetitionParticipant = new AssessmentParticipant();
 		savedCompetitionParticipant.setProcess(competition);
 		savedCompetitionParticipant.setUser(leadTechnologist);
 		savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -196,7 +196,7 @@ public class CompetitionSetupServiceImplTest {
 		Long existingLeadTechnologistId = 5L;
 		Long newLeadTechnologistId = 7L;
 
-		CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
+		AssessmentParticipant competitionParticipant = newAssessmentParticipant().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
 				.withLeadTechnologist(newLeadTechnologistId)
@@ -205,7 +205,7 @@ public class CompetitionSetupServiceImplTest {
 				.withId(competitionId)
 				.withLeadTechnologist(UserBuilder.newUser().withId(newLeadTechnologistId).build())
 				.build();
-		CompetitionAssessmentParticipant newLeadTechCompetitionParticipant = newCompetitionAssessmentParticipant().withId(11L).build();
+		AssessmentParticipant newLeadTechCompetitionParticipant = newAssessmentParticipant().withId(11L).build();
 		when(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
 				existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipant);
 		when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
@@ -221,7 +221,7 @@ public class CompetitionSetupServiceImplTest {
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 		verify(competitionParticipantRepository).getByCompetitionIdAndUserIdAndRole(1L, newLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
-		verify(competitionParticipantRepository, never()).save(Mockito.any(CompetitionAssessmentParticipant.class));
+		verify(competitionParticipantRepository, never()).save(Mockito.any(AssessmentParticipant.class));
 	}
 
 	@Test
