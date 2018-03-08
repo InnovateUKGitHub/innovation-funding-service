@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionPopulator;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -37,6 +38,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
@@ -79,7 +81,7 @@ public class AssessmentDetailedFinancesModelPopulator {
     private ApplicantRestService applicantRestService;
 
     @Autowired
-    ProjectCostsSectionPopulator projectCostsSectionPopulator;
+    YourProjectCostsSectionPopulator projectCostsSectionPopulator;
 
     public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, UserResource loggedInUser, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
@@ -87,7 +89,7 @@ public class AssessmentDetailedFinancesModelPopulator {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         String orgView = organisation.getOrganisationType().equals(OrganisationTypeEnum.BUSINESS.getId()) ? "finance" :"academic-finance";
 
-        addApplicationAndOrganisationDetails(model, assessment.getApplication(), competition.getAssessorFinanceView());
+        addApplicationAndOrganisationDetails(model, assessment.getApplication(), organisationId, competition.getAssessorFinanceView());
         addFinanceDetails(model, competition.getId(), assessment.getApplication());
         addDetailedFinances(model, competition.getId(), assessment.getApplication(), organisation.getId(), loggedInUser);
 
@@ -117,21 +119,25 @@ public class AssessmentDetailedFinancesModelPopulator {
                 .findFirst();
     }
 
-    private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+    private void addApplicationAndOrganisationDetails(Model model, long applicationId, long organisationId, AssessorFinanceView financeVew) {
+        List<ProcessRoleResource> userApplicationRoles = processRoleService
+                .findProcessRolesByApplicationId(applicationId)
+                .stream()
+                .filter(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
+                .collect(toList());
         addOrganisationDetails(model, userApplicationRoles, financeVew);
     }
 
-    private void addOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles, AssessorFinanceView financeVew) {
+    private void addOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles, AssessorFinanceView financeView) {
         model.addAttribute("academicOrganisations", getAcademicOrganisations(getApplicationOrganisations(userApplicationRoles)));
-        model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
+        model.addAttribute("applicationOrganisation", getApplicationOrganisations(userApplicationRoles).first());
 
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         leadOrganisation.ifPresent(org ->
                 model.addAttribute("leadOrganisation", org)
         );
 
-        model.addAttribute("showAssessorDetailedFinanceLink", financeVew.equals(DETAILED) ? true : false);
+        model.addAttribute("showAssessorDetailedFinanceLink", financeView.equals(DETAILED) ? true : false);
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {

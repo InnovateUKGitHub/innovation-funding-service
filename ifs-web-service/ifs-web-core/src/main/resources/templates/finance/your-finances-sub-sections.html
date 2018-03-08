@@ -211,7 +211,7 @@
     </th:block>
 
     <th:block th:fragment="assessment_finances(model)">
-        <th:block th:insert="'finance/'+${model.financeView} :: assessment_detailed_finance(${model})" />
+        <th:block th:insert="'finance/'+${detailedCostings.financeView} :: assessment_detailed_finance(${model})" />
     </th:block>
 
     <th:block th:fragment="funding_finances(model)">

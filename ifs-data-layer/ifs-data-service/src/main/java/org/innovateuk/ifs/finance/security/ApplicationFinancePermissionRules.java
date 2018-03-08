@@ -78,11 +78,15 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "READ_FILE_ENTRY", description = "An internal user can get file entry resource for finance section of a collaborator")
+    public boolean assessorUserCanGetFileEntryResourceForFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isAssessor(applicationFinanceResource.getApplication(), user);
+    }
+
     @PermissionRule(value = "CREATE_FILE_ENTRY", description = "A consortium member can create a file entry for the finance section for their organisation")
     public boolean consortiumMemberCanCreateAFileForTheApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplicationAndOrganisation(applicationFinanceResource, user);
     }
-
 
     @PermissionRule(value = "UPDATE_FILE_ENTRY", description = "A consortium member can update a file entry for the finance section for their organisation")
     public boolean consortiumMemberCanUpdateAFileForTheApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
