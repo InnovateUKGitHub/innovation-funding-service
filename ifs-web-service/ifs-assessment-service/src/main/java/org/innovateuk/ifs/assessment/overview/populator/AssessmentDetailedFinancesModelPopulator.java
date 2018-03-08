@@ -85,23 +85,36 @@ public class AssessmentDetailedFinancesModelPopulator {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        String orgView = organisation.getOrganisationType().equals(OrganisationTypeEnum.BUSINESS.getId()) ? "finance" :"academic-finance";
 
         addApplicationAndOrganisationDetails(model, assessment.getApplication(), competition.getAssessorFinanceView());
         addFinanceDetails(model, competition.getId(), assessment.getApplication());
         addDetailedFinances(model, competition.getId(), assessment.getApplication(), organisation.getId(), loggedInUser);
 
         return new AssessmentDetailedFinancesViewModel(assessmentId, assessment.getApplication(),
-                assessment.getApplicationName(), "finance");
+                assessment.getApplicationName(), orgView);
     }
 
     private void addDetailedFinances(Model model, long competitionId, long applicationId, long organisationId, UserResource loggedInUser) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
-        ApplicantSectionResource applicantSection = applicantRestService.getSection(46L, applicationId, section.getId());
+
+        ProcessRoleResource applicantProcessRole = getApplicantProcessRole(applicationId, organisationId).get();
+        ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantProcessRole.getUser(), applicationId, section.getId());
+        ApplicationForm form = new ApplicationForm();
 
         AbstractSectionViewModel sectionViewModel = projectCostsSectionPopulator.populate(
-                applicantSection, new ApplicationForm(), model, null, true, Optional.of(organisationId), true);
+                applicantSection, form, model, null, true, Optional.of(organisationId), true);
         model.addAttribute("detailedCostings", sectionViewModel);
+        model.addAttribute("form", form);
+        model.addAttribute("readonly", true);
+    }
+
+    private Optional<ProcessRoleResource> getApplicantProcessRole(long applicationId, long organisationId) {
+        return processRoleService.getByApplicationId(applicationId)
+                .stream()
+                .filter(processRole -> processRole.getOrganisationId().equals(organisationId))
+                .findFirst();
     }
 
     private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {

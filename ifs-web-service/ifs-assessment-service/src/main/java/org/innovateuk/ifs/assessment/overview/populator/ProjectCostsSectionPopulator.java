@@ -141,13 +141,13 @@ public class ProjectCostsSectionPopulator extends AbstractSectionPopulator<Abstr
         return SectionType.PROJECT_COST_FINANCES;
     }
 
-    private long getOrganisationType(long organisationId) {
+    private Long getOrganisationType(long organisationId) {
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
         return organisation.getOrganisationType();
     }
 
     private boolean isResearchOrganisation(Long organisationId) {
-        return organisationId.equals((OrganisationTypeEnum.RESEARCH.getId()));
+        return getOrganisationType(organisationId).equals((OrganisationTypeEnum.RESEARCH.getId()));
     }
 }
 
