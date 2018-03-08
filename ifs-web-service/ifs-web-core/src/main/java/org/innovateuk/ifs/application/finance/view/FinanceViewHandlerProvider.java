@@ -14,34 +14,34 @@ import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
  */
 @Component
 @Configuration
-public class FinanceViewHandler implements FinanceHandler {
+public class FinanceViewHandlerProvider implements FinanceHandler {
 
-    public FinanceFormHandler getFinanceFormHandler(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceFormHandler getFinanceFormHandler(long organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return getJESFinanceFormHandler();
         } else {
             return getDefaultFinanceFormHandler();
         }
     }
 
-    public FinanceFormHandler getProjectFinanceFormHandler(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceFormHandler getProjectFinanceFormHandler(long organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return getJESFinanceFormHandler();
         } else {
             return getProjectFinanceFormHandler();
         }
     }
 
-    public FinanceModelManager getFinanceModelManager(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceModelManager getFinanceModelManager(long organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return getJESFinanceModelManager();
         } else {
             return getDefaultFinanceModelManager();
         }
     }
 
-    public FinanceModelManager getProjectFinanceModelManager(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceModelManager getProjectFinanceModelManager(long organisationType) {
+        if(RESEARCH.getId() == organisationType) {
             return getJESProjectFinanceModelManager();
         } else {
             return getDefaultProjectFinanceModelManager();

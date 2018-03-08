@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.LongNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.finance.view.FinanceViewHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -68,7 +68,7 @@ public class ApplicationAjaxController {
     private OrganisationService organisationService;
 
     @Autowired
-    private FinanceViewHandler financeViewHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
     private FormInputResponseRestService formInputResponseRestService;
@@ -137,10 +137,10 @@ public class ApplicationAjaxController {
             List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
             return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            financeViewHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
+            financeViewHandlerProvider.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("formInput[cost-") || fieldName.startsWith("cost-")) {
-            ValidationMessages validationMessages = financeViewHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
+            ValidationMessages validationMessages = financeViewHandlerProvider.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
                 LOG.debug("no errors");
@@ -291,7 +291,7 @@ public class ApplicationAjaxController {
         model.addAttribute("markedAsComplete", markedAsComplete);
         Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
 
-        financeViewHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
+        financeViewHandlerProvider.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
@@ -309,6 +309,6 @@ public class ApplicationAjaxController {
 
     private FinanceRowItem addCost(Long applicationId, Long questionId, UserResource user) {
         Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        return financeViewHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
+        return financeViewHandlerProvider.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
     }
 }
