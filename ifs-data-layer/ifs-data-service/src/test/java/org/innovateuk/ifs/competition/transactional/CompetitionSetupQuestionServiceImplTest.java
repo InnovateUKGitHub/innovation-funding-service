@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -85,6 +86,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
                         newFormInput()
                                 .withType(FormInputType.FILEUPLOAD)
                                 .withScope(FormInputScope.APPLICATION)
+                                .withAllowedFileTypes("PDF,Spreadsheet")
                                 .withGuidanceAnswer(fileUploadGuidance)
                                 .build(),
                         newFormInput()
@@ -155,6 +157,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(resource.getType(), CompetitionSetupQuestionType.SCOPE);
         assertEquals(resource.getShortTitleEditable(), false);
         assertEquals(resource.getAppendixGuidance(), fileUploadGuidance);
+        assertEquals(resource.getAllowedFileTypesEnum(), new LinkedHashSet<>(asList(FileTypeCategory.PDF, FileTypeCategory.SPREADSHEET)));
 
         verify(guidanceRowMapper).mapToResource(guidanceRows);
     }

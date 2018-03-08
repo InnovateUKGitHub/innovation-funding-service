@@ -32,15 +32,11 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
     @Mappings({
             @Mapping(target = "responses", ignore = true),
             @Mapping(target = "guidanceRows", ignore = true),
-            @Mapping(target = "active", ignore = true),
-            @Mapping(target = "allowedFileTypes", expression = "java(mapToFileTypesString(resource))")
+            @Mapping(target = "active", ignore = true)
     })
     @Override
     public abstract FormInput mapToDomain(FormInputResource resource);
 
-    @Mappings({
-            @Mapping(target = "allowedFileTypes", expression = "java(mapToFileTypeEnums(domain))")
-    })
     @Override
     public abstract FormInputResource mapToResource(FormInput domain);
 
@@ -52,21 +48,21 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
         return object.getId();
     }
 
-    public Set<FileTypeCategory> mapToFileTypeEnums(FormInput formInput) {
-        if (formInput.getAllowedFileTypes() == null) {
+    public Set<FileTypeCategory> mapToFileTypeEnums(String allowedFileTypes) {
+        if (allowedFileTypes == null) {
             return emptySet();
         }
 
-        return simpleMapSet(formInput.getAllowedFileTypes().split(","), FileTypeCategory::fromDisplayName);
+        return simpleMapSet(allowedFileTypes.split(","), FileTypeCategory::fromDisplayName);
     }
 
-    public String mapToFileTypesString(FormInputResource formInputResource) {
-        if (formInputResource.getAllowedFileTypes() == null) {
+    public String mapToFileTypesString(Set<FileTypeCategory> allowedFileTypes) {
+        if (allowedFileTypes == null) {
             return null;
         }
 
         return String.join(",",
-                simpleMap(formInputResource.getAllowedFileTypes(),
+                simpleMap(allowedFileTypes,
                         FileTypeCategory::getDisplayName));
     }
 }
