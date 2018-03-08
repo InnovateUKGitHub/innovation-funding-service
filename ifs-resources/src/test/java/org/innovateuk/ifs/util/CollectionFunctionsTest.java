@@ -349,6 +349,24 @@ public class CollectionFunctionsTest {
     }
 
     @Test
+    public void test_simpleToLinkedHashSet() {
+        assertEquals(new LinkedHashSet<>(asList("123 string", "456 string")),
+                CollectionFunctions.simpleToLinkedHashSet(asList(123, 456), i -> i + " string"));
+    }
+
+    @Test
+    public void test_simpleToLinkedHashSet_nullList() {
+        assertEquals(new LinkedHashSet<String>(),
+                CollectionFunctions.simpleToLinkedHashSet(null, i -> i + " string"));
+    }
+
+    @Test
+    public void test_simpleToLinkedHashSet_nullElements() {
+        assertEquals(new LinkedHashSet<>(asList("123 string", "null string")),
+                CollectionFunctions.simpleToLinkedHashSet(asList(123, null), i -> i + " string"));
+    }
+
+    @Test
     public void test_simpleFilter() {
         assertEquals(asList(789), CollectionFunctions.simpleFilter(asList(123, 456, 789), i -> i > 456));
     }
