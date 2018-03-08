@@ -16,7 +16,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
-import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -97,7 +97,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     private ProjectWorkflowHandler projectWorkflowHandler;
 
     @Autowired
-    private InviteProjectRepository inviteProjectRepository;
+    private ProjectInviteRepository projectInviteRepository;
 
     @Autowired
     private InviteProjectMapper inviteProjectMapper;
@@ -363,7 +363,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
+        projectInviteRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return true;
     }
 }

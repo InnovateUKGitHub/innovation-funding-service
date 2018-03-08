@@ -29,11 +29,20 @@ done
 
 new_version="${new_version_or_current}_"
 
-reset_db () {
+run_flyway_clean () {
 
     cd ${project_root_dir}
 
-    ./gradlew flywayClean
+    ./gradlew -PopenshiftEnv=unused -Pcloud=automated -Pifs.company-house.key=unused ifs-data-layer:ifs-data-service:flywayClean
+
+    cd -
+}
+
+run_flyway_migrate() {
+
+    cd ${project_root_dir}
+
+    ./gradlew -PopenshiftEnv=unused -Pcloud=automated -Pifs.company-house.key=unused ifs-data-layer:ifs-data-service:flywayMigrate
 
     cd -
 }
@@ -43,15 +52,15 @@ do_baseline () {
     generate_test_class="ifs-data-layer/ifs-data-service/src/test/java/org/innovateuk/ifs/testdata/GenerateTestData.java"
 
     # clean database
-    reset_db
+    run_flyway_clean
 
     # navigate to project root
     cd ${project_root_dir}
 
-    ./gradlew clean processResources processTestResources
+    ./gradlew -PopenshiftEnv=unused -Pcloud=automated -Pifs.company-house.key=unused clean processResources processTestResources
 
     # run generator test class
-    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
+    IFS_GENERATE_TEST_DATA_EXECUTION=SINGLE_THREADED IFS_GENERATE_TEST_DATA_COMPETITION_FILTER=ALL_COMPETITIONS ./gradlew -PopenshiftEnv=unused -Pcloud=automated -Pifs.company-house.key=unused -PtestGroups=generatetestdata :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
     # extract the current version of the webtest data
     current_version="`get_current_patch_level`_"
@@ -68,7 +77,9 @@ do_baseline () {
 
     cd ${project_root_dir}
 
-    reset_db
+    # check that the new sequence of patches works
+    run_flyway_clean
+    run_flyway_migrate
 
     cat << EOF
 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

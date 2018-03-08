@@ -184,7 +184,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void applicationReadyForSubmit() throws Exception {
         Long applicationId = 1L;
 
-        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationProgressServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(true);
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
                 .andExpect(status().isOk())
@@ -252,7 +252,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         long applicationId = 1L;
         ApplicationIneligibleSendResource applicationIneligibleSendResource = applicationIneligibleSendResourceBuilder.build();
 
-        when(applicationServiceMock.informIneligible(applicationId, applicationIneligibleSendResource)).thenReturn(serviceSuccess());
+        when(applicationNotificationServiceMock.informIneligible(applicationId, applicationIneligibleSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
                 .contentType(APPLICATION_JSON)

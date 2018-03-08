@@ -150,7 +150,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(roleRepositoryMock.findOneByName(adminRoleType.getName())).thenReturn(role);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
-        when(inviteRoleRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
+        when(roleInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
         assertTrue(result.isFailure());
@@ -178,7 +178,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
         when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
-        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         RoleResource roleResource = newRoleResource().withName("ifs_administrator").build();
         when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
@@ -189,13 +189,13 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
         expectedRoleInvite.setHash("1234");
-        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
 
-        verify(inviteRoleRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
+        verify(roleInviteRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
@@ -227,7 +227,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
         when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
-        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
         RoleResource roleResource = newRoleResource().withName("support").build();
@@ -238,7 +238,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
 
-        verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
+        verify(roleInviteRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
@@ -265,7 +265,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
         when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
-        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         RoleResource roleResource = newRoleResource().withName("wibble").build();
         when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
@@ -273,7 +273,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
 
-        verify(inviteRoleRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
+        verify(roleInviteRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
 
         List<RoleInvite> captured = roleInviteArgumentCaptor.getAllValues();
         assertEquals("Astle.Pimenta@innovateuk.gov.uk", captured.get(0).getEmail());
@@ -293,7 +293,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
         when(roleRepositoryMock.findOneByName(UserRoleType.IFS_ADMINISTRATOR.getName())).thenReturn(role);
         // hash is random, so capture RoleInvite value to verify other fields
-        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
 
         RoleResource roleResource = newRoleResource().withName("ifs_administrator").build();
         when(roleMapperMock.mapIdToResource(role.getId())).thenReturn(roleResource);
@@ -304,20 +304,20 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
         expectedRoleInvite.setHash("1234");
-        when(inviteRoleRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
+        when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
-        verify(inviteRoleRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
+        verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));
         verify(emailService, never()).sendEmail(any(), paramsArgumentCaptor.capture(), any());
     }
 
     @Test
     public void testGetInvite(){
         RoleInvite roleInvite = newRoleInvite().build();
-        when(inviteRoleRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
+        when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
         when(roleInviteMapperMock.mapToResource(roleInvite)).thenReturn(newRoleInviteResource().build());
         ServiceResult<RoleInviteResource> result = service.getInvite("SomeInviteHash");
         assertTrue(result.isSuccess());
@@ -326,7 +326,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void testCheckExistingUser(){
         RoleInvite roleInvite = newRoleInvite().build();
-        when(inviteRoleRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
+        when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
         when(userRepositoryMock.findByEmail(roleInvite.getEmail())).thenReturn(Optional.of(newUser().build()));
         ServiceResult<Boolean> result = service.checkExistingUser("SomeInviteHash");
         assertTrue(result.isSuccess());
@@ -351,7 +351,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         roleInviteResource.setEmail("Arden.Pimenta@innovateuk.test");
         roleInviteResource.setRoleName("ifs_administrator");
 
-        when(inviteRoleRepositoryMock.findByStatus(SENT, pageable)).thenReturn(page);
+        when(roleInviteRepositoryMock.findByStatus(SENT, pageable)).thenReturn(page);
         when(roleInviteMapperMock.mapToResource(Mockito.any(RoleInvite.class))).thenReturn(roleInviteResource);
 
         ServiceResult<RoleInvitePageResource> result = service.findPendingInternalUserInvites(pageable);
@@ -400,7 +400,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         roleInviteResource2.setEmail("Arden.Pimenta@innovateuk.test");
         roleInviteResource2.setRoleName("ifs_administrator");
 
-        when(inviteRoleRepositoryMock.findByStatus(SENT, pageable)).thenReturn(page);
+        when(roleInviteRepositoryMock.findByStatus(SENT, pageable)).thenReturn(page);
         when(roleInviteMapperMock.mapToResource(roleInvite1)).thenReturn(roleInviteResource1);
         when(roleInviteMapperMock.mapToResource(roleInvite2)).thenReturn(roleInviteResource2);
 
@@ -430,9 +430,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
         verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
     }
 
     @Test
@@ -450,9 +450,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
         verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
     }
 
     @Test
@@ -471,9 +471,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
         verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
     }
 
     @Test
@@ -491,9 +491,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
         verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
     }
 
     @Test
@@ -507,7 +507,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
 
         when(applicationInviteRepositoryMock.findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
-        when(inviteProjectRepositoryMock.findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+        when(projectInviteRepositoryMock.findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
 
         ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
 
@@ -517,9 +517,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
         verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
     }
 
@@ -534,7 +534,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
 
         when(applicationInviteRepositoryMock.findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
-        when(inviteProjectRepositoryMock.findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+        when(projectInviteRepositoryMock.findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
 
         ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
 
@@ -544,9 +544,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(applicationInviteRepositoryMock).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
         verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
     }
 
@@ -561,7 +561,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
 
         when(applicationInviteRepositoryMock.findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
-        when(inviteProjectRepositoryMock.findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+        when(projectInviteRepositoryMock.findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
 
         ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
 
@@ -571,9 +571,9 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
         verify(applicationInviteRepositoryMock).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(projectInviteRepositoryMock).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
     }
 
@@ -589,7 +589,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
                 withHash("hashhashhash").
                 build();
 
-        when(inviteRoleRepositoryMock.findOne(123L)).thenReturn(existingInvite);
+        when(roleInviteRepositoryMock.findOne(123L)).thenReturn(existingInvite);
 
         RoleResource roleResource = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build();
         when(roleMapperMock.mapIdToResource(targetRole.getId())).thenReturn(roleResource);
@@ -610,7 +610,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
         // in this case to explicitly save, but is reused code with creating invites also)
         verify(emailService).sendEmail(singletonList(notificationTarget), emailTemplateArgs, INVITE_INTERNAL_USER);
-        verify(inviteRoleRepositoryMock).save(existingInvite);
+        verify(roleInviteRepositoryMock).save(existingInvite);
 
         // and verify that the sent on field has been updated so that this link will not expire soon
         assertThat(existingInvite.getSentBy(), equalTo(loggedInUser));
@@ -622,7 +622,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void resendInternalUserInviteButInviteNotFound() {
 
-        when(inviteRoleRepositoryMock.findOne(123L)).thenReturn(null);
+        when(roleInviteRepositoryMock.findOne(123L)).thenReturn(null);
 
         ServiceResult<Void> result = service.resendInternalUserInvite(123L);
 
@@ -631,8 +631,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         // assert the email was sent with the correct hash, and that the invite was saved (not strictly necessary
         // in this case to explicitly save, but is reused code with creating invites also)
-        verify(inviteRoleRepositoryMock).findOne(123L);
-        verifyNoMoreInteractions(inviteRoleRepositoryMock, roleMapperMock, emailService);
+        verify(roleInviteRepositoryMock).findOne(123L);
+        verifyNoMoreInteractions(roleInviteRepositoryMock, roleMapperMock, emailService);
     }
 
     private List<ApplicationInvite> setUpMockingCreateApplicationInvites() {
