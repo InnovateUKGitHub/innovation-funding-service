@@ -85,7 +85,7 @@ ${project_duration}    36
 *** Test Cases ***
 Project Finance completes previous sections of the project
     [Documentation]  IFS-2221
-    [Tags]
+    [Tags]  HappyPath
     #Added a check in this keyword to ensure bank details are required before generating a spend profile.
     #This needs to be kept as the FIRST test case in this suite.
     all previous sections of the project are completed

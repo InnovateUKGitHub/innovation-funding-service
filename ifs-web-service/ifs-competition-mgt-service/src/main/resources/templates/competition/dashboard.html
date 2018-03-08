@@ -4,13 +4,18 @@
 <div th:fragment="comp-dashboard-header(searchQuery)">
     <div class="grid-row">
         <div class="column-half">
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All competitions',size='heading-large'" />
+            <th:block th:insert="fragments/layout :: page-title"
+                      th:with="pageTitle=${setPageTitle == null ? 'All competitions' : setPageTitle},size='heading-large'" />
         </div>
         <div class="column-half alignright">
             <div class="form-search" th:if="${showSearch == null || showSearch == true}">
                 <label class="visuallyhidden" for="searchQuery">Search for:</label>
-                <input type="search" th:value="${searchQuery}" name="searchQuery" id="searchQuery" class="search-query"
-                       placeholder="Search competitions"/>
+                <input th:type="${searchType == 'applications' ? 'number' : 'text'}"
+                       th:value="${searchQuery}"
+                       th:name="${searchType == 'applications' ? 'searchString' : 'searchQuery'}"
+                       id="searchQuery"
+                       class="search-query"
+                       th:placeholder="${searchType == 'applications' ? 'Search applications' : 'Search competitions'}"/>
                 <input type="submit" id="searchsubmit" value="Search" class="btn"/>
             </div>
         </div>

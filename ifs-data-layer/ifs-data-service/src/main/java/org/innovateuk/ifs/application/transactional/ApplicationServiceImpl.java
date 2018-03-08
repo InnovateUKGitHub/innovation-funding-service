@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -21,6 +22,8 @@ import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -229,6 +232,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             });
             return simpleMap(applications, applicationMapper::mapToResource);
         });
+    }
+
+    @Override
+    public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
+
+        Page<Application> pagedResult = applicationRepository.searchByIdLike(searchString, pageable);
+        List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
