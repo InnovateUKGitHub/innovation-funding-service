@@ -14,8 +14,8 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
@@ -61,7 +61,7 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
     private ServiceResult<Void> updateAllowedFileTypes(Optional<Long> questionId, String value) {
         return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
             String[] strings = StringUtils.commaDelimitedListToStringArray(value);
-            LinkedHashSet<FileTypeCategory> fileTypeCategories = simpleToLinkedHashSet(strings, FileTypeCategory::valueOf);
+            Set<FileTypeCategory> fileTypeCategories = simpleToLinkedHashSet(strings, FileTypeCategory::valueOf);
 
             question.setAllowedFileTypes(fileTypeCategories);
 
