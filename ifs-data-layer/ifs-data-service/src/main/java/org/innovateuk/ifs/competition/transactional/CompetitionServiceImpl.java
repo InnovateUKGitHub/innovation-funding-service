@@ -16,7 +16,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -120,7 +120,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        List<CompetitionAssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
 
         List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
 
@@ -137,7 +137,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 find(userRepository.findOne(innovationLeadUserId),
                      notFoundError(User.class, innovationLeadUserId))
                 .andOnSuccess(innovationLead -> {
-                    CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
+                    AssessmentParticipant competitionParticipant = new AssessmentParticipant();
                     competitionParticipant.setProcess(competition);
                     competitionParticipant.setUser(innovationLead);
                     competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);

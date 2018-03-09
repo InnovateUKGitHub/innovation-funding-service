@@ -3,7 +3,7 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.domain.Project;
@@ -90,7 +90,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId){
-        List<CompetitionAssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 }
