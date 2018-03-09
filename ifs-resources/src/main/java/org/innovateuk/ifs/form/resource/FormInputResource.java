@@ -14,9 +14,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.emptySet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 
 public class FormInputResource {
     private Long id;
@@ -186,7 +185,7 @@ public class FormInputResource {
                 throws IOException, JsonProcessingException
         {
             if (p.isExpectedStartArrayToken()) {
-                Set<FileTypeCategory> result = newHashSet();
+                Set<FileTypeCategory> result = new LinkedHashSet<>();
 
                 while (p.nextToken() != JsonToken.END_ARRAY) {
                     result.add(FileTypeCategory.valueOf(p.getValueAsString()));
@@ -202,7 +201,7 @@ public class FormInputResource {
                     return emptySet();
                 }
 
-                return simpleMapSet(valueAsString.split(","), FileTypeCategory::valueOf);
+                return simpleToLinkedHashSet(valueAsString.split(","), FileTypeCategory::valueOf);
             }
 
             throw ctxt.wrongTokenException(p, p.getCurrentToken(), "Token should be an Array or String.");

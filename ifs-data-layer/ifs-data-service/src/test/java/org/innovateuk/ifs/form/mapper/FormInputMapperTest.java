@@ -75,8 +75,6 @@ public class FormInputMapperTest {
                 .build();
         when(formInputRepositoryMock.findOne(any())).thenReturn(formInput);
 
-        System.out.println("what");
-
         FormInputResource formInputResource = newFormInputResource()
                 .withAllowedFileTypes(asList(FileTypeCategory.SPREADSHEET, FileTypeCategory.PDF))
                 .build();
