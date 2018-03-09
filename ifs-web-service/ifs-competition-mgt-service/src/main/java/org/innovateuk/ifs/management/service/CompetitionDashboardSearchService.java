@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -22,6 +23,8 @@ public interface CompetitionDashboardSearchService {
     Map<CompetitionStatus, List<CompetitionSearchResultItem>> getNonIfsCompetitions();
 
     CompetitionSearchResult searchCompetitions(String searchQuery, int page);
+
+    ApplicationPageResource wildcardSearchByApplicationId(String searchString, int pageNumber, int pageSize);
 
     CompetitionCountResource getCompetitionCounts();
 
