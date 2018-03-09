@@ -1,1 +1,0 @@
-ALTER TABLE form_input CHANGE guidance_question guidance_title LONGTEXT

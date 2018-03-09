@@ -135,6 +135,8 @@ function injectDBVariables() {
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
     sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<FLYWAY-BASELINE-VERSION>>#${FLYWAY_BASELINE_VERSION}#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<FLYWAY-BASELINE-DESCRIPTION>>#${FLYWAY_BASELINE_DESCRIPTION}#g" $(getBuildLocation)/db-reset/*.yml
 
     [ -z "$SYSTEM_USER_UUID" ] && { echo "Set SYSTEM_USER_UUID environment variable"; exit -1; }
     sed -i.bak "s#<<SYSTEM-USER-UUID>>#${SYSTEM_USER_UUID}#g" $(getBuildLocation)/db-reset/*.yml
@@ -143,13 +145,13 @@ function injectFlywayVariables() {
 function injectLDAPVariables() {
     if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
     LDAP_PORT=${LDAP_PORT:-8389}
-    ONLY_SYNC_LDAP=${ONLY_SYNC_LDAP:false}
+    DB_RESET_TASK=${DB_RESET_TASK:false}
     sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<ONLY-SYNC-LDAP>>#$ONLY_SYNC_LDAP#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-RESET-TASK>>#$DB_RESET_TASK#g" $(getBuildLocation)/db-reset/*.yml
 }
 
 function getEnvVariableValue() {

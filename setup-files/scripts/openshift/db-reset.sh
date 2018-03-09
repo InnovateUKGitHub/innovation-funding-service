@@ -52,7 +52,7 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export LDAP_DOMAIN="dc=nodomain"
     export LDAP_SCHEME="ldaps"
 
-    export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
+    export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
     export SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 fi
 
@@ -66,7 +66,7 @@ pushDBResetImages
 dbReset
 
 echo Waiting for container to start
-until [ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' ]
+until [[ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ]] && [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' || "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Succeeded' ]]
 do
   echo -n .
   sleep 5
