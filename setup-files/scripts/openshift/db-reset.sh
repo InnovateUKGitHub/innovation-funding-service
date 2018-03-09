@@ -28,6 +28,7 @@ echo "Resetting the $PROJECT Openshift project"
 function createDBReset(){
     # Create dbreset
     oc create -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+    sleep 20
 }
 
 function waitForDBResetToStart() {
@@ -61,7 +62,7 @@ function tidyUp() {
 
 function dbReset() {
     createDBReset
-    #clearFS
+    clearFS
     waitForDBResetToStart
     waitForTermAndCheckStatus
     tidyUp
