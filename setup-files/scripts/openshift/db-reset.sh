@@ -27,8 +27,9 @@ echo "Resetting the $PROJECT Openshift project"
 
 function createDBReset(){
     # Create dbreset
-    return oc create -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+    oc create -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
 }
+
 function waitForDBResetToStart() {
     echo Waiting for container to start
     until [[ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ]] && [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' || "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Succeeded' ]]
@@ -51,6 +52,7 @@ function waitForTermAndCheckStatus {
 
     if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
 }
+
 function tidyUp() {
     # tidy up the pod afterwards
     echo Deleting dbreset
@@ -59,15 +61,11 @@ function tidyUp() {
 }
 
 function dbReset() {
-    if [[ createDBReset ]]; then
-        waitForDBResetToStart
-        clearFS
-        waitForTermAndCheckStatus
-        tidyUp
-    else
-        echo Coud not create dbreset.  Pod may already exist.
-        exit -1 # Exit with error if not successful
-    fi
+    createDBReset
+    waitForDBResetToStart
+    clearFS
+    waitForTermAndCheckStatus
+    tidyUp
 }
 
 # Entry point
