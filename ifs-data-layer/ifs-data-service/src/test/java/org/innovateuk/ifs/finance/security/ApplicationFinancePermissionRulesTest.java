@@ -47,8 +47,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
         {
             // Set up users on an organisation and application
-            final long applicationId = 1l;
-            final long organisationId = 2l;
+            final long applicationId = 1L;
+            final long organisationId = 2L;
             organisation = newOrganisationResource().with(id(organisationId)).build();
             applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(applicationId).build();
             leadApplicant = newUserResource().build();
@@ -66,13 +66,14 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), applicationId, LEADAPPLICANT.getName())).thenReturn(true);
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationId, COLLABORATOR.getName())).thenReturn(true);
+            when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(assessor.getId(), applicationId, ASSESSOR.getName())).thenReturn(true);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
 
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
-            final long otherApplicationId = 3l;
-            final long otherOrganisationId = 4l;
+            final long otherApplicationId = 3L;
+            final long otherOrganisationId = 4L;
             otherOrganisation = newOrganisationResource().with(id(otherOrganisationId)).build();
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
             otherLeadApplicant = newUserResource().build();
