@@ -63,7 +63,7 @@ public class CsvUtils {
     }
 
     public static List<CompetitionLine> readCompetitions() {
-        return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
+        return simpleMapWithIndex(readCsvLines("competitions"), CompetitionLine::new);
     }
 
     public static List<CompetitionFunderLine> readCompetitionFunders() {
@@ -403,6 +403,7 @@ public class CsvUtils {
 
     public static class CompetitionLine {
 
+        public int lineNumber;
         public String name;
         public String type;
         public List<String> innovationAreas;
@@ -438,8 +439,9 @@ public class CsvUtils {
         public boolean nonIfs;
         public String nonIfsUrl;
 
-        private CompetitionLine(List<String> line) {
+        private CompetitionLine(List<String> line, int lineNumber) {
 
+            this.lineNumber = lineNumber;
             int i = 0;
             name = nullable(line.get(i++));
             type = nullable(line.get(i++));

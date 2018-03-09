@@ -5,7 +5,6 @@ import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
@@ -298,14 +297,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
-
-        testService.doWithinTransaction(() -> {
-
-            List<Competition> competitions = competitionRepository.
-                    findAll();
-
-            competitions.forEach(c -> System.out.println(c.getName() + " - " + c.getCompetitionStatus()));
-        });
     }
 
     private void moveCompetitionsIntoFinalState(List<CompetitionData> competitions) {

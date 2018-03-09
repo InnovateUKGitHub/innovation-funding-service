@@ -10,6 +10,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -146,32 +147,33 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     }
 
     private CompetitionDataBuilder getCompetitionWithMilestones(CsvUtils.CompetitionLine line, CompetitionDataBuilder competitionBeforeMilestones) {
+
         switch (line.competitionStatus) {
 
             case OPEN: return line.nonIfs ?
-                    withOpenStatusNonIfs(competitionBeforeMilestones) :
-                    withOpenStatus(competitionBeforeMilestones);
+                    withOpenStatusNonIfs(competitionBeforeMilestones, line.lineNumber) :
+                    withOpenStatus(competitionBeforeMilestones, line.lineNumber);
 
-            case ASSESSOR_FEEDBACK: return withAssessorFeedbackStatus(competitionBeforeMilestones);
-            case CLOSED: return withClosedStatus(competitionBeforeMilestones);
-            case COMPETITION_SETUP: return withCompetitionSetupStatus(competitionBeforeMilestones);
-            case FUNDERS_PANEL: return withFundersPanelStatus(competitionBeforeMilestones);
-            case IN_ASSESSMENT: return withInAssessmentStatus(competitionBeforeMilestones);
-            case PROJECT_SETUP: return withProjectSetupStatus(competitionBeforeMilestones);
+            case ASSESSOR_FEEDBACK: return withAssessorFeedbackStatus(competitionBeforeMilestones, line.lineNumber);
+            case CLOSED: return withClosedStatus(competitionBeforeMilestones, line.lineNumber);
+            case COMPETITION_SETUP: return withCompetitionSetupStatus(competitionBeforeMilestones, line.lineNumber);
+            case FUNDERS_PANEL: return withFundersPanelStatus(competitionBeforeMilestones, line.lineNumber);
+            case IN_ASSESSMENT: return withInAssessmentStatus(competitionBeforeMilestones, line.lineNumber);
+            case PROJECT_SETUP: return withProjectSetupStatus(competitionBeforeMilestones, line.lineNumber);
             case READY_TO_OPEN: return line.nonIfs ?
-                    withReadyToOpenStatusNonIfs(competitionBeforeMilestones) :
-                    withReadyToOpenStatus(competitionBeforeMilestones);
+                    withReadyToOpenStatusNonIfs(competitionBeforeMilestones, line.lineNumber) :
+                    withReadyToOpenStatus(competitionBeforeMilestones, line.lineNumber);
 
             default: throw new IllegalArgumentException("Unknown CompetitionStatus value of " + line.competitionStatus.name());
         }
     }
 
-    private CompetitionDataBuilder withReadyToOpenStatus(CompetitionDataBuilder competitionBeforeMilestones) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.OPEN_DATE).
+    private CompetitionDataBuilder withReadyToOpenStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.OPEN_DATE, lineNumber).
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withReadyToOpenStatusNonIfs(CompetitionDataBuilder competitionBeforeMilestones) {
+    private CompetitionDataBuilder withReadyToOpenStatusNonIfs(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
         return competitionBeforeMilestones.
                 withOpenDate(now().plusYears(2)).
                 withRegistrationDate(now().plusYears(2).plusDays(10)).
@@ -179,51 +181,51 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                 withFundersPanelEndDate(now().plusYears(2).plusDays(20));
     }
 
-    private CompetitionDataBuilder withProjectSetupStatus(CompetitionDataBuilder competitionBeforeMilestones) {
-        return withCalculatedMilestones(competitionBeforeMilestones, null).
+    private CompetitionDataBuilder withProjectSetupStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+        return withCalculatedMilestones(competitionBeforeMilestones, null, lineNumber).
                 withAssessorsNotifiedDate(now().minusDays(10)).
                 withAssessmentClosedDate(now().minusDays(5)).
                 withFeedbackReleasedDate(now().minusDays(2)).
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withInAssessmentStatus(CompetitionDataBuilder competitionBeforeMilestones) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSOR_ACCEPTS).
+    private CompetitionDataBuilder withInAssessmentStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSOR_ACCEPTS, lineNumber).
                 withAssessorsNotifiedDate(now().minusDays(2)).
 //                withMilestoneUpdate(now().plusYears(2), MilestoneType.ASSESSMENT_CLOSED).
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withFundersPanelStatus(CompetitionDataBuilder competitionBeforeMilestones) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSMENT_PANEL).//MilestoneType.ASSESSOR_DEADLINE).
+    private CompetitionDataBuilder withFundersPanelStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSMENT_PANEL, lineNumber).//MilestoneType.ASSESSOR_DEADLINE).
                 withAssessorsNotifiedDate(now().minusDays(10)).
                 withAssessmentClosedDate(now().minusDays(2)).
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withCompetitionSetupStatus(CompetitionDataBuilder competitionBeforeMilestones) {
+    private CompetitionDataBuilder withCompetitionSetupStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
         return competitionBeforeMilestones;
     }
 
-    private CompetitionDataBuilder withClosedStatus(CompetitionDataBuilder competitionBeforeMilestones) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSOR_ACCEPTS).
+    private CompetitionDataBuilder withClosedStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSOR_ACCEPTS, lineNumber).
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withAssessorFeedbackStatus(CompetitionDataBuilder competitionBeforeMilestones) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.RELEASE_FEEDBACK).
+    private CompetitionDataBuilder withAssessorFeedbackStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.RELEASE_FEEDBACK, lineNumber).
                 withAssessorsNotifiedDate(now().minusDays(10)).
                 withAssessmentClosedDate(now().minusDays(2)).
                 withAssessorEndDate(now().plusYears(2)).
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withOpenStatus(CompetitionDataBuilder competitionBeforeMilestones) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.SUBMISSION_DATE).
+    private CompetitionDataBuilder withOpenStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.SUBMISSION_DATE, lineNumber).
                 withSetupComplete();
     }
 
-    private CompetitionDataBuilder withOpenStatusNonIfs(CompetitionDataBuilder competitionBeforeMilestones) {
+    private CompetitionDataBuilder withOpenStatusNonIfs(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
         return competitionBeforeMilestones.
                 withOpenDate(now().minusDays(2)).
                 withRegistrationDate(now().plusYears(2)).
@@ -232,22 +234,26 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     }
 
     private CompetitionDataBuilder withCalculatedMilestones(CompetitionDataBuilder competitionBeforeMilestones,
-                                                            MilestoneType milestoneWhereDatesStartInTheFuture) {
+                                                            MilestoneType milestoneWhereDatesStartInTheFuture, int lineNumber) {
 
-        List<MilestoneType> milestoneTypes = simpleFilter(MilestoneType.values(), type -> type.isPresetDate() && !type.equals(MilestoneType.REGISTRATION_DATE));
+        ZonedDateTime earliestDate = now().minusYears(2).plusDays(lineNumber);
+        ZonedDateTime firstFutureDate = now().plusYears(2).plusDays(lineNumber);
+
+        List<MilestoneType> presetMilestoneTypes = simpleFilter(MilestoneType.values(), type ->
+                type.isPresetDate() && !type.equals(MilestoneType.REGISTRATION_DATE));
 
         CompetitionDataBuilder competitionBuilder = competitionBeforeMilestones;
 
         int indexWhereDatesStartInTheFuture = milestoneWhereDatesStartInTheFuture != null ?
-                milestoneTypes.indexOf(milestoneWhereDatesStartInTheFuture) :
-                milestoneTypes.size() - 1;
+                presetMilestoneTypes.indexOf(milestoneWhereDatesStartInTheFuture) :
+                presetMilestoneTypes.size() - 1;
 
         for (int i = 0; i < indexWhereDatesStartInTheFuture; i++) {
-            competitionBuilder = competitionBuilder.withMilestoneUpdate(now().minusYears(2).plusDays(i * 10), milestoneTypes.get(i));
+            competitionBuilder = competitionBuilder.withMilestoneUpdate(earliestDate.plusDays(i * 10), presetMilestoneTypes.get(i));
         }
 
-        for (int i = indexWhereDatesStartInTheFuture; i < milestoneTypes.size(); i++) {
-            competitionBuilder = competitionBuilder.withMilestoneUpdate(now().plusYears(2).plusDays(i * 10), milestoneTypes.get(i));
+        for (int i = indexWhereDatesStartInTheFuture; i < presetMilestoneTypes.size(); i++) {
+            competitionBuilder = competitionBuilder.withMilestoneUpdate(firstFutureDate.plusDays(i * 10), presetMilestoneTypes.get(i));
         }
 
         return competitionBuilder;
