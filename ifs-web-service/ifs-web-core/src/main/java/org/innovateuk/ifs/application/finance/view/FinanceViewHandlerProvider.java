@@ -3,43 +3,45 @@ package org.innovateuk.ifs.application.finance.view;
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.jes.JESFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.jes.JESProjectFinanceModelManager;
-import org.innovateuk.ifs.project.finance.view.ProjectFinanceFormHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
 
+/**
+ * Finance handler for application and project
+ */
 @Component
 @Configuration
-public class FinanceHandler {
+public class FinanceViewHandlerProvider implements FinanceHandlerProvider {
 
-    public FinanceFormHandler getFinanceFormHandler(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceFormHandler getFinanceFormHandler(long organisationType) {
+        if(RESEARCH.getId().longValue() == organisationType) {
             return getJESFinanceFormHandler();
         } else {
             return getDefaultFinanceFormHandler();
         }
     }
 
-    public FinanceFormHandler getProjectFinanceFormHandler(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceFormHandler getProjectFinanceFormHandler(long organisationType) {
+        if(RESEARCH.getId().longValue() == organisationType) {
             return getJESFinanceFormHandler();
         } else {
             return getProjectFinanceFormHandler();
         }
     }
 
-    public FinanceModelManager getFinanceModelManager(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceModelManager getFinanceModelManager(long organisationType) {
+        if(RESEARCH.getId().longValue() == organisationType) {
             return getJESFinanceModelManager();
         } else {
             return getDefaultFinanceModelManager();
         }
     }
 
-    public FinanceModelManager getProjectFinanceModelManager(Long organisationType) {
-        if(RESEARCH.getId().equals(organisationType)) {
+    public FinanceModelManager getProjectFinanceModelManager(long organisationType) {
+        if(RESEARCH.getId().longValue() == organisationType) {
             return getJESProjectFinanceModelManager();
         } else {
             return getDefaultProjectFinanceModelManager();
@@ -81,5 +83,3 @@ public class FinanceHandler {
         return new DefaultProjectFinanceModelManager();
     }
 }
-
-

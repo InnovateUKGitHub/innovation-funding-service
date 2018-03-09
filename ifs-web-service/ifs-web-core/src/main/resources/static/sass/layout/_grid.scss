@@ -49,29 +49,6 @@
   }
 }
 
-%extra-width {
-  @include media-down(mobile) {
-    width: 95%;
-    max-width: 95%;
-  }
-
-  width:1150px;
-  max-width: 1150px;
-}
-
-.extra-width {
-  #content,
-  .grid-container {
-    @extend %extra-width;
-  }
-
-  #global-header {
-    .header-wrapper {
-      @extend %extra-width;
-    }
-  }
-}
-
 #content {
   &.no-grid {
     max-width:100%;
