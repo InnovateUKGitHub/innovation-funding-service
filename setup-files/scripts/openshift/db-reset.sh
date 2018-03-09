@@ -57,7 +57,6 @@ function tidyUp() {
     # tidy up the pod afterwards
     echo Deleting dbreset
     oc delete pod dbreset ${SVC_ACCOUNT_CLAUSE}
-    exit 0
 }
 
 function dbReset() {
@@ -66,6 +65,7 @@ function dbReset() {
     clearFS
     waitForTermAndCheckStatus
     tidyUp
+    exit 0
 }
 
 # Entry point
