@@ -1,10 +1,15 @@
-apply plugin: "org.sonarqube"
+apply plugin: org.sonarqube.gradle.SonarQubePlugin
 
 buildscript {
 
     repositories {
         jcenter()
     }
+
+    dependencies {
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
+    }
+
 }
 
 sonarqube {

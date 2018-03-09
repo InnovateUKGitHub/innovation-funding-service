@@ -1,5 +1,6 @@
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
+apply from: "gradle-support/release.gradle"
 
 allprojects {
     group 'innovateuk'
@@ -62,10 +63,9 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
-        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
+
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:3.1.0'
-        classpath 'net.researchgate:gradle-release:2.6.0'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
@@ -88,30 +88,8 @@ dependencyUpdates.resolutionStrategy = {
 
 
 
-apply plugin: 'net.researchgate.release'
+
 apply plugin: "com.github.hierynomus.license"
-
-release {
-    preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '
-    newVersionCommitMessage = '[Gradle Release Plugin] - Preparing new release version: '
-    //Note: When testing releases (i.e. not performing real releases) this tagTemplate should be changed to something different
-    // for example tagTemplate = 'TEST RELEASE ${version} ' this will ensure that we don't pollute our tags with fake releases.
-    tagTemplate = '${version}'
-
-    scmAdapters = [
-            net.researchgate.release.GitAdapter,
-    ]
-
-    git {
-        requireBranch = 'master|acceptance'
-        pushToRemote = 'origin'
-        pushToBranchPrefix = ''
-        commitVersionFileOnly = false
-    }
-}
-
-
-
 
 
 task wrapper(type: Wrapper) {
