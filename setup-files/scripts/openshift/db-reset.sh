@@ -65,7 +65,6 @@ function dbReset() {
     clearFS
     waitForTermAndCheckStatus
     tidyUp
-    exit 0
 }
 
 # Entry point
@@ -96,3 +95,5 @@ useContainerRegistry
 pushDBResetImages
 
 dbReset
+
+exit 0
