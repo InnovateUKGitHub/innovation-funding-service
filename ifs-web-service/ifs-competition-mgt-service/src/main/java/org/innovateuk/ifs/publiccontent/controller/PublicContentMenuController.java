@@ -56,7 +56,7 @@ public class PublicContentMenuController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        return menuPage(competitionId, model, new PublishForm(), getBaseUrlFromRequest(request));
+        return menuPage(competition, model, new PublishForm(), getBaseUrlFromRequest(request));
     }
 
     @PostMapping("/{competitionId}")
@@ -73,15 +73,15 @@ public class PublicContentMenuController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        Supplier<String> failureView = () -> menuPage(competitionId, model, publishForm, getBaseUrlFromRequest(request));
+        Supplier<String> failureView = () -> menuPage(competition, model, publishForm, getBaseUrlFromRequest(request));
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> publicContentService.publishByCompetitionId(competitionId));
     }
 
-    private String menuPage(Long competitionId, Model model, PublishForm publishForm, String webBaseUrl) {
-        model.addAttribute("model", publicContentMenuPopulator.populate(competitionId, webBaseUrl));
+    private String menuPage(CompetitionResource competition, Model model, PublishForm publishForm, String webBaseUrl) {
+        model.addAttribute("model", publicContentMenuPopulator.populate(competition, webBaseUrl));
         model.addAttribute(FORM_ATTR_NAME, publishForm);
         return TEMPLATE_FOLDER + "public-content-menu";
     }
