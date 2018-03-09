@@ -8,9 +8,6 @@ if (project.hasProperty("profile")) {
 
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 
-jar {
-    baseName = 'ifs-rest-api-service'
-}
 
 configurations {
     providedRuntime

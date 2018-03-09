@@ -3,10 +3,7 @@ if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile
 }
 
-jar {
-    baseName = 'data-service-file'
-    dependsOn processResources
-}
+
 
 bootRepackage {
     enabled = false
