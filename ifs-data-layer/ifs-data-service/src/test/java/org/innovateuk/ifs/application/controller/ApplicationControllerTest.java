@@ -5,11 +5,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -32,7 +35,6 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class ApplicationControllerTest extends BaseControllerMockMVCTest<ApplicationController> {
-
     @Override
     protected ApplicationController supplyControllerUnderTest() {
         return new ApplicationController();
@@ -88,6 +90,19 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
+    public void wildcardSearchById() throws Exception {
+
+        ApplicationPageResource applicationPageResource = new ApplicationPageResource();
+
+        PageRequest pageRequest = new PageRequest(0, 40);
+        when(applicationServiceMock.wildcardSearchById("", pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
+
+        mockMvc.perform(get("/application/wildcardSearchById"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)));
+    }
+
+    @Test
     public void applicationControllerShouldReturnAllApplications() throws Exception {
         int applicationNumber = 3;
         List<ApplicationResource> applications = newApplicationResource().build(applicationNumber);
@@ -122,7 +137,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         Application app = newApplication().build();
 
-        when(applicationServiceMock.applicationReadyForSubmit(app.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationProgressServiceMock.applicationReadyForSubmit(app.getId())).thenReturn(true);
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", app.getId()))
                 .andExpect(status().isOk())
@@ -157,7 +172,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void informIneligible() throws Exception {
         long applicationId = 1L;
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource().build();
-        when(applicationServiceMock.informIneligible(applicationId, resource)).thenReturn(serviceSuccess());
+        when(applicationNotificationServiceMock.informIneligible(applicationId, resource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
                 .contentType(APPLICATION_JSON)

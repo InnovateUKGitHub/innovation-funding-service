@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.security;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.mapper.CompetitionAssessmentParticipantMapper;
+import org.innovateuk.ifs.invite.mapper.AssessmentParticipantMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,10 @@ public class CompetitionParticipantLookupStrategy {
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    private CompetitionAssessmentParticipantMapper competitionAssessmentParticipantMapper;
+    private AssessmentParticipantMapper assessmentParticipantMapper;
 
     @PermissionEntityLookupStrategy
     public CompetitionParticipantResource getCompetitionParticipantResource(String inviteHash) {
-        return competitionAssessmentParticipantMapper.mapToResource(competitionParticipantRepository.getByInviteHash(inviteHash));
+        return assessmentParticipantMapper.mapToResource(competitionParticipantRepository.getByInviteHash(inviteHash));
     }
 }

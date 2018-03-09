@@ -88,7 +88,7 @@ public class ApplicationQuestionSectionSaverTest {
         ArgumentCaptor<CompetitionSetupQuestionResource> captor = ArgumentCaptor.forClass(CompetitionSetupQuestionResource.class);
         verify(competitionSetupQuestionService).updateQuestion(captor.capture());
 
-        assertThat(captor.getValue().getAllowedFileTypesEnum()).containsExactlyInAnyOrderElementsOf(fileTypeCategories);
+        assertThat(captor.getValue().getAllowedFileTypes()).containsExactlyInAnyOrderElementsOf(fileTypeCategories);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class ApplicationQuestionSectionSaverTest {
         ArgumentCaptor<CompetitionSetupQuestionResource> captor = ArgumentCaptor.forClass(CompetitionSetupQuestionResource.class);
         verify(competitionSetupQuestionService).updateQuestion(captor.capture());
 
-        assertThat(captor.getValue().getAllowedFileTypesEnum()).isEmpty();
+        assertThat(captor.getValue().getAllowedFileTypes()).isEmpty();
     }
 
     @Test

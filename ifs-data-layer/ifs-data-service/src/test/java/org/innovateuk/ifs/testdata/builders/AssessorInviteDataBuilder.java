@@ -3,8 +3,8 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,7 +18,7 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
+import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 
 /**
  * Generates assessor invites and gives the ability to accept them
@@ -43,7 +43,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
             final Competition competition = retrieveCompetitionByName(competitionName);
             final InnovationArea innovationArea = retrieveInnovationAreaByName(innovationAreaName);
 
-            final CompetitionAssessmentInvite invite = newCompetitionAssessmentInvite().
+            final AssessmentInvite invite = newAssessmentInvite().
                     withCompetition(competition).
                     withEmail(emailAddress).
                     withStatus(inviteStatus).
@@ -56,8 +56,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     build();
 
             testService.doWithinTransaction(() -> {
-                CompetitionAssessmentInvite savedInvite = competitionAssessmentInviteRepository.save(invite);
-                competitionParticipantRepository.save(new CompetitionAssessmentParticipant(savedInvite));
+                AssessmentInvite savedInvite = assessmentInviteRepository.save(invite);
+                competitionParticipantRepository.save(new AssessmentParticipant(savedInvite));
             });
         }));
     }
@@ -71,8 +71,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
 
             UserResource assessor = retrieveUserByEmail(assessorEmail);
 
-            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccess());
-            doAs(assessor, () -> competitionInviteService.acceptInvite(hash, assessor).getSuccess());
+            doAs(systemRegistrar(), () -> assessmentInviteService.openInvite(hash).getSuccess());
+            doAs(assessor, () -> assessmentInviteService.acceptInvite(hash, assessor).getSuccess());
         });
     }
 
@@ -85,8 +85,8 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("rejection reason '" + rejectionReason + "' is not valid"));
 
-            doAs(systemRegistrar(), () -> competitionInviteService.openInvite(hash).getSuccess());
-            doAs(systemRegistrar(), () -> competitionInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccess());
+            doAs(systemRegistrar(), () -> assessmentInviteService.openInvite(hash).getSuccess());
+            doAs(systemRegistrar(), () -> assessmentInviteService.rejectInvite(hash, rejectionReasonResource, rejectionComment).getSuccess());
         });
     }
 

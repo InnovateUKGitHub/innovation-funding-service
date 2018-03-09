@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
@@ -9,9 +11,13 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 import java.util.concurrent.Future;
+
+import static java.util.Collections.singletonList;
 
 /**
  * ApplicationRestServiceImpl is a utility for CRUD operations on {@link ApplicationResource}.
@@ -35,6 +41,18 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<List<ApplicationResource>> getApplicationsByUserId(Long userId) {
         return getWithRestResult(applicationRestURL + "/findByUser/" + userId, ParameterizedTypeReferences.applicationResourceListType());
+    }
+
+    @Override
+    public RestResult<ApplicationPageResource> wildcardSearchById(String searchString, int pageNumber, int pageSize) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+
+        if (StringUtils.isNotBlank(searchString)) {
+            params.put("searchString", singletonList(searchString));
+        }
+
+        String uriWithParams = buildPaginationUri(applicationRestURL + "/wildcardSearchById", pageNumber, pageSize, null, params);
+        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
     }
 
     @Override

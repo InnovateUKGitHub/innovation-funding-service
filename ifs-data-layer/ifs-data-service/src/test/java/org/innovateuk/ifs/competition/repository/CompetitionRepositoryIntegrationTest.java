@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -196,7 +196,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         openComp = repository.save(openComp);
         openComp.setMilestones(replaceOpenDateMilestoneDate(openComp.getMilestones(), now().minusHours(5L)));
         openComp = repository.save(openComp);
-        CompetitionAssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
+        AssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
         Competition earliestOpenComp = new Competition(null, null, null,null,"earliestOpenComp", null, null, null, termsAndConditions);
@@ -288,8 +288,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(5).getName());
     }
 
-    private CompetitionAssessmentParticipant buildCompetitionParticipant(Competition competition, User user){
-        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
+    private AssessmentParticipant buildCompetitionParticipant(Competition competition, User user){
+        AssessmentParticipant competitionParticipant = new AssessmentParticipant();
         competitionParticipant.setUser(user);
         competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
         competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
