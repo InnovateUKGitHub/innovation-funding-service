@@ -5,6 +5,7 @@ import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
@@ -16,7 +17,6 @@ import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
-import org.innovateuk.ifs.testdata.services.TestService;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationFinanceData;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData;
@@ -191,7 +191,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Generic innovation}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Rolling stock future developments}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }
@@ -298,6 +298,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+
+        testService.doWithinTransaction(() -> {
+
+            List<Competition> competitions = competitionRepository.
+                    findAll();
+
+            competitions.forEach(c -> System.out.println(c.getName() + " - " + c.getCompetitionStatus()));
+        });
     }
 
     private void moveCompetitionsIntoFinalState(List<CompetitionData> competitions) {

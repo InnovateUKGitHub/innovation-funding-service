@@ -370,7 +370,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, FEEDBACK_RELEASED);
     }
 
-    private CompetitionDataBuilder withMilestoneUpdate(ZonedDateTime date, MilestoneType milestoneType) {
+    public CompetitionDataBuilder withMilestoneUpdate(ZonedDateTime date, MilestoneType milestoneType) {
 
         if (date == null) {
             return this;

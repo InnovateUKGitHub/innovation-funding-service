@@ -123,6 +123,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<Void> sendNotificationApplicationSubmitted(Long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
