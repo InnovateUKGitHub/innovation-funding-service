@@ -558,4 +558,22 @@
     </div>
 </th:block>
 
+<!-- confirmation of resending internal user invite -->
+<th:block th:fragment="modal-resend-internal-user">
+    <div class="modal-resend-internal-user" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Resend invite to internal user</h2>
+            <p>They will be reminded to accept their allocated role.</p>
+        </div>
+        <hr />
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <input type="hidden" id="invite-id" name="inviteId" value="" />
+                <button class="button" type="submit">Resend</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
 </html>

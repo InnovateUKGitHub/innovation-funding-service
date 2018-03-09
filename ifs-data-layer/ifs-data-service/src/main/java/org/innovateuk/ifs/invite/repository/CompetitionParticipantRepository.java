@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionAssessmentParticipant, Long> {
+public interface CompetitionParticipantRepository extends PagingAndSortingRepository<AssessmentParticipant, Long> {
 
     String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
             "FROM ReviewInvite invite " +
@@ -28,47 +28,47 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 
-    String PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL = "SELECT competitionParticipant " +
-            "FROM CompetitionAssessmentParticipant competitionParticipant " +
-            "WHERE competitionParticipant.competition.id = :competitionId " +
-            "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            "AND competitionParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+    String PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL = "SELECT assessmentParticipant " +
+            "FROM AssessmentParticipant assessmentParticipant " +
+            "WHERE assessmentParticipant.competition.id = :competitionId " +
+            "AND assessmentParticipant.role = 'ASSESSOR' " +
+            "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
+            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
 
-    String PARTICIPANTS_NOT_ON_INTERVIEW_PANEL = "SELECT competitionParticipant " +
-            "FROM CompetitionAssessmentParticipant competitionParticipant " +
-            "WHERE competitionParticipant.competition.id = :competitionId " +
-            "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
-            "AND competitionParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
+    String PARTICIPANTS_NOT_ON_INTERVIEW_PANEL = "SELECT assessmentParticipant " +
+            "FROM AssessmentParticipant assessmentParticipant " +
+            "WHERE assessmentParticipant.competition.id = :competitionId " +
+            "AND assessmentParticipant.role = 'ASSESSOR' " +
+            "AND assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
+            "AND assessmentParticipant.user.id NOT IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
 
-    String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
-            "FROM CompetitionAssessmentParticipant competitionParticipant " +
-            "WHERE competitionParticipant.competition.id = :competitionId " +
-            "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND competitionParticipant.status IN :status";
+    String BY_COMP_AND_STATUS = "SELECT assessmentParticipant " +
+            "FROM AssessmentParticipant assessmentParticipant " +
+            "WHERE assessmentParticipant.competition.id = :competitionId " +
+            "AND assessmentParticipant.role = 'ASSESSOR' " +
+            "AND assessmentParticipant.status IN :status";
 
-    String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
-            "FROM CompetitionAssessmentParticipant competitionParticipant " +
-            "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
-            "WHERE competitionParticipant.competition.id = :competitionId " +
-            "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND competitionParticipant.status IN :status " +
+    String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT assessmentParticipant " +
+            "FROM AssessmentParticipant assessmentParticipant " +
+            "LEFT JOIN Profile profile ON profile.id = assessmentParticipant.user.profileId " +
+            "WHERE assessmentParticipant.competition.id = :competitionId " +
+            "AND assessmentParticipant.role = 'ASSESSOR' " +
+            "AND assessmentParticipant.status IN :status " +
             "AND (:innovationAreaId IS NULL " +
             "   OR EXISTS(" +
             "       SELECT profile.id " +
             "       FROM Profile profile " +
             "       JOIN profile.innovationAreas innovationAreas " +
-            "       WHERE profile.id = competitionParticipant.user.profileId " +
+            "       WHERE profile.id = assessmentParticipant.user.profileId " +
             "       AND innovationAreas.category.id = :innovationAreaId " +
             "   ) " +
-            "   OR competitionParticipant.invite.innovationArea.id = :innovationAreaId) " +
+            "   OR assessmentParticipant.invite.innovationArea.id = :innovationAreaId) " +
             "AND (:isCompliant IS NULL " +
             "   OR (:isCompliant = true AND (" +
             "       EXISTS(" +
             "           SELECT affiliation.id " +
             "           FROM Affiliation affiliation " +
-            "           WHERE affiliation.user.id = competitionParticipant.user.id " +
+            "           WHERE affiliation.user.id = assessmentParticipant.user.id " +
             "       ) " +
             "       AND profile.skillsAreas IS NOT NULL " +
             "       AND profile.agreement IS NOT NULL) " +
@@ -76,97 +76,111 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "       NOT EXISTS(" +
             "           SELECT affiliation.id " +
             "           FROM Affiliation affiliation " +
-            "           WHERE affiliation.user.id = competitionParticipant.user.id " +
+            "           WHERE affiliation.user.id = assessmentParticipant.user.id " +
             "       ) " +
             "       OR profile.skillsAreas IS NULL " +
             "       OR profile.agreement IS NULL)" +
             "   )" +
             "))";
 
-    String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT cp FROM CompetitionAssessmentParticipant cp WHERE cp.competition.id = :compId " +
-            "AND cp.role = :role " +
-            "AND cp.status = :status " +
-            "AND NOT EXISTS " +
-            "(SELECT 'found' FROM Assessment a WHERE " +
-            "a.participant.user = cp.user " +
-            "AND a.target.id = :appId) " +
-            "AND (:innovationAreaId is null OR EXISTS " +
-            "(SELECT 'area' FROM Profile p JOIN p.innovationAreas ia WHERE " +
-            "p.id = cp.user.profileId " +
-            "AND ia.category.id = :innovationAreaId ))";
+    String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT assessmentParticipant " +
+            "FROM AssessmentParticipant assessmentParticipant " +
+            "WHERE assessmentParticipant.competition.id = :compId " +
+            "AND assessmentParticipant.role = :role " +
+            "AND assessmentParticipant.status = :status " +
+            "AND NOT EXISTS (" +
+            "   SELECT 'found' " +
+            "   FROM Assessment a " +
+            "   WHERE a.participant.user = assessmentParticipant.user " +
+            "   AND a.target.id = :appId) " +
+            "   AND (:innovationAreaId is null " +
+            "       OR EXISTS (" +
+            "           SELECT 'area' " +
+            "           FROM Profile p " +
+            "           JOIN p.innovationAreas ia " +
+            "           WHERE p.id = assessmentParticipant.user.profileId " +
+            "           AND ia.category.id = :innovationAreaId" +
+            "       )" +
+            ")";
 
-    String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT cp FROM CompetitionAssessmentParticipant cp WHERE " +
-            "cp.competition.id = :compId " +
-            "AND cp.role = :role " +
-            "AND cp.status = :status " +
-            "AND EXISTS (SELECT 'found' FROM Assessment a WHERE a.participant.user = cp.user AND a.target.id = :appId)";
+    String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT assessmentParticipant " +
+            "FROM AssessmentParticipant assessmentParticipant " +
+            "WHERE assessmentParticipant.competition.id = :compId " +
+            "AND assessmentParticipant.role = :role " +
+            "AND assessmentParticipant.status = :status " +
+            "AND EXISTS (" +
+            "   SELECT 'found' " +
+            "   FROM Assessment a " +
+            "   WHERE a.participant.user = assessmentParticipant.user " +
+            "   AND a.target.id = :appId" +
+            ")";
 
     @Override
-    List<CompetitionAssessmentParticipant> findAll();
+    List<AssessmentParticipant> findAll();
 
-    CompetitionAssessmentParticipant getByInviteHash(String hash);
+    AssessmentParticipant getByInviteHash(String hash);
 
-    List<CompetitionAssessmentParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
+    List<AssessmentParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
 
-    List<CompetitionAssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
+    List<AssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
-    CompetitionAssessmentParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
-
-    @Query(BY_COMP_AND_STATUS)
-    Page<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                    @Param("status") List<ParticipantStatus> status,
-                                                                    Pageable pageable);
+    AssessmentParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
 
     @Query(BY_COMP_AND_STATUS)
-    List<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
-                                                                            @Param("status") List<ParticipantStatus> status);
+    Page<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                           @Param("status") List<ParticipantStatus> status,
+                                                                           Pageable pageable);
+
+    @Query(BY_COMP_AND_STATUS)
+    List<AssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                           @Param("status") List<ParticipantStatus> status);
 
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    Page<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
-                                                                                                 @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                 @Param("status") List<ParticipantStatus> status,
-                                                                                                 @Param("isCompliant") Boolean isCompliant,
-                                                                                                 Pageable pageable);
+    Page<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
+                                                                                                        @Param("innovationAreaId") Long innovationAreaId,
+                                                                                                        @Param("status") List<ParticipantStatus> status,
+                                                                                                        @Param("isCompliant") Boolean isCompliant,
+                                                                                                        Pageable pageable);
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    List<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
-                                                                                                         @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                         @Param("status") List<ParticipantStatus> status,
-                                                                                                         @Param("isCompliant") Boolean isCompliant);
+    List<AssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
+                                                                                                        @Param("innovationAreaId") Long innovationAreaId,
+                                                                                                        @Param("status") List<ParticipantStatus> status,
+                                                                                                        @Param("isCompliant") Boolean isCompliant);
 
-    List<CompetitionAssessmentParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
+    List<AssessmentParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
-    List<CompetitionAssessmentParticipant> getByInviteEmail(String email);
+    List<AssessmentParticipant> getByInviteEmail(String email);
 
-    CompetitionAssessmentParticipant getByInviteId(long id);
+    AssessmentParticipant getByInviteId(long id);
 
     int countByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
     @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)
-    Page<CompetitionAssessmentParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
-                                                                    @Param("role") CompetitionParticipantRole role,
-                                                                    @Param("status") ParticipantStatus status,
-                                                                    @Param("appId") long applicationId,
-                                                                    @Param("innovationAreaId") Long filterInnovationArea,
-                                                                    Pageable pageable);
+    Page<AssessmentParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
+                                                                   @Param("role") CompetitionParticipantRole role,
+                                                                   @Param("status") ParticipantStatus status,
+                                                                   @Param("appId") long applicationId,
+                                                                   @Param("innovationAreaId") Long filterInnovationArea,
+                                                                   Pageable pageable);
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)
-    List<CompetitionAssessmentParticipant> findParticipantsWithAssessments(
+    List<AssessmentParticipant> findParticipantsWithAssessments(
             @Param("compId") long competitionId,
             @Param("role") CompetitionParticipantRole role,
             @Param("status") ParticipantStatus status,
             @Param("appId") long applicationId);
 
     @Query(PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL)
-    Page<CompetitionAssessmentParticipant> findParticipantsNotOnAssessmentPanel(@Param("competitionId") long competitionId, Pageable pageable);
+    Page<AssessmentParticipant> findParticipantsNotOnAssessmentPanel(@Param("competitionId") long competitionId, Pageable pageable);
 
     @Query(PARTICIPANTS_NOT_ON_ASSESSMENT_PANEL)
-    List<CompetitionAssessmentParticipant> findParticipantsNotOnAssessmentPanel(@Param("competitionId") long competitionId);
+    List<AssessmentParticipant> findParticipantsNotOnAssessmentPanel(@Param("competitionId") long competitionId);
 
     @Query(PARTICIPANTS_NOT_ON_INTERVIEW_PANEL)
-    Page<CompetitionAssessmentParticipant> findParticipantsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
+    Page<AssessmentParticipant> findParticipantsNotOnInterviewPanel(@Param("competitionId") long competitionId, Pageable pageable);
 
     @Query(PARTICIPANTS_NOT_ON_INTERVIEW_PANEL)
-    List<CompetitionAssessmentParticipant> findParticipantsNotOnInterviewPanel(@Param("competitionId") long competitionId);
+    List<AssessmentParticipant> findParticipantsNotOnInterviewPanel(@Param("competitionId") long competitionId);
 }

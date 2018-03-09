@@ -53,9 +53,15 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
             "  a.applicationProcess.activityState.state = org.innovateuk.ifs.workflow.resource.State.SUBMITTED AND " +
             "  NOT EXISTS (SELECT 1 FROM InterviewAssignment i WHERE i.target = a )";
 
+    String SEARCH_BY_ID_LIKE = " SELECT a from Application a " +
+                               " WHERE str(a.id) LIKE CONCAT('%', :searchString, '%') ";
+
     @Override
     List<Application> findAll();
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);
+
+    @Query(SEARCH_BY_ID_LIKE)
+    Page<Application> searchByIdLike(@Param("searchString") String searchString, Pageable pageable);
 
     List<Application> findByCompetitionId(long competitionId);
 
