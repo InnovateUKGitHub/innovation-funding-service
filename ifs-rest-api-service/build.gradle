@@ -28,9 +28,3 @@ dependencies {
     compile project(':ifs-commons')
     testCompile project(':ifs-resources').sourceSets.test.output
 }
-
-task client(type: Jar) {
-    from(sourceSets.main.output) {
-        exclude "org/innovateuk/ifs/Application.class"
-    }
-}
