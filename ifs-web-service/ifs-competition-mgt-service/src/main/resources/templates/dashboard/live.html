@@ -11,9 +11,17 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" th:with="showSearch=${model.counts.liveCount > 0}" />
+    <form role="search"
+          method="get"
+          id="searchform"
+          th:with="supportUser=${model.getTabs().support()}"
+          th:action="@{${supportUser ? '/dashboard/application/search' : '/dashboard/search'}}">
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"
+                  th:with="showSearch=${model.counts.liveCount > 0},
+                        searchType=${supportUser ? 'applications' : 'competitions'}"
+        />
     </form>
+
     <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'live'}, counts=${model.counts}, tabs=${model.tabs})" />
 
     <th:block th:if="${model.counts.liveCount == 0}">
