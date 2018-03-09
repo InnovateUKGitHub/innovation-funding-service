@@ -1,9 +1,6 @@
 apply from: "gradle-support/versions.gradle"
 apply from: "gradle-support/sonarqube.gradle"
 apply from: "gradle-support/release.gradle"
-apply from: "gradle-support/openshift-support.gradle"
-apply from: "gradle-support/zipkin-support.gradle"
-apply from: "gradle-support/docker-compose.gradle"
 
 allprojects {
     group 'innovateuk'
@@ -24,6 +21,10 @@ def isNamedEnv() {
 def isNotProductionEnv() {
     !"production".equals(openshiftEnv)
 }
+
+apply from: "gradle-support/openshift-support.gradle"
+apply from: "gradle-support/zipkin-support.gradle"
+apply from: "gradle-support/docker-compose.gradle"
 
 
 if (!project.hasProperty('osTestArgs')) {
