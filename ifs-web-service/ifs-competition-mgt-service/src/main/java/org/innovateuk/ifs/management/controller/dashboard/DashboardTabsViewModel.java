@@ -30,4 +30,8 @@ public class DashboardTabsViewModel {
     public boolean previous(){
         return isInternal(userResource);
     }
+
+    public boolean support(){
+        return isSupport(userResource);
+    }
 }

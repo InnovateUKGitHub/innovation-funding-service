@@ -4,6 +4,8 @@ Documentation     IFS-188 Stakeholder views – Support team
 ...               IFS-1986 External users: search
 ...
 ...               IFS-1841 Basic view of all 'external' IFS users
+...
+...               IFS-2904 CSS Search by application number
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Support  CompAdmin
@@ -12,6 +14,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${invitedCollaborator}  stuart@empire.com
+${competitionName}      Networking home IOT devices
 
 *** Test Cases ***
 Support dashboard
@@ -33,6 +36,12 @@ Back navigation is to dashboard
     And the user should see the element    jQuery=a:contains("Live")
     And the user should see the element    jQuery=a:contains("Project setup")
     And the user should see the element    jQuery=a:contains("Previous")
+
+Support user is able to search for an Application
+    [Documentation]  IFS-2904
+    [Tags]  HappyPath
+    When the user navigates to the page       ${server}/management/dashboard/live
+    Then the user enters the application id into the search field
 
 Support user is able to search active external users
     [Documentation]  IFS-1986 IFS-1841
@@ -91,3 +100,9 @@ the invitee has accepted the invitation but has not yet verified his account
 the invitee verifies his account
     the user reads his email and clicks the link       ${invitedCollaborator}  Please verify your email address  recently set up an account  1
     the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
+
+the user enters the application id into the search field
+    ${applicationID} =  get application id by name  ${competitionName}
+    the user enters text to a text field    id=searchQuery  ${applicationID}
+    the user clicks the button/link          id=searchsubmit
+    the user should see the element          jQuery=td:contains("${applicationID}")

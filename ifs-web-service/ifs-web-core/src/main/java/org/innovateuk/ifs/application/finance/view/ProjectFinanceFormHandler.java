@@ -1,10 +1,7 @@
-package org.innovateuk.ifs.project.finance.view;
+package org.innovateuk.ifs.application.finance.view;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
-import org.innovateuk.ifs.application.finance.view.BaseFinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.UnsavedFieldsManager;
 import org.innovateuk.ifs.application.finance.view.item.FinanceRowHandler;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
