@@ -1,4 +1,5 @@
 apply from: "gradle-support/versions.gradle"
+apply from: "gradle-support/sonarqube.gradle"
 
 allprojects {
     group 'innovateuk'
@@ -86,7 +87,7 @@ dependencyUpdates.resolutionStrategy = {
 }
 
 
-apply plugin: "org.sonarqube"
+
 apply plugin: 'net.researchgate.release'
 apply plugin: "com.github.hierynomus.license"
 
@@ -109,15 +110,7 @@ release {
     }
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectName", "IFS_Project"
-        property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.branch", "development"
-        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
-        property "sonar.exclusions", "**/*MapperImpl.java"
-    }
-}
+
 
 
 

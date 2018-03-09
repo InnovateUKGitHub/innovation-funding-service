@@ -1,0 +1,18 @@
+apply plugin: "org.sonarqube"
+
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "IFS_Project"
+        property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
+        property "sonar.branch", "development"
+        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.exclusions", "**/*MapperImpl.java"
+    }
+}
