@@ -68,7 +68,6 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationId, COLLABORATOR.getName())).thenReturn(true);
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(assessor.getId(), applicationId, ASSESSOR.getName())).thenReturn(true);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
-
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
@@ -125,6 +124,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
         assertTrue(rules.supportCanAddACostToApplicationFinance(applicationFinance, supportUser()));
         assertTrue(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
+        assertTrue(rules.assessorCanAddACostToApplicationFinance(applicationFinance, assessor));
 
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
@@ -136,6 +136,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     public void testLeadCanGetFileResourceForPartner() {
         assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertTrue(rules.assessorUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, assessor));
         assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, compAdmin));
     }
