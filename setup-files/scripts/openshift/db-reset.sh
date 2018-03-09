@@ -25,15 +25,49 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 echo "Resetting the $PROJECT Openshift project"
 
-function dbReset() {
-    until oc create -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+function createDBReset(){
+    # Create dbreset
+    return oc create -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+}
+function waitForDBResetToStart() {
+    echo Waiting for container to start
+    until [[ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ]] && [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' || "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Succeeded' ]]
     do
-      oc delete -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
-      sleep 10
+      echo -n .
+      sleep 5
     done
+    oc logs -f dbreset ${SVC_ACCOUNT_CLAUSE}
+}
 
+function clearFS() {
     # Note: We remove just contents of virus-scan-holding and not the directory itself as its monitored by clamAV for scanning, but we delete other directories completely.
+    echo Clearing file system directories
     oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && rm -rf virus-scan-holding/* && ls | grep -v .trashcan | grep -v virus-scan-holding | xargs rm -rf'
+}
+
+function waitForTermAndCheckStatus {
+    echo Waiting for container to terminate before checking its status
+    sleep 5
+
+    if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
+}
+function tidyUp() {
+    # tidy up the pod afterwards
+    echo Deleting dbreset
+    oc delete pod dbreset ${SVC_ACCOUNT_CLAUSE}
+    exit 0
+}
+
+function dbReset() {
+    if [[ createDBReset ]]; then
+        waitForDBResetToStart
+        clearFS
+        waitForTermAndCheckStatus
+        tidyUp
+    else
+        echo Coud not create dbreset.  Pod may already exist.
+        exit -1 # Exit with error if not successful
+    fi
 }
 
 # Entry point
@@ -64,21 +98,3 @@ useContainerRegistry
 pushDBResetImages
 
 dbReset
-
-echo Waiting for container to start
-until [[ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ]] && [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' || "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Succeeded' ]]
-do
-  echo -n .
-  sleep 5
-done
-
-oc logs -f dbreset ${SVC_ACCOUNT_CLAUSE}
-
-echo Waiting for container to terminate before checking its status
-sleep 5
-
-if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
-
-# tidy up the pod afterwards
-oc delete pod dbreset ${SVC_ACCOUNT_CLAUSE}
-exit 0
