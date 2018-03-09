@@ -3,7 +3,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
-apply plugin: 'base'
 apply from: "../database-support.gradle"
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
