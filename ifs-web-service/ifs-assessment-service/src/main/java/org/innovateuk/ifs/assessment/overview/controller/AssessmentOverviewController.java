@@ -76,9 +76,8 @@ public class AssessmentOverviewController {
     @GetMapping("/detailed-finances/organisation/{organisationId}")
     public String getDetailedFinances(Model model,
                                       @PathVariable("assessmentId") long assessmentId,
-                                      @PathVariable("organisationId") long organisationId,
-                                      UserResource loggedInUser) {
-        model.addAttribute("model", assessmentDetailedFinancesSummaryModelPopulator.populateModel(assessmentId, organisationId, loggedInUser,  model));
+                                      @PathVariable("organisationId") long organisationId) {
+        model.addAttribute("model", assessmentDetailedFinancesSummaryModelPopulator.populateModel(assessmentId, organisationId, model));
         return "assessment/application-detailed-finances";
     }
 
