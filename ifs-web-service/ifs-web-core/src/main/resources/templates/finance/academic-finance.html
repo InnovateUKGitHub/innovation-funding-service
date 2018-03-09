@@ -35,7 +35,7 @@
             </div>
         </fieldset>
 
-        <th:block th:insert="finance/academic-finance :: finance_fields (${model, applicant='true'})"/>
+        <th:block th:insert="finance/academic-finance :: finance_fields (${model}, 'true')"/>
         <th:block th:insert="finance/academic-finance :: finance_upload (${model},${model.financeUploadQuestion},${model.financeUploadFormInput},${readonly})" />
 
         <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
@@ -46,18 +46,15 @@
 </th:block>
 
 <th:block th:fragment="assessment_detailed_finance (model)" th:with="question=${detailedCostings.applicantQuestion.question}, userOrganisation=${detailedCostings.currentApplicant.organisation}, readonly=${detailedCostings.allReadOnly or detailedCostings.complete}">
-
-    <th:block th:insert="finance/academic-finance :: finance_fields (${detailedCostings}, applicant='false')"/>
-
+    <th:block th:insert="finance/academic-finance :: finance_fields (${detailedCostings}, 'false')"/>
     <th:block th:insert="finance/academic-finance :: finance_upload (${detailedCostings},${detailedCostings.financeUploadQuestion},${detailedCostings.financeUploadFormInput},${readonly})" />
-
 </th:block>
 
-<th:block th:fragment="finance_fields (model, applicant)">
+<th:block th:fragment="finance_fields (model, isApplicant)">
     <fieldset class="academic">
-        <h2 class="heading-medium" th:appendclass="${applicant == 'true' ? 'no-margin' : ''}">Financial resources</h2>
+        <h2 class="heading-medium" th:classappend="${isApplicant == 'true' ? ' no-margin' : ''}">Financial resources</h2>
         <legend class="visuallyhidden">Financial resources</legend>
-        <p>The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
+        <p th:text="'The following costs are entered by the organisation from the summary of resources section on ' + (${isApplicant == 'true'} ? 'your ' : 'the ') + 'Je-S form'">The following costs are entered by the organisation from the summary of resources section on the Je-S form</p>
 
         <div class="grid-row">
             <div class="column-third"><strong>Directly incurred</strong></div>
