@@ -1,8 +1,4 @@
 
-subprojects {
-    apply from: rootProject.file("gradle-support/openshift-build.gradle")
-}
-
 
 allprojects {
 
