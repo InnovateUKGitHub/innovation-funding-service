@@ -62,8 +62,8 @@ function tidyUp() {
 
 function dbReset() {
     createDBReset
-    clearFS
     waitForDBResetToStart
+    clearFS
     waitForTermAndCheckStatus
     tidyUp
 }
