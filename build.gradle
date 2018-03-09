@@ -40,11 +40,8 @@ configure(subprojects - project(":ifs-auth-service")) {
 
 buildscript {
 
-    ext['thymeleaf.version'] = '3.0.3.RELEASE'
-
     ext {
         springBootVersion = '1.5.9.RELEASE'
-        thymeleafVersion = ext['thymeleaf.version']
         springCloudVersion = 'Dalston.RELEASE'
     }
 

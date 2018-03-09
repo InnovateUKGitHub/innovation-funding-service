@@ -127,8 +127,6 @@ test {
 }
 
 
-
-
 asciidoctor {
     dependsOn test
     attributes 'snippets': snippetsDir
