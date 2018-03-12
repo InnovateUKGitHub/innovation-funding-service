@@ -3,11 +3,14 @@ package org.innovateuk.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.transactional.ApplicationNotificationService;
+import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
@@ -20,11 +23,21 @@ import java.util.List;
 @RequestMapping("/application")
 public class ApplicationController {
 
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    private static final String DEFAULT_PAGE_SIZE = "40";
+
     @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationNotificationService applicationNotificationService;
+
+    @Autowired
+    private ApplicationProgressService applicationProgressService;
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
@@ -39,6 +52,13 @@ public class ApplicationController {
     @GetMapping("/findByUser/{userId}")
     public RestResult<List<ApplicationResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return applicationService.findByUserId(userId).toGetResponse();
+    }
+
+    @GetMapping("/wildcardSearchById")
+    public RestResult<ApplicationPageResource> wildcardSearchById(@RequestParam(value = "searchString", defaultValue = "") String searchString,
+                                                                  @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                  @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return applicationService.wildcardSearchById(searchString, new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
     @PostMapping("/saveApplicationDetails/{id}")
@@ -60,7 +80,7 @@ public class ApplicationController {
 
         if (updateStatusResult.isSuccess() && ApplicationState.SUBMITTED == state) {
             applicationService.saveApplicationSubmitDateTime(id, ZonedDateTime.now());
-            applicationService.sendNotificationApplicationSubmitted(id);
+            applicationNotificationService.sendNotificationApplicationSubmitted(id);
         }
 
         return updateStatusResult.toPutResponse();
@@ -68,7 +88,7 @@ public class ApplicationController {
 
     @GetMapping("/applicationReadyForSubmit/{applicationId}")
     public RestResult<Boolean> applicationReadyForSubmit(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.applicationReadyForSubmit(applicationId).toGetResponse();
+        return RestResult.toGetResponse(applicationProgressService.applicationReadyForSubmit(applicationId));
     }
 
     @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
@@ -102,7 +122,7 @@ public class ApplicationController {
     @PostMapping("/informIneligible/{applicationId}")
     public RestResult<Void> informIneligible(@PathVariable("applicationId") final long applicationId,
                                              @RequestBody ApplicationIneligibleSendResource applicationIneligibleSendResource) {
-        return applicationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
+        return applicationNotificationService.informIneligible(applicationId, applicationIneligibleSendResource).toPostResponse();
     }
 
     // IFS-43 added to ease future expansion as application team members are expected to have access to the application team page, but the location of links to that page (enabled by tis method) is as yet unknown

@@ -2,14 +2,19 @@ package org.innovateuk.ifs.application.documentation;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.controller.ApplicationController;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,6 +31,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ApplicationControllerDocumentation extends BaseControllerMockMVCTest<ApplicationController> {
@@ -87,6 +93,32 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         responseFields(
                                 fieldWithPath("[]").description("List of applications linked to the user id used in the request. Only contains applications the requesting user can see")
                         )));
+    }
+
+    @Test
+    public void wildcardSearchById() throws Exception {
+        String searchString = "12";
+        int pageNumber = 1;
+        int pageSize = 20;
+
+        List<ApplicationResource> applicationResources = ApplicationResourceBuilder.newApplicationResource().build(4);
+        ApplicationPageResource applicationPageResource = new ApplicationPageResource(applicationResources.size(), 5, applicationResources, pageNumber, pageSize);
+
+        PageRequest pageRequest = new PageRequest(pageNumber, pageSize);
+        when(applicationServiceMock.wildcardSearchById(searchString, pageRequest)).thenReturn(serviceSuccess(applicationPageResource));
+
+        mockMvc.perform(get("/application/wildcardSearchById?searchString=" + searchString + "&page=" + pageNumber + "&size=" + pageSize))
+                .andExpect(status().isOk())
+                .andExpect(content().json(JsonMappingUtil.toJson(applicationPageResource)))
+                .andDo(document("application/{method-name}",
+                                requestParameters(
+                                        parameterWithName("searchString").description("The application id on which wildcard search will be performed"),
+                                        parameterWithName("page").description("The page number to be retrieved"),
+                                        parameterWithName("size").description("The page size")
+                                )
+                                ,
+                                responseFields(PageResourceDocs.pageResourceFields)
+                ));
     }
 
     @Test
@@ -152,7 +184,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void applicationReadyForSubmit() throws Exception {
         Long applicationId = 1L;
 
-        when(applicationServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(applicationProgressServiceMock.applicationReadyForSubmit(applicationId)).thenReturn(true);
 
         mockMvc.perform(get("/application/applicationReadyForSubmit/{applicationId}", applicationId))
                 .andExpect(status().isOk())
@@ -220,7 +252,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         long applicationId = 1L;
         ApplicationIneligibleSendResource applicationIneligibleSendResource = applicationIneligibleSendResourceBuilder.build();
 
-        when(applicationServiceMock.informIneligible(applicationId, applicationIneligibleSendResource)).thenReturn(serviceSuccess());
+        when(applicationNotificationServiceMock.informIneligible(applicationId, applicationIneligibleSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/application/informIneligible/{applicationId}", applicationId)
                 .contentType(APPLICATION_JSON)

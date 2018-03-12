@@ -36,7 +36,10 @@ IFS.core.formValidation = (function () {
       },
       email: {
         fields: '[type="email"]:not([readonly])',
-        messageInvalid: 'Please enter a valid email address.'
+        messageInvalid: {
+          invalid: 'Please enter a valid email address.',
+          duplicate: 'The email address is already registered with us. Please sign into your account.'
+        }
       },
       required: {
         fields: '[required]:not([data-date],[readonly],[name="password"])',
@@ -199,10 +202,12 @@ IFS.core.formValidation = (function () {
     checkEmail: function (field) {
       // checks if the email is valid, the almost rfc compliant check. The same as the java check, see http://www.regular-expressions.info/email.html
       var email = field.val()
-      var emailAttribute = 'email'
+      var invalidEmailAttribute = 'email-invalid'
+      var duplicateEmailAttribute = 'email-duplicate'
       // disabled escape js-standard message, we might want to solve this in the future by cleaning up the regex
-      var errorMessage = IFS.core.formValidation.getErrorMessage(field, emailAttribute)
-      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, emailAttribute)
+      var invalidErrorMessage = IFS.core.formValidation.getErrorMessage(field, invalidEmailAttribute)
+      var duplicateErrorMessage = IFS.core.formValidation.getErrorMessage(field, duplicateEmailAttribute)
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, 'email')
       var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i // eslint-disable-line
 
       // check if email value exists to avoid invalid email message on empty fields
@@ -211,14 +216,18 @@ IFS.core.formValidation = (function () {
 
         // check if email address is invalid
         if (!validEmail) {
-          IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+          IFS.core.formValidation.setInvalid(field, invalidErrorMessage, displayValidationMessages)
           return false
         } else {
-          IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+          IFS.core.formValidation.setValid(field, invalidErrorMessage, displayValidationMessages)
+          // also set the duplicate email field to valid
+          IFS.core.formValidation.setValid(field, duplicateErrorMessage, displayValidationMessages)
           return true
         }
       } else {
-        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        IFS.core.formValidation.setValid(field, invalidErrorMessage, displayValidationMessages)
+        // also set the duplicate email field to valid
+        IFS.core.formValidation.setValid(field, duplicateErrorMessage, displayValidationMessages)
         return true
       }
     },
@@ -317,6 +326,7 @@ IFS.core.formValidation = (function () {
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
 
       if (field.val() !== null) {
+        var value = field.val()
         if (field.is(':checkbox,:radio')) {
           var name = field.attr('name')
           if (typeof (name) !== 'undefined') {
@@ -334,7 +344,8 @@ IFS.core.formValidation = (function () {
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         } else {
-          if (field.val().length === 0) {
+          // check if the value has any characters OR if the value only contains spaces
+          if (value.length === 0 || !value.trim()) {
             IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
             return false
           } else {

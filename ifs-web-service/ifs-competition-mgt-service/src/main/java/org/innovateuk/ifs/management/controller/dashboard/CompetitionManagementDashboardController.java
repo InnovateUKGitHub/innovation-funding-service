@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -18,9 +20,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.stream.Collectors.joining;
 
@@ -28,6 +32,10 @@ import static java.util.stream.Collectors.joining;
 public class CompetitionManagementDashboardController {
     private static final String TEMPLATE_PATH = "dashboard/";
     private static final String MODEL_ATTR = "model";
+
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    private static final String DEFAULT_PAGE_SIZE = "40";
 
     @Autowired
     private CompetitionDashboardSearchService competitionDashboardSearchService;
@@ -118,6 +126,30 @@ public class CompetitionManagementDashboardController {
         model.addAttribute("searchQuery", searchQuery);
         model.addAttribute("tabs", new DashboardTabsViewModel(user));
         return TEMPLATE_PATH + "search";
+    }
+
+    @SecuredBySpring(value = "READ", description = "The support users and IFS Administrators are allowed to view the application search page")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @GetMapping("/dashboard/application/search")
+    public String applicationSearch(@RequestParam(name = "searchString", defaultValue = "") String searchString,
+                                    @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageNumber,
+                                    @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                    Model model,
+                                    HttpServletRequest request,
+                                    UserResource user) {
+        String trimmedSearchString = StringUtils.normalizeSpace(searchString);
+        String existingQueryString = Objects.toString(request.getQueryString(), "");
+
+        ApplicationPageResource matchedApplications = competitionDashboardSearchService.wildcardSearchByApplicationId(trimmedSearchString, pageNumber, pageSize);
+
+        ApplicationSearchDashboardViewModel viewModel =
+                new ApplicationSearchDashboardViewModel(matchedApplications.getContent(),
+                                                        matchedApplications.getTotalElements(),
+                                                        new PaginationViewModel(matchedApplications, "search?" + existingQueryString),
+                                                        trimmedSearchString);
+        model.addAttribute("model", viewModel);
+
+        return TEMPLATE_PATH + "application-search";
     }
 
     @SecuredBySpring(value = "READ", description = "The competition admin and project finance roles are allowed to view the page for setting up new competitions")

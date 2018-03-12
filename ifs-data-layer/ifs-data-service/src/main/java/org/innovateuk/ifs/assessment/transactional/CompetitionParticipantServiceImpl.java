@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.mapper.CompetitionAssessmentParticipantMapper;
+import org.innovateuk.ifs.invite.mapper.AssessmentParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.CompetitionParticipantRoleMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -34,7 +34,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    private CompetitionAssessmentParticipantMapper compParticipantMapper;
+    private AssessmentParticipantMapper compParticipantMapper;
 
     @Autowired
     private CompetitionParticipantRoleMapper competitionParticipantRoleMapper;
