@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
@@ -146,29 +147,29 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
         verifyZeroInteractions(googleAnalyticsDataLayerRestServiceMock);
     }
 
-//    @Test
-//    public void postHandle_singleRole() {
-//        UserRoleType [] expectedUserRoleTypes = setAuthenticatedRoleTypes(UserRoleType.COMP_ADMIN);
-//
-//        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
-//
-//        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
-//        expectedDataLayer.setUserRole(String.join(",", simpleMap(expectedUserRoleTypes, UserRoleType::getName)));
-//
-//        assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
-//    }
+    @Test
+    public void postHandle_singleRole() {
+        Role [] expectedRoles = setAuthenticatedRoleTypes(Role.COMP_ADMIN);
 
-//    @Test
-//    public void postHandle_multipleRoles() {
-//        UserRoleType [] expectedUserRoleTypes = setAuthenticatedRoleTypes(UserRoleType.COMP_ADMIN, UserRoleType.IFS_ADMINISTRATOR);
-//
-//        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
-//
-//        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
-//        expectedDataLayer.setUserRole(String.join(",", simpleMap(expectedUserRoleTypes, UserRoleType::getName)));
-//
-//        assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
-//    }
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setUserRole(String.join(",", simpleMap(expectedRoles, Role::getName)));
+
+        assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
+    }
+
+    @Test
+    public void postHandle_multipleRoles() {
+        Role [] expectedRoles = setAuthenticatedRoleTypes(Role.COMP_ADMIN, Role.IFS_ADMINISTRATOR);
+
+        googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
+
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setUserRole(String.join(",", simpleMap(expectedRoles, Role::getName)));
+
+        assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
+    }
 
     @Test
     public void postHandle_anon() {
@@ -180,13 +181,13 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
         assertEquals(expectedDataLayer, mav.getModel().get(ANALYTICS_DATA_LAYER_NAME));
     }
 
-//    private UserRoleType[] setAuthenticatedRoleTypes(UserRoleType... expectedUserRoleTypes) {
-//        UserResource user = newUserResource()
-//                .withRolesGlobal(newRoleResource().withType(expectedUserRoleTypes).build(expectedUserRoleTypes.length))
-//                .build();
-//        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
-//        return expectedUserRoleTypes;
-//    }
+    private Role[] setAuthenticatedRoleTypes(Role... expectedRoles) {
+        UserResource user = newUserResource()
+                .withRolesGlobal(asList(expectedRoles))
+                .build();
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
+        return expectedRoles;
+    }
 
     private void setAnonymousAuthentication() {
         SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken("key", "principal", singletonList(new SimpleGrantedAuthority("anon"))));
