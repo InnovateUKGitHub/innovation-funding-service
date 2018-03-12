@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 
@@ -63,28 +62,25 @@ public class AssessmentDetailedFinancesModelPopulator {
     private ApplicantRestService applicantRestService;
 
     @Autowired
-    YourProjectCostsSectionPopulator projectCostsSectionPopulator;
+    private YourProjectCostsSectionPopulator projectCostsSectionPopulator;
 
     public AssessmentDetailedFinancesViewModel populateModel(long assessmentId, long organisationId, Model model) {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
         OrganisationResource organisation = organisationRestService.getOrganisationById(organisationId).getSuccess();
+        List<ProcessRoleResource> applicationRoles = processRoleService.getByApplicationId(assessment.getApplication());
 
-        addApplicationAndOrganisationDetails(model, assessment.getApplication(), organisation, competition.getAssessorFinanceView());
-        addFinanceDetails(model, competition.getId(), assessment.getApplication());
-        addDetailedFinances(model, competition.getId(), assessment.getApplication(), organisationId);
+        addApplicationAndOrganisationDetails(model, applicationRoles, organisation, competition.getAssessorFinanceView());
+        addFinanceDetails(model, assessment.getApplication());
+        addDetailedFinances(model, applicationRoles, competition.getId(), assessment.getApplication(), organisationId);
 
         return new AssessmentDetailedFinancesViewModel(assessmentId, assessment.getApplication(),
                 assessment.getApplicationName(), getFinanceView(organisation.getOrganisationType()));
     }
 
-    private String getFinanceView(Long organisationType) {
-        return organisationType.equals(OrganisationTypeEnum.BUSINESS.getId()) ? "finance" :"academic-finance";
-    }
-
-    private void addDetailedFinances(Model model, long competitionId, long applicationId, long organisationId) {
+    private void addDetailedFinances(Model model, List<ProcessRoleResource> applicationRoles, long competitionId, long applicationId, long organisationId) {
         SectionResource costSection = sectionService.getSectionsForCompetitionByType(competitionId, PROJECT_COST_FINANCES).get(0);
-        ProcessRoleResource applicantProcessRole = getApplicantProcessRole(applicationId, organisationId).get();
+        ProcessRoleResource applicantProcessRole = getApplicantProcessRole(applicationRoles, organisationId).get();
         ApplicantSectionResource applicantSection = applicantRestService.getSection(applicantProcessRole.getUser(), applicationId, costSection.getId());
         ApplicationForm form = new ApplicationForm();
 
@@ -95,45 +91,41 @@ public class AssessmentDetailedFinancesModelPopulator {
         model.addAttribute("readonly", true);
     }
 
-    private Optional<ProcessRoleResource> getApplicantProcessRole(long applicationId, long organisationId) {
-        return processRoleService.getByApplicationId(applicationId)
+    private void addApplicationAndOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles, OrganisationResource organisation, AssessorFinanceView financeView) {
+
+        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles, organisation.getId());
+        leadOrganisation.ifPresent(org ->
+                model.addAttribute("leadOrganisation", org)
+        );
+
+        model.addAttribute("applicationOrganisation", organisation);
+        model.addAttribute("showAssessorDetailedFinanceLink", financeView.equals(DETAILED) ? true : false);
+    }
+
+    public void addFinanceDetails(Model model, long applicationId) {
+        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
+        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
+        model.addAttribute("organisationFinances", organisationFinances);
+    }
+
+    private Optional<ProcessRoleResource> getApplicantProcessRole(List<ProcessRoleResource> userApplicationRoles, long organisationId) {
+        return userApplicationRoles
                 .stream()
                 .filter(processRole -> processRole.getOrganisationId().equals(organisationId))
                 .findFirst();
     }
 
-    private void addApplicationAndOrganisationDetails(Model model, long applicationId, OrganisationResource organisation, AssessorFinanceView financeVew) {
-        List<ProcessRoleResource> userApplicationRoles = processRoleService
-                .findProcessRolesByApplicationId(applicationId)
-                .stream()
-                .filter(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisation.getId()))
-                .collect(toList());
-        addOrganisationDetails(model, userApplicationRoles, organisation, financeVew);
-    }
-
-    private void addOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles, OrganisationResource organisation, AssessorFinanceView financeView) {
-        model.addAttribute("applicationOrganisation", organisation);
-
-        Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
-        leadOrganisation.ifPresent(org ->
-                model.addAttribute("leadOrganisation", org)
-        );
-
-        model.addAttribute("showAssessorDetailedFinanceLink", financeView.equals(DETAILED) ? true : false);
-    }
-
-    private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
+    private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles, long organisationId) {
 
         return userApplicationRoles.stream()
+                .filter(role -> role.getOrganisationId() != null && role.getOrganisationId().equals(organisationId))
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 
-    public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
-        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
-        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
-        model.addAttribute("organisationFinances", organisationFinances);
+    private String getFinanceView(Long organisationType) {
+        return organisationType.equals(OrganisationTypeEnum.BUSINESS.getId()) ? "finance" :"academic-finance";
     }
 }
 

@@ -3,45 +3,45 @@
 <th:block th:fragment="your_finance (model)" th:with="question=${model.applicantQuestion.question}, userOrganisation=${model.currentApplicant.organisation}, readonly=${model.allReadOnly or model.complete}">
     <h2 class="heading-medium no-margin" th:text="${#strings.replace(question.name,'{organisationName}',userOrganisation.name)}"/>
     <p ifs:utext="${question.description}"/>
-        <fieldset>
-            <h2 class="heading-medium">Innovate UK funding</h2>
-            <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
-            <p>Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
+    <fieldset>
+        <h2 class="heading-medium">Innovate UK funding</h2>
+        <legend class="visuallyhidden">Innovate UK (TSB) contribution</legend>
+        <p>Innovate UK is the new name for the Technology Strategy Board (TSB).</p>
 
-            <p>To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a>.</p>
+        <p>To receive Innovate UK funding, your academic organisation must apply for funding through the Je-S system. To find out more about the Je-S requirements and processes please go to the <a href="https://je-s.rcuk.ac.uk/" rel="external">Je-S website</a>.</p>
 
-            <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
-                application will not be submitted into this competition.</p>
+        <p>All finances need to be provided before this application can be submitted. If there are any finances outstanding at the competition deadline this
+            application will not be submitted into this competition.</p>
 
-            <h3 class="heading-small">Your project costs</h3>
+        <h3 class="heading-small">Your project costs</h3>
 
-            <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
-                UK</p>
-            <p>Enter the figures from the following fields on the Je-S form:</p>
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-' + academicFinance.tsbReference?.id + '-item]}')} ? 'form-group-error'">
-                <label class="form-label" th:for="|formInput[cost-${academicFinance.tsbReference?.id}-item]|">
-          		    		<span class="form-label-bold">TSB reference</span>
-                      <span class="form-hint">This number is found at the top of your Je-S form</span>
-                      <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + academicFinance.tsbReference?.id + '-item'})" />
-                </label>
-                <input type="text"
-                       class="form-control"
-                       th:name="${'cost-' + academicFinance.tsbReference?.id + '-tsb_reference'}"
-                       th:id="|formInput[cost-${academicFinance.tsbReference?.id}-item]|"
-                       th:value="${academicFinance.tsbReference?.value}"
-                       th:readonly="${readonly}"
-                       required="required"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +'item]}')} ? 'form-control-error'" />
-            </div>
-        </fieldset>
+        <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
+            UK</p>
+        <p>Enter the figures from the following fields on the Je-S form:</p>
+        <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-' + academicFinance.tsbReference?.id + '-item]}')} ? 'form-group-error'">
+            <label class="form-label" th:for="|formInput[cost-${academicFinance.tsbReference?.id}-item]|">
+                <span class="form-label-bold">TSB reference</span>
+                <span class="form-hint">This number is found at the top of your Je-S form</span>
+                <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + academicFinance.tsbReference?.id + '-item'})" />
+            </label>
+            <input type="text"
+                   class="form-control"
+                   th:name="${'cost-' + academicFinance.tsbReference?.id + '-tsb_reference'}"
+                   th:id="|formInput[cost-${academicFinance.tsbReference?.id}-item]|"
+                   th:value="${academicFinance.tsbReference?.value}"
+                   th:readonly="${readonly}"
+                   required="required"
+                   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +'item]}')} ? 'form-control-error'" />
+        </div>
+    </fieldset>
 
-        <th:block th:insert="finance/academic-finance :: finance_fields (${model}, 'true')"/>
-        <th:block th:insert="finance/academic-finance :: finance_upload (${model},${model.financeUploadQuestion},${model.financeUploadFormInput},${readonly})" />
+    <th:block th:insert="finance/academic-finance :: finance_fields (${model}, 'true')"/>
+    <th:block th:insert="finance/academic-finance :: finance_upload (${model},${model.financeUploadQuestion},${model.financeUploadFormInput},${readonly})" />
 
-        <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
-             th:with="fieldName='form.academicTermsAgreed'"
-             class="agree-to-terms-container extra-margin"
-             th:unless="${model.allReadOnly}"></div>
+    <div th:insert="fragments/elements :: application-agree-to-terms (${model.competition.id})"
+         th:with="fieldName='form.academicTermsAgreed'"
+         class="agree-to-terms-container extra-margin"
+         th:unless="${model.allReadOnly}"></div>
 
 </th:block>
 
