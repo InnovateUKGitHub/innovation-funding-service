@@ -39,8 +39,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectDetailsController.class)
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
 public class ProjectDetailsController {
 
     @Autowired
@@ -55,6 +53,7 @@ public class ProjectDetailsController {
     @Autowired
     private OrganisationService organisationService;
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
@@ -76,6 +75,7 @@ public class ProjectDetailsController {
         return "project/detail";
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @GetMapping("/{projectId}/edit-duration")
     public String editProjectDuration(@PathVariable("competitionId") final Long competitionId,
                                       @PathVariable("projectId") final Long projectId, Model model,
@@ -94,6 +94,7 @@ public class ProjectDetailsController {
         return "project/edit-duration";
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'ifs_administrator')")
     @PostMapping("/{projectId}/update-duration")
     public String updateProjectDuration(@PathVariable("competitionId") final Long competitionId,
                                         @PathVariable("projectId") final Long projectId,
