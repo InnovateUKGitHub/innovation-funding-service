@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import junit.framework.TestCase;
+import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
@@ -21,7 +22,6 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
@@ -42,10 +42,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProjectServiceImplTest {
-
-    @InjectMocks
-    private ProjectServiceImpl service;
+public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> {
 
     @Mock
     private ProjectRestService projectRestService;
@@ -59,6 +56,8 @@ public class ProjectServiceImplTest {
     @Mock
     private ProjectService projectService;
 
+    @Override
+    protected ProjectService supplyServiceUnderTest() { return new ProjectServiceImpl(); }
 
     @Test
     public void testGetById() {
@@ -283,7 +282,7 @@ public class ProjectServiceImplTest {
 
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(emptyList());
 
-        Long organisationId = projectService.getOrganisationIdFromUser(projectId, userResource);
+        Long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
 
         Assert.assertEquals(expectedOrgId, organisationId);
     }

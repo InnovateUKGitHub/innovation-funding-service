@@ -43,6 +43,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private OrganisationRestService organisationRestService;
 
+    @Autowired
+    private ProjectService projectService;
+
     @Override
     public List<ProjectUserResource> getProjectUsersForProject(Long projectId) {
         return projectRestService.getProjectUsersForProject(projectId).getSuccess();
@@ -165,7 +168,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException {
-        List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
                 user.getId().equals(pu.getUser()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
         return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
