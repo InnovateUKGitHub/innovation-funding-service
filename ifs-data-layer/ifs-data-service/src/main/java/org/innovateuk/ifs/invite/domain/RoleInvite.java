@@ -14,6 +14,7 @@ import java.time.ZonedDateTime;
  */
 public class RoleInvite extends Invite<Role, RoleInvite> {
 
+    @Column(name = "target_id")
     private Role role;
 
     public RoleInvite() {
