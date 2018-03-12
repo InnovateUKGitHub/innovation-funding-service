@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.project.transactional.ProjectServiceImpl;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -14,22 +11,23 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.method.P;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -51,13 +49,17 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testGetProjectById() {
         final Long projectId = 1L;
 
+        when(classUnderTestMock.getProjectById(projectId))
+                .thenReturn(serviceSuccess(newProjectResource().withId(projectId).build()));
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(newProjectResource().build());
 
         assertAccessDenied(
                 () -> classUnderTest.getProjectById(projectId),
                 () -> {
-                    verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
-                    verify(projectPermissionRules, times(1)).internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
                 }
         );
     }
@@ -167,74 +169,31 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testGetProjectManager(){
         ProjectResource project = newProjectResource().build();
 
+        when(classUnderTestMock.getProjectManager(123L))
+                .thenReturn(serviceSuccess(
+                        newProjectUserResource()
+                                .withProject(123L)
+                                .withRoleName("project-manager")
+                                .build()
+                ));
+
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+
         assertAccessDenied(
-                () -> classUnderTest.getProjectById(123L),
+                () -> classUnderTest.getProjectManager(123L),
                 () -> {
-                    verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
-                    verify(projectPermissionRules, times(1)).internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1))
+                            .internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(projectPermissionRules);
                 }
         );
     }
 
     @Override
-    protected Class<TestProjectService> getClassUnderTest() {
-        return TestProjectService.class;
-    }
-
-    public static class TestProjectService implements ProjectService {
-
-        @Override
-        public ServiceResult<ProjectResource> getProjectById(@P("projectId") Long projectId) {
-            return serviceSuccess(newProjectResource().withId(1L).build());
-        }
-
-        @Override
-        public ServiceResult<ProjectResource> getByApplicationId(@P("applicationId") Long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ProjectResource>> findAll() {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ProjectResource>> findByUserId(Long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-            return serviceSuccess(newProjectUserResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
-            return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
-        }
-
+    protected Class<? extends ProjectService> getClassUnderTest() {
+        return ProjectServiceImpl.class;
     }
 }
 

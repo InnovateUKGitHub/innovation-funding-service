@@ -14,6 +14,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.isNull;
@@ -39,6 +41,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void test_create() throws Exception {
         final NoteResource noteResource = new NoteResource(null, null, null, null, null);
+
         assertAccessDenied(
                 () -> classUnderTest.create(noteResource),
                 () -> {
@@ -51,6 +54,9 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     public void test_findOne() throws Exception {
         setLoggedInUser(null);
 
+        when(classUnderTestMock.findOne(1L))
+                .thenReturn(serviceSuccess(new NoteResource(1L, null, null, null, null)));
+
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
             verify(noteRules).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(noteRules);
@@ -60,6 +66,12 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void test_findAll() throws Exception {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.findAll(22L))
+                .thenReturn(serviceSuccess(new ArrayList<>(asList(
+                        new NoteResource(2L, null, null, null, null),
+                        new NoteResource(3L, null, null, null, null)
+                ))));
 
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccess().size());
@@ -87,12 +99,12 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
             List<NoteResource> notes = new ArrayList<>();
             notes.add(findOne(2L).getSuccess());
             notes.add(findOne(3L).getSuccess());
-            return ServiceResult.serviceSuccess(notes);
+            return serviceSuccess(notes);
         }
 
         @Override
         public ServiceResult<NoteResource> findOne(Long id) {
-            return ServiceResult.serviceSuccess(new NoteResource(id,
+            return serviceSuccess(new NoteResource(id,
                     null, null, null, null));
         }
 

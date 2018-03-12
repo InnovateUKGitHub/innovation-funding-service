@@ -4,9 +4,10 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -14,7 +15,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -22,9 +22,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItem
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -52,12 +50,14 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
     @Override
     protected Class<? extends CompetitionService> getClassUnderTest() {
-        return TestCompetitionService.class;
+        return CompetitionServiceImpl.class;
     }
 
     @Test
     public void findAll() {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.findAll()).thenReturn(serviceSuccess(newCompetitionResource().build(2)));
 
         ServiceResult<List<CompetitionResource>> results = classUnderTest.findAll();
         assertEquals(0, results.getSuccess().size());
@@ -71,6 +71,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     @Test
     public void getCompetitionById() {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.getCompetitionById(1L))
+                .thenReturn(serviceSuccess(newCompetitionResource().build()));
 
         assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
             verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
@@ -124,14 +127,21 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         });
     }
 
+
     @Test
     public void getCompetitionOrganisationTypesById() {
+        when(classUnderTestMock.getCompetitionOrganisationTypes(1L))
+                .thenReturn(serviceSuccess(newOrganisationTypeResource().build(2)));
+
         runAsRole(SYSTEM_REGISTRATION_USER, () -> classUnderTest.getCompetitionOrganisationTypes(1L));
     }
 
     @Test
     public void findLiveCompetitions() {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.findLiveCompetitions())
+                .thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findLiveCompetitions();
         assertEquals(0, results.getSuccess().size());
@@ -145,6 +155,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     public void findProjectSetupCompetitions() {
         setLoggedInUser(null);
 
+        when(classUnderTestMock.findProjectSetupCompetitions())
+                .thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
+
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findProjectSetupCompetitions();
         assertEquals(0, results.getSuccess().size());
 
@@ -156,6 +169,8 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     @Test
     public void findUpcomingCompetitions() {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.findUpcomingCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findUpcomingCompetitions();
         assertEquals(0, results.getSuccess().size());
@@ -170,6 +185,8 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         Long competitionId = 1L;
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
+        when(classUnderTestMock.findUnsuccessfulApplications(competitionId, 0, 0, ""))
+                .thenReturn(serviceSuccess(new ApplicationPageResource()));
         when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
 
         assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, ""), () -> {
@@ -214,8 +231,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void findPreviousCompetitions() {
+    public void findFeedbackReleasedCompetitions() {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.findFeedbackReleasedCompetitions())
+                .thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findFeedbackReleasedCompetitions();
         assertEquals(0, results.getSuccess().size());
@@ -256,127 +276,5 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
                         )
                         .build());
         serviceCall.run();
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestCompetitionService implements CompetitionService {
-
-        @Override
-        public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
-            return serviceSuccess(newCompetitionResource().build());
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
-            return serviceSuccess(newCompetitionResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<OrganisationTypeResource>> getCompetitionOrganisationTypes(long id) {
-            return serviceSuccess(newOrganisationTypeResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionResource>> findAll() {
-            return serviceSuccess(newCompetitionResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
-            return serviceSuccess(newCompetitionSearchResultItem().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-            return serviceSuccess(newCompetitionSearchResultItem().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
-            return serviceSuccess(newCompetitionSearchResultItem().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
-            return serviceSuccess(newCompetitionSearchResultItem().build(2));
-        }
-
-        @Override
-        public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField) {
-            return serviceSuccess(new ApplicationPageResource());
-        }
-
-        @Override
-        public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
-            return serviceSuccess(new CompetitionSearchResult());
-        }
-
-        @Override
-        public ServiceResult<CompetitionCountResource> countCompetitions() {
-            return serviceSuccess(new CompetitionCountResource());
-        }
-
-        @Override
-        public ServiceResult<Void> closeAssessment(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> notifyAssessors(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> releaseFeedback(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> manageInformState(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
-            return serviceSuccess(newCompetitionSearchResultItem().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
-            return serviceSuccess(emptyList());
-        }
-
-        @Override
-        public ServiceResult<Long>countAllOpenQueries(Long competitionId) {
-            return serviceSuccess(0L);
-        }
-
-        @Override
-        public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
-            return null;
-        }
     }
 }

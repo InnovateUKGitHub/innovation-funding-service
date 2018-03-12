@@ -37,19 +37,25 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
 
     @Test
     public void testFindAll() {
+        when(classUnderTestMock.findAll())
+                .thenReturn(serviceSuccess(newUserResource().build(2)));
+
         classUnderTest.findAll();
         assertViewMultipleUsersExpectations();
     }
 
     @Test
     public void testGetUserById() {
-        assertAccessDenied(() -> classUnderTest.getUserById(123L), () -> {
-            assertViewSingleUserExpectations();
-        });
+        when(classUnderTestMock.getUserById(123L))
+                .thenReturn(serviceSuccess(newUserResource().build()));
+
+        assertAccessDenied(() -> classUnderTest.getUserById(123L), this::assertViewSingleUserExpectations);
     }
 
     @Test
     public void testGetUserByUid() {
+        when(classUnderTestMock.getUserResourceByUid("asdf"))
+                .thenReturn(serviceSuccess(newUserResource().build()));
 
         // this method must remain unsecured because it is the way in which we get a user onto the
         // SecurityContext in the first place for permission checking
@@ -66,11 +72,16 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
     }
 
     private void assertViewXUsersExpectations(int numberOfUsers) {
-        verify(userRules, times(numberOfUsers)).anyUserCanViewThemselves(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
-        verify(userRules, times(numberOfUsers)).systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .anyUserCanViewThemselves(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .internalUsersCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .consortiumMembersCanViewOtherConsortiumMembers(isA(UserResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(numberOfUsers))
+                .systemRegistrationUserCanViewEveryone(isA(UserResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractionsWithRules();
     }
 
