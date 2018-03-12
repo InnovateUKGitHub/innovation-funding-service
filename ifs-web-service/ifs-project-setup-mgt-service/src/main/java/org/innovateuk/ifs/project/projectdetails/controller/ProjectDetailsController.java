@@ -101,8 +101,7 @@ public class ProjectDetailsController {
                                         Model model,
                                         UserResource loggedInUser) {
 
-
-        Supplier<String> failureView = () -> "project/edit-duration";
+        Supplier<String> failureView = () -> "redirect:/competition/" + competitionId + "/project/" + projectId + "/edit-duration";
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
         return projectDetailsService.updateProjectDuration(projectId, durationInMonths)
                                     .handleSuccessOrFailure(failure -> failureView.get(),

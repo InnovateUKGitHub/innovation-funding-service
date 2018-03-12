@@ -155,8 +155,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
 
         mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration?durationInMonths=" + durationInMonths))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/edit-duration"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/" + competitionId + "/project/" + projectId + "/edit-duration"))
                 .andReturn();
     }
 
