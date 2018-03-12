@@ -24,10 +24,10 @@ public class ApplicationDetailsFormPopulator implements CompetitionSetupSubsecti
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 		ApplicationDetailsForm competitionSetupForm = new ApplicationDetailsForm();
 
+		competitionSetupForm.setMaxProjectDuration(competitionResource.getMinProjectDuration());
+		competitionSetupForm.setMinProjectDuration(competitionResource.getMinProjectDuration());
 		competitionSetupForm.setUseResubmissionQuestion(competitionResource.isUseResubmissionQuestion());
 
 		return competitionSetupForm;
 	}
-
-
 }

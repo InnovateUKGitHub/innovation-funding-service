@@ -62,7 +62,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("hasAssessmentPanel").description("Indicates if the competition will have an assessment panel stage"),
             fieldWithPath("hasInterviewStage").description("Indicates if the competition will have an interview stage"),
             fieldWithPath("assessorFinanceView").description("Indicates if the competition will display an overview or a detailed view of the finances for the assessor"),
-            fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition")
+            fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition"),
+            fieldWithPath("minProjectDuration").description("The minimum amount of weeks that part of this competition projects should last"),
+            fieldWithPath("maxProjectDuration").description("The maximum amount of weeks that part of this competition projects should last")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

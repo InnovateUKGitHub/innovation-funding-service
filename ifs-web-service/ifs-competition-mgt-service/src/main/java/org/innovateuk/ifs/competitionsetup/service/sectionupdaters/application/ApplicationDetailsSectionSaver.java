@@ -42,6 +42,8 @@ public class ApplicationDetailsSectionSaver extends AbstractSectionSaver impleme
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		ApplicationDetailsForm form = (ApplicationDetailsForm) competitionSetupForm;
 		competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
+		competition.setMaxProjectDuration(form.getMaxProjectDuration());
+		competition.setMinProjectDuration(form.getMinProjectDuration());
 		return competitionSetupRestService.update(competition).toServiceResult();
 	}
 
