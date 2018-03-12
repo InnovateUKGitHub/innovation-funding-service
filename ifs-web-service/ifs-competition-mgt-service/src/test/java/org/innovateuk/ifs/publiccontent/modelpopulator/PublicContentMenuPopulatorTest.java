@@ -61,7 +61,7 @@ public class PublicContentMenuPopulatorTest {
         when(publicContentService.getCompetitionById(COMPETITION_ID)).thenReturn(publicContent);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        PublicContentMenuViewModel viewModel = target.populate(COMPETITION_ID, WEB_BASE_URL);
+        PublicContentMenuViewModel viewModel = target.populate(competition, WEB_BASE_URL);
 
         assertThat(viewModel.getSections(), equalTo(sections));
         assertThat(viewModel.getCompetition(), equalTo(competition));

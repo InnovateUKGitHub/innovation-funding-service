@@ -599,8 +599,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
 
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
 
         return appFinanceList;
     }
