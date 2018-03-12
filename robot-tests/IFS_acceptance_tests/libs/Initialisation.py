@@ -85,7 +85,7 @@ for ass in cursor.fetchall():
         assessment_ids[applicationName] = first_record
 
 
-# execute SQL query using execute() method, to fetch the Applications
+# execute SQL query using execute() method, to fetch the Projects
 cursor.execute("SELECT `id`,`name` FROM project")
 
 # Fetch the project records
@@ -104,6 +104,31 @@ for org in cursor.fetchall():
     organisationId = org[0]
     organisationName = org[1]
     organisation_ids[organisationName] = str(organisationId)
+
+
+# execute SQL query using execute() method, to fetch the Competition milestones
+cursor.execute("SELECT c.id, c.name, m.type, m.date FROM competition c JOIN milestone m ON m.competition_id = c.id")
+
+competition_milestones = {}
+for comp in cursor.fetchall():
+
+    competitionId = comp[0]
+    competitionName = comp[1]
+    milestoneType = comp[2]
+    milestoneDate = comp[3]
+
+    milestones_for_competition = competition_milestones[competitionId] if competitionId in competition_milestones else {}
+
+    dates_for_milestone = milestones_for_competition[milestoneType] if milestoneType in milestones_for_competition else {}
+
+    dates_for_milestone['rawDate'] = milestoneDate
+    dates_for_milestone['prettyDate'] = milestoneDate.strftime('%-d %B %Y') if milestoneDate is not None else None
+
+    competition_milestones[competitionId] = milestones_for_competition
+    milestones_for_competition[milestoneType] = dates_for_milestone
+
+def getPrettyMilestoneDate(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyDate']
 
 # disconnect from server
 cursor.close()

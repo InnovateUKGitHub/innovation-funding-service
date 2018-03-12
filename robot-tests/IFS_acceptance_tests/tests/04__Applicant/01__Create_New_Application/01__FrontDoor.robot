@@ -32,11 +32,11 @@ Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user should see the element    link=Home and industrial efficiency programme
+    Given the user should see the element    link=${createApplicationOpenCompetition}
     Then the user should see the element    jQuery=h3:contains("Eligibility")
     And the user should see the element    jQuery=div:contains("UK based business of any size. Must involve at least one SME")
-    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("15 April 2016")
-    And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
+    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("${createApplicationOpenCompetitionOpenDate}")
+    And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("${createApplicationOpenCompetitionCloseDate}")
     #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
 
 Guest user can see the opening and closing status of competitions
@@ -53,9 +53,9 @@ Guest user can see the opening and closing status of competitions
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
     And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
+    Given Change the close date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
+    And the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
-    And Change the close date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
@@ -67,10 +67,10 @@ Guest user can filter competitions by Innovation area
     When the user selects the option from the drop-down menu    Space technology    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
     Then the user should see the element    jQuery=a:contains("Transforming big data")
-    And the user should not see the element    jQuery=a:contains("Home and industrial efficiency programme")
+    And the user should not see the element    jQuery=a:contains("${createApplicationOpenCompetition}")
     When the user selects the option from the drop-down menu    Any    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
-    Then the user should see the element    jQuery=a:contains("Home and industrial efficiency programme")
+    Then the user should see the element    jQuery=a:contains("${createApplicationOpenCompetition}")
 
 Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
@@ -100,7 +100,7 @@ Guest user can see the public information of a competition
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then the user should see the element    jQuery=h1:contains("Home and industrial efficiency programme")
+    Then the user should see the element    jQuery=h1:contains("${createApplicationOpenCompetition}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Friday 15 April 2016")
     And the user should see the element    jQuery=li:contains("Competition closes")
     And the user should see the element    jQuery=li:contains("Friday 9 September 2067")
@@ -159,7 +159,7 @@ Guest user can apply to a competition
     [Documentation]    INFUND-6923
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Home and industrial efficiency programme
+    Given the user clicks the button/link    link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
     Then the user should see the element    jQuery=.button:contains("Sign in")
     And the user should see the element    jQuery=.button:contains("Create")
