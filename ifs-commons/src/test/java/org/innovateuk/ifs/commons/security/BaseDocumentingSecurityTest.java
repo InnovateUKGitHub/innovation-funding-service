@@ -4,24 +4,15 @@ import au.com.bytecode.opencsv.CSVWriter;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.description.method.MethodDescription;
-import net.bytebuddy.dynamic.scaffold.InstrumentedType;
-import net.bytebuddy.implementation.Implementation;
-import net.bytebuddy.implementation.MethodCall;
 import net.bytebuddy.implementation.MethodDelegation;
-import net.bytebuddy.implementation.StubMethod;
 import net.bytebuddy.implementation.attribute.MethodAttributeAppender;
-import net.bytebuddy.implementation.bytecode.ByteCodeAppender;
-import net.bytebuddy.jar.asm.MethodVisitor;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.ProxyUtils;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
-import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.Advised;
-import org.springframework.aop.target.SingletonTargetSource;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
@@ -42,6 +33,7 @@ import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
+import static net.bytebuddy.matcher.ElementMatchers.*;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
@@ -63,6 +55,22 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTest {
 
     protected T classUnderTest;
+
+    /**
+     * The underlying mock of the class that is currently
+     * being security tested. Expectations can be set
+     * on this like you would normally e.g.
+     * {@code when(classUnderTestMock.doSomething()).thenReturn();}
+     */
+    protected T classUnderTestMock;
+
+    /**
+     * As developers might still be using the old security
+     * testing pattern of defining a stub implementation,
+     * we should acquire the 'true' intended target class
+     * that we will be recording interactions with.
+     */
+    private Class<T> targetClass;
 
     /**
      * Service calls and their associated Permission Rules calls are recorded as they occur.  This enum allows us to
@@ -99,29 +107,18 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      */
     @Before
     public void setup() {
-        Advised advisedSecuredBean;
+        Class<?>[] interfaces = getClassUnderTest().getInterfaces();
+        targetClass = (Class<T>) (interfaces.length == 1 ? interfaces[0] : getClassUnderTest());
 
-        if (applicationContext.getBeanNamesForType(getClassUnderTest()).length >= 1) {
-            advisedSecuredBean = (Advised) applicationContext.getBean(getClassUnderTest());
-        } else {
-            applicationContext.registerBeanDefinition(
-                    "beanUndergoingSecurityTesting",
-                    new RootBeanDefinition(getClassUnderTest())
-            );
+        classUnderTestMock = createDelegatingProxy(targetClass, mock(targetClass));
 
-            advisedSecuredBean = (Advised) applicationContext.getBean("beanUndergoingSecurityTesting");
-        }
+        Object securedSpringProxy = ProxyUtils.createProxy(
+                targetClass,
+                classUnderTestMock,
+                getAdvisedSecuredBean().getAdvisors()
+        );
 
-        org.springframework.aop.framework.ProxyFactory proxyFactory =
-                new org.springframework.aop.framework.ProxyFactory();
-
-        proxyFactory.setTargetClass(getClassUnderTest());
-        proxyFactory.setTarget(getMockTarget());
-        proxyFactory.addAdvisors(advisedSecuredBean.getAdvisors());
-        proxyFactory.setProxyTargetClass(true);
-        proxyFactory.setPreFiltered(true);
-
-        classUnderTest = createRecordingProxy(proxyFactory.getProxy(), getClassUnderTest(),
+        classUnderTest = createRecordingProxy(securedSpringProxy, getClassUnderTest(),
                 method -> hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class),
                 methodCalled -> recordServiceMethodCall(methodCalled)
         );
@@ -129,23 +126,32 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
         super.setup();
     }
 
+    private Advised getAdvisedSecuredBean() {
+        if (applicationContext.getBeanNamesForType(targetClass).length >= 1) {
+            return (Advised) applicationContext.getBean(targetClass);
+        } else {
+            applicationContext.registerBeanDefinition(
+                    "beanUndergoingSecurityTesting",
+                    new RootBeanDefinition(targetClass)
+            );
 
-    private T getMockTarget() {
-        Class<?>[] interfaces = getClassUnderTest().getInterfaces();
-        Class<?> targetClass = interfaces.length == 1 ? interfaces[0] : getClassUnderTest();
+            return (Advised) applicationContext.getBean("beanUndergoingSecurityTesting");
+        }
+    }
 
+    private static <U> U createDelegatingProxy(Class<U> targetClass, U targetInstance) {
         try {
-            return (T) new ByteBuddy()
+            return new ByteBuddy()
                     .subclass(targetClass)
-                    .method(ElementMatchers.any())
-                    .intercept(MethodDelegation.to(mock(targetClass)))
+                    .method(isPublic().and(not(isDeclaredBy(Object.class))))
+                    .intercept(MethodDelegation.to(targetInstance))
                     .attribute(MethodAttributeAppender.ForInstrumentedMethod.INCLUDING_RECEIVER)
                     .make()
-                    .load(getClassUnderTest().getClassLoader())
+                    .load(targetClass.getClassLoader())
                     .getLoaded()
                     .newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Could not mock target class", e);
+            throw new RuntimeException("Could not delegate method calls to target class through target instance.", e);
         }
     }
 
@@ -157,17 +163,17 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
     }
 
     private void recordServiceMethodCall(Method methodCalled) {
-        Class<?>[] interfaces = getClassUnderTest().getInterfaces();
-        Class<?> serviceInterface = interfaces.length > 0 ? interfaces[0] : getClassUnderTest();
-
         recordedRuleInteractions.add(Pair.of(
                 RecordingSource.SERVICE,
-                serviceInterface.getSimpleName() + "." + methodCalled.getName()
+                targetClass.getSimpleName() + "." + methodCalled.getName()
         ));
 
         SecuredBySpring simpleSecuredAnnotation = AnnotationUtils.findAnnotation(methodCalled, SecuredBySpring.class);
         if (simpleSecuredAnnotation != null) {
-            recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
+            recordedRuleInteractions.add(Pair.of(
+                    RecordingSource.PERMISSION_RULE,
+                    targetClass.getSimpleName() + "." + methodCalled.getName()
+            ));
         }
     }
 
