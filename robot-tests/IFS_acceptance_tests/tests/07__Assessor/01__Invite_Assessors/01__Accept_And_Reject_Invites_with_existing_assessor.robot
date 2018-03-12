@@ -39,9 +39,10 @@ ${Invitation_existing_assessor1}           ${server}/assessment/invite/competiti
 ${Invitation_for_upcoming_comp_assessor1}  ${server}/assessment/invite/competition/1ec7d388-3639-44a9-ae62-16ad991dc92c
 ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0
 ${ASSESSOR_DASHBOARD}                      ${server}/assessment/assessor/dashboard
-${Correct_date}                            12 January to 29 January
-${Correct_date_start}                      12 January
-${Correct_date_end}                        29 January
+${Correct_date}                            29 April to 9 May
+${Correct_date_start}                      6 May
+${Correct_date_end}                        16 May
+${assessmentPeriod}                        29 April 2020 to 9 May 2020: Assessment period
 
 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 # ${IN_ASSESSMENT_COMPETITION_NAME} is the Sustainable living models for the future
@@ -114,7 +115,7 @@ Existing assessor: Accept invitation from the invite link
     [Setup]    Logout as user
     Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     And the user should see the element     jQuery=h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
-    And the user should see the element     jQuery=h2:contains("12 January 2068 to 28 January 2068: Assessment period")
+    And the user should see the element     jQuery=h2:contains("${assessmentPeriod}")
     And the user selects the radio button   acceptInvitation  true
     And The user clicks the button/link     jQuery=button:contains("Confirm")
     Then the user should see the element    jQuery=p:contains("Your email address is linked to an existing account.")
