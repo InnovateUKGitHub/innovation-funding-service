@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.core.Is.is;
@@ -297,7 +297,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
                 .withLastName("Last")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
-                .withRoles(asList(Role.PROJECT_FINANCE))
+                .withRoles(singletonList(Role.PROJECT_FINANCE))
                 .build();
 
         when(registrationServiceMock.createInternalUser("SomeHashString", internalUserRegistrationResource)).thenReturn(serviceSuccess());

@@ -8,8 +8,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Collections;
-
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
@@ -53,7 +52,7 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         ApplicationResource application = newApplicationResource().withId(1L).build();
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application,
-                newUserResource().withRolesGlobal(Collections.singletonList(Role.SYSTEM_MAINTAINER)
+                newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_MAINTAINER)
                 ).build());
 
         assertTrue(result);
@@ -64,7 +63,7 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         ApplicationResource application = newApplicationResource().withId(1L).build();
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application,
-                newUserResource().withRolesGlobal(Collections.singletonList(Role.COLLABORATOR)
+                newUserResource().withRolesGlobal(singletonList(Role.COLLABORATOR)
                 ).build());
 
         assertFalse(result);

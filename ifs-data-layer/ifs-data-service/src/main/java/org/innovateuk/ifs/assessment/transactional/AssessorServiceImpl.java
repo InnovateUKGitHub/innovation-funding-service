@@ -103,15 +103,13 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         // TODO: Handle failures gracefully and hand them back to the webservice
         return retrieveInvite(inviteHash).andOnSuccess(inviteResource -> {
             userRegistrationResource.setEmail(inviteResource.getEmail());
-            return getAssessorRoleResource().andOnSuccess(assessorRole -> {
-                userRegistrationResource.setRoles(singletonList(assessorRole));
-                return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
-                    assignCompetitionParticipantsToUser(created);
-                    Profile profile = profileRepository.findOne(created.getProfileId());
-                    // profile is guaranteed to have been created by createUser(...)
-                    profile.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
-                    profileRepository.save(profile);
-                });
+            userRegistrationResource.setRoles(singletonList(Role.ASSESSOR));
+            return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
+                assignCompetitionParticipantsToUser(created);
+                Profile profile = profileRepository.findOne(created.getProfileId());
+                // profile is guaranteed to have been created by createUser(...)
+                profile.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
+                profileRepository.save(profile);
             });
         });
     }
@@ -196,10 +194,6 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
         competitionParticipants.forEach(competitionParticipant -> competitionParticipant.setUser(user));
         competitionParticipantRepository.save(competitionParticipants);
-    }
-
-    private ServiceResult<Role> getAssessorRoleResource() {
-        return serviceSuccess(Role.ASSESSOR);
     }
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {

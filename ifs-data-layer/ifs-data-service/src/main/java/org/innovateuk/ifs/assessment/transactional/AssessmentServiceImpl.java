@@ -265,10 +265,8 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         return getAssessor(assessmentCreateResource.getAssessorId())
                 .andOnSuccess(assessor -> getApplication(assessmentCreateResource.getApplicationId())
                         .andOnSuccess(application -> checkApplicationAssignable(assessor, application))
-                        .andOnSuccess(application -> serviceSuccess(Role.ASSESSOR)
-                                .andOnSuccess(role -> getAssessmentActivityState(AssessmentState.CREATED)
-                                        .andOnSuccess(activityState -> createAssessment(assessor, application, role, activityState))
-                                )
+                        .andOnSuccess(application -> getAssessmentActivityState(AssessmentState.CREATED)
+                                        .andOnSuccess(activityState -> createAssessment(assessor, application, Role.ASSESSOR, activityState))
                         )
                 );
     }

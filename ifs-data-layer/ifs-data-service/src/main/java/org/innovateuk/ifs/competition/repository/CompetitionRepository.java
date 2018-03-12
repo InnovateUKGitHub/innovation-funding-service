@@ -109,7 +109,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.closedDate IS NULL " +
             "AND t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
-            "AND 0 = (SELECT COUNT(r) FROM u.roles r WHERE r = org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE) " +
+            "AND NOT EXISTS (SELECT 1 FROM u.roles r WHERE r = org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE) " +
             "AND a.competition.id = :competitionId " +
             "AND (post.thread.id, post.createdOn) IN ( " +
             "    SELECT p.thread.id, MAX(p.createdOn) " +

@@ -15,10 +15,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -82,7 +82,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
     }
 
     private void setDefaultSystemRegistrar() {
-        setLoggedInUser(newUserResource().withRolesGlobal(Collections.singletonList(Role.SYSTEM_REGISTRATION_USER)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_REGISTRATION_USER)).build());
         testService.doWithinTransaction(() ->
                 setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
         );

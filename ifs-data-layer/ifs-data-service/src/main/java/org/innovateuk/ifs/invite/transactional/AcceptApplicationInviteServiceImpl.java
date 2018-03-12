@@ -23,7 +23,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -115,10 +114,9 @@ public class AcceptApplicationInviteServiceImpl extends BaseApplicationInviteSer
 
     private void initializeInvitee(ApplicationInvite invite, User user) {
         Application application = invite.getTarget();
-        Role role = Role.COLLABORATOR;
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
 
-        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
+        ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
         processRoleRepository.save(processRole);
         application.addProcessRole(processRole);
 

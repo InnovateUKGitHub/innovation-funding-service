@@ -103,7 +103,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
                 withUser(application1LeadApplicant, application2LeadApplicant, application3LeadApplicant).
                 withApplication(application1, application2, application3).
-                withRole(Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.LEADAPPLICANT).
+                withRole(Role.LEADAPPLICANT).
                 build(3);
 
         UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant);

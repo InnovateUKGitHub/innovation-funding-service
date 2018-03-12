@@ -9,13 +9,12 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 
 public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceNotePermissionRules> {
@@ -27,7 +26,7 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     @Before
     public void setUp() throws Exception {
         projectFinanceUserOne = projectFinanceUser();
-        projectFinanceUserTwo = newUserResource().withId(1993L).withRolesGlobal(Collections.singletonList(Role.PROJECT_FINANCE)).build();
+        projectFinanceUserTwo = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
         intruder = getUserWithRole(FINANCE_CONTACT);
         noteResource = sampleNote();
     }

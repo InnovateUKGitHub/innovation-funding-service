@@ -13,15 +13,13 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -36,7 +34,6 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
     private UserResource user;
     private UserResource projectFinanceUser;
     private ProjectResource project;
-    private Role partnerRole;
     private List<ProjectUser> partnerProjectUser;
     private OrganisationResource organisationResource;
     private BankDetailsResource bankDetailsResource;
@@ -45,7 +42,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
     public void setUp(){
         user = newUserResource().build();
         project = newProjectResource().build();
-        projectFinanceUser = newUserResource().withRolesGlobal(Collections.singletonList(Role.PROJECT_FINANCE)).build();
+        projectFinanceUser = newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build();
         partnerProjectUser = newProjectUser().build(1);
         organisationResource = newOrganisationResource().build();
         bankDetailsResource = newBankDetailsResource().withOrganisation(organisationResource.getId()).withProject(project.getId()).build();

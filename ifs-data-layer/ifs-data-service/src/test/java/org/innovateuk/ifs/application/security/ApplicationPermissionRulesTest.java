@@ -67,15 +67,13 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource projectFinance;
     private UserResource panelAssessor;
 
-    private Role innovationLeadRole = Role.INNOVATION_LEAD;
-    private Role panelAssessorRole = Role.PANEL_ASSESSOR;
     private List<Role> applicantRoles = new ArrayList<>();
 
     @Before
     public void setup() {
         competition = newCompetition().withLeadTechnologist().build();
         User innovationLeadOnApp1 = newUser().build();
-        innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(innovationLeadRole)).build();
+        innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
         AssessmentParticipant competitionParticipant = newAssessmentParticipant().withUser(innovationLeadOnApp1).build();
         leadOnApplication1 = newUserResource().build();
@@ -84,7 +82,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         compAdmin = compAdminUser();
         assessor = assessorUser();
         projectFinance = projectFinanceUser();
-        panelAssessor = newUserResource().withRolesGlobal(singletonList(panelAssessorRole)).build();
+        panelAssessor = newUserResource().withRolesGlobal(singletonList(Role.PANEL_ASSESSOR)).build();
 
         processRole1 = newProcessRole().withRole(Role.LEADAPPLICANT).build();
         processRole2 = newProcessRole().withRole(Role.APPLICANT).build();

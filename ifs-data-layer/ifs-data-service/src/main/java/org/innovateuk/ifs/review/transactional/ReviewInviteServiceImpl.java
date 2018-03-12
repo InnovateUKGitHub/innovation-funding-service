@@ -461,10 +461,9 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(ReviewParticipant participant) {
         Competition competition = participant.getProcess();
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        final Role panelAssessorRole = Role.PANEL_ASSESSOR;
         final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         applicationsInPanel.forEach(application -> {
-            Review review = new Review(application, participant, panelAssessorRole);
+            Review review = new Review(application, participant, Role.PANEL_ASSESSOR);
             review.setActivityState(pendingActivityState);
             reviewRepository.save(review);
         });
