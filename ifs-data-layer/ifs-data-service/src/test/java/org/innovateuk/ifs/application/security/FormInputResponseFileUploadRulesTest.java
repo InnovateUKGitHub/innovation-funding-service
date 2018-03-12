@@ -22,7 +22,6 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertFalse;
@@ -51,18 +50,18 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         UserResource userResource = newUserResource().withId(user.getId()).build();
 
         ProcessRole applicantProcessRole =
-                newProcessRole().withUser(user).withRole(APPLICANT).withApplication(application).build();
+                newProcessRole().withUser(user).withRole(LEADAPPLICANT).withApplication(application).build();
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
-        List<Role> roles = asList(APPLICANT, LEADAPPLICANT, COLLABORATOR);
+        List<Role> expectedRoles = asList(LEADAPPLICANT, COLLABORATOR);
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
-        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId)).thenReturn(singletonList(applicantProcessRole));
+        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(singletonList(applicantProcessRole));
         
         assertTrue(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, userResource));
 
-        verify(processRoleRepositoryMock).findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId);
+        verify(processRoleRepositoryMock).findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId);
     }
 
     @Test
@@ -72,13 +71,13 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
 
-        List<Role> roles = asList(APPLICANT, LEADAPPLICANT, COLLABORATOR);
+        List<Role> expectedRoles = asList(LEADAPPLICANT, COLLABORATOR);
 
-        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId)).thenReturn(emptyList());
+        when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId)).thenReturn(emptyList());
 
         assertFalse(fileUploadRules.applicantCanUploadFilesInResponsesForOwnApplication(file, user));
 
-        verify(processRoleRepositoryMock).findByUserIdAndRoleInAndApplicationId(user.getId(), roles, applicationId);
+        verify(processRoleRepositoryMock).findByUserIdAndRoleInAndApplicationId(user.getId(), expectedRoles, applicationId);
     }
 
     @Test
