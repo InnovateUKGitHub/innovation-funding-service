@@ -91,7 +91,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
                 setupResource.setAllowedFileTypes(
-                        simpleToLinkedHashSet(formInput.getAllowedFileTypes().split(","),
+                        simpleToLinkedHashSet(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes()),
                                 FileTypeCategory::fromDisplayName));
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;
