@@ -10,6 +10,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.util.StringUtils;
 
 import java.util.Set;
 
@@ -53,7 +54,10 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
             return emptySet();
         }
 
-        return simpleMapSet(allowedFileTypes.split(","), FileTypeCategory::fromDisplayName);
+        return simpleMapSet(
+                StringUtils.commaDelimitedListToStringArray(allowedFileTypes),
+                FileTypeCategory::fromDisplayName
+        );
     }
 
     public String mapToFileTypesString(Set<FileTypeCategory> allowedFileTypes) {

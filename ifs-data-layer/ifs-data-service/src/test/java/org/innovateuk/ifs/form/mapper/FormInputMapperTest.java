@@ -120,4 +120,27 @@ public class FormInputMapperTest {
         assertTrue(result.getAllowedFileTypes().contains(FileTypeCategory.PDF));
         assertTrue(result.getAllowedFileTypes().contains(FileTypeCategory.SPREADSHEET));
     }
+
+    @Test
+    public void mapToResource_emptyFileTypeStringShouldResultInEmptyList() {
+        FormInput formInput = newFormInput()
+                .withAllowedFileTypes("")
+                .withId(1L)
+                .build();
+
+        FormInputResource result = formInputMapperImpl.mapToResource(formInput);
+
+        assertTrue(result.getAllowedFileTypes().isEmpty());
+    }
+
+    @Test
+    public void mapToResource_nullFileTypeStringShouldResultInEmptyList() {
+        FormInput formInput = newFormInput()
+                .withId(1L)
+                .build();
+
+        FormInputResource result = formInputMapperImpl.mapToResource(formInput);
+
+        assertTrue(result.getAllowedFileTypes().isEmpty());
+    }
 }
