@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -23,6 +25,9 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     @Autowired
     private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
 
     @Autowired
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
@@ -58,6 +63,11 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
         CompetitionSearchResult searchResult = competitionRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccess();
         searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
         return searchResult;
+    }
+
+    @Override
+    public ApplicationPageResource wildcardSearchByApplicationId(String searchString, int pageNumber, int pageSize) {
+        return applicationRestService.wildcardSearchById(searchString, pageNumber, pageSize).getSuccess();
     }
 
     @Override

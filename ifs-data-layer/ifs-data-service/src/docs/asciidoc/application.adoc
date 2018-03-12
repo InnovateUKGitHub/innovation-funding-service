@@ -81,6 +81,18 @@ include::{snippets}/application/application-ready-for-submit/http-response.adoc[
 ==== Curl Example
 include::{snippets}/application/application-ready-for-submit/curl-request.adoc[]
 
+=== Perform a wildcard search by application id returning a paged result
+==== Request
+include::{snippets}/application/wildcard-search-by-id/http-request.adoc[]
+include::{snippets}/application/wildcard-search-by-id/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/wildcard-search-by-id/http-response.adoc[]
+include::{snippets}/application/wildcard-search-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application/wildcard-search-by-id/curl-request.adoc[]
+
 === Save application details
 ==== Request
 include::{snippets}/application/save-application-details/http-request.adoc[]

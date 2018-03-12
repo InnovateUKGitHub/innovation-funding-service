@@ -2,7 +2,7 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.invite.transactional.InviteProjectService;
+import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,36 +25,36 @@ public class InviteProjectController {
     private static final Log LOG = LogFactory.getLog(InviteProjectController.class);
 
     @Autowired
-    private InviteProjectService inviteProjectService;
+    private ProjectInviteService projectInviteService;
 
     @PostMapping(PROJECT_INVITE_SAVE)
     public RestResult<Void> saveProjectInvites(@RequestBody @Valid InviteProjectResource inviteProjectResource) {
 
-        return inviteProjectService.saveProjectInvite(inviteProjectResource).toPostResponse();
+        return projectInviteService.saveProjectInvite(inviteProjectResource).toPostResponse();
     }
 
     @GetMapping(GET_INVITE_BY_HASH + "{hash}")
     public RestResult<InviteProjectResource> getProjectInviteByHash(@PathVariable("hash") String hash) {
-        return inviteProjectService.getInviteByHash(hash).toGetResponse();
+        return projectInviteService.getInviteByHash(hash).toGetResponse();
     }
 
     @GetMapping(GET_PROJECT_INVITE_LIST + "{projectId}")
     public RestResult<List<InviteProjectResource>> getInvitesByProject(@PathVariable("projectId") Long projectId) {
-        return inviteProjectService.getInvitesByProject(projectId).toGetResponse();
+        return projectInviteService.getInvitesByProject(projectId).toGetResponse();
     }
 
     @PutMapping(value = ACCEPT_INVITE  + "{hash}/{userId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
-        return inviteProjectService.acceptProjectInvite(hash, userId).toPostResponse();
+        return projectInviteService.acceptProjectInvite(hash, userId).toPostResponse();
     }
 
     @GetMapping(CHECK_EXISTING_USER_URL + "{hash}")
     public RestResult<Boolean> checkExistingUser( @PathVariable("hash") String hash) {
-        return inviteProjectService.checkUserExistingByInviteHash(hash).toGetResponse();
+        return projectInviteService.checkUserExistingByInviteHash(hash).toGetResponse();
     }
 
     @GetMapping(GET_USER_BY_HASH_MAPPING + "{hash}")
     public RestResult<UserResource> getUser( @PathVariable("hash") String hash) {
-        return inviteProjectService.getUserByInviteHash(hash).toGetResponse();
+        return projectInviteService.getUserByInviteHash(hash).toGetResponse();
     }
 }

@@ -91,7 +91,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
-                setupResource.setAllowedFileTypesEnum(
+                setupResource.setAllowedFileTypes(
                         simpleMapSet(Arrays.asList(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())),
                                 FileTypeCategory::fromDisplayName));
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
@@ -194,7 +194,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     private void setAppendixSubOptions(FormInput appendixFormInput, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         appendixFormInput.setAllowedFileTypes(
                 StringUtils.collectionToDelimitedString(
-                        simpleMap(competitionSetupQuestionResource.getAllowedFileTypesEnum(), FileTypeCategory::getDisplayName),
+                        simpleMap(competitionSetupQuestionResource.getAllowedFileTypes(), FileTypeCategory::getDisplayName),
                         ","));
         if(competitionSetupQuestionResource.getAppendixGuidance() != null) {
             appendixFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAppendixGuidance());
