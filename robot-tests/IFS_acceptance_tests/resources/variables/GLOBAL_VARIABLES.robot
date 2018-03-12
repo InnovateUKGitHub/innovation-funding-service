@@ -63,6 +63,11 @@ ${OPEN_COMPETITION_APPLICATION_5_NUMBER}  ${application_ids['${OPEN_COMPETITION_
 ${CLOSED_COMPETITION_APPLICATION_NAME}         A new innovative solution
 ${CLOSED_COMPETITION_APPLICATION_NAME_NUMBER}  ${application_ids['${CLOSED_COMPETITION_APPLICATION_NAME}']}
 
+${createApplicationOpenCompetition}             Photonics for All
+${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
+${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
+${createApplicationOpenCompetitionCloseDate}    ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "SUBMISSION_DATE")}
+
 ${READY_TO_OPEN_COMPETITION_NAME}         Photonics for health
 ${READY_TO_OPEN_COMPETITION}              ${competition_ids['${READY_TO_OPEN_COMPETITION_NAME}']}
 ${COMP_SETUP_COMPETITION}                 ${competition_ids['none']}
