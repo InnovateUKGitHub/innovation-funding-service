@@ -87,9 +87,9 @@
 
     <!--/* switch for having javascript that only gets loaded in a specific java sub-module */-->
     <th:block th:switch="${context}">
-        <th:block th:case="'applicant'">
-            <script th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/application.min.js')}" type="text/javascript"></script>
-        </th:block>
+        <!--<th:block th:case="'applicant'">-->
+            <!--<script th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/application.min.js')}" type="text/javascript"></script>-->
+        <!--</th:block>-->
         <th:block th:case="'assessment'">
             <script th:src="'/assessment'+${@mvcResourceUrlProvider.getForLookupPath('/js/dest/assessment.min.js')}" type="text/javascript"></script>
         </th:block>
