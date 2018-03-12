@@ -46,7 +46,10 @@
         <dt>Duration</dt>
         <dd th:text="${model.financeCheckSummaryResource.durationInMonths+' months'}"></dd>
       </dl>
-      <a th:href="@{/competition/{competitionId}/project/{projectId}/edit-duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}">Edit</a>
+
+      <th:block th:unless="${model.financeCheckSummaryResource.spendProfilesGenerated}">
+        <a th:href="@{/competition/{competitionId}/project/{projectId}/edit-duration(competitionId=${model.financeCheckSummaryResource.competitionId},projectId=${model.financeCheckSummaryResource.projectId})}">Edit</a>
+      </th:block>
     </div>
   </div>
 
