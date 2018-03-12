@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -50,7 +51,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build()));
 
         verifyInteractions(
                 SetupProgressChecker::canAccessMonitoringOfficer
@@ -71,16 +72,16 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     private UserResource getSupportUser(){
-        return newUserResource().withRolesGlobal(asList(Role.SUPPORT)).build();
+        return newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
     }
 
     private UserResource getInnovationLeadUser(){
-        return newUserResource().withRolesGlobal(asList(Role.INNOVATION_LEAD)).build();
+        return newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
     }
 
     @Test
     public void testSupportUserCanAccessIfMonitoringOfficerSubmitted() {
-        UserResource supportUser = newUserResource().withRolesGlobal(asList(Role.SUPPORT)).build();
+        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
 
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(true);
@@ -94,7 +95,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testInnovationLeadUserCanAccessIfMonitoringOfficerSubmitted() {
-        UserResource supportUser = newUserResource().withRolesGlobal(asList(Role.INNOVATION_LEAD)).build();
+        UserResource supportUser = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
 
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerSubmitted()).thenReturn(true);
@@ -125,7 +126,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         stream(UserRoleType.values()).forEach(role -> {
             if (role != PROJECT_FINANCE) {
 
-                List<Role> roles = asList(Role.getByName(role.getName()));
+                List<Role> roles = singletonList(Role.getByName(role.getName()));
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(nonFinanceTeam));
 
@@ -152,7 +153,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToFinanceChecksSectionAsNonFinanceTeamMembers() {
         stream(UserRoleType.values()).forEach(role -> {
             if (role != PROJECT_FINANCE) {
-                List<Role> roles = asList(Role.getByName(role.getName()));
+                List<Role> roles = singletonList(Role.getByName(role.getName()));
                 UserResource nonFinanceTeam = newUserResource().withRolesGlobal(roles).build();
                 assertEquals(NOT_ACCESSIBLE, internalUser.canAccessFinanceChecksSection(nonFinanceTeam));
             }
@@ -163,7 +164,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToSpendProfileSectionHappyPath() {
         when(setupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isSpendProfileApproved()).thenReturn(false);
-        assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build()));
         verifyInteractions(
                 SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isSpendProfileSubmitted
@@ -223,14 +224,14 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     private UserResource getFinanceTeamMember() {
-        List<Role> roles = asList(Role.PROJECT_FINANCE);
+        List<Role> roles = singletonList(Role.PROJECT_FINANCE);
         return newUserResource().withRolesGlobal(roles).build();
     }
 
     @Test
     public void testCheckAccessToOtherDocumentsSectionHappyPath() {
         when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build()));
 
         verifyInteractions(
                 SetupProgressChecker::isOtherDocumentsSubmitted
@@ -240,7 +241,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToOtherDocumentsSectionDocsApproved() {
         when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build()));
 
         verifyInteractions(
                 SetupProgressChecker::isOtherDocumentsSubmitted
@@ -299,7 +300,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToOtherDocumentsSectionDocsRejected() {
         when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build()));
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build()));
 
         verifyInteractions(
                 SetupProgressChecker::isOtherDocumentsSubmitted
@@ -335,7 +336,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
         when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
 
-        List<Role> roles = asList(Role.COMP_ADMIN);
+        List<Role> roles = singletonList(Role.COMP_ADMIN);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
         assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));
         assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(compAdmin));
@@ -422,7 +423,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         roleSpecificActivityStates.put(COMP_ADMIN, ProjectActivityStates.ACTION_REQUIRED);
         when(setupProgressCheckerMock.getRoleSpecificActivityState()).thenReturn(roleSpecificActivityStates);
 
-        List<Role> roles = asList(Role.PROJECT_FINANCE);
+        List<Role> roles = singletonList(Role.PROJECT_FINANCE);
         UserResource financeUser = newUserResource().withRolesGlobal(roles).build();
         assertEquals(ProjectActivityStates.ACTION_REQUIRED, internalUser.grantOfferLetterActivityStatus(financeUser));
 
@@ -431,7 +432,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
 
     @Test
     public void testCheckAccessToGrantOfferLetterSectionSendButOtherSectionsAreIncomplete() {
-        List<Role> roles = asList(Role.COMP_ADMIN);
+        List<Role> roles = singletonList(Role.COMP_ADMIN);
         UserResource compAdmin = newUserResource().withRolesGlobal(roles).build();
         when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         assertEquals(NOT_ACCESSIBLE, internalUser.canAccessGrantOfferLetterSendSection(compAdmin));

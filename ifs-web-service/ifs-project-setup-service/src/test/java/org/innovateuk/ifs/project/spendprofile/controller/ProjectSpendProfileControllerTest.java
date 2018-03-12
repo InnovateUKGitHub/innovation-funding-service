@@ -35,6 +35,7 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -299,7 +300,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         ProjectSpendProfileViewModel expectedViewModel = buildExpectedProjectSpendProfileViewModel(organisationId, projectResource, table);
 
-        expectedViewModel.setObjectErrors(Collections.singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
+        expectedViewModel.setObjectErrors(singletonList(new ObjectError(SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE.getErrorKey(), "Cannot mark as complete, because totals more than eligible")));
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectResource.getId(), organisationId))
                 .andExpect(status().isOk())
@@ -359,7 +360,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         PartnerOrganisationResource partnerOrganisationResource = new PartnerOrganisationResource();
         partnerOrganisationResource.setOrganisation(organisationId);
         partnerOrganisationResource.setLeadOrganisation(false);
-        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(Collections.singletonList(partnerOrganisationResource)));
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(singletonList(partnerOrganisationResource)));
 
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
@@ -539,7 +540,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         SpendProfileResource spendProfileResource = newSpendProfileResource().build();
 
-        List<Role> roleResources = asList(Role.PARTNER);
+        List<Role> roleResources = singletonList(Role.PARTNER);
 
         loggedInUser.setRoles(roleResources);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
