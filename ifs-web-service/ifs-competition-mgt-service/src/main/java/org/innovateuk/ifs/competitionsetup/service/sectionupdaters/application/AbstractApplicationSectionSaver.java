@@ -14,14 +14,12 @@ import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 
 
 public abstract class AbstractApplicationSectionSaver extends AbstractSectionSaver {
@@ -62,10 +60,10 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
 
     private ServiceResult<Void> updateAllowedFileTypes(Optional<Long> questionId, String value) {
         return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
-            List<String> strings = asList(StringUtils.commaDelimitedListToStringArray(value));
-            Set<FileTypeCategory> fileTypeCategories = simpleMapSet(strings, FileTypeCategory::valueOf);
+            String[] strings = StringUtils.commaDelimitedListToStringArray(value);
+            Set<FileTypeCategory> fileTypeCategories = simpleToLinkedHashSet(strings, FileTypeCategory::valueOf);
 
-            question.setAllowedFileTypesEnum(fileTypeCategories);
+            question.setAllowedFileTypes(fileTypeCategories);
 
             return competitionSetupQuestionService.updateQuestion(question);
         });

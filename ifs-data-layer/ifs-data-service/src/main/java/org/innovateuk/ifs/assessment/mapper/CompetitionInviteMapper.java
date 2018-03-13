@@ -3,20 +3,20 @@ package org.innovateuk.ifs.assessment.mapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 /**
- * Mapper between {@link CompetitionAssessmentInvite} and {@link CompetitionInviteResource}.
+ * Mapper between {@link AssessmentInvite} and {@link CompetitionInviteResource}.
  */
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = { InnovationAreaMapper.class }
 )
-public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionAssessmentInvite, CompetitionInviteResource, Long> {
+public abstract class CompetitionInviteMapper extends BaseMapper<AssessmentInvite, CompetitionInviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "target.id", target = "competitionId"),
@@ -28,7 +28,7 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionAsse
             @Mapping(source = "innovationAreaOrNull", target = "innovationArea"),
     })
     @Override
-    public abstract CompetitionInviteResource mapToResource(CompetitionAssessmentInvite domain);
+    public abstract CompetitionInviteResource mapToResource(AssessmentInvite domain);
 
     @Mappings({
             @Mapping(target="id", ignore=true),
@@ -38,9 +38,9 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionAsse
             @Mapping(target="target", ignore=true),
     })
     @Override
-    public abstract CompetitionAssessmentInvite mapToDomain(CompetitionInviteResource resource);
+    public abstract AssessmentInvite mapToDomain(CompetitionInviteResource resource);
 
-    public Long mapCompetitionInviteToId(CompetitionAssessmentInvite object) {
+    public Long mapCompetitionInviteToId(AssessmentInvite object) {
         if (object == null) {
             return null;
         }
