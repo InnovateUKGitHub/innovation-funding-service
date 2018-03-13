@@ -16,8 +16,6 @@ buildscript {
     }
 }
 
-
-
 ext {
     snippetsDir = file('build/generated-snippets')
     javaLanguageLevel = 1.8
