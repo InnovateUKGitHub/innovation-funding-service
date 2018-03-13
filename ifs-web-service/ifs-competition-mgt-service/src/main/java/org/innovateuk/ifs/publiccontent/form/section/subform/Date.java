@@ -20,7 +20,7 @@ public class Date {
     @NotNull(message = "{validation.publiccontent.datesform.date.required}")
     private Integer month;
 
-    @Range(min = 2000, max = 9999)
+    @Range(min = 2000, max = 9999, message = "{validation.standard.date.format}")
     @NotNull(message = "{validation.publiccontent.datesform.date.required}")
     private Integer year;
 
