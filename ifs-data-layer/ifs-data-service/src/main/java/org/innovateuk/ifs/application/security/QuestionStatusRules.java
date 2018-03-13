@@ -1,14 +1,12 @@
 package org.innovateuk.ifs.application.security;
 
-import org.innovateuk.ifs.application.mapper.QuestionStatusMapper;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 

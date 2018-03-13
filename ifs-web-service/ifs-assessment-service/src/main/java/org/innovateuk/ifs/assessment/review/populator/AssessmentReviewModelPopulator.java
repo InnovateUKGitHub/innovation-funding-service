@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.review.populator;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.assessment.review.viewmodel.AssessmentReviewViewModel;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.service.ReviewRestService;

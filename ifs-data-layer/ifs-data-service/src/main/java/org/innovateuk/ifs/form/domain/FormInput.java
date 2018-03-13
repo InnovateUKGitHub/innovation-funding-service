@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.domain.GuidanceRow;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;

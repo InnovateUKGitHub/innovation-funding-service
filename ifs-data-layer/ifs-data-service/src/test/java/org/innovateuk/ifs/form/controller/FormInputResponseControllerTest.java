@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.controller.FormInputResponseController;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.springframework.http.MediaType;
@@ -14,8 +15,8 @@ import org.springframework.validation.DataBinder;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.argThat;

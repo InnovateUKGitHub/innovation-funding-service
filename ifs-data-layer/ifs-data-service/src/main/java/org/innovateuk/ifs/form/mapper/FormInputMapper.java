@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
+import org.innovateuk.ifs.application.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;

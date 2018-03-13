@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.form.transactional;
 
+import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.*;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.springframework.security.access.method.P;

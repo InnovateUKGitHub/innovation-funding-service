@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
