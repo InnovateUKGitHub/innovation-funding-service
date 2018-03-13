@@ -120,6 +120,12 @@ task osUpgradeDemo(type: Exec) {
     args = [openshiftEnv, "demo", project.version]
 }
 
+task dbBaselineDemo(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
 // Sysint tasks
 
 
