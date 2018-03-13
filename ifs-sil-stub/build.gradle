@@ -68,3 +68,8 @@ tagDocker.tag = silStubVersion
 osStageRemote.tag = silStubVersion
 tagDockerLocal.tag = silStubVersion
 osStageLocal.tag = silStubVersion
+
+createContainer.hostName="sil-stub"
+createContainer.containerName="sil-stub"
+createContainer.containerId="sil-stub"
+createContainer.portBindings = ['8091:8080']

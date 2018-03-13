@@ -40,6 +40,13 @@ buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
+deploy.dependsOn ":docker:ifs-mysql:deploy"
+
+
+List<String> networkAliases = new ArrayList<>()
+networkAliases.add("ifs-data-service")
+createContainer.networkAliases=networkAliases
+
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
 
@@ -184,7 +191,8 @@ task generateMainMapperClasses(type: JavaCompile) {
 
 task syncShib(type:Exec) {
     workingDir '../../'
-    commandLine 'docker-compose', '-p', 'innovation-funding-service','-f', 'docker-compose/docker-compose.yml', 'exec',  '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
+    //TODO block until complete? no output anymore.
+    commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
 compileJava.dependsOn generateMainMapperClasses

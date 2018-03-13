@@ -65,3 +65,9 @@ tagDocker.tag = registrationServiceVersion
 osStageRemote.tag = registrationServiceVersion
 tagDockerLocal.tag = registrationServiceVersion
 osStageLocal.tag = registrationServiceVersion
+
+createContainer.hostName="registration-svc"
+createContainer.containerName="registration-svc"
+createContainer.containerId="registration-svc"
+
+deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"

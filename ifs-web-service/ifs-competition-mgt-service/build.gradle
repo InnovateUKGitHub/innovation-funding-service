@@ -4,6 +4,12 @@ osStageRemote.tag = competitionMgtServiceVersion
 tagDockerLocal.tag = competitionMgtServiceVersion
 osStageLocal.tag = competitionMgtServiceVersion
 
+createContainer.hostName="competition-mgt-svc"
+createContainer.containerName="competition-mgt-svc"
+createContainer.containerId="competition-mgt-svc"
+
+ext.serverContext = '/management'
+
 jar {
     baseName = 'management'
 }

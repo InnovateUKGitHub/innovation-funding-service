@@ -8,6 +8,12 @@ osStageRemote.tag = projectSetupServiceVersion
 tagDockerLocal.tag = projectSetupServiceVersion
 osStageLocal.tag = projectSetupServiceVersion
 
+createContainer.hostName="project-setup-svc"
+createContainer.containerName="project-setup-svc"
+createContainer.containerId="project-setup-svc"
+
+ext.serverContext = '/project-setup'
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

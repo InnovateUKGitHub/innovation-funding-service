@@ -1,5 +1,3 @@
-buildDocker.dependsOn ":docker:oracle-jre:buildDocker"
-
 createContainer.enabled = false
 deploy.enabled=false
 wait.enabled=false

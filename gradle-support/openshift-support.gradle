@@ -1,20 +1,3 @@
-buildscript {
-
-
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-
-    dependencies {
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
-    }
-
-}
-
-// use fully qualified class name
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-
 //support tasks for dealing with Openshift
 if (project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"

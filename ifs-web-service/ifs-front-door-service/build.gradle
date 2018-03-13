@@ -12,6 +12,11 @@ osStageRemote.tag = frontDoorServiceVersion
 tagDockerLocal.tag = frontDoorServiceVersion
 osStageLocal.tag = frontDoorServiceVersion
 
+createContainer.hostName="front-door-svc"
+createContainer.containerName="front-door-svc"
+createContainer.containerId="front-door-svc"
+
+ext.serverContext = '/'
 
 jar {
     baseName = 'ifs-front-door-service'

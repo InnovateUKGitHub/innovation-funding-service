@@ -8,6 +8,12 @@ osStageRemote.tag = assessmentServiceVersion
 tagDockerLocal.tag = assessmentServiceVersion
 osStageLocal.tag = assessmentServiceVersion
 
+createContainer.hostName="assessment-svc"
+createContainer.containerName="assessment-svc"
+createContainer.containerId="assessment-svc"
+
+ext.serverContext = '/assessment'
+
 jar {
     baseName = 'assessment'
 }
