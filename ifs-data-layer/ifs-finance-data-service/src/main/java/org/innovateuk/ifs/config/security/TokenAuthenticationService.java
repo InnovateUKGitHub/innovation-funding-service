@@ -35,7 +35,7 @@ public class TokenAuthenticationService {
         if (token != null) {
             try {
                 return token.equals(
-                        hashBasedMacTokenHandler.calculateHash(secretKey, getContentAsByteArray(request)));
+                        hashBasedMacTokenHandler.calculateHash(secretKey, getContentAsString(request)));
             } catch (InvalidKeyException e) {
                 throw new IllegalStateException("Caught InvalidKeyException while trying to calculate hash", e);
             } catch (IOException e) {
@@ -49,7 +49,7 @@ public class TokenAuthenticationService {
         return request.getHeader("X-AUTH-TOKEN");
     }
 
-    private byte[] getContentAsByteArray(HttpServletRequest request) throws IOException {
-        return IOUtils.toByteArray(request.getReader());
+    private String getContentAsString(HttpServletRequest request) throws IOException {
+        return IOUtils.toString(request.getReader());
     }
 }

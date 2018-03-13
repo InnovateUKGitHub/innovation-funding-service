@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 @Component
@@ -23,13 +24,18 @@ public class HashBasedMacTokenHandler {
         }
     }
 
-    public String calculateHash(String key, String data) throws InvalidKeyException {
-        return calculateHash(key, data.getBytes());
+    public String calculateHash(String key, String input) throws InvalidKeyException {
+        mac.reset();
+        mac.init(getKey(key));
+        return Hex.encodeHexString(mac.doFinal(getInputAsByteArray(input)));
     }
 
-    public String calculateHash(String key, byte[] data) throws InvalidKeyException {
-        mac.reset();
-        mac.init(new SecretKeySpec(key.getBytes(), ALGORITHM));
-        return Hex.encodeHexString(mac.doFinal(data));
+    private Key getKey(String key) {
+        byte[] keyAsBytes = key != null ? key.getBytes() : null;
+        return new SecretKeySpec(keyAsBytes, ALGORITHM);
+    }
+
+    private byte[] getInputAsByteArray(String input) {
+        return input != null ? input.getBytes() : null;
     }
 }
