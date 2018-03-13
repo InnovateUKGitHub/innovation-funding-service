@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
+import org.innovateuk.ifs.user.transactional.BaseUserServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -92,33 +89,6 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
 
     @Override
     protected Class<? extends BaseUserService> getClassUnderTest() {
-        return TestBaseUserService.class;
-    }
-
-    /**
-     * Test class for use in Service Security tests.
-     */
-    public static class TestBaseUserService implements BaseUserService {
-
-        @Override
-        public ServiceResult<UserResource> getUserResourceByUid(String uid) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<UserResource> getUserById(Long id) {
-            return serviceSuccess(newUserResource().build());
-        }
-
-        @Override
-        public ServiceResult<List<UserResource>> findAll() {
-            return serviceSuccess(newUserResource().build(2));
-        }
-
-        @Override
-        public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-            return serviceSuccess(newUserResource().build(2));
-        }
-
+        return BaseUserServiceImpl.class;
     }
 }

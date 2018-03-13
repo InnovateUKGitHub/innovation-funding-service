@@ -3,11 +3,12 @@ package org.innovateuk.ifs.thread.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
+import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesServiceImpl;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.security.NoteLookupStrategy;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.threads.resource.NoteResource;
-import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
     @Override
     protected Class<? extends FinanceCheckNotesService> getClassUnderTest() {
-        return TestFinanceCheckNotesService.class;
+        return FinanceCheckNotesServiceImpl.class;
     }
 
     @Before
@@ -91,38 +92,4 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
             verifyNoMoreInteractions(noteRules);
         });
     }
-
-    public static class TestFinanceCheckNotesService implements FinanceCheckNotesService {
-
-        @Override
-        public ServiceResult<List<NoteResource>> findAll(Long contextClassPk) {
-            List<NoteResource> notes = new ArrayList<>();
-            notes.add(findOne(2L).getSuccess());
-            notes.add(findOne(3L).getSuccess());
-            return serviceSuccess(notes);
-        }
-
-        @Override
-        public ServiceResult<NoteResource> findOne(Long id) {
-            return serviceSuccess(new NoteResource(id,
-                    null, null, null, null));
-        }
-
-        @Override
-        public ServiceResult<Long> create(NoteResource NoteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> close(Long noteId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> addPost(PostResource post, Long noteId) {
-            return null;
-        }
-    }
-
-
 }
