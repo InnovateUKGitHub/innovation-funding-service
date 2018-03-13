@@ -16,10 +16,10 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.PDF;
 import static org.innovateuk.ifs.file.resource.FileTypeCategory.SPREADSHEET;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
@@ -239,7 +239,7 @@ public class CompetitionSetupQuestionResource {
     // TODO: IFS-2565 remove function in ZDD contract
     @JsonProperty("allowedFileTypes")
     public void setAllowedFileTypesByDisplayName(List<String> names) {
-        this.allowedFileTypes = names.stream().map(this::fromNameOrDisplayName).collect(toSet());
+        this.allowedFileTypes = simpleToLinkedHashSet(names, this::fromNameOrDisplayName);
     }
 
     public String getAppendixGuidance() {
