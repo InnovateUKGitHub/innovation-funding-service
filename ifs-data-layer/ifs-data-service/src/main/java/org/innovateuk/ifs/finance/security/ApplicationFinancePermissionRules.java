@@ -2,6 +2,9 @@ package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -27,6 +30,9 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private CompetitionRepository competitionRepository;
 
     @PermissionRule(value = "READ", description = "The consortium can see the application finances of their own organisation")
     public boolean consortiumCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
@@ -60,7 +66,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ADD_COST", description = "An assessor can add a cost to the application finances")
     public boolean assessorCanAddACostToApplicationFinance(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isAssessor(applicationFinanceResource.getApplication(), user);
+        return isAssessor(applicationFinanceResource.getApplication(), user) && hasDetailedView(applicationFinanceResource.getApplication());
     }
 
     @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation or if lead applicant")
@@ -123,5 +129,10 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
         final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;
+    }
+
+    private boolean hasDetailedView(long applicationId) {
+        Competition competition = competitionRepository.findByApplicationsId(applicationId);
+        return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
     }
 }
