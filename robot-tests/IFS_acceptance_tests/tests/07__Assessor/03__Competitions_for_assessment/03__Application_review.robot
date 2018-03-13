@@ -14,6 +14,8 @@ Documentation     INFUND-3780: As an Assessor I want the system to autosave my w
 ...               INFUND-6281 As an Assessor I want to see specific scoring guidance text for each application question so that I can score the question accurately
 ...
 ...               INFUND-8065 File download links are broken for assessors
+...
+...               IFS-2854 Allow assessors to see full application finances
 Suite Setup       The user logs-in in new browser  &{assessor_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
@@ -200,7 +202,7 @@ Economic Benefit: Guidance
     [Teardown]  The user clicks the button/link    link=Back to your assessment overview
 
 Finance overview
-    [Documentation]    INFUND-3394
+    [Documentation]    INFUND-3394  IFS-2854
     [Tags]
     Given the user clicks the button/link           link=Finances overview
     Then the user should see the text in the page  Finances summary
