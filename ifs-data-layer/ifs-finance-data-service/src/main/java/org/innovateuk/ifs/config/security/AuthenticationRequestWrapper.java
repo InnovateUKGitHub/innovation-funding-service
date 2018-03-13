@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config;
+package org.innovateuk.ifs.config.security;
 
 import org.apache.commons.io.IOUtils;
 
@@ -15,7 +15,7 @@ public class AuthenticationRequestWrapper extends HttpServletRequestWrapper {
 
     private String body;
 
-    public AuthenticationRequestWrapper(HttpServletRequest request) {
+    AuthenticationRequestWrapper(HttpServletRequest request) {
         super(request);
         try {
             body = IOUtils.toString(request.getInputStream(), "UTF-8");

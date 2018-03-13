@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config;
+package org.innovateuk.ifs.config.security;
 
 import org.apache.tika.io.IOUtils;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;

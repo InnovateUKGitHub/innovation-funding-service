@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config;
+package org.innovateuk.ifs.config.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class AuthenticationToken implements Authentication {
 
-    public AuthenticationToken() {
+    AuthenticationToken() {
     }
 
     @Override
