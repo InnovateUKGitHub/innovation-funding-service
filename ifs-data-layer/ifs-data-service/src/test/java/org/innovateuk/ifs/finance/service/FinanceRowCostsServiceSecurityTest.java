@@ -15,6 +15,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.security.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
@@ -35,7 +36,6 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static org.innovateuk.ifs.finance.service.FinanceRowCostsServiceSecurityTest.TestFinanceRowCostsService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
@@ -206,7 +206,7 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
 
         EnumSet<UserRoleType> nonProjectFinanceRoles = complementOf(of(PROJECT_FINANCE));
         nonProjectFinanceRoles.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.addCostWithoutPersisting(projectFinanceId, questionId);
                 Assert.fail("Should not have been able to add a project cost without the project finance role");

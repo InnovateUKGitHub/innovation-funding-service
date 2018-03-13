@@ -11,10 +11,9 @@ import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +38,7 @@ import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAsses
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -67,9 +66,6 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
     @Autowired
     private ProfileRepository profileRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
     @Override
@@ -268,7 +264,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         addTestAssessors();
 
-        assertEquals(6, userRepository.findByRolesName(ASSESSOR.getName()).size());
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
         Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
@@ -294,7 +290,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         addTestAssessors();
 
-        assertEquals(6, userRepository.findByRolesName(ASSESSOR.getName()).size());
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
@@ -321,7 +317,7 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         addTestAssessors();
 
-        assertEquals(6, userRepository.findByRolesName(ASSESSOR.getName()).size());
+        assertEquals(6, userRepository.findByRoles(ASSESSOR).size());
 
         saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
         saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
@@ -354,14 +350,12 @@ public class AssessmentInviteRepositoryIntegrationTest extends BaseRepositoryInt
 
         Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
 
-        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
-
         List<User> users = newUser()
                 .withId()
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singleton(assessorRole))
+                .withRoles(singleton(ASSESSOR))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

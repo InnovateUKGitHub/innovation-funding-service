@@ -3,7 +3,7 @@ package org.innovateuk.ifs.registration.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import javax.validation.constraints.Pattern;
@@ -38,7 +38,7 @@ public class InternalUserRegistrationResource {
     })
     private String password;
 
-    private List<RoleResource> roles;
+    private List<Role> roles;
 
     public InternalUserRegistrationResource() {
     }
@@ -51,11 +51,11 @@ public class InternalUserRegistrationResource {
         this.password = password;
     }
 
-    public List<RoleResource> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleResource> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

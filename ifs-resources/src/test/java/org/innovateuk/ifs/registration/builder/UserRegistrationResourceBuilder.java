@@ -71,7 +71,7 @@ public class UserRegistrationResourceBuilder extends BaseBuilder<UserRegistratio
         return withArray((email, userRegistrationResource) -> setField("email", email, userRegistrationResource), emails);
     }
 
-    public UserRegistrationResourceBuilder withRoles(List<RoleResource>... roles) {
+    public UserRegistrationResourceBuilder withRoles(List<Role>... roles) {
         return withArray((roleList, userRegistrationResource) -> setField("roles", roleList, userRegistrationResource), roles);
     }
 }
