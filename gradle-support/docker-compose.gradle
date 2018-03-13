@@ -16,7 +16,7 @@ dockerCompose {
 
     projectName="innovation-funding-service"
 
-    if (project.hasProperty('ifs.debug.disabled') ? project.property('ifs.debug.disabled').toBoolean() : false) {
+    if (project.hasProperty('ifs.debug.enabled') ? project.property('ifs.debug.enabled').toBoolean() : false) {
         //Temp change to allow testing of compose HTTP_TIMEOUT issue
         useComposeFiles = ['docker-compose/docker-compose-debug.yml']
     } else {
@@ -26,7 +26,7 @@ dockerCompose {
 
     if (project.hasProperty('ifs.full-deployment.enabled') ? project.property('ifs.full-deployment.enabled').toBoolean() : true) {
 
-        if (project.hasProperty('ifs.debug.disabled') ? project.property('ifs.debug.disabled').toBoolean() : false) {
+        if (project.hasProperty('ifs.debug.enabled') ? project.property('ifs.debug.enabled').toBoolean() : false) {
             //Temp change to allow testing of compose HTTP_TIMEOUT issue
             useComposeFiles.add('docker-compose/docker-compose-full-debug.yml')
         } else {
