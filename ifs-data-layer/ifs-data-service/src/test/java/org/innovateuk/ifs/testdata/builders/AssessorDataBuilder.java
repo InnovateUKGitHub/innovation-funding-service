@@ -6,7 +6,7 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
 import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
@@ -59,7 +59,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     withDisability(disability).
                     withGender(gender).
                     withPassword("Passw0rd").
-                    withRoles(singletonList(getAssessorRoleResource())).
+                    withRoles(singletonList(Role.ASSESSOR)).
                     build();
 
             assessorService.registerAssessorByHash(hash, registration).getSuccess();
@@ -103,10 +103,8 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
                 User user = userRepository.findByEmail(data.getEmail()).get();
 
-                Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-
-                if (!user.getRoles().contains(assessorRole)) {
-                    user.getRoles().add(assessorRole);
+                if (!user.getRoles().contains(Role.ASSESSOR)) {
+                    user.getRoles().add(Role.ASSESSOR);
                 }
 
                 userRepository.save(user);
@@ -253,11 +251,6 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     public AssessorDataBuilder rejectInvite(String hash, String rejectionReason, String rejectionComment) {
         return with(data -> newAssessorInviteData(serviceLocator).rejectInvite(hash, rejectionReason, Optional.of(rejectionComment)).build());
     }
-
-    private RoleResource getAssessorRoleResource() {
-        return roleService.findByUserRoleType(ASSESSOR).getSuccess();
-    }
-
 
     public static AssessorDataBuilder newAssessorData(ServiceLocator serviceLocator) {
         return new AssessorDataBuilder(emptyList(), serviceLocator);
