@@ -167,6 +167,13 @@ public abstract class AbstractRestTemplateAdaptor {
         return withEmptyCallbackCompletable(getAsyncRestTemplate().postForEntity(path, jsonEntity(postEntity), responseType));
     }
 
+    @RestCacheInvalidateResult
+    public <T> CompletableFuture<ResponseEntity<T>> restPostWithEntityAsync(String path, Object postEntity, HttpHeaders additionalHeaders,
+                                                                            Class<T> responseType) {
+        return withEmptyCallbackCompletable(getAsyncRestTemplate().postForEntity(path,
+                jsonEntity(postEntity, additionalHeaders), responseType));
+    }
+
     protected final <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> handleSuccessOrFailureJsonResponse(ResponseEntity<String> asString, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         List<HttpStatus> allExpectedSuccessStatusCodes = combineLists(asList(otherExpectedStatusCodes), expectedSuccessCode);
 
