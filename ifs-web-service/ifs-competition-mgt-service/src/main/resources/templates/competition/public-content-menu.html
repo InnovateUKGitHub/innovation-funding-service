@@ -44,7 +44,7 @@
         <div class="extra-margin">
             <p th:if="${model.hasBeenPublished()}"
                 th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
-                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, ' h:mma'))}">
+                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, 'h:mma'))}">
                 <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
             <div class="grid-row">
                 <div class="column-half">

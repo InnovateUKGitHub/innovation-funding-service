@@ -47,15 +47,13 @@ Guest user can see the opening and closing status of competitions
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
     And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Change the close date of the Competition in the database to fifteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
-    And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
-    Given Change the close date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
-    And the user navigates to the page  ${frontDoor}
+    And Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
+    And Change the close date of the Competition in the database to tomorrow  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
@@ -100,10 +98,10 @@ Guest user can see the public information of a competition
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
     Given the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then the user should see the element    jQuery=h1:contains("${createApplicationOpenCompetition}")
-    And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Friday 15 April 2016")
+    Then the user should see the element    jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
+    And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}")
     And the user should see the element    jQuery=li:contains("Competition closes")
-    And the user should see the element    jQuery=li:contains("Friday 9 September 2067")
+    And the user should see the element    jQuery=li:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}")
     And the user should see the text in the page    Or sign in to continue an existing application.
     And the user should see the element    jQuery=.button:contains("Start new application")
 
@@ -136,10 +134,10 @@ Guest user can see the public Dates of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link    link=Dates
-    When the user should see the element    jQuery=dt:contains("15 April 2016") + dd:contains("Competition opens")
+    When the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE_TIME}") + dd:contains("Competition opens")
     And the user should see the element    jQuery=dt:contains("12 May 2016") + dd:contains("Briefing event in Belfast")
-    And the user should see the element    jQuery=dt:contains("9 September 2067") + dd:contains("Competition closes")
-    And the user should see the element    jQuery=dt:contains("20 June 2068") + dd:contains("Applicants notified")
+    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}") + dd:contains("Competition closes")
+    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE_TIME}") + dd:contains("Applicants notified")
 
 Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923

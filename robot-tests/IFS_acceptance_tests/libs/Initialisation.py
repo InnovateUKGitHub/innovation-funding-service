@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+from logging import warn
+import pytz
 import pymysql
 import os
 config = ''
@@ -115,7 +117,11 @@ for comp in cursor.fetchall():
     competitionId = comp[0]
     competitionName = comp[1]
     milestoneType = comp[2]
-    milestoneDate = comp[3]
+    milestoneDateDb = comp[3]
+
+    utc = pytz.utc
+    bst = pytz.timezone('Europe/London')
+    milestoneDate = utc.localize(milestoneDateDb).astimezone(bst) if milestoneDateDb is not None else None
 
     milestones_for_competition = competition_milestones[competitionId] if competitionId in competition_milestones else {}
 
@@ -123,12 +129,24 @@ for comp in cursor.fetchall():
 
     dates_for_milestone['rawDate'] = milestoneDate
     dates_for_milestone['prettyDate'] = milestoneDate.strftime('%-d %B %Y') if milestoneDate is not None else None
+    dates_for_milestone['prettyDateTime'] = milestoneDate.strftime('%-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
+    dates_for_milestone['prettyLongDate'] = milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
+    dates_for_milestone['prettyLongDateTime'] = milestoneDate.strftime('%A %-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
 
     competition_milestones[competitionId] = milestones_for_competition
     milestones_for_competition[milestoneType] = dates_for_milestone
 
 def getPrettyMilestoneDate(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyDate']
+
+def getPrettyMilestoneDateTime(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyDateTime']
+
+def getPrettyLongMilestoneDate(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyLongDate']
+
+def getPrettyLongMilestoneDateTime(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyLongDateTime']
 
 # disconnect from server
 cursor.close()
