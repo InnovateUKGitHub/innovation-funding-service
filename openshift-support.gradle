@@ -66,6 +66,12 @@ task dbAnonymisedDumpProduction(type: Exec) {
     args = [openshiftEnv, "production", project.version]
 }
 
+task dbBaselineProduction(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
 // UAT tasks
 
 
