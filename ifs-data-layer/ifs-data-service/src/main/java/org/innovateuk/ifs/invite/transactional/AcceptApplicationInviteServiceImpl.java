@@ -9,11 +9,10 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -39,9 +37,6 @@ public class AcceptApplicationInviteServiceImpl extends BaseApplicationInviteSer
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -119,10 +114,9 @@ public class AcceptApplicationInviteServiceImpl extends BaseApplicationInviteSer
 
     private void initializeInvitee(ApplicationInvite invite, User user) {
         Application application = invite.getTarget();
-        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
 
-        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
+        ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
         processRoleRepository.save(processRole);
         application.addProcessRole(processRole);
 

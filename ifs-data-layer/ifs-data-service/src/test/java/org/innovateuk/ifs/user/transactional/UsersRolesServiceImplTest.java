@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
@@ -117,7 +118,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
     @Test
     public void getAssignableProcessRolesByApplicationIdForLeadApplicant() {
 
-        List<ProcessRole> processRoles = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).build(2);
+        List<ProcessRole> processRoles = newProcessRole().withRole(Role.LEADAPPLICANT).build(2);
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource().build(2);
 
         when(processRoleRepositoryMock.findByApplicationId(1L)).thenReturn(processRoles);
@@ -135,7 +136,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
     @Test
     public void getAssignableProcessRolesByApplicationIdForCollaborator() {
 
-        List<ProcessRole> processRoles = newProcessRole().withRole(UserRoleType.COLLABORATOR).build(2);
+        List<ProcessRole> processRoles = newProcessRole().withRole(Role.COLLABORATOR).build(2);
         List<ProcessRoleResource> processRoleResources = newProcessRoleResource().build(2);
 
         when(processRoleRepositoryMock.findByApplicationId(1L)).thenReturn(processRoles);

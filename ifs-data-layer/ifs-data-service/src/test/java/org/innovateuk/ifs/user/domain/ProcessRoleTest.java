@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.domain;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,7 +21,7 @@ public class ProcessRoleTest {
     public void setUp() throws Exception {
         user = new User();
         application = newApplication().build();
-        role = new Role();
+        role = Role.ASSESSOR;
         organisation = newOrganisation().build();
 
         processRoleTest = new ProcessRole(user, application.getId(), role, organisation.getId());

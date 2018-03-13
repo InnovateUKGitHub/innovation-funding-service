@@ -5,13 +5,12 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupTemplateService;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import static freemarker.template.utility.Collections12.singletonList;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
@@ -36,8 +35,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     @Test
     public void testAllServiceFunctionsShouldBeAuthorizedForCompAdmin() {
 
-        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteAssessedQuestionInCompetition(null);
@@ -45,8 +43,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testAllServiceFunctionsShouldBeAuthorizedForProjectFinance() {
-        RoleResource compAdminRole = newRoleResource().withType(PROJECT_FINANCE).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteAssessedQuestionInCompetition(null);

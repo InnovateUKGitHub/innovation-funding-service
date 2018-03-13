@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -13,7 +14,6 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
@@ -31,7 +31,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testInternalUsersCanViewPartnerOrgs() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().build();
 
@@ -51,7 +51,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testPartnersCanView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().withProject(project).build();
 
@@ -65,7 +65,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testNonPartnersCannotView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
         Project project = newProject().build();
 
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(emptyList());
@@ -78,7 +78,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testInternalUserCanView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
         Project project = newProject().build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
@@ -89,7 +89,7 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testExternalUsersCannotView() {
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PARTNER).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.PARTNER)).build();
         Project project = newProject().build();
 
         PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource().withProject(project.getId()).build();
