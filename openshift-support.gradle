@@ -66,6 +66,12 @@ task dbAnonymisedDumpProduction(type: Exec) {
     args = [openshiftEnv, "production", project.version]
 }
 
+task dbBaselineProduction(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
 // UAT tasks
 
 
@@ -111,6 +117,12 @@ task osDeployDemo(type: Exec) {
 task osUpgradeDemo(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
+task dbBaselineDemo(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
