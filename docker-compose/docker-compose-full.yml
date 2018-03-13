@@ -10,11 +10,6 @@ services:
     networks:
       - ifs
     hostname: assessment-svc
-    ports:
-      - "8082:8080"
-      - "9002:8000"
-    environment:
-      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
 
   competition-mgt-svc:
@@ -26,11 +21,6 @@ services:
     networks:
       - ifs
     hostname: competition-mgt-svc
-    environment:
-      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
-    ports:
-      - "8083:8080"
-      - "9003:8000"
 
   project-setup-mgt-svc:
     image: innovateuk/project-setup-mgt-service
@@ -41,11 +31,6 @@ services:
     networks:
       - ifs
     hostname: project-setup-mgt-svc
-    ports:
-      - "8084:8080"
-      - "9004:8000"
-    environment:
-      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
 
   project-setup-svc:
@@ -57,11 +42,6 @@ services:
     networks:
       - ifs
     hostname: project-setup-svc
-    ports:
-      - "8085:8080"
-      - "9005:8000"
-    environment:
-      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
 
   front-door-svc:
@@ -73,9 +53,4 @@ services:
     networks:
       - ifs
     hostname: front-door-svc
-    ports:
-      - "8087:8080"
-      - "9007:8000"
-    environment:
-      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
