@@ -1,20 +1,13 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.method.P;
-
-import java.io.InputStream;
-import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.fail;
@@ -200,33 +193,6 @@ public class ApplicationFormInputUploadServiceSecurityTest extends BaseServiceSe
 
     @Override
     protected Class<? extends ApplicationFormInputUploadService> getClassUnderTest() {
-        return TestApplicationFormInputUploadService.class;
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from methods, which is lost when using
-     * mocks)
-     */
-    public static class TestApplicationFormInputUploadService implements ApplicationFormInputUploadService {
-        @Override
-        public ServiceResult<FormInputResponseFileEntryResource> createFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryResource fileEntry, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FormInputResponse> deleteFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FormInputResponseFileAndContents> getFormInputResponseFileUpload(@P("fileEntry") FormInputResponseFileEntryId fileEntryId) {
-            return null;
-        }
-
+        return ApplicationFormInputUploadServiceImpl.class;
     }
 }

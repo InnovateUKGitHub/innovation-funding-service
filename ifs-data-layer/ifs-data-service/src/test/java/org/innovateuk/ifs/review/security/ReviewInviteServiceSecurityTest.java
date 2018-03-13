@@ -3,17 +3,17 @@ package org.innovateuk.ifs.review.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.security.CompetitionParticipantLookupStrategy;
 import org.innovateuk.ifs.assessment.security.CompetitionParticipantPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
+import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
+import org.innovateuk.ifs.review.transactional.ReviewInviteServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
     @Override
     protected Class<? extends ReviewInviteService> getClassUnderTest() {
-        return TestReviewInviteService.class;
+        return ReviewInviteServiceImpl.class;
     }
 
     @Before
@@ -127,6 +127,9 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
                         .build())
                         )
                 .build();
+
+        when(classUnderTestMock.getAllInvitesByUser(1L))
+                .thenReturn(serviceSuccess(singletonList(newReviewParticipantResource().withUser(1L).build())));
         when(userLookupStrategies.findById(1L)).thenReturn(assessorUserResource);
 
         assertAccessDenied(
@@ -231,95 +234,5 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     @Test
     public void deleteAllInvites() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
-    }
-
-    public static class TestReviewInviteService implements ReviewInviteService {
-
-        @Override
-        public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
-                                                                                       Pageable pageable,
-                                                                                       List<ParticipantStatus> statuses) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ReviewParticipantResource>> getAllInvitesByUser(long userId) {
-            return serviceSuccess(singletonList(newReviewParticipantResource().withUser(1L).build()));
-        }
-
-        @Override
-        public ServiceResult<ReviewInviteResource> openInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteInvite(String email, long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteAllInvites(long competitionId) {
-            return null;
-        }
     }
 }

@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -18,10 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -359,124 +354,6 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
     @Override
     protected Class<? extends GrantOfferLetterService> getClassUnderTest() {
-        return TestGrantOfferLetterService.class;
-    }
-
-    public static class TestGrantOfferLetterService implements GrantOfferLetterService {
-
-        @Override
-        public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createSignedGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
-            return null;
-        }
+        return GrantOfferLetterServiceImpl.class;
     }
 }

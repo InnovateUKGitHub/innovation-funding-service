@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupTemplateService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupTemplateServiceImpl;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
 
     @Override
     protected Class<? extends CompetitionSetupTemplateService> getClassUnderTest() {
-        return CompetitionSetupTemplateServiceSecurityTest.TestCompetitionSetupTemplateService.class;
+        return CompetitionSetupTemplateServiceImpl.class;
     }
 
     @Test
@@ -68,19 +69,5 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
         classUnderTest.deleteAssessedQuestionInCompetition(null);
-    }
-
-    public static class TestCompetitionSetupTemplateService implements CompetitionSetupTemplateService {
-        public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
-            return null;
-        }
-
-        public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
-            return null;
-        }
-
-        public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
-            return null;
-        }
     }
 }

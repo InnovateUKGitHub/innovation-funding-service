@@ -3,17 +3,16 @@ package org.innovateuk.ifs.interview.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.security.CompetitionParticipantLookupStrategy;
 import org.innovateuk.ifs.assessment.security.CompetitionParticipantPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewInviteServiceImpl;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Override
     protected Class<? extends InterviewInviteService> getClassUnderTest() {
-        return TestInterviewInviteService.class;
+        return InterviewInviteServiceImpl.class;
     }
 
     @Before
@@ -127,6 +126,9 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
                         .build())
                         )
                 .build();
+
+        when(classUnderTestMock.getAllInvitesByUser(1L))
+                .thenReturn(serviceSuccess(singletonList(newInterviewParticipantResource().withUser(1L).build())));
         when(userLookupStrategies.findById(1L)).thenReturn(assessorUserResource);
 
         assertAccessDenied(
@@ -146,85 +148,5 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
     @Test
     public void deleteAllInvites() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
-    }
-
-    public static class TestInterviewInviteService implements InterviewInviteService {
-
-        @Override
-        public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
-                                                                                       Pageable pageable,
-                                                                                       List<ParticipantStatus> statuses) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<InterviewParticipantResource>> getAllInvitesByUser(long userId) {
-            return serviceSuccess(singletonList(newInterviewParticipantResource().withUser(1L).build()));
-        }
-
-        @Override
-        public ServiceResult<InterviewInviteResource> openInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteInvite(String email, long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteAllInvites(long competitionId) {
-            return null;
-        }
     }
 }

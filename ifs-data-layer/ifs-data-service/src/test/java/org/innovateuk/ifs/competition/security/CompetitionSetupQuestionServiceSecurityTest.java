@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionServiceImpl;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
@@ -11,15 +10,15 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
+import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static freemarker.template.utility.Collections12.singletonList;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 /**
  * Testing the permission rules applied to the secured methods in OrganisationService.  This set of tests tests for the
@@ -32,7 +31,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Override
     protected Class<? extends CompetitionSetupQuestionService> getClassUnderTest() {
-        return TestCompetitionService.class;
+        return CompetitionSetupQuestionServiceImpl.class;
     }
 
     @Test
@@ -177,32 +176,5 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
                 // expected behaviour
             }
         });
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestCompetitionService implements CompetitionSetupQuestionService {
-
-        @Override
-        public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> delete(Long questionId) {
-            return null;
-        }
-
-        public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
-            return null;
-        }
-
-        public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-            return null;
-        }
-
-
     }
 }

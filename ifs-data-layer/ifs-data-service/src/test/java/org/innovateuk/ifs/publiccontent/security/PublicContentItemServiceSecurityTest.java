@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemServiceImpl;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +16,8 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTest<PublicContentItemService> {
@@ -34,7 +33,7 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
 
     @Override
     protected Class<? extends PublicContentItemService> getClassUnderTest() {
-        return TestPublicContentItemService.class;
+        return PublicContentItemServiceImpl.class;
     }
 
     @Test
@@ -63,14 +62,5 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
                         )
                         .build());
         serviceCall.run();
-    }
-
-    public static class TestPublicContentItemService implements PublicContentItemService {
-        @Override
-        public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) { return null; }
-
-        @Override
-        public ServiceResult<PublicContentItemResource> byCompetitionId(Long id) { return null; }
-
     }
 }

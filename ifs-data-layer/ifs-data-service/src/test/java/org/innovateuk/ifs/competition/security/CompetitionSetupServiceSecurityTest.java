@@ -1,21 +1,16 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.setup.resource.SetupStatusResource;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -46,7 +41,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Override
     protected Class<? extends CompetitionSetupService> getClassUnderTest() {
-        return TestCompetitionSetupService.class;
+        return CompetitionSetupServiceImpl.class;
     }
 
     @Test
@@ -109,88 +104,5 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestCompetitionSetupService implements CompetitionSetupService {
-
-        @Override
-        public ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionResource> create() {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<CompetitionTypeResource>> findAllTypes() {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionResource> createNonIfs() {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId) {
-            return null;
-        }
-
-        @Override
-		public ServiceResult<SetupStatusResource> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
-			return null;
-		}
-
-		@Override
-		public ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
-			return null;
-		}
-
-        @Override
-        public ServiceResult<SetupStatusResource> markSubsectionComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<SetupStatusResource> markSubsectionIncomplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> returnToSetup(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markAsSetup(Long competitionId) {
-            return null;
-        }
-
     }
 }

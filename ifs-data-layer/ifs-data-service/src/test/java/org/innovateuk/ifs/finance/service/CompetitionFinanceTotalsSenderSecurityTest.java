@@ -1,18 +1,16 @@
 package org.innovateuk.ifs.finance.service;
 
-
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.sync.service.CompetitionFinanceTotalsSender;
+import org.innovateuk.ifs.finance.sync.service.CompetitionFinanceTotalsSenderImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
 
 public class CompetitionFinanceTotalsSenderSecurityTest extends BaseServiceSecurityTest<CompetitionFinanceTotalsSender> {
     @Override
-    protected Class<CompetitionFinanceTotalsSenderSecurityTest.TestCompetitionFinanceTotalsSender> getClassUnderTest() {
-        return CompetitionFinanceTotalsSenderSecurityTest.TestCompetitionFinanceTotalsSender.class;
+    protected Class<? extends CompetitionFinanceTotalsSender> getClassUnderTest() {
+        return CompetitionFinanceTotalsSenderImpl.class;
     }
 
     @Test
@@ -20,13 +18,5 @@ public class CompetitionFinanceTotalsSenderSecurityTest extends BaseServiceSecur
         testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
                 classUnderTest.sendFinanceTotalsForCompetition(1L), SYSTEM_MAINTAINER);
 
-    }
-
-    public static class TestCompetitionFinanceTotalsSender implements CompetitionFinanceTotalsSender {
-
-        @Override
-        public ServiceResult<Void> sendFinanceTotalsForCompetition(Long competitionId) {
-            return serviceSuccess();
-        }
     }
 }

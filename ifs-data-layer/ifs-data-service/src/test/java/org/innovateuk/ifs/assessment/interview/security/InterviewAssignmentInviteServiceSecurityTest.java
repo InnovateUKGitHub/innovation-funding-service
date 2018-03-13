@@ -1,16 +1,11 @@
 package org.innovateuk.ifs.assessment.interview.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -20,7 +15,7 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
 
     @Override
     protected Class<? extends InterviewAssignmentInviteService> getClassUnderTest() {
-        return TestInterviewAssignmentInviteService.class;
+        return InterviewAssignmentInviteServiceImpl.class;
     }
 
     private static Pageable PAGE_REQUEST = new PageRequest(0,20);
@@ -55,28 +50,5 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
                 () -> classUnderTest.assignApplications(newStagedApplicationResource().build(2)),
                 COMP_ADMIN, PROJECT_FINANCE
         );
-    }
-
-    public static class TestInterviewAssignmentInviteService implements InterviewAssignmentInviteService {
-
-        @Override
-        public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getAvailableApplicationIds(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites) {
-            return null;
-        }
     }
 }

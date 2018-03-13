@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
@@ -11,7 +10,6 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -20,7 +18,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 
@@ -123,23 +121,9 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 			}
 		});
 	}
-	
+
 	@Override
 	protected Class<? extends ApplicationFundingService> getClassUnderTest() {
-		return TestApplicationFundingService.class;
-	}
-
-	public static class TestApplicationFundingService implements ApplicationFundingService {
-
-		@Override
-		public ServiceResult<Void> notifyApplicantsOfFundingDecisions(FundingNotificationResource fundingNotificationResource) {
-			return null;
-		}
-
-		@Override
-		public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> decision) {
-			return null;
-		}
-
+		return ApplicationFundingServiceImpl.class;
 	}
 }

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.AgreementResource;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -15,7 +13,7 @@ public class AgreementServiceSecurityTest extends BaseServiceSecurityTest<Agreem
 
     @Override
     protected Class<? extends AgreementService> getClassUnderTest() {
-        return TestAgreementService.class;
+        return AgreementServiceImpl.class;
     }
 
     @Test
@@ -28,14 +26,5 @@ public class AgreementServiceSecurityTest extends BaseServiceSecurityTest<Agreem
     public void getCurrent_notAnAssessor() throws Exception {
         setLoggedInUser(newUserResource().build());
         classUnderTest.getCurrent();
-    }
-
-    public static class TestAgreementService implements AgreementService {
-
-        @Override
-        public ServiceResult<AgreementResource> getCurrent() {
-            return null;
-        }
-
     }
 }

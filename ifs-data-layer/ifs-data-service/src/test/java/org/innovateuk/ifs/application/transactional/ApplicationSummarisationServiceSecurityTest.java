@@ -1,18 +1,14 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.math.BigDecimal;
-
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
 
 public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummarisationService> {
@@ -81,19 +77,6 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 
 	@Override
 	protected Class<? extends ApplicationSummarisationService> getClassUnderTest() {
-		return TestApplicationSummarisationService.class;
-	}
-
-	public static class TestApplicationSummarisationService implements ApplicationSummarisationService {
-
-		@Override
-		public ServiceResult<BigDecimal> getTotalProjectCost(Application application) {
-			return null;
-		}
-
-		@Override
-		public ServiceResult<BigDecimal> getFundingSought(Application application) {
-			return null;
-		}
+		return ApplicationSummarisationServiceImpl.class;
 	}
 }

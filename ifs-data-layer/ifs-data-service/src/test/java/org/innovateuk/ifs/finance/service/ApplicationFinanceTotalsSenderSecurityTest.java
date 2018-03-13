@@ -4,15 +4,14 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.security.FinanceTotalsPermissionRules;
 import org.innovateuk.ifs.finance.sync.service.ApplicationFinanceTotalsSender;
+import org.innovateuk.ifs.finance.sync.service.ApplicationFinanceTotalsSenderImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,8 +29,8 @@ public class ApplicationFinanceTotalsSenderSecurityTest extends BaseServiceSecur
     }
 
     @Override
-    protected Class<ApplicationFinanceTotalsSenderSecurityTest.TestApplicationFinanceTotalsSender> getClassUnderTest() {
-        return ApplicationFinanceTotalsSenderSecurityTest.TestApplicationFinanceTotalsSender.class;
+    protected Class<? extends ApplicationFinanceTotalsSender> getClassUnderTest() {
+        return ApplicationFinanceTotalsSenderImpl.class;
     }
 
     @Test
@@ -43,13 +42,5 @@ public class ApplicationFinanceTotalsSenderSecurityTest extends BaseServiceSecur
                         isA(ApplicationResource.class),
                         isA(UserResource.class))
         );
-    }
-
-    public static class TestApplicationFinanceTotalsSender implements ApplicationFinanceTotalsSender {
-
-        @Override
-        public ServiceResult<Void> sendFinanceTotalsForApplication(Long applicationId) {
-            return serviceSuccess();
-        }
     }
 }

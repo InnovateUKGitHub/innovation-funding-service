@@ -1,19 +1,15 @@
 package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupCompositeId;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
+import org.innovateuk.ifs.publiccontent.transactional.ContentGroupServiceImpl;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.function.Supplier;
 
@@ -46,7 +42,7 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
 
     @Override
     protected Class<? extends ContentGroupService> getClassUnderTest() {
-        return TestContentGroupService.class;
+        return ContentGroupServiceImpl.class;
     }
 
     @Test
@@ -101,33 +97,5 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
 
     private void assertAccessDeniedAsRole(UserRoleType roleType, Runnable serviceCall, Runnable verifications) {
         runAsRole(roleType, () -> assertAccessDenied(serviceCall, verifications) );
-    }
-
-    public static class TestContentGroupService implements ContentGroupService {
-
-        @Override
-        public ServiceResult<Void> uploadFile(long contentGroupId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> removeFile(Long contentGroupId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType section) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getFileDetails(long contentGroupId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getFileContents(long contentGroupId) {
-            return null;
-        }
     }
 }

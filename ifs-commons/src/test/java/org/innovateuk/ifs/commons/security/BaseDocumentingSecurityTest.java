@@ -108,7 +108,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
     @Before
     public void setup() {
         Class<?>[] interfaces = getClassUnderTest().getInterfaces();
-        targetClass = (Class<T>) (interfaces.length == 1 ? interfaces[0] : getClassUnderTest());
+        targetClass = (Class<T>) (interfaces.length >= 1 ? interfaces[0] : getClassUnderTest());
 
         classUnderTestMock = createDelegatingProxy(targetClass, mock(targetClass));
 

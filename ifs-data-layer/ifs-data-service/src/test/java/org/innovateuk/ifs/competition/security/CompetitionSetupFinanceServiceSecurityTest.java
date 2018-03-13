@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupFinanceServiceImpl;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -20,7 +19,7 @@ public class CompetitionSetupFinanceServiceSecurityTest extends BaseServiceSecur
 
     @Override
     protected Class<? extends CompetitionSetupFinanceService> getClassUnderTest() {
-        return TestCompetitionSetupFinanceService.class;
+        return CompetitionSetupFinanceServiceImpl.class;
     }
 
     @Test
@@ -51,23 +50,6 @@ public class CompetitionSetupFinanceServiceSecurityTest extends BaseServiceSecur
             fail("Should not have been able to get finance section without a global role");
         } catch (AccessDeniedException e) {
             // expected behaviour
-        }
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestCompetitionSetupFinanceService implements CompetitionSetupFinanceService {
-
-        @Override
-        public ServiceResult<Void> save(CompetitionSetupFinanceResource competitionSetupFinanceResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionSetupFinanceResource> getForCompetition(Long competitionId) {
-            return null;
         }
     }
 }

@@ -2,15 +2,14 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.assessment.transactional.AssessmentInviteServiceImpl;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +35,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
 
     @Override
     protected Class<? extends AssessmentInviteService> getClassUnderTest() {
-        return TestAssessmentAssessmentInviteService.class;
+        return AssessmentInviteServiceImpl.class;
     }
 
     @Before
@@ -218,130 +217,5 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
     @Test
     public void deleteAllInvites() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
-    }
-
-    public static class TestAssessmentAssessmentInviteService implements AssessmentInviteService {
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionInviteResource> openInvite(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash, UserResource userResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId, Optional<Long> innovationArea) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
-                                                                                       Pageable pageable,
-                                                                                       Optional<Long> innovationArea,
-                                                                                       List<ParticipantStatus> statuses,
-                                                                                       Optional<Boolean> compliant) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getAssessorsNotAcceptedInviteIds(long competitionId,
-                                                                          Optional<Long> innovationArea,
-                                                                          List<ParticipantStatus> status,
-                                                                          Optional<Boolean> compliant) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInviteResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteInvite(String email, long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteAllInvites(long competitionId) {
-            return null;
-        }
     }
 }
