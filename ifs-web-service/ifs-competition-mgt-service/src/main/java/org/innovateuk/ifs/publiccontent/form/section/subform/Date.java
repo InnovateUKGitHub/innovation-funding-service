@@ -12,15 +12,15 @@ import javax.validation.constraints.NotNull;
 public class Date {
     private Long id;
 
-    @Range(min = 1, max = 31)
+    @Range(min = 1, max = 31, message = "{validation.publiccontent.datesform.date.day}")
     @NotNull(message = "{validation.publiccontent.datesform.date.required}")
     private Integer day;
 
-    @Range(min = 1, max = 12)
+    @Range(min = 1, max = 12, message = "{validation.publiccontent.datesform.date.month}")
     @NotNull(message = "{validation.publiccontent.datesform.date.required}")
     private Integer month;
 
-    @Range(min = 2000, max = 9999, message = "{validation.standard.date.format}")
+    @Range(min = 2000, max = 9999, message = "{validation.publiccontent.datesform.date.year}")
     @NotNull(message = "{validation.publiccontent.datesform.date.required}")
     private Integer year;
 
