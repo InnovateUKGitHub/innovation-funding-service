@@ -549,6 +549,13 @@ the user can add and remove multiple event groups
     And the user should not see the element    id=dates[2].month
     And the user should not see the element    id=dates[2].year
     And the user should not see the element    jQuery=.editor:eq(2)
+    And the user clicks the button/link        jQuery=button:contains("+ add new event")
+    And the user enters text to a text field   id=dates[2].day      22
+    And the user enters text to a text field   id=dates[2].month    12
+    And the user enters text to a text field   id=dates[2].year     22
+    And the user clicks the button/link        jQuery=button:contains("Save and review")
+    Then the user should see a summary error   Please enter a valid date.
+    And the user clicks the button/link        jQuery=button:contains("Remove event"):eq(2)
     And the user clicks the button/link        jQuery=button:contains("Save and review")
     And the user clicks the button/link        jQuery=.button:contains("Return to public content")
 
