@@ -32,7 +32,7 @@ Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user should see the element    link=${createApplicationOpenCompetition}
+    Given the user should see the element in the paginated list     link=${createApplicationOpenCompetition}
     Then the user should see the element    jQuery=h3:contains("Eligibility")
     And the user should see the element    jQuery=div:contains("UK based business of any size. Must involve at least one SME")
     Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("${createApplicationOpenCompetitionOpenDate}")
@@ -45,16 +45,20 @@ Guest user can see the opening and closing status of competitions
     [Setup]  Connect to Database  @{database}
     Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
+    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
     And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
     And Change the close date of the Competition in the database to fifteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
+    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
     And Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
+    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Change the close date of the Competition in the database to tomorrow  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
+    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
 
@@ -75,7 +79,7 @@ Guest user can see the public information of an unopened competition
     [Tags]  Pending
     # TODO IFS-2986
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link in the paginated list    link=${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
     And the user should see the element    jQuery=li:contains("Competition closes")
@@ -97,7 +101,7 @@ Guest user can see the public information of a competition
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    Given the user clicks the button/link in the paginated list    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     Then the user should see the element    jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}")
     And the user should see the element    jQuery=li:contains("Competition closes")
@@ -157,7 +161,7 @@ Guest user can apply to a competition
     [Documentation]    INFUND-6923
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=${createApplicationOpenCompetition}
+    Given the user clicks the button/link in the paginated list    link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
     Then the user should see the element    jQuery=.button:contains("Sign in")
     And the user should see the element    jQuery=.button:contains("Create")
