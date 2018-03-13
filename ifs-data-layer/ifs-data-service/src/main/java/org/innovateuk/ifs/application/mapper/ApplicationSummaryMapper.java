@@ -48,7 +48,7 @@ public abstract class ApplicationSummaryMapper {
         result.setName(source.getName());
         result.setDuration(source.getDurationInMonths());
         result.setManageFundingEmailDate(source.getManageFundingEmailDate());
-        result.setIneligibleInformed(source.getApplicationProcess().getActivityState() == ApplicationState.INELIGIBLE_INFORMED);
+        result.setIneligibleInformed(source.getApplicationProcess().getProcessState() == ApplicationState.INELIGIBLE_INFORMED);
         if (source.getLeadApplicant() != null) {
             result.setLeadApplicant(source.getLeadApplicant().getName());
         }
@@ -62,7 +62,7 @@ public abstract class ApplicationSummaryMapper {
         if (source.getFundingDecision() != null) {
             result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
         }
-        if (source.getApplicationProcess().getActivityState() == ApplicationState.APPROVED) {
+        if (source.getApplicationProcess().getProcessState() == ApplicationState.APPROVED) {
             result.setFundingDecision(FundingDecision.FUNDED);
         }
 
@@ -88,9 +88,9 @@ public abstract class ApplicationSummaryMapper {
 
     private String status(Application source, Integer completedPercentage) {
 
-        if (source.getApplicationProcess().getActivityState() == ApplicationState.SUBMITTED
-                || source.getApplicationProcess().getActivityState() == ApplicationState.APPROVED
-                || source.getApplicationProcess().getActivityState() == ApplicationState.REJECTED) {
+        if (source.getApplicationProcess().getProcessState() == ApplicationState.SUBMITTED
+                || source.getApplicationProcess().getProcessState() == ApplicationState.APPROVED
+                || source.getApplicationProcess().getProcessState() == ApplicationState.REJECTED) {
             return "Submitted";
         }
 

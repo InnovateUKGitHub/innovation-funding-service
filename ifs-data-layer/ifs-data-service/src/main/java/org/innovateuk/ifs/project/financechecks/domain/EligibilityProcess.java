@@ -65,7 +65,7 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     }
 
     @Override
-    public EligibilityState getActivityState() {
+    public EligibilityState getProcessState() {
         return EligibilityState.fromState(activityState.getState());
     }
 

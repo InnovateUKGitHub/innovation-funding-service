@@ -51,6 +51,6 @@ public class ReviewPermissionRules extends BasePermissionRules {
 
     private boolean assessmentReviewIsInState(ReviewResource reviewResource, Set<ReviewState> allowedStates) {
         Review review = reviewRepository.findOne(reviewResource.getId());
-        return allowedStates.contains(review.getActivityState());
+        return allowedStates.contains(review.getProcessState());
     }
 }

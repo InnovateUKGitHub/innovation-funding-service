@@ -112,7 +112,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         assertTrue(result.isSuccess());
         assertFalse(application.isInAssessmentReviewPanel());
 
-        reviews.forEach(a -> assertEquals(State.WITHDRAWN, a.getActivityState().getBackingState()));
+        reviews.forEach(a -> assertEquals(State.WITHDRAWN, a.getProcessState().getBackingState()));
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verifyNoMoreInteractions(applicationRepositoryMock);

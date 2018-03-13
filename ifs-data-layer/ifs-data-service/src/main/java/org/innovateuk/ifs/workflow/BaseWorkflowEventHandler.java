@@ -91,7 +91,7 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
     }
 
     protected boolean fireEvent(MessageBuilder<EventType> event, ProcessType process) {
-        return fireEvent(event, process.getActivityState());
+        return fireEvent(event, process.getProcessState());
     }
 
     protected boolean fireEvent(MessageBuilder<EventType> event, StateType currentState) {
@@ -99,7 +99,7 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
     }
 
     protected boolean testEvent(MessageBuilder<EventType> event, TargetType target) {
-        return testEvent(event, getCurrentProcess(target).getActivityState());
+        return testEvent(event, getCurrentProcess(target).getProcessState());
     }
 
     protected boolean testEvent(MessageBuilder<EventType> event, StateType currentState) {

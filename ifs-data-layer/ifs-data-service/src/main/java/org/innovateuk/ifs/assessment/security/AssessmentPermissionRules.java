@@ -78,6 +78,6 @@ public class AssessmentPermissionRules extends BasePermissionRules {
 
     private boolean assessmentIsInState(AssessmentResource assessmentResource, Set<AssessmentState> allowedStates) {
         Assessment assessment = assessmentRepository.findOne(assessmentResource.getId());
-        return allowedStates.contains(assessment.getActivityState());
+        return allowedStates.contains(assessment.getProcessState());
     }
 }

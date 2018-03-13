@@ -27,7 +27,7 @@ public class InterviewAssignmentBuilderTest {
                 .build();
 
         assertEquals(expectedId, interviewAssignment.getId());
-        assertEquals(expectedState, interviewAssignment.getActivityState());
+        assertEquals(expectedState, interviewAssignment.getProcessState());
         assertEquals(expectedProcessRole, interviewAssignment.getParticipant());
     }
 
@@ -45,12 +45,12 @@ public class InterviewAssignmentBuilderTest {
 
         InterviewAssignment first = interviewAssignments.get(0);
         assertEquals(expectedIds[0], first.getId());
-        assertEquals(expectedStates[0], first.getActivityState());
+        assertEquals(expectedStates[0], first.getProcessState());
         assertEquals(expectedProcessRoles[0], first.getParticipant());
 
         InterviewAssignment second = interviewAssignments.get(1);
         assertEquals(expectedIds[1], second.getId());
-        assertEquals(expectedStates[1], second.getActivityState());
+        assertEquals(expectedStates[1], second.getProcessState());
         assertEquals(expectedProcessRoles[1], second.getParticipant());
     }
 }

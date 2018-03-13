@@ -63,7 +63,7 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
 
     public ViabilityState getState(PartnerOrganisation partnerOrganisation) {
         ViabilityProcess process = getCurrentProcess(partnerOrganisation);
-        return process != null ? process.getActivityState() : ViabilityState.REVIEW;
+        return process != null ? process.getProcessState() : ViabilityState.REVIEW;
     }
 
     @Override

@@ -100,7 +100,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
             AssessmentRejectOutcomeValue assessmentRejectOutcomeValue = null;
             String comment = null;
 
-            if (count.getAssessment().getActivityState() == REJECTED) {
+            if (count.getAssessment().getProcessState() == REJECTED) {
                 assessmentRejectOutcomeValue = count.getAssessment().getRejection().getRejectReason();
                 comment = count.getAssessment().getRejection().getRejectComment();
             }
@@ -114,7 +114,7 @@ public class AssessorCompetitionSummaryServiceImpl implements AssessorCompetitio
                     count.getApplication().getName(),
                     leadOrganisation.getName(),
                     count.getAssessorCount(),
-                    count.getAssessment().getActivityState(),
+                    count.getAssessment().getProcessState(),
                     assessmentRejectOutcomeValue,
                     comment,
                     count.getAssessment().getId()

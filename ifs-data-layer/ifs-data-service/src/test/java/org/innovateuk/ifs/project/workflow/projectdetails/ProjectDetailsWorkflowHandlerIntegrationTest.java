@@ -207,7 +207,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     private void assertProcessState(Long expectedProjectId, Long expectedProjectUserId, ProjectDetailsState expectedState, ProjectDetailsEvent expectedEvent, ProjectDetailsProcess process) {
         assertEquals(expectedProjectId, process.getTarget().getId());
         assertEquals(expectedProjectUserId, process.getParticipant().getId());
-        assertEquals(expectedState, process.getActivityState());
+        assertEquals(expectedState, process.getProcessState());
         assertEquals(expectedEvent.getType(), process.getProcessEvent());
     }
 

@@ -69,13 +69,13 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
         SpendProfileProcess process = getCurrentProcess(project);
         if (process == null)
             return false;
-        return !SpendProfileState.PENDING.equals(process.getActivityState());
+        return !SpendProfileState.PENDING.equals(process.getProcessState());
 
     }
 
     public boolean isReadyToApprove(Project project) {
         SpendProfileProcess process = getCurrentProcess(project);
-        return process != null && SpendProfileState.SUBMITTED.equals(process.getActivityState());
+        return process != null && SpendProfileState.SUBMITTED.equals(process.getProcessState());
     }
 
     private boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
@@ -90,9 +90,9 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
 
     public ApprovalType getApproval(Project project) {
         SpendProfileProcess process = getCurrentProcess(project);
-        if (process != null && SpendProfileState.APPROVED.equals(process.getActivityState())) {
+        if (process != null && SpendProfileState.APPROVED.equals(process.getProcessState())) {
             return ApprovalType.APPROVED;
-        } else if (process != null && SpendProfileState.REJECTED.equals(process.getActivityState())) {
+        } else if (process != null && SpendProfileState.REJECTED.equals(process.getProcessState())) {
             return ApprovalType.REJECTED;
         } else {
             return ApprovalType.UNSET;

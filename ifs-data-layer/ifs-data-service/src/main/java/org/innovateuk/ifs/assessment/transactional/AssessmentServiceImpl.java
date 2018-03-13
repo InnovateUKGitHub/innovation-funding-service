@@ -95,7 +95,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentResource> findAssignableById(long id) {
         return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
-            if (WITHDRAWN == found.getActivityState()) {
+            if (WITHDRAWN == found.getProcessState()) {
                 return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
             }
             return serviceSuccess(assessmentMapper.mapToResource(found));
@@ -105,7 +105,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentResource> findRejectableById(long id) {
         return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
-            if (WITHDRAWN == found.getActivityState()) {
+            if (WITHDRAWN == found.getProcessState()) {
                 return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
             }
             return serviceSuccess(assessmentMapper.mapToResource(found));
@@ -305,7 +305,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {
         boolean noAssessmentOrWithdrawn = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId())
-                .map(assessment -> assessment.getActivityState().equals(WITHDRAWN))
+                .map(assessment -> assessment.getProcessState().equals(WITHDRAWN))
                 .orElse(true);
 
         if (noAssessmentOrWithdrawn) {

@@ -57,7 +57,7 @@ public class ApplicationStatistics {
     }
 
     public ApplicationState getApplicationState() {
-        return applicationProcess.getActivityState();
+        return applicationProcess.getProcessState();
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {
@@ -77,11 +77,11 @@ public class ApplicationStatistics {
     }
 
     public int getAssessors() {
-        return assessments.stream().filter(a -> ASSESSOR_STATES.contains(a.getActivityState())).mapToInt(e -> 1).sum();
+        return assessments.stream().filter(a -> ASSESSOR_STATES.contains(a.getProcessState())).mapToInt(e -> 1).sum();
     }
 
     public int getAccepted() {
-        return assessments.stream().filter(a -> ACCEPTED_STATES.contains(a.getActivityState())).mapToInt(e -> 1).sum();
+        return assessments.stream().filter(a -> ACCEPTED_STATES.contains(a.getProcessState())).mapToInt(e -> 1).sum();
     }
 
     public int getSubmitted() {

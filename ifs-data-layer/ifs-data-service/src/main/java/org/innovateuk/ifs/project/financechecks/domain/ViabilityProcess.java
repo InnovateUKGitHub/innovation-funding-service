@@ -65,7 +65,7 @@ public class ViabilityProcess extends Process<ProjectUser, PartnerOrganisation, 
     }
 
     @Override
-    public ViabilityState getActivityState() {
+    public ViabilityState getProcessState() {
         return ViabilityState.fromState(activityState.getState());
     }
 

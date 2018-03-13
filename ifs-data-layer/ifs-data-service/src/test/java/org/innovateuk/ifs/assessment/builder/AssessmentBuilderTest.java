@@ -46,7 +46,7 @@ public class AssessmentBuilderTest {
                 .build();
 
         assertEquals(expectedId, assessment.getId());
-        assertEquals(expectedStatus, assessment.getActivityState());
+        assertEquals(expectedStatus, assessment.getProcessState());
         assertEquals(expectedLastModifiedDate, assessment.getLastModified());
         assertEquals(expectedStartDate, assessment.getStartDate());
         assertEquals(expectedEndDate, assessment.getEndDate());
@@ -83,7 +83,7 @@ public class AssessmentBuilderTest {
 
         Assessment first = assessments.get(0);
         assertEquals(expectedIds[0], first.getId());
-        assertEquals(expectedStatuss[0], first.getActivityState());
+        assertEquals(expectedStatuss[0], first.getProcessState());
         assertEquals(expectedLastModifiedDates[0], first.getLastModified());
         assertEquals(expectedStartDates[0], first.getStartDate());
         assertEquals(expectedEndDates[0], first.getEndDate());
@@ -93,7 +93,7 @@ public class AssessmentBuilderTest {
 
         Assessment second = assessments.get(1);
         assertEquals(expectedIds[1], second.getId());
-        assertEquals(expectedStatuss[1], second.getActivityState());
+        assertEquals(expectedStatuss[1], second.getProcessState());
         assertEquals(expectedLastModifiedDates[1], second.getLastModified());
         assertEquals(expectedStartDates[1], second.getStartDate());
         assertEquals(expectedEndDates[1], second.getEndDate());

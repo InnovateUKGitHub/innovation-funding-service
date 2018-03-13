@@ -218,7 +218,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         // was accepted by the StateMachine or not (rather than if
         // it was a successful/rejected transition)
         assertTrue(assessmentWorkflowHandler.submit(assessment));
-        assertEquals(READY_TO_SUBMIT, assessment.getActivityState());
+        assertEquals(READY_TO_SUBMIT, assessment.getProcessState());
     }
 
     private AssessmentFundingDecisionOutcome createFundingDecision() {

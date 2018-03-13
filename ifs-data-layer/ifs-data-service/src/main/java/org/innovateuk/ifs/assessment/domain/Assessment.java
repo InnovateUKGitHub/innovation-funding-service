@@ -94,7 +94,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.target = target;
     }
 
-    public AssessmentState getActivityState() {
+    public AssessmentState getProcessState() {
         return AssessmentState.fromState(activityState.getState());
     }
 

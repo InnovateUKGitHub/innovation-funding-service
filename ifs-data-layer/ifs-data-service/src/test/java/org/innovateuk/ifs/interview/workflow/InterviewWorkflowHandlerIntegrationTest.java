@@ -102,7 +102,7 @@ public class InterviewWorkflowHandlerIntegrationTest
 
         assertTrue(workflowHandlerMethod.apply(workflowProcess));
 
-        assertEquals(expectedState, workflowProcess.getActivityState());
+        assertEquals(expectedState, workflowProcess.getProcessState());
 
         verify(activityStateRepositoryMock).findOneByActivityTypeAndState(getActivityType(), expectedState.getBackingState());
         verify(getRepositoryMock()).save(workflowProcess);

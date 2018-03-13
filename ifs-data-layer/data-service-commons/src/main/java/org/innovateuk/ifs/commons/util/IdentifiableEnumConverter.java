@@ -25,8 +25,7 @@ public abstract class IdentifiableEnumConverter<T extends Enum<T> & Identifiable
     private final Map<Long, T> idMap;
 
     protected IdentifiableEnumConverter(final Class<T> theEnum) {
-        // we should be able to use Identifiable::getId instead of i -> i.getId(), but there's a bug in java
-        idMap = stream(theEnum.getEnumConstants()).collect(toMap(i -> i.getId(), identity()));
+        idMap = stream(theEnum.getEnumConstants()).collect(toMap(Identifiable::getId, identity()));
     }
 
     @Override

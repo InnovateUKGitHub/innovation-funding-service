@@ -115,7 +115,7 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
 
         assertTrue(workflowHandlerMethod.apply(application));
 
-        assertEquals(expectedApplicationState, applicationProcess.getActivityState());
+        assertEquals(expectedApplicationState, applicationProcess.getProcessState());
 
         verify(applicationProcessRepositoryMock, times(2)).findOneByTargetId(application.getId());
         verify(activityStateRepositoryMock).findOneByActivityTypeAndState(activityType, expectedApplicationState.getBackingState());

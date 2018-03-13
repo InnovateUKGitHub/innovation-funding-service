@@ -583,6 +583,6 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     }
 
     private Long getApplicationsPendingForPanelCount(List<Review> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(ReviewState.PENDING)).count();
+        return reviews.stream().filter(review -> review.getProcessState().equals(ReviewState.PENDING)).count();
     }
 }

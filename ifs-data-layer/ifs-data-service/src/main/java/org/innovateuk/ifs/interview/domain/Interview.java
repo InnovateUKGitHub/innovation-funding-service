@@ -55,7 +55,7 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
         this.target = target;
     }
 
-    public InterviewState getActivityState() {
+    public InterviewState getProcessState() {
         return InterviewState.fromState(activityState.getState());
     }
 

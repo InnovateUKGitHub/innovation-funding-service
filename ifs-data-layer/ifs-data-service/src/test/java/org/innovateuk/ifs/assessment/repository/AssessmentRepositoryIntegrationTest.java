@@ -228,7 +228,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         assertEquals(getAssessmentStatesWithoutDecisions().size() * numOfAssessmentsForEachState, found.size());
 
         Map<AssessmentState, List<Assessment>> foundByStateMap = found.stream()
-                .collect(Collectors.groupingBy(Assessment::getActivityState, LinkedHashMap::new, toList()));
+                .collect(Collectors.groupingBy(Assessment::getProcessState, LinkedHashMap::new, toList()));
 
         assertEquals("Expected the assessments to ordered by ActivityState in the natural " +
                 "ordering of their equivalent AssessmentState", getAssessmentStatesWithoutDecisions(), foundByStateMap.keySet());
@@ -249,7 +249,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .findByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
 
         assertEquals(1, found.size());
-        assertEquals(state, found.get(0).getActivityState().getBackingState());
+        assertEquals(state, found.get(0).getProcessState().getBackingState());
         assertEquals(application.getCompetition().getId(), found.get(0).getTarget().getCompetition().getId());
     }
 

@@ -56,7 +56,7 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     }
 
     @Override
-    public ProjectState getActivityState() {
+    public ProjectState getProcessState() {
         return ProjectState.fromState(activityState.getState());
     }
 

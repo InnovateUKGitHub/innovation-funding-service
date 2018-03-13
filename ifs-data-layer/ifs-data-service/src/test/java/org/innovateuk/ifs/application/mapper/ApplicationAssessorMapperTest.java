@@ -105,7 +105,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                         .buildSet(1))
                 .withAvailable(false)
                 .withMostRecentAssessmentId(assessment.getId())
-                .withMostRecentAssessmentState(assessment.getActivityState())
+                .withMostRecentAssessmentState(assessment.getProcessState())
                 .withTotalApplicationsCount(unassignedCount)
                 .withAssignedCount(assignedCount)
                 .withSubmittedCount(submittedCount)

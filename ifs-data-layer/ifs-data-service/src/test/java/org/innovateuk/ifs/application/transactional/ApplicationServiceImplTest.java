@@ -181,7 +181,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
-            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
+            assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
             assertNull(created.getStartDate());
@@ -354,7 +354,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals(applicationName, created.getName());
-            assertEquals(applicationState, created.getApplicationProcess().getActivityState());
+            assertEquals(applicationState, created.getApplicationProcess().getProcessState());
             assertEquals(competitionId, created.getCompetition().getId());
             return true;
         }));

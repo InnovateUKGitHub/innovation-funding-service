@@ -28,10 +28,14 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     @OrderBy("id ASC")
     private List<IneligibleOutcome> ineligibleOutcomes = new ArrayList<>();
 
+
+    @Column(name="activity_state_id")
+    private ApplicationState activityState;
+
     ApplicationProcess() {
     }
 
-    public ApplicationProcess(Application target, ProcessRole participant, ActivityState initialState) {
+    public ApplicationProcess(Application target, ProcessRole participant, ApplicationState initialState) {
         this.target = target;
         this.participant = participant;
         this.setActivityState(initialState);
@@ -58,9 +62,12 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
     }
 
     @Override
-    public ApplicationState getActivityState() {
+    public ApplicationState getProcessState() {
         return ApplicationState.fromState(activityState.getState());
     }
+
+    @Override
+    public ApplicationState getActivityState() { return activityState; }
 
     public List<IneligibleOutcome> getIneligibleOutcomes() {
         return ineligibleOutcomes;

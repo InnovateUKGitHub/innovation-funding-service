@@ -2,6 +2,7 @@ package org.innovateuk.ifs.workflow.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -25,8 +26,8 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private Long id;
     private String event;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    protected ActivityState activityState;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    protected ActivityState activityState;
 
     @LastModifiedDate
     private ZonedDateTime lastModified = ZonedDateTime.now();
@@ -48,9 +49,9 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     public Process() {
     }
 
-    public Process(String event, ActivityState activityState) {
+    protected Process(String event, ActivityState activityState) {
         this.event = event;
-        this.activityState = activityState;
+//        this.activityState = activityState;
     }
 
     public Process(String event, ActivityState activityState, LocalDate startDate, LocalDate endDate) {
@@ -95,6 +96,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         this.activityState = status;
     }
 
+
     public String getProcessEvent() {
         return event;
     }
@@ -127,7 +129,8 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return state.getBackingState().equals(activityState.getState());
     }
 
-    public abstract StatesType getActivityState();
+
+    public abstract StatesType getProcessState();
 
     @Override
     public boolean equals(Object o) {
@@ -143,7 +146,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return new EqualsBuilder()
                 .append(id, process.id)
                 .append(event, process.event)
-                .append(activityState, process.activityState)
+//                .append(activityState, process.activityState)
                 .append(startDate, process.startDate)
                 .append(endDate, process.endDate)
                 .append(version, process.version)
@@ -156,11 +159,13 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(event)
-                .append(activityState)
+//                .append(activityState)
                 .append(startDate)
                 .append(endDate)
                 .append(version)
                 .append(internalParticipant)
                 .toHashCode();
     }
+
+    public abstract StatesType getActivityState();
 }

@@ -526,6 +526,6 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     }
 
     private Long getApplicationsPendingForPanelCount(List<Interview> reviews) {
-        return reviews.stream().filter(review -> review.getActivityState().equals(InterviewState.PENDING)).count();
+        return reviews.stream().filter(review -> review.getProcessState().equals(InterviewState.PENDING)).count();
     }
 }

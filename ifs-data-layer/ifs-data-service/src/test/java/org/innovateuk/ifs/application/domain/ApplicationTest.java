@@ -57,7 +57,7 @@ public class ApplicationTest {
     public void applicationShouldReturnCorrectAttributeValues() throws Exception {
         Assert.assertEquals(application.getId(), id);
         Assert.assertEquals(application.getName(), name);
-        Assert.assertEquals(application.getApplicationProcess().getActivityState(), applicationState);
+        Assert.assertEquals(application.getApplicationProcess().getProcessState(), applicationState);
         Assert.assertEquals(application.getProcessRoles(), processRoles);
         Assert.assertEquals(application.getCompetition(), competition);
         Assert.assertEquals(application.getApplicationFinances(), applicationFinances);

@@ -50,7 +50,7 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
     }
 
     public ProjectState getState(Project project) {
-        return getCurrentProcess(project).getActivityState();
+        return getCurrentProcess(project).getProcessState();
     }
 
     @Override

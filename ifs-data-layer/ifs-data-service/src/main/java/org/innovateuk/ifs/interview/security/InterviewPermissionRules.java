@@ -49,6 +49,6 @@ public class InterviewPermissionRules extends BasePermissionRules {
 
     private boolean interviewIsInState(InterviewResource interviewResource, Set<InterviewState> allowedStates) {
         Interview interview = interviewRepository.findOne(interviewResource.getId());
-        return allowedStates.contains(interview.getActivityState());
+        return allowedStates.contains(interview.getProcessState());
     }
 }

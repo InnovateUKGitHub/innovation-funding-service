@@ -77,7 +77,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     }
 
     @Override
-    public InterviewAssignmentState getActivityState() {
+    public InterviewAssignmentState getProcessState() {
         return InterviewAssignmentState.fromState(activityState.getState());
     }
 

@@ -386,7 +386,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
                 getPartnerOrganisation(projectId, organisationId)
                         .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
-                                .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getActivityState(), viability, viabilityRagStatus))
+                                .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getProcessState(), viability, viabilityRagStatus))
                                 .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                                 .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
                                         .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
@@ -403,7 +403,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
-                        .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getActivityState(), eligibility, eligibilityRagStatus))
+                        .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getProcessState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                         .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus)))));
@@ -436,7 +436,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return getViabilityProcess(partnerOrganisation)
                 .andOnSuccess(viabilityProcess -> {
-                    if (ViabilityState.APPROVED == viabilityProcess.getActivityState()) {
+                    if (ViabilityState.APPROVED == viabilityProcess.getProcessState()) {
                         return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
                     } else {
                         return serviceSuccess();
@@ -450,7 +450,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
 
-        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getActivityState()), projectFinance.getViabilityStatus());
+        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getProcessState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
             viabilityResource.setViabilityApprovalDate(viabilityProcess.getLastModified().toLocalDate());
@@ -497,7 +497,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     private ServiceResult<EligibilityResource> buildEligibilityResource(EligibilityProcess eligibilityProcess, ProjectFinance projectFinance) {
-        EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getActivityState()), projectFinance.getEligibilityStatus());
+        EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getProcessState()), projectFinance.getEligibilityStatus());
 
         if (eligibilityProcess.getLastModified() != null) {
             eligibilityResource.setEligibilityApprovalDate(eligibilityProcess.getLastModified().toLocalDate());

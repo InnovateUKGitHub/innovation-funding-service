@@ -53,7 +53,7 @@ public class ProjectDetailsProcess extends Process<ProjectUser, Project, Project
     }
 
     @Override
-    public ProjectDetailsState getActivityState() {
+    public ProjectDetailsState getProcessState() {
         return ProjectDetailsState.fromState(activityState.getState());
     }
 }

@@ -493,7 +493,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         controller.acceptInvitation(review.getId()).getSuccess();
 
-        assertEquals(ReviewState.ACCEPTED, reviewRepository.findOne(review.getId()).getActivityState());
+        assertEquals(ReviewState.ACCEPTED, reviewRepository.findOne(review.getId()).getProcessState());
     }
 
     @Test
@@ -533,7 +533,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         controller.acceptInvitation(review.getId()).getSuccess();
 
-        assertEquals(ReviewState.ACCEPTED, reviewRepository.findOne(review.getId()).getActivityState());
+        assertEquals(ReviewState.ACCEPTED, reviewRepository.findOne(review.getId()).getProcessState());
     }
 
     @Test
@@ -577,6 +577,6 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         controller.rejectInvitation(review.getId(), rejectOutcomeResource).getSuccess();
 
-        assertEquals(ReviewState.REJECTED, reviewRepository.findOne(review.getId()).getActivityState());
+        assertEquals(ReviewState.REJECTED, reviewRepository.findOne(review.getId()).getProcessState());
     }
 }

@@ -65,7 +65,7 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     }
 
     @Override
-    public GrantOfferLetterState getActivityState() {
+    public GrantOfferLetterState getProcessState() {
         return GrantOfferLetterState.fromState(activityState.getState());
     }
 

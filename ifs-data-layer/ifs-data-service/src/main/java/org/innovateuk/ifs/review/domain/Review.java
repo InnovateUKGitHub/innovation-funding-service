@@ -81,7 +81,7 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
         this.target = target;
     }
 
-    public ReviewState getActivityState() {
+    public ReviewState getProcessState() {
         return ReviewState.fromState(activityState.getState());
     }
 

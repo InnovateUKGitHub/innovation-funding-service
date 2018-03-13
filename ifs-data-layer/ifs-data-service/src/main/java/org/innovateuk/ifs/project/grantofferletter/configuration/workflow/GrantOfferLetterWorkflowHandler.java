@@ -71,7 +71,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public boolean isSendAllowed(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.PENDING.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.PENDING.equals(process.getProcessState());
     }
 
     public boolean removeGrantOfferLetter(Project project, User internalUser) {
@@ -93,33 +93,33 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     public boolean isAlreadySent(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && !GrantOfferLetterState.PENDING.equals(process.getActivityState());
+        return process != null && !GrantOfferLetterState.PENDING.equals(process.getProcessState());
     }
 
     public boolean isApproved(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.APPROVED.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.APPROVED.equals(process.getProcessState());
     }
 
     public boolean isRejected(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) &&
+        return process != null && GrantOfferLetterState.SENT.equals(process.getProcessState()) &&
                 SIGNED_GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
     }
 
     public boolean isReadyToApprove(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getProcessState());
     }
 
     public boolean isSent(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState());
+        return process != null && GrantOfferLetterState.SENT.equals(process.getProcessState());
     }
 
     public GrantOfferLetterState getState(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null? process.getActivityState() : GrantOfferLetterState.PENDING;
+        return process != null? process.getProcessState() : GrantOfferLetterState.PENDING;
     }
 
     private boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {

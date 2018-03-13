@@ -61,7 +61,7 @@ public abstract class ApplicationAssessorMapper {
         mostRecentAssessment.ifPresent(assessment -> {
             populateRejection(applicationAssessorResource, assessment);
             applicationAssessorResource.setMostRecentAssessmentId(assessment.getId());
-            applicationAssessorResource.setMostRecentAssessmentState(assessment.getActivityState());
+            applicationAssessorResource.setMostRecentAssessmentState(assessment.getProcessState());
         });
 
         applicationAssessorResource.setTotalApplicationsCount(countAssignedApplications(user.getId()));
@@ -72,7 +72,7 @@ public abstract class ApplicationAssessorMapper {
     }
 
     private void populateRejection(ApplicationAssessorResource applicationAssessorResource, Assessment assessment) {
-        if (assessment.getActivityState() == REJECTED) {
+        if (assessment.getProcessState() == REJECTED) {
             AssessmentRejectOutcome rejection = assessment.getRejection();
             applicationAssessorResource.setRejectReason(rejection.getRejectReason());
             applicationAssessorResource.setRejectComment(rejection.getRejectComment());

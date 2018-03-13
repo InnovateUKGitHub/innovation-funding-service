@@ -31,7 +31,7 @@ public class ReviewBuilderTest {
                 .build();
 
         assertEquals(expectedId, review.getId());
-        assertEquals(expectedStatus, review.getActivityState());
+        assertEquals(expectedStatus, review.getProcessState());
         assertEquals(expectedProcessRole, review.getParticipant());
         assertEquals(expectedRejection, review.getRejection());
     }
@@ -53,13 +53,13 @@ public class ReviewBuilderTest {
 
         Review first = reviews.get(0);
         assertEquals(expectedIds[0], first.getId());
-        assertEquals(expectedStatuses[0], first.getActivityState());
+        assertEquals(expectedStatuses[0], first.getProcessState());
         assertEquals(expectedProcessRoles[0], first.getParticipant());
         assertEquals(expectedRejection[0], first.getRejection());
 
         Review second = reviews.get(1);
         assertEquals(expectedIds[1], second.getId());
-        assertEquals(expectedStatuses[1], second.getActivityState());
+        assertEquals(expectedStatuses[1], second.getProcessState());
         assertEquals(expectedProcessRoles[1], second.getParticipant());
         assertEquals(expectedRejection[1], second.getRejection());
     }

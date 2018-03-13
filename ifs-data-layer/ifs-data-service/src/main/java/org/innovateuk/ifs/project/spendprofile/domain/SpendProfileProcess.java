@@ -64,7 +64,7 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
     }
 
     @Override
-    public SpendProfileState getActivityState() {
+    public SpendProfileState getProcessState() {
         return SpendProfileState.fromState(activityState.getState());
     }
 
