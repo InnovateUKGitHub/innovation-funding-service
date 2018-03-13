@@ -2,8 +2,8 @@ package org.innovateuk.ifs.finance.controller;
 
 import org.innovateuk.ifs.MockMvcTest;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.resource.sync.FinanceType;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 import org.innovateuk.ifs.finance.transactional.CostTotalService;
 import org.junit.Test;
 import org.mockito.Mock;

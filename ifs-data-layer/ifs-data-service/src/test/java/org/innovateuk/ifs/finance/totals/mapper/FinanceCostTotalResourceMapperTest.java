@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.finance.sync.mapper;
+package org.innovateuk.ifs.finance.totals.mapper;
 
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
@@ -6,8 +6,8 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.finance.resource.cost.OtherCost;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.resource.sync.FinanceType;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;

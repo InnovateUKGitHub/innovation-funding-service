@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.finance.documentation;
 
-import org.hamcrest.Matchers;
 import org.innovateuk.ifs.MockMvcTest;
 import org.innovateuk.ifs.finance.controller.CostTotalController;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.innovateuk.ifs.finance.transactional.CostTotalService;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
-import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +15,6 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CostTotalDocs.financeCostTotalResourceBuilder;
 import static org.innovateuk.ifs.documentation.CostTotalDocs.financeCostTotalResourceFields;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;

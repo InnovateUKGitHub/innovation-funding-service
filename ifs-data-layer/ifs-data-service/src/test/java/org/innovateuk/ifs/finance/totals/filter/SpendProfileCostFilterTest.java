@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.finance.sync.filter;
+package org.innovateuk.ifs.finance.totals.filter;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.junit.Before;
 import org.junit.Test;
 

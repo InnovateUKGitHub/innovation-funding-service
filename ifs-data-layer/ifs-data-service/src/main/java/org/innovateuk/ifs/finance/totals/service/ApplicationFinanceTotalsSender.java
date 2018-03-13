@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.finance.sync.service;
+package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;

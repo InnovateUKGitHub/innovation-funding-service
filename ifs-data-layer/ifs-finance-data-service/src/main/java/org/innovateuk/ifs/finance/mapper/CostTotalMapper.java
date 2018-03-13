@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.finance.domain.CostTotal;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.finance.resource.sync;
+package org.innovateuk.ifs.finance.resource.totals;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 

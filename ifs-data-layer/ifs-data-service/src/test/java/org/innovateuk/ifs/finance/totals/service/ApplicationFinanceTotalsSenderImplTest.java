@@ -1,21 +1,20 @@
-package org.innovateuk.ifs.finance.sync.service;
+package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.resource.sync.FinanceType;
-import org.innovateuk.ifs.finance.sync.filter.SpendProfileCostFilter;
-import org.innovateuk.ifs.finance.sync.mapper.FinanceCostTotalResourceMapper;
-import org.innovateuk.ifs.finance.sync.queue.CostTotalMessageQueue;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceType;
+import org.innovateuk.ifs.finance.totals.filter.SpendProfileCostFilter;
+import org.innovateuk.ifs.finance.totals.mapper.FinanceCostTotalResourceMapper;
+import org.innovateuk.ifs.finance.totals.queue.CostTotalMessageQueue;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;

@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.finance.sync.queue;
+package org.innovateuk.ifs.finance.totals.queue;
 
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,13 +1,13 @@
-package org.innovateuk.ifs.finance.sync.service;
+package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.sync.filter.SpendProfileCostFilter;
-import org.innovateuk.ifs.finance.sync.mapper.FinanceCostTotalResourceMapper;
-import org.innovateuk.ifs.finance.sync.queue.CostTotalMessageQueue;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.totals.filter.SpendProfileCostFilter;
+import org.innovateuk.ifs.finance.totals.mapper.FinanceCostTotalResourceMapper;
+import org.innovateuk.ifs.finance.totals.queue.CostTotalMessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

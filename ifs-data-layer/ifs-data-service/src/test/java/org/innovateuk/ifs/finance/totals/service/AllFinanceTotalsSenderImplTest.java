@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.finance.sync.service;
+package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.transactional.ApplicationService;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.sync.FinanceType;
+import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;

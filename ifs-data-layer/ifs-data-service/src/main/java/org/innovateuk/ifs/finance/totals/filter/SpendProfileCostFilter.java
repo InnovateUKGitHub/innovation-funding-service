@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.finance.sync.filter;
+package org.innovateuk.ifs.finance.totals.filter;
 
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

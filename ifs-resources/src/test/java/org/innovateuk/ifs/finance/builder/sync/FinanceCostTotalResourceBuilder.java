@@ -2,8 +2,8 @@ package org.innovateuk.ifs.finance.builder.sync;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.resource.sync.FinanceType;
+import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 
 import java.math.BigDecimal;
 import java.util.List;

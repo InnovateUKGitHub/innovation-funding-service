@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.config;
+package org.innovateuk.ifs.security.config;
 
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
