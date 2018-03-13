@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.attribute.MethodAttributeAppender;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.ProxyUtils;
@@ -28,7 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -118,9 +118,14 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
                 getAdvisedSecuredBean().getAdvisors()
         );
 
-        classUnderTest = createRecordingProxy(securedSpringProxy, getClassUnderTest(),
-                method -> hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class),
-                methodCalled -> recordServiceMethodCall(methodCalled)
+        classUnderTest = createRecordingProxy(
+                targetClass,
+                securedSpringProxy,
+                method -> {
+                    if (hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class)) {
+                        recordServiceMethodCall(method);
+                    }
+                }
         );
 
         super.setup();
@@ -139,7 +144,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
         }
     }
 
-    private static <U> U createDelegatingProxy(Class<U> targetClass, U targetInstance) {
+    private static <U> U createDelegatingProxy(Class<U> targetClass, Object targetInstance) {
         try {
             return new ByteBuddy()
                     .subclass(targetClass)
@@ -253,42 +258,51 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      */
     @Override
     protected Object createPermissionRuleMock(Object mock, Class<?> mockClass) {
-        return createRecordingProxy(mock, mockClass,
-                method -> hasOneAnnotation(method, PermissionRule.class),
-                methodCalled -> recordPermissionRuleMethodCall(methodCalled, mockClass)
+        return createRecordingProxy(
+                mockClass,
+                mock,
+                method -> {
+                    if (hasOneAnnotation(method, PermissionRule.class)) {
+                        recordPermissionRuleMethodCall(method, mockClass);
+                    }
+                }
         );
     }
 
     /**
-     * Create a pass-through proxy that is able to record interactions with mock objects in a similar way that Mockito does
-     * (Mockito does not expose its recordings and so it is necessary to do this manually if you want a list of interactions available)
+     * Interceptor that catches any matching methods
+     * (according to criteria set by the ByteBuddy dynamic subclass)
+     * and delegates their invocation to a target instance.
      *
-     * @param instance
-     * @param clazz
-     * @param <T>
-     * @return
+     * It also accepts a method handler that allows some logic to be
+     * performed before the method is invoked on the target instance.
      */
-    public static <T> T createRecordingProxy(Object instance, Class<T> clazz, Predicate<Method> proxyMethodFilter, Consumer<Method> methodCallHandler) {
+    public static class DelegatingMethodInterceptor {
 
-        ProxyFactory factory = new ProxyFactory();
-        factory.setSuperclass(clazz);
-        factory.setFilter(proxyMethodFilter::test);
+        private Object target;
+        private Consumer<Method> handler;
 
-        MethodHandler handler = (self, thisMethod, proceed, args) -> {
-            Method originalMethod = instance.getClass().getMethod(thisMethod.getName(), thisMethod.getParameterTypes());
-            methodCallHandler.accept(originalMethod);
+        public DelegatingMethodInterceptor(Object target, Consumer<Method> handler) {
+            this.target = target;
+            this.handler = handler;
+        }
+
+        @RuntimeType
+        public Object intercept(@Origin Method method, @AllArguments Object... args) throws Throwable {
+            handler.accept(method);
+
             try {
-                return originalMethod.invoke(instance, args);
-            } catch (InvocationTargetException e) {
+                return method.invoke(target, args);
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 throw e.getCause();
             }
-        };
-
-        try {
-            return (T) factory.create(new Class<?>[0], new Object[0], handler);
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
         }
+    }
+
+    private static <U> U createRecordingProxy(Class<U> targetClass, Object targetInstance, Consumer<Method> methodHandler) {
+        DelegatingMethodInterceptor interceptor = new DelegatingMethodInterceptor(targetInstance, methodHandler);
+
+        return createDelegatingProxy(targetClass, interceptor);
     }
 
     private boolean hasOneAnnotation(Method method, Class<? extends Annotation>... annotations) {
