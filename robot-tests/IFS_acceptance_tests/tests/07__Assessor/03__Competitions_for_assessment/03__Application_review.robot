@@ -203,7 +203,7 @@ Economic Benefit: Guidance
 
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
-    [Tags]
+    [Tags]  MySQL
     Given the user clicks the button/link           link=Finances overview
     Then the user should see the text in the page  Finances summary
     And the finance summary total should be correct
@@ -286,16 +286,16 @@ The user sets the finance option to detailed
     execute sql string   UPDATE `${database_name}`.`competition` SET `assessor_finance_view`='DETAILED' WHERE `name`='${competition}';
 
 The project costs are correct in the overview
-    The user should see the element           jQuery=button:contains("Labour") span:contains("£3,081")
-    The user should see the element           jQuery=button:contains("Overhead costs") span:contains("£0")
-    The user should see the element           jQuery=button:contains("Materials") span:contains("£100,200")
-    The user should see the element           jQuery=button:contains("Capital usage") span:contains("£552")
-    The user should see the element           jQuery=button:contains("Subcontracting costs") span:contains("£90,000")
-    The user should see the element           jQuery=button:contains("Travel and subsistence") span:contains("£5,970")
-    The user should see the element           jQuery=button:contains("Other costs") span:contains("£1,100")
+    The user should see the element       jQuery=button:contains("Labour") span:contains("£3,081")
+    The user should see the element       jQuery=button:contains("Overhead costs") span:contains("£0")
+    The user should see the element       jQuery=button:contains("Materials") span:contains("£100,200")
+    The user should see the element       jQuery=button:contains("Capital usage") span:contains("£552")
+    The user should see the element       jQuery=button:contains("Subcontracting costs") span:contains("£90,000")
+    The user should see the element       jQuery=button:contains("Travel and subsistence") span:contains("£5,970")
+    The user should see the element       jQuery=button:contains("Other costs") span:contains("£1,100")
 
 The academic finances are correct
-    And the user should see the element       jQuery=.table-overview td:contains("3 months")
-    And the user should see the element       jQuery=.table-overview td:contains("£990")
-    And the user should see the element       jQuery=.table-overview td:contains("100%")
-    And the user should see the element       jQuery=.table-overview td:contains("990")
+    The user should see the element       jQuery=.table-overview td:contains("3 months")
+    The user should see the element       jQuery=.table-overview td:contains("£990")
+    The user should see the element       jQuery=.table-overview td:contains("100%")
+    The user should see the element       jQuery=.table-overview td:contains("990")
