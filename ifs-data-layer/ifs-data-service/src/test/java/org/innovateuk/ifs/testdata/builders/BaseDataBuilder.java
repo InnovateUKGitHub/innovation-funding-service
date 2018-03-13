@@ -129,8 +129,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationService applicationService;
     protected ApplicationNotificationService applicationNotificationService;
     protected QuestionService questionService;
+    protected QuestionStatusService questionStatusService;
     protected TestQuestionService testQuestionService;
     protected FormInputService formInputService;
+    protected FormInputResponseService formInputResponseService;
     protected FormInputResponseRepository formInputResponseRepository;
     protected ApplicationRepository applicationRepository;
     protected ApplicationFundingService applicationFundingService;
@@ -139,6 +141,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected MonitoringOfficerService monitoringOfficerService;
     protected FinanceRowCostsService financeRowCostsService;
     protected SectionService sectionService;
+    protected SectionStatusService sectionStatusService;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
     protected EthnicityRepository ethnicityRepository;
@@ -213,8 +216,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationService = serviceLocator.getBean(ApplicationService.class);
         applicationNotificationService = serviceLocator.getBean(ApplicationNotificationService.class);
         questionService = serviceLocator.getBean(QuestionService.class);
+        questionStatusService = serviceLocator.getBean(QuestionStatusService.class);
         testQuestionService = serviceLocator.getBean(TestQuestionService.class);
         formInputService = serviceLocator.getBean(FormInputService.class);
+        formInputResponseService = serviceLocator.getBean(FormInputResponseService.class);
         formInputResponseRepository = serviceLocator.getBean(FormInputResponseRepository.class);
         applicationRepository = serviceLocator.getBean(ApplicationRepository.class);
         applicationFundingService = serviceLocator.getBean(ApplicationFundingService.class);
@@ -224,6 +229,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         financeRowCostsService = serviceLocator.getBean(FinanceRowCostsService.class);
         financeService = serviceLocator.getBean(FinanceService.class);
         sectionService = serviceLocator.getBean(SectionService.class);
+        sectionStatusService = serviceLocator.getBean(SectionStatusService.class);
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
         ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);

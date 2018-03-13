@@ -55,7 +55,6 @@ public class FormInputBuilderTest {
                 .withId(expectedId)
                 .withWordCount(expectedWordCount)
                 .withType(expectedType)
-                .withResponses(expectedResponses)
                 .withQuestion(expectedQuestion)
                 .withCompetition(expectedCompetition)
                 .withInputValidators(expectedInputValidators)
@@ -72,7 +71,6 @@ public class FormInputBuilderTest {
         assertEquals(expectedId, formInput.getId());
         assertEquals(expectedWordCount, formInput.getWordCount());
         assertEquals(expectedType, formInput.getType());
-        assertEquals(expectedResponses, formInput.getResponses());
         assertEquals(expectedQuestion, formInput.getQuestion());
         assertEquals(expectedCompetition, formInput.getCompetition());
         assertEquals(expectedInputValidators, formInput.getInputValidators());
@@ -108,7 +106,6 @@ public class FormInputBuilderTest {
                 .withId(expectedIds)
                 .withWordCount(expectedWordCounts)
                 .withType(expectedTypes)
-                .withResponses(expectedResponses.get(0), expectedResponses.get(1))
                 .withQuestion(expectedQuestions)
                 .withCompetition(expectedCompetitions)
                 .withInputValidators(expectedInputValidators.get(0), expectedInputValidators.get(1))
@@ -126,7 +123,6 @@ public class FormInputBuilderTest {
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedWordCounts[0], first.getWordCount());
         assertEquals(expectedTypes[0], first.getType());
-        assertEquals(expectedResponses.get(0), first.getResponses());
         assertEquals(expectedQuestions[0], first.getQuestion());
         assertEquals(expectedCompetitions[0], first.getCompetition());
         assertEquals(expectedInputValidators.get(0), first.getInputValidators());
@@ -143,7 +139,6 @@ public class FormInputBuilderTest {
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedWordCounts[1], second.getWordCount());
         assertEquals(expectedTypes[1], second.getType());
-        assertEquals(expectedResponses.get(1), second.getResponses());
         assertEquals(expectedQuestions[1], second.getQuestion());
         assertEquals(expectedCompetitions[1], second.getCompetition());
         assertEquals(expectedInputValidators.get(1), second.getInputValidators());

@@ -30,7 +30,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
 
     @Mappings({
-            @Mapping(target = "responses", ignore = true),
             @Mapping(target = "guidanceRows", ignore = true),
             @Mapping(target = "active", ignore = true)
     })

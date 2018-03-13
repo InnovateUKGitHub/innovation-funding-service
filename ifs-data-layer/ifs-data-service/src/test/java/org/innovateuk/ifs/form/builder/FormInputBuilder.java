@@ -56,10 +56,6 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
         return withArraySetFieldByReflection("type", value);
     }
 
-    public FormInputBuilder withResponses(List<FormInputResponse>... value) {
-        return withArraySetFieldByReflection("responses", value);
-    }
-
     public FormInputBuilder withQuestion(Question... value) {
         return withArraySetFieldByReflection("question", value);
     }

@@ -1,30 +1,24 @@
 package org.innovateuk.ifs.form.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.form.domain.Section;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
-import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.form.security.SectionServiceSecurityTest.TestSectionService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Module: innovation-funding-service
@@ -38,42 +32,6 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
     public void lookupPermissionRules() {
         sectionPermissionRules = getMockPermissionRulesBean(SectionPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
-    }
-
-    @Test
-    public void testPermissionForMarkSectionAsComplete() {
-        Long sectionId = 1L;
-        Long applicationId = 2L;
-        Long markedAsCompleteById = 3L;
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules).onlyMemberOfProjectTeamCanMarkSectionAsComplete(isA(ApplicationResource.class), isA(UserResource.class))
-        );
-    }
-
-    @Test
-    public void testPermissionForMarkSectionAsInComplete() {
-        Long sectionId = 1L;
-        Long applicationId = 2L;
-        Long markedAsCompleteById = 3L;
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules).onlyMemberOfProjectTeamCanMarkSectionAsInComplete(isA(ApplicationResource.class), isA(UserResource.class))
-        );
-    }
-
-    @Test
-    public void testPermissionForMarkSectionAsNotRequired() {
-        Long sectionId = 1L;
-        Long applicationId = 2L;
-        Long markedAsCompleteById = 3L;
-        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
-        assertAccessDenied(
-                () -> classUnderTest.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules).onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(isA(ApplicationResource.class), isA(UserResource.class))
-        );
     }
 
     @Test
@@ -96,47 +54,12 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
         }
 
         @Override
-        public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(Long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Set<Long>> getCompletedSections(long applicationId, long organisationId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId) {
             return null;
         }
 
         @Override
-        public ServiceResult<List<ValidationMessages>> markSectionAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSectionAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<Long>> getIncompleteSections(Long applicationId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
             return null;
         }
 
