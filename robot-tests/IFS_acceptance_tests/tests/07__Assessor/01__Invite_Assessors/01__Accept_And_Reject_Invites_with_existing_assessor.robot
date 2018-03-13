@@ -157,7 +157,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    MySQL
     Then the assessor should see the number of days remaining
-    And the calculation of the remaining days should be correct  2068-01-28
+    And the calculation of the remaining days should be correct  2020-05-16
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
