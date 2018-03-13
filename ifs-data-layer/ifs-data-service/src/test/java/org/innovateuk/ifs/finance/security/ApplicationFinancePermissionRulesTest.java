@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -11,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -68,6 +71,11 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationId, COLLABORATOR.getName())).thenReturn(true);
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(assessor.getId(), applicationId, ASSESSOR.getName())).thenReturn(true);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
+
+            Competition competition = newCompetition()
+                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+
+            when(competitionRepositoryMock.findByApplicationsId(applicationId)).thenReturn(competition);
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
