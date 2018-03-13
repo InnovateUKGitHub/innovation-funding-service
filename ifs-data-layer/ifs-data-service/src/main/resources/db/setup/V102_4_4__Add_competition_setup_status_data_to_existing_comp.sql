@@ -2,7 +2,7 @@
 
 -- Add Question setup statuses for existing completed competitions
 INSERT INTO `setup_status` (`completed`, `class_name`, `class_pk`, `parent_id`, `target_class_name`, `target_id`)
-SELECT 1, 'org.innovateuk.ifs.form.domain.Question', q.id, pss.id, 'org.innovateuk.ifs.competition.domain.Competition', q.competition_id
+SELECT 1, 'org.innovateuk.ifs.application.domain.Question', q.id, pss.id, 'org.innovateuk.ifs.competition.domain.Competition', q.competition_id
 FROM question q
     JOIN setup_status pss ON pss.class_name = 'org.innovateuk.ifs.competition.resource.CompetitionSetupSection'
         AND pss.class_pk = 6
