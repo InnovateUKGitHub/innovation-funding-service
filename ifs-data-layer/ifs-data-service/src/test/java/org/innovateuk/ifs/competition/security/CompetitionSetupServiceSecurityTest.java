@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
@@ -52,7 +52,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         nonCompAdminRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             Long competitionId = 2L;
 
             assertAccessDenied(() -> classUnderTest.create(), () -> {
@@ -78,7 +78,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testCompAdminAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 
         classUnderTest.findAllTypes();
         Long competitionId = 2L;
@@ -94,7 +94,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     }
     @Test
     public void testProjectFinanceAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
 
         classUnderTest.findAllTypes();
         Long competitionId = 2L;

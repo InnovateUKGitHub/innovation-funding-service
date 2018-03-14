@@ -3,13 +3,13 @@ package org.innovateuk.ifs.project.bankdetails.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsServiceImpl;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
@@ -23,7 +23,7 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
     public void testGetProjectBankDetailsStatusSummaryAllowedIfProjectFinanceRole() {
 
         stream(UserRoleType.values()).forEach(role -> {
-            UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build();
+            UserResource user = newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build();
             setLoggedInUser(user);
 
             if (role == PROJECT_FINANCE) {

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewInviteServiceImpl;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.junit.Before;
@@ -23,7 +24,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
@@ -121,11 +121,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     public void getAllInvitesByUser() throws Exception {
         UserResource assessorUserResource = newUserResource()
                 .withRolesGlobal(singletonList(
-                        newRoleResource()
-                        .withType(ASSESSOR)
-                        .withId(1L)
-                        .build())
-                        )
+                        Role.ASSESSOR
+                        ))
                 .build();
 
         when(classUnderTestMock.getAllInvitesByUser(1L))
@@ -145,9 +142,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     public void acceptInvite() {
         UserResource assessorUserResource = newUserResource()
                 .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
+                        Role.ASSESSOR
                         )
                 ).build();
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
@@ -181,9 +176,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     public void acceptInvite_notSameUser() {
         UserResource assessorUserResource = newUserResource()
                 .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
+                        Role.ASSESSOR
                         )
                 ).build();
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
@@ -207,9 +200,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     public void acceptInvite_hashNotExists() {
         UserResource assessorUserResource = newUserResource()
                 .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
+                        Role.ASSESSOR
                         )
                 ).build();
 

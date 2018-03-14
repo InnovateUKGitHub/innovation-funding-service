@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.PartnerOrganisationServiceImpl;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +14,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -47,11 +46,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void testCompAdminCanSeeAllPartnerOrganisationsForAnyProject(){
-        setLoggedInUser(
-                newUserResource()
-                        .withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build()))
-                        .build()
-        );
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 
         when(classUnderTestMock.getProjectPartnerOrganisations(123L))
                 .thenReturn(serviceSuccess(partnerOrganisations));
@@ -63,6 +58,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
                 .partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
         verify(partnerOrganisationPermissionRules, times(3))
                 .internalUsersCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+
         verifyNoMoreInteractions(partnerOrganisationPermissionRules);
 
         assertTrue(result.isSuccess());
@@ -83,10 +79,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void testCompAdminCanSeePartnerOrganisation(){
-        UserResource internalUser = newUserResource()
-                .withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build()))
-                .build();
-
+        UserResource internalUser = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
         setLoggedInUser(internalUser);
 
         when(classUnderTestMock.getPartnerOrganisation(123L, 234L))

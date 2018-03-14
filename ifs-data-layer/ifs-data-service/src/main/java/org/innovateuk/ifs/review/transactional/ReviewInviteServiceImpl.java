@@ -30,11 +30,9 @@ import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -130,9 +128,6 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
 
     @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -466,10 +461,9 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(ReviewParticipant participant) {
         Competition competition = participant.getProcess();
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        final Role panelAssessorRole = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
         final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         applicationsInPanel.forEach(application -> {
-            Review review = new Review(application, participant, panelAssessorRole);
+            Review review = new Review(application, participant, Role.PANEL_ASSESSOR);
             review.setActivityState(pendingActivityState);
             reviewRepository.save(review);
         });

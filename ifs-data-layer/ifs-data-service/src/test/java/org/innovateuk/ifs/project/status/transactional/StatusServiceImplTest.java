@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status.transactional;
 
-import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -27,6 +26,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -63,8 +64,6 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -97,7 +96,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        Role leadApplicantRole = newRole(LEADAPPLICANT).build();
+        Role leadApplicantRole = Role.LEADAPPLICANT;
 
         Long userId = 7L;
         User user = newUser().
@@ -136,9 +135,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         o = organisation;
         o.setOrganisationType(businessOrganisationType);
 
-        partnerRole = newRole().
-                withType(FINANCE_CONTACT).
-                build();
+        partnerRole = Role.FINANCE_CONTACT;
 
         po = newPartnerOrganisation().
                 withOrganisation(o).
@@ -183,9 +180,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
         Mockito.when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
-        User internalUser = newUser().withRoles(newRole().withType(COMP_ADMIN).buildSet(1)).build();
+        User internalUser = newUser().withRoles(singleton(Role.COMP_ADMIN)).build();
         when(userRepositoryMock.findOne(internalUser.getId())).thenReturn(internalUser);
-        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
     }
 
     @Override
@@ -197,13 +194,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
     public void testGetCompetitionStatus() {
         Long competitionId = 123L;
         Competition competition = newCompetition().withId(competitionId).build();
-
-        /**
-         * Create partner and lead applicant role
-         */
-        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-        Role applicantRole = newRole().withType(APPLICANT).build();
-        Role partnerRole = newRole().withType(PARTNER).build();
 
         /**
          * Create 3 organisations:
@@ -223,7 +213,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         /**
          * Create 3 applications, one for each org, with process roles
          */
-        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(leadApplicantRole, applicantRole, applicantRole).withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).build(3);
+        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.APPLICANT).withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).build(3);
         List<Application> applications = newApplication().withCompetition(competition).withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2)).build(3);
 
         /**
@@ -790,7 +780,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();
-        Role role = newRole().withType(UserRoleType.LEADAPPLICANT).build();
+        Role role = Role.LEADAPPLICANT;
         ProcessRole processRole = newProcessRole().
                 withRole(role).
                 withApplication(application).
@@ -849,7 +839,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         // Status shown to support user when MO is set is COMPLETE
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
-        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.SUPPORT)).build());
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
         ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
@@ -857,28 +847,28 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         // Status shown to support user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(null);
-        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.SUPPORT)).build());
         result = service.getProjectStatusByProjectId(projectId);
         returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
         // Status shown to innovation lead user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
-        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(INNOVATION_LEAD).build())).build());
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.INNOVATION_LEAD)).build());
         result = service.getProjectStatusByProjectId(projectId);
         returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
         // Status shown to comp admin user when MO is not set is ACTION_REQUIRED
-        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(COMP_ADMIN).build())).build());
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.COMP_ADMIN)).build());
         result = service.getProjectStatusByProjectId(projectId);
         returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
         // Status shown to project finance user when MO is not set is ACTION_REQUIRED
-        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(PROJECT_FINANCE).build())).build());
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.PROJECT_FINANCE)).build());
         result = service.getProjectStatusByProjectId(projectId);
         returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
@@ -887,8 +877,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void testGetProjectTeamStatus(){
-        Role partnerRole = newRole().withType(PARTNER).build();
-
         /**
          * Create 3 organisations:
          * 2 Business, 1 Academic
@@ -1154,8 +1142,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void testIsGrantOfferLetterIsPendingNonLeadPartner() {
-
-        Role partnerRole = newRole().withType(FINANCE_CONTACT).build();
         User u = newUser().withEmailAddress("a@b.com").build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();

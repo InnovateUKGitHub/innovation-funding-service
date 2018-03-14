@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionServiceImpl;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,7 +14,6 @@ import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
@@ -36,8 +35,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testGetByQuestionIdDeniedIfGlobalCompAdminRole() {
-        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.getByQuestionId(QUESTION_ID);
     }
 
@@ -60,7 +58,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
         nonCompAdminRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.getByQuestionId(QUESTION_ID);
                 fail("Should not have been able to get question from id without the global Comp Admin role");
@@ -72,8 +70,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testSaveAllowedIfGlobalCompAdminRole() {
-        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.update(newCompetitionSetupQuestionResource().build());
     }
 
@@ -96,7 +93,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
         nonCompAdminRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.update(newCompetitionSetupQuestionResource().build());
                 fail("Should not have been able to update question without the global Comp Admin role");
@@ -108,8 +105,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteAllowedIfGlobalCompAdminRole() {
-        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.delete(1L);
     }
 
@@ -132,7 +128,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
         nonCompAdminRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.delete(1L);
                 fail("Should not have been able to update question without the global Comp Admin role");
@@ -144,8 +140,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testCreateByCompetitionAllowedIfGlobalCompAdminRole() {
-        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.createByCompetitionId(2L);
     }
 
@@ -168,7 +163,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
         nonCompAdminRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.createByCompetitionId(3L);
                 fail("Should not have been able to update question without the global Comp Admin role");

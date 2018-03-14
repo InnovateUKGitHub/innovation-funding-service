@@ -7,7 +7,6 @@ import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,7 +16,6 @@ import org.mapstruct.Mappings;
         config = GlobalMapperConfig.class,
         uses = {
                 ProjectMapper.class,
-                RoleMapper.class,
                 OrganisationMapper.class,
                 InviteProjectMapper.class,
                 UserMapper.class

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,7 +23,6 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
@@ -208,7 +208,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         nonCompAdminRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.generateGrantOfferLetter(projectId, fileEntryResource);
                 Assert.fail("Should not have been able to generate GOL without the global Comp Admin role");
@@ -229,7 +229,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         nonCompAdminRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.generateGrantOfferLetterIfReady(projectId);
                 Assert.fail("Should not have been able to generate GOL automatically without the global Comp Admin role");

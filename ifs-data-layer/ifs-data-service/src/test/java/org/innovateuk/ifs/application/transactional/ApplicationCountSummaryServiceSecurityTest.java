@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**
@@ -17,7 +16,7 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
 
     @Test
     public void testGetApplicationCountSummariesByCompetitionId() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.getApplicationCountSummariesByCompetitionId(1L, 0, 0, empty());
     }
 
@@ -29,7 +28,7 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
 
     @Test
     public void testGetApplicationCountSummariesByCompetitionIdAndInnovationArea() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.getApplicationCountSummariesByCompetitionIdAndInnovationArea(1L, 2L,0, 0, empty(), "", "");
     }
 

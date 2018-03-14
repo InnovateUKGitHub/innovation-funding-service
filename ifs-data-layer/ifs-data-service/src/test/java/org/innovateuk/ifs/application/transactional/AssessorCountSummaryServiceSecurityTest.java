@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.Collections;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 /**
@@ -19,10 +19,7 @@ public class AssessorCountSummaryServiceSecurityTest extends BaseServiceSecurity
     public void testGetAssessorCountSummariesByCompetitionId() {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(
-                                newRoleResource()
-                                        .withType(UserRoleType.COMP_ADMIN)
-                                        .build(1))
+                        .withRolesGlobal(Collections.singletonList(Role.COMP_ADMIN))
                         .build()
         );
         classUnderTest.getAssessorCountSummariesByCompetitionId(1L,  Optional.empty(), Optional.empty(),0, 0);
