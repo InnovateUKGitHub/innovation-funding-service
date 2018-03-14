@@ -57,8 +57,4 @@ public class ProjectSpendProfileExportController {
     private String getCSVAttachmentHeader(String fileName) {
         return ATTACHMENT_HEADER + fileName;
     }
-
-    public static void main(String[] args) {
-        System.out.println("Hellp");
-    }
 }
