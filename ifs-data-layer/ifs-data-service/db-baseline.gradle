@@ -17,14 +17,14 @@ buildscript {
 
 // use fully qualified class name
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-task dbResetDockerEnv {
+task dbBaselineDockerEnv {
     dependsOn "build"
 
-    def inputDir = project.file("$project.buildDir/docker-db-reset")
+    def inputDir = project.file("$project.buildDir/docker-db-baseline")
     doFirst {
         copy {
-            from file('src/main/docker/Dockerfile-dbreset')
-            rename 'Dockerfile-dbreset', 'Dockerfile'
+            from file('src/main/docker/Dockerfile-dbbaseline')
+            rename 'Dockerfile-dbbaseline', 'Dockerfile'
             into inputDir
         }
         copy {
@@ -33,24 +33,16 @@ task dbResetDockerEnv {
             into inputDir
         }
         copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db.sh")
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db-sync-ldap.sh")
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/baseline-db.sh")
             into inputDir
         }
     }
 }
 
-task dbResetDocker(type: DockerBuildImage) {
-    dependsOn "dbResetDockerEnv"
-    tag = 'innovateuk/dbreset'
-    inputDir = project.file("$project.buildDir/docker-db-reset")
+task dbBaselineDocker(type: DockerBuildImage) {
+    dependsOn "dbBaselineDockerEnv"
+    tag = 'innovateuk/dbbaseline'
+    inputDir = project.file("$project.buildDir/docker-db-baseline")
 }
 
 task dbAnonymisedDumpDockerEnv {

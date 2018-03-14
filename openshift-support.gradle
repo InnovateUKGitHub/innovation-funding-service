@@ -68,7 +68,7 @@ task dbAnonymisedDumpProduction(type: Exec) {
 
 task dbBaselineProduction(type: Exec) {
     dependsOn prepareDeployment
-    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
@@ -122,7 +122,7 @@ task osUpgradeDemo(type: Exec) {
 
 task dbBaselineDemo(type: Exec) {
     dependsOn prepareDeployment
-    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
@@ -144,6 +144,12 @@ task osUpgradeSysint(type: Exec) {
 task dbResetSysint(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
+task dbBaselineSysint(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
