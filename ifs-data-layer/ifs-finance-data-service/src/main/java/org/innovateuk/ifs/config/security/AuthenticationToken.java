@@ -5,6 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+/**
+ * Represents the token for a request once it has been authenticated.
+ */
 public class AuthenticationToken implements Authentication {
 
     AuthenticationToken() {

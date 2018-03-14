@@ -11,6 +11,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * {@link HttpServletRequest} wrapper that caches all content read from
+ * the {@linkplain #getInputStream() input stream}. It allows multiple calls to
+ * {@linkplain #getInputStream() input stream} by returning a new input stream for the cache every time.
+ */
 public class AuthenticationRequestWrapper extends HttpServletRequestWrapper {
 
     private String body;

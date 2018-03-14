@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 
+/**
+ * Responsible for authenticating requests by inspecting the request header for a valid authentication token.
+ */
 @Service
 public class TokenAuthenticationService {
 

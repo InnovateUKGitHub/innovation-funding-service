@@ -8,6 +8,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+/**
+ * Authenticates requests using the {@link TokenAuthenticationService}, setting an authentication principal on the
+ * security context if the request is authenticated.
+ */
 @Component
 public class AuthenticationFilter implements Filter {
 

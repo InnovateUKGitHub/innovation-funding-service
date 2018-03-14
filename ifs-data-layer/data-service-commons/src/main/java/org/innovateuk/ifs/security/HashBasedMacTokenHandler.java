@@ -9,6 +9,10 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Responsible for providing hash based message authentication codes using SHA-256 a given input in combination
+ * with a secret key.
+ */
 @Component
 public class HashBasedMacTokenHandler {
 
