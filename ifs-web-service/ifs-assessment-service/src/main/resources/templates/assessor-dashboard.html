@@ -200,44 +200,6 @@
                 </div>
             </div>
 
-            <!--<div class="assessment-interview-invites">-->
-                <!--<th:block th:unless="${#lists.isEmpty(model.getInterviewPanelAccepted)}">-->
-                    <!--<div class="progress-list"><h2 class="heading-medium no-margin-top">Attend interview (<span-->
-                        <!--th:text="${#lists.size(model.getInterviewPanelAccepted)}"/>)</h2>-->
-                        <!--<ul>-->
-                            <!--<li th:each="assessmentInterviewAccept : ${model.getInterviewPanelAccepted}">-->
-                                <!--<div class="task">-->
-                                    <!--<h3 class="heading-small">-->
-                                        <!--<a th:href="@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${assessmentPanelAccept.competitionId})}"-->
-                                           <!--th:text="${assessmentInterviewAccept.competitionName}"/>-->
-                                    <!--</h3>-->
-
-                                    <!--<div th:if="${assessmentInterviewAccept.awaitingApplications == 0}">-->
-                                        <!--Applications awaiting review will be added here.-->
-                                    <!--</div>-->
-
-                                    <!--<div th:if="${assessmentInterviewAccept.awaitingApplications > 0}" class="action-required">-->
-                                        <!--<strong>-->
-                                            <!--<span th:text="${assessmentInterviewAccept.awaitingApplications}" class="accepted-applications">COUNT-->
-                                            <!--</span> applications awaiting review-->
-                                        <!--</strong>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                                <!--<div class="status">-->
-                                    <!--<div class="status-msg msg-deadline">-->
-                                        <!--<strong class="bold-medium days-remaining" th:text="${assessmentPanelAccept.daysLeft}"></strong>-->
-                                        <!--<br />days left <br />-->
-                                        <!--Deadline-->
-                                        <!--<span class="day" th:text="${#temporals.day(assessmentPanelAccept.panelDateDeadline)}">END DAY</span>-->
-                                        <!--<span class="month" th:text="${#temporals.monthName(assessmentPanelAccept.panelDateDeadline)}">END MONTH</span>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                <!--</th:block>-->
-            <!--</div>-->
-
             <div class="interview-panel-invites" th:unless="${#lists.isEmpty(model.interviewPanelInvites)}">
                 <div class="progress-list"><h2 class="heading-medium">Invitations to interview panel(<span
                     th:text="${#lists.size(model.interviewPanelInvites)}"/>)</h2>
