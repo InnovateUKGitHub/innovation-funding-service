@@ -28,7 +28,7 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +67,6 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -514,7 +513,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
 
         Long currentSectionId = sectionResources.get(2).getId();
         ApplicationResource application = newApplicationResource().build();
-        RoleResource role = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
+        Role role = Role.COLLABORATOR;
         ProcessRoleResource processRole = newProcessRoleResource().withOrganisation(2L).withRole(role).build();
 
         when(applicationService.getById(1L)).thenReturn(application);

@@ -4,18 +4,15 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.documentation.EditUserResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
-import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
@@ -25,7 +22,6 @@ import static org.innovateuk.ifs.documentation.UserDocs.internalUserRegistration
 import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
@@ -161,7 +157,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void createInternalUser() throws Exception {
 
-        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        List<Role> roleResources = singletonList(Role.PROJECT_FINANCE);
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")

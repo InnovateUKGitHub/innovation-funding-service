@@ -5,15 +5,13 @@ import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static java.util.Collections.emptyList;
 
 /**
@@ -49,10 +47,6 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
 
     public ProcessRoleBuilder withRole(Role... roles) {
         return withArray((role, processRole) -> processRole.setRole(role), roles);
-    }
-
-    public ProcessRoleBuilder withRole(UserRoleType... roles) {
-        return withArray((role, processRole) -> processRole.setRole(newRole().withType(role).build()), roles);
     }
 
     public ProcessRoleBuilder withApplication(Builder<Application, ?> application) {
