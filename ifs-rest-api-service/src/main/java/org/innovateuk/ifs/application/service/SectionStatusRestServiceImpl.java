@@ -20,41 +20,41 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 @Service
 public class SectionStatusRestServiceImpl extends BaseRestService implements SectionStatusRestService {
 
-    private String sectionRestURL = "/sectionStatus";
+    private String sectionRestURL = "/section-status";
 
     @Override
     public RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
-        return postWithRestResult(sectionRestURL + "/markAsComplete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, validationMessagesListType());
+        return postWithRestResult(sectionRestURL + "/mark-as-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, validationMessagesListType());
     }
 
     @Override
     public RestResult<Void> markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
-        return postWithRestResult(sectionRestURL + "/markAsNotRequired/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, Void.class);
+        return postWithRestResult(sectionRestURL + "/mark-as-not-required/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, Void.class);
     }
 
     @Override
     public RestResult<Void> markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
-        return postWithRestResult(sectionRestURL + "/markAsInComplete/" + sectionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
+        return postWithRestResult(sectionRestURL + "/mark-as-in-complete/" + sectionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
     }
 
     @Override
     public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/getCompletedSectionsByOrganisation/" + applicationId, mapOfLongToLongsSetType());
+        return getWithRestResult(sectionRestURL + "/get-completed-sections-by-organisation/" + applicationId, mapOfLongToLongsSetType());
     }
 
     @Override
     public RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId) {
-        return getWithRestResult(sectionRestURL + "/getCompletedSections/" + applicationId + "/" + organisationId, longsListType());
+        return getWithRestResult(sectionRestURL + "/get-completed-sections/" + applicationId + "/" + organisationId, longsListType());
     }
 
     @Override
     public RestResult<List<Long>> getIncompletedSectionIds(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/getIncompleteSections/" + applicationId, longsListType());
+        return getWithRestResult(sectionRestURL + "/get-incomplete-sections/" + applicationId, longsListType());
     }
 
     @Override
     public RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId) {
-        return getWithRestResult(sectionRestURL + "/allSectionsMarkedAsComplete/" + applicationId, Boolean.class);
+        return getWithRestResult(sectionRestURL + "/all-sections-marked-as-complete/" + applicationId, Boolean.class);
     }
 
 }

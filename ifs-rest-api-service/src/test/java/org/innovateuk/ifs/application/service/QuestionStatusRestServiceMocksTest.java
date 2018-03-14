@@ -45,7 +45,7 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
 
     @Test
     public void getMarkedAsCompleteTest() throws Exception {
-        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + questionStatusRestURL + "/getMarkedAsComplete/1/2";
+        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + questionStatusRestURL + "/get-marked-as-complete/1/2";
 
         Long[] questionIds = new Long[]{3L, 4L, 5L};
         when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(""), Long[].class)).thenReturn(settable(new ResponseEntity<>(questionIds, HttpStatus.OK)));
@@ -61,19 +61,19 @@ public class QuestionStatusRestServiceMocksTest extends BaseRestServiceUnitTest<
 
     @Test
     public void markAsCompleteTest() {
-        setupPutWithRestResultExpectations(questionStatusRestURL + "/markAsComplete/1/2/3", validationMessagesListType(), null, null, HttpStatus.OK);
+        setupPutWithRestResultExpectations(questionStatusRestURL + "/mark-as-complete/1/2/3", validationMessagesListType(), null, null, HttpStatus.OK);
         assertTrue(service.markAsComplete(1L, 2L, 3L).isSuccess());
     }
 
     @Test
     public void markAsInCompleteTest() {
-        setupPutWithRestResultExpectations(questionStatusRestURL + "/markAsInComplete/1/2/3", Void.class, null, null);
+        setupPutWithRestResultExpectations(questionStatusRestURL + "/mark-as-in-complete/1/2/3", Void.class, null, null);
         assertTrue(service.markAsInComplete(1L, 2L, 3L).isSuccess());
     }
 
     @Test
     public void updateNotificationTest() {
-        setupPutWithRestResultExpectations(questionStatusRestURL + "/updateNotification/1/true", Void.class, null, null);
+        setupPutWithRestResultExpectations(questionStatusRestURL + "/update-notification/1/true", Void.class, null, null);
         assertTrue(service.updateNotification(1L, true).isSuccess());
     }
 

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<SectionStatusRestServiceImpl> {
 
-    private static final String sectionRestUrl = "/sectionStatus";
+    private static final String sectionRestUrl = "/section-status";
 
     @Override
     protected SectionStatusRestServiceImpl registerRestServiceUnderTest() {
@@ -31,7 +31,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
         Long sectionId = 123L;
         Long applicationId = 234L;
         Long markedAsCompleteById = 345L;
-        String expectedUrl = sectionRestUrl + "/markAsComplete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
+        String expectedUrl = sectionRestUrl + "/mark-as-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
         List<ValidationMessages> messages = new ArrayList<>();
         setupPostWithRestResultExpectations(expectedUrl, validationMessagesListType(), null, messages);
 
@@ -45,7 +45,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
         Long sectionId = 123L;
         Long applicationId = 234L;
         Long markedAsCompleteById = 345L;
-        String expectedUrl = sectionRestUrl + "/markAsNotRequired/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
+        String expectedUrl = sectionRestUrl + "/mark-as-not-required/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
         setupPostWithRestResultExpectations(expectedUrl, HttpStatus.OK);
 
         RestResult<Void> result = service.markAsNotRequired(sectionId, applicationId, markedAsCompleteById);
@@ -58,7 +58,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
         Long sectionId = 123L;
         Long applicationId = 234L;
         Long markedAsCompleteById = 345L;
-        String expectedUrl = sectionRestUrl + "/markAsInComplete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
+        String expectedUrl = sectionRestUrl + "/mark-as-in-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
         setupPostWithRestResultExpectations(expectedUrl, HttpStatus.OK);
 
         RestResult<Void> result = service.markAsInComplete(sectionId, applicationId, markedAsCompleteById);
@@ -69,7 +69,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
     @Test
     public void getCompletedSectionsByOrganisation() {
         long applicationId = 123L;
-        String expectedUrl = sectionRestUrl + "/getCompletedSectionsByOrganisation/" + applicationId;
+        String expectedUrl = sectionRestUrl + "/get-completed-sections-by-organisation/" + applicationId;
         Map<Long, Set<Long>> expectedResult = new HashMap<>();
         setupGetWithRestResultExpectations(expectedUrl, mapOfLongToLongsSetType(), expectedResult);
 
@@ -80,7 +80,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
 
     @Test
     public void getCompletedSectionIds() {
-        String expectedUrl = sectionRestUrl + "/getCompletedSections/123/456";
+        String expectedUrl = sectionRestUrl + "/get-completed-sections/123/456";
         List<Long> returnedResponse = asList(1L, 2L, 3L);
 
         setupGetWithRestResultExpectations(expectedUrl, longsListType(), returnedResponse);
@@ -93,7 +93,7 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
     @Test
     public void getIncompleteSectionIds() {
 
-        String expectedUrl = sectionRestUrl + "/getIncompleteSections/123";
+        String expectedUrl = sectionRestUrl + "/get-incomplete-sections/123";
         List<Long> returnedResponse = asList(1L, 2L, 3L);
 
         setupGetWithRestResultExpectations(expectedUrl, longsListType(), returnedResponse);

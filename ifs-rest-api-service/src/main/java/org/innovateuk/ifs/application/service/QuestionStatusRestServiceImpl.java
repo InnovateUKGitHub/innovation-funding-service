@@ -52,13 +52,13 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
 
     @Override
     public RestResult<List<ValidationMessages>> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
-        return putWithRestResult(questionStatusRestURL + "/markAsComplete/" + questionId + "/" + applicationId + "/" + markedAsCompleteById, new ParameterizedTypeReference<List<ValidationMessages>>() {
+        return putWithRestResult(questionStatusRestURL + "/mark-as-complete/" + questionId + "/" + applicationId + "/" + markedAsCompleteById, new ParameterizedTypeReference<List<ValidationMessages>>() {
         });
     }
 
     @Override
     public RestResult<Void> markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
-        return putWithRestResult(questionStatusRestURL + "/markAsInComplete/" + questionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
+        return putWithRestResult(questionStatusRestURL + "/mark-as-in-complete/" + questionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
     }
 
     @Override
@@ -68,12 +68,12 @@ public class QuestionStatusRestServiceImpl extends BaseRestService implements Qu
 
     @Override
     public RestResult<Void> updateNotification(Long questionStatusId, Boolean notify) {
-        return putWithRestResult(questionStatusRestURL + "/updateNotification/" + questionStatusId + "/" + notify, Void.class);
+        return putWithRestResult(questionStatusRestURL + "/update-notification/" + questionStatusId + "/" + notify, Void.class);
     }
 
     @Override
     public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
-        return adapt(restGetAsync(questionStatusRestURL + "/getMarkedAsComplete/" + applicationId + "/" + organisationId, Long[].class), re -> new HashSet<>(asList(re.getBody())));
+        return adapt(restGetAsync(questionStatusRestURL + "/get-marked-as-complete/" + applicationId + "/" + organisationId, Long[].class), re -> new HashSet<>(asList(re.getBody())));
     }
 
 

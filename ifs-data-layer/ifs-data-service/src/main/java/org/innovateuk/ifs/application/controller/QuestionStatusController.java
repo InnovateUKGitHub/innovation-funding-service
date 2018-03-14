@@ -53,7 +53,7 @@ public class QuestionStatusController {
         return questionStatusService.getCountByApplicationIdAndAssigneeId(applicationId, assigneeId).toGetResponse();
     }
 
-    @PutMapping("/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
+    @PutMapping("/mark-as-complete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("questionId") final Long questionId,
                                                                @PathVariable("applicationId") final Long applicationId,
                                                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
@@ -61,7 +61,7 @@ public class QuestionStatusController {
         return questionStatusService.markAsComplete(ids, markedAsCompleteById).toPutWithBodyResponse();
     }
 
-    @PutMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
+    @PutMapping("/mark-as-in-complete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("questionId") final Long questionId,
                                              @PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
@@ -78,13 +78,13 @@ public class QuestionStatusController {
         return questionStatusService.assign(ids, assigneeId, assignedById).toPutResponse();
     }
 
-    @GetMapping("/getMarkedAsComplete/{applicationId}/{organisationId}")
+    @GetMapping("/get-marked-as-complete/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
                                                      @PathVariable("organisationId") Long organisationId) {
         return questionStatusService.getMarkedAsComplete(applicationId, organisationId).toGetResponse();
     }
 
-    @PutMapping("/updateNotification/{questionStatusId}/{notify}")
+    @PutMapping("/update-notification/{questionStatusId}/{notify}")
     public RestResult<Void> updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
                                                @PathVariable("notify") final Boolean notify) {
         return questionStatusService.updateNotification(questionStatusId, notify).toPutResponse();

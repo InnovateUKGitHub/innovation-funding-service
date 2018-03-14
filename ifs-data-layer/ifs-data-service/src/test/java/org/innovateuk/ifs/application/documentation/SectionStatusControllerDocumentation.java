@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class SectionStatusControllerDocumentation extends BaseControllerMockMVCTest<SectionStatusController> {
 
-    private static final String baseURI = "/sectionStatus";
+    private static final String baseURI = "/section-status";
 
     @Override
     protected SectionStatusController supplyControllerUnderTest() {
@@ -40,7 +40,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.getCompletedSections(id)).thenReturn(serviceSuccess(result));
 
-        mockMvc.perform(get(baseURI + "/getCompletedSectionsByOrganisation/{applicationId}", id))
+        mockMvc.perform(get(baseURI + "/get-completed-sections-by-organisation/{applicationId}", id))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -62,7 +62,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.getCompletedSections(applicationId, organisationId)).thenReturn(serviceSuccess(result));
 
-        mockMvc.perform(get(baseURI + "/getCompletedSections/{applicationId}/{organisationId}", applicationId, organisationId))
+        mockMvc.perform(get(baseURI + "/get-completed-sections/{applicationId}/{organisationId}", applicationId, organisationId))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -83,7 +83,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById)).thenReturn(serviceSuccess(emptyList()));
 
-        mockMvc.perform(post(baseURI + "/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}",
+        mockMvc.perform(post(baseURI + "/mark-as-complete/{sectionId}/{applicationId}/{markedAsCompleteById}",
                 sectionId, applicationId, markedAsCompleteById))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
@@ -103,7 +103,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.markSectionAsNotRequired(sectionId, applicationId, markedAsNotRequiredById)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(baseURI + "/markAsNotRequired/{sectionId}/{applicationId}/{markedAsNotRequiredById}",
+        mockMvc.perform(post(baseURI + "/mark-as-not-required/{sectionId}/{applicationId}/{markedAsNotRequiredById}",
                 sectionId, applicationId, markedAsNotRequiredById))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
@@ -123,7 +123,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.markSectionAsInComplete(sectionId, applicationId, markedAsInCompleteById)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(baseURI + "/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}",
+        mockMvc.perform(post(baseURI + "/mark-as-in-complete/{sectionId}/{applicationId}/{markedAsInCompleteById}",
                 sectionId, applicationId, markedAsInCompleteById))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
@@ -140,7 +140,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
         final Long id = 1L;
 
         when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, id, null)).thenReturn(serviceSuccess(true));
-        mockMvc.perform(get(baseURI + "/allSectionsMarkedAsComplete/{applicationId}", id))
+        mockMvc.perform(get(baseURI + "/all-sections-marked-as-complete/{applicationId}", id))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(
@@ -155,7 +155,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
         when(sectionStatusServiceMock.getIncompleteSections(applicationId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
-        mockMvc.perform(get(baseURI + "/getIncompleteSections/{applicationId}", applicationId))
+        mockMvc.perform(get(baseURI + "/get-incomplete-sections/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("section/{method-name}",
                         pathParameters(

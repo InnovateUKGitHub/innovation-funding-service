@@ -56,7 +56,7 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
         when(sectionStatusServiceMock.getCompletedSections(application.getId(), organisationId))
                 .thenReturn(serviceSuccess(completedSectionIds));
 
-        mockMvc.perform(get("/sectionStatus/getCompletedSections/" + application.getId() + "/" + organisationId))
+        mockMvc.perform(get("/section-status/get-completed-sections/" + application.getId() + "/" + organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(completedSectionIds)));
     }
@@ -74,7 +74,7 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
         when(sectionStatusServiceMock.getIncompleteSections(application.getId()))
                 .thenReturn(serviceSuccess(incompleteSectionIds));
 
-        mockMvc.perform(get("/sectionStatus/getIncompleteSections/" + application.getId()))
+        mockMvc.perform(get("/section-status/get-incomplete-sections/" + application.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(incompleteSectionIds)));
     }
@@ -88,7 +88,7 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
 
         when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(new ArrayList<>()));
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/sectionStatus/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[]"))
                 .andDo(
@@ -113,7 +113,7 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
 
         when(sectionStatusServiceMock.markSectionAsInComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/sectionStatus/markAsInComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-in-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
                 .andDo(
                         document(
@@ -137,7 +137,7 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
 
         when(sectionStatusServiceMock.markSectionAsNotRequired(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/sectionStatus/markAsNotRequired/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-not-required/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
                 .andDo(
                         document(
@@ -167,7 +167,7 @@ public class SectionStatusControllerTest extends BaseControllerMockMVCTest<Secti
         when(sectionStatusServiceMock.markSectionAsComplete(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess(validationMessages));
 
 
-        mockMvc.perform(RestDocumentationRequestBuilders.post("/sectionStatus/markAsComplete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section-status/mark-as-complete/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[{\"objectName\":\"costItem\",\"objectId\":1,\"errors\":[{\"errorKey\":\"validation.finance.min.row\",\"fieldName\":null,\"fieldRejectedValue\":null,\"arguments\":[]}]}]"))
                 .andDo(
