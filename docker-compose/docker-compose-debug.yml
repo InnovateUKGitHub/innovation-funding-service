@@ -60,6 +60,11 @@ services:
     networks:
       - ifs
     hostname: registration-svc
+    ports:
+      - "8088:8080"
+      - "9008:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   application-svc:
     image: innovateuk/application-service
@@ -70,6 +75,11 @@ services:
     networks:
       - ifs
     hostname: application-svc
+    ports:
+      - "8089:8080"
+      - "9001:8000"
+    environment:
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   data-service:
     image: innovateuk/data-service
@@ -84,6 +94,11 @@ services:
     hostname: data-service
     volumes:
       - .././robot-tests/upload_files/:/tmp/ifs-local
+    ports:
+      - "8086:8080"
+      - "9006:8000"
+    environment:
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   sil-stub:
       image: innovateuk/sil-stub
@@ -94,7 +109,10 @@ services:
       networks:
         - ifs
       hostname: sil-stub
-
+      ports:
+        - "8091:8080"
+      environment:
+        - JAVA_OPTS=-Xmx300m
 
   mail:
     image: innovateuk/mail-sink

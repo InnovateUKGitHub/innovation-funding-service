@@ -14,7 +14,7 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerV
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +47,6 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.*;
@@ -102,7 +101,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     @Before
     public void setUp() {
         super.setUp();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
     }
 
     @Test
@@ -141,7 +140,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
     }
 
     private void checkEditableFlagIsSetCorrectlyForSupportUser(String url, boolean post) throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
         MvcResult result = mockMvc.perform(post ? post(url) : get(url)).andReturn();
         Map<String, Object> modelMap = result.getModelAndView().getModel();
         MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");

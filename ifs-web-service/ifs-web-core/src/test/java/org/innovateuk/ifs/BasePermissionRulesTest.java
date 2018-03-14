@@ -1,22 +1,18 @@
 package org.innovateuk.ifs;
 
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 
 /**
  * A base class for testing @PermissionRules-annotated classes
@@ -26,18 +22,18 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     @InjectMocks
     protected T rules = supplyPermissionRulesUnderTest();
 
-    protected List<RoleResource> allRolesResources;
+    protected List<Role> allRolesResources;
 
     protected List<UserResource> allGlobalRoleUsers;
 
-    protected RoleResource compAdminRole() {
-        return getRoleResource(COMP_ADMIN);
+    protected Role compAdminRole() {
+        return Role.COMP_ADMIN;
     }
 
-    protected RoleResource assessorRole() { return getRoleResource(ASSESSOR); }
+    protected Role assessorRole() { return Role.ASSESSOR; }
 
     protected UserResource compAdminUser() {
-        return getUserWithRole(COMP_ADMIN);
+        return getUserWithRole( Role.COMP_ADMIN);
     }
 
     protected UserResource projectFinanceUser() {
@@ -48,8 +44,8 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(ASSESSOR);
     }
 
-    protected RoleResource systemRegistrationRole() {
-        return getRoleResource(SYSTEM_REGISTRATION_USER);
+    protected Role systemRegistrationRole() {
+        return SYSTEM_REGISTRATION_USER;
     }
 
     protected UserResource systemRegistrationUser() {
@@ -58,21 +54,12 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     @Before
     public void setupSetsOfData() {
-        allRolesResources = stream(UserRoleType.values()).map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
+        allRolesResources = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
     }
 
-    private UserResource createUserWithRoles(UserRoleType... types) {
-        List<RoleResource> roles = simpleMap(asList(types), this::getRoleResource);
-        return newUserResource().withRolesGlobal(roles).build();
-    }
-
-    protected UserResource getUserWithRole(UserRoleType type) {
-        return simpleFilter(allGlobalRoleUsers, user -> simpleMap(user.getRoles(), RoleResource::getName).contains(type.getName())).get(0);
-    }
-
-    private RoleResource getRoleResource(UserRoleType type) {
-        return simpleFilter(allRolesResources, role -> role.getName().equals(type.getName())).get(0);
+    protected UserResource getUserWithRole(Role type) {
+        return simpleFilter(allGlobalRoleUsers, user -> user.getRoles().contains(type)).get(0);
     }
 
     protected abstract T supplyPermissionRulesUnderTest();
