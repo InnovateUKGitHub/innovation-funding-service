@@ -4,4 +4,8 @@ WHERE justification = 'The project costs are entirely appropriate and represent 
 
 UPDATE guidance_row
 SET justification = 'Target customers are identified along with the value proposition to them. The routes to market and how profit, productivity and growth will increase is identified and evidenced. The exploitation and/or dissemination of the main project outputs is outlined.'
-WHERE justification = 'Target customers are identified along with the value proposition to them. The routes to market and how profit, productivity and growth will increaseis identified and evidenced. . The exploitation and/or dissemination of the main project outputs is outlined.';
+WHERE justification = 'Target customers are identified along withthe value proposition  to them.  The routes to market and how profit, productivity and growth will increaseis identified and evidenced. .  The exploitation and/or dissemination of the main project outputs is outlined.';
+
+UPDATE guidance_row
+SET justification = 'Target customers are identified along with the value proposition to them. The routes to market and how profit, productivity and growth will increase is identified and evidenced. The exploitation and/or dissemination of the main project outputs is outlined. The Projected Growth table is completed and projections look realistic.'
+WHERE justification = 'Target customers are identified along withthe value proposition  to them.  The routes to market and how profit, productivity and growth will increaseis identified and evidenced. .  The exploitation and/or dissemination of the main project outputs is outlined.The Projected Growth table is completed and projections look realistic.'
