@@ -15,6 +15,7 @@ public class AssessorDashboardViewModel {
     private List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelInvites;
     private List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted;
     private List<AssessorDashboardInterviewInviteViewModel> interviewPanelInvites;
+    private List<AssessorDashboardInterviewAcceptedViewModel> interviewPanelAccepted;
     private AssessorProfileStatusViewModel profileStatus;
 
     public AssessorDashboardViewModel(
@@ -24,7 +25,8 @@ public class AssessorDashboardViewModel {
             List<AssessorDashboardPendingInviteViewModel> pendingInvites,
             List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelInvites,
             List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted,
-            List<AssessorDashboardInterviewInviteViewModel> interviewPanelInvites
+            List<AssessorDashboardInterviewInviteViewModel> interviewPanelInvites,
+            List<AssessorDashboardInterviewAcceptedViewModel> interviewPanelAccepted
             ) {
         this.profileStatus = profileStatus;
         this.activeCompetitions = activeCompetitions;
@@ -33,6 +35,7 @@ public class AssessorDashboardViewModel {
         this.assessmentPanelInvites = assessmentPanelInvites;
         this.assessmentPanelAccepted = assessmentPanelAccepted;
         this.interviewPanelInvites = interviewPanelInvites;
+        this.interviewPanelAccepted = interviewPanelAccepted;
     }
 
     public List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions() {
@@ -71,8 +74,18 @@ public class AssessorDashboardViewModel {
         return interviewPanelInvites;
     }
 
+    public List<AssessorDashboardInterviewAcceptedViewModel> getInterviewPanelAccepted() {
+        return interviewPanelAccepted;
+    }
+
+    public void setInterviewPanelAccepted(List<AssessorDashboardInterviewAcceptedViewModel> interviewPanelAccepted) {
+        this.interviewPanelAccepted = interviewPanelAccepted;
+    }
+
     public void setInterviewPanelInvites(List<AssessorDashboardInterviewInviteViewModel> interviewPanelInvites) {
         this.interviewPanelInvites = interviewPanelInvites;
+
+
     }
 
     public AssessorProfileStatusViewModel getProfileStatus() {

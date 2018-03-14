@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.interview.transactional;
 
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -27,9 +29,15 @@ import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -81,6 +89,12 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
 
     @Autowired
     private InterviewParticipantRepository interviewParticipantRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -439,7 +453,21 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     public ServiceResult<Void> acceptInvite(String inviteHash) {
         return getParticipantByInviteHash(inviteHash)
                 .andOnSuccess(InterviewInviteServiceImpl::accept)
+                .andOnSuccess(this::assignAllPanelApplicationsToParticipant)
                 .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> assignAllPanelApplicationsToParticipant(InterviewParticipant participant) {
+        Competition competition = participant.getProcess();
+//        change call
+        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
+        applicationsInPanel.forEach(application -> {
+            Review review = new Review(application, participant, Role.PANEL_ASSESSOR);
+            review.setActivityState(pendingActivityState);
+            reviewRepository.save(review);
+        });
+        return serviceSuccess();
     }
 
     @Override
