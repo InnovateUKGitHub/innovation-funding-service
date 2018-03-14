@@ -58,60 +58,67 @@
 
   <h2 class="heading-medium">Partner finances</h2>
   <table class="table-progress extra-margin-bottom">
+
     <thead>
-      <tr>
-        <th scope="col">Organisation</th>
-        <th scope="col">Viability</th>
-        <th scope="col">Eligibility</th>
-        <th scope="col">Queries</th>
-        <th scope="col">Notes</th>
-      </tr>
+    <tr>
+      <th scope="col">Organisation</th>
+      <th scope="col" class="aligncentre">Viability</th>
+      <th scope="col" class="aligncentre cell-border-right">RAG</th>
+      <th scope="col" class="aligncentre">Eligibility</th>
+      <th scope="col" class="aligncentre cell-border-right">RAG</th>
+      <th scope="col" class="aligncentre">Queries raised</th>
+      <th scope="col" class="aligncentre">Notes</th>
+    </tr>
     </thead>
     <tbody>
     <tr th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
-      <th scope="row">
+      <th scope="row" >
         <th:block th:text="${orgDetails.name}">org name</th:block>
         <th:block th:if="${orgDetails.isLead()}"> (Lead)</th:block>
       </th>
-      <td>
-        <a th:if="${!orgDetails.viability.notApplicable}"
-           th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+      <td class="aligncentre">
+        <a th:if="${!orgDetails.viability.notApplicable}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
            th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
-           th:classappend="${'viability-' + status.index}" />
+           th:classappend="${'viability-' + status.index}"/>
 
         <span th:if="${orgDetails.viability.notApplicable}"
               th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
               th:classappend="${'viability-' + status.index}"></span>
       </td>
-      <td>
+      <td class="aligncentre cell-border-right">
+                <span th:if="${orgDetails.viability.notApplicable}"
+                      th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"
+                      th:classappend="${'viability-rag-' + status.index}"></span>
+        <span th:unless="${orgDetails.viability.notApplicable}"
+              th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.viabilityRagStatus)}"
+              th:classappend="${'viability-rag-' + status.index}">Green</span>
+      </td>
+      <td class="aligncentre">
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
            th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
            th:classappend="${'eligibility-' + status.index}"/>
       </td>
-      <td>
+      <td class="aligncentre cell-border-right">
+                <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
+                      th:classappend="${'eligibility-rag-' + status.index}">Green</span>
+      </td>
+      <td class="aligncentre">
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
            th:text="View"/>
       </td>
-      <td>
+      <td class="aligncentre">
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}">View</a>
       </td>
     </tr>
     </tbody>
   </table>
 
-  <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.financeCheckSummaryResource.projectId})}"
-        th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
-    <h2 class="heading-medium">Generate spend profile</h2>
+  <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.financeCheckSummaryResource.projectId})}" th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
+    <h3 class="heading-medium">Generate spend profile</h3>
     <p>To generate your spend profile, the viability and eligibility sections, plus bank details must be approved for all partners. This will create their individual flat spend profiles. These spend profiles can be edited during the project.</p>
-    <button th:if="${model.showDisabledGenerateSpendProfilesButton}"
-            disabled="disabled"
-            class="button generate-spend-profile-main-button">Generate spend profile</button>
-    <a th:unless="${model.showDisabledGenerateSpendProfilesButton}"
-       th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}"
-       data-js-modal="generate-spend-profile"
-       class="button generate-spend-profile-main-button">Generate spend profile</a>
-    <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"
-              th:insert="fragments/modals :: generate-spend-profile" />
+    <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled" class="button generate-spend-profile-main-button">Generate spend profile</button>
+    <a th:unless="${model.showDisabledGenerateSpendProfilesButton}" th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}" data-js-modal="generate-spend-profile" class="button generate-spend-profile-main-button">Generate spend profile</a>
+    <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}" th:insert="fragments/modals :: generate-spend-profile" />
   </form>
 
   <th:block th:insert="fragments/layout :: main-content-end" />
