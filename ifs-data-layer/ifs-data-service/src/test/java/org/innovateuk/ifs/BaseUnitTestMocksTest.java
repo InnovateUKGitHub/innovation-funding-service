@@ -250,13 +250,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProfileRepository profileRepositoryMock;
 
     @Mock
-    protected RoleRepository roleRepositoryMock;
-
-    @Mock
-    protected InviteRoleRepository inviteRoleRepositoryMock;
-
-    @Mock
-    protected RoleService roleServiceMock;
+    protected RoleInviteRepository roleInviteRepositoryMock;
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
@@ -310,6 +304,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationService applicationServiceMock;
 
     @Mock
+    protected ApplicationNotificationService applicationNotificationServiceMock;
+
+    @Mock
+    protected ApplicationProgressService applicationProgressServiceMock;
+
+    @Mock
     protected ApplicationCountSummaryService applicationCountSummaryServiceMock;
 
     @Mock
@@ -352,7 +352,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
 
     @Mock
-    protected CompetitionAssessmentInviteRepository competitionAssessmentInviteRepositoryMock;
+    protected AssessmentInviteRepository assessmentInviteRepositoryMock;
 
     @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
@@ -373,10 +373,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
-    protected CompetitionInviteService competitionInviteServiceMock;
+    protected AssessmentInviteService assessmentInviteServiceMock;
 
     @Mock
-    protected CompetitionAssessmentParticipantMapper competitionAssessmentParticipantMapperMock;
+    protected AssessmentParticipantMapper assessmentParticipantMapperMock;
 
     @Mock
     protected CompetitionParticipantRoleMapper competitionParticipantRoleMapperMock;
@@ -391,10 +391,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewParticipantMapper interviewParticipantMapperMock;
 
     @Mock
-    protected InviteProjectRepository inviteProjectRepositoryMock;
+    protected ProjectInviteRepository projectInviteRepositoryMock;
 
     @Mock
-    protected InviteProjectService inviteProjectServiceMock;
+    protected ProjectInviteService projectInviteServiceMock;
 
     @Mock
     protected InviteUserService inviteUserServiceMock;
@@ -434,9 +434,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected IdentityProviderService idpServiceMock;
-
-    @Mock
-    protected RoleMapper roleMapperMock;
 
     @Mock
     protected ProcessRoleMapper processRoleMapperMock;
@@ -736,7 +733,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleInviteMapper roleInviteMapperMock;
 
     @Mock
-    protected InviteService inviteServiceMock;
+    protected ApplicationInviteService applicationInviteServiceMock;
 
     @Mock
     protected OrganisationInitialCreationService organisationInitialCreationServiceMock;

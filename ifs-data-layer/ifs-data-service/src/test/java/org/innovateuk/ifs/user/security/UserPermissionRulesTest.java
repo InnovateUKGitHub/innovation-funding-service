@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
@@ -28,7 +28,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
@@ -161,9 +160,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testConsortiumMembersCanViewOtherConsortiumMembers() {
 
-        Role leadRole = newRole().withType(LEADAPPLICANT).build();
-        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
-
         Application application1 = newApplication().build();
         when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
 
@@ -174,7 +170,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User application1Collaborator2 = newUser().build();
 
         List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
-                withRole(leadRole, leadRole, leadRole, collaboratorRole, collaboratorRole).
+                withRole(Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR, Role.COLLABORATOR).
                 withUser(application1Lead1, application1Lead2, application1Lead3AndApplication2Collaborator2,
                         application1Collaborator1, application1Collaborator2).
                 build(5);
@@ -198,7 +194,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User application2Collaborator1 = newUser().build();
 
         List<ProcessRole> application2ConsortiumRoles = newProcessRole().withApplication(application2).
-                withRole(leadRole, collaboratorRole, collaboratorRole).
+                withRole(Role.LEADAPPLICANT, Role.COLLABORATOR, Role.COLLABORATOR).
                 withUser(application2Lead, application2Collaborator1, application1Lead3AndApplication2Collaborator2).
                 build(3);
 
@@ -246,10 +242,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testConsortiumMembersCanViewOtherConsortiumMembersButNotAssessors() {
 
-        Role leadRole = newRole().withType(LEADAPPLICANT).build();
-        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
-        Role assessorRole = newRole().withType(ASSESSOR).build();
-
         Application application1 = newApplication().build();
 
         User applicationLead = newUser().build();
@@ -257,11 +249,11 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User applicationAssessor = newUser().build();
 
         List<ProcessRole> applicationConsortiumRoles = newProcessRole().withApplication(application1).
-                withRole(leadRole, collaboratorRole).
+                withRole(Role.LEADAPPLICANT, Role.COLLABORATOR).
                 withUser(applicationLead, applicationCollaborator).
                 build(2);
 
-        ProcessRole assessorProcessRole = newProcessRole().withApplication(application1).withRole(assessorRole).
+        ProcessRole assessorProcessRole = newProcessRole().withApplication(application1).withRole(Role.ASSESSOR).
                 withUser(applicationAssessor).build();
 
         List<User> applicationConsortium = simpleMap(applicationConsortiumRoles, ProcessRole::getUser);
@@ -281,11 +273,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testAssessorsCanViewConsortiumMembersForApplicationsTheyAreAssessing() {
 
-        Role leadRole = newRole().withType(LEADAPPLICANT).build();
-        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
-        Role assessorRole = newRole().withType(ASSESSOR).build();
-        Role panelAssessorRole = newRole().withType(PANEL_ASSESSOR).build();
-
         Application application1 = newApplication().build();
         Application application2 = newApplication().build();
         Application application3 = newApplication().build();
@@ -302,29 +289,29 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         ProcessRole application1LeadProcessRole = newProcessRole().
                 withApplication(application1).
-                withRole(leadRole).
+                withRole(Role.LEADAPPLICANT).
                 withUser(application1Lead).
                 build();
         ProcessRole application2CollaboratorProcessRole = newProcessRole().
                 withApplication(application2).
-                withRole(collaboratorRole).
+                withRole(Role.COLLABORATOR).
                 withUser(application2Collaborator).
                 build();
         ProcessRole application3LeadProcessRole = newProcessRole().
                 withApplication(application3).
-                withRole(leadRole).
+                withRole(Role.LEADAPPLICANT).
                 withUser(application3Lead).
                 build();
 
         List<ProcessRole> assessorProcessRoles = newProcessRole().
                 withApplication(application1, application2).
-                withRole(assessorRole, assessorRole).
+                withRole(Role.ASSESSOR, Role.ASSESSOR).
                 withUser(assessorForApplications1And2, assessorForApplications1And2).
                 build(2);
 
         List<ProcessRole> panelAssessorProcessRole = newProcessRole()
                 .withApplication(application1)
-                .withRole(panelAssessorRole)
+                .withRole(Role.PANEL_ASSESSOR)
                 .withUser(panelAssessorForApplication1)
                 .build(1);
 
@@ -358,9 +345,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testConsortiumMembersCanViewTheProcessRolesOtherConsortiumMembers() {
 
-        Role leadRole = newRole().withType(LEADAPPLICANT).build();
-        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
-
         Application application1 = newApplication().build();
         when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
 
@@ -371,7 +355,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User application1Collaborator2 = newUser().build();
 
         List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
-                withRole(leadRole, leadRole, leadRole, collaboratorRole, collaboratorRole).
+                withRole(Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.LEADAPPLICANT, Role.COLLABORATOR, Role.COLLABORATOR).
                 withUser(application1Lead1, application1Lead2, application1Lead3AndApplication2Collaborator2,
                         application1Collaborator1, application1Collaborator2).build(2);
 
@@ -393,8 +377,6 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing() {
 
-        Role assessorRole = newRole().withType(ASSESSOR).build();
-
         Application application1 = newApplication().build();
         when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
 
@@ -402,7 +384,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User application1Assessor2 = newUser().build();
 
         List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
-                withRole(assessorRole, assessorRole, assessorRole).
+                withRole(Role.ASSESSOR, Role.ASSESSOR, Role.ASSESSOR).
                 withUser(application1Assessor1, application1Assessor2).build(2);
 
         List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);

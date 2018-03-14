@@ -114,7 +114,6 @@ import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Matchers.*;
@@ -202,7 +201,7 @@ public class BaseUnitTest {
     @Mock
     protected DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
     @Mock
-    public FinanceHandler financeHandler;
+    public FinanceViewHandlerProvider financeViewHandlerProvider;
     @Mock
     protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
     @Mock
@@ -557,10 +556,8 @@ public class BaseUnitTest {
     }
 
     public void setupUserRoles() {
-        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName());
-        assessorRole.setUrl("assessor/dashboard");
-        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName());
-        applicantRole.setUrl("applicant/dashboard");
+        Role assessorRole = Role.ASSESSOR;
+        Role applicantRole = Role.APPLICANT;
         applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
         assessorAndApplicant.setRoles(asList(applicantRole, assessorRole));
@@ -584,9 +581,9 @@ public class BaseUnitTest {
 
         Map<Long, ApplicationResource> idsToApplicationResources = applications.stream().collect(toMap(a -> a.getId(), a -> a));
 
-        RoleResource role1 = newRoleResource().withId(1L).withName(UserApplicationRole.LEAD_APPLICANT.getRoleName()).build();
-        RoleResource role2 = newRoleResource().withId(2L).withName(UserApplicationRole.COLLABORATOR.getRoleName()).build();
-        RoleResource assessorRole = newRoleResource().withId(3L).withName(UserRole.ASSESSOR.getRoleName()).build();
+        Role role1 = Role.LEADAPPLICANT;
+        Role role2 = Role.COLLABORATOR;
+        Role assessorRole = Role.ASSESSOR;
 
         OrganisationResource organisation1 = newOrganisationResource().withId(1L).withOrganisationType(businessOrganisationTypeResource.getId()).withName("Empire Ltd").build();
         OrganisationResource organisation2 = newOrganisationResource().withId(2L).withOrganisationType(researchOrganisationTypeResource.getId()).withName("Ludlow").build();
@@ -719,8 +716,8 @@ public class BaseUnitTest {
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
+        when(financeViewHandlerProvider.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeViewHandlerProvider.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupInvites() {

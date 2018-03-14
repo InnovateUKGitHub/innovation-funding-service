@@ -48,7 +48,7 @@ Guest user can see the opening and closing status of competitions
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
     And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
+    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Change the close date of the Competition in the database to fifteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
@@ -81,7 +81,7 @@ Guest user can see the public information of an unopened competition
     Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
     And the user should see the element    jQuery=li:contains("Competition closes")
-    And the user should see the element    jQuery=li:contains("Friday 16 March 2018")
+    And the user should see the element    jQuery=li:contains("Friday 16 April 2018")
     And the user should see the text in the page    This competition has not yet opened.
     And the user should not see the text in the page    Or sign in to continue an existing application
     And the user should see the element    jQuery=.button:contains("Start new application")

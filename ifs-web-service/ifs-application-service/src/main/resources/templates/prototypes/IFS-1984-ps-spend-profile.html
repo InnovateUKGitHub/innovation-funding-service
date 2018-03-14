@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/IFS-1984-ps-dashboard-steps?status=step5'})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Mobile Phone Data for Logistics Analytics'}, ${'Spend profile'}, ${null})" />
+
+    <p>This overview shows the spend profile status of each organisation in your project.</p>
+
+    <h2 class="heading-medium">Partner progress</h2>
+    <ul class="task-list">
+        <li>
+            <div class="task">
+                <h3 class="heading-small">
+                    <a href="/prototypes/IFS-1984-ps-spend-profile-review">Electric Sounds Ltd</a>
+                    (Lead)
+                </h3>
+            </div>
+            <span class="notification">
+                In progress
+            </span>
+        </li>
+    </ul>
+
+
+    <!-- END OF HARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+</body>
+</html>

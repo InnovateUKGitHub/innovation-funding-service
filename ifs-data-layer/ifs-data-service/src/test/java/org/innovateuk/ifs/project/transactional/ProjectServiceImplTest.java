@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -47,10 +48,8 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -68,7 +67,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     private Application application;
     private Organisation organisation;
-    private Role leadApplicantRole;
     private User user;
     private User u;
     private ProcessRole leadApplicantProcessRole;
@@ -85,15 +83,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        leadApplicantRole = newRole(LEADAPPLICANT).build();
-
         user = newUser().
                 withId(userId).
                 build();
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisation.getId()).
-                withRole(leadApplicantRole).
+                withRole(Role.LEADAPPLICANT).
                 withUser(user).
                 build();
 
@@ -152,8 +148,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testCreateProjectFromApplication() {
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-
         ProjectResource newProjectResource = newProjectResource().build();
 
         PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
@@ -167,8 +161,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
                 withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
                 build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
@@ -298,7 +290,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(userRepositoryMock.findOne(newUser.getId())).thenReturn(u);
         List<ProjectInvite> projectInvites = newProjectInvite().withUser(user).build(1);
         projectInvites.get(0).open();
-        when(inviteProjectRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
+        when(projectInviteRepositoryMock.findByProjectId(p.getId())).thenReturn(projectInvites);
 
         // Method under test
         ServiceResult<ProjectUser> shouldSucceed = service.addPartner(p.getId(), newUser.getId(), o.getId());
@@ -309,8 +301,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testCreateProjectsFromFundingDecisions() {
-
-        Role partnerRole = newRole().withType(PARTNER).build();
 
         ProjectResource newProjectResource = newProjectResource().build();
 
@@ -325,8 +315,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
                 withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
                 build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
@@ -371,10 +359,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testCreateProjectsFromFundingDecisionsSaveFails() throws Exception {
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));
 
@@ -410,7 +394,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                 projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());
-                assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
+                assertEquals(Role.PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
                 assertEquals(project, matchingProjectUser.get(0).getProcess());
             });
 

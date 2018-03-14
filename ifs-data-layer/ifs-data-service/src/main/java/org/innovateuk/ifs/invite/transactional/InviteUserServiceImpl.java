@@ -13,8 +13,8 @@ import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
-import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
+import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
+import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
@@ -23,9 +23,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.mapper.RoleMapper;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -60,10 +58,10 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class InviteUserServiceImpl extends BaseTransactionalService implements InviteUserService {
 
     @Autowired
-    private InviteRoleRepository inviteRoleRepository;
+    private RoleInviteRepository roleInviteRepository;
 
     @Autowired
-    private InviteProjectRepository inviteProjectRepository;
+    private ProjectInviteRepository projectInviteRepository;
 
     @Autowired
     private ApplicationInviteRepository applicationInviteRepository;
@@ -76,9 +74,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
-
-    @Autowired
-    private RoleMapper roleMapper;
 
     private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
 
@@ -105,8 +100,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> getRole(adminRoleType))
-                .andOnSuccess(role -> saveInvite(invitedUser, role))
+                .andOnSuccess(role -> saveInvite(invitedUser, Role.getByName(adminRoleType.getName())))
                 .andOnSuccess(this::inviteInternalUser);
     }
 
@@ -144,7 +138,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private ServiceResult<Void> validateUserNotAlreadyInvited(UserResource invitedUser) {
 
-        List<RoleInvite> existingInvites = inviteRoleRepository.findByEmail(invitedUser.getEmail());
+        List<RoleInvite> existingInvites = roleInviteRepository.findByEmail(invitedUser.getEmail());
         return existingInvites.isEmpty() ? serviceSuccess() : serviceFailure(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED);
     }
 
@@ -155,7 +149,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 role,
                 CREATED);
 
-        RoleInvite invite = inviteRoleRepository.save(roleInvite);
+        RoleInvite invite = roleInviteRepository.save(roleInvite);
 
         return serviceSuccess(invite);
     }
@@ -187,7 +181,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private Map<String, Object> createGlobalArgsForInternalUserInvite(RoleInvite roleInvite) {
         Map<String, Object> globalArguments = new HashMap<>();
-        RoleResource roleResource = roleMapper.mapIdToResource(roleInvite.getTarget().getId());
+        Role roleResource = roleInvite.getTarget();
         globalArguments.put("role", roleResource.getDisplayName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, roleInvite));
         return globalArguments;
@@ -199,7 +193,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     public ServiceResult<RoleInviteResource> getInvite(String inviteHash) {
-        RoleInvite roleInvite = inviteRoleRepository.getByHash(inviteHash);
+        RoleInvite roleInvite = roleInviteRepository.getByHash(inviteHash);
         return serviceSuccess(roleInviteMapper.mapToResource(roleInvite));
     }
 
@@ -211,7 +205,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
-        return find(inviteRoleRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+        return find(roleInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
     private ServiceResult<Boolean> handleInviteError(RoleInvite i, ServiceFailure failure) {
@@ -221,13 +215,13 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private boolean handleInviteSuccess(RoleInvite roleInvite) {
-        inviteRoleRepository.save(roleInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
+        roleInviteRepository.save(roleInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return true;
     }
 
     @Override
     public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
-        Page<RoleInvite> pagedResult = inviteRoleRepository.findByStatus(InviteStatus.SENT, pageable);
+        Page<RoleInvite> pagedResult = roleInviteRepository.findByStatus(InviteStatus.SENT, pageable);
         List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
         return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(roleInviteResources), pagedResult.getNumber(), pagedResult.getSize()));
     }
@@ -255,7 +249,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private ServiceResult<RoleInvite> findRoleInvite(long inviteId) {
-        return find(ofNullable(inviteRoleRepository.findOne(inviteId)), notFoundError(RoleInvite.class, inviteId));
+        return find(ofNullable(roleInviteRepository.findOne(inviteId)), notFoundError(RoleInvite.class, inviteId));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {
@@ -293,16 +287,16 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
             List<ProjectInvite> projectInvites;
             switch (searchCategory) {
                 case NAME:
-                    projectInvites = inviteProjectRepository.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    projectInvites = projectInviteRepository.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
                     break;
 
                 case ORGANISATION_NAME:
-                    projectInvites = inviteProjectRepository.findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    projectInvites = projectInviteRepository.findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
                     break;
 
                 case EMAIL:
                 default:
-                    projectInvites = inviteProjectRepository.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    projectInvites = projectInviteRepository.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
                     break;
             }
             return serviceSuccess(projectInvites);

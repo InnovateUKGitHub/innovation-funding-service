@@ -4,9 +4,8 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,10 +34,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     @Before
     public void setUp() throws Exception {
         Long compAdminUserId = 2L;
-        Long compAdminRoleId = 2L;
         UserResource compAdminUser = newUserResource().withId(compAdminUserId).withFirstName("jim").withLastName("kirk").withEmail("j.kirk@starfleet.org").build();
-        RoleResource compAdminRole = new RoleResource(compAdminRoleId, UserRoleType.COMP_ADMIN.getName());
-        compAdminUser.getRoles().add(compAdminRole);
+        compAdminUser.getRoles().add(Role.COMP_ADMIN);
         swapOutForUser(compAdminUser);
     }
 

@@ -5,12 +5,12 @@ apply from: "fractal.gradle";
 subprojects {
 
 
-    apply from: rootProject.file("java-spring-boot.gradle")
+    apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
     // ifs-web-core is not a docker project.
     if (it.name != 'ifs-web-core') {
 
-        apply from: rootProject.file("openshift-build.gradle")
-        apply from: rootProject.file("prepare-docker.gradle")
+        apply from: rootProject.file("gradle-support/openshift-build.gradle")
+        apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
         ext.dockerDir = "$project.parent.projectDir/docker/"
 

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -21,10 +21,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.not;
@@ -112,9 +110,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole() {
         Long userId = 1L;
-        RoleResource roleResource = newRoleResource()
-                .withType(COMP_ADMIN)
-                .build();
+        Role roleResource = Role.COMP_ADMIN;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))
@@ -128,9 +124,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void existsAndHasRole_wrongRole() {
         Long userId = 1L;
-        RoleResource roleResource = newRoleResource()
-                .withType(FINANCE_CONTACT)
-                .build();
+        Role roleResource = Role.FINANCE_CONTACT;
         UserResource userResource = newUserResource()
                 .withId(userId)
                 .withRolesGlobal(singletonList(roleResource))

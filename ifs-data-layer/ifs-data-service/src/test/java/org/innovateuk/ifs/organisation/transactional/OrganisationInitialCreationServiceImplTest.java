@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.service.OrganisationMatchingServiceImpl;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -85,7 +85,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 )
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(inviteWithExistingOrganisation));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(inviteWithExistingOrganisation));
 
         service.createAndLinkByInvite(organisationResource, testInviteHash);
 
@@ -98,7 +98,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withInviteOrganisation(newInviteOrganisation().build())
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
         when(organisationMatchingService.findOrganisationMatch(organisationResource)).thenReturn(Optional.empty());
 
         expectOrganisationToBeCreatedAndLinked();
@@ -117,7 +117,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withId(1L)
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
@@ -149,7 +149,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withId(leadOrganisationId)
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
@@ -180,7 +180,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                 .withId(1L)
                 .build();
 
-        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+        when(applicationInviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
@@ -209,7 +209,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
                         newApplication()
                                 .withProcessRoles(
                                         newProcessRole()
-                                                .withRole(UserRoleType.LEADAPPLICANT)
+                                                .withRole(Role.LEADAPPLICANT)
                                                 .withOrganisationId(organisationId)
                                                 .build()
                                 )

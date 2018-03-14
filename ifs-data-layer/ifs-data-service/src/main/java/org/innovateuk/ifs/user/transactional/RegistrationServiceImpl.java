@@ -7,7 +7,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
-import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
+import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -21,16 +21,13 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
-import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -39,10 +36,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE;
@@ -51,7 +48,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -96,9 +92,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private UserMapper userMapper;
 
     @Autowired
-    private RoleMapper roleMapper;
-
-    @Autowired
     private AddressMapper addressMapper;
 
     @Autowired
@@ -111,10 +104,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     private UserSurveyService userSurveyService;
 
     @Autowired
-    private InviteRoleRepository inviteRoleRepository;
-
-    @Autowired
-    private RoleService roleService;
+    private RoleInviteRepository roleInviteRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -230,13 +220,11 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> addRoleToUser(User user, String roleName) {
-        return getRole(roleName).andOnSuccessReturn(role -> {
-            if (user.getRoles().stream().filter(r -> r.getId() == role.getId()).count() == 0) {
-                user.addRole(role);
-            }
-            return user;
-        });
-
+        Role role = Role.getByName(roleName);
+        if (user.getRoles().stream().filter(r -> r.getId() == role.getId()).count() == 0) {
+            user.addRole(role);
+        }
+        return serviceSuccess(user);
     }
 
     private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {
@@ -257,7 +245,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setGender(userResource.getGender());
         newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
         newUser.setAllowMarketingEmails(userResource.getAllowMarketingEmails());
-        newUser.setRoles(userResource.getRoles().stream().map( u -> roleMapper.mapToDomain(u)).collect(Collectors.toSet()));
+        newUser.setRoles(new HashSet<>(userResource.getRoles()));
 
         return newUser;
     }
@@ -319,18 +307,18 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 }));
     }
 
-    private ServiceResult<List<RoleResource>> getInternalRoleResources(Role role) {
+    private ServiceResult<List<Role>> getInternalRoleResources(Role role) {
         UserRoleType roleType = UserRoleType.fromName(role.getName());
 
         return getInternalRoleResources(roleType);
     }
 
-    private ServiceResult<List<RoleResource>> getInternalRoleResources(UserRoleType roleType) {
+    private ServiceResult<List<Role>> getInternalRoleResources(UserRoleType roleType) {
 
         if(UserRoleType.IFS_ADMINISTRATOR.equals(roleType)){
             return getIFSAdminRoles(roleType); // IFS Admin has multiple roles
         } else {
-            return roleService.findByUserRoleType(roleType).andOnSuccess(roleResource -> serviceSuccess(singletonList(roleResource)));
+            return serviceSuccess(singletonList(Role.getByName(roleType.getName())));
         }
     }
 
@@ -347,23 +335,16 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> updateInviteStatus(RoleInvite roleInvite) {
         roleInvite.open();
-        inviteRoleRepository.save(roleInvite);
+        roleInviteRepository.save(roleInvite);
         return serviceSuccess();
     }
 
-    private ServiceResult<List<RoleResource>> getIFSAdminRoles(UserRoleType roleType) {
-        List<RoleResource> roleResources = new ArrayList<>();
-        return roleService.findByUserRoleType(roleType).andOnSuccess(adminResource -> {
-            roleResources.add(adminResource);
-            return roleService.findByUserRoleType(PROJECT_FINANCE).andOnSuccessReturn(finResource -> {
-                roleResources.add(finResource);
-                return serviceSuccess(roleResources);
-            }).getSuccess();
-        });
+    private ServiceResult<List<Role>> getIFSAdminRoles(UserRoleType roleType) {
+        return serviceSuccess( asList(Role.getByName(roleType.getName()), Role.PROJECT_FINANCE) );
     }
 
     private ServiceResult<RoleInvite> getByHash(String hash) {
-        return find(inviteRoleRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
+        return find(roleInviteRepository.getByHash(hash), notFoundError(RoleInvite.class, hash));
     }
 
     private ServiceResult<User> createUserWithUid(User user, String password) {
@@ -387,7 +368,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                 .andOnSuccess(() -> ServiceResult.getNonNullValue(userRepository.findOne(userToEdit.getId()), notFoundError(User.class)))
                 .andOnSuccess(user -> getInternalRoleResources(userRoleType)
                     .andOnSuccess(roleResources -> {
-                        Set<Role> roleList = CollectionFunctions.simpleMapSet(roleResources, roleResource -> roleMapper.mapToDomain(roleResource));
+                        Set<Role> roleList = new HashSet<>(roleResources);
                         user.setFirstName(userToEdit.getFirstName());
                         user.setLastName(userToEdit.getLastName());
                         user.setRoles(roleList);

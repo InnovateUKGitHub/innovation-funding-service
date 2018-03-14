@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,16 +23,16 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     Optional<User> findByEmailAndStatus(@Param("email") String email, @Param("status") final UserStatus status);
 
-    Optional<User> findByIdAndRolesName(Long id, String name);
+    Optional<User> findByIdAndRoles(Long id, Role role);
 
     @Override
     List<User> findAll();
 
-    List<User> findByRolesName(String name);
+    List<User> findByRoles(Role role);
 
-    List<User> findByRolesNameOrderByFirstNameAscLastNameAsc(String name);
+    List<User> findByRolesOrderByFirstNameAscLastNameAsc(Role role);
 
-    Page<User> findDistinctByStatusAndRolesNameIn(UserStatus status, Set<String> roleName, Pageable pageable);
+    Page<User> findDistinctByStatusAndRolesIn(UserStatus status, Set<Role> roles, Pageable pageable);
 
     User findOneByUid(String uid);
 

@@ -23,16 +23,16 @@ public interface ReviewRepository extends ProcessRepository<Review>, PagingAndSo
 
     @Query("SELECT CASE WHEN count(a.id)>0 THEN TRUE ELSE FALSE END " +
             "FROM Application a " +
-            "INNER JOIN CompetitionAssessmentParticipant cap ON cap.competition = a.competition " +
+            "INNER JOIN AssessmentParticipant ap ON ap.competition = a.competition " +
             "WHERE " +
             "  a.competition.id = :competitionId AND a.inAssessmentReviewPanel=true " +
             "AND " +
-            "  cap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
-            "  cap.role=org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR AND " +
+            "  ap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
+            "  ap.role=org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR AND " +
             "  NOT EXISTS (SELECT 1 FROM Review r " +
             "              WHERE " +
             "                r.target=a AND " +
-            "                r.participant.user = cap.user AND " +
+            "                r.participant.user = ap.user AND " +
             "                r.activityState.state <> org.innovateuk.ifs.workflow.resource.State.WITHDRAWN) "
     )
     boolean notifiable(@Param("competitionId") long competitionId);
