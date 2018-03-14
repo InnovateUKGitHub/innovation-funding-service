@@ -95,7 +95,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
                 () -> {
                     if (isNewAddressNotValid(form)) {
-                        addAddressNotProvidedValidationError(bindingResult, validationHandler);
                         return bankDetails(model, projectId, loggedInUser, form);
                     }
 
