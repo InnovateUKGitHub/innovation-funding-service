@@ -68,7 +68,7 @@ task dbAnonymisedDumpProduction(type: Exec) {
 
 task dbBaselineProduction(type: Exec) {
     dependsOn prepareDeployment
-    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
@@ -90,6 +90,12 @@ task osUpgradeUat(type: Exec) {
 task dbResetUat(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task dbBaselineUat(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
@@ -122,7 +128,7 @@ task osUpgradeDemo(type: Exec) {
 
 task dbBaselineDemo(type: Exec) {
     dependsOn prepareDeployment
-    executable = 'setup-files/scripts/openshift/db-reset.sh'
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
@@ -144,6 +150,12 @@ task osUpgradeSysint(type: Exec) {
 task dbResetSysint(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
+task dbBaselineSysint(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
@@ -174,6 +186,12 @@ task dbResetPerf(type: Exec) {
     args = [openshiftEnv, "perf", project.version]
 }
 
+task dbBaselinePerf(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "perf", project.version]
+}
+
 // Local tasks
 
 task osInitClusterLocal(type: Exec) {
@@ -196,6 +214,12 @@ task osUpgradeLocal(type: Exec) {
 task dbResetLocal(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
+task dbBaselineLocal(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
@@ -257,6 +281,12 @@ task importAnonDataIntoRemote(type: Exec) {
 task dbResetRemote(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-reset.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task dbBaselineRemote(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/db-baseline.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
