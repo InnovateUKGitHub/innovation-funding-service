@@ -239,9 +239,10 @@ The competitions date changes so it is now Open
     the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
 
 Change the open date of the Competition in the database to one day before
-    [Arguments]  ${competition}
+    [Arguments]  ${competitionName}
     ${yesterday} =  get yesterday
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
+    ${competitionId} =  get comp id from comp title  ${competitionName}
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type` = 'OPEN_DATE';
 
 Change the close date of the Competition in the database to tomorrow
     [Arguments]  ${competition}
@@ -253,12 +254,6 @@ Change the close date of the Competition in the database to a fortnight
     ${fortnight} =  get fortnight
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fortnight}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
 
-Change the close date of the Competition in the database to fifteen days
-    [Arguments]  ${competition}
-    ${fifteen} =  get fifteen days
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fifteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
-
-
 Change the close date of the Competition in the database to thirteen days
     [Arguments]  ${competition}
     ${thirteen} =  get thirteen days
@@ -268,11 +263,6 @@ Change the open date of the Competition in the database to tomorrow
     [Arguments]  ${competition}
     ${tomorrow} =  get tomorrow
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
-
-Reset the open and close date of the Competition in the database
-    [Arguments]  ${competition}
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2018-02-24 11:00:00' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
-    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2018-03-16 11:00:00' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
 
 the internal user navigates to public content
     [Arguments]  ${comp}
