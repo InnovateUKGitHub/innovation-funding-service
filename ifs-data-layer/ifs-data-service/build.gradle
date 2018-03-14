@@ -37,7 +37,7 @@ buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest
 buildDocker.inputDir = project.file("$project.buildDir/docker")
 tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
-deploy.dependsOn ":docker:ifs-mysql:deploy"
+deploy.dependsOn ":docker:ifs-mysql:ifs-database:deploy"
 
 
 List<String> networkAliases = new ArrayList<>()
