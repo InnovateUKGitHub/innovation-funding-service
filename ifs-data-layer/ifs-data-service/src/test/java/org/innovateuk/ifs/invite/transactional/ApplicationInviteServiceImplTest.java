@@ -24,11 +24,10 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +61,6 @@ import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInv
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.mockito.Matchers.any;
@@ -145,14 +143,13 @@ public class ApplicationInviteServiceImplTest {
     @Test
     public void validatorEmpty() {
         Application application = newApplication().withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
         ProcessRole processRole1 = newProcessRole()
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(role1)
+                .withRole(Role.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -167,13 +164,12 @@ public class ApplicationInviteServiceImplTest {
     @Test
     public void validatorEmail() {
         Application application = newApplication().withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
         ProcessRole processRole1 = newProcessRole().with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(role1)
+                .withRole(Role.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -191,7 +187,6 @@ public class ApplicationInviteServiceImplTest {
     public void inviteCollaborators() throws Exception {
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
 
         Organisation leadOrganisation = newOrganisation()
@@ -204,7 +199,7 @@ public class ApplicationInviteServiceImplTest {
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(role1)
+                .withRole(Role.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -225,14 +220,13 @@ public class ApplicationInviteServiceImplTest {
     @Test
     public void inviteCollaboratorsInvalid() throws Exception {
         Application application = newApplication().withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
         ProcessRole processRole1 = newProcessRole()
                 .with(id(1L))
                 .withApplication(application)
                 .withUser(leadApplicant)
-                .withRole(role1)
+                .withRole(Role.LEADAPPLICANT)
                 .withOrganisationId(leadOrganisation.getId())
                 .build();
         application.setProcessRoles(singletonList(processRole1));
@@ -481,13 +475,12 @@ public class ApplicationInviteServiceImplTest {
     @Test
     public void getInviteOrganisationByHash() {
         Competition competition = newCompetition().build();
-        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         User user = newUser().build();
         Organisation organisation = newOrganisation().build();
 
         ProcessRole leadApplicantProcessRole = newProcessRole()
                 .withUser(user)
-                .withRole(leadApplicantRole)
+                .withRole(Role.LEADAPPLICANT)
                 .withOrganisationId(organisation.getId())
                 .build();
         Application application = newApplication()
@@ -541,7 +534,7 @@ public class ApplicationInviteServiceImplTest {
 
         List<ProcessRole> inviteProcessRoles = newProcessRole()
                 .withOrganisationId(organisation.getId())
-                .withRole(UserRoleType.COLLABORATOR)
+                .withRole(Role.COLLABORATOR)
                 .build(1);
 
         Application application = newApplication()
@@ -590,7 +583,7 @@ public class ApplicationInviteServiceImplTest {
 
         List<ProcessRole> inviteProcessRoles = newProcessRole()
                 .withOrganisationId(organisation.getId())
-                .withRole(UserRoleType.COLLABORATOR)
+                .withRole(Role.COLLABORATOR)
                 .build(1);
 
         Application application = newApplication()
@@ -637,7 +630,7 @@ public class ApplicationInviteServiceImplTest {
 
         List<ProcessRole> inviteProcessRoles = newProcessRole()
                 .withOrganisationId(organisation.getId())
-                .withRole(UserRoleType.COLLABORATOR)
+                .withRole(Role.COLLABORATOR)
                 .build(1);
 
         Application application = newApplication()

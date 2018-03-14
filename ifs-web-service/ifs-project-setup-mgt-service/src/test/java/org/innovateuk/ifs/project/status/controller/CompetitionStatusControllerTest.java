@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResou
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,11 +23,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.any;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -52,7 +53,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     public void testViewCompetitionStatusPageAllProjectFinance() throws Exception {
         Long competitionId = 123L;
 
-        setLoggedInUser(newUserResource().withRolesGlobal(Arrays.asList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.PROJECT_FINANCE)).build());
 
         CompetitionProjectsStatusResource competitionProjectsStatus = newCompetitionProjectsStatusResource().build();
 
@@ -75,7 +76,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     public void testViewCompetitionStatusPageAllCompAdmin() throws Exception {
         Long competitionId = 123L;
 
-        setLoggedInUser(newUserResource().withRolesGlobal(Arrays.asList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.COMP_ADMIN)).build());
 
         CompetitionProjectsStatusResource competitionProjectsStatus = newCompetitionProjectsStatusResource().build();
 
@@ -97,11 +98,11 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     public void testViewCompetitionStatusPageQueries() throws Exception {
         Long competitionId = 123L;
 
-        setLoggedInUser(newUserResource().withRolesGlobal(Arrays.asList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.PROJECT_FINANCE)).build());
 
         CompetitionResource competition = newCompetitionResource().withName("comp1").withId(123L).build();
 
-        List<CompetitionOpenQueryResource> openQueries = Arrays.asList(new CompetitionOpenQueryResource(1L, 2L, "org", 3L, "proj"));
+        List<CompetitionOpenQueryResource> openQueries = asList(new CompetitionOpenQueryResource(1L, 2L, "org", 3L, "proj"));
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
@@ -131,11 +132,11 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
     public void testViewPendingSpendProfiles() throws Exception {
         Long competitionId = 123L;
 
-        setLoggedInUser(newUserResource().withRolesGlobal(Arrays.asList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.PROJECT_FINANCE)).build());
 
         SpendProfileStatusResource pendingSpendProfile1 = new SpendProfileStatusResource(11L, 1L, "Project Name 1");
         SpendProfileStatusResource pendingSpendProfile2 = new SpendProfileStatusResource(11L, 2L, "Project Name 2");
-        List<SpendProfileStatusResource> pendingSpendProfiles = Arrays.asList(pendingSpendProfile1, pendingSpendProfile2);
+        List<SpendProfileStatusResource> pendingSpendProfiles = asList(pendingSpendProfile1, pendingSpendProfile2);
 
         CompetitionResource competition = newCompetitionResource().withName("comp1").withId(123L).build();
 

@@ -20,10 +20,9 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -100,9 +99,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
     @Autowired
     private ProfileRepository profileRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private AgreementRepository agreementRepository;
@@ -849,7 +845,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
         controller.sendAllInvites(competition.getId(), assessorInviteSendResource).getSuccess();
 
         User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
-        assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));
+        assertTrue(invitedUser.getRoles().contains(Role.ASSESSOR));
     }
 
     @Test
@@ -960,7 +956,6 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
     public void getAvailableAssessors_sortsFirstAndLastName() throws Exception {
         loginCompAdmin();
 
-        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
         InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
 
         List<Profile> profiles = newProfile()
@@ -977,7 +972,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Robert", "Robert", "Alexis", "Alexis")
                 .withLastName("Stark", "Salt", "Kinney", "Colon")
-                .withRoles(singleton(assessorRole))
+                .withRoles(singleton(Role.ASSESSOR))
                 .withProfileId(profileIds)
                 .build(4);
 
@@ -1030,14 +1025,12 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
 
         Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
 
-        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-
         List<User> users = newUser()
                 .withId()
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singleton(assessorRole))
+                .withRoles(singleton(Role.ASSESSOR))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

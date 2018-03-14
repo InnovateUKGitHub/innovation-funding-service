@@ -21,12 +21,11 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -88,9 +87,6 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Autowired
     private RejectionReasonRepository rejectionReasonRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -307,8 +303,6 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
 
-        Role role = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
         List<AssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
@@ -336,7 +330,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
             ProcessRole processRole = new ProcessRole();
             processRole.setUser(users.get(i));
             processRole.setApplicationId(application.getId());
-            processRole.setRole(role);
+            processRole.setRole(Role.ASSESSOR);
             processRoleRepository.save(processRole);
 
             Assessment assessment = new Assessment(application, processRole);
@@ -357,8 +351,6 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
 
         Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
-
-        Role role = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
@@ -385,7 +377,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         ProcessRole processRole = new ProcessRole();
         processRole.setUser(users.get(0));
         processRole.setApplicationId(application.getId());
-        processRole.setRole(role);
+        processRole.setRole(Role.ASSESSOR);
         processRoleRepository.save(processRole);
 
         Assessment assessment = new Assessment(application, processRole);

@@ -89,7 +89,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
 
         mockMvc.perform(get("/"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/assessor/dashboard"));
+                .andExpect(view().name("redirect:/assessment/assessor/dashboard"));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
         mockMvc.perform(post("/roleSelection")
                 .param("selectedRole", selectedRole.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessor/dashboard"))
+                .andExpect(redirectedUrl("/assessment/assessor/dashboard"))
                 .andReturn();
     }
 

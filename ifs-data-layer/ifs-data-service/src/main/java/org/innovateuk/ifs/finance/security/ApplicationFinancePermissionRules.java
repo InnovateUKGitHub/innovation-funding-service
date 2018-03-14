@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,9 +25,6 @@ public class ApplicationFinancePermissionRules {
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
-
     @PermissionRule(value = "READ", description = "The consortium can see the application finances of their own organisation")
     public boolean consortiumCanSeeTheApplicationFinancesForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         return isAConsortiumMemberOnApplication(applicationFinanceResource, user);
@@ -36,7 +32,7 @@ public class ApplicationFinancePermissionRules {
 
     @PermissionRule(value = "READ", description = "An assessor can see the application finances for organisations in the applications they assess")
     public boolean assessorCanSeeTheApplicationFinanceForOrganisationsInApplicationsTheyAssess(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isAssessor = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), ASSESSOR, roleRepository, processRoleRepository);
+        final boolean isAssessor = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), ASSESSOR, processRoleRepository);
         return isAssessor;
     }
 
@@ -92,8 +88,8 @@ public class ApplicationFinancePermissionRules {
     }
 
     private boolean isAConsortiumMemberOnApplicationAndOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, processRoleRepository);
         return isLeadApplicant || isCollaborator;
     }
 
@@ -113,7 +109,7 @@ public class ApplicationFinancePermissionRules {
 
     private boolean isAConsortiumMemberOnApplicationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;
     }

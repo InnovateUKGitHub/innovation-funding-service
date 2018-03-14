@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -14,8 +14,7 @@ import java.time.ZonedDateTime;
  */
 public class RoleInvite extends Invite<Role, RoleInvite> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "target_id", referencedColumnName = "id")
+    @Column(name = "target_id")
     private Role role;
 
     public RoleInvite() {

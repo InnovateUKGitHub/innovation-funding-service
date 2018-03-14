@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
@@ -13,7 +14,6 @@ import java.util.EnumSet;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
@@ -57,11 +57,8 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
         setLoggedInUser(
                 newUserResource()
                         .withRolesGlobal(singletonList(
-                                newRoleResource()
-                                        .withType(roleType)
-                                        .build()
-                                )
-                        )
+                                Role.getByName(roleType.getName())
+                        ))
                         .build());
         serviceCall.run();
     }

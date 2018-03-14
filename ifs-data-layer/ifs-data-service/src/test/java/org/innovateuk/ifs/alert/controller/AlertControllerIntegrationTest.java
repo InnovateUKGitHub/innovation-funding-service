@@ -3,7 +3,7 @@ package org.innovateuk.ifs.alert.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +19,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.basicSecurityUser;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
 import static org.junit.Assert.*;
 
 public class AlertControllerIntegrationTest extends BaseControllerIntegrationTest<AlertController> {
@@ -30,8 +28,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
 
     @Before
     public void setUp() throws Exception {
-        RoleResource systemMaintainerRole = newRoleResource().withType(SYSTEM_MAINTAINER).build();
-        systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(systemMaintainerRole)).build();
+        systemMaintenanceUser = newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_MAINTAINER)).build();
     }
 
     @Autowired

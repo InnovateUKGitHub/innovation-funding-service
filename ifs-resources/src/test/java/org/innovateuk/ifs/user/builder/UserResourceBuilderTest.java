@@ -3,10 +3,10 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Disability.YES;
@@ -32,7 +32,7 @@ public class UserResourceBuilderTest {
         UserStatus expectedStatus = ACTIVE;
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
-        List<RoleResource> expectedRoles = newRoleResource().build(2);
+        List<Role> expectedRoles = asList(Role.APPLICANT, Role.COLLABORATOR);
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Long expectedEthnicity = 1L;
@@ -84,7 +84,7 @@ public class UserResourceBuilderTest {
         UserStatus[] expectedStatuss = {ACTIVE, INACTIVE};
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
-        List<List<RoleResource>> expectedRoles = asList(newRoleResource().build(2), newRoleResource().build(2));
+        List<List<Role>> expectedRoles = asList( asList(Role.APPLICANT, Role.COLLABORATOR), asList(Role.PARTNER, Role.PROJECT_MANAGER) );
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Long[] expectedEthnicities = {1L, 2L};

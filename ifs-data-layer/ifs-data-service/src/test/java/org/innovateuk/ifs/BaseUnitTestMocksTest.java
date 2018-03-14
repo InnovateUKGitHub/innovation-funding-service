@@ -250,13 +250,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProfileRepository profileRepositoryMock;
 
     @Mock
-    protected RoleRepository roleRepositoryMock;
-
-    @Mock
     protected RoleInviteRepository roleInviteRepositoryMock;
-
-    @Mock
-    protected RoleService roleServiceMock;
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
@@ -440,9 +434,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected IdentityProviderService idpServiceMock;
-
-    @Mock
-    protected RoleMapper roleMapperMock;
 
     @Mock
     protected ProcessRoleMapper processRoleMapperMock;

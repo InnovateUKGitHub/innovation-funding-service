@@ -2,9 +2,8 @@ package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
-import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,24 +25,16 @@ public class InviteUserPermissionRulesTest extends BasePermissionRulesTest<Invit
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
 
         invitedUser = UserResourceBuilder.newUserResource().build();
 
-        RoleResource ifsAdminRole = RoleResourceBuilder.newRoleResource()
-                .withName("ifs_administrator")
-                .build();
-
         ifsAdmin = UserResourceBuilder.newUserResource()
-                .withRolesGlobal(Collections.singletonList(ifsAdminRole))
-                .build();
-
-        RoleResource nonIfsAdminRole = RoleResourceBuilder.newRoleResource()
-                .withName("support")
+                .withRolesGlobal(Collections.singletonList(Role.IFS_ADMINISTRATOR))
                 .build();
 
         nonIfsAdmin = UserResourceBuilder.newUserResource()
-                .withRolesGlobal(Collections.singletonList(nonIfsAdminRole))
+                .withRolesGlobal(Collections.singletonList(Role.SUPPORT))
                 .build();
     }
 
