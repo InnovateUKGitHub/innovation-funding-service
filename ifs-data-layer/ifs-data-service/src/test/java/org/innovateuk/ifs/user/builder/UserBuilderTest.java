@@ -1,18 +1,15 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.user.domain.*;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.Title;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 import static org.innovateuk.ifs.user.resource.Disability.NOT_STATED;
@@ -59,7 +56,7 @@ public class UserBuilderTest {
         UserStatus expectedStatus = ACTIVE;
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
-        Set<Role> expectedRoles = newRole().buildSet(2);
+        Set<Role> expectedRoles = new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER));
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Ethnicity expectedEthnicity = newEthnicity().build();
@@ -115,7 +112,7 @@ public class UserBuilderTest {
         UserStatus[] expectedStatuss = {ACTIVE, INACTIVE};
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
-        List<Set<Role>> expectedRoles = asList(newRole().buildSet(2), newRole().buildSet(2));
+        List<Set<Role>> expectedRoles = asList(new HashSet<>(asList(Role.LEADAPPLICANT, Role.PARTNER)), new HashSet<>(asList(Role.COLLABORATOR, Role.COMP_ADMIN)));
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Ethnicity[] expectedEthnicities = newEthnicity().buildArray(2, Ethnicity.class);

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Optional.empty;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -71,14 +70,14 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
     private UserResource createUserViaRegistration(String firstName, String lastName, String emailAddress, String phoneNumber, List<UserRoleType> userRoleTypes, Long organisationId) {
 
         List<String> roleNames = simpleMap(userRoleTypes, userRoleType -> userRoleType.getName());
-        List<Role> roles = roleRepository.findByNameIn(roleNames);
+        List<Role> roles = Role.getByNameIn(roleNames);
 
         UserResource created = registrationService.createOrganisationUser(organisationId, newUserResource().
                 withFirstName(firstName).
                 withLastName(lastName).
                 withEmail(emailAddress).
                 withPhoneNumber(phoneNumber).
-                withRolesGlobal(simpleMap(roles, r -> newRoleResource().withId(r.getId()).build())).
+                withRolesGlobal(simpleMap(roles, r -> Role.getByName(r.getName()))).
                 withPassword("Passw0rd").
                 build()).
                 getSuccess();

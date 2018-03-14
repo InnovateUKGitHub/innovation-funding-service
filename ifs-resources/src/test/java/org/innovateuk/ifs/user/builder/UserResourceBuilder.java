@@ -36,7 +36,7 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     }
 
     @SafeVarargs
-    public final UserResourceBuilder withRolesGlobal(List<RoleResource>... rolesList) {
+    public final UserResourceBuilder withRolesGlobal(List<Role>... rolesList) {
         return withArray((roles, user) -> user.setRoles(roles), rolesList);
     }
 

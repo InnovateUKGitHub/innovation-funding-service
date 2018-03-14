@@ -27,7 +27,7 @@ import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStr
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -47,7 +47,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CREATE_PROJECT_
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -161,8 +160,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private void addProcessRoles(Project project, User user, Organisation organisation) {
         Application application = project.getApplication();
-        Role role = roleRepository.findOneByName(COLLABORATOR.getName());
-        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
+        ProcessRole processRole = new ProcessRole(user, application.getId(), Role.COLLABORATOR, organisation.getId());
         processRoleRepository.save(processRole);
     }
 

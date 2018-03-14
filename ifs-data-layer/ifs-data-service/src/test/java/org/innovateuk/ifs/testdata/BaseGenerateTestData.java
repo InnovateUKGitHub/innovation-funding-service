@@ -23,6 +23,7 @@ import org.innovateuk.ifs.testdata.builders.data.ApplicationQuestionResponseData
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.testdata.services.*;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -47,12 +48,12 @@ import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.services.BaseDataBuilderService.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.*;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -512,7 +513,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected abstract void fixUpDatabase();
 
     private void setDefaultCompAdmin() {
-        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(Role.SYSTEM_REGISTRATION_USER)).build());
         testService.doWithinTransaction(() ->
                 setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccess())
         );
