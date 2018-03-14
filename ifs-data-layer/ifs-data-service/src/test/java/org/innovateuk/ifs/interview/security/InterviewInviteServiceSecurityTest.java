@@ -136,13 +136,8 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Test
     public void acceptInvite() {
-        UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
-                ).build();
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
 
         when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
@@ -172,13 +167,8 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Test
     public void acceptInvite_notSameUser() {
-        UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
-                ).build();
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
         when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
                 .thenReturn(interviewParticipantResource);
@@ -198,13 +188,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Test
     public void acceptInvite_hashNotExists() {
-        UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(ASSESSOR)
-                                .build()
-                        )
-                ).build();
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
 
         when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash not exists")).thenReturn(null);
 
