@@ -30,10 +30,12 @@ ${manageExternalUsers}  ${server}/management/admin/external/users
 #Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
+${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionRTO}, "SUBMISSION_DATE")}
+
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
 
-${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
+${openCompetitionBusinessRTO_name}      Photonics for RTO
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 
@@ -67,6 +69,8 @@ ${createApplicationOpenCompetition}             Home and industrial efficiency p
 ${createApplicationOpenCompetitionId}           ${competition_ids['${createApplicationOpenCompetition}']}
 ${createApplicationOpenCompetitionOpenDate}     ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "OPEN_DATE")}
 ${createApplicationOpenCompetitionCloseDate}    ${getPrettyMilestoneDate(${createApplicationOpenCompetitionId}, "SUBMISSION_DATE")}
+${createApplicationOpenCompetitionAssessorAcceptsDayMonth}    ${getPrettyMilestoneDayMonth(${createApplicationOpenCompetitionId}, "ASSESSOR_ACCEPTS")}
+${createApplicationOpenCompetitionAssessorDeadlineDayMonth}    ${getPrettyMilestoneDayMonth(${createApplicationOpenCompetitionId}, "ASSESSOR_DEADLINE")}
 
 ${READY_TO_OPEN_COMPETITION_NAME}         Photonics for health
 ${READY_TO_OPEN_COMPETITION}              ${competition_ids['${READY_TO_OPEN_COMPETITION_NAME}']}
@@ -82,6 +86,7 @@ ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APP
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
+${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}              ${getPrettyMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_ACCEPTS")}
 ${IN_ASSESSMENT_APPLICATION_1_TITLE}      3D-printed buildings
 ${IN_ASSESSMENT_APPLICATION_1_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_1_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_3_TITLE}      Intelligent Building
@@ -182,6 +187,7 @@ ${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE_TIME}  ${getPrettyMilestoneDateTime($
 ${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}  ${getPrettyMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "SUBMISSION_DATE")}
 ${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}  ${getPrettyLongMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "SUBMISSION_DATE")}
 ${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE_TIME}  ${getPrettyMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "NOTIFICATIONS")}
+${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}  ${getSimpleMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "ASSESSOR_DEADLINE")}
 ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables

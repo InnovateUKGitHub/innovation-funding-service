@@ -69,10 +69,10 @@ Guest user can filter competitions by Innovation area
     When the user selects the option from the drop-down menu    Space technology    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
     Then the user should see the element    jQuery=a:contains("Transforming big data")
-    And the user should not see the element    jQuery=a:contains("${createApplicationOpenCompetition}")
+    And the user should not see the element in the paginated list   jQuery=a:contains("${createApplicationOpenCompetition}")
     When the user selects the option from the drop-down menu    Any    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
-    Then the user should see the element    jQuery=a:contains("${createApplicationOpenCompetition}")
+    Then the user should see the element in the paginated list   jQuery=a:contains("${createApplicationOpenCompetition}")
 
 Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714

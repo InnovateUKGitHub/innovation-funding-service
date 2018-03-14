@@ -24,7 +24,7 @@ Number of days remaining until submission should be correct
     ...    INFUND-5485
     [Tags]
     Then the user should see the number of days remaining
-    And the days remaining should be correct (Applicant's dashboard)    2067-09-09
+    And the days remaining should be correct (Applicant's dashboard)    ${openCompetitionRTOCloseDate}
 
 Hours remaining should show the last 24hours
     [Documentation]    INFUND-8614
@@ -33,7 +33,7 @@ Hours remaining should show the last 24hours
     When the user reloads the page
     Then the user should see the text in the page    hours left
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2067-09-09 11:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${openCompetitionRTOCloseDate} 11:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 
 *** Keywords ***
 Custom setup

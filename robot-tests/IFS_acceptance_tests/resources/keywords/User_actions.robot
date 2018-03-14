@@ -31,6 +31,11 @@ The user should see the element in the paginated list
     [Arguments]    ${ELEMENT}
     Do Keyword With Pagination     Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
 
+The user should not see the element in the paginated list
+    [Arguments]    ${ELEMENT}
+    ${elementFound}=   Do Keyword With Pagination And Ignore Error     Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
+    Run Keyword If   ${elementFound} == True    Fail   'Should not have found the element ${ELEMENT} in the paginated list'
+
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
     Wait Until Element Is Not Visible Without Screenshots    ${NOT_VISIBLE_ELEMENT}

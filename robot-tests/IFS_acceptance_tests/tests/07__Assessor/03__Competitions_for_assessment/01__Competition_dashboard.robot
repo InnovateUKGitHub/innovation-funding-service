@@ -46,7 +46,7 @@ Details of the competition are visible
     [Tags]    HappyPath
     Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("Sustainable living models for the future")
     And the user should see the element    jQuery=dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
-    And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("12:00pm Thursday 12 January 2068")
+    And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
     And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("12:00pm Saturday 28 January 2068")
 
 Competition brief link can be seen

@@ -39,9 +39,8 @@ ${Invitation_existing_assessor1}           ${server}/assessment/invite/competiti
 ${Invitation_for_upcoming_comp_assessor1}  ${server}/assessment/invite/competition/1ec7d388-3639-44a9-ae62-16ad991dc92c
 ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0
 ${ASSESSOR_DASHBOARD}                      ${server}/assessment/assessor/dashboard
-${Correct_date}                            29 April to 9 May
-${Correct_date_start}                      6 May
-${Correct_date_end}                        16 May
+${Correct_date_start}                      ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}
+${Correct_date_end}                        ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}
 ${assessmentPeriod}                        29 April 2020 to 9 May 2020: Assessment period
 
 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
@@ -157,7 +156,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    MySQL
     Then the assessor should see the number of days remaining
-    And the calculation of the remaining days should be correct  2020-05-16
+    And the calculation of the remaining days should be correct  ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716

@@ -128,13 +128,22 @@ for comp in cursor.fetchall():
     dates_for_milestone = milestones_for_competition[milestoneType] if milestoneType in milestones_for_competition else {}
 
     dates_for_milestone['rawDate'] = milestoneDate
+    dates_for_milestone['simpleDate'] = milestoneDate.strftime('%Y-%m-%d') if milestoneDate is not None else None
+    dates_for_milestone['prettyDayMonth'] = milestoneDate.strftime('%-d %B') if milestoneDate is not None else None
     dates_for_milestone['prettyDate'] = milestoneDate.strftime('%-d %B %Y') if milestoneDate is not None else None
     dates_for_milestone['prettyDateTime'] = milestoneDate.strftime('%-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
     dates_for_milestone['prettyLongDate'] = milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
     dates_for_milestone['prettyLongDateTime'] = milestoneDate.strftime('%A %-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
+    dates_for_milestone['prettyLongTimeDate'] = milestoneDate.strftime('%-I:%M') + milestoneDate.strftime('%p').lower() + milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
 
     competition_milestones[competitionId] = milestones_for_competition
     milestones_for_competition[milestoneType] = dates_for_milestone
+
+def getSimpleMilestoneDate(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['simpleDate']
+
+def getPrettyMilestoneDayMonth(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyDayMonth']
 
 def getPrettyMilestoneDate(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyDate']
@@ -147,6 +156,9 @@ def getPrettyLongMilestoneDate(competitionId, milestoneType):
 
 def getPrettyLongMilestoneDateTime(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyLongDateTime']
+
+def getPrettyLongMilestoneTimeDate(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['prettyLongTimeDate']
 
 # disconnect from server
 cursor.close()
