@@ -1,1 +1,1 @@
-UPDATE `competition` SET `max_project_duration`='1', `min_project_duration`='36';
+UPDATE `competition` SET  `min_project_duration`='1', `max_project_duration`='36';
