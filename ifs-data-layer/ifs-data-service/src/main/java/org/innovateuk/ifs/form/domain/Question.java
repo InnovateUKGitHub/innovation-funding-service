@@ -15,7 +15,10 @@ import java.util.List;
  */
 @Entity
 public class Question {
-    @ZeroDowntime(reference = "IFS-2981", description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class")
+    @ZeroDowntime(reference = "IFS-2981",
+            description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class " +
+                    "NOTE: The script V113_1_0__migrate_old_question_package_name.sql will need to be ran again " +
+                    "to cleanup any statuses that were created with old package name while deploying.")
     public static final String PREVIOUS_PACKAGE_NAME = "org.innovate.ifs.application.domain";
     private static final String SCOPE = "Scope";
 
