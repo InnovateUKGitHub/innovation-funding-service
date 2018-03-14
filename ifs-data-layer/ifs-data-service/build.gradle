@@ -59,6 +59,7 @@ bootRun {
 ext {
     snippetsDir = file('build/generated-snippets')
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
+    ifsFinanceTotalsAuthSecretKey = 'supersecretkey'
 }
 
 configurations {
