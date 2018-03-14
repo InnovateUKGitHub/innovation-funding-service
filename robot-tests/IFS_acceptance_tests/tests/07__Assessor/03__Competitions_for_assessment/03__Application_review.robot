@@ -204,17 +204,17 @@ Economic Benefit: Guidance
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
     [Tags]  MySQL
-    Given the user clicks the button/link           link=Finances overview
-    Then the user should see the text in the page  Finances summary
+    Given the user clicks the button/link        link=Finances overview
+    And the user should see the element          jQuery=h2:contains("Finances summary")
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
     When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
-    Then the user reloads the page
-    Then The user clicks the button/link            jQuery=th:contains("Mo Juggling Mo Problems Ltd") a:contains("View finances")
-    And the user should see the element             jQuery=h2:contains("Detailed finances")
-    Then the project costs are correct in the overview
-    Then The user clicks the button/link            link=Back to funding
-    Then The user clicks the button/link            jQuery=th:contains("University of Bath") a:contains("View finances")
+    And the user reloads the page
+    And The user clicks the button/link          jQuery=th:contains("Mo Juggling Mo Problems Ltd") a:contains("View finances")
+    Then the user should see the element         jQuery=h2:contains("Detailed finances")
+    And the project costs are correct in the overview
+    When The user clicks the button/link         link=Back to funding
+    And The user clicks the button/link          jQuery=th:contains("University of Bath") a:contains("View finances")
     Then the academic finances are correct
 
 Status of the application should be In Progress
