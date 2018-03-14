@@ -2,6 +2,22 @@ def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply from: "fractal.gradle";
 
+
+buildscript {
+
+    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+
+    ext {
+        thymeleafVersion = ext['thymeleaf.version']
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+
+    }
+}
+
 subprojects {
 
 

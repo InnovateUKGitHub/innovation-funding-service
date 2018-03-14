@@ -1,6 +1,3 @@
-jar {
-    baseName = 'project-setup'
-}
 
 project.version = projectSetupServiceVersion
 tagDocker.tag = projectSetupServiceVersion

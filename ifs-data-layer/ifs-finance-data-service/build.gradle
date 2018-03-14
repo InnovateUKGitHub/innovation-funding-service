@@ -3,10 +3,8 @@ apply from: targetBuild + "-build.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-apply plugin: 'base'
-apply plugin: 'org.flywaydb.flyway'
+apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
-
 apply from: "../database-support.gradle"
 
 configurations {
@@ -50,9 +48,6 @@ bootRun {
     addResources = false
 }
 
-jar {
-    baseName = 'ifs-finance-data-service'
-}
 
 configurations {
     mapstruct
@@ -61,7 +56,6 @@ configurations {
 dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'mysql:mysql-connector-java'
-    compile 'org.flywaydb:flyway-core:4.1.2'
     compile 'org.mapstruct:mapstruct:1.2.0.Final'
     mapstruct 'org.mapstruct:mapstruct-processor:1.2.0.Final'
 

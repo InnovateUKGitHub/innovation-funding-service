@@ -15,10 +15,6 @@ ext {
     snippetsDir = file('build/generated-snippets')
 }
 
-jar {
-    baseName = 'ifs-sil-stub'
-}
-
 dependencies {
     compile project(":ifs-commons")
     compile "org.springframework.boot:spring-boot-starter-web"
