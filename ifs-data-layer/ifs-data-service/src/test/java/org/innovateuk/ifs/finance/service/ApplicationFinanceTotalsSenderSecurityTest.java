@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.security.FinanceTotalsPermissionRules;
-import org.innovateuk.ifs.finance.sync.service.ApplicationFinanceTotalsSender;
+import org.innovateuk.ifs.finance.totals.service.ApplicationFinanceTotalsSender;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;

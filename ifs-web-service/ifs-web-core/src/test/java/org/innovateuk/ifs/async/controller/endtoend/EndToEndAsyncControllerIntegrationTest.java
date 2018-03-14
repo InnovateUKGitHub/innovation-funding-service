@@ -46,7 +46,6 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.pro
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
@@ -234,8 +233,8 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
 
     private List<Long> setupLeadOrganisationRetrievalExpectations(ExpectedExecutionBehaviour executionBehaviour) {
 
-        RoleResource leadApplicantRole = newRoleResource().withType(UserRoleType.LEADAPPLICANT).build();
-        RoleResource collaboratorRole = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
+        Role leadApplicantRole = Role.LEADAPPLICANT;
+        Role collaboratorRole = Role.COLLABORATOR;
 
         List<ProcessRoleResource> applicationProcessRoles = newProcessRoleResource().
                 withId(1L, 3L, 5L).

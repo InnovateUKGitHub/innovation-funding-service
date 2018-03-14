@@ -17,8 +17,8 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
@@ -94,8 +93,7 @@ public class ApplicationNotificationServiceImplTest {
     @Test
     public void sendNotificationApplicationSubmitted() {
         User leadUser = newUser().withEmailAddress("leadapplicant@example.com").build();
-        Role leadRole = newRole().withType(LEADAPPLICANT).build();
-        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(leadRole).build();
+        ProcessRole leadProcessRole = newProcessRole().withUser(leadUser).withRole(Role.LEADAPPLICANT).build();
         Competition competition = newCompetition().build();
         Application application = newApplication().withProcessRoles(leadProcessRole).withCompetition(competition).build();
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
@@ -133,7 +131,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(newRole().withType(LEADAPPLICANT).withUrl("url").build())
+                .withRole(Role.LEADAPPLICANT)
                 .build(3);
 
         List<Application> applications = newApplication()
@@ -265,7 +263,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(newRole().withType(LEADAPPLICANT).withUrl("url").build())
+                .withRole(Role.LEADAPPLICANT)
                 .build(3);
 
         List<Application> applications = newApplication()
@@ -399,7 +397,7 @@ public class ApplicationNotificationServiceImplTest {
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(users.get(0), users.get(1), users.get(2))
-                .withRole(newRole().withType(LEADAPPLICANT).withUrl("url").build())
+                .withRole(Role.LEADAPPLICANT)
                 .build(3);
 
         List<Application> applications = newApplication()
@@ -539,7 +537,7 @@ public class ApplicationNotificationServiceImplTest {
 
         ProcessRole[] processRoles = newProcessRole()
                 .withUser(users)
-                .withRole(LEADAPPLICANT, COLLABORATOR)
+                .withRole(Role.LEADAPPLICANT, Role.COLLABORATOR)
                 .buildArray(2, ProcessRole.class);
 
         Application application = newApplication()

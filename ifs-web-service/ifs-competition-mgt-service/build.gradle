@@ -10,10 +10,6 @@ createContainer.containerId="competition-mgt-svc"
 
 ext.serverContext = '/management'
 
-jar {
-    baseName = 'management'
-}
-
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

@@ -18,10 +18,6 @@ createContainer.containerId="front-door-svc"
 
 ext.serverContext = '/'
 
-jar {
-    baseName = 'ifs-front-door-service'
-}
-
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

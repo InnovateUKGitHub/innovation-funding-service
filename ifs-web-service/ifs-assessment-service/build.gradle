@@ -14,10 +14,6 @@ createContainer.containerId="assessment-svc"
 
 ext.serverContext = '/assessment'
 
-jar {
-    baseName = 'assessment'
-}
-
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

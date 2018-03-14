@@ -15,10 +15,6 @@ createContainer.hostName="application-svc"
 createContainer.containerName="application-svc"
 createContainer.containerId="application-svc"
 
-jar {
-    baseName = 'ifs-application-service'
-}
-
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

@@ -3,3 +3,5 @@ deploy.enabled=false
 wait.enabled=false
 stop.enabled=false
 removeContainer.enabled=false
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+

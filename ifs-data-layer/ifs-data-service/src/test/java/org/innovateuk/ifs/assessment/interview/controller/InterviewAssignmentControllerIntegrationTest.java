@@ -20,11 +20,10 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -84,9 +83,6 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private ProfileRepository profileRepository;
 
     @Autowired
@@ -137,11 +133,9 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         felixWilson.setProfileId(profile.getId());
 
-        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
-
         List<ProcessRole> processRoles = newProcessRole()
                 .withId()
-                .withRole(assessorRole)
+                .withRole(Role.ASSESSOR)
                 .withApplication(applications.get(0), applications.get(1))
                 .withUser(felixWilson, felixWilson)
                 .build(2);
@@ -154,11 +148,9 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         organisationRepository.save(organisations);
 
-        Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
-
         processRoles.addAll(
                 newProcessRole()
-                        .withRole(leadApplicantRole)
+                        .withRole(Role.LEADAPPLICANT)
                         .withApplication(applications.get(0), applications.get(1))
                         .withUser(steveSmith)
                         .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId())

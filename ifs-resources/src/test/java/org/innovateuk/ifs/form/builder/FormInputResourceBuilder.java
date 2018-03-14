@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
@@ -65,6 +65,6 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
     }
 
     public FormInputResourceBuilder withAllowedFileTypes(Collection<FileTypeCategory>... fileTypes) {
-        return withArray((types, formInput) -> setField("allowedFileTypes", newHashSet(types), formInput), fileTypes);
+        return withArray((types, formInput) -> setField("allowedFileTypes", newLinkedHashSet(types), formInput), fileTypes);
     }
 }
