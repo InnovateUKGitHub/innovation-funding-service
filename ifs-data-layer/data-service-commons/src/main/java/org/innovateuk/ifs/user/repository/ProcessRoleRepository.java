@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -19,11 +19,11 @@ public interface ProcessRoleRepository extends PagingAndSortingRepository<Proces
     ProcessRole findByUserIdAndRoleAndApplicationId(Long userId, Role role, Long applicationId);
     List<ProcessRole> findByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, Long applicationId);
     List<ProcessRole> findByApplicationId(Long applicationId);
-    List<ProcessRole> findByApplicationIdAndRoleId(Long applicationId, Long roleId);
-    ProcessRole findOneByApplicationIdAndRoleId(Long applicationId, Long roleId);
+    List<ProcessRole> findByApplicationIdAndRole(Long applicationId, Role role);
+    ProcessRole findOneByApplicationIdAndRole(Long applicationId, Role role);
     List<ProcessRole> findByApplicationIdAndOrganisationId(Long applicationId, Long organisationId);
     ProcessRole findByUserIdAndApplicationId(Long userId, Long applicationId);
-    ProcessRole findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(Long userId, Long roleId, Long applicationId, Long organisationId);
+    ProcessRole findByUserIdAndRoleAndApplicationIdAndOrganisationId(Long userId, Role role, Long applicationId, Long organisationId);
     boolean existsByUserIdAndApplicationId(Long userId, Long applicationId);
-    boolean existsByUserIdAndApplicationIdAndRoleName(Long id, Long applicationId, String roleName);
+    boolean existsByUserIdAndApplicationIdAndRole(Long id, Long applicationId, Role role);
 }

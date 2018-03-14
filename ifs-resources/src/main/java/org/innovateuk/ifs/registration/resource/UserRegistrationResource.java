@@ -19,7 +19,7 @@ public class UserRegistrationResource extends UserProfileBaseResource{
     })
     private String password;
 
-    private List<RoleResource> roles;
+    private List<Role> roles;
 
     public UserRegistrationResource() {
     }
@@ -44,11 +44,11 @@ public class UserRegistrationResource extends UserProfileBaseResource{
         this.password = password;
     }
 
-    public List<RoleResource> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleResource> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

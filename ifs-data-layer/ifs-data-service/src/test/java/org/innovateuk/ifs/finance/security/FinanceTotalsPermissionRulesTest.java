@@ -3,13 +3,13 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -29,9 +29,9 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         UserResource userResource = newUserResource().withId(1L).build();
         ApplicationResource application = newApplicationResource().withId(1L).build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(userResource.getId(),
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(userResource.getId(),
                 application.getId(),
-                UserRoleType.LEADAPPLICANT.getName())).thenReturn(true);
+                Role.LEADAPPLICANT)).thenReturn(true);
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application, userResource);
 
@@ -52,10 +52,7 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         ApplicationResource application = newApplicationResource().withId(1L).build();
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application,
-                newUserResource().withRolesGlobal(
-                        newRoleResource()
-                                .withName(UserRoleType.SYSTEM_MAINTAINER.getName())
-                                .build(1)
+                newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_MAINTAINER)
                 ).build());
 
         assertTrue(result);
@@ -66,10 +63,7 @@ public class FinanceTotalsPermissionRulesTest extends BasePermissionRulesTest<Fi
         ApplicationResource application = newApplicationResource().withId(1L).build();
 
         boolean result = rules.leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(application,
-                newUserResource().withRolesGlobal(
-                        newRoleResource()
-                                .withName(UserRoleType.COLLABORATOR.getName())
-                                .build(1)
+                newUserResource().withRolesGlobal(singletonList(Role.COLLABORATOR)
                 ).build());
 
         assertFalse(result);

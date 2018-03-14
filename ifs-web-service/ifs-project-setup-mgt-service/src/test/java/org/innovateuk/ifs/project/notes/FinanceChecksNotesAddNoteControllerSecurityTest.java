@@ -5,6 +5,7 @@ import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.project.notes.controller.FinanceChecksNotesAddNoteController;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
@@ -18,7 +19,6 @@ import java.util.function.Consumer;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.eq;
@@ -51,7 +51,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testCancelNewForm() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.cancelNewForm(projectCompositeId.id(), 2L, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
@@ -60,7 +60,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.cancelNewForm(projectCompositeId.id(), 2L, null, null, null);
                 Assert.fail("Should not have been able to cancel form without the project finance role");
@@ -72,7 +72,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testDownloadAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.downloadAttachment(projectCompositeId.id(), 2L, 3L, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
@@ -81,7 +81,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.downloadAttachment(projectCompositeId.id(), 2L, 3L, null, null);
                 Assert.fail("Should not have been able to download attachment without the project finance role");
@@ -93,7 +93,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testSaveQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.saveNote(projectCompositeId.id(), 2L, null, null, null, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
@@ -102,7 +102,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.saveNote(projectCompositeId.id(), 2L, null, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save note without the project finance role");
@@ -114,7 +114,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testSaveQueryAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.saveNewNoteAttachment(null, projectCompositeId.id(), 2L, null, null, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
@@ -123,7 +123,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.saveNewNoteAttachment(null, projectCompositeId.id(), 2L, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save a note attachment without the project finance role");
@@ -135,7 +135,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testViewNewQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.viewNewNote(projectCompositeId.id(), 2L, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
@@ -144,7 +144,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.viewNewNote(projectCompositeId.id(), 2L, null, null, null, null);
                 Assert.fail("Should not have been able to show the create note form without the project finance role");
@@ -156,7 +156,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
 
     @Test
     public void testRemoveAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         assertSecured(() -> classUnderTest.removeAttachment(projectCompositeId.id(), 2L, 3L, null, null, null, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
@@ -165,7 +165,7 @@ public class FinanceChecksNotesAddNoteControllerSecurityTest extends BaseProject
         nonFinanceTeamRoles.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.removeAttachment(projectCompositeId.id(), 2L, 3L, null, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to remove attachments from the create note form without the project finance role");

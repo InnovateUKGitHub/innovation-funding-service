@@ -218,14 +218,14 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.ACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
+        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
     public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
-        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
+        Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
     }
@@ -235,20 +235,20 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         return validateSearchString(searchString).andOnSuccess(() -> {
             String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
-            Set<String> roleTypeNames = simpleMapSet(roleTypes, UserRoleType::getName);
+            Set<Role> roleTypeNames = simpleMapSet(roleTypes, r -> Role.getByName(r.getName()));
             List<UserOrganisation> userOrganisations;
             switch (searchCategory) {
                 case NAME:
-                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypeNames);
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypeNames);
                     break;
 
                 case ORGANISATION_NAME:
-                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
                     break;
 
                 case EMAIL:
                 default:
-                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
                     break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
