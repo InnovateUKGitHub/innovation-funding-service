@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class AssessorFormInputResponsePermissionRulesTest extends BasePermission
 
         ProcessRole processRole = newProcessRole()
                 .withUser(newUser().with(id(assessorUser.getId())).build())
-                .withRole(ASSESSOR)
+                .withRole(Role.ASSESSOR)
                 .build();
 
         assessment = newAssessment().withParticipant(processRole).build();

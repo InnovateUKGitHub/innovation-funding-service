@@ -10,7 +10,6 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,6 @@ public class FormInputResponsePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private FormInputRepository formInputRepository;
@@ -133,6 +129,6 @@ public class FormInputResponsePermissionRules {
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
         final Long organisationId = processRoleRepository.findOne(response.getUpdatedBy()).getOrganisationId();
         final Long applicationId = response.getApplication();
-        return checkProcessRole(user, applicationId, organisationId, userRoleType, roleRepository, processRoleRepository);
+        return checkProcessRole(user, applicationId, organisationId, userRoleType, processRoleRepository);
     }
 }

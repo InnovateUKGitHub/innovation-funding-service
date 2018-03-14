@@ -9,6 +9,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,6 @@ import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
@@ -89,11 +89,7 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(singletonList(
-                                newRoleResource()
-                                        .withType(roleType)
-                                        .build()
-                                )
+                        .withRolesGlobal(singletonList(Role.getByName(roleType.getName()))
                         )
                         .build());
         serviceCall.run();

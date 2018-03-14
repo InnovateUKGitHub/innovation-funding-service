@@ -10,7 +10,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -133,22 +133,22 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
 
         applications[0].setProcessRoles(
                 newProcessRole()
-                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withRole(Role.LEADAPPLICANT)
                         .withOrganisationId(1L)
                         .build(1));
         applications[1].setProcessRoles(
                 newProcessRole()
-                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withRole(Role.LEADAPPLICANT)
                         .withOrganisationId(2L)
                         .build(1));
         applications[2].setProcessRoles(
                 newProcessRole()
-                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withRole(Role.LEADAPPLICANT)
                         .withOrganisationId(3L)
                         .build(1));
         applications[3].setProcessRoles(
                 newProcessRole()
-                        .withRole(UserRoleType.LEADAPPLICANT)
+                        .withRole(Role.LEADAPPLICANT)
                         .withOrganisationId(4L)
                         .build(1));
 

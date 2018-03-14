@@ -13,7 +13,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -93,7 +92,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withTotalScorePossible(100, 100)
                 .build(2);
 
-        RoleResource role = buildLeadApplicantRole();
+        Role role = Role.LEADAPPLICANT;
         List<OrganisationResource> organisations = buildTestOrganisations();
         List<ProcessRoleResource> participants = newProcessRoleResource()
                 .withRole(role)
@@ -181,7 +180,7 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withTotalScorePossible(100)
                 .build();
 
-        RoleResource role = buildLeadApplicantRole();
+        Role role = Role.LEADAPPLICANT;
         List<OrganisationResource> organisations = buildTestOrganisations();
         List<ProcessRoleResource> participants = newProcessRoleResource()
                 .withRole(role)
@@ -377,10 +376,6 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
                 .withId(11L, 12L, 13L, 14L)
                 .withName("Juggling is fun", "Juggling is very fun", "Juggling is not fun", "Juggling is word that sounds funny to say")
                 .build(4);
-    }
-
-    private RoleResource buildLeadApplicantRole() {
-        return newRoleResource().withType(UserRoleType.LEADAPPLICANT).build();
     }
 
     private List<OrganisationResource> buildTestOrganisations() {

@@ -25,8 +25,8 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -40,12 +40,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
@@ -83,7 +79,7 @@ import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipan
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
@@ -114,8 +110,6 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
     private User user;
     private Profile profile;
     private InnovationArea innovationArea;
-    private Role assessorRole;
-    private Role applicantRole;
 
 
     @Override
@@ -150,9 +144,6 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         userResource = newUserResource().withId(userId).build();
         profile = newProfile().withId(profileId).build();
         user = newUser().withId(userId).withProfileId(profile.getId()).build();
-
-        assessorRole = newRole().withName(UserRoleType.ASSESSOR.getName()).build();
-        applicantRole = newRole().withName(UserRoleType.APPLICANT.getName()).build();
 
         UserResource senderResource = newUserResource().withId(-1L).withUID(UID).build();
         User sender = newUser().withId(-1L).withUid(UID).build();
@@ -884,7 +875,6 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.empty());
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.empty());
-        when(roleRepositoryMock.findOneByName(UserRoleType.ASSESSOR.getName())).thenReturn(assessorRole);
         when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
         when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
 
@@ -892,7 +882,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, userRepositoryMock, roleRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
+                                  assessmentInviteRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
@@ -991,7 +981,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         List<User> existingUsers = newUser()
                 .withFirstName("John", "Peter")
                 .withLastName("Barnes", "Jones")
-                .withRoles(newHashSet(applicantRole), newHashSet(assessorRole))
+                .withRoles(new HashSet(singleton(Role.APPLICANT)), new HashSet(singleton(Role.ASSESSOR)))
                 .build(2);
 
         List<AssessmentInvite> invites = newAssessmentInvite()
@@ -1010,7 +1000,6 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         when(assessmentInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(userRepositoryMock.findByEmail(emails.get(0))).thenReturn(Optional.of(existingUsers.get(0)));
         when(userRepositoryMock.findByEmail(emails.get(1))).thenReturn(Optional.of(existingUsers.get(1)));
-        when(roleRepositoryMock.findOneByName(UserRoleType.ASSESSOR.getName())).thenReturn(assessorRole);
         when(notificationSenderMock.sendNotification(isA(Notification.class))).thenAnswer(ServiceResult::serviceSuccess);
 
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
@@ -1020,18 +1009,16 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         existingUsers.get(1).hasRole(UserRoleType.ASSESSOR);
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
-                                  assessmentInviteRepositoryMock, userRepositoryMock, roleRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
+                                  assessmentInviteRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         inOrder.verify(competitionParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(0)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
-        inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.ASSESSOR.getName());
         inOrder.verify(notificationSenderMock).sendNotification(isA(Notification.class));
 
         inOrder.verify(competitionParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invites.get(1)));
         inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
-        inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.ASSESSOR.getName());
         inOrder.verify(notificationSenderMock).sendNotification(isA(Notification.class));
 
         inOrder.verifyNoMoreInteractions();

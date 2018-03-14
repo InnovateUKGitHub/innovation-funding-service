@@ -32,12 +32,10 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -124,9 +122,6 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
@@ -558,8 +553,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
     }
 
     private void addAssessorRoleToUser(User user) {
-        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-        user.addRole(assessorRole);
+        user.addRole(Role.ASSESSOR);
     }
 
     @Override

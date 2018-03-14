@@ -22,7 +22,7 @@ import org.innovateuk.ifs.sil.experian.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -208,7 +208,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         Competition competition = newCompetition().withName("Greener Jet Engines").build();
         Application application = newApplication().withCompetition(competition).build();
         organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build());
-        ProcessRole leadApplicantRole = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(organisation.getId()).withApplication(application).build();
+        ProcessRole leadApplicantRole = newProcessRole().withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).withApplication(application).build();
         Project project = newProject().withId(projectId).withApplication(application).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
