@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Affiliation;
+import org.innovateuk.ifs.user.domain.Ethnicity;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
 import java.time.ZonedDateTime;
@@ -10,9 +12,9 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 /**
  * Builder for User entities.
