@@ -435,6 +435,20 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
         return interviewInviteRepository.save(invite.open());
     }
 
+    @Override
+    public ServiceResult<Void> acceptInvite(String inviteHash) {
+        return getParticipantByInviteHash(inviteHash)
+                .andOnSuccess(InterviewInviteServiceImpl::accept)
+                .andOnSuccessReturnVoid();
+    }
+
+    @Override
+    public ServiceResult<Void> rejectInvite(String inviteHash) {
+        return getParticipantByInviteHash(inviteHash)
+                .andOnSuccess(this::reject)
+                .andOnSuccessReturnVoid();
+    }
+
     private ServiceResult<InterviewParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(interviewParticipantRepository.getByInviteHash(inviteHash), notFoundError(InterviewParticipant.class, inviteHash));
     }
@@ -464,6 +478,18 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
             return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
             return serviceSuccess( participant.acceptAndAssignUser(user));
+        }
+    }
+
+    private ServiceResult<CompetitionParticipant> reject(InterviewParticipant participant) {
+        if (participant.getInvite().getStatus() != OPENED) {
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == ACCEPTED) {
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == REJECTED) {
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
+        } else {
+            return serviceSuccess(participant.reject());
         }
     }
 
