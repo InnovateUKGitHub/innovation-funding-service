@@ -17,26 +17,16 @@ items:
     name: flyway-config
   data:
     FLYWAY_LOCATIONS: "<<FLYWAY-LOCATIONS>>"
-    SYSTEM_USER_UUID: "<<SYSTEM-USER-UUID>>"
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: ldap-config
-  data:
-    LDAP_HOST: "<<LDAP-HOST>>"
-    LDAP_PORT: "<<LDAP-PORT>>"
-    LDAP_PASS: "<<LDAP-PASS>>"
-    LDAP_DOMAIN: "<<LDAP-DOMAIN>>"
-    LDAP_SCHEME: "<<LDAP-SCHEME>>"
-    ONLY_SYNC_LDAP: "<<ONLY-SYNC-LDAP>>"
+    FLYWAY_BASELINE_VERSION: "<<FLYWAY-BASELINE-VERSION>>"
+    FLYWAY_BASELINE_DESCRIPTION: "<<FLYWAY-BASELINE-DESCRIPTION>>"
 - apiVersion: v1
   kind: Pod
   metadata:
-    name: dbreset
+    name: dbbaseline
   spec:
     containers:
-    - name: dbreset
-      image: innovateuk/dbreset:1.0-SNAPSHOT
+    - name: dbbaseline
+      image: innovateuk/dbbaseline:1.0-SNAPSHOT
       imagePullPolicy: Always
       command: [ "/bin/bash", "-exec" ]
       args:
@@ -45,11 +35,12 @@ items:
         flyway.url=jdbc:mysql://\${DB_HOST}:\${DB_PORT}
         flyway.schemas=\$DB_NAME
         flyway.locations=\$FLYWAY_LOCATIONS
-        flyway.placeholders.ifs.system.user.uuid=\$SYSTEM_USER_UUID
         flyway.user=\$DB_USER
         flyway.password=\$DB_PASS
+        flyway.baselineVersion=\$FLYWAY_BASELINE_VERSION
+        flyway.baselineDescription=\$FLYWAY_BASELINE_DESCRIPTION
         EOF
-        . /clean-migrate-db-sync-ldap.sh
+        . /baseline-db.sh
       env:
       - name: DB_HOST
         valueFrom:
@@ -76,44 +67,19 @@ items:
           configMapKeyRef:
             name: db-config
             key: DB_PASS
-      - name: LDAP_HOST
-        valueFrom:
-          configMapKeyRef:
-            name: ldap-config
-            key: LDAP_HOST
-      - name: LDAP_PORT
-        valueFrom:
-          configMapKeyRef:
-            name: ldap-config
-            key: LDAP_PORT
-      - name: LDAP_PASS
-        valueFrom:
-          configMapKeyRef:
-            name: ldap-config
-            key: LDAP_PASS
-      - name: LDAP_DOMAIN
-        valueFrom:
-          configMapKeyRef:
-            name: ldap-config
-            key: LDAP_DOMAIN
-      - name: ONLY_SYNC_LDAP
-        valueFrom:
-          configMapKeyRef:
-            name: ldap-config
-            key: ONLY_SYNC_LDAP
-      - name: LDAP_SCHEME
-        valueFrom:
-          configMapKeyRef:
-            name: ldap-config
-            key: LDAP_SCHEME
       - name: FLYWAY_LOCATIONS
         valueFrom:
           configMapKeyRef:
             name: flyway-config
             key: FLYWAY_LOCATIONS
-      - name: SYSTEM_USER_UUID
+      - name: FLYWAY_BASELINE_VERSION
         valueFrom:
           configMapKeyRef:
             name: flyway-config
-            key: SYSTEM_USER_UUID
+            key: FLYWAY_BASELINE_VERSION
+      - name: FLYWAY_BASELINE_DESCRIPTION
+        valueFrom:
+          configMapKeyRef:
+            name: flyway-config
+            key: FLYWAY_BASELINE_DESCRIPTION
     restartPolicy: Never

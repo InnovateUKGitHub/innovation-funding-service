@@ -9,6 +9,7 @@ apply from: "../database-support.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
+apply from: "db-baseline.gradle"
 apply from: rootProject.file("openshift-build.gradle")
 apply from: rootProject.file("prepare-docker.gradle")
 
