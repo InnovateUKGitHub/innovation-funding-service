@@ -45,24 +45,25 @@ public class ProjectSpendProfileExportController {
                                                       HttpServletResponse response) throws IOException {
         SpendProfileCSVResource spendProfileCSVResource = spendProfileService.getSpendProfileCSV(projectId, organisationId);
         response.setContentType(CONTENT_TYPE);
-        //response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName()));
-        //response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName().replace(',', ' ')));
 
-
-        CharsetEncoder encoder = Charset.forName(CharEncoding.ISO_8859_1).newEncoder().onUnmappableCharacter(CodingErrorAction.REPLACE);
-        CharBuffer input = CharBuffer.wrap(spendProfileCSVResource.getFileName());
-        ByteBuffer output = encoder.encode(input);
-
-        String string1 = output.asCharBuffer().toString();
-        String string2 = new String(output.array(), CharEncoding.ISO_8859_1);
-        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(string2));
+        /*
+         * Prevent 'HTTP response splitting attack' by removing comma from the 'Content-disposition' header.
+         * If there is a comma in the 'Content-disposition' header, then it results in two values of the same 'Content-disposition' header,
+         * which in turn is interpreted as a 'HTTP response splitting attack', because there cannot be "multiple Content-Disposition header" values
+         * in a single HTTP response.
+         *
+         */
+        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(removeComma(spendProfileCSVResource.getFileName())));
         response.getOutputStream().print(spendProfileCSVResource.getCsvData());
         response.getOutputStream().flush();
     }
 
+    private String removeComma(String input) {
+        return input.replace(",", "");
+    }
+
     private String getCSVAttachmentHeader(String fileName) {
         return ATTACHMENT_HEADER + fileName;
-        //return StringEscapeUtils.escapeCsv(ATTACHMENT_HEADER + fileName);
     }
 
     public static void main(String[] args) {
