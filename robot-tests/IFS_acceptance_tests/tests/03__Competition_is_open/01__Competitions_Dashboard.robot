@@ -48,7 +48,7 @@ Competition dashboard ready to Open competition
     [Documentation]    INFUND-7358  INF-2637
     [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
-    When The user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
+    When The user clicks the button/link in the paginated list    link=${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery=span:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=h1:contains("Ready to open")

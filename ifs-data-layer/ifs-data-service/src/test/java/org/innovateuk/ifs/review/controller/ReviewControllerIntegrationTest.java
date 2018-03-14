@@ -25,7 +25,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -290,7 +290,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .withRole(Role.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -360,7 +360,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .withRole(Role.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -431,7 +431,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withUser(assessor)
                 .withApplication(application)
-                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .withRole(Role.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -477,7 +477,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withUser(userRepository.findByEmail(getPaulPlum().getEmail()).get())
                 .withApplication(application)
-                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .withRole(Role.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -517,7 +517,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withUser(userRepository.findByEmail(getPaulPlum().getEmail()).get())
                 .withApplication(application)
-                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .withRole(Role.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -557,7 +557,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withUser(userRepository.findByEmail(getPaulPlum().getEmail()).get())
                 .withApplication(application)
-                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .withRole(Role.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 

@@ -11,7 +11,6 @@ import org.mapstruct.Mappings;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-        RoleMapper.class,
         UserMapper.class
     }
 )
@@ -19,7 +18,8 @@ public abstract class ProcessRoleMapper extends BaseMapper<ProcessRole, ProcessR
 
     @Mappings({
         @Mapping(source = "role.name", target = "roleName"),
-        @Mapping(source = "user.name", target = "userName")
+            @Mapping(source = "user.name", target = "userName"),
+            @Mapping(source = "role.id", target = "role")
     })
     @Override
     public abstract ProcessRoleResource mapToResource(ProcessRole domain);
