@@ -664,10 +664,13 @@
                         <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
                     </ul>
                 </div>
-                <div class="upload-section extra-margin" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')} ? 'form-group-error'">
+                <div class="upload-section extra-margin">
                     <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
-                    <div class="form-group">
+                    <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')} ? 'form-group-error'">
                         <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
+                        <th:block th:if="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')}" th:text="${err}" />
+                        </th:block>
                         <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
                                            filename=${overheadCosts?.calculationFile?.get()?.name},
