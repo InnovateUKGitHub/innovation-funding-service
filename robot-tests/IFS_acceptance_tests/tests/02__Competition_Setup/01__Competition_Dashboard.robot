@@ -96,7 +96,7 @@ Competition Opens automatically on date
     Then the user should not see the element                                        jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     When the user navigates to the page                                             ${CA_Live}
     Then the user should see the element                                            jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    [Teardown]  execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='2018-03-14 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
+    [Teardown]  execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
 
 Search existing applications
     [Documentation]    INFUND-3829

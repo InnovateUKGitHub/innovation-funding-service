@@ -135,6 +135,7 @@ for comp in cursor.fetchall():
     dates_for_milestone['prettyLongDate'] = milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
     dates_for_milestone['prettyLongDateTime'] = milestoneDate.strftime('%A %-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
     dates_for_milestone['prettyLongTimeDate'] = milestoneDate.strftime('%-I:%M') + milestoneDate.strftime('%p').lower() + milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
+    dates_for_milestone['dateTimeDb'] = milestoneDate.strftime('%Y-%m-%d %-I:%M:%S') if milestoneDate is not None else None
 
     competition_milestones[competitionId] = milestones_for_competition
     milestones_for_competition[milestoneType] = dates_for_milestone
@@ -159,6 +160,9 @@ def getPrettyLongMilestoneDateTime(competitionId, milestoneType):
 
 def getPrettyLongMilestoneTimeDate(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyLongTimeDate']
+
+def getMilestoneDateTimeDb(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['dateTimeDb']
 
 # disconnect from server
 cursor.close()

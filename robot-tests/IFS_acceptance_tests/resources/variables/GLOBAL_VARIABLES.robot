@@ -74,6 +74,7 @@ ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}    ${getPrettyMilest
 
 ${READY_TO_OPEN_COMPETITION_NAME}         Photonics for health
 ${READY_TO_OPEN_COMPETITION}              ${competition_ids['${READY_TO_OPEN_COMPETITION_NAME}']}
+${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}    ${getMilestoneDateTimeDb(${READY_TO_OPEN_COMPETITION}, "OPEN_DATE")}
 ${COMP_SETUP_COMPETITION}                 ${competition_ids['none']}
 ${NOT_EDITABLE_COMPETITION_NAME}          Integrated delivery programme - low carbon vehicles
 ${NOT_EDITABLE_COMPETITION}               ${competition_ids['${NOT_EDITABLE_COMPETITION_NAME}']}

@@ -15,7 +15,7 @@ Resource          ../../02__Competition_Setup/CompAdmin_Commons.robot
 Guest user navigates to Front Door
     [Documentation]    INFUND-6923 INFUND-7946 IFS-247
     [Tags]
-    [Setup]    the user navigates to the front door
+    [Setup]  the user navigates to the page  ${FRONTDOOR}
     When the user should see the element     jQuery=a:contains("Innovate UK")
     Then the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element     css=#keywords
@@ -43,6 +43,7 @@ Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL
     [Setup]  Connect to Database  @{database}
+<<<<<<< HEAD
     Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
@@ -61,6 +62,25 @@ Guest user can see the opening and closing status of competitions
     And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
     And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
+=======
+    Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
+    ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
+
+    Given the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
+
+
+    Given Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
+    When the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Open now  Opened
+
+
+    Given Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
+    When the user navigates to the page  ${frontDoor}
+    Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Closing soon  Opened
+
+    [Teardown]  Return the competition's milestones to their initial values  ${competitionId}  ${openDate}  ${submissionDate}
+>>>>>>> origin/fixDevelopmentAccTests
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
@@ -167,19 +187,35 @@ Guest user can apply to a competition
     And the user should see the element    jQuery=.button:contains("Create")
 
 *** Keywords ***
-the user navigates to the front door
-    the user clicks the button/link    jQuery=span:contains("Need help signing in or creating an account")
-    the user clicks the button/link    jQuery=a:contains("competitions listings page")
-
 Close survey window
     Close Window
     Select Window
 
 the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}
-    the user should see the element    jQuery=h2:contains(${competition_name}) ~ h3:contains(${date_status}) ~ dl dt:contains(${open_text})
+    the user should see the element    jQuery=h2:contains("${competition_name}") ~ h3:contains("${date_status}") ~ dl dt:contains("${open_text}")
 
 the registration date of the non-ifs competition belongs to the past
     [Arguments]  ${competitionId}
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='REGISTRATION_DATE';
+
+Get competitions id and set it as suite variable
+    [Arguments]  ${competitionTitle}
+    ${competitionId} =  get comp id from comp title  ${competitionTitle}
+    Set suite variable  ${competitionId}
+
+Save competition's current dates
+    [Arguments]  ${competitionId}
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='OPEN_DATE';
+    ${result} =  get from list  ${result}  0
+    ${openDate} =  get from list  ${result}  0
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
+    ${result} =  get from list  ${result}  0
+    ${submissionDate} =  get from list  ${result}  0
+    [Return]  ${openDate}  ${submissionDate}
+
+Return the competition's milestones to their initial values
+    [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
+    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
+    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
