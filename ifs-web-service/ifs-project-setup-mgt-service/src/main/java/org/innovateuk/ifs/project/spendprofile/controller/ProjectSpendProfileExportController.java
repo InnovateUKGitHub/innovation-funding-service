@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
-import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -10,17 +8,11 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CodingErrorAction;
 
 /**
  * This controller will handle all requests that are related to spend profile export/downloads.
