@@ -53,7 +53,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
 
     @Transactional
     @Override
-    @ZeroDowntime()
+    @ZeroDowntime(reference = "IFS-2981", description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class")
     public ServiceResult<Map<Long, Boolean>> getQuestionStatuses(Long competitionId, CompetitionSetupSection parentSection) {
         Long parentSectionStatusId = getParentIdStatusObjectOrCreateOne(competitionId, parentSection);
         List<SetupStatusResource> setupStatuses = getSetupStatusByTargetAndParentId(competitionId, parentSectionStatusId);
@@ -73,6 +73,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
                     .getSuccess();
     }
 
+    @ZeroDowntime(reference = "IFS-2981", description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class")
     private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, Long questionId, CompetitionSetupSection parentSection) {
         Optional<SetupStatusResource> setupStatusOpt =
                 setupStatusService.findSetupStatusAndTarget(Question.class.getName(), questionId, Competition.class.getName(), competitionId)

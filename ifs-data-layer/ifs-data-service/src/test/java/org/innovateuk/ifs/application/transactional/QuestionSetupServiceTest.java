@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -75,6 +76,7 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    @ZeroDowntime(reference = "IFS-2981", description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class")
     public void testMarkQuestionInSetupAsIncompleteCreateOne() throws Exception {
         final Long questionId = 23L;
         final Long competitionId = 32L;
@@ -111,6 +113,11 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
         when(setupStatusService.findSetupStatusAndTarget(Question.class.getName(), questionId, Competition.class.getName(), competitionId))
                 .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
         when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        when(setupStatusService.findSetupStatusAndTarget(Question.PREVIOUS_PACKAGE_NAME, questionId, Competition.class.getName(), competitionId))
+                .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
 
         service.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection);
 

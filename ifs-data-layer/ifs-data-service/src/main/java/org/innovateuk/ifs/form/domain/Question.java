@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Entity
 public class Question {
+    @ZeroDowntime(reference = "IFS-2981", description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class")
     public static final String PREVIOUS_PACKAGE_NAME = "org.innovate.ifs.application.domain";
     private static final String SCOPE = "Scope";
 

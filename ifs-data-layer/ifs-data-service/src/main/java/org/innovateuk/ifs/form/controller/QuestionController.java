@@ -28,7 +28,7 @@ public class QuestionController {
 
     @Autowired
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in QuestionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     private QuestionStatusService questionStatusService;
 
     @GetMapping("/id/{id}")
@@ -46,7 +46,7 @@ public class QuestionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in QuestionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @PutMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
@@ -56,7 +56,7 @@ public class QuestionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in QuestionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @PutMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
     public RestResult<Void> assign(@PathVariable("questionId") final Long questionId,
                        @PathVariable("applicationId") final Long applicationId,
@@ -67,7 +67,7 @@ public class QuestionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in QuestionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @GetMapping("/getMarkedAsComplete/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
                                          @PathVariable("organisationId") Long organisationId) {
@@ -76,7 +76,7 @@ public class QuestionController {
 
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in QuestionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @PutMapping("/updateNotification/{questionStatusId}/{notify}")
     public RestResult<Void> updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
                                    @PathVariable("notify") final Boolean notify) {

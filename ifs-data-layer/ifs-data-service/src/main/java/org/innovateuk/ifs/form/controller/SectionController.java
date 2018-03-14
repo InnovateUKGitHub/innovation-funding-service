@@ -25,7 +25,7 @@ public class SectionController {
     private SectionService sectionService;
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @Autowired
     private SectionStatusService sectionStatusService;
 
@@ -35,14 +35,14 @@ public class SectionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/getCompletedSectionsByOrganisation/{applicationId}")
     public RestResult<Map<Long, Set<Long>>> getCompletedSectionsMap(@PathVariable("applicationId") final Long applicationId) {
         return sectionStatusService.getCompletedSections(applicationId).toGetResponse();
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
                                                       @PathVariable("organisationId") final Long organisationId) {
@@ -51,7 +51,7 @@ public class SectionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @PostMapping("/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("sectionId") final Long sectionId,
                                                                @PathVariable("applicationId") final Long applicationId,
@@ -60,7 +60,7 @@ public class SectionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @PostMapping("/markAsNotRequired/{sectionId}/{applicationId}/{markedAsNotRequiredById}")
     public RestResult<Void> markAsNotRequired(@PathVariable("sectionId") final Long sectionId,
                                               @PathVariable("applicationId") final Long applicationId,
@@ -69,7 +69,7 @@ public class SectionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @PostMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
                                              @PathVariable("applicationId") final Long applicationId,
@@ -78,14 +78,14 @@ public class SectionController {
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/allSectionsMarkedAsComplete/{applicationId}")
     public RestResult<Boolean> getCompletedSections(@PathVariable("applicationId") final Long applicationId) {
         return sectionStatusService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null).toGetResponse();
     }
 
     @Deprecated
-    @ZeroDowntime(reference = "IFS-Something", description = "Created new endpoint in SectionStatusController.")
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/getIncompleteSections/{applicationId}")
     public RestResult<List<Long>> getIncompleteSections(@PathVariable("applicationId") final Long applicationId) {
         return sectionStatusService.getIncompleteSections(applicationId).toGetResponse();
