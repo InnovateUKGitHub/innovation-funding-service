@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
+import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
@@ -15,6 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 
 /**
  * This controller will handle all requests that are related to spend profile export/downloads.
@@ -40,7 +46,16 @@ public class ProjectSpendProfileExportController {
         SpendProfileCSVResource spendProfileCSVResource = spendProfileService.getSpendProfileCSV(projectId, organisationId);
         response.setContentType(CONTENT_TYPE);
         //response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName()));
-        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName().replace(',', ' ')));
+        //response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(spendProfileCSVResource.getFileName().replace(',', ' ')));
+
+
+        CharsetEncoder encoder = Charset.forName(CharEncoding.ISO_8859_1).newEncoder().onUnmappableCharacter(CodingErrorAction.REPLACE);
+        CharBuffer input = CharBuffer.wrap(spendProfileCSVResource.getFileName());
+        ByteBuffer output = encoder.encode(input);
+
+        String string1 = output.asCharBuffer().toString();
+        String string2 = new String(output.array(), CharEncoding.ISO_8859_1);
+        response.setHeader(HEADER_CONTENT_DISPOSITION, getCSVAttachmentHeader(string2));
         response.getOutputStream().print(spendProfileCSVResource.getCsvData());
         response.getOutputStream().flush();
     }
@@ -48,5 +63,9 @@ public class ProjectSpendProfileExportController {
     private String getCSVAttachmentHeader(String fileName) {
         return ATTACHMENT_HEADER + fileName;
         //return StringEscapeUtils.escapeCsv(ATTACHMENT_HEADER + fileName);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Hellp");
     }
 }
