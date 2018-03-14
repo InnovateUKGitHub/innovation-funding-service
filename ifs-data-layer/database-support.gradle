@@ -5,6 +5,7 @@ ext.dockerComposeFile = "docker-compose/docker-compose.yml"
 task startMySql(type: Exec) {
     workingDir '../../'
     doFirst {
+        commandLine 'docker', 'exec',  '-d', sqlContainer, '/usr/local/bin/ldap-sync-from-ifs-db.sh'
         commandLine 'docker-compose', '-p', 'innovation-funding-service', '-f', dockerComposeFile, 'up', '-d', sqlContainer
     }
     doLast {
@@ -20,7 +21,7 @@ task startMySql(type: Exec) {
 task createTestSchema(type: Exec) {
     workingDir '../../'
     doFirst {
-        commandLine 'docker-compose', '-p', 'innovation-funding-service', '-f', dockerComposeFile, 'exec', '-T', sqlContainer, 'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
+        commandLine 'docker', 'exec',  '-d', sqlContainer,  'mysql', '-uroot', '-ppassword', '-e', 'create database if not exists ' + testSchema
     }
 }
 
