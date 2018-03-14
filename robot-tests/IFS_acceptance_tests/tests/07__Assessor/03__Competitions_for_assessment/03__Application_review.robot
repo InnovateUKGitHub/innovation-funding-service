@@ -204,8 +204,8 @@ Economic Benefit: Guidance
 Finance overview
     [Documentation]    INFUND-3394  IFS-2854
     [Tags]  MySQL
-    Given the user clicks the button/link        link=Finances overview
-    And the user should see the element          jQuery=h2:contains("Finances summary")
+    When the user clicks the button/link        link=Finances overview
+    Then the user should see the element        jQuery=h2:contains("Finances summary")
     And the finance summary total should be correct
     And the project cost breakdown total should be correct
     When the user sets the finance option to detailed   ${IN_ASSESSMENT_COMPETITION_NAME}
