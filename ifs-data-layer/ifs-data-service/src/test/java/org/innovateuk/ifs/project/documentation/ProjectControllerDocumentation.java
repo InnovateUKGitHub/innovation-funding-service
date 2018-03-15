@@ -98,16 +98,14 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void withdrawProject() throws Exception {
         Long projectId = 456L;
-        ProjectResource expectedProject = projectResourceBuilder.build();
-        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess(expectedProject));
+        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/withdraw-project/project/{projectId}", projectId))
+        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
                 .andDo(
                         document("project/{method-name}",
                          pathParameters(
                                  parameterWithName("projectId").description("Id of the project to withdraw")
-                         ),
-                                 responseFields(projectResourceFields)
+                         )
                 ));
     }
 }

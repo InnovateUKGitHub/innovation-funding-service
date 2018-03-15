@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -31,6 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_PROJECT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
@@ -48,6 +50,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -237,34 +240,69 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testWithdrawProject() {
         Long projectId = 123L;
+        Long userId = 456L;
         Project project = newProject().withId(projectId).build();
-        ProjectResource projectResource = newProjectResource().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(newRoleResource().withType(IFS_ADMINISTRATOR).build()))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectMapperMock.mapToResource(project)).thenReturn(projectResource);
-        when(projectWorkflowHandlerMock.projectWithdrawn(project)).thenReturn(true);
+        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(true);
 
-        ServiceResult<ProjectResource> result = service.withdrawProject(projectId);
+        ServiceResult<Void> result = service.withdrawProject(projectId);
         assertTrue(result.isSuccess());
-        assertEquals(projectResource, result.getSuccess());
 
         verify(projectRepositoryMock).findOne(projectId);
-        verify(projectMapperMock).mapToResource(project);
-        verify(projectWorkflowHandlerMock).projectWithdrawn(project);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
     }
 
     @Test
-    public void testWithDrawProjectFails() {
+    public void testWithdrawProjectFails() {
         Long projectId = 321L;
+        Long userId = 987L;
         Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(newRoleResource().withType(IFS_ADMINISTRATOR).build()))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        setLoggedInUser(loggedInUser);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(projectWorkflowHandlerMock.projectWithdrawn(project)).thenReturn(false);
+        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
 
-        ServiceResult<ProjectResource> result = service.withdrawProject(projectId);
+        ServiceResult<Void> result = service.withdrawProject(projectId);
         assertTrue(result.isFailure());
         assertEquals(PROJECT_CANNOT_BE_WITHDRAWN.getErrorKey(), result.getErrors().get(0).getErrorKey());
         verify(projectRepositoryMock).findOne(projectId);
-        verifyZeroInteractions(projectMapperMock);
-        verify(projectWorkflowHandlerMock).projectWithdrawn(project);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
+    }
+
+    @Test
+    public void testWithdrawProjectCannotFindIdFails() {
+        Long projectId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource user = newUserResource()
+                .withRolesGlobal(singletonList(newRoleResource().withType(IFS_ADMINISTRATOR).build()))
+                .build();
+        setLoggedInUser(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
+
+        ServiceResult<Void> result = service.withdrawProject(projectId);
+        assertTrue(result.isFailure());
+        assertEquals(CANNOT_FIND_PROJECT.getErrorKey(), result.getErrors().get(0).getErrorKey());
+        verify(projectRepositoryMock).findOne(projectId);
+        verifyZeroInteractions(projectWorkflowHandlerMock);
     }
 
     @Test

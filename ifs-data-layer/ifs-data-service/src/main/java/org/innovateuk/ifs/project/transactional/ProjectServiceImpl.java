@@ -204,13 +204,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<ProjectResource> withdrawProject(Long projectId) {
+    public ServiceResult<Void> withdrawProject(Long projectId) {
 
-        Project project = projectRepository.findOne(projectId);
-        if (projectWorkflowHandler.projectWithdrawn(project)) {
-            return serviceSuccess(projectMapper.mapToResource(project));
-        }
-        return serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN);
+        return getProject(projectId).handleSuccessOrFailure(
+                projectDoesNotExist -> serviceFailure(CANNOT_FIND_PROJECT),
+                existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
+                                projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
+                                serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))
+        );
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {

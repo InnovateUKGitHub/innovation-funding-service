@@ -56,5 +56,5 @@ public interface ProjectService {
 
     @PreAuthorize("hasAuthority('ifs_administrator')")
     @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to withdraw projects")
-    ServiceResult<ProjectResource> withdrawProject(Long projectId);
+    ServiceResult<Void> withdrawProject(Long projectId);
 }

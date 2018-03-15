@@ -37,7 +37,8 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
     public void configure(StateMachineStateConfigurer<ProjectState, ProjectEvent> states) throws Exception {
         states.withStates()
                 .initial(SETUP)
-                .states(new LinkedHashSet<>(asList(ProjectState.values())));
+                .states(new LinkedHashSet<>(asList(ProjectState.values())))
+                .end(LIVE);
     }
 
     @Override

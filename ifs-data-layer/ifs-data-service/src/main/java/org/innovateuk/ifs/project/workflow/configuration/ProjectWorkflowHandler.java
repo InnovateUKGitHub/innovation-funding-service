@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
@@ -49,8 +50,8 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
         return fireEvent(mandatoryValueAddedEvent(project, projectUser, ProjectEvent.GOL_APPROVED), project);
     }
 
-    public boolean projectWithdrawn(Project project) {
-        return fireEvent(projectWithdrawnEvent(project), project);
+    public boolean projectWithdrawn(Project project, User internalUser) {
+        return fireEvent(projectWithdrawnEvent(project, internalUser), project);
     }
 
     public ProjectState getState(Project project) {
@@ -107,9 +108,10 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
                 .setHeader("participant", projectUser);
     }
 
-    private MessageBuilder<ProjectEvent> projectWithdrawnEvent(Project project) {
+    private MessageBuilder<ProjectEvent> projectWithdrawnEvent(Project project, User internalUser) {
         return MessageBuilder
                 .withPayload(ProjectEvent.PROJECT_WITHDRAWN)
-                .setHeader("target", project);
+                .setHeader("target", project)
+                .setHeader("internalParticipant", internalUser);
     }
 }

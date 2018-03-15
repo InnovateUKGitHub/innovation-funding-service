@@ -122,7 +122,6 @@ include::{snippets}/project/withdraw-project/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/project/withdraw-project/http-response.adoc[]
-include::{snippets}/project/withdraw-project/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/project/withdraw-project/curl-request.adoc[]

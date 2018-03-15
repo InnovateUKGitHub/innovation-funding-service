@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
 import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -22,6 +23,7 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -108,6 +110,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
     @Test
     public void testProjectWithdrawn() {
         Project project = newProject().build();
+        User internalUser = newUser().build();
         ActivityState currentActivityState = new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState());
         ProjectProcess projectProcess = new ProjectProcess(null, project, currentActivityState);
         when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
@@ -115,7 +118,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
         ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState());
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState())).thenReturn(expectedActivityState);
 
-        boolean result = projectWorkflowHandler.projectWithdrawn(project);
+        boolean result = projectWorkflowHandler.projectWithdrawn(project, internalUser);
 
         assertTrue(result);
 

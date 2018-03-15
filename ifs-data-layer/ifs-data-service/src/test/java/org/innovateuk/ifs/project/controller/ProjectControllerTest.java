@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_PROJECT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -115,12 +116,10 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     @Test
     public void testWithdrawProject() throws Exception {
         Long projectId = 456L;
-        ProjectResource expectedProject = newProjectResource().withId(projectId).build();
-        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess(expectedProject));
+        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/withdraw-project/project/{projectId}", projectId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedProject)));
+        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
+                .andExpect(status().isOk());
 
         verify(projectServiceMock).withdrawProject(projectId);
     }
@@ -130,10 +129,22 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
         Long projectId = 789L;
         when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN));
 
-        mockMvc.perform(post("/project/withdraw-project/project/{projectId}", projectId))
-                .andExpect(status().isInternalServerError());
+        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
+                .andExpect(status().isBadRequest());
 
         verify(projectServiceMock).withdrawProject(projectId);
+    }
+
+    @Test
+    public void testWithdrawProjectWhenProjectDoesntExist() throws Exception {
+        Long projectId = 432L;
+        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceFailure(CANNOT_FIND_PROJECT));
+
+        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
+                .andExpect(status().isNotFound());
+
+        verify(projectServiceMock).withdrawProject(projectId);
+
     }
 }
 
