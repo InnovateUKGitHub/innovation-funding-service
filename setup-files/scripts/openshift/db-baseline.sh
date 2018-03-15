@@ -6,11 +6,6 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ "$TARGET" == "production" ]]; then
-    echo "Cannot reset the database on production"
-    exit 1
-fi
-
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
 
@@ -25,15 +20,12 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 echo "Resetting the $PROJECT Openshift project"
 
-function dbReset() {
-    until oc create -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+function dbBaseline() {
+    until oc create -f $(getBuildLocation)/db-baseline/66-dbbaseline.yml ${SVC_ACCOUNT_CLAUSE}
     do
-      oc delete -f $(getBuildLocation)/db-reset/66-dbreset.yml ${SVC_ACCOUNT_CLAUSE}
+      oc delete -f $(getBuildLocation)/db-baseline/66-dbbaseline.yml ${SVC_ACCOUNT_CLAUSE}
       sleep 10
     done
-
-    # Note: We remove just contents of virus-scan-holding and not the directory itself as its monitored by clamAV for scanning, but we delete other directories completely.
-    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && rm -rf virus-scan-holding/* && ls | grep -v .trashcan | grep -v virus-scan-holding | xargs rm -rf'
 }
 
 # Entry point
@@ -53,32 +45,30 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export LDAP_SCHEME="ldaps"
 
     export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/reference,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
-    export SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 fi
 
 injectDBVariables
-injectLDAPVariables
 injectFlywayVariables
 
 useContainerRegistry
-pushDBResetImages
+pushDBBaselineImages
 
-dbReset
+dbBaseline
 
 echo Waiting for container to start
-until [ "$(oc get po dbreset ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' ]
+until [[ "$(oc get po dbbaseline ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ]] && [[ "$(oc get po dbbaseline -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' || "$(oc get po dbbaseline -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Succeeded' ]]
 do
   echo -n .
   sleep 5
 done
 
-oc logs -f dbreset ${SVC_ACCOUNT_CLAUSE}
+oc logs -f dbbaseline ${SVC_ACCOUNT_CLAUSE}
 
 echo Waiting for container to terminate before checking its status
 sleep 5
 
-if [[ "$(oc get po dbreset -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
+if [[ "$(oc get po dbbaseline -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
 
 # tidy up the pod afterwards
-oc delete pod dbreset ${SVC_ACCOUNT_CLAUSE}
+oc delete pod dbbaseline ${SVC_ACCOUNT_CLAUSE}
 exit 0
