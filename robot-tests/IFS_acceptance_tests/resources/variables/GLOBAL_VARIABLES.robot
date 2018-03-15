@@ -35,7 +35,7 @@ ${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionR
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
 
-${openCompetitionBusinessRTO_name}      Photonics for RTO
+${openCompetitionBusinessRTO_name}      Photonics for RTO and Business
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 

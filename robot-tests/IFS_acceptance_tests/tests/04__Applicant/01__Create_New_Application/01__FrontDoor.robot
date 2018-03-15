@@ -43,26 +43,6 @@ Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL
     [Setup]  Connect to Database  @{database}
-<<<<<<< HEAD
-    Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
-    And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
-    And Change the close date of the Competition in the database to fifteen days  ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
-    And Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
-    And Change the close date of the Competition in the database to tomorrow  ${READY_TO_OPEN_COMPETITION_NAME}
-    Given the user navigates to the page  ${frontDoor}
-    And the user should see the element in the paginated list    ${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Closing soon    Opened
-    And Reset the open and close date of the Competition in the database   ${READY_TO_OPEN_COMPETITION_NAME}
-=======
     Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
 
@@ -80,7 +60,6 @@ Guest user can see the opening and closing status of competitions
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Closing soon  Opened
 
     [Teardown]  Return the competition's milestones to their initial values  ${competitionId}  ${openDate}  ${submissionDate}
->>>>>>> origin/fixDevelopmentAccTests
 
 Guest user can filter competitions by Innovation area
     [Documentation]    INFUND-6923
