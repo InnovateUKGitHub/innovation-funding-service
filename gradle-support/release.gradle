@@ -1,0 +1,31 @@
+apply plugin: net.researchgate.release.ReleasePlugin
+
+buildscript {
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'net.researchgate:gradle-release:2.6.0'
+    }
+}
+
+release {
+    preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '
+    newVersionCommitMessage = '[Gradle Release Plugin] - Preparing new release version: '
+    //Note: When testing releases (i.e. not performing real releases) this tagTemplate should be changed to something different
+    // for example tagTemplate = 'TEST RELEASE ${version} ' this will ensure that we don't pollute our tags with fake releases.
+    tagTemplate = '${version}'
+
+    scmAdapters = [
+            net.researchgate.release.GitAdapter,
+    ]
+
+    git {
+        requireBranch = 'master|acceptance'
+        pushToRemote = 'origin'
+        pushToBranchPrefix = ''
+        commitVersionFileOnly = false
+    }
+}
