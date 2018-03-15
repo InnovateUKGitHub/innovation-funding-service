@@ -27,10 +27,8 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 @Component
 public class CostTotalMessageQueue {
 
-    @Value("${ifs.finance-totals.authSecretKey}")
     private String financeTotalsKey;
 
-    @Autowired
     private HashBasedMacTokenHandler hashBasedMacTokenHandler;
 
     private static final Logger LOG = LoggerFactory.getLogger(CostTotalMessageQueue.class);
@@ -39,9 +37,13 @@ public class CostTotalMessageQueue {
 
     @Autowired
     public CostTotalMessageQueue(
-            @Qualifier("finance_data_service_adaptor") AbstractRestTemplateAdaptor restTemplateAdaptor
+            @Qualifier("finance_data_service_adaptor") AbstractRestTemplateAdaptor restTemplateAdaptor,
+            HashBasedMacTokenHandler hashBasedMacTokenHandler,
+            @Value("${ifs.finance-totals.authSecretKey}") String financeTotalsKey
     ) {
         this.restTemplateAdaptor = restTemplateAdaptor;
+        this.hashBasedMacTokenHandler = hashBasedMacTokenHandler;
+        this.financeTotalsKey = financeTotalsKey;
     }
 
     public ServiceResult<Void> sendCostTotals(List<FinanceCostTotalResource> financeCostTotalResources) {

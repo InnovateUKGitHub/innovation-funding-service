@@ -2,16 +2,19 @@ package org.innovateuk.ifs.finance.totals.queue;
 
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,23 +26,33 @@ public class CostTotalMessageQueueTest {
 
     private CostTotalMessageQueue costTotalMessageQueue;
 
+    private HashBasedMacTokenHandler hashBasedMacTokenHandler = new HashBasedMacTokenHandler();
+
     @Before
     public void setUp() throws Exception {
-        costTotalMessageQueue = new CostTotalMessageQueue(restTemplateAdaptorMock);
+        costTotalMessageQueue = new CostTotalMessageQueue(
+                restTemplateAdaptorMock,
+                new HashBasedMacTokenHandler(),
+                "supersecretkey"
+        );
     }
 
     @Test
-    public void sendCostTotals() {
+    public void sendCostTotals() throws Exception {
         String url = "/cost-totals";
 
         List<FinanceCostTotalResource> costTotalResources = newFinanceCostTotalResource()
                 .build(2);
 
-        when(restTemplateAdaptorMock.restPostWithEntityAsync(url, costTotalResources, Void.class))
+        HttpHeaders authHeader = new HttpHeaders();
+        authHeader.add("X-AUTH-TOKEN", hashBasedMacTokenHandler.calculateHash("supersecretkey",
+                toJson(costTotalResources)));
+
+        when(restTemplateAdaptorMock.restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class))
                 .thenReturn(new CompletableFuture<>());
 
         costTotalMessageQueue.sendCostTotals(costTotalResources);
 
-        verify(restTemplateAdaptorMock).restPostWithEntityAsync(url, costTotalResources, Void.class);
+        verify(restTemplateAdaptorMock).restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class);
     }
 }
