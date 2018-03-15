@@ -78,6 +78,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-654 Project Finance user has approved viability but date stamp is incorrect
 ...
 ...               IFS-1904 Only 1 row is saved on adding multiple new rows in eligibility > finances as internal user
+...
+...               IFS-2313 Project Setup: Ability to edit project duration
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -99,6 +101,14 @@ Project Finance user can see the finance check summary page
     And the user should see the text in the page    ${funders_panel_application_1_title}
     And the table row has expected values
     And the user should see the element    link=Projects in setup
+
+Project Finance can edit the duration of the Project
+    [Documentation]  IFS-2313
+    [Tags]
+    Given the user clicks the button/link         link=Edit
+    When the user enters text to a text field     id=durationInMonths  4
+    And the user clicks the button/link           jQuery=button:contains("Save and return to finances")
+    Then the user should see the element           jQuery=dd:contains("4 months")
 
 Project finance user cannot view viability section if this is not applicable for the org in question
     [Documentation]    INFUND-9517
