@@ -1,17 +1,28 @@
 package org.innovateuk.ifs.competitionsetup.form.application;
 
+import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
+import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.commons.validation.constraints.FieldLarger;
 
 import javax.validation.constraints.NotNull;
+import java.util.function.BiPredicate;
 
-@FieldLarger(firstField = "maxProjectDuration", secondField = "minProjectDuration", message = "{competition.setup.applicationdetails.min.projectduration.larger}")
+@FieldComparison(
+        firstField = "maxProjectDuration",
+        secondField = "minProjectDuration",
+        message = "{competition.setup.applicationdetails.min.projectduration.exceedsmax}",
+        predicate = ApplicationDetailsForm.MaxExceedsMinPredicateProvider.class)
+@FieldComparison(
+        firstField = "minProjectDuration",
+        secondField = "maxProjectDuration",
+        message = "{competition.setup.applicationdetails.max.projectduration.beneathmin}",
+        predicate = ApplicationDetailsForm.MinExceedsMaxPredicateProvider.class)
 public class ApplicationDetailsForm extends CompetitionSetupForm {
 
-    @NotNull(message = "{competition.setup.applicationdetails.min.projectduration}")
+    @NotNull
     private Integer minProjectDuration;
 
-    @NotNull(message = "{competition.setup.applicationdetails.max.projectduration}")
+    @NotNull
     private Integer maxProjectDuration;
 
     private boolean useResubmissionQuestion;
@@ -38,5 +49,21 @@ public class ApplicationDetailsForm extends CompetitionSetupForm {
 
     public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
+    }
+
+    public static class MaxExceedsMinPredicateProvider implements BiPredicateProvider<Integer, Integer> {
+        public MaxExceedsMinPredicateProvider() { }
+
+        public BiPredicate<Integer, Integer> predicate() {
+            return (max, min) -> max >= min;
+        }
+    }
+
+    public static class MinExceedsMaxPredicateProvider implements BiPredicateProvider<Integer, Integer> {
+        public MinExceedsMaxPredicateProvider() { }
+
+        public BiPredicate<Integer, Integer> predicate() {
+            return (min, max) -> min <= max;
+        }
     }
 }
