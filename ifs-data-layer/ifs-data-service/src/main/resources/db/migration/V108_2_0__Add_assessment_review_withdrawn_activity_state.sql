@@ -1,1 +1,0 @@
-INSERT INTO activity_state (activity_type, state) VALUES ('ASSESSMENT_PANEL_APPLICATION_INVITE', 'WITHDRAWN');

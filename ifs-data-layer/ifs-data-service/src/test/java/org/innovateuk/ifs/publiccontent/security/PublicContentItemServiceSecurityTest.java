@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +15,11 @@ import org.junit.Test;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTest<PublicContentItemService> {
@@ -55,12 +56,7 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
-                        .withRolesGlobal(singletonList(
-                                newRoleResource()
-                                        .withType(roleType)
-                                        .build()
-                                )
-                        )
+                        .withRolesGlobal(singletonList(Role.getByName(roleType.getName())))
                         .build());
         serviceCall.run();
     }

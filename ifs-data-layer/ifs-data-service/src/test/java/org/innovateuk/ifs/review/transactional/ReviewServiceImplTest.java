@@ -15,9 +15,8 @@ import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
@@ -45,7 +44,6 @@ import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewR
 import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
 import static org.innovateuk.ifs.review.transactional.ReviewServiceImpl.INVITE_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 import static org.junit.Assert.assertEquals;
@@ -152,12 +150,8 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .withApplication(applications.toArray(new Application[1]))
                 .build(1);
 
-        Role panelAssessorRole = newRole().withType(UserRoleType.PANEL_ASSESSOR).build();
-
-        Review review = new Review(applications.get(0), reviewParticipants.get(0), panelAssessorRole);
+        Review review = new Review(applications.get(0), reviewParticipants.get(0), Role.PANEL_ASSESSOR);
         review.setActivityState(acceptedActivityState);
-
-        when(roleRepositoryMock.findOneByName(panelAssessorRole.getName())).thenReturn(panelAssessorRole);
 
         when(reviewParticipantRepositoryMock
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
@@ -196,14 +190,13 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
         InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock,
                 reviewRepositoryMock, activityStateRepositoryMock, reviewRepositoryMock,
-                reviewRepositoryMock, reviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock, roleRepositoryMock);
+                reviewRepositoryMock, reviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
         inOrder.verify(applicationRepositoryMock)
                 .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
         inOrder.verify(reviewRepositoryMock)
                 .existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, applications.get(0), (State.WITHDRAWN));
-        inOrder.verify(roleRepositoryMock).findOneByName(panelAssessorRole.getName());
         inOrder.verify(activityStateRepositoryMock)
                 .findOneByActivityTypeAndState(ASSESSMENT_REVIEW, State.CREATED);
         inOrder.verify(reviewRepositoryMock)

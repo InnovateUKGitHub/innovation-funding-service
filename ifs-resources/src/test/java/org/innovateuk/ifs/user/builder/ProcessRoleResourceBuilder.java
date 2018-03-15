@@ -2,15 +2,15 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 /**
  * Builder for {@link ProcessRoleResource} entities.
@@ -55,7 +55,7 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
         return withArray((id, processRoleResource) -> processRoleResource.setId(id), ids);
     }
 
-    public ProcessRoleResourceBuilder withRole(RoleResource... roles) {
+    public ProcessRoleResourceBuilder withRole(Role... roles) {
         return withArray((role, processRoleResource) -> {
             setField("role", role.getId(), processRoleResource);
             setField("roleName", role.getName(), processRoleResource);

@@ -23,7 +23,7 @@ import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -55,9 +55,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -79,7 +77,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
 
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(organisationId).build();
 
-    RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
+    Role financeTeamRole = Role.PROJECT_FINANCE;
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(asList(financeTeamRole)).build();
     UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
 

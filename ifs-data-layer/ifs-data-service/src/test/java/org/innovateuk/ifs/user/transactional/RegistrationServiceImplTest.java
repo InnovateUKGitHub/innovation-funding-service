@@ -18,13 +18,10 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
-import org.innovateuk.ifs.user.builder.RoleBuilder;
-import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Ethnicity;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
@@ -43,6 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static java.time.ZonedDateTime.now;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -64,15 +62,11 @@ import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBu
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -97,10 +91,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     private User updatedUserInDB;
 
-    private RoleResource roleResource;
-
-    private Role role;
-
     @Mock
     private StandardPasswordEncoder standardPasswordEncoder;
 
@@ -112,8 +102,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void createUser() throws Exception {
-        Set<Role> roles = newRole().buildSet(1);
+    public void createUser() {
+        Set<Role> roles = singleton(Role.ASSESSOR);
         EthnicityResource ethnicityResource = newEthnicityResource().with(id(1L)).build();
         Ethnicity ethnicity = newEthnicity().withId(1L).build();
         AddressResource addressResource = newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
@@ -220,12 +210,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 build();
 
         Organisation selectedOrganisation = newOrganisation().withId(123L).build();
-        Role applicantRole = newRole().withName(APPLICANT.getName()).build();
+        Role applicantRole = Role.APPLICANT;
 
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
-        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -298,30 +287,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     }
 
     @Test
-    public void testCreateApplicantUserButRoleNotFound() {
-
-        UserResource userToCreate = newUserResource().
-                withFirstName("First").
-                withLastName("Last").
-                withEmail("email@example.com").
-                withPhoneNumber("01234 567890").
-                withPassword("thepassword").
-                withTitle(Mr).
-                build();
-
-        Organisation selectedOrganisation = newOrganisation().build();
-
-        when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(null);
-        when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
-        when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
-
-        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(notFoundError(Role.class, APPLICANT.getName())));
-    }
-
-    @Test
     public void testCreateApplicantUserButIdpCallFails() {
 
         UserResource userToCreate = newUserResource().
@@ -334,10 +299,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 build();
 
         Organisation selectedOrganisation = newOrganisation().build();
-        Role applicantRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-        when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
@@ -352,10 +315,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToCreate = newUserResource().withPassword("thepassword").build();
         Organisation selectedOrganisation = newOrganisation().build();
-        Role applicantRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
-    when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceFailure(new Error(RestIdentityProviderService.ServiceFailures.UNABLE_TO_CREATE_USER, INTERNAL_SERVER_ERROR)));
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceFailure(badRequestError("bad password")));
@@ -439,15 +400,13 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Test
     public void testCreateInternalUser() throws Exception {
-        RoleInvite roleInvite = newRoleInvite().withRole(newRole().withType(UserRoleType.PROJECT_FINANCE)).build();
-        Set<Role> roles = newRole().withType(UserRoleType.PROJECT_FINANCE).buildSet(1);
-        List<RoleResource> roleResources = newRoleResource().withId(roles.iterator().next().getId()).withType(UserRoleType.PROJECT_FINANCE).build(1);
+        RoleInvite roleInvite = newRoleInvite().withRole(Role.PROJECT_FINANCE).build();
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")
                 .withLastName("Last")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
-                .withRoles(roleResources)
+                .withRoles(singletonList(Role.PROJECT_FINANCE))
                 .build();
 
         User userToCreate = newUser()
@@ -455,11 +414,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withFirstName("First")
                 .withLastName("Last")
                 .withEmailAddress("email@example.com")
-                .withRoles(roles)
+                .withRoles(singleton(Role.PROJECT_FINANCE))
                 .build();
 
         when(roleInviteRepositoryMock.getByHash("SomeInviteHash")).thenReturn(roleInvite);
-        when(roleServiceMock.findByUserRoleType(UserRoleType.PROJECT_FINANCE)).thenReturn(serviceSuccess(roleResources.get(0)));
         when(passwordPolicyValidatorMock.validatePassword(anyString(), any(UserResource.class))).thenReturn(serviceSuccess());
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "Passw0rd123")).thenReturn(serviceSuccess("new-uid"));
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build());
@@ -505,15 +463,13 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         UserRoleType newRole = UserRoleType.SUPPORT;
         
         when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
-        when(roleServiceMock.findByUserRoleType(newRole)).thenReturn(serviceSuccess(roleResource));
-        when(roleMapperMock.mapToDomain(roleResource)).thenReturn(role);
         when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);
 
         ServiceResult<Void> result = service.editInternalUser(userToEdit, newRole);
 
         assertTrue(result.isSuccess());
         verify(userRepositoryMock).save(userInDB);
-        assertTrue(userInDB.getRoles().stream().anyMatch(role1 -> role1.equals(role)));
+        assertTrue(userInDB.getRoles().stream().anyMatch(role1 -> role1.equals(Role.SUPPORT)));
         assertEquals(userInDB.getFirstName(), userToEdit.getFirstName());
         assertEquals(userInDB.getLastName(), userToEdit.getLastName());
 
@@ -606,7 +562,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Test
     public void testCreateCompAdminOrganisationUser() {
 
-        RoleResource roleResource = newRoleResource().withType(COMP_ADMIN).withName(COMP_ADMIN.getName()).withUrl("dummyUrl").build();
+        Role roleResource = Role.COMP_ADMIN;
         UserResource userToCreate = newUserResource().
                 withFirstName("First").
                 withLastName("Last").
@@ -621,13 +577,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 build();
 
         Organisation selectedOrganisation = newOrganisation().withId(123L).build();
-        Role compAdminRole = newRole().withName(COMP_ADMIN.getName()).build();
 
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
-        when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(compAdminRole);
-        when(roleMapperMock.mapToDomain(roleResource)).thenReturn(compAdminRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
         Profile expectedProfile = newProfile().withId(7L).build();
@@ -648,7 +601,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Disability.YES, user.getDisability());
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
-            assertTrue(user.getRoles().contains(compAdminRole));
+            assertTrue(user.getRoles().contains(Role.COMP_ADMIN));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
@@ -702,14 +655,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withLastName("Doe")
                 .withCreatedOn(ZonedDateTime.now())
                 .withModifiedOn(ZonedDateTime.now())
-                .build();
-
-        roleResource = RoleResourceBuilder.newRoleResource()
-                .withName("support")
-                .build();
-
-        role = RoleBuilder.newRole()
-                .withName("support")
                 .build();
     }
 }
