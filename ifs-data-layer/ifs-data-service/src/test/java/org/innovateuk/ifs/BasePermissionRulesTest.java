@@ -8,9 +8,8 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -22,15 +21,12 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -47,17 +43,17 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected List<Role> allRoles;
 
-    protected List<RoleResource> allRolesResources;
+    protected List<Role> allRolesResources;
 
     protected List<UserResource> allGlobalRoleUsers;
 
     protected List<UserResource> allInternalUsers;
 
-    protected RoleResource compAdminRole() {
+    protected Role compAdminRole() {
         return getRoleResource(COMP_ADMIN);
     }
 
-    protected RoleResource assessorRole() { return getRoleResource(ASSESSOR); }
+    protected Role assessorRole() { return getRoleResource(ASSESSOR); }
 
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
@@ -79,7 +75,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(ASSESSOR);
     }
 
-    protected RoleResource systemRegistrationRole() {
+    protected Role systemRegistrationRole() {
         return getRoleResource(SYSTEM_REGISTRATION_USER);
     }
 
@@ -97,27 +93,23 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     @Before
     public void setupSetsOfData() {
-        allRoles = newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
-        allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
+        allRoles = asList(Role.values());
+        allRolesResources = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
         allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser());
 
-        // Set up global role method mocks
-        for (Role role : allRoles) {
-            when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
-        }
     }
 
     private UserResource createUserWithRoles(UserRoleType... types) {
-        List<RoleResource> roles = simpleMap(asList(types), this::getRoleResource);
+        List<Role> roles = simpleMap(asList(types), this::getRoleResource);
         return newUserResource().withRolesGlobal(roles).build();
     }
 
     protected UserResource getUserWithRole(UserRoleType type) {
-        return simpleFilter(allGlobalRoleUsers, user -> simpleMap(user.getRoles(), RoleResource::getName).contains(type.getName())).get(0);
+        return simpleFilter(allGlobalRoleUsers, user -> simpleMap(user.getRoles(), Role::getName).contains(type.getName())).get(0);
     }
 
-    private RoleResource getRoleResource(UserRoleType type) {
+    private Role getRoleResource(UserRoleType type) {
         return simpleFilter(allRolesResources, role -> role.getName().equals(type.getName())).get(0);
     }
 
@@ -134,7 +126,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected void setUpUserNotAsProjectManager(UserResource user) {
-        List<RoleResource> projectManagerUser = emptyList();
+        List<Role> projectManagerUser = emptyList();
         user.setRoles(projectManagerUser);
     }
 
@@ -155,38 +147,34 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected void setUpUserAsCompAdmin(ProjectResource project, UserResource user) {
-        List<RoleResource> compAdminRoleResource = newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1);
+        List<Role> compAdminRoleResource = singletonList(Role.COMP_ADMIN);
         user.setRoles(compAdminRoleResource);
     }
 
     protected void setUpUserNotAsCompAdmin(ProjectResource project, UserResource user) {
-        List<RoleResource> compAdminRoleResource = emptyList();
+        List<Role> compAdminRoleResource = emptyList();
         user.setRoles(compAdminRoleResource);
     }
 
     protected void setUpUserAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanceUser = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        List<Role> projectFinanceUser = singletonList(Role.PROJECT_FINANCE);
         user.setRoles(projectFinanceUser);
     }
 
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanceUser = emptyList();
+        List<Role> projectFinanceUser = emptyList();
         user.setRoles(projectFinanceUser);
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
-        Role partnerRole = newRole().build();
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, OrganisationResource organisation, boolean userIsPartner) {
-        Role partnerRole = newRole().build();
         ProjectUser partnerProjectUser = newProjectUser().build();
 
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
     }
 
@@ -202,15 +190,12 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
         org.innovateuk.ifs.application.domain.Application originalApplication = newApplication().build();
         Project projectEntity = newProject().withApplication(originalApplication).build();
-        Role leadApplicantRole = newRole().build();
-        Role partnerRole = newRole().build();
         Organisation leadOrganisation = newOrganisation().build();
         ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
-        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
-        when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
+        when(processRoleRepositoryMock.findOneByApplicationIdAndRole(projectEntity.getApplication().getId(), Role.LEADAPPLICANT)).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
         when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);

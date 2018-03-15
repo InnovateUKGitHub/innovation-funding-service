@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,6 @@ public abstract class RootPermissionRules {
 
     @Autowired
     protected ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    protected RoleRepository roleRepository;
 
     @Autowired
     protected UserRepository userRepository;

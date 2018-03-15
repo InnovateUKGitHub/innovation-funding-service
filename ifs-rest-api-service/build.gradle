@@ -8,9 +8,6 @@ if (project.hasProperty("profile")) {
 
 apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
 
-jar {
-    baseName = 'ifs-rest-api-service'
-}
 
 configurations {
     providedRuntime
@@ -30,10 +27,4 @@ dependencies {
     compile project(':ifs-resources')
     compile project(':ifs-commons')
     testCompile project(':ifs-resources').sourceSets.test.output
-}
-
-task client(type: Jar) {
-    from(sourceSets.main.output) {
-        exclude "org/innovateuk/ifs/Application.class"
-    }
 }

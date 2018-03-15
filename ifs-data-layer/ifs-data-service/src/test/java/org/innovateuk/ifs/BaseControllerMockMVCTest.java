@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.commons.rest.RestResultHandlingHttpMessageConverter;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -14,14 +13,10 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
-import org.innovateuk.ifs.rest.ErrorControllerAdvice;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.InjectMocks;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -32,9 +27,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.HandlerAdapter;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -48,13 +40,11 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -64,12 +54,10 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.util.ReflectionTestUtils.getField;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,8 +65,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * This is the base class for testing Controllers using MockMVC in addition to standard Mockito mocks.  Using MockMVC
  * allows Controllers to be tested via their routes and their responses' HTTP responses tested also.
- *
- * Created by dwatson on 02/10/15.
  */
 public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnitTestMocksTest {
 
@@ -103,33 +89,9 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     @Before
     public void setupMockMvc() {
-
-        MockMvc originalMvc = MockMvcBuilders.standaloneSetup(controller).build();
-
-        //
-        // We need to register custom MessageConverters with MockMVC manually.  Unfortunately there's no way to simply add a new
-        // one to the custom set of MessageConverters that comes out of the box.  Therefore we need to get the original set as
-        // a list, add our custom one to the list, and then set this list as the full set of MessageConverters
-        //
-        List<HandlerAdapter> defaultHandlerAdapters = (List<HandlerAdapter>) getField(getField(originalMvc, "servlet"), "handlerAdapters");
-        RequestMappingHandlerAdapter requestMappingHandlerAdapter = (RequestMappingHandlerAdapter) defaultHandlerAdapters.stream().filter(handler -> handler instanceof RequestMappingHandlerAdapter).collect(toList()).get(0);
-        List<HttpMessageConverter<?>> originalMessageConverters = requestMappingHandlerAdapter.getMessageConverters();
-        List<HttpMessageConverter<?>> nonMappingJackson2Converters = originalMessageConverters.stream().filter(converter -> !(converter instanceof MappingJackson2HttpMessageConverter)).collect(toList());
-
-        RestResultHandlingHttpMessageConverter customHttpMessageConverter = new RestResultHandlingHttpMessageConverter();
-        List<HttpMessageConverter<?>> newListOfConverters = combineLists(nonMappingJackson2Converters, customHttpMessageConverter);
-        HttpMessageConverter[] newListOfConvertersArray = newListOfConverters.toArray(new HttpMessageConverter[newListOfConverters.size()]);
-
-        mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setMessageConverters(newListOfConvertersArray)
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                .setControllerAdvice(new ErrorControllerAdvice())
-                .apply(documentationConfiguration(this.restDocumentation)
-                        .uris()
-                        .withScheme("http")
-                        .withHost("localhost")
-                        .withPort(8090))
-                .build();
+        mockMvc = new MockMvcConfigurer()
+                .restDocumentation(restDocumentation)
+                .getMockMvc(controller);
     }
 
     private static ResultMatcher contentObject(final Object json) throws JsonProcessingException {
