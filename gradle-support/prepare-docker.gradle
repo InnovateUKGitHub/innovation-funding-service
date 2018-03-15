@@ -14,6 +14,7 @@ task prepareDockerBaseInput {
     dependsOn build
     def inputDir = project.file("$project.buildDir/docker")
 
+
     doFirst {
         copy {
             from dockerDir
@@ -30,6 +31,8 @@ task prepareDockerBaseInput {
             into inputDir
         }
     }
+
+    outputs.dir inputDir
 }
 
 
@@ -50,4 +53,6 @@ task prepareDockerInput {
             into inputDir
         }
     }
+
+    outputs.dir inputDir
 }
