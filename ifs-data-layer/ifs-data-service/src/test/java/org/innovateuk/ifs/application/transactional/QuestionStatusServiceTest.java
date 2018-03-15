@@ -39,10 +39,10 @@ public class QuestionStatusServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void assignTest() throws Exception {
-        final Long applicationId = 1232L;
-        final Long questionId = 2228L;
-        final Long assigneeId = 51234L;
-        final Long assignedById = 72834L;
+        final long applicationId = 1232L;
+        final long questionId = 2228L;
+        final long assigneeId = 51234L;
+        final long assignedById = 72834L;
         QuestionApplicationCompositeId questionApplicationCompositeId = new QuestionApplicationCompositeId(questionId, applicationId);
 
         when(questionRepositoryMock.findOne(questionId)).thenReturn(newQuestion().build());

@@ -12,19 +12,19 @@ import java.util.List;
 public interface FormInputService {
 
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
-    ServiceResult<FormInputResource> findFormInput(Long id);
+    ServiceResult<FormInputResource> findFormInput(long id);
 
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
-    ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId);
+    ServiceResult<List<FormInputResource>> findByQuestionId(long questionId);
 
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
-    ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope);
+    ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(long questionId, FormInputScope scope);
 
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
-    ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId);
+    ServiceResult<List<FormInputResource>> findByCompetitionId(long competitionId);
 
     @NotSecured(value = "Anyone can see a form input", mustBeSecuredByOtherServices = false)
-    ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope);
+    ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(long competitionId, FormInputScope scope);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update form inputs")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
@@ -32,5 +32,5 @@ public interface FormInputService {
 
     @SecuredBySpring(value = "DELETE", description = "Only those with either comp admin or project finance roles can delete form inputs")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<Void> delete(Long id);
+    ServiceResult<Void> delete(long id);
 }

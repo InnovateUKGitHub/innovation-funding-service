@@ -28,27 +28,27 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     private FormInputMapper formInputMapper;
 
     @Override
-    public ServiceResult<FormInputResource> findFormInput(Long id) {
+    public ServiceResult<FormInputResource> findFormInput(long id) {
         return findFormInputEntity(id).andOnSuccessReturn(formInputMapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId) {
+    public ServiceResult<List<FormInputResource>> findByQuestionId(long questionId) {
         return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndActiveTrueOrderByPriorityAsc(questionId)));
     }
 
     @Override
-    public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope) {
+    public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(long questionId, FormInputScope scope) {
         return serviceSuccess(formInputToResources(formInputRepository.findByQuestionIdAndScopeAndActiveTrueOrderByPriorityAsc(questionId, scope)));
     }
 
     @Override
-    public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
+    public ServiceResult<List<FormInputResource>> findByCompetitionId(long competitionId) {
         return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndActiveTrueOrderByPriorityAsc(competitionId)));
     }
 
     @Override
-    public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
+    public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(long competitionId, FormInputScope scope) {
         return serviceSuccess(formInputToResources(formInputRepository.findByCompetitionIdAndScopeAndActiveTrueOrderByPriorityAsc(competitionId, scope)));
     }
 
@@ -60,7 +60,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     @Override
     @Transactional
-    public ServiceResult<Void> delete(Long id) {
+    public ServiceResult<Void> delete(long id) {
         formInputRepository.delete(formInputMapper.mapIdToDomain(id));
         return serviceSuccess();
     }
@@ -69,7 +69,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
         return simpleMap(filtered, formInput -> formInputMapper.mapToResource(formInput));
     }
 
-    private ServiceResult<FormInput> findFormInputEntity(Long id) {
+    private ServiceResult<FormInput> findFormInputEntity(long id) {
         return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
     }
 }

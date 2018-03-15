@@ -28,9 +28,9 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
 
     @Test
     public void markAsComplete() {
-        Long sectionId = 123L;
-        Long applicationId = 234L;
-        Long markedAsCompleteById = 345L;
+        long sectionId = 123L;
+        long applicationId = 234L;
+        long markedAsCompleteById = 345L;
         String expectedUrl = sectionRestUrl + "/mark-as-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
         List<ValidationMessages> messages = new ArrayList<>();
         setupPostWithRestResultExpectations(expectedUrl, validationMessagesListType(), null, messages);
@@ -42,9 +42,9 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
 
     @Test
     public void markAsNotRequired() {
-        Long sectionId = 123L;
-        Long applicationId = 234L;
-        Long markedAsCompleteById = 345L;
+        long sectionId = 123L;
+        long applicationId = 234L;
+        long markedAsCompleteById = 345L;
         String expectedUrl = sectionRestUrl + "/mark-as-not-required/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
         setupPostWithRestResultExpectations(expectedUrl, HttpStatus.OK);
 
@@ -55,9 +55,9 @@ public class SectionStatusRestServiceImplTest extends BaseRestServiceUnitTest<Se
 
     @Test
     public void markAsInComplete() {
-        Long sectionId = 123L;
-        Long applicationId = 234L;
-        Long markedAsCompleteById = 345L;
+        long sectionId = 123L;
+        long applicationId = 234L;
+        long markedAsCompleteById = 345L;
         String expectedUrl = sectionRestUrl + "/mark-as-in-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
         setupPostWithRestResultExpectations(expectedUrl, HttpStatus.OK);
 

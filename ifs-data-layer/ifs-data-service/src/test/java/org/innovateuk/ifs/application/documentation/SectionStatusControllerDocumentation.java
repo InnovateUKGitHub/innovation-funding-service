@@ -54,9 +54,9 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
     @Test
     public void getCompletedSections() throws Exception {
-        final Long organisationId = 1L;
+        final long organisationId = 1L;
 
-        final Long applicationId = 2L;
+        final long applicationId = 2L;
 
         final Set<Long> result = asSet(2L, 3L);
 
@@ -137,7 +137,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
     @Test
     public void allSectionsMarkedAsComplete() throws Exception {
-        final Long id = 1L;
+        final long id = 1L;
 
         when(sectionStatusServiceMock.childSectionsAreCompleteForAllOrganisations(null, id, null)).thenReturn(serviceSuccess(true));
         mockMvc.perform(get(baseURI + "/all-sections-marked-as-complete/{applicationId}", id))
@@ -151,7 +151,7 @@ public class SectionStatusControllerDocumentation extends BaseControllerMockMVCT
 
     @Test
     public void getIncompleteSections() throws Exception {
-        final Long applicationId = 1L;
+        final long applicationId = 1L;
 
         when(sectionStatusServiceMock.getIncompleteSections(applicationId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 

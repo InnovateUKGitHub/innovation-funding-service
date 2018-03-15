@@ -118,7 +118,6 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
                 .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
         when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
 
-
         service.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection);
 
         verify(setupStatusService, times(1)).findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId);

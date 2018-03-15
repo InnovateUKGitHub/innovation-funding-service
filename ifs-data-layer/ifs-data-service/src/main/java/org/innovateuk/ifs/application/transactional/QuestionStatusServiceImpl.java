@@ -171,7 +171,6 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
     }
 
-
     @Override
     public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(long applicationId, long assigneeId){
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
@@ -250,7 +249,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess(validationMessages);
     }
 
-    private QuestionStatus getQuestionStatusByApplicationIdAndAssigneeId(Question question, Long applicationId, Long assigneeId) {
+    private QuestionStatus getQuestionStatusByApplicationIdAndAssigneeId(Question question, long applicationId, long assigneeId) {
         if (question.hasMultipleStatuses()) {
             return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(question.getId(), applicationId, assigneeId);
         } else {
@@ -258,7 +257,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private QuestionStatus getQuestionStatusByMarkedAsCompleteId(Question question, Long applicationId, Long markedAsCompleteById) {
+    private QuestionStatus getQuestionStatusByMarkedAsCompleteId(Question question, long applicationId, long markedAsCompleteById) {
         if (question.hasMultipleStatuses()) {
             return questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteById(question.getId(), applicationId, markedAsCompleteById);
         } else {
@@ -266,7 +265,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private QuestionStatus findByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
+    private QuestionStatus findByQuestionIdAndApplicationId(long questionId, long applicationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
         if (questionStatuses != null && !questionStatuses.isEmpty()) {
             return questionStatuses.get(0);
