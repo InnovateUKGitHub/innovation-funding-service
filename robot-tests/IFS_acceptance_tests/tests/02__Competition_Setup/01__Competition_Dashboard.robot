@@ -90,13 +90,15 @@ Competition Opens automatically on date
     [Documentation]    INFUND-3004
     [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
-    Given the user should see the element                                           jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
+    Get competitions id and set it as suite variable  ${READY_TO_OPEN_COMPETITION_NAME}
+    ${openDate}  ${submissionDate} =  Save competition's current dates  ${competitionId}
+
+    Given the user should see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     When Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
     And the user reloads the page
-    Then the user should not see the element                                        jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    When the user navigates to the page                                             ${CA_Live}
-    Then the user should see the element                                            jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    [Teardown]  execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${READY_TO_OPEN_COMPETITION_OPEN_DATE_DB}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
+    When the user navigates to the page  ${CA_Live}
+    Then the user should see the element  jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
+    [Teardown]  Return the competition's milestones to their initial values  ${competitionId}  ${openDate}  ${submissionDate}
 
 Search existing applications
     [Documentation]    INFUND-3829

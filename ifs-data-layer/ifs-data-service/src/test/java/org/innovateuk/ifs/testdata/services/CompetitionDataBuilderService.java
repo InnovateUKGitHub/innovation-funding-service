@@ -11,12 +11,15 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.ASSESSOR_ACCEPTS;
+import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
@@ -175,31 +178,30 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
 
     private CompetitionDataBuilder withReadyToOpenStatusNonIfs(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
         return competitionBeforeMilestones.
-                withOpenDate(now().plusYears(2)).
-                withRegistrationDate(now().plusYears(2).plusDays(10)).
-                withSubmissionDate(now().plusYears(2).plusDays(20)).
-                withFundersPanelEndDate(now().plusYears(2).plusDays(20));
+                withOpenDate(startOfDay().plusYears(2)).
+                withRegistrationDate(startOfDay().plusYears(2).plusDays(10)).
+                withSubmissionDate(startOfDay().plusYears(2).plusDays(20)).
+                withFundersPanelEndDate(startOfDay().plusYears(2).plusDays(20));
     }
 
     private CompetitionDataBuilder withProjectSetupStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
         return withCalculatedMilestones(competitionBeforeMilestones, null, lineNumber).
-                withAssessorsNotifiedDate(now().minusDays(10)).
-                withAssessmentClosedDate(now().minusDays(5)).
-                withFeedbackReleasedDate(now().minusDays(2)).
+                withAssessorsNotifiedDate(startOfDay().minusDays(10)).
+                withAssessmentClosedDate(startOfDay().minusDays(5)).
+                withFeedbackReleasedDate(startOfDay().minusDays(2)).
                 withSetupComplete();
     }
 
     private CompetitionDataBuilder withInAssessmentStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSOR_ACCEPTS, lineNumber).
-                withAssessorsNotifiedDate(now().minusDays(2)).
-//                withMilestoneUpdate(now().plusYears(2), MilestoneType.ASSESSMENT_CLOSED).
+        return withCalculatedMilestones(competitionBeforeMilestones, ASSESSOR_ACCEPTS, lineNumber).
+                withAssessorsNotifiedDate(startOfDay().minusDays(2)).
                 withSetupComplete();
     }
 
     private CompetitionDataBuilder withFundersPanelStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
         return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSMENT_PANEL, lineNumber).//MilestoneType.ASSESSOR_DEADLINE).
-                withAssessorsNotifiedDate(now().minusDays(10)).
-                withAssessmentClosedDate(now().minusDays(2)).
+                withAssessorsNotifiedDate(startOfDay().minusDays(10)).
+                withAssessmentClosedDate(startOfDay().minusDays(2)).
                 withSetupComplete();
     }
 
@@ -208,36 +210,37 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     }
 
     private CompetitionDataBuilder withClosedStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.ASSESSOR_ACCEPTS, lineNumber).
+        return withCalculatedMilestones(competitionBeforeMilestones, ASSESSOR_ACCEPTS, lineNumber).
                 withSetupComplete();
     }
 
     private CompetitionDataBuilder withAssessorFeedbackStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
         return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.RELEASE_FEEDBACK, lineNumber).
-                withAssessorsNotifiedDate(now().minusDays(10)).
-                withAssessmentClosedDate(now().minusDays(2)).
-                withAssessorEndDate(now().plusYears(2)).
+                withAssessorsNotifiedDate(startOfDay().minusDays(10)).
+                withAssessmentClosedDate(startOfDay().minusDays(2)).
+                withAssessorEndDate(startOfDay().plusYears(2)).
                 withSetupComplete();
     }
 
     private CompetitionDataBuilder withOpenStatus(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
-        return withCalculatedMilestones(competitionBeforeMilestones, MilestoneType.SUBMISSION_DATE, lineNumber).
+        return withCalculatedMilestones(competitionBeforeMilestones, SUBMISSION_DATE, lineNumber).
                 withSetupComplete();
     }
 
     private CompetitionDataBuilder withOpenStatusNonIfs(CompetitionDataBuilder competitionBeforeMilestones, int lineNumber) {
+
         return competitionBeforeMilestones.
-                withOpenDate(now().minusDays(2)).
-                withRegistrationDate(now().plusYears(2)).
-                withSubmissionDate(now().plusYears(2).plusDays(10)).
-                withFundersPanelEndDate(now().plusYears(2).plusDays(20));
+                withOpenDate(startOfDay().minusDays(2)).
+                withRegistrationDate(startOfDay().plusYears(2)).
+                withSubmissionDate(startOfDay().plusYears(2).plusDays(10)).
+                withFundersPanelEndDate(startOfDay().plusYears(2).plusDays(20));
     }
 
     private CompetitionDataBuilder withCalculatedMilestones(CompetitionDataBuilder competitionBeforeMilestones,
                                                             MilestoneType milestoneWhereDatesStartInTheFuture, int lineNumber) {
 
-        ZonedDateTime earliestDate = now().minusYears(2).plusDays(lineNumber);
-        ZonedDateTime firstFutureDate = now().plusYears(2).plusDays(lineNumber);
+        ZonedDateTime earliestDate = startOfDay().minusYears(2).plusDays(lineNumber);
+        ZonedDateTime firstFutureDate = startOfDay().plusDays(lineNumber);
 
         List<MilestoneType> presetMilestoneTypes = simpleFilter(MilestoneType.values(), type ->
                 type.isPresetDate() && !type.equals(MilestoneType.REGISTRATION_DATE));
@@ -257,5 +260,9 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
         }
 
         return competitionBuilder;
+    }
+
+    private ZonedDateTime startOfDay() {
+        return now().truncatedTo(ChronoUnit.DAYS);
     }
 }

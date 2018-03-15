@@ -35,7 +35,7 @@ ${openCompetitionRTOCloseDate}       ${getSimpleMilestoneDate(${openCompetitionR
 ${openCompetitionManagementRTO}  ${SERVER}/management/competition/${openCompetitionRTO}
 ${applicationsForRTOComp}        ${SERVER}/management/competition/${openCompetitionRTO}/applications
 
-${openCompetitionBusinessRTO_name}      Photonics for RTO and Business
+${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 
@@ -189,6 +189,8 @@ ${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}  ${getPrettyMilestoneDateTime(
 ${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}  ${getPrettyLongMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "SUBMISSION_DATE")}
 ${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE_TIME}  ${getPrettyMilestoneDateTime(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "NOTIFICATIONS")}
 ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}  ${getSimpleMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "ASSESSOR_DEADLINE")}
+${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_ACCEPTS_PRETTY_DATE}  ${getPrettyMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "ASSESSOR_DEADLINE")}
+${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_PRETTY_DATE}  ${getPrettyMilestoneDate(${UPCOMING_COMPETITION_TO_ASSESS_ID}, "ASSESSOR_DEADLINE")}
 ${CURRENTLY_WAITING_UNTIL}      false
 
 # Organisation variables

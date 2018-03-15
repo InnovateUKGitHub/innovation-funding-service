@@ -136,6 +136,9 @@ for comp in cursor.fetchall():
     dates_for_milestone['prettyLongDateTime'] = milestoneDate.strftime('%A %-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
     dates_for_milestone['prettyLongTimeDate'] = milestoneDate.strftime('%-I:%M') + milestoneDate.strftime('%p').lower() + milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
     dates_for_milestone['dateTimeDb'] = milestoneDate.strftime('%Y-%m-%d %-I:%M:%S') if milestoneDate is not None else None
+    dates_for_milestone['day'] = milestoneDate.strftime('%-d') if milestoneDate is not None else None
+    dates_for_milestone['month'] = milestoneDate.strftime('%-m') if milestoneDate is not None else None
+    dates_for_milestone['year'] = milestoneDate.strftime('%Y') if milestoneDate is not None else None
 
     competition_milestones[competitionId] = milestones_for_competition
     milestones_for_competition[milestoneType] = dates_for_milestone
@@ -163,6 +166,15 @@ def getPrettyLongMilestoneTimeDate(competitionId, milestoneType):
 
 def getMilestoneDateTimeDb(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['dateTimeDb']
+
+def getMilestoneDay(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['day']
+
+def getMilestoneMonth(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['month']
+
+def getMilestoneYear(competitionId, milestoneType):
+    return competition_milestones[competitionId][milestoneType]['year']
 
 # disconnect from server
 cursor.close()
