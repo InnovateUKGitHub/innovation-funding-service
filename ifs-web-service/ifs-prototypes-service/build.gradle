@@ -1,0 +1,36 @@
+bootRun {
+    addResources = false
+}
+
+configurations {
+    providedRuntime
+}
+project.version = prototypesServiceVersion
+tagDocker.tag = prototypesServiceVersion
+osStageRemote.tag = prototypesServiceVersion
+tagDockerLocal.tag = prototypesServiceVersion
+osStageLocal.tag = prototypesServiceVersion
+
+jar {
+    baseName = 'ifs-prototypes-service'
+}
+
+dependencies {
+    compile project(':ifs-web-service:ifs-web-core')
+
+    // weirdly, removing this line from this web module will cause the build to pull in version 2.1.2.RELEASE
+    // despite 3.0.1.RELEASE being specified explicitly in ifs-web-core's build.gradle
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE"
+    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE"
+
+    testCompile project(':ifs-resources').sourceSets.test.output
+    testCompile project(":ifs-commons").sourceSets.test.output
+    testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
+
+    testCompile "com.openpojo:openpojo:0.8.6"
+    testCompile "org.skyscreamer:jsonassert:1.5.0"
+    testCompile "net.sf.opencsv:opencsv:2.3"
+}
+
+
+

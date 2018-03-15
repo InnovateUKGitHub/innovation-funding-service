@@ -11,6 +11,7 @@ ext.competitionMgtServiceVersion = project.properties['competition-mgt-service.v
 ext.projectSetupMgtServiceVersion = project.properties['project-setup-mgt-service.version'] ?: project.version
 ext.projectSetupServiceVersion = project.properties['project-setup-service.version'] ?: project.version
 ext.registrationServiceVersion = project.properties['registration-service.version'] ?: project.version
+ext.prototypesServiceVersion = project.properties['prototypes-service.version'] ?: project.version
 
 ext.spVersion = project.properties['sp.version'] ?: project.version
 ext.idpVersion = project.properties['idp.version'] ?: project.version

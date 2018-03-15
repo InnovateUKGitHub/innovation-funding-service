@@ -1,0 +1,10 @@
+version: '3'
+services:
+
+  prototypes:
+    hostname: prototypes
+    image: innovateuk/prototypes
+    ports:
+      - "1234:8080"
+    networks:
+      - ifs
