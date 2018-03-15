@@ -99,7 +99,7 @@ public class ErrorToObjectErrorConverterFactory {
     }
 
     public static FieldError newFieldError(Error e, String fieldName, Object rejectedValue) {
-        return newFieldError(e, fieldName, rejectedValue, e.getErrorKey());
+        return newFieldError(e, e.getFieldName(), rejectedValue, e.getErrorKey());
     }
 
     public static FieldError newFieldError(Error e, String fieldName, Object rejectedValue, String errorKey) {

@@ -49,10 +49,12 @@ public class ValidationMessages implements ErrorHolder, Serializable {
     }
 
     public <T> ValidationMessages(Set<ConstraintViolation<T>> constraintViolations) {
-        this.errors.addAll(simpleMap(constraintViolations,
+        List<Error> fieldErrors = simpleMap(constraintViolations,
                 violation -> fieldError(violation.getPropertyPath().toString(),
                         violation.getLeafBean(),
-                        violation.getMessageTemplate())));
+                        stripCurlyBrackets(violation.getMessageTemplate())));
+
+        errors.addAll(fieldErrors);
     }
 
     public ValidationMessages(Error... errors) {
@@ -196,11 +198,15 @@ public class ValidationMessages implements ErrorHolder, Serializable {
             return null;
         }
 
-        if (messageKey.startsWith("{") && messageKey.endsWith("}")) {
-            return messageKey.substring(1, messageKey.length() - 1);
+        return stripCurlyBrackets(messageKey);
+    }
+
+    private String stripCurlyBrackets(String key) {
+        if (key.startsWith("{") && key.endsWith("}")) {
+            return key.substring(1, key.length() - 1);
         }
 
-        return messageKey;
+        return key;
     }
 
     //
