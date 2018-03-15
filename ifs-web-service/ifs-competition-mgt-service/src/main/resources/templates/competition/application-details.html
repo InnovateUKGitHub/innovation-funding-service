@@ -43,7 +43,9 @@
                        th:field="*{minProjectDuration}"
                        type="number"
                        required="required"
-                       min="1" />
+                       min="1"
+                       max="60"
+                       data-lowerthan="maximum" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('maxProjectDuration')} ? 'form-group-error'">
                 <label class="form-label" for="maximum">
@@ -58,7 +60,9 @@
                        th:field="*{maxProjectDuration}"
                        type="number"
                        required="required"
-                       min="1" />
+                       min="1"
+                       max="60"
+                       data-higherthan="minimum" />
             </div>
         </fieldset>
 

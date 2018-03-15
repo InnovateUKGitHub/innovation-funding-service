@@ -77,6 +77,14 @@ IFS.core.formValidation = (function () {
         fields: '[type="tel"]:not([readonly])',
         messageInvalid: 'Please enter a valid phone number.'
       },
+      lowerthan: {
+        fields: '[data-lowerthan]',
+        messageInvalid: 'The minimum must be smaller than the maximum.'
+      },
+      higherthan: {
+        fields: '[data-higherthan]',
+        messageInvalid: 'The maximum must be larger than the minimum.'
+      },
       typeTimeout: 300,
       // data-{{type}}-showmessage will define how the errors will be shown,
       // none = nothing happens and we are just running the check
@@ -115,6 +123,8 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.tel.fields, function () { IFS.core.formValidation.checkTel(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.lowerthan.fields, function () { IFS.core.formValidation.checkLowerThan(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.higherthan.fields, function () { IFS.core.formValidation.checkHigherThan(jQuery(this)) })
 
       jQuery('body').on('change', '[data-set-section-valid]', function () {
         var section = jQuery(this).attr('data-set-section-valid')
@@ -595,6 +605,48 @@ IFS.core.formValidation = (function () {
           IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
           return true
         }
+      }
+    },
+    checkLowerThan: function (field) {
+      var attribute = 'lowerthan'
+      var lowerThanAttribute = 'higherthan'
+      var lowerThan = field.data(attribute)
+      var lowerThanField = jQuery('#' + lowerThan)
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, attribute)
+      var displayValidationMessagesLowerThan = IFS.core.formValidation.getMessageDisplaySetting(lowerThanField, lowerThanAttribute)
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, attribute)
+      var errorMessageLowerThan = IFS.core.formValidation.getErrorMessage(lowerThanField, lowerThanAttribute)
+
+      var maximumValue = parseInt(lowerThanField.val())
+      if (parseInt(field.val()) > maximumValue) {
+        IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+        IFS.core.formValidation.setInvalid(lowerThanField, errorMessageLowerThan, displayValidationMessagesLowerThan)
+        return false
+      } else {
+        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        IFS.core.formValidation.setValid(lowerThanField, errorMessageLowerThan, displayValidationMessagesLowerThan)
+        return true
+      }
+    },
+    checkHigherThan: function (field) {
+      var attribute = 'higherthan'
+      var higherThanAttribute = 'lowerthan'
+      var higherThan = field.data(attribute)
+      var higherThanField = jQuery('#' + higherThan)
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, attribute)
+      var displayValidationMessagesHigherThan = IFS.core.formValidation.getMessageDisplaySetting(higherThanField, higherThanAttribute)
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, attribute)
+      var errorMessageHigherThan = IFS.core.formValidation.getErrorMessage(higherThanField, higherThanAttribute)
+
+      var minimumValue = parseInt(higherThanField.val())
+      if (parseInt(field.val()) < minimumValue) {
+        IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+        IFS.core.formValidation.setInvalid(higherThanField, errorMessageHigherThan, displayValidationMessagesHigherThan)
+        return false
+      } else {
+        IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+        IFS.core.formValidation.setValid(higherThanField, errorMessageHigherThan, displayValidationMessagesHigherThan)
+        return true
       }
     },
     getErrorMessage: function (field, type) {
