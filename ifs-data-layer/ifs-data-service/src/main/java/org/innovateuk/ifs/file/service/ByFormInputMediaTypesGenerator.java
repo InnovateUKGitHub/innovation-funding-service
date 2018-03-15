@@ -29,7 +29,7 @@ public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long>
     public List<MediaType> apply(Long formInputId) {
         FormInputResource formInput = formInputService.findFormInput(formInputId).getSuccess();
 
-        Set<FileTypeCategory> fileTypeCategories = formInput.getAllowedFileTypesSet();
+        Set<FileTypeCategory> fileTypeCategories = formInput.getAllowedFileTypes();
 
         List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, FileTypeCategory::getMediaTypes));
 

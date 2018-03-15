@@ -11,11 +11,17 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,7 +29,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
@@ -37,7 +45,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
@@ -49,11 +56,9 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -71,7 +76,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     private Application application;
     private Organisation organisation;
-    private Role leadApplicantRole;
     private User user;
     private User u;
     private ProcessRole leadApplicantProcessRole;
@@ -88,15 +92,13 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
-        leadApplicantRole = newRole(LEADAPPLICANT).build();
-
         user = newUser().
                 withId(userId).
                 build();
 
         leadApplicantProcessRole = newProcessRole().
                 withOrganisationId(organisation.getId()).
-                withRole(leadApplicantRole).
+                withRole(Role.LEADAPPLICANT).
                 withUser(user).
                 build();
 
@@ -155,8 +157,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testCreateProjectFromApplication() {
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-
         ProjectResource newProjectResource = newProjectResource().build();
 
         PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
@@ -170,8 +170,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
                 withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
                 build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
@@ -243,7 +241,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Long userId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(newRoleResource().withType(IFS_ADMINISTRATOR).build()))
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
                 .withId(userId)
                 .build();
         User user = newUser()
@@ -268,7 +266,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Long userId = 987L;
         Project project = newProject().withId(projectId).build();
         UserResource loggedInUser = newUserResource()
-                .withRolesGlobal(singletonList(newRoleResource().withType(IFS_ADMINISTRATOR).build()))
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
                 .withId(userId)
                 .build();
         User user = newUser()
@@ -292,7 +290,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Long projectId = 456L;
         Project project = newProject().withId(projectId).build();
         UserResource user = newUserResource()
-                .withRolesGlobal(singletonList(newRoleResource().withType(IFS_ADMINISTRATOR).build()))
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
                 .build();
         setLoggedInUser(user);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
@@ -381,8 +379,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testCreateProjectsFromFundingDecisions() {
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-
         ProjectResource newProjectResource = newProjectResource().build();
 
         PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
@@ -396,8 +392,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectUsers(asList(leadPartnerProjectUser, newProjectUser().build())).
                 withPartnerOrganisations(singletonList(savedProjectPartnerOrganisation)).
                 build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
 
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenReturn(savedProject);
@@ -442,10 +436,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testCreateProjectsFromFundingDecisionsSaveFails() throws Exception {
 
-        Role partnerRole = newRole().withType(PARTNER).build();
-
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
-
         Project newProjectExpectations = createProjectExpectationsFromOriginalApplication();
         when(projectRepositoryMock.save(newProjectExpectations)).thenThrow(new DataIntegrityViolationException("dummy constraint violation"));
 
@@ -481,7 +471,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                                 projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());
-                assertEquals(PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
+                assertEquals(Role.PARTNER.getName(), matchingProjectUser.get(0).getRole().getName());
                 assertEquals(project, matchingProjectUser.get(0).getProcess());
             });
 

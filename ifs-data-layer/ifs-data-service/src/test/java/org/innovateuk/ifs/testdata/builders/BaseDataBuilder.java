@@ -13,10 +13,10 @@ import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
-import org.innovateuk.ifs.assessment.transactional.AssessmentInviteService;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -64,11 +64,11 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.*;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.repository.EthnicityRepository;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
@@ -79,8 +79,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -117,7 +117,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected UserRepository userRepository;
     protected ProfileRepository profileRepository;
     protected RegistrationService registrationService;
-    protected RoleRepository roleRepository;
     protected OrganisationRepository organisationRepository;
     protected TokenRepository tokenRepository;
     protected TokenService tokenService;
@@ -140,7 +139,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
     protected EthnicityRepository ethnicityRepository;
-    protected RoleService roleService;
     protected AssessmentInviteRepository assessmentInviteRepository;
     protected CompetitionRepository competitionRepository;
     protected CompetitionFunderRepository competitionFunderRepository;
@@ -201,7 +199,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         organisationTypeService = serviceLocator.getBean(OrganisationTypeService.class);
         userRepository = serviceLocator.getBean(UserRepository.class);
         registrationService = serviceLocator.getBean(RegistrationService.class);
-        roleRepository = serviceLocator.getBean(RoleRepository.class);
         organisationRepository = serviceLocator.getBean(OrganisationRepository.class);
         tokenRepository = serviceLocator.getBean(TokenRepository.class);
         tokenService = serviceLocator.getBean(TokenService.class);
@@ -225,7 +222,6 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
         ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
-        roleService = serviceLocator.getBean(RoleService.class);
         assessmentInviteRepository = serviceLocator.getBean(AssessmentInviteRepository.class);
         competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         assessorService = serviceLocator.getBean(AssessorService.class);
@@ -385,7 +381,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(email, usersByEmailAddressInternal, () -> {
             User user = userRepository.findByEmail(email).get();
             return newUserResource().
-                    withRolesGlobal(newRoleResource().withType(role).build(1)).
+                    withRolesGlobal(asList(Role.getByName(role.getName()))).
                     withId(user.getId()).
                     build();
         });
