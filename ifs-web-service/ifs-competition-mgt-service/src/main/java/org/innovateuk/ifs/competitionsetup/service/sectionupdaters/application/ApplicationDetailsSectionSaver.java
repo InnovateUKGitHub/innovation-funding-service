@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -12,6 +13,7 @@ import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSecti
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.*;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.APPLICATION_DETAILS;
@@ -21,6 +23,9 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection
  */
 @Service
 public class ApplicationDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSubsectionSaver {
+
+    @Autowired
+	private SmartValidator validator;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -40,11 +45,22 @@ public class ApplicationDetailsSectionSaver extends AbstractSectionSaver impleme
 
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+
 		ApplicationDetailsForm form = (ApplicationDetailsForm) competitionSetupForm;
-		competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
-		competition.setMaxProjectDuration(form.getMaxProjectDuration());
-		competition.setMinProjectDuration(form.getMinProjectDuration());
-		return competitionSetupRestService.update(competition).toServiceResult();
+
+		BindingResult errors = new BeanPropertyBindingResult(form, "competitionSetupForm");
+
+		ValidationUtils.invokeValidator(validator, competitionSetupForm, errors);
+
+		if(errors.hasErrors()) {
+			return ServiceResult.serviceFailure(new ValidationMessages(errors).getErrors());
+		}
+		else {
+			competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
+			competition.setMaxProjectDuration(form.getMaxProjectDuration());
+			competition.setMinProjectDuration(form.getMinProjectDuration());
+			return competitionSetupRestService.update(competition).toServiceResult();
+		}
 	}
 
 	@Override
