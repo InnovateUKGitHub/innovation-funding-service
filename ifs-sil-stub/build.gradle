@@ -3,9 +3,9 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply plugin: 'org.asciidoctor.convert'
-apply from: rootProject.file("java-spring-boot.gradle")
-apply from: rootProject.file("openshift-build.gradle")
-apply from: rootProject.file("prepare-docker.gradle")
+apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
+apply from: rootProject.file("gradle-support/openshift-build.gradle")
+apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 configurations {
     providedRuntime
@@ -13,10 +13,6 @@ configurations {
 
 ext {
     snippetsDir = file('build/generated-snippets')
-}
-
-jar {
-    baseName = 'ifs-sil-stub'
 }
 
 dependencies {

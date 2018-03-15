@@ -7,14 +7,13 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
@@ -23,10 +22,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -151,8 +147,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         UserResource user = newUserResource().build();
 
         setupFinanceContactExpectations(project, user);
-        List<RoleResource> financeContact = newRoleResource().withType(UserRoleType.FINANCE_CONTACT).build(1);
-        financeContact.add(newRoleResource().withType(UserRoleType.PARTNER).build());
+        List<Role> financeContact = asList(Role.FINANCE_CONTACT, Role.PARTNER);
         user.setRoles(financeContact);
 
         assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(ProjectCompositeId.id(project.getId()), user));
@@ -160,13 +155,10 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
 
     private void setupFinanceContactExpectations(ProjectResource project, UserResource user) {
-        Role partnerRole = newRole().build();
         List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
 
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
 
-        when(roleRepositoryMock.findOneByName(PROJECT_FINANCE_CONTACT.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(partnerProjectUser);
     }
 

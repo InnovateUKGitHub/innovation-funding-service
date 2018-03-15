@@ -13,14 +13,12 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.*;
@@ -294,7 +292,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void testCreateInternalUser(){
         setLoggedInUser(null);
 
-        List<RoleResource> roleResources = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1);
+        List<Role> roleResources = singletonList(Role.PROJECT_FINANCE);
 
         InternalUserRegistrationResource internalUserRegistrationResource = newInternalUserRegistrationResource()
                 .withFirstName("First")

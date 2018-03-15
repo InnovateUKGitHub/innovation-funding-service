@@ -11,7 +11,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -27,10 +27,9 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.RoleService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +45,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_NOTIFY_FAILED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -60,13 +58,10 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     private String webBaseUrl;
 
     @Autowired
-    private CompetitionInviteService competitionInviteService;
+    private AssessmentInviteService assessmentInviteService;
 
     @Autowired
     private RegistrationService registrationService;
-
-    @Autowired
-    private RoleService roleService;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
@@ -108,15 +103,13 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
         // TODO: Handle failures gracefully and hand them back to the webservice
         return retrieveInvite(inviteHash).andOnSuccess(inviteResource -> {
             userRegistrationResource.setEmail(inviteResource.getEmail());
-            return getAssessorRoleResource().andOnSuccess(assessorRole -> {
-                userRegistrationResource.setRoles(singletonList(assessorRole));
-                return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
-                    assignCompetitionParticipantsToUser(created);
-                    Profile profile = profileRepository.findOne(created.getProfileId());
-                    // profile is guaranteed to have been created by createUser(...)
-                    profile.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
-                    profileRepository.save(profile);
-                });
+            userRegistrationResource.setRoles(singletonList(Role.ASSESSOR));
+            return createUser(userRegistrationResource).andOnSuccessReturnVoid(created -> {
+                assignCompetitionParticipantsToUser(created);
+                Profile profile = profileRepository.findOne(created.getProfileId());
+                // profile is guaranteed to have been created by createUser(...)
+                profile.addInnovationArea(innovationAreaMapper.mapToDomain(inviteResource.getInnovationArea()));
+                profileRepository.save(profile);
             });
         });
     }
@@ -190,21 +183,17 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<User> getAssessor(long assessorId) {
-        return find(userRepository.findByIdAndRolesName(assessorId, ASSESSOR.getName()), notFoundError(User.class, assessorId));
+        return find(userRepository.findByIdAndRoles(assessorId, Role.ASSESSOR), notFoundError(User.class, assessorId));
     }
 
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {
-        return competitionInviteService.getInvite(inviteHash);
+        return assessmentInviteService.getInvite(inviteHash);
     }
 
     private void assignCompetitionParticipantsToUser(User user) {
-        List<CompetitionAssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
+        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
         competitionParticipants.forEach(competitionParticipant -> competitionParticipant.setUser(user));
         competitionParticipantRepository.save(competitionParticipants);
-    }
-
-    private ServiceResult<RoleResource> getAssessorRoleResource() {
-        return roleService.findByUserRoleType(ASSESSOR);
     }
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {

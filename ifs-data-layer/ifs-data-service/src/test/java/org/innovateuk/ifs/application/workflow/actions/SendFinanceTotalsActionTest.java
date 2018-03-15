@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.workflow.actions;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.finance.sync.service.ApplicationFinanceTotalsSender;
+import org.innovateuk.ifs.finance.totals.service.ApplicationFinanceTotalsSender;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

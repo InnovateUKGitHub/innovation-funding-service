@@ -59,7 +59,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
         final Long competitionId = 1L;
 
         when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
-        when(applicationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
+        when(applicationNotificationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/postSubmission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk())

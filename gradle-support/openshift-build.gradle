@@ -1,0 +1,57 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply from: rootProject.file("gradle-support/openshift-methods.gradle")
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+    }
+}
+
+task buildDocker(type: DockerBuildImage) {
+    tag = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
+    inputDir = project.projectDir
+}
+
+task tagDocker(type: DockerTagImage) {
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
+}
+
+task osStageRemote(type: DockerPushImage) {
+    dependsOn tagDocker
+    registryCredentials = getRemoteOCCredentials()
+    imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
+}
+
+task tagDockerLocal(type: DockerTagImage) {
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = "dummy"
+    doFirst {
+        if (repository == "dummy") {
+            repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        }
+    }
+    tag = project.version
+}
+
+task osStageLocal(type: DockerPushImage) {
+    dependsOn tagDockerLocal
+    imageName = "dummy"
+    doFirst {
+        if (imageName == "dummy") {
+            registryCredentials = getLocalOCCredentials()
+            imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        }
+    }
+    tag = project.version
+}

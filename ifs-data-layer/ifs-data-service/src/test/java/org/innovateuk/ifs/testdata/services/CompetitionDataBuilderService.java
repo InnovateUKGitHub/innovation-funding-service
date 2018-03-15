@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.services;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -15,15 +16,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitionFunders;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
@@ -187,7 +187,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
     }
 
     private void setDefaultCompAdmin() {
-        setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_REGISTRATION_USER)).build());
         testService.doWithinTransaction(() ->
                 setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccess())
         );

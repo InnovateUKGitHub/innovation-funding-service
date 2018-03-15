@@ -2,15 +2,31 @@ def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply from: "fractal.gradle";
 
+
+buildscript {
+
+    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+
+    ext {
+        thymeleafVersion = ext['thymeleaf.version']
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+
+    }
+}
+
 subprojects {
 
 
-    apply from: rootProject.file("java-spring-boot.gradle")
+    apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
     // ifs-web-core is not a docker project.
     if (it.name != 'ifs-web-core') {
 
-        apply from: rootProject.file("openshift-build.gradle")
-        apply from: rootProject.file("prepare-docker.gradle")
+        apply from: rootProject.file("gradle-support/openshift-build.gradle")
+        apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
         ext.dockerDir = "$project.parent.projectDir/docker/"
 

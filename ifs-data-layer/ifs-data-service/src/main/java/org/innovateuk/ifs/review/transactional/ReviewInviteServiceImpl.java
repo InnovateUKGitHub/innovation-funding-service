@@ -30,11 +30,9 @@ import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -132,9 +130,6 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private ActivityStateRepository activityStateRepository;
 
     enum Notifications {
@@ -224,7 +219,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
 
     @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            final Page<CompetitionAssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId, pageable);
+            final Page<AssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId, pageable);
 
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
@@ -237,7 +232,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        List<CompetitionAssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId);
+        List<AssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }
@@ -427,7 +422,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     }
 
     private ServiceResult<ReviewInvite> getByEmailAndCompetition(String email, long competitionId) {
-        return find(reviewInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
+        return find(reviewInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInvite.class, email, competitionId));
     }
 
     private boolean isUserCompliant(ReviewInvite competitionInvite) {
@@ -466,10 +461,9 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(ReviewParticipant participant) {
         Competition competition = participant.getProcess();
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        final Role panelAssessorRole = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
         final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         applicationsInPanel.forEach(application -> {
-            Review review = new Review(application, participant, panelAssessorRole);
+            Review review = new Review(application, participant, Role.PANEL_ASSESSOR);
             review.setActivityState(pendingActivityState);
             reviewRepository.save(review);
         });
@@ -499,7 +493,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     }
 
     private ServiceResult<ReviewInvite> getByHash(String inviteHash) {
-        return find(reviewInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
+        return find(reviewInviteRepository.getByHash(inviteHash), notFoundError(AssessmentInvite.class, inviteHash));
     }
 
     private static ServiceResult<ReviewParticipant> accept(ReviewParticipant participant) {

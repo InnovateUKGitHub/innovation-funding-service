@@ -1,22 +1,8 @@
 
 subprojects {
-    apply from: rootProject.file("java-spring-boot.gradle")
+    apply from: rootProject.file("gradle-support/java-spring-boot.gradle")
     ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 }
-
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
-        classpath 'org.flywaydb:flyway-core:4.0'
-    }
-}
-
-
 
 ext {
     snippetsDir = file('build/generated-snippets')

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application.workflow.actions;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.finance.sync.service.ApplicationFinanceTotalsSender;
+import org.innovateuk.ifs.finance.totals.service.ApplicationFinanceTotalsSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

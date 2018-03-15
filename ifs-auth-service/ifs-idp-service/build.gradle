@@ -16,7 +16,7 @@ def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?: "changeit"
 
-apply from: rootProject.file("new-relic.gradle")
+apply from: rootProject.file("gradle-support/new-relic.gradle")
 
 
 task prepareDockerFile {
