@@ -84,8 +84,6 @@ public class AssessorDashboardViewModel {
 
     public void setInterviewPanelInvites(List<AssessorDashboardInterviewInviteViewModel> interviewPanelInvites) {
         this.interviewPanelInvites = interviewPanelInvites;
-
-
     }
 
     public AssessorProfileStatusViewModel getProfileStatus() {
