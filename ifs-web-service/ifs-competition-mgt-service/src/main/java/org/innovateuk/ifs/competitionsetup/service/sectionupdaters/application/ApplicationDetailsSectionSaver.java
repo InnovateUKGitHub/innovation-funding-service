@@ -13,7 +13,10 @@ import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSecti
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.*;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Set;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.APPLICATION_DETAILS;
@@ -25,7 +28,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection
 public class ApplicationDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSubsectionSaver {
 
     @Autowired
-	private SmartValidator validator;
+	private Validator validator;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -47,13 +50,10 @@ public class ApplicationDetailsSectionSaver extends AbstractSectionSaver impleme
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 
 		ApplicationDetailsForm form = (ApplicationDetailsForm) competitionSetupForm;
+		Set<ConstraintViolation<CompetitionSetupForm>> violations = validator.validate(competitionSetupForm);
 
-		BindingResult errors = new BeanPropertyBindingResult(form, "competitionSetupForm");
-
-		ValidationUtils.invokeValidator(validator, competitionSetupForm, errors);
-
-		if(errors.hasErrors()) {
-			return ServiceResult.serviceFailure(new ValidationMessages(errors).getErrors());
+		if(!violations.isEmpty()) {
+			return ServiceResult.serviceFailure(new ValidationMessages(violations).getErrors());
 		}
 		else {
 			competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());

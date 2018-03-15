@@ -104,7 +104,7 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.isFailure());
         assertThat("minProjectDuration")
                 .isEqualTo(result.getFailure().getErrors().get(0).getFieldName());
-        assertThat("The minimum project duration cannot be equal to or exceed the maximum project duration.")
+        assertThat("{competition.setup.applicationdetails.min.projectduration.larger}")
                 .isEqualTo(result.getFailure().getErrors().get(0).getErrorKey());
 
         verifyZeroInteractions(competitionSetupRestServiceMock);
@@ -122,7 +122,7 @@ public class ApplicationDetailsSectionSaverTest {
 
         assertThat(result.isFailure()).isTrue();
         assertThat("minProjectDuration").isEqualTo(result.getFailure().getErrors().get(0).getFieldName());
-        assertThat("The minimum project duration cannot be equal to or exceed the maximum project duration.")
+        assertThat("{competition.setup.applicationdetails.min.projectduration.larger}")
                 .isEqualTo(result.getFailure().getErrors().get(0).getErrorKey());
 
         verifyZeroInteractions(competitionSetupRestServiceMock);

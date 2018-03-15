@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 
+import javax.validation.ConstraintViolation;
 import java.io.Serializable;
 import java.util.*;
 
@@ -45,6 +46,13 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
     public ValidationMessages(Long objectId, BindingResult bindingResult) {
         populateFromBindingResult(objectId, bindingResult);
+    }
+
+    public <T> ValidationMessages(Set<ConstraintViolation<T>> constraintViolations) {
+        this.errors.addAll(simpleMap(constraintViolations,
+                violation -> fieldError(violation.getPropertyPath().toString(),
+                        violation.getLeafBean(),
+                        violation.getMessageTemplate())));
     }
 
     public ValidationMessages(Error... errors) {
