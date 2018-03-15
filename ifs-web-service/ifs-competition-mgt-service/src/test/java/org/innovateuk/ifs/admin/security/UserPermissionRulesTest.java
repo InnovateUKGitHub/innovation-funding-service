@@ -2,7 +2,10 @@ package org.innovateuk.ifs.admin.security;
 
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCompositeId;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,9 +13,7 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.getLoggedInUser;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +26,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void projectFinanceUserCanBeAccessed() {
-        RoleResource role = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build();
+        Role role = Role.PROJECT_FINANCE;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -34,7 +35,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void compAdminUserCanBeAccessed() {
-        RoleResource role = newRoleResource().withType(UserRoleType.COMP_ADMIN).build();
+        Role role = Role.COMP_ADMIN;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -43,7 +44,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void supportUserCanBeAccessed() {
-        RoleResource role = newRoleResource().withType(UserRoleType.SUPPORT).build();
+        Role role = Role.SUPPORT;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -52,7 +53,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void innovationLeadUserCanBeAccessed() {
-        RoleResource role = newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build();
+        Role role = Role.INNOVATION_LEAD;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.internalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -61,7 +62,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void projectFinanceUserCanBeEdited() {
-        RoleResource role = newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build();
+        Role role = Role.PROJECT_FINANCE;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -70,7 +71,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void compAdminUserCanBeEdited() {
-        RoleResource role = newRoleResource().withType(UserRoleType.COMP_ADMIN).build();
+        Role role = Role.COMP_ADMIN;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -79,7 +80,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void supportUserCanBeEdited() {
-        RoleResource role = newRoleResource().withType(UserRoleType.SUPPORT).build();
+        Role role = Role.SUPPORT;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -88,7 +89,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void innovationLeadUserCanBeEdited() {
-        RoleResource role = newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build();
+        Role role = Role.INNOVATION_LEAD;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.ACTIVE).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertTrue(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -97,7 +98,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     @Test
     public void inactiveUserCannotBeEdited() {
-        RoleResource role = newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build();
+        Role role = Role.INNOVATION_LEAD;
         UserResource user = newUserResource().withRolesGlobal(singletonList(role)).withStatus(UserStatus.INACTIVE).build();
         when(userServiceMock.findById(1L)).thenReturn(user);
         assertFalse(rules.canEditInternalUser(UserCompositeId.id(1L), getLoggedInUser()));
@@ -106,7 +107,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Before
     public void setUp() {
         super.setUp();
-        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(IFS_ADMINISTRATOR).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build();
         setLoggedInUser(user);
     }
 }

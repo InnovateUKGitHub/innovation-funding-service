@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.builder.ApplicationBuilder;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -18,15 +21,22 @@ import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -54,10 +64,7 @@ import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormIn
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
@@ -132,7 +139,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         org2 = newOrganisation().withId(345L).build();
         org3 = newOrganisation().withId(456L).build();
 
-        roles = newProcessRole().withRole(UserRoleType.LEADAPPLICANT, UserRoleType.APPLICANT, UserRoleType.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
+        roles = newProcessRole().withRole(Role.LEADAPPLICANT, Role.APPLICANT, Role.COLLABORATOR).withOrganisationId(234L, 345L, 456L).build(3).toArray(new ProcessRole[0]);
         section = newSection().withQuestions(Arrays.asList(multiAnswerQuestion, leadAnswerQuestion)).build();
         comp = newCompetition().withSections(Arrays.asList(section)).withMaxResearchRatio(30).build();
         app = newApplication().withCompetition(comp).withProcessRoles(roles).build();
@@ -150,8 +157,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Competition competition = newCompetition().build();
         User user = newUser().build();
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
-        Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-        ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
+        ProcessRole processRole = newProcessRole().withUser(user).withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
         ApplicationState applicationState = ApplicationState.CREATED;
 
         Application application = newApplication().
@@ -164,7 +170,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        when(roleRepositoryMock.findOneByName(leadApplicantRole.getName())).thenReturn(leadApplicantRole);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
@@ -184,7 +189,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
             assertNull(createdProcessRole.getId());
             assertEquals(application.getId(), createdProcessRole.getApplicationId());
             assertEquals(organisation.getId(), createdProcessRole.getOrganisationId());
-            assertEquals(leadApplicantRole.getId(), createdProcessRole.getRole().getId());
+            assertEquals(Role.LEADAPPLICANT, createdProcessRole.getRole());
             assertEquals(user.getId(), createdProcessRole.getUser().getId());
 
             return true;
@@ -221,10 +226,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Organisation organisation1 = new Organisation(1L, "test organisation 1");
         Organisation organisation2 = new Organisation(2L, "test organisation 2");
 
-        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(new Role()).withOrganisationId( organisation1.getId()).build();
-        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(new Role()).withOrganisationId( organisation1.getId()).build();
-        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(new Role()).withOrganisationId( organisation2.getId()).build();
-        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(new Role()).withOrganisationId( organisation2.getId()).build();
+        ProcessRole testProcessRole1 = newProcessRole().withId(0L).withUser(testUser1).withApplication(testApplication1).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
+        ProcessRole testProcessRole2 = newProcessRole().withId(1L).withUser(testUser1).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId( organisation1.getId()).build();
+        ProcessRole testProcessRole3 = newProcessRole().withId(2L).withUser(testUser2).withApplication(testApplication2).withRole(Role.APPLICANT).withOrganisationId( organisation2.getId()).build();
+        ProcessRole testProcessRole4 = newProcessRole().withId(3L).withUser(testUser2).withApplication(testApplication3).withRole(Role.APPLICANT).withOrganisationId( organisation2.getId()).build();
 
         when(userRepositoryMock.findOne(1L)).thenReturn(testUser1);
         when(userRepositoryMock.findOne(2L)).thenReturn(testUser2);
@@ -259,13 +264,65 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     }
 
     @Test
+    public void wildcardSearchByIdWithResultsOnSinglePage() throws Exception {
+
+        String searchString = "12";
+        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
+
+        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 5);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 5, 1, 5);
+
+    }
+
+    @Test
+    public void wildcardSearchByIdWithResultsAcrossMultiplePages() throws Exception {
+
+        String searchString = "12";
+        ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource().build();
+
+        Pageable pageable = setUpMockingWildcardSearchById(searchString, applicationResource, 2);
+
+        ServiceResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageable);
+
+        assertWildcardSearchById(result, applicationResource, 2, 3, 5);
+
+    }
+
+    private Pageable setUpMockingWildcardSearchById(String searchString, ApplicationResource applicationResource,
+                                                    int pageSize) {
+
+        List<Application> applications = ApplicationBuilder.newApplication().build(5);
+
+        Pageable pageable = new PageRequest(0, pageSize);
+        Page<Application> pagedResult = new PageImpl<>(applications, pageable, applications.size());
+
+        when(applicationRepositoryMock.searchByIdLike(searchString, pageable)).thenReturn(pagedResult);
+        when(applicationMapperMock.mapToResource(any(Application.class))).thenReturn(applicationResource);
+
+        return pageable;
+    }
+
+    private void assertWildcardSearchById(ServiceResult<ApplicationPageResource> result, ApplicationResource applicationResource,
+                                          int pageSize, int totalPages, int contentSize) {
+        assertTrue(result.isSuccess());
+
+        ApplicationPageResource resultObject = result.getSuccess();
+
+        assertEquals(pageSize, resultObject.getSize());
+        assertEquals(totalPages, resultObject.getTotalPages());
+        assertEquals(contentSize, resultObject.getContent().size());
+        assertEquals(applicationResource, resultObject.getContent().get(0));
+    }
+
+    @Test
     public void applicationControllerCanCreateApplication() throws Exception {
         Long competitionId = 1L;
         Long organisationId = 2L;
         Long userId = 3L;
-        String roleName = LEADAPPLICANT.getName();
         Competition competition = newCompetition().with(id(1L)).build();
-        Role role = newRole().with(name(roleName)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
         ApplicationState applicationState = ApplicationState.CREATED;
@@ -282,7 +339,6 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         ApplicationResource newApplication = newApplicationResource().build();
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
         when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(
                 newProcessRole().withUser(user).withOrganisationId(organisation.getId()).build()
@@ -396,8 +452,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
     @Test
     public void showApplicationTeam() {
-        Role compAdmin = newRole(COMP_ADMIN).build();
-        User user = newUser().withRoles(singleton(compAdmin)).build();
+        User user = newUser().withRoles(singleton(Role.COMP_ADMIN)).build();
         when(userRepositoryMock.findOne(234L)).thenReturn(user);
 
         ServiceResult<Boolean> serviceResult = service.showApplicationTeam(123L, 234L);

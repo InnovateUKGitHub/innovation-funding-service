@@ -11,7 +11,6 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +28,6 @@ public class ApplicationInvitePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
@@ -86,7 +82,7 @@ public class ApplicationInvitePermissionRules {
         final InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
             long organisationId = inviteOrganisation.getOrganisation().getId();
-            final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
+            final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, processRoleRepository);
             return isCollaborator;
         }
         return false;
@@ -96,7 +92,7 @@ public class ApplicationInvitePermissionRules {
         if (invite.getApplication() != null && invite.getInviteOrganisation() != null) {
             final InviteOrganisation inviteOrganisation = inviteOrganisationRepository.findOne(invite.getInviteOrganisation());
             if (inviteOrganisation != null && inviteOrganisation.getOrganisation() != null) {
-                return checkProcessRole(user, invite.getApplication(), inviteOrganisation.getOrganisation().getId(), COLLABORATOR, roleRepository, processRoleRepository);
+                return checkProcessRole(user, invite.getApplication(), inviteOrganisation.getOrganisation().getId(), COLLABORATOR, processRoleRepository);
             }
         }
         return false;

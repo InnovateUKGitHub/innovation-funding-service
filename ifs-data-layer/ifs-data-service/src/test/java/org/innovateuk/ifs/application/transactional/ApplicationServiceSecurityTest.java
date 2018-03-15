@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -12,10 +13,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
@@ -32,7 +35,6 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
@@ -72,7 +74,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     public void testCreateApplicationByAppNameForUserIdAndCompetitionId() {
         Long competitionId = 123L;
         Long userId = 456L;
-        setLoggedInUser(newUserResource().withId(userId).withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
+        setLoggedInUser(newUserResource().withId(userId).withRolesGlobal(singletonList(Role.APPLICANT)).build());
         when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(newCompetitionResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build());
         assertAccessDenied(
                 () -> classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", competitionId, userId),
@@ -110,7 +112,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         EnumSet<UserRoleType> nonApplicantRoles = complementOf(of(APPLICANT, SYSTEM_REGISTRATION_USER));
 
         nonApplicantRoles.forEach(role -> {
-            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
 
             try {
                 classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
@@ -173,6 +175,11 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<List<ApplicationResource>> findByUserId(Long userId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
             return null;
         }
 

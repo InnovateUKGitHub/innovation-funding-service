@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -16,19 +16,16 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 
 	@Test
 	public void testNotifyLeadApplicantAllowedIfGlobalCompAdminRole() {
-
-		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 		classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
 	}
 
@@ -64,7 +61,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 		nonCompAdminRoles.forEach(role -> {
 
 			setLoggedInUser(
-					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+					newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
 			try {
 				classUnderTest.notifyApplicantsOfFundingDecisions(new FundingNotificationResource());
 				fail("Should not have been able to notify lead applicants of funding decision without the global Comp Admin role");
@@ -76,9 +73,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 
 	@Test
 	public void testSaveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
-
-		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 		classUnderTest.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
 	}
 
@@ -114,9 +109,9 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 		nonCompAdminRoles.forEach(role -> {
 
 			setLoggedInUser(
-					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+					newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
 			try {
-				classUnderTest.saveFundingDecisionData(123L, new HashMap<Long, FundingDecision>());
+				classUnderTest.saveFundingDecisionData(123L, new HashMap<>());
 				fail("Should not have been able to save funding decision data without the global Comp Admin role");
 			} catch (AccessDeniedException e) {
 				// expected behaviour

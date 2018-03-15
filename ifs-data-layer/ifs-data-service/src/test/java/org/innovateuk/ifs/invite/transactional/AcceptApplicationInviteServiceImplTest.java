@@ -8,12 +8,11 @@ import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -31,9 +30,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,8 +42,6 @@ public class AcceptApplicationInviteServiceImplTest {
     private ApplicationInviteRepository applicationInviteRepositoryMock;
     @Mock
     private UserRepository userRepositoryMock;
-    @Mock
-    private RoleRepository roleRepositoryMock;
     @Mock
     private ProcessRoleRepository processRoleRepositoryMock;
     @Mock
@@ -157,20 +152,16 @@ public class AcceptApplicationInviteServiceImplTest {
         User user = createAndExpectInviteUser();
         Organisation usersCurrentOrganisation = createAndExpectUsersCurrentOrganisation(user);
 
-        Role collaboratorRole = newRole(COLLABORATOR).build();
-
         when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
                 usersCurrentOrganisation.getId(),
                 invite.getTarget().getId()
         ))
                 .thenReturn(Optional.empty());
 
-        when(roleRepositoryMock.findOneByName(COLLABORATOR.getName())).thenReturn(collaboratorRole);
-
         ProcessRole expectedProcessRole = new ProcessRole(
                 user,
                 invite.getTarget().getId(),
-                collaboratorRole,
+                Role.COLLABORATOR,
                 usersCurrentOrganisation.getId()
         );
 

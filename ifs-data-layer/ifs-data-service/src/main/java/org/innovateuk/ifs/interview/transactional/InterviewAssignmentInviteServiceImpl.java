@@ -9,9 +9,8 @@ import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -38,9 +37,6 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
@@ -131,7 +127,7 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
-        final Role leadApplicantRole = roleRepository.findOneByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName());
+        final Role leadApplicantRole = Role.getByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName());
         final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
         final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), leadApplicantRole, application.getLeadOrganisationId());
         final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);

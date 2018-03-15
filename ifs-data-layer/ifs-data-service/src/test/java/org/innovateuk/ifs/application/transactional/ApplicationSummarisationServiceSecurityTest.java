@@ -3,16 +3,14 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.fail;
 
 public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummarisationService> {
@@ -20,8 +18,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 	@Test
 	public void testTotalProjectCostAllowedIfGlobalCompAdminRole() {
 
-		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 		classUnderTest.getTotalProjectCost(null);
 	}
 
@@ -50,9 +47,7 @@ public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecu
 	
 	@Test
 	public void testFundingSoughtAllowedIfGlobalCompAdminRole() {
-
-		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
 		classUnderTest.getFundingSought(null);
 	}
 
