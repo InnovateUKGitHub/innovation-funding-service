@@ -1,1 +1,0 @@
-ALTER TABLE competition_user MODIFY competition_role ENUM('ASSESSOR', 'INNOVATION_LEAD') NOT NULL;

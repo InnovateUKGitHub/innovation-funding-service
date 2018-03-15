@@ -1,1 +1,0 @@
-UPDATE `invite` SET  `type`='APPLICATION';

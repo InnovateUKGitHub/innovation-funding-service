@@ -70,7 +70,7 @@ the days remaining should be correct (Applicant's dashboard)
 
 get yesterday
     ${today} =    Get Time
-    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    ${yesterday} =  Subtract Time From Date  ${today}  1 day  exclude_millis=True
     [Return]    ${yesterday}
 
 get today
@@ -97,11 +97,6 @@ get thirteen days
     ${today} =    Get Time
     ${thirteen} =     Add time To Date    ${today}    13 day
     [Return]    ${thirteen}
-
-get fifteen days
-    ${today} =    Get Time
-    ${fifteen} =     Add time To Date    ${today}    15 day
-    [Return]    ${fifteen}
 
 get tomorrow day
     ${today}=    get time

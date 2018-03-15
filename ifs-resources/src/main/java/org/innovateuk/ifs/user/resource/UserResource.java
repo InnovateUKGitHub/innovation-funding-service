@@ -32,7 +32,7 @@ public class UserResource {
     private String email;
     private String password;
     private UserStatus status;
-    private List<RoleResource> roles = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
     private Gender gender;
     private Disability disability;
     private Long ethnicity;
@@ -143,12 +143,12 @@ public class UserResource {
         this.password = password;
     }
 
-    public List<RoleResource> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<RoleResource> roles) {
-        roles.sort(comparing(RoleResource::getId));
+    public void setRoles(List<Role> roles) {
+        roles.sort(comparing(Role::getId));
         this.roles = roles;
     }
 
@@ -161,7 +161,7 @@ public class UserResource {
     }
 
     public boolean hasRole(UserRoleType role) {
-        return simpleMap(roles, RoleResource::getName).contains(role.getName());
+        return simpleMap(roles, Role::getName).contains(role.getName());
     }
 
     public boolean hasRoles(UserRoleType... acceptedRoles) {
@@ -256,7 +256,7 @@ public class UserResource {
             return IFS_ADMINISTRATOR.getDisplayName();
         } else {    // Most are not yet hierarchical so in most cases this will also return single role at present.
             return roles.stream()
-                    .map(RoleResource::getDisplayName)
+                    .map(Role::getDisplayName)
                     .collect(Collectors.joining(", "));
         }
     }

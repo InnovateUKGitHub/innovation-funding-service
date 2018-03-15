@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.invite.domain;
 
-import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.user.domain.ProcessActivity;
-import org.innovateuk.ifs.user.domain.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Entity
 @DiscriminatorOptions(force = true)
-public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
+public abstract class Invite<T, I extends Invite<T,I>> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

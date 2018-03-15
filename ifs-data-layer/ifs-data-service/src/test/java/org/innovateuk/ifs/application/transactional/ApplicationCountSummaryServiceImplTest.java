@@ -5,7 +5,7 @@ import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
@@ -17,9 +17,6 @@ import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
@@ -46,13 +43,6 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
     @Before
     public void setup() {
-        leadApplicationRole = newRole()
-                .withType(LEADAPPLICANT)
-                .build();
-        applicantRole = newRole()
-                .withType(APPLICANT)
-                .build();
-
         applicationStatistics = newApplicationStatistics()
                 .withProcessRoles(
                         newProcessRole()

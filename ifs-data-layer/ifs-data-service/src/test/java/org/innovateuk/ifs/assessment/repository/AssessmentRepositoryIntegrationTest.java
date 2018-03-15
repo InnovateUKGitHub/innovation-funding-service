@@ -12,8 +12,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -42,7 +42,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 
@@ -62,9 +61,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     private User user;
 
@@ -441,7 +437,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         processRoleRepository.save(newProcessRole()
                 .with(id(null))
                 .withUser(user)
-                .withRole(roleRepository.findOneByName(ASSESSOR.getName()))
+                .withRole(Role.ASSESSOR)
                 .withApplication(application)
                 .build(count)).forEach(result::add);
         return result.toArray(new ProcessRole[result.size()]);

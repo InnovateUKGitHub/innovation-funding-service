@@ -13,7 +13,7 @@ import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.forms.saver.ApplicationSectionSaver;
 import org.innovateuk.ifs.application.forms.service.ApplicationRedirectionService;
 import org.innovateuk.ifs.application.overheads.OverheadFileSaver;
-import org.innovateuk.ifs.application.populator.*;
+import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.populator.section.AbstractSectionPopulator;
 import org.innovateuk.ifs.application.populator.section.YourFinancesSectionPopulator;
@@ -28,8 +28,7 @@ import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,8 +66,7 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
@@ -514,7 +512,7 @@ public class ApplicationSectionControllerTest extends BaseControllerMockMVCTest<
 
         Long currentSectionId = sectionResources.get(2).getId();
         ApplicationResource application = newApplicationResource().build();
-        RoleResource role = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
+        Role role = Role.COLLABORATOR;
         ProcessRoleResource processRole = newProcessRoleResource().withOrganisation(2L).withRole(role).build();
 
         when(applicationService.getById(1L)).thenReturn(application);

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,9 +27,6 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
@@ -74,8 +70,8 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
         final ApplicationFinance applicationFinance = (ApplicationFinance) overheads.getTarget();
         final Long applicationId = applicationFinance.getApplication().getId();
         final Long organisationId = applicationFinance.getOrganisation().getId();
-        final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
+        final boolean isLead = checkProcessRole(user, applicationId, organisationId, LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, processRoleRepository);
         return isLead || isCollaborator;
     }
 

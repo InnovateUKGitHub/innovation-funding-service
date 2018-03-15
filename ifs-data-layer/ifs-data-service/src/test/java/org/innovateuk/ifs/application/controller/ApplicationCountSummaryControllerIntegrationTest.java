@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -22,12 +23,9 @@ import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 
 public class ApplicationCountSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationCountSummaryController> {
-
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -108,7 +106,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         ProcessRole processRole = newProcessRole()
                 .with(id(null))
                 .withApplication(application)
-                .withRole(newRole().with(id(1L)).withType(LEADAPPLICANT).build())
+                .withRole(Role.LEADAPPLICANT)
                 .withOrganisationId(3L)
                 .withUser(userMapper.mapToDomain(getSteveSmith()))
                 .build();

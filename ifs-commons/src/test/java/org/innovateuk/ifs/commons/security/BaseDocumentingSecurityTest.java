@@ -5,6 +5,7 @@ import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +29,6 @@ import java.util.function.Predicate;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.fail;
@@ -234,7 +234,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
         EnumSet<UserRoleType> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
         EnumSet<UserRoleType> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 functionToCall.run();
                 fail("Should not have been able to run the function given the role: " + role);
@@ -251,7 +251,7 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
             // expected behaviour
         }
         rolesThatShouldSucceed.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 functionToCall.run();
                 // Should not throw

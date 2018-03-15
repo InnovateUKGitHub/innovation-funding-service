@@ -11,10 +11,7 @@ import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.registration.controller.RegistrationController;
 import org.innovateuk.ifs.registration.service.RegistrationCookieService;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,13 +38,13 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -504,28 +501,23 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     public void gettingRegistrationPageWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
 
 
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(
-                newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-        )).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
 
         mockMvc.perform(get("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/testrolename/dashboard"));
+                .andExpect(view().name("redirect:/" + Role.APPLICANT.getUrl()));
 
     }
 
     @Test
     public void postingRegistrationWithLoggedInUserShouldResultInRedirectOnly() throws Exception {
-        setLoggedInUser(
-                newUserResource().withRolesGlobal(singletonList(
-                        newRoleResource().withName("testrolename").withUrl("testrolename/dashboard").build()
-                )).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.APPLICANT)).build());
 
         mockMvc.perform(post("/registration/register")
                 .cookie(organisationCookie)
         ).andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/testrolename/dashboard"));
+                .andExpect(view().name("redirect:/" + Role.APPLICANT.getUrl()));
     }
 
     @Test
