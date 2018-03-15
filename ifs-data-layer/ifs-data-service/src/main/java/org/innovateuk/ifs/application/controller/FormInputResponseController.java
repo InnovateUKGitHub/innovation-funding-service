@@ -38,12 +38,12 @@ public class FormInputResponseController {
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
     @GetMapping("/findResponsesByApplication/{applicationId}")
-    public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final long applicationId) {
         return formInputResponseService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
     @GetMapping("/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}")
-    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final Long formInputId, @PathVariable("applicationId") final Long applicationId) {
+    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final long formInputId, @PathVariable("applicationId") final long applicationId) {
         return formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
@@ -65,7 +65,7 @@ public class FormInputResponseController {
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long formInputId = jsonObj.get("formInputId").asLong();
         JsonNode ignoreEmptyNode = jsonObj.get("ignoreEmpty");
-        Boolean ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
+        boolean ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
         ServiceResult<ValidationMessages> result = formInputResponseService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId, userId, value))
@@ -74,7 +74,7 @@ public class FormInputResponseController {
         return result.toPostWithBodyResponse();
     }
 
-    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponse response, Boolean ignoreEmpty) {
+    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponse response, boolean ignoreEmpty) {
         BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
         if (bindingResult.hasErrors()) {
             LOG.debug("Got validation errors: ");

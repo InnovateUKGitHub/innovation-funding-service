@@ -12,11 +12,11 @@ import java.util.Set;
  * Interface for CRUD operations on {@link SectionResource} related data.
  */
 public interface SectionStatusRestService {
-    RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById);
-    RestResult<Void> markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById);
-    RestResult<Void> markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById);
-    RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId);
-    RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId);
-    RestResult<List<Long>> getIncompletedSectionIds(Long applicationId);
-    RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId);
+    RestResult<List<ValidationMessages>> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById);
+    RestResult<Void> markAsNotRequired(long sectionId, long applicationId, long markedAsCompleteById);
+    RestResult<Void> markAsInComplete(long sectionId, long applicationId, long markedAsInCompleteById);
+    RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(long applicationId);
+    RestResult<List<Long>> getCompletedSectionIds(long applicationId, long organisationId);
+    RestResult<List<Long>> getIncompletedSectionIds(long applicationId);
+    RestResult<Boolean> allSectionsMarkedAsComplete(long applicationId);
 }

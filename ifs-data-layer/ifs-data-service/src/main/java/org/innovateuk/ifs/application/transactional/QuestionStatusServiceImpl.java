@@ -62,20 +62,20 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     @Override
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsComplete(final QuestionApplicationCompositeId ids,
-                                                                  final Long markedAsCompleteById) {
+                                                                  final long markedAsCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsCompleteById, true, true);
     }
 
     @Override
     @Transactional
     public ServiceResult<List<ValidationMessages>> markAsInComplete(final QuestionApplicationCompositeId ids,
-                                                                    final Long markedAsInCompleteById) {
+                                                                    final long markedAsInCompleteById) {
         return setComplete(ids.questionId, ids.applicationId, markedAsInCompleteById, false, true);
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
+    public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final long assigneeId, final long assignedById) {
         return find(getQuestionSupplier(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById))
                 .andOnSuccess((question, application, assignee, assignedBy) -> {
 
@@ -102,8 +102,8 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Set<Long>> getMarkedAsComplete(Long applicationId,
-                                                        Long organisationId) {
+    public ServiceResult<Set<Long>> getMarkedAsComplete(long applicationId,
+                                                        long organisationId) {
         return find(application(applicationId)).andOnSuccess(application -> {
 
             List<Question> questions = questionRepository.findByCompetitionId(application.getCompetition().getId());
@@ -123,8 +123,8 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateNotification(final Long questionStatusId,
-                                                  final Boolean notify) {
+    public ServiceResult<Void> updateNotification(final long questionStatusId,
+                                                  final boolean notify) {
 
         return find(questionStatusRepository.findOne(questionStatusId), notFoundError(QuestionStatus.class, questionStatusId)).andOnSuccessReturnVoid(questionStatus -> {
             questionStatus.setNotified(notify);
@@ -133,7 +133,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {
+    public ServiceResult<Boolean> isMarkedAsComplete(Question question, long applicationId, long organisationId) {
         if (question.hasMultipleStatuses()) {
             return serviceSuccess(isMarkedAsCompleteForOrganisation(question.getId(), applicationId, organisationId));
         } else {
@@ -142,52 +142,52 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
+    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(long questionId, long applicationId) {
         List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
         List<QuestionStatusResource> resources = simpleMap(statuses, questionStatusMapper::mapToResource);
         return serviceSuccess(resources);
     }
 
     @Override
-    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
+    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(long questionId, long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
         return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapToResource));
     }
 
     @Override
-    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId) {
+    public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdIsInAndApplicationId(Arrays.asList(questionIds), applicationId);
         return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapToResource));
     }
 
     @Override
-    public ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId) {
+    public ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
         return serviceSuccess(simpleMap(filterByOrganisationIdIfHasMultipleStatuses(questionStatuses, organisationId), questionStatusMapper::mapToResource));
     }
 
     @Override
-    public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(Long id) {
+    public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(long id) {
         return find(questionStatusRepository.findOne(id), notFoundError(QuestionStatus.class, id)).andOnSuccessReturn(questionStatusMapper::mapToResource);
     }
 
 
     @Override
-    public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId){
+    public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(long applicationId, long assigneeId){
         return serviceSuccess(questionStatusRepository.countByApplicationIdAndAssigneeId(applicationId, assigneeId));
     }
-    private Boolean isMarkedAsCompleteForOrganisation(Long questionId, Long applicationId, Long organisationId) {
+    private Boolean isMarkedAsCompleteForOrganisation(long questionId, long applicationId, long organisationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsCompleteAndMarkedAsCompleteByOrganisationId(questionId, applicationId, true, organisationId);
         return !questionStatuses.isEmpty();
     }
 
-    private Boolean isMarkedAsCompleteForSingleStatus(Long questionId, Long applicationId) {
+    private Boolean isMarkedAsCompleteForSingleStatus(long questionId, long applicationId) {
         List<QuestionStatus> questionStatuses = questionStatusRepository.findByQuestionIdAndApplicationIdAndMarkedAsComplete(questionId, applicationId, true);
         return !questionStatuses.isEmpty();
     }
 
 
-    private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, Long organisationId) {
+    private Optional<Boolean> isMarkedAsCompleteForOrganisation(QuestionStatus questionStatus, long organisationId) {
         Boolean markedAsComplete = null;
         if (questionStatus.getMarkedAsCompleteBy() != null &&
                 questionStatus.getMarkedAsCompleteBy().getOrganisationId().equals(organisationId)) {
@@ -204,7 +204,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
         return Optional.ofNullable(markedAsComplete);
     }
 
-    private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, Long organisationId) {
+    private List<QuestionStatus> filterByOrganisationIdIfHasMultipleStatuses(final List<QuestionStatus> questionStatuses, long organisationId) {
         return questionStatuses.stream().
                 filter(qs -> !qs.getQuestion().hasMultipleStatuses() || (qs.getAssignee() != null && qs.getAssignee().getOrganisationId().equals(organisationId)))
                 .collect(Collectors.toList());
@@ -215,7 +215,7 @@ public class QuestionStatusServiceImpl extends BaseTransactionalService implemen
                 -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete, updateApplicationCompleteStatus));
     }
 
-    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, Long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus){
+    private ServiceResult<List<ValidationMessages>> setCompleteOnFindAndSuccess(ProcessRole markedAsCompleteBy, Application application, Question question, long processRoleId, boolean markAsComplete, boolean updateApplicationCompleteStatus){
 
         QuestionStatus questionStatus = null;
 

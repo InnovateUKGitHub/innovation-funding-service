@@ -17,10 +17,10 @@ import java.util.List;
 public interface FormInputResponseService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId);
+    ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId);
+    ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(long formInputId, long applicationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionName(long applicationId, String questionName);

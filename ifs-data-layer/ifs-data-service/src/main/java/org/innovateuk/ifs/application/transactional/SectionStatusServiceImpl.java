@@ -52,7 +52,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     private FormInputResponseRepository formInputResponseRepository;
 
     @Override
-    public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final Long applicationId) {
+    public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(final long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::completedSections);
     }
 
@@ -74,9 +74,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<List<ValidationMessages>> markSectionAsComplete(final Long sectionId,
-                                                                         final Long applicationId,
-                                                                         final Long markedAsCompleteById) {
+    public ServiceResult<List<ValidationMessages>> markSectionAsComplete(final long sectionId,
+                                                                         final long applicationId,
+                                                                         final long markedAsCompleteById) {
 
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
 
@@ -92,14 +92,14 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+    public ServiceResult<Void> markSectionAsNotRequired(long sectionId, long applicationId, long markedAsCompleteById) {
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
             markSectionAsComplete(section, application, markedAsCompleteById);
             return serviceSuccess();
         });
     }
 
-    private void markSectionAsComplete(Section section, Application application, Long markedAsCompleteById) {
+    private void markSectionAsComplete(Section section, Application application, long markedAsCompleteById) {
         sectionService.getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
             questionStatusService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
@@ -110,9 +110,9 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
     @Override
     @Transactional
-    public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,
-                                                       final Long applicationId,
-                                                       final Long markedAsInCompleteById) {
+    public ServiceResult<Void> markSectionAsInComplete(final long sectionId,
+                                                       final long applicationId,
+                                                       final long markedAsInCompleteById) {
 
         return sectionService.getQuestionsForSectionAndSubsections(sectionId).andOnSuccessReturnVoid(questions -> questions.forEach(q ->
                 questionStatusService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById)
@@ -120,7 +120,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
     }
 
     @Override
-    public ServiceResult<List<Long>> getIncompleteSections(final Long applicationId) {
+    public ServiceResult<List<Long>> getIncompleteSections(final long applicationId) {
         return getApplication(applicationId).andOnSuccessReturn(this::incompleteSections);
     }
 
@@ -153,7 +153,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
         return incompleteSections;
     }
 
-    private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
+    private ServiceResult<Boolean> isSectionComplete(Section section, long applicationId, long organisationId) {
         return isMainSectionComplete(section, applicationId, organisationId).andOnSuccess(
                 mainSectionComplete -> {
                     // If there are child sections are they complete?
@@ -172,7 +172,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
                 });
     }
 
-    private ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
+    private ServiceResult<Boolean> isMainSectionComplete(Section section, long applicationId, long organisationId) {
 
         for (Question question : section.getQuestions()) {
 
@@ -191,7 +191,7 @@ public class SectionStatusServiceImpl extends BaseTransactionalService implement
 
 
     @Override
-    public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
+    public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, long applicationId, Section excludedSection) {
         return getApplication(applicationId).andOnSuccess(application -> childSectionsCompleteForAllOrganisations(application, parentSection));
     }
 

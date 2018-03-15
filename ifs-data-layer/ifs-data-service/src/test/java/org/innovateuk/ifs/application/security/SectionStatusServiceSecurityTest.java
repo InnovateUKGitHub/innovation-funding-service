@@ -80,7 +80,7 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
 
 
         @Override
-        public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(Long applicationId) {
+        public ServiceResult<Map<Long, Set<Long>>> getCompletedSections(long applicationId) {
             return null;
         }
 
@@ -90,27 +90,27 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
         }
 
         @Override
-        public ServiceResult<List<ValidationMessages>> markSectionAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        public ServiceResult<List<ValidationMessages>> markSectionAsComplete(long sectionId, long applicationId, long markedAsCompleteById) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        public ServiceResult<Void> markSectionAsNotRequired(long sectionId, long applicationId, long markedAsCompleteById) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> markSectionAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
+        public ServiceResult<Void> markSectionAsInComplete(long sectionId, long applicationId, long markedAsInCompleteById) {
             return null;
         }
 
         @Override
-        public ServiceResult<List<Long>> getIncompleteSections(Long applicationId) {
+        public ServiceResult<List<Long>> getIncompleteSections(long applicationId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection) {
+        public ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, long applicationId, Section excludedSection) {
             return null;
         }
     }

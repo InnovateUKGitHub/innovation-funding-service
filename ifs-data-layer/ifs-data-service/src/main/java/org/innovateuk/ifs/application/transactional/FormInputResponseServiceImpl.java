@@ -41,12 +41,12 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
     private FormInputRepository formInputRepository;
 
     @Override
-    public ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(final Long applicationId) {
+    public ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(final long applicationId) {
         return serviceSuccess(formInputResponsesToResources(formInputResponseRepository.findByApplicationId(applicationId)));
     }
 
     @Override
-    public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(final Long formInputId, final Long applicationId) {
+    public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(final long formInputId, final long applicationId) {
         return serviceSuccess(formInputResponsesToResources(formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId)));
     }
 
@@ -99,7 +99,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
                 serviceSuccess(new FormInputResponse(ZonedDateTime.now(), "", userAppRole, formInput, application));
     }
 
-    private Supplier<ServiceResult<FormInput>> formInput(Long id) {
+    private Supplier<ServiceResult<FormInput>> formInput(long id) {
         return () -> findFormInputEntity(id);
     }
 
@@ -107,7 +107,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
         return simpleMap(filtered, formInputResponse -> formInputResponseMapper.mapToResource(formInputResponse));
     }
 
-    private ServiceResult<FormInput> findFormInputEntity(Long id) {
+    private ServiceResult<FormInput> findFormInputEntity(long id) {
         return find(formInputRepository.findOne(id), notFoundError(FormInput.class, id));
     }
 

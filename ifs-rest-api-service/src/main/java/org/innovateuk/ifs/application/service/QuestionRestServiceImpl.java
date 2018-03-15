@@ -21,43 +21,43 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     String questionRestURL = "/question";
 
     @Override
-    public RestResult<List<QuestionResource>> findByCompetition(Long competitionId) {
+    public RestResult<List<QuestionResource>> findByCompetition(long competitionId) {
         return getWithRestResult(questionRestURL + "/findByCompetition/" + competitionId, ParameterizedTypeReferences.questionResourceListType());
     }
 
     @Override
-    public RestResult<QuestionResource> findById(Long questionId) {
+    public RestResult<QuestionResource> findById(long questionId) {
         return getWithRestResult(questionRestURL + "/id/" + questionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<QuestionResource> getNextQuestion(Long questionId) {
+    public RestResult<QuestionResource> getNextQuestion(long questionId) {
         return getWithRestResult(questionRestURL + "/getNextQuestion/" + questionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<QuestionResource> getPreviousQuestion(Long questionId) {
+    public RestResult<QuestionResource> getPreviousQuestion(long questionId) {
         return getWithRestResult(questionRestURL + "/getPreviousQuestion/" + questionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<QuestionResource> getPreviousQuestionBySection(Long sectionId) {
+    public RestResult<QuestionResource> getPreviousQuestionBySection(long sectionId) {
         return getWithRestResult(questionRestURL + "/getPreviousQuestionBySection/" + sectionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<QuestionResource> getNextQuestionBySection(Long sectionId) {
+    public RestResult<QuestionResource> getNextQuestionBySection(long sectionId) {
         return getWithRestResult(questionRestURL + "/getNextQuestionBySection/" + sectionId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
+    public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(long competitionId, FormInputType formInputType) {
         return getWithRestResult(questionRestURL + "/getQuestionByCompetitionIdAndFormInputType/" + competitionId + "/" + formInputType.name(), QuestionResource.class);
     }
 
 	@Override
 	public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(
-			Long sectionId, QuestionType type) {
+            long sectionId, QuestionType type) {
 		 return getWithRestResult(questionRestURL + "/getQuestionsBySectionIdAndType/" + sectionId + "/" + type.name(), ParameterizedTypeReferences.questionResourceListType());
 	}
 
@@ -67,12 +67,12 @@ public class QuestionRestServiceImpl extends BaseRestService implements Question
     }
 
     @Override
-    public RestResult<QuestionResource> getByIdAndAssessmentId(Long questionId, Long assessmentId) {
+    public RestResult<QuestionResource> getByIdAndAssessmentId(long questionId, long assessmentId) {
         return getWithRestResult(questionRestURL + "/getQuestionByIdAndAssessmentId/" + questionId + "/" + assessmentId, QuestionResource.class);
     }
 
     @Override
-    public RestResult<List<QuestionResource>> getQuestionsByAssessment(Long assessmentId) {
+    public RestResult<List<QuestionResource>> getQuestionsByAssessment(long assessmentId) {
         return getWithRestResult(questionRestURL + "/getQuestionsByAssessment/" + assessmentId, ParameterizedTypeReferences.questionResourceListType());
     }
 }

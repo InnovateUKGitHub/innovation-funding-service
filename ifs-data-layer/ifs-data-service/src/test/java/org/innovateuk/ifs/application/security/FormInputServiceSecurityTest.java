@@ -108,12 +108,12 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId) {
+        public ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(long applicationId) {
             return serviceSuccess(newFormInputResponseResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId) {
+        public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(long formInputId, long applicationId) {
             return serviceSuccess(newFormInputResponseResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 

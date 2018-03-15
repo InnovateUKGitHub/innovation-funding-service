@@ -19,25 +19,25 @@ public interface SectionStatusService {
     ServiceResult<Set<Long>> getCompletedSections(final long applicationId, final long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<Map<Long, Set<Long>>> getCompletedSections(Long applicationId);
+    ServiceResult<Map<Long, Set<Long>>> getCompletedSections(long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_COMPLETE')")
-    ServiceResult<List<ValidationMessages>> markSectionAsComplete(Long sectionId,
-                                                                  @P("applicationId") final Long id,
-                                                                  Long markedAsCompleteById);
+    ServiceResult<List<ValidationMessages>> markSectionAsComplete(long sectionId,
+                                                                  @P("applicationId") final long id,
+                                                                  long markedAsCompleteById);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_NOT_REQUIRED')")
-    ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsNotRequiredById);
+    ServiceResult<Void> markSectionAsNotRequired(long sectionId, long applicationId, long markedAsNotRequiredById);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_INCOMPLETE')")
-    ServiceResult<Void> markSectionAsInComplete(Long sectionId,
-                                                @P("applicationId") final Long id,
-                                                Long markedAsInCompleteById);
+    ServiceResult<Void> markSectionAsInComplete(long sectionId,
+                                                @P("applicationId") final long id,
+                                                long markedAsInCompleteById);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<List<Long>> getIncompleteSections(final Long applicationId);
+    ServiceResult<List<Long>> getIncompleteSections(final long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, Long applicationId, Section excludedSection);
+    ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations(Section parentSection, long applicationId, Section excludedSection);
 
 }

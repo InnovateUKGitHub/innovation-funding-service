@@ -23,37 +23,37 @@ public class SectionStatusRestServiceImpl extends BaseRestService implements Sec
     private String sectionRestURL = "/section-status";
 
     @Override
-    public RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+    public RestResult<List<ValidationMessages>> markAsComplete(long sectionId, long applicationId, long markedAsCompleteById) {
         return postWithRestResult(sectionRestURL + "/mark-as-complete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, validationMessagesListType());
     }
 
     @Override
-    public RestResult<Void> markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+    public RestResult<Void> markAsNotRequired(long sectionId, long applicationId, long markedAsCompleteById) {
         return postWithRestResult(sectionRestURL + "/mark-as-not-required/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, Void.class);
     }
 
     @Override
-    public RestResult<Void> markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
+    public RestResult<Void> markAsInComplete(long sectionId, long applicationId, long markedAsInCompleteById) {
         return postWithRestResult(sectionRestURL + "/mark-as-in-complete/" + sectionId + "/" + applicationId + "/" + markedAsInCompleteById, Void.class);
     }
 
     @Override
-    public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(Long applicationId) {
+    public RestResult<Map<Long, Set<Long>>> getCompletedSectionsByOrganisation(long applicationId) {
         return getWithRestResult(sectionRestURL + "/get-completed-sections-by-organisation/" + applicationId, mapOfLongToLongsSetType());
     }
 
     @Override
-    public RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId) {
+    public RestResult<List<Long>> getCompletedSectionIds(long applicationId, long organisationId) {
         return getWithRestResult(sectionRestURL + "/get-completed-sections/" + applicationId + "/" + organisationId, longsListType());
     }
 
     @Override
-    public RestResult<List<Long>> getIncompletedSectionIds(Long applicationId) {
+    public RestResult<List<Long>> getIncompletedSectionIds(long applicationId) {
         return getWithRestResult(sectionRestURL + "/get-incomplete-sections/" + applicationId, longsListType());
     }
 
     @Override
-    public RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId) {
+    public RestResult<Boolean> allSectionsMarkedAsComplete(long applicationId) {
         return getWithRestResult(sectionRestURL + "/all-sections-marked-as-complete/" + applicationId, Boolean.class);
     }
 
