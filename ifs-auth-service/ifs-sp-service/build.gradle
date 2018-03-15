@@ -46,6 +46,7 @@ task prepareDockerFile {
             into "${inputDir}/certs"
         }
     }
+    outputs.dir inputDir
 }
 
 buildDocker.dependsOn prepareDockerFile
