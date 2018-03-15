@@ -231,6 +231,26 @@ the user fills in the Public content and publishes
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish content")
 
+Get competitions id and set it as suite variable
+    [Arguments]  ${competitionTitle}
+    ${competitionId} =  get comp id from comp title  ${competitionTitle}
+    Set suite variable  ${competitionId}
+
+Save competition's current dates
+    [Arguments]  ${competitionId}
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='OPEN_DATE';
+    ${result} =  get from list  ${result}  0
+    ${openDate} =  get from list  ${result}  0
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
+    ${result} =  get from list  ${result}  0
+    ${submissionDate} =  get from list  ${result}  0
+    [Return]  ${openDate}  ${submissionDate}
+
+Return the competition's milestones to their initial values
+    [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
+    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
+    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
+
 The competitions date changes so it is now Open
     [Arguments]  ${competition}
     Connect to Database  @{database}

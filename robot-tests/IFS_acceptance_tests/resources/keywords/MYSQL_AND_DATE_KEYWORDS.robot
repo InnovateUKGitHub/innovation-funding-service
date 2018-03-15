@@ -8,15 +8,7 @@ Resource          ../defaultResources.robot
 the assessment start period changes in the db in the past
     [Arguments]   ${competition_id}
     ${yesterday} =    get yesterday
-    When execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}'), ('${yesterday}', 'ASSESSORS_NOTIFIED', '${competition_id}');
-    And execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
-    And reload page
-
-the submission date changes in the db in the past
-    [Arguments]   ${competition_id}
-    ${yesterday} =    get yesterday
-    When execute sql string     INSERT IGNORE INTO `${database_name}`.`milestone` (date, type, competition_id) VALUES('${yesterday}', 'OPEN_DATE', '${competition_id}'), ('${yesterday}', 'SUBMISSION_DATE', '${competition_id}');
-    And execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE');
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competition_id}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
     And reload page
 
 the calculation of the remaining days should be correct
@@ -30,7 +22,7 @@ the calculation of the remaining days should be correct
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text     jQuery=.my-applications li:last('') .days-remaining
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications .msg-deadline .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 the total calculation in dashboard should be correct
