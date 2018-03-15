@@ -648,8 +648,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         inOrder.verify(interviewInviteMapperMock).mapToResource(isA(InterviewInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
-
-
+    
     @Test
     public void acceptInvite() {
         String openedInviteHash = "openedInviteHash";
