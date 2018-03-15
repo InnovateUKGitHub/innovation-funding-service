@@ -94,13 +94,12 @@ Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
     [Tags]  HappyPath
     [Setup]    Log in as a different user        &{internal_finance_credentials}
-    Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the element          css=table.table-progress
-    And the user should see the element          jQuery=h2:contains("Finance checks")
-    And the user should see the text in the page  Overview
-    And the user should see the text in the page    ${funders_panel_application_1_title}
+    Given the user navigates to the page         ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the element         css=table.table-progress
+    And the user should see the element          jQuery=h1:contains("Finance checks")
+    And the user should see the element          jQuery=dd:contains("${funders_panel_application_1_title}")
     And the table row has expected values
-    And the user should see the element    link=Projects in setup
+    And the user should see the element          link=Projects in setup
 
 Project Finance can edit the duration of the Project
     [Documentation]  IFS-2313
@@ -152,7 +151,7 @@ Project Finance user can view academic Jes form
 Project finance can see the within limit research participation level
     [Documentation]    INFUND-7580
     [Tags]
-    When the user clicks the button/link  link=Project finance overview
+    When the user clicks the button/link  link=View finances
     Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    100 %
     And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
@@ -170,7 +169,7 @@ Proj finance can see the maximum research participation level
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    57.34 %
     #TODO IFS-1134:    And the user should see the text in the page       Maximum research participation exceeded
-    When the user clicks the button/link               link=Project finance overview
+    When the user clicks the button/link               link=View finances
     #TODO IFS-1134:    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
     #TODO IFS-1134:    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
@@ -217,7 +216,7 @@ Project finance user can view finance overview for the consortium
     [Tags]
     log in as a different user              &{internal_finance_credentials}
     When the user navigates to the page     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    link=Project finance overview
+    When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
     And the categories are verified for Overview section    1    1 Oct 2020    3 months    £402,797    116,596    4,936    29%
@@ -244,7 +243,7 @@ Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
     [Tags]
     Given the user navigates to the page                      ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link                      link=Project finance overview
+    When the user clicks the button/link                      link=View finances
     #Check finances summary for lead partner
     Then the user should see the text in the element          css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
@@ -792,7 +791,7 @@ Project finance user can see updated finance overview after partner changes to e
 Project finance can see updated finance breakdown for different categories
     [Documentation]    INFUND-4846
     [Tags]
-    When the user clicks the button/link   link=Project finance overview
+    When the user clicks the button/link   link=View finances
     #check breakdown for lead partner
     Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order    Total 	      Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
@@ -824,7 +823,7 @@ Project finance can approve academic eligibility
 Project finance user can view Updated finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    When the user clicks the button/link    link=Project finance overview
+    When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
     And the categories are verified for Overview section    1   1 Oct 2020  3 months    £356,559   102,725    4,936     29%
@@ -1126,11 +1125,10 @@ Custom suite setup
     Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the table row has expected values
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(2)    3 months
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(3)    £402,797
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(4)    116,596
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(5)    4,936
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(6)    29%
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(2)   £402,797
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(4)    116,596
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(6)    4,936
+    the user sees the text in the element    css=.standard-definition-list dd:nth-child(8)    29%
 
 the user fills in project costs
     Input Text    name=costs[0].value    £8,000
