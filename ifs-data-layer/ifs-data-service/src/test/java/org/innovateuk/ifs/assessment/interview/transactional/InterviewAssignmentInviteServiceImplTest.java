@@ -9,8 +9,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServi
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -29,7 +28,6 @@ import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.ne
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -48,12 +46,11 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
                     .withProcessRoles(
                             newProcessRole()
                                     .withUser(newUser().build())
-                                    .withRole(newRole().withType(UserRoleType.LEADAPPLICANT).build())
+                                    .withRole(Role.LEADAPPLICANT)
                                     .withOrganisationId(LEAD_ORGANISATION.getId())
                                     .build()
                     )
                     .build(TOTAL_APPLICATIONS);
-    private static final Role LEAD_APPLICANT_ROLE = newRole(UserRoleType.INTERVIEW_LEAD_APPLICANT).build();
     private static final ActivityState CREATED_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
 
     @Override
@@ -87,7 +84,7 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
         List<InterviewAssignment> expectedInterviewPanels = newInterviewAssignment()
                 .withParticipant(
                         newProcessRole()
-                                .withRole(UserRoleType.INTERVIEW_LEAD_APPLICANT)
+                                .withRole(Role.INTERVIEW_LEAD_APPLICANT)
                                 .withOrganisationId(LEAD_ORGANISATION.getId())
                                 .build()
                 )
@@ -143,8 +140,6 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState())).thenReturn(CREATED_ACTIVITY_STATE);
 
-        when(roleRepositoryMock.findOneByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName())).thenReturn(LEAD_APPLICANT_ROLE);
-
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
             when(applicationRepositoryMock.findOne(expectedApplication.getId()))
                     .thenReturn(expectedApplication);
@@ -156,12 +151,11 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
         service.assignApplications(stagedApplications).getSuccess();
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock,
+        InOrder inOrder = inOrder(applicationRepositoryMock, activityStateRepositoryMock,
                 interviewAssignmentRepositoryMock);
 
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
             inOrder.verify(applicationRepositoryMock).findOne(expectedApplication.getId());
-            inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName());
             inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(
                     ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
             inOrder.verify(interviewAssignmentRepositoryMock).save(interviewPanellambdaMatcher(expectedApplication));
@@ -173,7 +167,7 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
             ProcessRole participant = interviewPanel.getParticipant();
             assertEquals(application.getId(), interviewPanel.getTarget().getId());
             assertEquals(application.getId(), participant.getApplicationId());
-            assertTrue(participant.getRole().isOfType(UserRoleType.INTERVIEW_LEAD_APPLICANT));
+            assertTrue(participant.getRole() == Role.INTERVIEW_LEAD_APPLICANT);
             assertEquals(participant.getUser(), application.getLeadApplicant());
             assertEquals(participant.getOrganisationId(), application.getLeadOrganisationId());
         });

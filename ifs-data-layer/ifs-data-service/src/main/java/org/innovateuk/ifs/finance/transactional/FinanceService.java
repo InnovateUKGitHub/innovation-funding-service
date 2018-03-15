@@ -25,7 +25,6 @@ public interface FinanceService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId);
 
-
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId);
 
