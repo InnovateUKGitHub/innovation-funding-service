@@ -4,10 +4,6 @@ osStageRemote.tag = competitionMgtServiceVersion
 tagDockerLocal.tag = competitionMgtServiceVersion
 osStageLocal.tag = competitionMgtServiceVersion
 
-jar {
-    baseName = 'management'
-}
-
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

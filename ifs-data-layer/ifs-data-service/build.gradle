@@ -1,11 +1,8 @@
-
-
 def targetBuild = hasProperty('profile') ? profile : 'docker'
 apply from: targetBuild + "-build.gradle"
 
-apply plugin: 'base'
-apply plugin: 'org.flywaydb.flyway'
 apply from: "../database-support.gradle"
+apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
@@ -64,10 +61,6 @@ ext {
     ifsFinanceTotalsBaseURL = 'http://finance-data-service:8080'
 }
 
-jar {
-    baseName = 'ifs-data-service'
-}
-
 configurations {
     mapstruct
 }
@@ -89,7 +82,6 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.6'
     compile 'commons-codec:commons-codec:1.10'
     compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile "org.flywaydb:flyway-core:4.1.2"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
@@ -129,8 +121,6 @@ test {
     }
     finalizedBy asciidoctor
 }
-
-
 
 
 asciidoctor {
