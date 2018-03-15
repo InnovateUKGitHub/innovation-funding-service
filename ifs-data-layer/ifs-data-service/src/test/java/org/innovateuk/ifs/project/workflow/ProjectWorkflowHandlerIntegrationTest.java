@@ -78,14 +78,24 @@ public class ProjectWorkflowHandlerIntegrationTest extends
                 ProjectState.SETUP, ProjectState.LIVE, ProjectEvent.GOL_APPROVED);
     }
 
+    @Test
+    public void testProjectWithdrawn() {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithInternalUserParticipant(
+                ((project, internalUser) -> projectWorkflowHandler.projectWithdrawn(project, internalUser)),
+
+                // current State, destination State and expected Event to be fired
+                ProjectState.SETUP, ProjectState.WITHDRAWN, ProjectEvent.PROJECT_WITHDRAWN);
+    }
+
+
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectEvent expectedEventToBeFired) {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
 
         // Set the current state in the Project Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP, currentProjectState.getBackingState());
-        ProjectProcess currentProjectProcess = new ProjectProcess(null, project, currentActivityState);
+        ProjectProcess currentProjectProcess = setUpCurrentProjectProcess(projectUser, project, currentProjectState);
         when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentProjectProcess);
 
         // Set the destination state which we expect when the event is fired
@@ -99,35 +109,39 @@ public class ProjectWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected ProjectProcess object (say X) and verifying that X was the object that was saved.
-        ProjectProcess expectedProjectProcess = new ProjectProcess(projectUser, project, expectedActivityState);
-
-        // Ensure the correct event was fired by the workflow
-        expectedProjectProcess.setProcessEvent(expectedEventToBeFired.getType());
+        ProjectProcess expectedProjectProcess = setUpExpectedProjectProcess(projectUser, project, expectedActivityState, expectedEventToBeFired);
 
         verify(projectProcessRepositoryMock).save(expectedProjectProcess);
     }
 
-    @Test
-    public void testProjectWithdrawn() {
+    private void callWorkflowAndCheckTransitionAndEventFiredWithInternalUserParticipant(BiFunction<Project, User, Boolean> workflowMethodToCall, ProjectState currentProjectState, ProjectState destinationProjectState, ProjectEvent expectedEventToBeFired) {
         Project project = newProject().build();
         User internalUser = newUser().build();
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState());
-        ProjectProcess projectProcess = new ProjectProcess(null, project, currentActivityState);
-        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
 
-        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState());
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState())).thenReturn(expectedActivityState);
+        ProjectProcess currentProjectProcess = setUpCurrentProjectProcess(null, project, currentProjectState);
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentProjectProcess);
 
-        boolean result = projectWorkflowHandler.projectWithdrawn(project, internalUser);
+        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP, destinationProjectState.getBackingState());
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP, destinationProjectState.getBackingState())).thenReturn(expectedActivityState);
+
+        boolean result = workflowMethodToCall.apply(project, internalUser);
 
         assertTrue(result);
 
-        ProjectProcess expectedProjectProcess = new ProjectProcess(null, project, expectedActivityState);
-
-        // Ensure the correct event was fired by the workflow
-        expectedProjectProcess.setProcessEvent(ProjectEvent.PROJECT_WITHDRAWN.getType());
+        ProjectProcess expectedProjectProcess = setUpExpectedProjectProcess(null, project, expectedActivityState, expectedEventToBeFired);
 
         verify(projectProcessRepositoryMock).save(expectedProjectProcess);
+    }
+
+    private ProjectProcess setUpCurrentProjectProcess(ProjectUser projectUser, Project project, ProjectState currentProjectState) {
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP, currentProjectState.getBackingState());
+        return new ProjectProcess(projectUser, project, currentActivityState);
+    }
+
+    private ProjectProcess setUpExpectedProjectProcess(ProjectUser projectUser, Project project, ActivityState expectedActivityState, ProjectEvent eventToBeFired) {
+        ProjectProcess expectedProjectProcess = new ProjectProcess(projectUser, project, expectedActivityState);
+        expectedProjectProcess.setProcessEvent(eventToBeFired.getType());
+        return expectedProjectProcess;
     }
 
     @Override
