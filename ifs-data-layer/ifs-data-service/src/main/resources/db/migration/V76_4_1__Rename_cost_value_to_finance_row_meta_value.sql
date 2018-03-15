@@ -1,1 +1,0 @@
-RENAME TABLE cost_value TO finance_row_meta_value;
