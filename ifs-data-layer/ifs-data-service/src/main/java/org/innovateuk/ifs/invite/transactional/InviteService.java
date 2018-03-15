@@ -5,7 +5,6 @@ import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +25,6 @@ public abstract class InviteService<T extends Invite> {
 
     @Autowired
     protected ProcessRoleRepository processRoleRepository;
-
-    @Autowired
-    protected RoleRepository roleRepository;
 
     @Autowired
     protected UserRepository userRepository;
