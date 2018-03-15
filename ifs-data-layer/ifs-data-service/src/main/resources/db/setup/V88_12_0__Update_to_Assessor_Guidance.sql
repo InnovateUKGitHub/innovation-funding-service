@@ -1,1 +1,0 @@
-UPDATE `section` SET `assessor_guidance_description`='These sections give important background information on the project. They do not need scoring however you do need to mark the scope.' WHERE `name`='Project details';
