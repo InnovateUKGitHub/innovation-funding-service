@@ -219,7 +219,7 @@ Project finance user can view finance overview for the consortium
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    3 months    £402,797    116,596    4,936    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    4 months    £402,797    116,596    4,936    29%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
