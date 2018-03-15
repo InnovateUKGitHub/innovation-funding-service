@@ -19,7 +19,7 @@ public class Question {
             description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class " +
                     "NOTE: The script V114_1_0__migrate_old_question_package_name.sql will need to be ran again " +
                     "to cleanup any statuses that were created with old package name while deploying.")
-    public static final String PREVIOUS_PACKAGE_NAME = "org.innovate.ifs.application.domain";
+    public static final String PREVIOUS_PACKAGE_NAME = "org.innovate.ifs.application.domain.Question";
     private static final String SCOPE = "Scope";
 
     @Id
