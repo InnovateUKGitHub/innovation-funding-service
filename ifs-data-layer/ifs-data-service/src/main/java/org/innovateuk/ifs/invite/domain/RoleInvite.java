@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.time.ZonedDateTime;
 
 @Entity

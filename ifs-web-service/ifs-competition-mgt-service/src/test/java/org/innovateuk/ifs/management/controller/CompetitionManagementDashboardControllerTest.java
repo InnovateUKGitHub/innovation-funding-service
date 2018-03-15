@@ -13,7 +13,6 @@ import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementD
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,8 +40,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Class for testing public functions of {@link CompetitionManagementDashboardController}
