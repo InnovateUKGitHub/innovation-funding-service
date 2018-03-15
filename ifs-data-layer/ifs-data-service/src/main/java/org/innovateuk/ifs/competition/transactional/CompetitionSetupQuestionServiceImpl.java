@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +31,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -92,7 +91,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
                 setupResource.setAllowedFileTypes(
-                        simpleMapSet(Arrays.asList(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())),
+                        simpleToLinkedHashSet(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes()),
                                 FileTypeCategory::fromDisplayName));
                 setupResource.setAppendixGuidance(formInput.getGuidanceAnswer());
                 break;

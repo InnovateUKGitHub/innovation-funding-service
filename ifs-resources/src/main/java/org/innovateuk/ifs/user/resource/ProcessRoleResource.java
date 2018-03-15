@@ -15,7 +15,7 @@ public class ProcessRoleResource {
     	// no-arg constructor
     }
 
-    public ProcessRoleResource(Long id, UserResource user, ApplicationResource application, RoleResource role, OrganisationResource organisation) {
+    public ProcessRoleResource(Long id, UserResource user, ApplicationResource application, Role role, OrganisationResource organisation) {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();
