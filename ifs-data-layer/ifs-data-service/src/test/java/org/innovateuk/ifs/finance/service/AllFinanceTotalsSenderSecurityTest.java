@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.sync.service.AllFinanceTotalsSender;
+import org.innovateuk.ifs.finance.totals.service.AllFinanceTotalsSender;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
