@@ -37,6 +37,7 @@ import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilde
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.ASSESSOR;
+import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
@@ -537,6 +538,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withPanelDate(now().plusDays(10))
                 .build();
 
+        InterviewInviteResource interviewInvite = newInterviewInviteResource()
+                .withInviteHash("")
+                .withCompetitionId(competitionResource.getId())
+                .withCompetitionName("Juggling Craziness")
+                .withInterviewDate(now().plusDays(10))
+                .build();
+
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withUser(3L)
                 .withCompetition(competitionResource.getId())
@@ -548,6 +556,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
+                .withUser(3L)
+                .withCompetition(competitionResource.getId())
+                .withStatus(ACCEPTED)
+                .withCompetitionParticipantRole(INTERVIEW_ASSESSOR)
+                .withAwaitingApplications(1L)
+                .withCompetitionName("Juggling Craziness")
+                .withInvite(interviewInvite)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));
