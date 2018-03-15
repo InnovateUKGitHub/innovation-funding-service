@@ -10,10 +10,11 @@ def String ldapPassword = project.properties['auth.ldap.password'] ?: "default"
 task prepareDockerFile {
     def inputDir = file("${project.buildDir}/docker")
 
-    def String ldapEncryptionKey = file(ldapEncryptionKeyFile).text.trim().replace('\n', '\\n')
-    def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     doFirst {
+
+        def String ldapEncryptionKey = file(ldapEncryptionKeyFile).text.trim().replace('\n', '\\n')
+        def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
         copy {
             from 'src/main/docker/'
             into 'src/main/docker/'
