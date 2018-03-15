@@ -28,7 +28,9 @@ import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuild
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -80,7 +82,7 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                         leadOrganisation.getId(),
                         collaboratorOrganisation2.getId(),
                         otherOrganisation.getId())
-                .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName(), ASSESSOR.getName())
+                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ASSESSOR)
                 .build(4);
 
         when(processRoleService.findProcessRolesByApplicationId(APPLICATION_ID)).thenReturn(processRoleResources);

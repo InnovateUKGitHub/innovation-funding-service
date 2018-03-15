@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -94,7 +94,7 @@ public class ManageInnovationLeadsModelPopulatorTest {
                 .withInnovationAreaNames(Collections.EMPTY_SET)
                 .build();
 
-        when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(availableInnovationLeads);
+        when(userService.findUserByType(INNOVATION_LEAD)).thenReturn(availableInnovationLeads);
         when(competitionService.findInnovationLeads(competitionId)).thenReturn(innovationLeadsAssignedToCompetition);
         when(userService.findById(competitionResource.getLeadTechnologist())).thenReturn(innLead4);
 

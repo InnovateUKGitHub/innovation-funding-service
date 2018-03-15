@@ -13,8 +13,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentInviteService> {
 

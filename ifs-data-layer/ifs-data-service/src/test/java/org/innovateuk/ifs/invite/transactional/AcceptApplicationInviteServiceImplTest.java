@@ -31,7 +31,6 @@ import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newAppl
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)

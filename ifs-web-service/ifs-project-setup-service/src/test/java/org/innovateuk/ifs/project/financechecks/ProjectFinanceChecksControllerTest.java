@@ -30,7 +30,6 @@ import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -60,6 +59,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -175,7 +175,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
         when(organisationService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(organisationId);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
@@ -208,7 +208,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
@@ -234,7 +234,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(industrialOrganisation.getId()).withRoleName(UserRoleType.PARTNER.getName()).build(1));
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(industrialOrganisation.getId()).withRole(PARTNER).build(1));
         when(organisationService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
 
         MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility")).
@@ -265,7 +265,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void testEligibilityChanges() throws Exception {
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(industrialOrganisation.getId()).withRoleName(UserRoleType.PARTNER.getName()).build(1));
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(industrialOrganisation.getId()).withRole(PARTNER).build(1));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(organisationService.getOrganisationIdFromUser(project.getId(), loggedInUser)).thenReturn(industrialOrganisation.getId());
         mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility/changes"))

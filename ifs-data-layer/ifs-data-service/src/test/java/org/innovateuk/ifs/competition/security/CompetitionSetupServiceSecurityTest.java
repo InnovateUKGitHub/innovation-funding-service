@@ -9,21 +9,23 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -34,6 +36,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupService> {
 
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE));
     private CompetitionPermissionRules rules;
 
     @Before
@@ -51,13 +54,10 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testAllAccessDenied() {
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRolesGlobal(singletonList(role)).build());
             Long competitionId = 2L;
 
             assertAccessDenied(() -> classUnderTest.create(), () -> {

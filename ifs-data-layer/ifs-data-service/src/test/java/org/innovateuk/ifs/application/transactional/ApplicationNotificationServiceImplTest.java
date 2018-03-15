@@ -46,8 +46,6 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;

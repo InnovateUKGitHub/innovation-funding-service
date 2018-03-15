@@ -7,8 +7,8 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +110,7 @@ public class OrganisationServiceImpl implements OrganisationService {
     public Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
-                user.getId().equals(pu.getUser()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
+                user.getId().equals(pu.getUser()) && Role.PARTNER.getId() == pu.getRole());
         return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
     }
 }

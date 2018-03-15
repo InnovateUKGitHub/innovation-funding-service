@@ -8,8 +8,8 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,7 +115,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResource> findUserByType(UserRoleType type) {
+    public List<UserResource> findUserByType(Role type) {
         return userRestService.findByUserRoleType(type).getSuccess();
     }
 
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsAndHasRole(Long userId, UserRoleType role) {
+    public boolean existsAndHasRole(Long userId, Role role) {
         RestResult<UserResource> result = userRestService.retrieveUserById(userId);
 
         if (result.isFailure()) {

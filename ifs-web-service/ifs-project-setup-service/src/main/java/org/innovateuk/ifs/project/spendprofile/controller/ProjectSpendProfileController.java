@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -347,7 +347,7 @@ public class ProjectSpendProfileController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
                 && projectUserResource.getOrganisation().equals(organisationId)
-                && PARTNER.getName().equals(projectUserResource.getRoleName())
+                && PARTNER.getId() == projectUserResource.getId()
         );
 
         return returnedProjectUser.isPresent();

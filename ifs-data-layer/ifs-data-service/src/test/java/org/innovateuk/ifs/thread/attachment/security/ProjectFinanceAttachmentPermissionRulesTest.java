@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUs
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -48,7 +48,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         projectFinanceUser = projectFinanceUser();
         projectPartnerUser = getUserWithRole(PARTNER);
 
-        intruder = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.PARTNER)).build();
+        intruder = newUserResource().withId(1993L).withRolesGlobal(singletonList(PARTNER)).build();
         intruder.setId(1993L);
     }
 

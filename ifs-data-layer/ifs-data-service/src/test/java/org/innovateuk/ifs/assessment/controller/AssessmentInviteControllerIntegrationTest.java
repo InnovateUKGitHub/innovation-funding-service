@@ -25,7 +25,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -35,8 +35,8 @@ import static org.innovateuk.ifs.application.transactional.ApplicationFundingSer
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 

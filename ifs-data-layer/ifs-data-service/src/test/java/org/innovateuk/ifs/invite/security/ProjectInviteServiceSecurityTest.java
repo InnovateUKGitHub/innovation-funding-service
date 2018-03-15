@@ -14,7 +14,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.security.ProjectInviteServiceSecurityTest.TestProjectInviteService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;

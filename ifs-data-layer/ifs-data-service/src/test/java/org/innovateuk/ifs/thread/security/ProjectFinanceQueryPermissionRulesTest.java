@@ -12,13 +12,11 @@ import org.junit.Test;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -37,7 +35,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         queryResource = queryWithoutPosts();
         queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), ZonedDateTime.now()));
 
-        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.PARTNER)).build();
+        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(singletonList(PARTNER)).build();
         incorrectPartner.setId(1993L);
     }
 

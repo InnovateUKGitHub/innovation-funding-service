@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -109,7 +109,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
-        return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
+        return simpleFilter(projectUsers, pu -> PARTNER.getId() == pu.getRole());
     }
 
     @Override

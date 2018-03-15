@@ -62,7 +62,6 @@ import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;

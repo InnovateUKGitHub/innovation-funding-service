@@ -33,8 +33,8 @@ import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -195,7 +195,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         long projectId = 123L;
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.PARTNER)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(PARTNER)).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -221,7 +221,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         long projectId = 123L;
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.PARTNER)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(PARTNER)).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -246,7 +246,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         long projectId = 123L;
         long organisationId = 234L;
 
-        UserResource user = newUserResource().withRolesGlobal(singletonList(Role.FINANCE_CONTACT)).build();
+        UserResource user = newUserResource().withRolesGlobal(singletonList(FINANCE_CONTACT)).build();
 
         BaseIntegrationTest.setLoggedInUser(user);
 
@@ -313,7 +313,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(user.getId()).
                 withOrganisation(789L).
-                withRoleName(PARTNER).
+                withRole(PARTNER).
                 build(1);
 
         when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(projectUsers);

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;

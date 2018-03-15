@@ -21,7 +21,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 

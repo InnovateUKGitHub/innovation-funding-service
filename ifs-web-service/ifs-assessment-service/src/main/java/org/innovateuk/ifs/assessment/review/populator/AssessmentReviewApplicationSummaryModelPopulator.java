@@ -18,7 +18,6 @@ import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,6 +28,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 
 /**
  * Build the model for the Application under review view.
@@ -147,6 +147,6 @@ public class AssessmentReviewApplicationSummaryModelPopulator {
         return userApplicationRoles
                 .stream()
                 .filter(processRoleResource -> processRoleResource.getUser().equals(user.getId()))
-                .anyMatch(processRoleResource -> processRoleResource.getRoleName().equals(UserRoleType.ASSESSOR.getName()));
+                .anyMatch(processRoleResource -> processRoleResource.getRole() == ASSESSOR.getId());
     }
 }

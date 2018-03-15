@@ -6,8 +6,8 @@ import org.innovateuk.ifs.login.HomeController;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
 import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
 import org.innovateuk.ifs.login.viewmodel.RoleSelectionViewModel;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -142,7 +142,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @Test
     public void testRoleSelectionAssessor() throws Exception {
         setLoggedInUser(assessorAndApplicant);
-        UserRoleType selectedRole = UserRoleType.ASSESSOR;
+        Role selectedRole = Role.ASSESSOR;
 
         mockMvc.perform(post("/roleSelection")
                 .param("selectedRole", selectedRole.name()))
@@ -154,7 +154,7 @@ public class HomeControllerTest extends BaseControllerMockMVCTest<HomeController
     @Test
     public void testRoleSelectionApplicant() throws Exception {
         setLoggedInUser(assessorAndApplicant);
-        UserRoleType selectedRole = UserRoleType.APPLICANT;
+        Role selectedRole = Role.APPLICANT;
 
         mockMvc.perform(post("/roleSelection")
                 .param("selectedRole", selectedRole.name()))

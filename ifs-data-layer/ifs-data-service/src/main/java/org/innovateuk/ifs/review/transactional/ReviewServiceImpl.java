@@ -40,7 +40,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVI
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -175,7 +174,7 @@ public class ReviewServiceImpl implements ReviewService {
         if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
             final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED);
 
-            Review review =  new Review(application, assessor,  Role.PANEL_ASSESSOR);
+            Review review =  new Review(application, assessor);
             review.setActivityState(createdActivityState);
             reviewRepository.save(review);
         }

@@ -79,7 +79,7 @@ import java.util.function.Supplier;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -263,7 +263,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource compAdmin() {
-        return retrieveUserByEmailInternal(compAdminEmail, UserRoleType.COMP_ADMIN);
+        return retrieveUserByEmailInternal(compAdminEmail, COMP_ADMIN);
     }
 
     protected UserResource systemRegistrar() {
@@ -301,7 +301,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return fromCache(applicationId, leadApplicantsByApplicationId, () ->
                 doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                        getSuccess(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get()));
+                        getSuccess(), pr -> pr.getRole() == LEADAPPLICANT.getId()).get()));
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {
@@ -342,7 +342,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             return processRoleRepository.findByUserAndApplicationId(userRepository.findOne(user.getId()),
                     application.getId())
                     .stream()
-                    .filter(x -> x.getRole().getName().equals(ASSESSOR.getName()))
+                    .filter(x -> x.getRole() == ASSESSOR)
                     .findFirst()
                     .get();
         });
@@ -374,11 +374,11 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         return with(data -> doAs(compAdmin(), () -> action.accept(data)));
     }
 
-    protected UserResource retrieveUserByEmailInternal(String email, UserRoleType role) {
+    protected UserResource retrieveUserByEmailInternal(String email, Role role) {
         return fromCache(email, usersByEmailAddressInternal, () -> {
             User user = userRepository.findByEmail(email).get();
             return newUserResource().
-                    withRolesGlobal(asList(Role.getByName(role.getName()))).
+                    withRolesGlobal(asList(role)).
                     withId(user.getId()).
                     build();
         });

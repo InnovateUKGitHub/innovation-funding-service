@@ -32,7 +32,6 @@ import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -63,6 +62,7 @@ import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -155,7 +155,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
 
-        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRoleName(UserRoleType.LEADAPPLICANT.getName()).build();
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRole(LEADAPPLICANT).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
         when(userService.retrieveUserById(user.getId())).thenReturn(user);
@@ -200,7 +200,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(1);
         setupServices(competition, application, user, formInputs);
 
-        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRoleName(UserRoleType.LEADAPPLICANT.getName()).build();
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).withRole(LEADAPPLICANT).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
         when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
         when(userService.retrieveUserById(user.getId())).thenReturn(user);

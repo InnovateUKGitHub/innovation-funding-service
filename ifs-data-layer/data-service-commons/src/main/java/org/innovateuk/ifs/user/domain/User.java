@@ -118,8 +118,8 @@ public class User extends AuditableEntity implements Serializable{
         roles.add(role);
     }
 
-    public boolean hasRole(UserRoleType type) {
-        return getRoles().stream().anyMatch(role -> role.getName().equals(type.getName()));
+    public boolean hasRole(Role type) {
+        return getRoles().contains(type);
     }
 
     public void setRoles(Set<Role> roles) {

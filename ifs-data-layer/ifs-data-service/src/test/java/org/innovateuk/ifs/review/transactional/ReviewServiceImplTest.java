@@ -17,7 +17,6 @@ import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
@@ -151,7 +150,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .withApplication(applications.toArray(new Application[1]))
                 .build(1);
 
-        Review review = new Review(applications.get(0), reviewParticipants.get(0), Role.PANEL_ASSESSOR);
+        Review review = new Review(applications.get(0), reviewParticipants.get(0));
         review.setActivityState(acceptedActivityState);
 
         when(reviewParticipantRepositoryMock

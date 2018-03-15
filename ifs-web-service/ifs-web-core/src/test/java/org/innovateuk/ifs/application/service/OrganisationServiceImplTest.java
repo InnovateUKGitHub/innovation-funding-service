@@ -8,7 +8,6 @@ import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.junit.Test;
@@ -24,6 +23,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -155,7 +155,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         setLoggedInUser(userResource);
 
         when(projectServiceMock.getProjectUsersForProject(projectId)).
-                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRole(PARTNER).build()));
 
         boolean result = service.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
 
@@ -174,7 +174,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         setLoggedInUser(userResource);
 
         when(projectServiceMock.getProjectUsersForProject(projectId)).
-                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRole(PARTNER).build()));
 
         boolean result = service.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
 
@@ -193,7 +193,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         setLoggedInUser(userResource);
 
         when(projectServiceMock.getProjectUsersForProject(projectId)).
-                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(expectedOrgId).withRole(PARTNER).build()));
 
         Long organisationId = service.getOrganisationIdFromUser(projectId, userResource);
 

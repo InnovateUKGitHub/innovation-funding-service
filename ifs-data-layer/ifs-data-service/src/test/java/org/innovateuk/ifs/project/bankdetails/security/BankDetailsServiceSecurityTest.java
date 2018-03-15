@@ -8,16 +8,15 @@ import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.method.P;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<BankDetailsService> {
     @Override
@@ -27,9 +26,8 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
 
     @Test
     public void testGetProjectBankDetailsStatusSummaryAllowedIfProjectFinanceRole() {
-
-        stream(UserRoleType.values()).forEach(role -> {
-            UserResource user = newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build();
+        stream(Role.values()).forEach(role -> {
+            UserResource user = newUserResource().withRolesGlobal(singletonList(role)).build();
             setLoggedInUser(user);
 
             if (role == PROJECT_FINANCE) {

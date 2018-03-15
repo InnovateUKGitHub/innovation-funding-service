@@ -11,7 +11,6 @@ import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.getLoggedInUser;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 

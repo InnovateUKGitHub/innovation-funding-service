@@ -26,7 +26,7 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +45,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -284,8 +284,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         return NOT_STARTED;
     }
 
-    private Map<UserRoleType, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project) {
-        Map<UserRoleType, ProjectActivityStates> roleSpecificGolStates = new HashMap<UserRoleType, ProjectActivityStates>();
+    private Map<Role, ProjectActivityStates> getRoleSpecificGrantOfferLetterState(Project project) {
+        Map<Role, ProjectActivityStates> roleSpecificGolStates = new HashMap<Role, ProjectActivityStates>();
 
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
         ProjectActivityStates spendProfileStatus = getSpendProfileStatus(project, financeChecksStatus);

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.viewmodel.AssignButtonsViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,6 +31,8 @@ import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilde
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -96,7 +97,7 @@ public class AssignButtonsPopulatorTest {
 
     private ApplicantResourceBuilder applicantResource(boolean lead) {
         return newApplicantResource()
-                .withProcessRole(newProcessRoleResource().withRoleName(lead ? UserRoleType.LEADAPPLICANT.getName() : UserRoleType.COLLABORATOR.getName()).build())
+                .withProcessRole(newProcessRoleResource().withRole(lead ? LEADAPPLICANT : COLLABORATOR).build())
                 .withOrganisation(newOrganisationResource().build());
     }
 }

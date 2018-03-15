@@ -13,27 +13,25 @@ import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
+import java.util.EnumSet;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
+
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = EnumSet.complementOf(EnumSet.of(COMP_ADMIN, PROJECT_FINANCE));
 
     private GrantOfferLetterPermissionRules projectGrantOfferPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -207,13 +205,11 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
 
-        List<UserRoleType> nonCompAdminRoles = Arrays.stream(UserRoleType.values()).filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
+        EnumSet<Role> nonCompAdminRoles = EnumSet.complementOf(EnumSet.of(COMP_ADMIN, PROJECT_FINANCE));
 
         nonCompAdminRoles.forEach(role -> {
-
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRolesGlobal(singletonList(role)).build());
             try {
                 classUnderTest.generateGrantOfferLetter(projectId, fileEntryResource);
                 Assert.fail("Should not have been able to generate GOL without the global Comp Admin role");
@@ -225,13 +221,9 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testGenerateGrantOfferLetterIfReadyDeniedIfNotCorrectGlobalRoles() {
-
         final Long projectId = 1L;
 
-        List<UserRoleType> nonCompAdminRoles = Arrays.stream(UserRoleType.values()).filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
 
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());

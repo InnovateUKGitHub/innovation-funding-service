@@ -22,7 +22,6 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -59,6 +58,7 @@ import static org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl.Noti
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -102,7 +102,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.SUPPORT);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, Role.SUPPORT);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_INVALID));
     }
@@ -118,7 +118,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveUserInviteWhenRoleSpecifiedIsNotInternalRole() {
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.COLLABORATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, COLLABORATOR);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
@@ -128,7 +128,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void saveUserInviteWhenEmailDomainIsIncorrect() throws Exception {
 
-        UserRoleType adminRoleType = UserRoleType.SUPPORT;
+        Role adminRoleType = Role.SUPPORT;
         invitedUser.setEmail("Astle.Pimenta@gmail.com");
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
@@ -138,16 +138,12 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void saveUserInviteWhenUserAlreadyInvited() throws Exception {
-
-        UserRoleType adminRoleType = UserRoleType.SUPPORT;
-
-        Role role = Role.SUPPORT;
         RoleInvite roleInvite = new RoleInvite();
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
         when(roleInviteRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Collections.singletonList(roleInvite));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, adminRoleType);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, SUPPORT);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_TARGET_USER_ALREADY_INVITED));
 
@@ -172,7 +168,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR);
 
         verify(roleInviteRepositoryMock, times(2)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
@@ -202,7 +198,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     @Test
     public void inviteInternalUserSendEmailFails() throws Exception {
-        Role role = Role.SUPPORT;
+        Role role = SUPPORT;
         RoleInvite expectedRoleInvite = newRoleInvite().withEmail("Astle.Pimenta@innovateuk.gov.uk").withName("Astle Pimenta").withRole(role).withStatus(CREATED).withHash("").build();
         // hash is random, so capture RoleInvite value to verify other fields
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
@@ -211,7 +207,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.SUPPORT);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, SUPPORT);
 
         verify(roleInviteRepositoryMock, times(1)).save(roleInviteArgumentCaptor.capture());
         verify(emailService).sendEmail(any(), paramsArgumentCaptor.capture(), any());
@@ -252,7 +248,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.of(newUser().build()));
 
-        ServiceResult<Void> result = service.saveUserInvite(invitedUser, UserRoleType.IFS_ADMINISTRATOR);
+        ServiceResult<Void> result = service.saveUserInvite(invitedUser, IFS_ADMINISTRATOR);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(USER_ROLE_INVITE_EMAIL_TAKEN));
         verify(roleInviteRepositoryMock, never()).save(Mockito.any(RoleInvite.class));

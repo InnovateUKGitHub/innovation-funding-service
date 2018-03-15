@@ -432,7 +432,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
 
-        ServiceResult<Void> result = service.editInternalUser(userToEdit, UserRoleType.COLLABORATOR);
+        ServiceResult<Void> result = service.editInternalUser(userToEdit, Role.COLLABORATOR);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(NOT_AN_INTERNAL_USER_ROLE));
@@ -446,7 +446,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         when(baseUserServiceMock.getUserById(userToEdit.getId())).thenReturn(serviceFailure(notFoundError(User.class, userToEdit.getId())));
 
-        ServiceResult<Void> result = service.editInternalUser(userToEdit, UserRoleType.SUPPORT);
+        ServiceResult<Void> result = service.editInternalUser(userToEdit, Role.SUPPORT);
 
         assertTrue(result.isFailure());
         assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
@@ -458,7 +458,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         setUpUsersForEditInternalUserSuccess();
 
-        UserRoleType newRole = UserRoleType.SUPPORT;
+        Role newRole = Role.SUPPORT;
         
         when(userRepositoryMock.findOne(userToEdit.getId())).thenReturn(userInDB);
         when(userMapperMock.mapToDomain(userResourceInDB)).thenReturn(userInDB);

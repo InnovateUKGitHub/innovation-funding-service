@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;

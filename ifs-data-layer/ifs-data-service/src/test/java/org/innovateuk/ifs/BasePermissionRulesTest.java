@@ -11,7 +11,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -28,7 +27,7 @@ import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUs
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Mockito.when;
@@ -49,11 +48,6 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected List<UserResource> allInternalUsers;
 
-    protected Role compAdminRole() {
-        return getRoleResource(COMP_ADMIN);
-    }
-
-    protected Role assessorRole() { return getRoleResource(ASSESSOR); }
 
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
@@ -73,10 +67,6 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected UserResource assessorUser() {
         return getUserWithRole(ASSESSOR);
-    }
-
-    protected Role systemRegistrationRole() {
-        return getRoleResource(SYSTEM_REGISTRATION_USER);
     }
 
     protected UserResource systemRegistrationUser() {
@@ -100,21 +90,12 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     }
 
-    private UserResource createUserWithRoles(UserRoleType... types) {
-        List<Role> roles = simpleMap(asList(types), this::getRoleResource);
-        return newUserResource().withRolesGlobal(roles).build();
+    private UserResource createUserWithRoles(Role... roles) {
+        return newUserResource().withRolesGlobal(asList(roles)).build();
     }
 
-    protected UserResource getUserWithRole(UserRoleType type) {
-        return simpleFilter(allGlobalRoleUsers, user -> simpleMap(user.getRoles(), Role::getName).contains(type.getName())).get(0);
-    }
-
-    private Role getRoleResource(UserRoleType type) {
-        return simpleFilter(allRolesResources, role -> role.getName().equals(type.getName())).get(0);
-    }
-
-    protected Role getRole(UserRoleType type) {
-        return simpleFilter(allRoles, role -> role.getName().equals(type.getName())).get(0);
+    protected UserResource getUserWithRole(Role type) {
+        return simpleFilter(allGlobalRoleUsers, user -> user.hasRole(type)).get(0);
     }
 
     protected void setUpUserAsProjectManager(ProjectResource projectResource, UserResource user) {
@@ -147,7 +128,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected void setUpUserAsCompAdmin(ProjectResource project, UserResource user) {
-        List<Role> compAdminRoleResource = singletonList(Role.COMP_ADMIN);
+        List<Role> compAdminRoleResource = singletonList(COMP_ADMIN);
         user.setRoles(compAdminRoleResource);
     }
 

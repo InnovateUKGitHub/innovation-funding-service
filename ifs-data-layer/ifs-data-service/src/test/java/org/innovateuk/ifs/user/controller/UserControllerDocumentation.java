@@ -24,8 +24,7 @@ import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -127,7 +126,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void testFindActiveInternalUsers() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
+        when(userServiceMock.findActiveByProcessRoles(Role.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
         mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
@@ -137,7 +136,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void testFindInactiveInternalUsers() throws Exception {
         UserPageResource userPageResource = buildUserPageResource();
-        when(userServiceMock.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
+        when(userServiceMock.findInactiveByProcessRoles(Role.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(userPageResource));
         mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         responseFields(userPageResourceFields)
@@ -182,7 +181,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void editInternalUser() throws Exception {
 
-        EditUserResource editUserResource = new EditUserResource(1L, "Johnathan", "Dow", UserRoleType.SUPPORT);
+        EditUserResource editUserResource = new EditUserResource(1L, "Johnathan", "Dow", Role.SUPPORT);
         when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/internal/edit")

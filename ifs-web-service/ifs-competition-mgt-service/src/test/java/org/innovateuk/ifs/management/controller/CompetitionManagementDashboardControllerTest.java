@@ -13,7 +13,6 @@ import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementD
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

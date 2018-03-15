@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewMod
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
