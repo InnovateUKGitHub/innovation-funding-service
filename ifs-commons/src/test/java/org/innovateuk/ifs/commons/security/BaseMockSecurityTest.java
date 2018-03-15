@@ -3,7 +3,7 @@ package org.innovateuk.ifs.commons.security;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.security.evaluator.*;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
@@ -24,7 +24,6 @@ import java.util.Map.Entry;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.*;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -253,7 +252,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
         asList(UserRoleType.values()).forEach(role -> {
 
-            RoleResource roleResource = newRoleResource().withType(role).build();
+            Role roleResource = Role.getByName(role.getName());
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 

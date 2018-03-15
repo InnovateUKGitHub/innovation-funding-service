@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.security.ProjectFinancePermissionRules;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -23,7 +23,6 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
@@ -73,7 +72,7 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
     @Test
     public void testAllInternalUsersCanUpdateFinanceCosts(){
         asList(UserRoleType.values()).forEach(role -> {
-            RoleResource roleResource = newRoleResource().withType(role).build();
+            Role roleResource = Role.getByName(role.getName());
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
             if (PROJECT_FINANCE.equals(role) || UserRoleType.COMP_ADMIN.equals(role)) {

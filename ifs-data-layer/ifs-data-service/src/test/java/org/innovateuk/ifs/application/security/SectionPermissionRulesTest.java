@@ -7,12 +7,13 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -50,7 +51,7 @@ public class SectionPermissionRulesTest extends BasePermissionRulesTest<SectionP
         UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
         UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();
 
-        when(processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), application.getId(), LEADAPPLICANT.getName()))
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT))
                 .thenReturn(true);
         when(processRoleRepository.findByUserIdAndApplicationId(nonProjectTeamMember.getId(), application.getId()))
                 .thenReturn(null);

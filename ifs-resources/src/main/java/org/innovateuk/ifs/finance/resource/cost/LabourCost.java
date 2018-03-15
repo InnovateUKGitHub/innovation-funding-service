@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -93,11 +92,6 @@ public class LabourCost extends AbstractFinanceRowItem {
         return grossEmployeeCost;
     }
 
-    @JsonProperty("grossAnnualSalary")
-    public BigDecimal getGrossAnnualSalary(){   // ZDD support to be removed on next Sprint
-        return grossEmployeeCost;
-    }
-
     public BigDecimal getRate(Integer workingDaysPerYear) {
         rate = getRatePerDay(workingDaysPerYear);
         return rate;
@@ -147,11 +141,6 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     public void setGrossEmployeeCost(BigDecimal grossEmployeeCost) {
-        this.grossEmployeeCost = grossEmployeeCost;
-    }
-
-    @JsonProperty("grossAnnualSalary")
-    public void setGrossAnnualSalary(BigDecimal grossEmployeeCost){   // zdd support to be removed next Sprint
         this.grossEmployeeCost = grossEmployeeCost;
     }
 

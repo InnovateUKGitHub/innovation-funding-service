@@ -2,16 +2,18 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.testdata.builders.data.AssessorData;
 import org.innovateuk.ifs.user.domain.Ethnicity;
-import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -21,7 +23,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -59,7 +60,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     withDisability(disability).
                     withGender(gender).
                     withPassword("Passw0rd").
-                    withRoles(singletonList(getAssessorRoleResource())).
+                    withRoles(singletonList(Role.ASSESSOR)).
                     build();
 
             assessorService.registerAssessorByHash(hash, registration).getSuccess();
@@ -103,10 +104,8 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
                 User user = userRepository.findByEmail(data.getEmail()).get();
 
-                Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-
-                if (!user.getRoles().contains(assessorRole)) {
-                    user.getRoles().add(assessorRole);
+                if (!user.getRoles().contains(Role.ASSESSOR)) {
+                    user.getRoles().add(Role.ASSESSOR);
                 }
 
                 userRepository.save(user);
@@ -253,11 +252,6 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
     public AssessorDataBuilder rejectInvite(String hash, String rejectionReason, String rejectionComment) {
         return with(data -> newAssessorInviteData(serviceLocator).rejectInvite(hash, rejectionReason, Optional.of(rejectionComment)).build());
     }
-
-    private RoleResource getAssessorRoleResource() {
-        return roleService.findByUserRoleType(ASSESSOR).getSuccess();
-    }
-
 
     public static AssessorDataBuilder newAssessorData(ServiceLocator serviceLocator) {
         return new AssessorDataBuilder(emptyList(), serviceLocator);

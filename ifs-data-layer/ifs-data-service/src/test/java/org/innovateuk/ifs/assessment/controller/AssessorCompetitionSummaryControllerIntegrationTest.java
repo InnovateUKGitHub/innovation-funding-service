@@ -19,12 +19,11 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
@@ -40,9 +39,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessorAssessmentResourceBuilder.newAssessorAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -50,8 +47,6 @@ import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 
@@ -71,9 +66,6 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
     @Autowired
     private OrganisationRepository organisationRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -138,11 +130,9 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         userRepository.save(paulPlum);
 
-        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
-
         List<ProcessRole> processRoles = newProcessRole()
                 .withId()
-                .withRole(assessorRole)
+                .withRole(Role.ASSESSOR)
                 .withApplication(applications.get(0), applications.get(1), applications.get(2), applications.get(0), applications.get(1))
                 .withUser(paulPlum, paulPlum, paulPlum, felixWilson, felixWilson)
                 .build(5);
@@ -155,11 +145,9 @@ public class AssessorCompetitionSummaryControllerIntegrationTest extends BaseCon
 
         organisationRepository.save(organisations);
 
-        Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
-
         processRoles.addAll(
                 newProcessRole()
-                        .withRole(leadApplicantRole)
+                        .withRole(Role.LEADAPPLICANT)
                         .withApplication(applications.get(0), applications.get(1), applications.get(2))
                         .withUser(steveSmith)
                         .withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())

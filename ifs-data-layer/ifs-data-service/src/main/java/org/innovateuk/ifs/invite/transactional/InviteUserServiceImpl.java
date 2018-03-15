@@ -23,9 +23,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.mapper.RoleMapper;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -77,9 +75,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
-    @Autowired
-    private RoleMapper roleMapper;
-
     private static final Log LOG = LogFactory.getLog(InviteUserServiceImpl.class);
 
     @Value("${ifs.web.baseURL}")
@@ -105,8 +100,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(() -> getRole(adminRoleType))
-                .andOnSuccess(role -> saveInvite(invitedUser, role))
+                .andOnSuccess(role -> saveInvite(invitedUser, Role.getByName(adminRoleType.getName())))
                 .andOnSuccess(this::inviteInternalUser);
     }
 
@@ -187,7 +181,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private Map<String, Object> createGlobalArgsForInternalUserInvite(RoleInvite roleInvite) {
         Map<String, Object> globalArguments = new HashMap<>();
-        RoleResource roleResource = roleMapper.mapIdToResource(roleInvite.getTarget().getId());
+        Role roleResource = roleInvite.getTarget();
         globalArguments.put("role", roleResource.getDisplayName());
         globalArguments.put("inviteUrl", getInviteUrl(webBaseUrl + WEB_CONTEXT, roleInvite));
         return globalArguments;
