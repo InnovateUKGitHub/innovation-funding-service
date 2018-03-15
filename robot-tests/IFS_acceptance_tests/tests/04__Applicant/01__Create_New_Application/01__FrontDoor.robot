@@ -49,11 +49,9 @@ Guest user can see the opening and closing status of competitions
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Opening soon  Opens
 
-
     Given Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
     When the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition  ${READY_TO_OPEN_COMPETITION_NAME}  Open now  Opened
-
 
     Given Change the close date of the Competition in the database to thirteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     When the user navigates to the page  ${frontDoor}
@@ -178,23 +176,3 @@ the registration date of the non-ifs competition belongs to the past
     [Arguments]  ${competitionId}
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='REGISTRATION_DATE';
-
-Get competitions id and set it as suite variable
-    [Arguments]  ${competitionTitle}
-    ${competitionId} =  get comp id from comp title  ${competitionTitle}
-    Set suite variable  ${competitionId}
-
-Save competition's current dates
-    [Arguments]  ${competitionId}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='OPEN_DATE';
-    ${result} =  get from list  ${result}  0
-    ${openDate} =  get from list  ${result}  0
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
-    ${result} =  get from list  ${result}  0
-    ${submissionDate} =  get from list  ${result}  0
-    [Return]  ${openDate}  ${submissionDate}
-
-Return the competition's milestones to their initial values
-    [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
-    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
-    Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
