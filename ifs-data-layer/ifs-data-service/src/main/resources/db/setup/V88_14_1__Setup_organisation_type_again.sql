@@ -1,2 +1,0 @@
-UPDATE `organisation_type` SET `name`='Public sector organisation or charity' WHERE `name`='Charity';
-UPDATE `organisation_type` SET `name`='Research and technology organisations (RTO\'s)' WHERE `name`='Public Sector';

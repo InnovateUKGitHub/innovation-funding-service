@@ -14,13 +14,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 

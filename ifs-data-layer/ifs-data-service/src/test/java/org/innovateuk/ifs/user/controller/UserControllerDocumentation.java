@@ -9,18 +9,15 @@ import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 
-import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
-import static org.innovateuk.ifs.documentation.UserDocs.internalUserRegistrationResourceFields;
-import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
-import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.UserDocs.*;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -35,9 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
