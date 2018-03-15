@@ -32,11 +32,11 @@ Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user should see the element in the paginated list     link=${createApplicationOpenCompetition}
+    Given the user should see the element    link=Home and industrial efficiency programme
     Then the user should see the element    jQuery=h3:contains("Eligibility")
     And the user should see the element    jQuery=div:contains("UK based business of any size. Must involve at least one SME")
-    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("${createApplicationOpenCompetitionOpenDate}")
-    And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("${createApplicationOpenCompetitionCloseDate}")
+    Then the user should see the element    jQuery=dt:contains("Opened") + dd:contains("15 April 2016")
+    And the user should see the element    jQuery=dt:contains("Closes") + dd:contains("9 September 2067")
     #Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
 
 Guest user can see the opening and closing status of competitions
@@ -66,17 +66,17 @@ Guest user can filter competitions by Innovation area
     When the user selects the option from the drop-down menu    Space technology    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
     Then the user should see the element    jQuery=a:contains("Transforming big data")
-    And the user should not see the element in the paginated list   jQuery=a:contains("${createApplicationOpenCompetition}")
+    And the user should not see the element    jQuery=a:contains("Home and industrial efficiency programme")
     When the user selects the option from the drop-down menu    Any    id=innovation-area
     And the user clicks the button/link    jQuery=button:contains("Update results")
-    Then the user should see the element in the paginated list   jQuery=a:contains("${createApplicationOpenCompetition}")
+    Then the user should see the element    jQuery=a:contains("Home and industrial efficiency programme")
 
 Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
     [Tags]  Pending
     # TODO IFS-2986
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list    link=${READY_TO_OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
     And the user should see the element    jQuery=li:contains("Competition closes")
@@ -98,11 +98,11 @@ Guest user can see the public information of a competition
     [Documentation]    INFUND-6923
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then the user should see the element    jQuery=h1:contains("${UPCOMING_COMPETITION_TO_ASSESS_NAME}")
-    And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}")
+    Given the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    Then the user should see the element    jQuery=h1:contains("Home and industrial efficiency programme")
+    And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Friday 15 April 2016")
     And the user should see the element    jQuery=li:contains("Competition closes")
-    And the user should see the element    jQuery=li:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME_LONG}")
+    And the user should see the element    jQuery=li:contains("Friday 9 September 2067")
     And the user should see the text in the page    Or sign in to continue an existing application.
     And the user should see the element    jQuery=.button:contains("Start new application")
 
@@ -135,10 +135,10 @@ Guest user can see the public Dates of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link    link=Dates
-    When the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE_TIME}") + dd:contains("Competition opens")
+    When the user should see the element    jQuery=dt:contains("15 April 2016") + dd:contains("Competition opens")
     And the user should see the element    jQuery=dt:contains("12 May 2016") + dd:contains("Briefing event in Belfast")
-    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}") + dd:contains("Competition closes")
-    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE_TIME}") + dd:contains("Applicants notified")
+    And the user should see the element    jQuery=dt:contains("9 September 2067") + dd:contains("Competition closes")
+    And the user should see the element    jQuery=dt:contains("20 June 2068") + dd:contains("Applicants notified")
 
 Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923
@@ -158,7 +158,7 @@ Guest user can apply to a competition
     [Documentation]    INFUND-6923
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link in the paginated list    link=${createApplicationOpenCompetition}
+    Given the user clicks the button/link    link=Home and industrial efficiency programme
     When the user clicks the button/link    link=Start new application
     Then the user should see the element    jQuery=.button:contains("Sign in")
     And the user should see the element    jQuery=.button:contains("Create")
