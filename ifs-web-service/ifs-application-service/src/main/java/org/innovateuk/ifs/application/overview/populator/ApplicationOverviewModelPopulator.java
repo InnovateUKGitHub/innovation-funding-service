@@ -161,7 +161,7 @@ public class ApplicationOverviewModelPopulator {
 
     private ApplicationOverviewUserViewModel getUserDetails(ApplicationResource application, Long userId) {
         Boolean userIsLeadApplicant = userService.isLeadApplicant(userId, application);
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
+        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application.getId());
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         return new ApplicationOverviewUserViewModel(userIsLeadApplicant, leadApplicant,

@@ -24,7 +24,6 @@ import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitionFunders;
 import static org.innovateuk.ifs.testdata.services.CsvUtils.readCompetitions;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirstMandatory;
 
