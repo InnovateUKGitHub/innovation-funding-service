@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -22,7 +24,8 @@ public class ProjectDetailsViewModel {
     private ProjectResource project;
     private UserResource currentUser;
     private List<Long> usersPartnerOrganisations;
-    private List<OrganisationResource> partnerOrganisations;
+    private List<OrganisationResource> organisations;
+    private List<PartnerOrganisationResource> partnerOrganisations;
 
     private OrganisationResource leadOrganisation;
     private ApplicationResource app;
@@ -38,7 +41,8 @@ public class ProjectDetailsViewModel {
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                    List<Long> usersPartnerOrganisations,
-                                   List<OrganisationResource> partnerOrganisations,
+                                   List<OrganisationResource> organisations,
+                                   List<PartnerOrganisationResource> partnerOrganisations,
                                    OrganisationResource leadOrganisation,
                                    ApplicationResource app,
                                    List<ProjectUserResource> projectUsers,
@@ -53,6 +57,7 @@ public class ProjectDetailsViewModel {
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
         this.partnerOrganisations = partnerOrganisations;
+        this.organisations = organisations;
         this.leadOrganisation = leadOrganisation;
         this.app = app;
         this.competition = competition;
@@ -74,8 +79,8 @@ public class ProjectDetailsViewModel {
         return currentUser;
     }
 
-    public List<OrganisationResource> getPartnerOrganisations() {
-        return partnerOrganisations;
+    public List<OrganisationResource> getOrganisations() {
+        return organisations;
     }
 
     public ApplicationResource getApp() {
@@ -92,6 +97,14 @@ public class ProjectDetailsViewModel {
 
     public Map<Long, ProjectUserResource> getFinanceContactsByOrganisationId() {
         return financeContactsByOrganisationId;
+    }
+
+    public String getPostCodeForPartnerOrganisation(Long organisationId) {
+        return partnerOrganisations.stream()
+                .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
+                .findFirst()
+                .map(PartnerOrganisationResource::getPostCode)
+                .orElse("Select project location");
     }
 
     public OrganisationResource getLeadOrganisation() {

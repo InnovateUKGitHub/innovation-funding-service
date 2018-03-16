@@ -20,12 +20,15 @@ import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
+import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -94,6 +97,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     private OrganisationService organisationService;
 
     @Autowired
+    private PartnerOrganisationRestService partnerOrganisationService;
+
+    @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
     @Autowired
@@ -110,8 +116,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<OrganisationResource> partnerOrganisations
+        List<OrganisationResource> organisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
+
+        List<PartnerOrganisationResource> partnerOrganisations = null;
+        if (competitionResource.isLocationPerPartner()) {
+            partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess();
+        }
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
@@ -121,7 +132,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
-                partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
+                organisations, partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsCompleteAndAllFinanceContactsAssigned,
                 getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
 
@@ -139,15 +150,21 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<OrganisationResource> partnerOrganisations
+        List<OrganisationResource> organisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
+
+        List<PartnerOrganisationResource> partnerOrganisations = null;
+        if (competitionResource.isLocationPerPartner()) {
+            partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess();
+        }
+
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
         boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
-                partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
+                organisations, partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
                 getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true, true));
 
@@ -180,6 +197,91 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return validationHandler.addAnyErrors(updateResult, toField("financeContact")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
+    }
+
+    //TODO - ZZZ - @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @GetMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    public String viewPartnerProjectLocation(@PathVariable("projectId") final Long projectId,
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             Model model,
+                                             UserResource loggedInUser) {
+
+        PartnerOrganisationResource partnerOrganisation = partnerOrganisationService.getPartnerOrganisation(projectId, organisationId).getSuccess();
+        PartnerProjectLocationForm form = new PartnerProjectLocationForm(partnerOrganisation.getPostCode());
+
+        return doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
+
+    }
+
+    private String doViewPartnerProjectLocation(Long projectId, Long organisationId, UserResource loggedInUser, Model model, PartnerProjectLocationForm form) {
+
+        if(!organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())){
+            return redirectToProjectDetails(projectId);
+        }
+
+        ProjectResource projectResource = projectService.getById(projectId);
+
+        model.addAttribute("model", new PartnerProjectLocationViewModel(projectId, projectResource.getName(), organisationId));
+        model.addAttribute(FORM_ATTR_NAME, form);
+
+        return "project/partner-project-location";
+    }
+
+    //TODO - ZZZ - @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
+    @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
+    public String updatePartnerProjectLocation(@PathVariable("projectId") final Long projectId,
+                                               @PathVariable("organisationId") final Long organisationId,
+                                               @ModelAttribute(FORM_ATTR_NAME) PartnerProjectLocationForm form,
+                                               @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                               Model model,
+                                               UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> doViewPartnerProjectLocation(projectId, organisationId, loggedInUser, model, form);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
+
+            return validationHandler.addAnyErrors(updateResult, toField("projectStartDate")).
+                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+        });
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
+    @PostMapping("/{projectId}/details/start-date")
+    public String updateStartDateDEL(@PathVariable("projectId") final Long projectId,
+                                  @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
+                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                  Model model,
+                                  UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
+
+            return validationHandler.addAnyErrors(updateResult, toField("projectStartDate")).
+                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
+        });
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
+    @GetMapping("/{projectId}/details/start-date")
+    public String viewStartDateDEL(@PathVariable("projectId") final Long projectId, Model model,
+                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
+                                UserResource loggedInUser) {
+
+        ProjectResource projectResource = projectService.getById(projectId);
+        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
+        form.setProjectStartDate(defaultStartDate);
+        return doViewProjectStartDate(model, projectResource, form);
+
+    }
+
+    private String doViewProjectStartDateDEL(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
+        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
+        model.addAttribute(FORM_ATTR_NAME, form);
+        return "project/details-start-date";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
