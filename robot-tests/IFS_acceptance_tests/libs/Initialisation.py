@@ -128,17 +128,17 @@ for comp in cursor.fetchall():
     dates_for_milestone = milestones_for_competition[milestoneType] if milestoneType in milestones_for_competition else {}
 
     dates_for_milestone['rawDate'] = milestoneDate
-    dates_for_milestone['simpleDate'] = milestoneDate.strftime('%Y-%m-%d') if milestoneDate is not None else None
-    dates_for_milestone['prettyDayMonth'] = milestoneDate.strftime('%-d %B') if milestoneDate is not None else None
-    dates_for_milestone['prettyDate'] = milestoneDate.strftime('%-d %B %Y') if milestoneDate is not None else None
-    dates_for_milestone['prettyDateTime'] = milestoneDate.strftime('%-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
-    dates_for_milestone['prettyLongDate'] = milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
-    dates_for_milestone['prettyLongDateTime'] = milestoneDate.strftime('%A %-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None
-    dates_for_milestone['prettyLongTimeDate'] = milestoneDate.strftime('%-I:%M') + milestoneDate.strftime('%p').lower() + milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None
-    dates_for_milestone['dateTimeDb'] = milestoneDate.strftime('%Y-%m-%d %-I:%M:%S') if milestoneDate is not None else None
-    dates_for_milestone['day'] = milestoneDate.strftime('%-d') if milestoneDate is not None else None
-    dates_for_milestone['month'] = milestoneDate.strftime('%-m') if milestoneDate is not None else None
-    dates_for_milestone['year'] = milestoneDate.strftime('%Y') if milestoneDate is not None else None
+    dates_for_milestone['simpleDate'] = milestoneDate.strftime('%Y-%m-%d') if milestoneDate is not None else None            # 2002-03-28
+    dates_for_milestone['prettyDayMonth'] = milestoneDate.strftime('%-d %B') if milestoneDate is not None else None          # 4 February
+    dates_for_milestone['prettyDate'] = milestoneDate.strftime('%-d %B %Y') if milestoneDate is not None else None           # 4 February 2002
+    dates_for_milestone['prettyDateTime'] = milestoneDate.strftime('%-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None  # 4 February 2002 2:04am
+    dates_for_milestone['prettyLongDate'] = milestoneDate.strftime('%A %-d %B %Y') if milestoneDate is not None else None    # Sunday 2 February 2002
+    dates_for_milestone['prettyLongDateTime'] = milestoneDate.strftime('%A %-d %B %Y %-I:%M') + milestoneDate.strftime('%p').lower() if milestoneDate is not None else None  # Sunday 4 February 2002 2:04am
+    dates_for_milestone['prettyLongTimeDate'] = milestoneDate.strftime('%-I:%M') + milestoneDate.strftime('%p').lower() + milestoneDate.strftime(' %A %-d %B %Y') if milestoneDate is not None else None  # 2:05am
+    dates_for_milestone['dateTimeDb'] = milestoneDate.strftime('%Y-%m-%d %-I:%M:%S') if milestoneDate is not None else None  # 2002-02-02 2:05:36
+    dates_for_milestone['day'] = milestoneDate.strftime('%-d') if milestoneDate is not None else None    # 2 as day the - means that there is no 0 if date is 02
+    dates_for_milestone['month'] = milestoneDate.strftime('%-m') if milestoneDate is not None else None  # 2 as month the - means that there is no 0 if date is 02
+    dates_for_milestone['year'] = milestoneDate.strftime('%Y') if milestoneDate is not None else None    # 2002
 
     competition_milestones[competitionId] = milestones_for_competition
     milestones_for_competition[milestoneType] = dates_for_milestone
