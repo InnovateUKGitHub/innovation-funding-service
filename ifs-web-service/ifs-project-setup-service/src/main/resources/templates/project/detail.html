@@ -88,7 +88,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr th:each="organisation: ${model.partnerOrganisations}">
+            <tr th:each="organisation: ${model.organisations}">
                 <td>
                     <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
                         <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
