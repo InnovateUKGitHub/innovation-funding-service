@@ -3,7 +3,7 @@ services:
 
   prototypes:
     hostname: prototypes
-    image: innovateuk/prototypes
+    image: innovateuk/prototypes-service
     ports:
       - "1234:8080"
     networks:
