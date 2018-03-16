@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.form.controller;
 
+import org.innovateuk.ifs.application.transactional.SectionStatusService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.form.transactional.SectionService;
@@ -22,52 +24,71 @@ public class SectionController {
     @Autowired
     private SectionService sectionService;
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
+    @Autowired
+    private SectionStatusService sectionStatusService;
+
     @GetMapping("/{sectionId}")
     public RestResult<SectionResource> getById(@PathVariable("sectionId") final Long sectionId) {
         return sectionService.getById(sectionId).toGetResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/getCompletedSectionsByOrganisation/{applicationId}")
     public RestResult<Map<Long, Set<Long>>> getCompletedSectionsMap(@PathVariable("applicationId") final Long applicationId) {
-        return sectionService.getCompletedSections(applicationId).toGetResponse();
+        return sectionStatusService.getCompletedSections(applicationId).toGetResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/getCompletedSections/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getCompletedSections(@PathVariable("applicationId") final Long applicationId,
                                                       @PathVariable("organisationId") final Long organisationId) {
 
-        return sectionService.getCompletedSections(applicationId, organisationId).toGetResponse();
+        return sectionStatusService.getCompletedSections(applicationId, organisationId).toGetResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @PostMapping("/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("sectionId") final Long sectionId,
                                                                @PathVariable("applicationId") final Long applicationId,
                                                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
-        return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
+        return sectionStatusService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @PostMapping("/markAsNotRequired/{sectionId}/{applicationId}/{markedAsNotRequiredById}")
     public RestResult<Void> markAsNotRequired(@PathVariable("sectionId") final Long sectionId,
                                               @PathVariable("applicationId") final Long applicationId,
                                               @PathVariable("markedAsNotRequiredById") final Long markedAsNotRequiredById) {
-        return sectionService.markSectionAsNotRequired(sectionId, applicationId, markedAsNotRequiredById).toGetResponse();
+        return sectionStatusService.markSectionAsNotRequired(sectionId, applicationId, markedAsNotRequiredById).toGetResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @PostMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
                                              @PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
-        return sectionService.markSectionAsInComplete(sectionId, applicationId, markedAsInCompleteById).toPutResponse();
+        return sectionStatusService.markSectionAsInComplete(sectionId, applicationId, markedAsInCompleteById).toPutResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/allSectionsMarkedAsComplete/{applicationId}")
     public RestResult<Boolean> getCompletedSections(@PathVariable("applicationId") final Long applicationId) {
-        return sectionService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null).toGetResponse();
+        return sectionStatusService.childSectionsAreCompleteForAllOrganisations(null, applicationId, null).toGetResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in SectionStatusController.")
     @GetMapping("/getIncompleteSections/{applicationId}")
     public RestResult<List<Long>> getIncompleteSections(@PathVariable("applicationId") final Long applicationId) {
-        return sectionService.getIncompleteSections(applicationId).toGetResponse();
+        return sectionStatusService.getIncompleteSections(applicationId).toGetResponse();
     }
 
     @GetMapping("/getNextSection/{sectionId}")

@@ -1,13 +1,11 @@
-package org.innovateuk.ifs.form.security;
+package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.security.FormInputResponsePermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -15,8 +13,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -24,7 +22,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Testing how the secured methods in {@link FormInputService} interact with Spring Security
  */
-public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormInputService> {
+public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormInputResponseService> {
 
     private FormInputResponsePermissionRules formInputResponsePermissionRules;
 
@@ -37,10 +35,10 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
     public void testFindResponsesByApplication() {
         long applicationId = 1l;
         classUnderTest.findResponsesByApplication(applicationId);
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).internalUserCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).internalUserCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
     }
 
     @Test
@@ -48,10 +46,10 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         long applicationId = 1l;
         long formInputResponseId = 2l;
         classUnderTest.findResponsesByFormInputIdAndApplicationId(applicationId, formInputResponseId);
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).internalUserCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).internalUserCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
     }
 
 
@@ -90,57 +88,32 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
     @Test
     public void findResponseByApplicationIdAndQuestionId() {
         classUnderTest.findResponseByApplicationIdAndQuestionId(1L, 2L);
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
                 .consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
                 .assessorCanSeeTheInputResponsesInApplicationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
                 .internalUserCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+        verify(formInputResponsePermissionRules, times(TestFormInputResponseService.ARRAY_SIZE_FOR_POST_FILTER_TESTS))
                 .consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
     }
 
     @Override
-    protected Class<TestFormInputService> getClassUnderTest() {
-        return TestFormInputService.class;
+    protected Class<TestFormInputResponseService> getClassUnderTest() {
+        return TestFormInputResponseService.class;
     }
 
-    public static class TestFormInputService implements FormInputService {
+    public static class TestFormInputResponseService implements FormInputResponseService {
 
         static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
         @Override
-        public ServiceResult<FormInputResource> findFormInput(Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<FormInputResource>> findByQuestionId(Long questionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<FormInputResource>> findByQuestionIdAndScope(Long questionId, FormInputScope scope) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<FormInputResource>> findByCompetitionId(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<FormInputResource>> findByCompetitionIdAndScope(Long competitionId, FormInputScope scope) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(Long applicationId) {
+        public ServiceResult<List<FormInputResponseResource>> findResponsesByApplication(long applicationId) {
             return serviceSuccess(newFormInputResponseResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override
-        public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId) {
+        public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(long formInputId, long applicationId) {
             return serviceSuccess(newFormInputResponseResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
@@ -160,15 +133,6 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
             return null;
         }
 
-        @Override
-        public ServiceResult<FormInputResource> save(FormInputResource formInputResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> delete(Long id) {
-            return null;
-        }
     }
 }
 

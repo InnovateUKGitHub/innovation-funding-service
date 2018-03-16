@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
+import org.innovateuk.ifs.application.transactional.QuestionStatusService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.transactional.QuestionService;
@@ -24,47 +26,61 @@ public class QuestionController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
+    private QuestionStatusService questionStatusService;
+
     @GetMapping("/id/{id}")
     public RestResult<QuestionResource> getQuestionById(@PathVariable("id") final Long id) {
         return questionService.getQuestionById(id).toGetResponse();
     }
 
+    @Deprecated
     @PutMapping("/markAsComplete/{questionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("questionId") final Long questionId,
                                                                @PathVariable("applicationId") final Long applicationId,
                                                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
-        return questionService.markAsComplete(ids, markedAsCompleteById).toPutWithBodyResponse();
+        return questionStatusService.markAsComplete(ids, markedAsCompleteById).toPutWithBodyResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @PutMapping("/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("questionId") final Long questionId,
                                  @PathVariable("applicationId") final Long applicationId,
                                  @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
-        return questionService.markAsInComplete(ids, markedAsInCompleteById).toPutResponse();
+        return questionStatusService.markAsInComplete(ids, markedAsInCompleteById).toPutResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @PutMapping("/assign/{questionId}/{applicationId}/{assigneeId}/{assignedById}")
     public RestResult<Void> assign(@PathVariable("questionId") final Long questionId,
                        @PathVariable("applicationId") final Long applicationId,
                        @PathVariable("assigneeId") final Long assigneeId,
                        @PathVariable("assignedById") final Long assignedById) {
         QuestionApplicationCompositeId ids = new QuestionApplicationCompositeId(questionId, applicationId);
-        return questionService.assign(ids, assigneeId, assignedById).toPutResponse();
+        return questionStatusService.assign(ids, assigneeId, assignedById).toPutResponse();
     }
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @GetMapping("/getMarkedAsComplete/{applicationId}/{organisationId}")
     public RestResult<Set<Long>> getMarkedAsComplete(@PathVariable("applicationId") Long applicationId,
                                          @PathVariable("organisationId") Long organisationId) {
-        return questionService.getMarkedAsComplete(applicationId, organisationId).toGetResponse();
+        return questionStatusService.getMarkedAsComplete(applicationId, organisationId).toGetResponse();
     }
 
 
+    @Deprecated
+    @ZeroDowntime(reference = "IFS-2981", description = "Created new endpoint in QuestionStatusController.")
     @PutMapping("/updateNotification/{questionStatusId}/{notify}")
     public RestResult<Void> updateNotification(@PathVariable("questionStatusId") final Long questionStatusId,
                                    @PathVariable("notify") final Boolean notify) {
-        return questionService.updateNotification(questionStatusId, notify).toPutResponse();
+        return questionStatusService.updateNotification(questionStatusId, notify).toPutResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}")

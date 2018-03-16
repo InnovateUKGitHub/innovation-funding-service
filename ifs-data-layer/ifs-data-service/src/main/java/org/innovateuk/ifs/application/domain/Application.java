@@ -285,9 +285,6 @@ public class Application implements ProcessActivity {
         }
     }
 
-
-
-
     public BigDecimal getCompletion() {
         return completion;
     }

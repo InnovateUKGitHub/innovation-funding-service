@@ -1,20 +1,18 @@
 package org.innovateuk.ifs.form.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.form.controller.QuestionController;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.application.domain.QuestionStatus;
-import org.innovateuk.ifs.form.mapper.QuestionMapper;
-import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.commons.security.SecuritySetter;
 import org.innovateuk.ifs.form.builder.FormInputBuilder;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,12 +20,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
-import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -35,15 +32,15 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
 
     @Autowired
-    QuestionStatusRepository questionStatusRepository;
+    private QuestionStatusRepository questionStatusRepository;
     @Autowired
-    FormInputRepository formInputRepository;
+    private FormInputRepository formInputRepository;
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
     @Autowired
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
 
 
     private final Long userId = SecuritySetter.basicSecurityUser.getId();
@@ -74,7 +71,7 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
 
     @Test
     public void testGetQuestionById() throws Exception {
-        questionResource= controller.getQuestionById(questionId).getSuccess();
+        questionResource = controller.getQuestionById(questionId).getSuccess();
 
         assertNotNull(questionResource);
         assertEquals("How does your project align with the scope of this competition?", questionResource.getName());
@@ -102,80 +99,10 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(questionResource.getFormInputs().contains(activeFormInput.getId()));
     }
 
-    @Test
-    public void testMarkAsComplete() throws Exception {
-        controller.markAsComplete(questionId, applicationId, userId);
-
-
-        List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-
-        statuses.forEach(
-                s -> assertTrue(s.getMarkedAsComplete())
-        );
-    }
-
-    @Test
-    public void testMarkAsInComplete() throws Exception {
-        controller.markAsInComplete(questionId, applicationId, userId);
-
-        List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-
-        statuses.forEach(
-                s -> assertFalse(s.getMarkedAsComplete())
-        );
-
-    }
-
-     @Test
-     public void testAssign() throws Exception {
-        controller.assign(questionId, applicationId, newAssigneeProcessRoleId, userId);
-
-        List<QuestionStatus> statuses = questionStatusRepository.findByQuestionIdAndApplicationId(questionId, applicationId);
-
-         statuses.forEach(
-                s -> assertEquals(newAssigneeProcessRoleId, s.getAssignee().getId())
-        );
-    }
-
     @Ignore
     @Test
     public void testAssignMultiple() throws Exception {
         //Todo: don't know how to implement this, can we assign questions that are in the finance form for example?
-    }
-
-    @Test
-    public void testGetMarkedAsComplete() throws Exception {
-        // Start with zero completed
-        Set<Long> markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
-        assertNotNull(markedAsComplete);
-        assertEquals(7, markedAsComplete.size());
-
-        // Complete one section
-        controller.markAsComplete(questionId, applicationId, userId);
-        markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
-        assertNotNull(markedAsComplete);
-        assertEquals(8, markedAsComplete.size());
-
-        // Mark section as incomplete again.
-        controller.markAsInComplete(questionId, applicationId, userId);
-        markedAsComplete = controller.getMarkedAsComplete(applicationId, organisationId).getSuccess();
-        assertNotNull(markedAsComplete);
-        assertEquals(7, markedAsComplete.size());
-    }
-
-    @Test
-    public void testUpdateNotification() throws Exception {
-        QuestionStatus questionStatus = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(questionId, applicationId, userId);
-
-        controller.updateNotification(questionStatus.getId(), true);
-
-        questionStatus = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(questionId, applicationId, userId);
-        assertTrue(questionStatus.getNotified());
-
-        controller.updateNotification(questionStatus.getId(), false);
-
-        questionStatus = questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(questionId, applicationId, userId);
-        assertFalse(questionStatus.getNotified());
     }
 
     @Test
@@ -215,29 +142,6 @@ public class QuestionControllerIntegrationTest extends BaseControllerIntegration
         assertNotNull(nextQuestion);
         assertNotNull(nextQuestion.getId());
         assertEquals(40L, nextQuestion.getId().longValue());
-    }
-
-    @Test
-    public void testIsMarkedAsComplete() throws Exception {
-        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
-
-        controller.markAsComplete(questionId, applicationId, userId);
-
-        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
-    }
-
-    @Test
-    public void testIsMarkedAsCompleteMultiple() throws Exception {
-        question = questionRepository.findOne(QUESTION_ID_WITH_MULTIPLE);
-
-        assertFalse(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
-
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, userId);
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 2L);
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 8L);
-        controller.markAsComplete(QUESTION_ID_WITH_MULTIPLE, applicationId, 9L);
-
-        assertTrue(questionService.isMarkedAsComplete(question, applicationId, organisationId).getSuccess());
     }
 
     @Test

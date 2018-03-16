@@ -301,6 +301,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SectionService sectionServiceMock;
 
     @Mock
+    protected SectionStatusService sectionStatusServiceMock;
+
+    @Mock
     protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
 
     @Mock
@@ -458,6 +461,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FormInputService formInputServiceMock;
+
+    @Mock
+    protected FormInputResponseService formInputResponseService;
 
     @Mock
     protected ApplicationFundingService applicationFundingServiceMock;

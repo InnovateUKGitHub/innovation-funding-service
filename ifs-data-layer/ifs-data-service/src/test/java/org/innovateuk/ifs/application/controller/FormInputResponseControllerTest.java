@@ -56,7 +56,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 build();
         List<FormInputResponseResource> formInputResponseResources = Collections.singletonList(formInputResponseResource);
 
-        when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(serviceSuccess(formInputResponseResources));
+        when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(serviceSuccess(formInputResponseResources));
 
         mockMvc.
                 perform(
@@ -98,7 +98,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         FormInputResponseResource formInputResponseResource = newFormInputResponseResource().build();
 
-        when(formInputServiceMock.findResponseByApplicationIdAndQuestionName(applicationId, questionName))
+        when(formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName))
                 .thenReturn(serviceSuccess(formInputResponseResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get(
@@ -107,13 +107,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(formInputResponseResource)));
 
-        verify(formInputServiceMock, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
+        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
     }
 
     private void assertGetByFormInputIdAndApplicationIdButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedErrorKey) throws Exception {
         ServiceResult<List<FormInputResponseResource>> failureResponse = serviceFailure(errorToReturn);
 
-        when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
+        when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
         MvcResult response = mockMvc.
                 perform(
                         get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", 456, 123).
