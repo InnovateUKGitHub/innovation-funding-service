@@ -102,7 +102,7 @@ Existing Assessor tries to accept closed competition
     [Tags]
     [Setup]    Close the competition in assessment
     Given Log in as a different user               &{existing_assessor1_credentials}
-    And The user should not see the element        link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And wait until element is not visible          jQuery=a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")  # the without screenshots keyword doesnt seemt to work here!
     When the user navigates to the page            ${Invitation_for_upcoming_comp_assessor1}
     Then the user should see the element           jQuery=h1:contains("This invitation is now closed")
     [Teardown]    Run Keywords    Connect to Database    @{database}
