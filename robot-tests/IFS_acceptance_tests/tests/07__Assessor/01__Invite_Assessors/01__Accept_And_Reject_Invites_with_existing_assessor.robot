@@ -97,7 +97,7 @@ Existing assessor: Reject invitation from Dashboard
     And The user clicks the button/link                     jQuery=button:contains("Confirm")
     And the user should see the element                     jQuery=p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
 
-Existing Assessor tries to accept closed competition
+Existing Assessor tries to accept expired invitation in closed assessment
     [Documentation]    INFUND-943
     [Tags]
     [Setup]    Close the competition in assessment
