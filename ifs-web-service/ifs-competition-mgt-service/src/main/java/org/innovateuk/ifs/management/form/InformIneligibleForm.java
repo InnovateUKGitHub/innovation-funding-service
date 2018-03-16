@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -13,8 +14,12 @@ import java.util.List;
  */
 public class InformIneligibleForm implements BindingResultTarget {
 
+    @NotBlank(message = "{validation.informleadapplicant.subject.required}")
     private String subject;
+
+    @NotBlank(message = "{validation.informleadapplicant.message.required}")
     private String content;
+
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
 
