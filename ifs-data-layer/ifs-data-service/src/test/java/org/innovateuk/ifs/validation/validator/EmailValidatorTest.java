@@ -1,10 +1,9 @@
-package org.innovateuk.ifs.validation;
+package org.innovateuk.ifs.validation.validator;
 
-import static org.innovateuk.ifs.validation.ValidatorTestUtil.getBindingResult;
+import static org.innovateuk.ifs.validation.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.innovateuk.ifs.validation.validator.EmailValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
@@ -24,7 +23,7 @@ public class EmailValidatorTest {
         validator = new EmailValidator();
         
         formInputResponse = new FormInputResponse();
-        bindingResult = getBindingResult(formInputResponse);
+        bindingResult = ValidatorTestUtil.getBindingResult(formInputResponse);
     }
 
     @Test

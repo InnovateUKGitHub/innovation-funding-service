@@ -1,16 +1,15 @@
-package org.innovateuk.ifs.validation;
+package org.innovateuk.ifs.assessment.validator;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.assessment.validator.AssessorScopeValidator;
+import org.innovateuk.ifs.validation.validator.ValidatorTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.innovateuk.ifs.validation.ValidatorTestUtil.getBindingResult;
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.*;
 
 public class AssessorScopeValidatorTest {
@@ -29,7 +28,7 @@ public class AssessorScopeValidatorTest {
                         .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
                         .build())
                 .build();
-        bindingResult = getBindingResult(formInputResponse);
+        bindingResult = ValidatorTestUtil.getBindingResult(formInputResponse);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.validation;
+package org.innovateuk.ifs.validation.validator;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;

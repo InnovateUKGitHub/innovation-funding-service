@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.validation;
+package org.innovateuk.ifs.validation.validator;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
-import org.innovateuk.ifs.validation.validator.PastMMYYYYValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;

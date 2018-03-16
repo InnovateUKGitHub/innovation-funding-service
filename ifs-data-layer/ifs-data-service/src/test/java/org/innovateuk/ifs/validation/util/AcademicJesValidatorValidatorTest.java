@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newAp
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.validation.ValidatorTestUtil.getBindingResult;
+import static org.innovateuk.ifs.validation.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 

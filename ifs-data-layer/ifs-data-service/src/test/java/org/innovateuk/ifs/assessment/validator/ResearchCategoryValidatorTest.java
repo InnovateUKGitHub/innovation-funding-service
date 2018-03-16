@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.validation;
+package org.innovateuk.ifs.assessment.validator;
 
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.assessment.validator.ResearchCategoryValidator;
+import org.innovateuk.ifs.validation.validator.ValidatorTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.innovateuk.ifs.validation.ValidatorTestUtil.getBindingResult;
+import static org.innovateuk.ifs.validation.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +50,7 @@ public class ResearchCategoryValidatorTest {
 
         when(researchCategoryRepositoryMock.findAll()).thenReturn(researchCategories);
 
-        bindingResult = getBindingResult(formInputResponse);
+        bindingResult = ValidatorTestUtil.getBindingResult(formInputResponse);
     }
 
     @Test
