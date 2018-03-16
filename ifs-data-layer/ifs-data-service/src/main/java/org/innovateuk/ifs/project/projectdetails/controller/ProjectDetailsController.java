@@ -55,6 +55,13 @@ public class ProjectDetailsController {
         return projectDetailsService.updateFinanceContact(composite, financeContactUserId).toPostResponse();
     }
 
+    @PostMapping("/{projectId}/organisation/{organisation}/partner-project-location")
+    public RestResult<Void> updatePartnerProjectLocation(@PathVariable("projectId") final Long projectId,
+                                                         @PathVariable("organisation") final Long organisationId,
+                                                         @RequestParam("postCode") String postCode) {
+        return projectDetailsService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
+    }
+
     @PostMapping("/{projectId}/invite-finance-contact")
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
                                                  @RequestBody @Valid final InviteProjectResource inviteResource) {

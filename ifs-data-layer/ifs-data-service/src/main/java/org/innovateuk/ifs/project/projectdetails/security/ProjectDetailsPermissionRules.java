@@ -29,5 +29,10 @@ public class ProjectDetailsPermissionRules extends BasePermissionRules {
     public boolean partnersCanUpdateTheirOwnOrganisationsFinanceContacts(ProjectOrganisationCompositeId composite, UserResource user) {
         return isPartner(composite.getProjectId(), user.getId()) && partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
     }
+
+    @PermissionRule(value = "UPDATE_PARTNER_PROJECT_LOCATION", description = "A partner can update the project location for their own organisation")
+    public boolean partnersCanUpdateProjectLocationForTheirOwnOrganisation(ProjectOrganisationCompositeId composite, UserResource user) {
+        return partnerBelongsToOrganisation(composite.getProjectId(), user.getId(), composite.getOrganisationId());
+    }
 }
 
