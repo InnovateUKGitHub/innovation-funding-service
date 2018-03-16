@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.application;
+package org.innovateuk.ifs.user.viewmodel;
 
 /**
  * This enumerations defines the available UserApplicationRoles.
