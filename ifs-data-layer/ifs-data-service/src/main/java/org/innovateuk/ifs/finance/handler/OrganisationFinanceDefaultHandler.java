@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.finance.handler;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.*;

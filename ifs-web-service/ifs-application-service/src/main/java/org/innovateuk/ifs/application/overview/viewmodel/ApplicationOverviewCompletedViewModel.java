@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.overview.viewmodel;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 
 import java.util.Set;
 import java.util.concurrent.ExecutionException;

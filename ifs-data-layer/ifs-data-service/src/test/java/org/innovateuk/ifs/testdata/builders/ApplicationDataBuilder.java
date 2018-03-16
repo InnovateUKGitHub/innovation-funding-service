@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -87,7 +88,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                                 .getSuccess(),
                         x -> APPLICATION_DETAILS.getShortName().equals(x.getName())).get();
 
-                questionService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
+                questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
                                 .getId()),
                         retrieveLeadApplicant(data.getApplication().getId()).getId())
