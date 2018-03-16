@@ -434,7 +434,6 @@ IFS.core.formValidation = (function () {
       }
     },
     checkDate: function (field) {
-      console.log('check date!')
       var dateGroup = field.closest('.date-group')
       var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, 'date')
 
