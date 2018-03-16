@@ -118,6 +118,8 @@ public class Competition implements ProcessActivity {
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private TermsAndConditions termsAndConditions;
 
+    private boolean locationPerPartner = true;
+
     public Competition() {
         setupComplete = false;
     }
@@ -696,6 +698,14 @@ public class Competition implements ProcessActivity {
 
     public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public boolean isLocationPerPartner() {
+        return locationPerPartner;
+    }
+
+    public void setLocationPerPartner(boolean locationPerPartner) {
+        this.locationPerPartner = locationPerPartner;
     }
 }
 

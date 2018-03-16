@@ -94,6 +94,8 @@ public class CompetitionResource {
 
     private TermsAndConditionsResource termsAndConditions;
 
+    private boolean locationPerPartner = true;
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -591,6 +593,14 @@ public class CompetitionResource {
         this.termsAndConditions = termsAndConditions;
     }
 
+    public boolean isLocationPerPartner() {
+        return locationPerPartner;
+    }
+
+    public void setLocationPerPartner(boolean locationPerPartner) {
+        this.locationPerPartner = locationPerPartner;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -649,6 +659,7 @@ public class CompetitionResource {
                 .append(assessorFinanceView, that.assessorFinanceView)
                 .append(nonIfsUrl, that.nonIfsUrl)
                 .append(termsAndConditions, that.termsAndConditions)
+                .append(locationPerPartner, that.locationPerPartner)
                 .isEquals();
     }
 
@@ -704,6 +715,7 @@ public class CompetitionResource {
                 .append(nonIfs)
                 .append(nonIfsUrl)
                 .append(termsAndConditions)
+                .append(locationPerPartner)
                 .toHashCode();
     }
 }
