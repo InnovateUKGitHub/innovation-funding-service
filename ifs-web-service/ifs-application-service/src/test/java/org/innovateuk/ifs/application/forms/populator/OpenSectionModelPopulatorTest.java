@@ -164,7 +164,7 @@ public class OpenSectionModelPopulatorTest extends BaseUnitTestMocksTest {
 
         ProcessRoleResource leadApplicantProcessRole = newProcessRoleResource().withUser(userResource).build();
 
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(leadApplicantProcessRole);
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(leadApplicantProcessRole);
 
         when(userService.findById(leadApplicantProcessRole.getUser())).thenReturn(userResource);
 
