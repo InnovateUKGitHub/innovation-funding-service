@@ -12,8 +12,6 @@ import org.springframework.security.access.AccessDeniedException;
 
 import static freemarker.template.utility.Collections12.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupTemplateService> {

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.assignment.populator;
 
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.assessment.assignment.viewmodel.AssessmentAssignmentViewModel;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;

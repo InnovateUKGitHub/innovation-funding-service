@@ -1,1 +1,0 @@
-ALTER TABLE project DROP COLUMN project_manager;
