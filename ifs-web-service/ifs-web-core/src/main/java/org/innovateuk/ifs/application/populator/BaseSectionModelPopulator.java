@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.resource.*;
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;

@@ -14,14 +14,14 @@ task prepareDockerFile {
 
     def inputDir = project.file("$project.buildDir/docker")
 
-    def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')
-    def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
-    def String spProxyCacertificate = file(spProxyCacertificateFile).text.trim().replace('\n', '\\n')
-
-    def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
-    def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
     doFirst {
+        def String spProxyKey = file(spProxyKeyFile).text.trim().replace('\n', '\\n')
+        def String spProxyCertificate = file(spProxyCertificateFile).text.trim().replace('\n', '\\n')
+        def String spProxyCacertificate = file(spProxyCacertificateFile).text.trim().replace('\n', '\\n')
+
+        def String idpSigningCertificate = file(idpSigningCertificateFile).text.trim().replace('\n', '\\n')
+        def String idpEncryptionCertificate = file(idpEncryptionCertificateFile).text.trim().replace('\n', '\\n')
         copy {
             from 'src/main/docker/'
             into 'src/main/docker/'
@@ -46,6 +46,7 @@ task prepareDockerFile {
             into "${inputDir}/certs"
         }
     }
+    outputs.dir inputDir
 }
 
 buildDocker.dependsOn prepareDockerFile
