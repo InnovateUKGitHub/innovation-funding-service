@@ -177,6 +177,15 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
+    public ServiceResult<Void> updatePartnerProjectLocation(Long projectId, LocalDate projectStartDate) {
+        return validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
+                andOnSuccess(() -> getProject(projectId)).
+                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
         return getProject(projectId).
                 andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
