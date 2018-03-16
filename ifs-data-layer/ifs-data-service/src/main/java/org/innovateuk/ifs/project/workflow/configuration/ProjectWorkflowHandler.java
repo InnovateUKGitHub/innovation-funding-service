@@ -51,7 +51,7 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
     }
 
     public boolean projectWithdrawn(Project project, User internalUser) {
-        return fireEvent(projectWithdrawnEvent(project, internalUser), project);
+        return fireEvent(internalUserEvent(project, internalUser, ProjectEvent.PROJECT_WITHDRAWN), project);
     }
 
     public ProjectState getState(Project project) {
@@ -108,9 +108,9 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
                 .setHeader("participant", projectUser);
     }
 
-    private MessageBuilder<ProjectEvent> projectWithdrawnEvent(Project project, User internalUser) {
+    private MessageBuilder<ProjectEvent> internalUserEvent(Project project, User internalUser, ProjectEvent event) {
         return MessageBuilder
-                .withPayload(ProjectEvent.PROJECT_WITHDRAWN)
+                .withPayload(event)
                 .setHeader("target", project)
                 .setHeader("internalParticipant", internalUser);
     }
