@@ -33,7 +33,6 @@ task prepareDockerFile {
             into "${inputDir}/scripts"
         }
     }
-    outputs.dir inputDir
 }
 
 buildDocker.dependsOn prepareDockerFile

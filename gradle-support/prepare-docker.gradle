@@ -31,8 +31,6 @@ task prepareDockerBaseInput {
             into inputDir
         }
     }
-
-    outputs.dir inputDir
 }
 
 
@@ -54,5 +52,4 @@ task prepareDockerInput {
         }
     }
 
-    outputs.dir inputDir
 }
