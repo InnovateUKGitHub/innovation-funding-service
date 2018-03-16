@@ -2,8 +2,12 @@ version: '3'
 services:
 
   prototypes:
-    hostname: prototypes
+    hostname: prototypes-svc
     image: innovateuk/prototypes-service
+    healthcheck:
+       test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+       interval: 15s
+       timeout: 8s
     ports:
       - "1234:8080"
     networks:
