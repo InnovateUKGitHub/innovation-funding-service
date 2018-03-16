@@ -53,6 +53,9 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     private SectionService sectionService;
 
     @Autowired
+    private SectionStatusService sectionStatusService;
+
+    @Autowired
     private FinanceRowCostsService financeRowCostsService;
 
     @Autowired
@@ -99,7 +102,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         processRoleIds.stream().forEach(processRoleId ->
                 sectionService.getSectionsByCompetitionIdAndType(competitionId, SectionType.FUNDING_FINANCES).getSuccess().stream()
                         .forEach(fundingSection ->
-                                sectionService.markSectionAsInComplete(fundingSection.getId(),
+                                sectionStatusService.markSectionAsInComplete(fundingSection.getId(),
                                         applicationId, processRoleId))
         );
     }

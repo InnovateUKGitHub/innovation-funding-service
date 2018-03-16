@@ -109,7 +109,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
             UserResource assigningUser = retrieveUserById(assignedByUser.getUser());
 
             doAs(assigningUser, () ->
-                questionService.assign(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()),
+                    questionStatusService.assign(new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId()),
                         assigneeUser.getId(), assignedByUser.getId())
             );
         });
@@ -124,7 +124,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
             doAs(leadUser, () -> {
                 QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(question.getId(), data.getApplication().getId());
                 return updateApplicationCompletionStatus ?
-                        questionService.markAsComplete(questionKey, lead.getId()) :
+                        questionStatusService.markAsComplete(questionKey, lead.getId()) :
                         testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, lead.getId());
             });
         });
@@ -138,7 +138,7 @@ public class QuestionResponseDataBuilder extends BaseDataBuilder<ApplicationQues
         FormInputResponseCommand updateRequest = new FormInputResponseCommand(
                 applicantFormInput.getId(), data.getApplication().getId(), user.getId(), value);
 
-        FormInputResponse response = formInputService.saveQuestionResponse(updateRequest).getSuccess();
+        FormInputResponse response = formInputResponseService.saveQuestionResponse(updateRequest).getSuccess();
         formInputResponseRepository.save(response);
     }
 

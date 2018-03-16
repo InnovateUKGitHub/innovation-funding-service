@@ -40,13 +40,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputServiceMock.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseService.findResponsesByApplication(applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findResponsesByApplication/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputServiceMock, only()).findResponsesByApplication(applicationId);
+        verify(formInputResponseService, only()).findResponsesByApplication(applicationId);
     }
 
     @Test
@@ -56,13 +56,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", formInputId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputServiceMock, only()).findResponsesByFormInputIdAndApplicationId(formInputId, applicationId);
+        verify(formInputResponseService, only()).findResponsesByFormInputIdAndApplicationId(formInputId, applicationId);
     }
 
     @Test
@@ -72,13 +72,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         FormInputResponseResource expected = newFormInputResponseResource().build();
 
-        when(formInputServiceMock.findResponseByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionName/{applicationId}/{questionName}", applicationId, questionName))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputServiceMock, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
+        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
     }
 
     @Test
@@ -88,13 +88,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
 
-        when(formInputServiceMock.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
+        when(formInputResponseService.findResponseByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/forminputresponse/findByApplicationIdAndQuestionId/{applicationId}/{questionId}", applicationId, questionId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(toJson(expected)));
 
-        verify(formInputServiceMock, only()).findResponseByApplicationIdAndQuestionId(applicationId, questionId);
+        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionId(applicationId, questionId);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         ValidationMessages expected = new ValidationMessages(bindingResult);
         when(validationUtilMock.validateResponse(formInputResponse, false)).thenReturn(bindingResult);
 
-        when(formInputServiceMock.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
+        when(formInputResponseService.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
             @Override
             public boolean matches(Object argument) {
                 FormInputResponseCommand firArgument = (FormInputResponseCommand) argument;

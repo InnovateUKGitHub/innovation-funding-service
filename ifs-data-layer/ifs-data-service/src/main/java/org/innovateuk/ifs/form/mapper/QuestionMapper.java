@@ -30,7 +30,6 @@ public abstract class QuestionMapper extends BaseMapper<Question, QuestionResour
     @Override
     @Mappings({
             @Mapping(target = "costs", ignore = true),
-            @Mapping(target = "questionStatuses", ignore = true)
     })
     public abstract Question mapToDomain(QuestionResource resource);
 

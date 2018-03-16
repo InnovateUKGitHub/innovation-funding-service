@@ -88,7 +88,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                                 .getSuccess(),
                         x -> APPLICATION_DETAILS.getShortName().equals(x.getName())).get();
 
-                questionService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
+                questionStatusService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
                                 .getApplication()
                                 .getId()),
                         retrieveLeadApplicant(data.getApplication().getId()).getId())

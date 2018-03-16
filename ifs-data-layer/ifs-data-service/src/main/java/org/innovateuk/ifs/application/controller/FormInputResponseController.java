@@ -3,14 +3,14 @@ package org.innovateuk.ifs.application.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.application.transactional.FormInputResponseService;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -30,7 +30,7 @@ public class FormInputResponseController {
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
-    private FormInputService formInputService;
+    private FormInputResponseService formInputResponseService;
 
     @Autowired
     private ValidationUtil validationUtil;
@@ -38,25 +38,25 @@ public class FormInputResponseController {
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
     @GetMapping("/findResponsesByApplication/{applicationId}")
-    public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId) {
-        return formInputService.findResponsesByApplication(applicationId).toGetResponse();
+    public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final long applicationId) {
+        return formInputResponseService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
     @GetMapping("/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}")
-    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final Long formInputId, @PathVariable("applicationId") final Long applicationId) {
-        return formInputService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
+    public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final long formInputId, @PathVariable("applicationId") final long applicationId) {
+        return formInputResponseService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
     @GetMapping("/findByApplicationIdAndQuestionName/{applicationId}/{questionName}")
     public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionName(@PathVariable long applicationId,
                                                                                     @PathVariable String questionName) {
-        return formInputService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
+        return formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
     }
 
     @GetMapping("/findByApplicationIdAndQuestionId/{applicationId}/{questionId}")
     public RestResult<List<FormInputResponseResource>> findByApplicationIdAndQuestionId(@PathVariable long applicationId,
                                                                                         @PathVariable long questionId) {
-        return formInputService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();
+        return formInputResponseService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();
     }
 
     @PostMapping("/saveQuestionResponse")
@@ -65,16 +65,16 @@ public class FormInputResponseController {
         Long applicationId = jsonObj.get("applicationId").asLong();
         Long formInputId = jsonObj.get("formInputId").asLong();
         JsonNode ignoreEmptyNode = jsonObj.get("ignoreEmpty");
-        Boolean ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
+        boolean ignoreEmpty = ignoreEmptyNode != null && ignoreEmptyNode.asBoolean();
         String value = HtmlUtils.htmlUnescape(jsonObj.get("value").asText(""));
 
-        ServiceResult<ValidationMessages> result = formInputService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId, userId, value))
+        ServiceResult<ValidationMessages> result = formInputResponseService.saveQuestionResponse(new FormInputResponseCommand(formInputId, applicationId, userId, value))
                 .andOnSuccessReturn(response -> buildBindingResultWithCheckErrors(response, ignoreEmpty));
 
         return result.toPostWithBodyResponse();
     }
 
-    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponse response, Boolean ignoreEmpty) {
+    private ValidationMessages buildBindingResultWithCheckErrors(FormInputResponse response, boolean ignoreEmpty) {
         BindingResult bindingResult = validationUtil.validateResponse(response, ignoreEmpty);
         if (bindingResult.hasErrors()) {
             LOG.debug("Got validation errors: ");

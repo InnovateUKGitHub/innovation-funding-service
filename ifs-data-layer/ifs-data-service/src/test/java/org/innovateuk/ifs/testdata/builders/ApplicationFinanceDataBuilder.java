@@ -117,7 +117,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     boolean lastElement = i == questions.size() - 1;
 
                     if (lastElement && updateApplicationCompleteStatus) {
-                        questionService.markAsComplete(questionKey, processRoleId).getSuccess();
+                        questionStatusService.markAsComplete(questionKey, processRoleId).getSuccess();
                     } else {
                         testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccess();
                     }

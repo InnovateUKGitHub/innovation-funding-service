@@ -1,30 +1,26 @@
 package org.innovateuk.ifs.form.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.form.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.form.resource.QuestionType;
-import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.security.AssessmentLookupStrategy;
 import org.innovateuk.ifs.assessment.security.AssessmentPermissionRules;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Set;
 
+import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.form.security.QuestionServiceSecurityTest.TestQuestionService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
-import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -162,31 +158,6 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<List<ValidationMessages>> markAsComplete(QuestionApplicationCompositeId ids, Long markedAsCompleteById) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ValidationMessages>> markAsInComplete(QuestionApplicationCompositeId ids, Long markedAsInCompleteById) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> assign(QuestionApplicationCompositeId ids, Long assigneeId, Long assignedById) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateNotification(Long questionStatusId, Boolean notify) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<List<QuestionResource>> findByCompetition(Long competitionId) {
             return serviceSuccess(newQuestionResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
@@ -212,11 +183,6 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         }
 
         @Override
-        public ServiceResult<Boolean> isMarkedAsComplete(Question question, Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<QuestionResource> getQuestionResourceByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
             return serviceSuccess(newQuestionResource().build());
         }
@@ -224,36 +190,6 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         @Override
         public ServiceResult<Question> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
             return serviceSuccess(newQuestion().build());
-        }
-
-        @Override
-        public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdAndApplicationId(Long questionId, Long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByApplicationIdAndAssigneeIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<QuestionStatusResource>> getQuestionStatusByQuestionIdsAndApplicationIdAndOrganisationId(Long[] questionIds, Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<QuestionStatusResource>> findByApplicationAndOrganisation(Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<QuestionStatusResource> getQuestionStatusResourceById(Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Integer> getCountByApplicationIdAndAssigneeId(Long applicationId, Long assigneeId) {
-            return null;
         }
 
         @Override
