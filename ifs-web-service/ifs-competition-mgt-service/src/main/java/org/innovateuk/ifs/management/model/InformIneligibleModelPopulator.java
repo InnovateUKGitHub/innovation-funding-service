@@ -29,7 +29,6 @@ public class InformIneligibleModelPopulator {
                 .map(ProcessRoleResource::getUserName)
                 .findFirst().orElse("");
 
-
         return new InformIneligibleViewModel(
                 applicationResource.getCompetition(),
                 applicationResource.getId(),

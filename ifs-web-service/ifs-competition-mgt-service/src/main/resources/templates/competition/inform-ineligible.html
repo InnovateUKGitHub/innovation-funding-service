@@ -12,6 +12,11 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Ineligible applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/ineligible(competitionId=${model.competitionId})}" />
 
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to send email.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
+
     <div class="page-title">
         <h1 class="heading-xlarge">
             <span class="heading-secondary" th:text="|${model.competitionId}: ${model.competitionName}|">9876: Technology inspired</span>
@@ -32,8 +37,8 @@
             <input class="form-control width-full"
                    id="subject"
                    type="text"
-                   required="required"
                    th:field="*{subject}"
+                   required="required"
                    th:attr="data-required-errormessage=#{validation.informleadapplicant.subject.required}"   />
         </div>
 
@@ -42,8 +47,8 @@
             <textarea id="message"
                       rows="16"
                       class="form-control width-full"
-                      required="required"
                       th:field="*{content}"
+                      required="required"
                       th:attr="data-required-errormessage=#{validation.informleadapplicant.message.required}"></textarea>
         </div>
 
