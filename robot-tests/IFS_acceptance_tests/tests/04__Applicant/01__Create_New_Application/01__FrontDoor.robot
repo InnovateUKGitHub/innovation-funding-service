@@ -135,10 +135,10 @@ Guest user can see the public Dates of the competition
     [Documentation]    INFUND-6923
     [Tags]
     Given the user clicks the button/link    link=Dates
-    When the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE_TIME}") + dd:contains("Competition opens")
+    When the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_OPEN_DATE}") + dd:contains("Competition opens")
     And the user should see the element    jQuery=dt:contains("12 May 2016") + dd:contains("Briefing event in Belfast")
     And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_CLOSE_DATE_TIME}") + dd:contains("Competition closes")
-    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE_TIME}") + dd:contains("Applicants notified")
+    And the user should see the element    jQuery=dt:contains("${UPCOMING_COMPETITION_TO_ASSESS_NOTIFICATION_DATE}") + dd:contains("Applicants notified")
 
 Guest user can see the public How to apply of the competition
     [Documentation]    INFUND-6923
