@@ -96,7 +96,6 @@ task prepareDockerFile {
         }
     }
 
-    outputs.dir inputDir
 }
 
 buildDocker.dependsOn prepareDockerFile
