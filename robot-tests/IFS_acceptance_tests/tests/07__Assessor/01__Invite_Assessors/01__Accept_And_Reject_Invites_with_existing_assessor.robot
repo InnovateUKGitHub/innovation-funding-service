@@ -41,7 +41,7 @@ ${Invitation_nonexisting_assessor2}        ${server}/assessment/invite/competiti
 ${ASSESSOR_DASHBOARD}                      ${server}/assessment/assessor/dashboard
 ${Correct_date_start}                      ${createApplicationOpenCompetitionAssessorAcceptsDayMonth}
 ${Correct_date_end}                        ${createApplicationOpenCompetitionAssessorDeadlineDayMonth}
-${assessmentPeriod}                        ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_ACCEPTS_PRETTY_DATE} to ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_PRETTY_DATE}: Assessment period
+${assessmentPeriod}                        ${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_PRETTY_DATE} to ${IN_ASSESSMENT_COMPETITION_ASSESSOR_DEADLINE_PRETTY_DATE}: Assessment period
 
 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 # ${IN_ASSESSMENT_COMPETITION_NAME} is the Sustainable living models for the future
