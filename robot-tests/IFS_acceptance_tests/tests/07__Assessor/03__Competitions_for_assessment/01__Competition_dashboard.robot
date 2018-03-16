@@ -44,10 +44,10 @@ Calculation of the applications for assessment should be correct
 Details of the competition are visible
     [Documentation]    INFUND-3723
     [Tags]    HappyPath
-    Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("Sustainable living models for the future")
+    Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery=dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
     And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("${IN_ASSESSMENT_COMPETITION_ASSESSOR_ACCEPTS_TIME_DATE_LONG}")
-    And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("12:00pm Saturday 28 January 2068")
+    And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("${getPrettyLongMilestoneTimeDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}")
 
 Competition brief link can be seen
     [Documentation]    INFUND-5494
