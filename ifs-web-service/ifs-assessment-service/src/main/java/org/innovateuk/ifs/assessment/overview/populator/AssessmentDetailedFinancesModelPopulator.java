@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.section.YourProjectCostsSectionPopulator;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
@@ -18,6 +17,7 @@ import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
+import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES;
 
 @Component
 public class AssessmentDetailedFinancesModelPopulator {

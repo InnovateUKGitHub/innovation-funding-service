@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.domain.GuidanceRow;
-import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -32,9 +30,6 @@ public class FormInput {
 
     @Column(name = "form_input_type_id")
     private FormInputType type;
-
-    @OneToMany(mappedBy = "formInput")
-    private List<FormInputResponse> responses;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="questionId", referencedColumnName="id")
@@ -93,15 +88,6 @@ public class FormInput {
 
     public void setWordCount(Integer wordCount) {
         this.wordCount = wordCount;
-    }
-
-    @JsonIgnore
-    public List<FormInputResponse> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(List<FormInputResponse> responses) {
-        this.responses = responses;
     }
 
     public FormInputType getType() {

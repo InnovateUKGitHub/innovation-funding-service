@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.populator.finance;
 
 import org.innovateuk.ifs.applicant.resource.AbstractApplicantResource;
 import org.innovateuk.ifs.application.populator.forminput.AbstractFormInputPopulator;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.finance.OrganisationSizeViewModel;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
