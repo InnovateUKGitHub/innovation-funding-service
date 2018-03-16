@@ -639,10 +639,10 @@ Proj Finance is able to see the Finances amended
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
     [Tags]
-    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    £379,678
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    109,660
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
+    When the user navigates to the page                 ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the text in the element    css=.standard-definition-list dd:nth-child(2)    £379,678
+    And the user should see the text in the element     css=.standard-definition-list dd:nth-child(4)    109,660
+    And the user should see the text in the element     css=.standard-definition-list dd:nth-child(8)    29%
 
 Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
@@ -784,9 +784,9 @@ Project finance user can see updated finance overview after partner changes to e
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
-    Then the user should see the text in the element   css=.table-overview tr:nth-child(1) td:nth-child(3)    £356,559
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    102,725
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
+    Then the user should see the text in the element   css=.standard-definition-list dd:nth-child(2)    £356,559
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-child(4)    102,725
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-child(8)    29%
 
 Project finance can see updated finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -826,7 +826,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £356,559   102,725    4,936     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  4 months    £356,559   102,725    4,936     29%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
