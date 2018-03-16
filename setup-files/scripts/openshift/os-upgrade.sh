@@ -31,6 +31,7 @@ function upgradeServices {
     oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/46-prototypes-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
