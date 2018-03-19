@@ -3,7 +3,7 @@ package org.innovateuk.ifs.applicant.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResponseResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
