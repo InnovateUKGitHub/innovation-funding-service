@@ -22,7 +22,7 @@ public interface UserService {
 
     boolean existsAndHasRole(Long userId, Role role);
 
-    ProcessRoleResource getLeadApplicantProcessRoleOrNull(ApplicationResource application);
+    ProcessRoleResource getLeadApplicantProcessRoleOrNull(Long applicationId);
 
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
 

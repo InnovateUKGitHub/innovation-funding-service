@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
@@ -19,7 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -48,13 +46,10 @@ public class ProjectFinanceChecksOverviewController {
     @Autowired
     private ProjectService projectService;
 
-    @Autowired
-    private OrganisationService organisationService;
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewOverview(Model model, @P("projectId")@PathVariable("projectId") final Long projectId, UserResource loggedInUser) {
-        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = projectService.getOrganisationIdFromUser(projectId, loggedInUser);
         FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(projectId);
         ProjectResource project = projectService.getById(projectId);
         model.addAttribute("model", financeCheckOverviewViewModel);

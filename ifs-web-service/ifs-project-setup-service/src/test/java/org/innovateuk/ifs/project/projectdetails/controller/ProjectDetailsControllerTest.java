@@ -494,7 +494,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
         when(projectService.getById(projectId)).thenReturn(projectResource);
-        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
@@ -567,7 +567,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectDetailsService.saveProjectInvite(any())).thenReturn(serviceSuccess());
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
-        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         InviteStatus testStatus = CREATED;
 
@@ -753,7 +753,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
 
-        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -801,7 +801,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
-        when(organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

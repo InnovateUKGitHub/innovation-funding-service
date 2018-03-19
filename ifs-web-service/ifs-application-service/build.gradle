@@ -11,9 +11,6 @@ osStageRemote.tag = applicationServiceVersion
 tagDockerLocal.tag = applicationServiceVersion
 osStageLocal.tag = applicationServiceVersion
 
-jar {
-    baseName = 'ifs-application-service'
-}
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

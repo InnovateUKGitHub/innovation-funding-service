@@ -8,6 +8,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import java.util.Collections;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -17,7 +18,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 /**
  * Helper for Spring REST Docs, specifically for user registration.
  */
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 public class UserRegistrationResourceDocs {
 
     public static final FieldDescriptor[] userRegistrationResourceFields = {

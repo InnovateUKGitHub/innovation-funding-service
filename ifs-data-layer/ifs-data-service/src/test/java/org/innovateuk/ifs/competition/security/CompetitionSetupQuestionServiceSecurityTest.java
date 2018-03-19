@@ -13,6 +13,9 @@ import java.util.List;
 
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
+import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static freemarker.template.utility.Collections12.singletonList;
@@ -20,7 +23,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 /**
  * Testing the permission rules applied to the secured methods in OrganisationService.  This set of tests tests for the

@@ -2,7 +2,10 @@ package org.innovateuk.ifs.admin.security;
 
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserCompositeId;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Before;
 import org.junit.Test;
 

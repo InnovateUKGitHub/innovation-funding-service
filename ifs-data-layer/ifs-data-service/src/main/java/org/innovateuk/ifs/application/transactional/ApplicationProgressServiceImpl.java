@@ -1,12 +1,13 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -37,10 +38,13 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
     private OrganisationRepository organisationRepository;
 
     @Autowired
-    private QuestionService questionService;
+    private QuestionStatusService questionStatusService;
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private SectionStatusService sectionStatusService;
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
@@ -62,7 +66,7 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         return find(applicationRepository.findOne(id), notFoundError(Application.class, id)).andOnSuccess(application -> {
             BigDecimal progressPercentage = calculateApplicationProgress(application);
 
-            return sectionService.childSectionsAreCompleteForAllOrganisations(null, id, null)
+            return sectionStatusService.childSectionsAreCompleteForAllOrganisations(null, id, null)
                     .andOnSuccessReturn(allSectionsComplete -> {
                         Competition competition = application.getCompetition();
                         BigDecimal researchParticipation =
@@ -101,12 +105,12 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()
                         .filter(Question::getMarkAsCompletedEnabled)
-                        .filter(q -> q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccess()).count())
+                        .filter(q -> q.hasMultipleStatuses() && questionStatusService.isMarkedAsComplete(q, application.getId(), org.getId()).getSuccess()).count())
                 .sum();
 
         Long countSingleStatusQuestionsCompleted = questions.stream()
                 .filter(Question::getMarkAsCompletedEnabled)
-                .filter(q -> !q.hasMultipleStatuses() && questionService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess())
+                .filter(q -> !q.hasMultipleStatuses() && questionStatusService.isMarkedAsComplete(q, application.getId(), 0L).getSuccess())
                 .count();
 
         Long countCompleted = countMultipleStatusQuestionsCompleted + countSingleStatusQuestionsCompleted;
