@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                                 <div class="status">
-                                    <div class="status-msg msg-deadline">
+                                    <div class="status-msg msg-deadline" th:attr="data-competition-id=${activeCompetition.competitionId}">
                                         <strong class="bold-medium days-remaining" th:text="${activeCompetition.daysLeft}"></strong>
                                         <br />
                                         days left <br />
@@ -169,7 +169,7 @@
                                     </div>
                                 </div>
                                 <div class="status">
-                                    <div class="status-msg msg-deadline">
+                                    <div class="status-msg msg-deadline" th:attr="data-competition-id=${assessmentPanelAccept.competitionId}">
                                         <strong class="bold-medium days-remaining" th:text="${assessmentPanelAccept.daysLeft}"></strong>
                                         <br />days left <br />
                                         Deadline

@@ -20,7 +20,7 @@ the submission date changes in the db in the past
     And reload page
 
 the calculation of the remaining days should be correct
-    [Arguments]    ${END_DATE}
+    [Arguments]    ${END_DATE}    ${COMPETITION_ID}
     ${GET_TIME}=    get time    hour    UTC
     ${TIME}=    Convert To Number    ${GET_TIME}
     ${CURRENT_DATE}=    Get Current Date    UTC    result_format=%Y-%m-%d    exclude_millis=true
@@ -30,7 +30,7 @@ the calculation of the remaining days should be correct
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications .msg-deadline .days-remaining
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.my-applications .msg-deadline[data-competition-id='${COMPETITION_ID}'] .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 the total calculation in dashboard should be correct

@@ -135,8 +135,8 @@ Upcoming competition should be visible
     [Tags]    HappyPath
     Given the user navigates to the page           ${ASSESSOR_DASHBOARD}
     And the assessor should see the correct date
-    When The user clicks the button/link           link=Home and industrial efficiency programme
-    And the user should see the element            jQuery=p:contains("You have agreed to be an assessor for the upcoming competition 'Home and industrial efficiency programme'")
+    When The user clicks the button/link           link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    And the user should see the element            jQuery=p:contains("You have agreed to be an assessor for the upcoming competition '${UPCOMING_COMPETITION_TO_ASSESS_NAME}'")
     And The user clicks the button/link            link=Assessor dashboard
     Then the user should see the element           jQuery=h2:contains("Upcoming competitions to assess")
 
@@ -150,13 +150,13 @@ The assessment period starts the comp moves to the comp for assessment
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
     [Tags]    MySQL
-    Then the assessor should see the date for submission of assessment
+    Then the assessor should see the date for submission of assessment    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    MySQL
-    Then the assessor should see the number of days remaining
-    And the calculation of the remaining days should be correct  ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}
+    Then the assessor should see the number of days remaining    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    And the calculation of the remaining days should be correct  ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
 
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
@@ -195,11 +195,13 @@ the assessor fills all fields with valid inputs
     the user cannot see a validation error in the page
 
 the assessor should see the date for submission of assessment
-    the user should see the element  css=.my-applications .msg-deadline .day
-    the user should see the element  css=.my-applications .msg-deadline .month
+    [Arguments]    ${competitionId}
+    the user should see the element  css=.my-applications .msg-deadline[data-competition-id='${competitionId}'] .day
+    the user should see the element  css=.my-applications .msg-deadline[data-competition-id='${competitionId}'] .month
 
 the assessor should see the number of days remaining
-    the user should see the element  css=.my-applications .msg-deadline .days-remaining
+    [Arguments]    ${competitionId}
+    the user should see the element  css=.my-applications .msg-deadline[data-competition-id='${competitionId}'] .days-remaining
 
 the assessor shouldn't be able to accept the rejected competition
     the user navigates to the page    ${Invitation_existing_assessor1}

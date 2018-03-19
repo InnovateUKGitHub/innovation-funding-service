@@ -11,5 +11,5 @@ Assessment should not be visible when the deadline has passed
     [Setup]    Connect to Database    @{database}
     When The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
     And the user reloads the page
-    Then The user should not see the element    link=Park living
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2068-01-28 12:00:00' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
+    Then The user should not see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${getMilestoneDateDb(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")} 12:00:00' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and type = 'ASSESSOR_DEADLINE';
