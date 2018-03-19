@@ -76,7 +76,7 @@ public class ProjectDetailsController {
         return "project/detail";
     }
 
-    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
     @GetMapping("/{projectId}/edit-duration")
     public String editProjectDuration(@PathVariable("competitionId") final Long competitionId,
@@ -96,7 +96,7 @@ public class ProjectDetailsController {
         return "project/edit-duration";
     }
 
-    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
     @PostMapping("/{projectId}/update-duration")
     public String updateProjectDuration(@PathVariable("competitionId") final Long competitionId,
