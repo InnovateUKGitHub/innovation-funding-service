@@ -124,6 +124,12 @@ function injectDBVariables() {
     sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-reset/*.yml
 
+    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-baseline/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-baseline/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-baseline/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-baseline/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-baseline/*.yml
+
     sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-anonymised-data/*.yml
@@ -135,6 +141,9 @@ function injectDBVariables() {
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
     sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" $(getBuildLocation)/db-baseline/*.yml
+    sed -i.bak "s#<<FLYWAY-BASELINE-VERSION>>#${FLYWAY_BASELINE_VERSION}#g" $(getBuildLocation)/db-baseline/*.yml
+    sed -i.bak "s#<<FLYWAY-BASELINE-DESCRIPTION>>#${FLYWAY_BASELINE_DESCRIPTION}#g" $(getBuildLocation)/db-baseline/*.yml
 
     [ -z "$SYSTEM_USER_UUID" ] && { echo "Set SYSTEM_USER_UUID environment variable"; exit -1; }
     sed -i.bak "s#<<SYSTEM-USER-UUID>>#${SYSTEM_USER_UUID}#g" $(getBuildLocation)/db-reset/*.yml
@@ -202,6 +211,7 @@ function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/sil-stub/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-baseline/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/robot-tests/*.yml
@@ -211,6 +221,7 @@ function useContainerRegistry() {
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-baseline/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql-client/*.yml
@@ -221,6 +232,7 @@ function useContainerRegistry() {
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/finance-data-service/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-baseline/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/robot-tests/*.yml
@@ -234,6 +246,15 @@ function pushDBResetImages() {
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
+}
+
+function pushDBBaselineImages() {
+    docker tag innovateuk/dbbaseline:latest \
+        ${REGISTRY}/${PROJECT}/dbbaseline:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/dbbaseline:${VERSION}
 }
 
 function pushFractalImages() {
