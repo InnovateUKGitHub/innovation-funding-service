@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.UserProfileResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static java.util.Collections.emptyList;
 
 public class UserProfileResourceBuilder extends UserProfileBaseResourceBuilder<UserProfileResource, UserProfileResourceBuilder> {
 

@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
+import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class QuestionDocs {

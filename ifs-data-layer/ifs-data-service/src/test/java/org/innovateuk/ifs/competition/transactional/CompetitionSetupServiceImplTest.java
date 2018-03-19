@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.application.repository.SectionRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
