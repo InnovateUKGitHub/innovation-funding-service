@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competition.mapper;
 
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
-import org.innovateuk.ifs.application.mapper.SectionMapper;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
+import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;

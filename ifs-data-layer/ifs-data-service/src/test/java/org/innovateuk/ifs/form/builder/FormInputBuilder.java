@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.domain.GuidanceRow;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -54,10 +54,6 @@ public class FormInputBuilder extends BaseBuilder<FormInput, FormInputBuilder> {
 
     public FormInputBuilder withType(FormInputType... value) {
         return withArraySetFieldByReflection("type", value);
-    }
-
-    public FormInputBuilder withResponses(List<FormInputResponse>... value) {
-        return withArraySetFieldByReflection("responses", value);
     }
 
     public FormInputBuilder withQuestion(Question... value) {

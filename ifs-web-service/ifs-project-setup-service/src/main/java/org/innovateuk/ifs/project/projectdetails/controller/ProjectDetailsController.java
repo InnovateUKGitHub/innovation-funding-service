@@ -495,7 +495,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return redirectToProjectDetails(projectId);
         }
 
-        if(!organisationService.userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
+        if(!projectService.userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
             return redirectToProjectDetails(projectId);
         }
 
