@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.security.FormInputResponseFileUploadLookup
 import org.innovateuk.ifs.application.security.FormInputResponseFileUploadRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
