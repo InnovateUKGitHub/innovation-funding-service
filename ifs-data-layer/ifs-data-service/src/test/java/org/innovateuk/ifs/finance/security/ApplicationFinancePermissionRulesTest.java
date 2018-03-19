@@ -1,15 +1,18 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -44,8 +47,8 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
         {
             // Set up users on an organisation and application
-            final long applicationId = 1l;
-            final long organisationId = 2l;
+            final long applicationId = 1L;
+            final long organisationId = 2L;
             organisation = newOrganisationResource().with(id(organisationId)).build();
             applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(applicationId).build();
             leadApplicant = newUserResource().build();
@@ -61,13 +64,18 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), applicationId, Role.LEADAPPLICANT)).thenReturn(true);
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(collaborator.getId(), applicationId, Role.COLLABORATOR)).thenReturn(true);
+            when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
 
+            Competition competition = newCompetition()
+                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+
+            when(competitionRepositoryMock.findByApplicationsId(applicationId)).thenReturn(competition);
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
-            final long otherApplicationId = 3l;
-            final long otherOrganisationId = 4l;
+            final long otherApplicationId = 3L;
+            final long otherOrganisationId = 4L;
             otherOrganisation = newOrganisationResource().with(id(otherOrganisationId)).build();
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
             otherLeadApplicant = newUserResource().build();
@@ -119,6 +127,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
         assertTrue(rules.supportCanAddACostToApplicationFinance(applicationFinance, supportUser()));
         assertTrue(rules.innovationLeadCanAddACostToApplicationFinance(applicationFinance, innovationLeadUser()));
+        assertTrue(rules.assessorCanAddACostToApplicationFinance(applicationFinance, assessor));
 
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
@@ -130,6 +139,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     public void testLeadCanGetFileResourceForPartner() {
         assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, leadApplicant));
         assertTrue(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertTrue(rules.assessorUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, assessor));
         assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, otherLeadApplicant));
         assertFalse(rules.consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(applicationFinance, compAdmin));
     }

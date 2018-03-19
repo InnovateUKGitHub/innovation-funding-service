@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.feedback.populator;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackNavigationViewModel;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.resource.SectionType.GENERAL;
+import static org.innovateuk.ifs.form.resource.SectionType.GENERAL;
 
 /**
  * Build the model for Assessment Feedback navigation view.

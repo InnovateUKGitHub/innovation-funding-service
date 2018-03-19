@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.assessment.feedback.viewmodel;
 
-import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.assessment.feedback.viewmodel.AssessmentFeedbackViewModel;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -11,7 +9,7 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;

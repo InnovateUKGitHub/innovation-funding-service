@@ -1,9 +1,9 @@
 
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -40,20 +40,20 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public ServiceResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
-        return questionRestService.assign(questionId, applicationId, assigneeId, assignedById).toServiceResult();
+        return questionStatusRestService.assign(questionId, applicationId, assigneeId, assignedById).toServiceResult();
     }
 
     @Override
     public List<ValidationMessages> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
-        questionRestService.assign(questionId, applicationId, 0L, 0L);
+        questionStatusRestService.assign(questionId, applicationId, 0L, 0L);
         LOG.debug(String.format("mark question(application details) as complete %s / %s /%s ", questionId, applicationId, markedAsCompleteById));
-        return questionRestService.markAsComplete(questionId, applicationId, markedAsCompleteById).getSuccess();
+        return questionStatusRestService.markAsComplete(questionId, applicationId, markedAsCompleteById).getSuccess();
     }
 
     @Override
     public void markAsIncomplete(Long questionId, Long applicationId, Long markedAsInCompleteById) {
         LOG.debug(String.format("mark section as incomplete %s / %s /%s ", questionId, applicationId, markedAsInCompleteById));
-        questionRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
+        questionStatusRestService.markAsInComplete(questionId, applicationId, markedAsInCompleteById);
     }
 
     @Override
@@ -86,12 +86,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void removeNotifications(List<QuestionStatusResource> questionStatuses) {
-        questionStatuses.stream().forEach(qs -> questionRestService.updateNotification(qs.getId(), true));
+        questionStatuses.stream().forEach(qs -> questionStatusRestService.updateNotification(qs.getId(), true));
     }
 
     @Override
     public Future<Set<Long>> getMarkedAsComplete(Long applicationId, Long organisationId) {
-        return questionRestService.getMarkedAsComplete(applicationId, organisationId);
+        return questionStatusRestService.getMarkedAsComplete(applicationId, organisationId);
     }
 
     @Override

@@ -5,14 +5,14 @@ import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
  * Builder for {@link ProcessRole} entities.

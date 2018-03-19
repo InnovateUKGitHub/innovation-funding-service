@@ -162,7 +162,7 @@ public class SetupSectionsPermissionRules {
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
         try {
-            Long organisationId = organisationService.getOrganisationIdFromUser(projectId, user);
+            Long organisationId = projectService.getOrganisationIdFromUser(projectId, user);
 
             ProjectTeamStatusResource teamStatus;
 
