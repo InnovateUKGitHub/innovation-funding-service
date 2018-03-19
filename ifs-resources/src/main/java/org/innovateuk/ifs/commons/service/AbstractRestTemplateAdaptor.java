@@ -163,12 +163,9 @@ public abstract class AbstractRestTemplateAdaptor {
     }
 
     @RestCacheInvalidateResult
-    public <T> CompletableFuture<ResponseEntity<T>> restPostWithEntityAsync(String path, Object postEntity, Class<T> responseType) {
-        return withEmptyCallbackCompletable(getAsyncRestTemplate().postForEntity(path, jsonEntity(postEntity), responseType));
-    }
-
-    @RestCacheInvalidateResult
-    public <T> CompletableFuture<ResponseEntity<T>> restPostWithEntityAsync(String path, Object postEntity, HttpHeaders additionalHeaders,
+    public <T> CompletableFuture<ResponseEntity<T>> restPostWithEntityAsync(String path,
+                                                                            Object postEntity,
+                                                                            HttpHeaders additionalHeaders,
                                                                             Class<T> responseType) {
         return withEmptyCallbackCompletable(getAsyncRestTemplate().postForEntity(path,
                 jsonEntity(postEntity, additionalHeaders), responseType));

@@ -27,22 +27,22 @@ public class AuthenticationRequestWrapperTest {
     @Test
     public void getInputStream() throws Exception {
         ServletInputStream first = authenticationRequestWrapper.getInputStream();
-        assertEquals("First call to getInputStream should match request content", content, IOUtils.toString(first,
-                "UTF-8"));
+        assertEquals("First call to getInputStream should match request content",
+                content, IOUtils.toString(first, "UTF-8"));
 
         ServletInputStream second = authenticationRequestWrapper.getInputStream();
-        assertEquals("Subsequent calls to getInputStream should match request content", content, IOUtils.toString
-                (second,
-                "UTF-8"));
+        assertEquals("Subsequent calls to getInputStream should match request content",
+                content, IOUtils.toString(second, "UTF-8"));
     }
 
     @Test
     public void getReader() throws Exception {
         Reader first = authenticationRequestWrapper.getReader();
-        assertEquals("First call to getInputStream should match request content", content, IOUtils.toString(first));
+        assertEquals("First call to getInputStream should match request content",
+                content, IOUtils.toString(first));
 
         Reader second = authenticationRequestWrapper.getReader();
-        assertEquals("Subsequent calls to getInputStream should match request content", content, IOUtils.toString
-                (second));
+        assertEquals("Subsequent calls to getInputStream should match request content",
+                content, IOUtils.toString(second));
     }
 }

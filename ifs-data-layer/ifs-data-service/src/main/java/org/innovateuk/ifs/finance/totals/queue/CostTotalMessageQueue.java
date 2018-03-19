@@ -27,11 +27,11 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 @Component
 public class CostTotalMessageQueue {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CostTotalMessageQueue.class);
+
     private String financeTotalsKey;
 
     private HashBasedMacTokenHandler hashBasedMacTokenHandler;
-
-    private static final Logger LOG = LoggerFactory.getLogger(CostTotalMessageQueue.class);
 
     private AbstractRestTemplateAdaptor restTemplateAdaptor;
 
