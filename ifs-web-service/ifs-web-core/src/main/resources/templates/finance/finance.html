@@ -701,10 +701,16 @@
                 <div class="upload-section extra-margin">
                     <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
                     <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')} ? 'form-group-error'">
-                        <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
-                        <th:block th:if="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')}" th:text="${err}" />
-                        </th:block>
+                        <label th:for="|formInput[cost-${overheadCosts?.id}-calculationFile]|">
+                            <span class="visuallyhidden">Overhead calculation spreadsheet</span>
+                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+overheadCosts?.id+'-calculationFile'})" />
+                        </label>
+                        <input name="fileoverheadid"
+                               th:value="${overheadCosts?.id}"
+                               class="visuallyhidden"
+                               th:id="|formInput[cost-${overheadCosts?.id}-calculationFile]|"
+                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')} ? 'form-control-error'"
+                               th:attr="data-required-errormessage=#{validation.finance.overhead.file.required}"/>
                         <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
                                            filename=${overheadCosts?.calculationFile?.get()?.name},
