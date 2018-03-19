@@ -61,8 +61,8 @@
         <li class="not-selected">
             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
-        <li class="not-selected" aria-label="Item not selected">
-            <a class="buttonlink disabled">Pending and rejected</a>
+        <li class="not-selected">
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
         </li>
         <li class="not-selected" aria-label="Item not selected">
             <a class="buttonlink disabled">Accepted</a>
