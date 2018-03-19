@@ -127,7 +127,7 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
         final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
-        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.LEADAPPLICANT, application.getLeadOrganisationId());
+        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
         final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
 
         interviewAssignmentRepository.save(panel);

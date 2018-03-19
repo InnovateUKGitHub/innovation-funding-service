@@ -41,7 +41,7 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
 
         List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").withPhoneNumber("01234123123")
                 .withEmail("d@d.com")
-                .withRoleName(PROJECT_MANAGER.getName()).build(1);
+                .withRole(PROJECT_MANAGER).build(1);
 
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().withName("Org1", "Org2", "Org3").build(3);
 

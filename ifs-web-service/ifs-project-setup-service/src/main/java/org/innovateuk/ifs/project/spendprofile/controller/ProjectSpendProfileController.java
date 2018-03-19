@@ -347,7 +347,7 @@ public class ProjectSpendProfileController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
                 && projectUserResource.getOrganisation().equals(organisationId)
-                && PARTNER.getId() == projectUserResource.getId()
+                && PARTNER.getId() == projectUserResource.getRole()
         );
 
         return returnedProjectUser.isPresent();

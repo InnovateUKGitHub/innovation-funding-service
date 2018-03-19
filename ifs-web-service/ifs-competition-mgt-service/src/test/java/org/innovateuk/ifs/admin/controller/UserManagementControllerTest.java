@@ -148,15 +148,12 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
     @Test
     public void viewEditUserSuccess() throws Exception {
-
-        Role role = IFS_ADMINISTRATOR;
-
         String email = "asdf@asdf.com";
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
                 .withEmail(email)
-                .withRolesGlobal(Collections.singletonList(role))
+                .withRolesGlobal(Collections.singletonList(IFS_ADMINISTRATOR))
                 .withStatus(UserStatus.ACTIVE)
                 .build();
 

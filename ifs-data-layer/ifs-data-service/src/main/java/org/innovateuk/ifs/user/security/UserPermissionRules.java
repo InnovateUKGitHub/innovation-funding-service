@@ -41,11 +41,11 @@ public class UserPermissionRules {
 
     private static List<Role> CONSORTIUM_ROLES = asList(LEADAPPLICANT, COLLABORATOR);
 
-    private static Predicate<ProcessRole> consortiumProcessRoleFilter = CONSORTIUM_ROLES::contains;
+    private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole());
 
-    private static List<Role> ASSESSOR_ROLES = asList(ASSESSOR, PANEL_ASSESSOR);
+    private static List<Role> ASSESSOR_ROLES = asList(ASSESSOR, PANEL_ASSESSOR); // TODO interview panel?
 
-    private static Predicate<ProcessRole> assessorProcessRoleFilter = ASSESSOR_ROLES::contains;
+    private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> ASSESSOR_ROLES.contains(role.getRole());
 
     private static List<String> PROJECT_ROLES = asList(ProjectParticipantRole.PROJECT_MANAGER.getName(), ProjectParticipantRole.PROJECT_FINANCE_CONTACT.getName(), ProjectParticipantRole.PROJECT_PARTNER.getName());
 
