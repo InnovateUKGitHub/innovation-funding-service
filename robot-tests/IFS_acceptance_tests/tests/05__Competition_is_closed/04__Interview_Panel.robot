@@ -40,7 +40,7 @@ Cancel sending invite returns to the invite tab
     When the user clicks the button/link      link=Cancel
     Then the user should see the element      jQuery=td:contains("${assessor_ben}")
 
-Assessors receives the invite to interview panel
+Assessors receives the invite to the interview panel
     [Documentation]  IFS-2779
     [Tags]
     Given the user clicks the button/link      link=Invite
@@ -52,6 +52,7 @@ Assessors receives the invite to interview panel
     Then the user should see the element       link=Find
     And the user reads his email               ${assessor_ben_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
     And the user reads his email               ${assessor_joel_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
+    #TODO Assesor is able to reject the invitation from email need to add once IFS-3143 done
 
 CompAdmin can add the applications to invite list
 #to assign applications to interview panel
