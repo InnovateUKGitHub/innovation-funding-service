@@ -7,9 +7,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceBuilder> {
 
@@ -36,7 +36,7 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
     }
 
     @SafeVarargs
-    public final UserResourceBuilder withRolesGlobal(List<RoleResource>... rolesList) {
+    public final UserResourceBuilder withRolesGlobal(List<Role>... rolesList) {
         return withArray((roles, user) -> user.setRoles(roles), rolesList);
     }
 

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -46,7 +46,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private OrganisationTypeRestService organisationTypeService;
     
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
     
     @Autowired
     private OrganisationService organisationService;
@@ -144,7 +144,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 	        	FinanceRowType costType = costTypeForQuestion(question);
 	        	if(costType != null) {
 		        	FinanceRowCostCategory category = applicationFinanceResource.getFinanceOrganisationDetails(costType);
-		            FinanceRowItem costItem = financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
+		            FinanceRowItem costItem = financeViewHandlerProvider.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, userId, question.getId());
 		        	category.addCost(costItem);
 	        	}
 	        }

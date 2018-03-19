@@ -3,12 +3,12 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
@@ -33,7 +33,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Override
     public BaseSectionViewModel populateModel(
@@ -98,7 +98,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
                 applicantSection.getCompetition().getId(),
                 applicantSection.getApplication().getId()
         ));
-        FinanceModelManager financeModelManager = financeHandler.getFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
+        FinanceModelManager financeModelManager = financeViewHandlerProvider.getFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType());
         financeSectionViewModel.setFinanceViewModel(financeModelManager.getFinanceViewModel(
                 applicantSection.getApplication().getId(),
                 simpleMap(costsQuestions, ApplicantQuestionResource::getQuestion),

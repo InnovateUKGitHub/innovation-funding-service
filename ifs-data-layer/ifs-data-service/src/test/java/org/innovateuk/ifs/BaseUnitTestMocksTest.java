@@ -55,10 +55,16 @@ import org.innovateuk.ifs.finance.transactional.FinanceFileEntryService;
 import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
+import org.innovateuk.ifs.application.mapper.FormInputResponseMapper;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
+import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
+import org.innovateuk.ifs.form.transactional.QuestionService;
+import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
@@ -250,13 +256,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProfileRepository profileRepositoryMock;
 
     @Mock
-    protected RoleRepository roleRepositoryMock;
-
-    @Mock
     protected RoleInviteRepository roleInviteRepositoryMock;
-
-    @Mock
-    protected RoleService roleServiceMock;
 
     @Mock
     protected ProcessRoleRepository processRoleRepositoryMock;
@@ -299,6 +299,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SectionService sectionServiceMock;
+
+    @Mock
+    protected SectionStatusService sectionStatusServiceMock;
 
     @Mock
     protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
@@ -442,9 +445,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected IdentityProviderService idpServiceMock;
 
     @Mock
-    protected RoleMapper roleMapperMock;
-
-    @Mock
     protected ProcessRoleMapper processRoleMapperMock;
 
     @Mock
@@ -461,6 +461,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FormInputService formInputServiceMock;
+
+    @Mock
+    protected FormInputResponseService formInputResponseService;
 
     @Mock
     protected ApplicationFundingService applicationFundingServiceMock;

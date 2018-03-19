@@ -2,12 +2,12 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -44,7 +44,7 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
     private ProjectFinanceOverviewModelManager projectFinanceOverviewModelManager;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
     private ProjectService projectService;
@@ -85,6 +85,6 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
         List<ApplicantQuestionResource> costsQuestions = applicantSection.questionsWithType(QuestionType.COST);
 
         financeSectionViewModel.setFinanceOverviewViewModel(projectFinanceOverviewModelManager.getFinanceDetailsViewModel(applicantSection.getCompetition().getId(), projectResource.getId()));
-        financeSectionViewModel.setFinanceViewModel(financeHandler.getProjectFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()).getFinanceViewModel(projectResource.getId(), costsQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), applicantSection.getCurrentApplicant().getProcessRole().getUser(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
+        financeSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getProjectFinanceModelManager(applicantSection.getCurrentApplicant().getOrganisation().getOrganisationType()).getFinanceViewModel(projectResource.getId(), costsQuestions.stream().map(ApplicantQuestionResource::getQuestion).collect(Collectors.toList()), applicantSection.getCurrentApplicant().getProcessRole().getUser(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
     }
 }
