@@ -225,7 +225,7 @@
                             <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">
                                 <div class="task">
                                     <h3 class="heading-small">
-                                        <a th:href="@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${interviewPanelAccept.competitionId})}"
+                                        <a class="buttonlink disabled"
                                            th:text="${interviewPanelAccept.competitionName}"/>
                                     </h3>
 
