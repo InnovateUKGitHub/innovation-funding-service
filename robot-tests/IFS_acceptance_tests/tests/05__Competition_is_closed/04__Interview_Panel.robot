@@ -10,6 +10,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-2727 Interview Panels - Assign applications 'Find' tab
 ...
 ...               IFS-3054 Assessor dashboard - Invitation to interview panel box
+...
+...               IFS-3055 Assessor dashboard - Attend interview panel box
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -66,7 +68,7 @@ CompAdmin can add the applications to invite list
     Then the competition admin selects the applications and add to invite list
 
 Assessors accept the invitation to interview panel
-    [Documentation]  IFS-3054
+    [Documentation]  IFS-3054  IFS-3055
     [Tags]
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     And the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
@@ -74,6 +76,7 @@ Assessors accept the invitation to interview panel
     And the user clicks the button/link      css=.button[type="submit"]   #Confirm
     Then the user navigates to the page      ${server}/assessment/assessor/dashboard
     And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    And the user should see the element      jQuery=h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 *** Keywords ***
 the Interview Panel is activated in the db
