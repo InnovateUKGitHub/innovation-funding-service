@@ -247,43 +247,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
-    @PostMapping("/{projectId}/details/start-date")
-    public String updateStartDateDEL(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
-                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                                  Model model,
-                                  UserResource loggedInUser) {
-
-        Supplier<String> failureView = () -> doViewProjectStartDate(model, projectService.getById(projectId), form);
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
-
-            return validationHandler.addAnyErrors(updateResult, toField("projectStartDate")).
-                    failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
-        });
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
-    @GetMapping("/{projectId}/details/start-date")
-    public String viewStartDateDEL(@PathVariable("projectId") final Long projectId, Model model,
-                                @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
-                                UserResource loggedInUser) {
-
-        ProjectResource projectResource = projectService.getById(projectId);
-        LocalDate defaultStartDate = projectResource.getTargetStartDate().withDayOfMonth(1);
-        form.setProjectStartDate(defaultStartDate);
-        return doViewProjectStartDate(model, projectResource, form);
-
-    }
-
-    private String doViewProjectStartDateDEL(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {
-        model.addAttribute("model", new ProjectDetailsStartDateViewModel(projectResource));
-        model.addAttribute(FORM_ATTR_NAME, form);
-        return "project/details-start-date";
-    }
-
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = INVITE_FC)
     public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
