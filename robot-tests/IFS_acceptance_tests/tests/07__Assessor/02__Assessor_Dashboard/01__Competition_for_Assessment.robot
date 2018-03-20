@@ -11,9 +11,8 @@ Assessment should not be visible when the deadline has passed
     ${assessorsDeadline} =  Save competition's current assessor deadline  ${IN_ASSESSMENT_COMPETITION}
     When The assessment deadline for the ${IN_ASSESSMENT_COMPETITION_NAME} changes to the past
     And the user reloads the page
-#    Then The user should not see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    Then The user should not see the element    link=Park living
     [Teardown]  Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${assessorsDeadline}' WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' and `type`='ASSESSOR_DEADLINE';
-# TODO update when IFS-3148
 
 *** Keywords ***
 Save competition's current assessor deadline
