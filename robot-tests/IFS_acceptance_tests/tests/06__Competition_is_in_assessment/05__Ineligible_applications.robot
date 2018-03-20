@@ -113,7 +113,9 @@ Inform a user their application is ineligible
     [Tags]  HappyPath  Applicant
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the user navigates to the page      ${ineligibleApplications}
-    And the user clicks the button/link      jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
+    And the user clicks the button/link       jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
+    And the user clicks the button/link       jQuery=a:contains("Cancel")
+    When the user clicks the button/link      jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
     And the user is required to enter a subject/message    Please enter the email subject.  subject  This is ineligible
     And the user clicks the button/link       jQuery=button:contains("Send")
     And the user is required to enter a subject/message    Please enter the email message.  message  Thank you for your application but this is ineligible
