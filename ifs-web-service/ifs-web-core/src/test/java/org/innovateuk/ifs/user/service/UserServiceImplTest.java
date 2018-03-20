@@ -86,7 +86,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         userTwo.setId(2L);
 
         List<UserResource> expected = new ArrayList<>(asList(userOne, userTwo));
-        when(userRestService.findByUserRoleType(COMP_ADMIN)).thenReturn(restSuccess(expected));
+        when(userRestService.findByUserRole(COMP_ADMIN)).thenReturn(restSuccess(expected));
 
         List<UserResource> found = service.findUserByType(COMP_ADMIN);
         assertTrue(found.size() > 0);

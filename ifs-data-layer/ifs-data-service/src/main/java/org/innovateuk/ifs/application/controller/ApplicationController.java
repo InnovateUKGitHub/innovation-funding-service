@@ -91,6 +91,7 @@ public class ApplicationController {
         return RestResult.toGetResponse(applicationProgressService.applicationReadyForSubmit(applicationId));
     }
 
+
     @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                                          @PathVariable("userId") final Long userId,

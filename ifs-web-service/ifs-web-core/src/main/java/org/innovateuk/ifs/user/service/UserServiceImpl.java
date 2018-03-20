@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResource> findUserByType(Role type) {
-        return userRestService.findByUserRoleType(type).getSuccess();
+        return userRestService.findByUserRole(type).getSuccess();
     }
 
     @Override

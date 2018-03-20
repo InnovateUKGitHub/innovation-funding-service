@@ -99,9 +99,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<UserResource>> findByUserRoleType(Role role) {
-        // TODO ZDD
-
+    public RestResult<List<UserResource>> findByUserRole(Role role) {
         return getWithRestResult(userRestURL + "/findByRole/" + role, userListType());
     }
 
