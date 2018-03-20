@@ -95,7 +95,7 @@ public class UserController {
 
         UserResource userToEdit = getUserToEdit(editUserResource);
 
-        return registrationService.editInternalUser(userToEdit, editUserResource.getUserRole()).toPostResponse();
+        return registrationService.editInternalUser(userToEdit, editUserResource.getUserRoleType()).toPostResponse();
     }
 
     private UserResource getUserToEdit(EditUserResource editUserResource) {

@@ -31,7 +31,7 @@ public class EditUserResource {
     })
     private String lastName;
 
-    private Role userRole;
+    private Role userRoleType;
 
     public EditUserResource() {
 
@@ -41,7 +41,7 @@ public class EditUserResource {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userRole = userRoleType;
+        this.userRoleType = userRoleType;
     }
 
     public Long getUserId() {
@@ -68,12 +68,13 @@ public class EditUserResource {
         this.lastName = lastName;
     }
 
-    public Role getUserRole() {
-        return userRole;
+
+    public Role getUserRoleType() {
+        return userRoleType;
     }
 
-    public void setUserRole(Role userRole) {
-        this.userRole = userRole;
+    public void getUserRoleType(Role userRole) {
+        this.userRoleType = userRole;
     }
 
     @Override
@@ -88,7 +89,7 @@ public class EditUserResource {
                 .append(userId, that.userId)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
-                .append(userRole, that.userRole)
+                .append(userRoleType, that.userRoleType)
                 .isEquals();
     }
 
@@ -98,7 +99,7 @@ public class EditUserResource {
                 .append(userId)
                 .append(firstName)
                 .append(lastName)
-                .append(userRole)
+                .append(userRoleType)
                 .toHashCode();
     }
 }
