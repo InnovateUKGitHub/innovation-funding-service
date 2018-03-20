@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

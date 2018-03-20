@@ -1,29 +1,18 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
-
-
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
-import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.questionResourceListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.validationMessagesListType;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpMethod.GET;
 
 public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<QuestionRestServiceImpl> {
 
@@ -35,15 +24,6 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         QuestionRestServiceImpl questionRestService = new QuestionRestServiceImpl();
         questionRestService.questionRestURL = questionRestURL;
         return questionRestService;
-    }
-
-    @Test
-    public void assignTest() {
-
-        setupPutWithRestResultExpectations(questionRestURL + "/assign/1/2/3/4", Void.class, null, null);
-
-        // now run the method under test
-        assertTrue(service.assign(1L, 2L, 3L, 4L).isSuccess());
     }
 
     @Test
@@ -68,40 +48,6 @@ public class QuestionRestServiceMocksTest extends BaseRestServiceUnitTest<Questi
         // verify
         assertNotNull(returnedQuestion);
         Assert.assertEquals(question, returnedQuestion);
-    }
-
-    @Test
-    public void getMarkedAsCompleteTest() throws Exception {
-        String expectedUrl = BaseRestServiceUnitTest.dataServicesUrl + questionRestURL + "/getMarkedAsComplete/1/2";
-
-        Long[] questionIds = new Long[]{3L, 4L, 5L};
-        when(mockAsyncRestTemplate.exchange(expectedUrl, GET, httpEntityForRestCall(""), Long[].class)).thenReturn(settable(new ResponseEntity<>(questionIds, HttpStatus.OK)));
-
-        // now run the method under test
-        Set<Long> returnedQuestionIds = service.getMarkedAsComplete(1L, 2L).get();
-
-        // verify
-        assertNotNull(questionIds);
-        assertEquals(3, returnedQuestionIds.size());
-        assertEquals(new HashSet<>(Arrays.asList(questionIds)), returnedQuestionIds);
-    }
-
-    @Test
-    public void markAsCompleteTest() {
-        setupPutWithRestResultExpectations(questionRestURL + "/markAsComplete/1/2/3", validationMessagesListType(), null, null, HttpStatus.OK);
-        assertTrue(service.markAsComplete(1L, 2L, 3L).isSuccess());
-    }
-
-    @Test
-    public void markAsInCompleteTest() {
-        setupPutWithRestResultExpectations(questionRestURL + "/markAsInComplete/1/2/3", Void.class, null, null);
-        assertTrue(service.markAsInComplete(1L, 2L, 3L).isSuccess());
-    }
-
-    @Test
-    public void updateNotificationTest() {
-        setupPutWithRestResultExpectations(questionRestURL + "/updateNotification/1/true", Void.class, null, null);
-        assertTrue(service.updateNotification(1L, true).isSuccess());
     }
 
     @Test

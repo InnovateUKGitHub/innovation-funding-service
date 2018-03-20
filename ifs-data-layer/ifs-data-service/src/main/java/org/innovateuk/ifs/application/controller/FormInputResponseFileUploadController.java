@@ -9,7 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
