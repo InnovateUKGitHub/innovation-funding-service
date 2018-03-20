@@ -22,7 +22,7 @@ import java.util.List;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
- * This controller handles the Overview tab for inviting assessors to an Assessor Panel.
+ * This controller handles the Overview tab for inviting assessors to an Interview Panel.
  */
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
@@ -86,7 +86,7 @@ public class InterviewInviteAssessorsOverviewController extends CompetitionManag
     }
 
     private InterviewOverviewSelectionForm trimSelectionByFilteredResult(InterviewOverviewSelectionForm selectionForm,
-                                                                      Long competitionId) {
+                                                                      long competitionId) {
         List<Long> filteredResults = getAllInviteIds(competitionId);
         InterviewOverviewSelectionForm updatedSelectionForm = new InterviewOverviewSelectionForm();
 

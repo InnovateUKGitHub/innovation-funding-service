@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.management.controller.CompetitionManagementCook
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Build the model for the Assessment Panel Invite assessors 'Overview' view.
+ * Build the model for the Interview Panel Invite assessors 'Overview' view.
  */
 @Component
 public class InterviewInviteAssessorsOverviewModelPopulator extends InterviewInviteAssessorsModelPopulator<InterviewInviteAssessorsOverviewViewModel> {

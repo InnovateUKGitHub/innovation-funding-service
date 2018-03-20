@@ -4,7 +4,7 @@ import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 
 /**
- * Holder of model attributes for the Invite assessors 'Overview' view.
+ * Holder of model attributes for the Interview Invite assessors 'Overview' view.
  */
 public class InterviewInviteAssessorsOverviewViewModel extends InviteAssessorsViewModel<OverviewAssessorRowViewModel> {
 
