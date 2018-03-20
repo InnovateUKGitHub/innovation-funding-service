@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -194,7 +195,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
         Optional<Boolean> result = financeService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
-        return result.map(Boolean::booleanValue).orElse(false);
+        return result.orElse(false);
     }
 
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
@@ -359,6 +360,11 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         ProjectActivityStates otherDocumentsStatus = isLead ? createOtherDocumentStatus(project) : NOT_REQUIRED;
         ProjectActivityStates grantOfferLetterStatus = isLead ? createLeadGrantOfferLetterStatus(project) : createGrantOfferLetterStatus(project);
 
+        boolean grantOfferLetterSentToProjectTeam =
+                golWorkflowHandler.getExtendedState(project).
+                        andOnSuccessReturn(GrantOfferLetterStateResource::isGeneratedGrantOfferLetterAlreadySentToProjectTeam).
+                        getSuccess();
+
         return new ProjectPartnerStatusResource(
                 partnerOrganisation.getId(),
                 partnerOrganisation.getName(),
@@ -371,7 +377,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 otherDocumentsStatus,
                 grantOfferLetterStatus,
                 financeContactStatus,
-                golWorkflowHandler.isAlreadySent(project),
+                grantOfferLetterSentToProjectTeam,
                 isLead);
     }
 }
