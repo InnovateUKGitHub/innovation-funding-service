@@ -28,8 +28,7 @@ Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]  MySQL
     Given the user should see the element  jQuery=.sub-header:contains("days left to submit")
-    When we retrieve the date from the assessors deadline from the database
-    Then the days remaining should be correct (Top of the page)  ${assessorDeadline}
+    Then the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 
 Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540
@@ -56,10 +55,3 @@ the user fills in rejection details
     Select From List By Index                              id=rejectReason    1
     the user should not see an error in the page
     The user enters text to a text field                   id=rejectComment    Have conflicts with the area of expertise.
-
-we retrieve the date from the assessors deadline from the database
-    Connect to Database  @{database}
-    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d') FROM `${database_name}`.`milestone` WHERE `competition_id`='${IN_ASSESSMENT_COMPETITION}' AND type='ASSESSOR_DEADLINE';
-    ${result} =  get from list  ${result}  0
-    ${assessorDeadline} =  get from list  ${result}  0
-    set suite variable  ${assessorDeadline}
