@@ -51,7 +51,7 @@ dockerCompose {
         useComposeFiles.add('docker-compose/docker-compose-finance-totals.yml')
     }
 
-    if (project.property('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : false) {
+    if (project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : false) {
         useComposeFiles.add('docker-compose/docker-compose-prototypes.yml')
     }
 
