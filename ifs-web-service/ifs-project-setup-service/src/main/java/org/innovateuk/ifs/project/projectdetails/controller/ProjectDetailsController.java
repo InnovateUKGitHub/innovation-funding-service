@@ -215,7 +215,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private String doViewPartnerProjectLocation(Long projectId, Long organisationId, UserResource loggedInUser, Model model, PartnerProjectLocationForm form) {
 
-        if(!organisationService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())){
+        if(!projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())){
             return redirectToProjectDetails(projectId);
         }
 
