@@ -182,6 +182,15 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @GetMapping("/{projectId}/details/location")
+    public String viewProjectLocation(@PathVariable("projectId") final Long projectId,
+                                      @RequestParam(value="organisation",required=false) Long organisation,
+                                      Model model,
+                                      UserResource loggedInUser) {
+        return "project/location";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = SAVE_FC)
     public String updateFinanceContact(@PathVariable("projectId") final Long projectId,
                                        Model model,

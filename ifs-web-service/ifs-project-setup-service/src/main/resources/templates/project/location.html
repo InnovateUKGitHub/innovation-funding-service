@@ -1,0 +1,42 @@
+
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project location'" />
+</head>
+
+<body th:with="context='project'" class="project-detail finance-contact">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle='PROJECT NAME',size='heading-xlarge'" />
+
+    <p>We will assign a Monitoring Officer who will visit your project location.</p>
+
+    <form action="">
+        <h2 class="heading-medium">Project location</h2>
+
+        <p class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</p>
+
+        <div class="form-group">
+            <label class="form-label-bold" for="postcode">
+                Postcode
+            </label>
+            <input class="form-control width-medium" id="postcode" type="text">
+        </div>
+
+        <p>You can change your project location up until a Monitoring Officer is assigned to your project.</p>
+
+        <button class="button">Save project location</button>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
