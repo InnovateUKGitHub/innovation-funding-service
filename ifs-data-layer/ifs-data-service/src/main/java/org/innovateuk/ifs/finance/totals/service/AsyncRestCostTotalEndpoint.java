@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.finance.totals.queue;
+package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,16 +18,14 @@ import java.util.List;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 
 /**
- * Send {@link FinanceCostTotalResource} to related message handlers in
- * the finance-data-service via a queue mechanism.
+ * Communication with the finance-data-service endpoint implemented by async REST .
  * <p>
- * Under-the-hood, this queue can be implemented via async REST or
- * a message queue e.g. RabbitMQ.
+ * This is eventually expected to be replaced by an event message queue, see IFS-2391.
  */
 @Component
-public class CostTotalMessageQueue {
+public class AsyncRestCostTotalEndpoint {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CostTotalMessageQueue.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AsyncRestCostTotalEndpoint.class);
 
     private String financeTotalsKey;
 
@@ -36,7 +34,7 @@ public class CostTotalMessageQueue {
     private AbstractRestTemplateAdaptor restTemplateAdaptor;
 
     @Autowired
-    public CostTotalMessageQueue(
+    public AsyncRestCostTotalEndpoint(
             @Qualifier("finance_data_service_adaptor") AbstractRestTemplateAdaptor restTemplateAdaptor,
             HashBasedMacTokenHandler hashBasedMacTokenHandler,
             @Value("${ifs.finance-totals.authSecretKey}") String financeTotalsKey

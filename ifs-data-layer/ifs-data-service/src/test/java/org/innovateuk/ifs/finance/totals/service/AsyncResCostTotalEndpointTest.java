@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.finance.totals.queue;
+package org.innovateuk.ifs.finance.totals.service;
 
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.totals.service.AsyncRestCostTotalEndpoint;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,18 +20,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CostTotalMessageQueueTest {
+public class AsyncResCostTotalEndpointTest {
 
     @Mock
     private AbstractRestTemplateAdaptor restTemplateAdaptorMock;
 
-    private CostTotalMessageQueue costTotalMessageQueue;
+    private AsyncRestCostTotalEndpoint costTotalEndpoint;
 
     private HashBasedMacTokenHandler hashBasedMacTokenHandler = new HashBasedMacTokenHandler();
 
     @Before
     public void setUp() throws Exception {
-        costTotalMessageQueue = new CostTotalMessageQueue(
+        costTotalEndpoint = new AsyncRestCostTotalEndpoint(
                 restTemplateAdaptorMock,
                 new HashBasedMacTokenHandler(),
                 "supersecretkey"
@@ -51,7 +52,7 @@ public class CostTotalMessageQueueTest {
         when(restTemplateAdaptorMock.restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class))
                 .thenReturn(new CompletableFuture<>());
 
-        costTotalMessageQueue.sendCostTotals(costTotalResources);
+        costTotalEndpoint.sendCostTotals(costTotalResources);
 
         verify(restTemplateAdaptorMock).restPostWithEntityAsync(url, costTotalResources, authHeader, Void.class);
     }
