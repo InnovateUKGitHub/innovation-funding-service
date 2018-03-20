@@ -262,9 +262,43 @@
         </div>
     </th:block>
 
+    <!-- ===========================View: assessor_detailed_finance =========================== -->
+    <th:block th:fragment="assessment_detailed_finance(model)">
+        <h2 class="heading-medium">Detailed finances</h2>
+
+        <section class="collapsible" th:each="projectCostSection : ${detailedCostings.defaultProjectCostSections}">
+            <h2>
+                <th:block th:text="${projectCostSection.applicantSection.section.name}" ></th:block>
+                <span th:attr="data-mirror='#section-total-'+${projectCostSection.applicantSection.section.id}" ></span>
+            </h2>
+            <div class="collapsible-content">
+                <th:block th:each="costViewModel : ${projectCostSection.costViews}">
+                    <th:block th:if="${costViewModel.formInput.type.displayableFinanceType}">
+                        <th:block th:insert="finance/finance :: ${costViewModel.formInput.type.nameLower} (${costViewModel})" ></th:block>
+                    </th:block>
+                </th:block>
+            </div>
+        </section>
+
+        <div class="grid-row total-cost">
+            <div class="column-half">
+                <label for="total-cost" class="heading-medium">Total project costs</label>
+            </div>
+            <div class="column-half alignright">
+                <input type="text"
+                       id="total-cost"
+                       readonly="readonly"
+                       class="heading-medium width-full alignright"
+                       data-calculation-fields="[id*=section-total]"
+                       data-calculation-operations="+"
+                       th:value="'£' + ${#numbers.formatInteger(organisationFinanceTotal, 0, 'DEFAULT')}"/>
+            </div>
+        </div>
+    </th:block>
+
     <!-- ===========================Form: labour =========================== -->
     <th:block th:fragment="labour (costViewModel)">
-        <p th:text="${costViewModel.question.description}"></p>
+        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: labour_finances" th:with="question=${costViewModel.question}, costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -711,10 +745,9 @@
         </th:block>
     </th:block>
 
-
     <!-- ===========================Form: materials =========================== -->
     <th:block th:fragment="materials (costViewModel)" th:with="question=${costViewModel.question}">
-        <p th:text="${question.description}">description</p>
+        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${question.description}">description</p>
         <th:block th:insert="finance/finance :: materials_finances" th:with="costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -876,7 +909,7 @@
     <!-- ===========================Form: capital usage =========================== -->
 
     <th:block th:fragment="capital_usage (costViewModel)" >
-        <p th:text="${costViewModel.question.description}"></p>
+        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: capital_usage_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1095,7 +1128,7 @@
 
     <!-- ===========================Form: subcontracting cost =========================== -->
     <th:block th:fragment="subcontracting (costViewModel)">
-        <p th:text="${costViewModel.question.description}"></p>
+        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: subcontracting_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1230,7 +1263,7 @@
     <!-- ===========================Form: travel cost =========================== -->
 
     <th:block th:fragment="travel (costViewModel)">
-        <p th:text="${costViewModel.question.description}"></p>
+        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}"></p>
         <th:block th:insert="finance/finance :: travel_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1393,7 +1426,7 @@
 
     <!-- ===========================Form: other cost =========================== -->
     <th:block th:fragment="other_costs (costViewModel)">
-        <p th:text="${costViewModel.question.description}" />
+        <p th:unless="${costViewModel.viewmode == 'readonly'}" th:text="${costViewModel.question.description}" />
         <th:block th:insert="finance/finance :: other_costs_finances" th:with="question=${costViewModel.question},costCategory=${costViewModel.costCategory}, viewmode=${costViewModel.viewmode}, subSection=${costViewModel.section}" />
     </th:block>
 
@@ -1662,6 +1695,7 @@
                            placeholder="0"
                            min="1"
                            max="9999999999999999999"
+                           step="1"
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
                 </td>
                 <td>

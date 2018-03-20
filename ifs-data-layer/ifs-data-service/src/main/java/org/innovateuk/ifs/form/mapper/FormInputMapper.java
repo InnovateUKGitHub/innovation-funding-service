@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
-import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.application.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
@@ -11,10 +10,12 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.springframework.util.StringUtils;
 
 import java.util.Set;
 
 import static java.util.Collections.emptySet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Mapper(
@@ -30,17 +31,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputResource, Long> {
 
     @Mappings({
-            @Mapping(target = "responses", ignore = true),
             @Mapping(target = "guidanceRows", ignore = true),
             @Mapping(target = "active", ignore = true)
     })
     @Override
     public abstract FormInput mapToDomain(FormInputResource resource);
 
-    @ZeroDowntime(reference = "IFS-2564", description = "Remove `allowedFileTypesSet` mapping in ZDD migrate phase.")
-    @Mappings({
-            @Mapping(target = "allowedFileTypesSet", ignore = true)
-    })
     @Override
     public abstract FormInputResource mapToResource(FormInput domain);
 
@@ -48,14 +44,28 @@ public abstract class FormInputMapper extends BaseMapper<FormInput, FormInputRes
         if (object == null) {
             return null;
         }
+
         return object.getId();
     }
 
-    Set<FileTypeCategory> mapToFileTypes(String fileTypes) {
-        if (fileTypes == null) {
+    public Set<FileTypeCategory> mapToFileTypeEnums(String allowedFileTypes) {
+        if (allowedFileTypes == null) {
             return emptySet();
         }
 
-        return simpleMapSet(fileTypes.split(","), FileTypeCategory::fromDisplayName);
+        return simpleMapSet(
+                StringUtils.commaDelimitedListToStringArray(allowedFileTypes),
+                FileTypeCategory::fromDisplayName
+        );
+    }
+
+    public String mapToFileTypesString(Set<FileTypeCategory> allowedFileTypes) {
+        if (allowedFileTypes == null) {
+            return null;
+        }
+
+        return String.join(",",
+                simpleMap(allowedFileTypes,
+                        FileTypeCategory::getDisplayName));
     }
 }

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.innovateuk.ifs.application.domain.GuidanceRow;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;

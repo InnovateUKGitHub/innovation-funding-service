@@ -2,7 +2,7 @@ package org.innovateuk.ifs.registration.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -49,7 +49,7 @@ public class InternalUserRegistrationResourceBuilder extends BaseBuilder<Interna
         return withArray((password, userRegistrationResource) -> setField("password", password, userRegistrationResource), passwords);
     }
 
-    public InternalUserRegistrationResourceBuilder withRoles(List<RoleResource>... roles) {
+    public InternalUserRegistrationResourceBuilder withRoles(List<Role>... roles) {
         return withArray((roleList, userRegistrationResource) -> setField("roles", roleList, userRegistrationResource), roles);
     }
 }
