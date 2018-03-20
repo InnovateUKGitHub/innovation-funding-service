@@ -206,8 +206,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> withdrawProject(Long projectId) {
 
-        return getProject(projectId).handleSuccessOrFailure(
-                projectDoesNotExist -> serviceFailure(CANNOT_FIND_PROJECT),
+        return getProject(projectId).andOnSuccess(
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->
                                 projectWorkflowHandler.projectWithdrawn(existingProject, user) ?
                                 serviceSuccess() : serviceFailure(PROJECT_CANNOT_BE_WITHDRAWN))

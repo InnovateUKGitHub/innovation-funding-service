@@ -9,7 +9,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_PROJECT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -138,7 +137,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     @Test
     public void testWithdrawProjectWhenProjectDoesntExist() throws Exception {
         Long projectId = 432L;
-        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceFailure(CANNOT_FIND_PROJECT));
+        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
 
         mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
                 .andExpect(status().isNotFound());

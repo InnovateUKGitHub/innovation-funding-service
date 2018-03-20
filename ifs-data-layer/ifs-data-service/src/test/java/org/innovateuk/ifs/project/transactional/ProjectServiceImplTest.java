@@ -40,7 +40,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_FIND_PROJECT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
@@ -58,7 +57,6 @@ import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganis
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -298,7 +296,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Void> result = service.withdrawProject(projectId);
         assertTrue(result.isFailure());
-        assertEquals(CANNOT_FIND_PROJECT.getErrorKey(), result.getErrors().get(0).getErrorKey());
         verify(projectRepositoryMock).findOne(projectId);
         verifyZeroInteractions(projectWorkflowHandlerMock);
     }
