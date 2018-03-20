@@ -1,1 +1,0 @@
-UPDATE `setup_status` SET `class_name` = 'org.innovateuk.ifs.form.domain.Question' WHERE `class_name` = 'org.innovateuk.ifs.application.domain.Question';
