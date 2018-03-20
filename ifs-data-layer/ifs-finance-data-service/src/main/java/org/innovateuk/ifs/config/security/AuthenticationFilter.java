@@ -3,9 +3,12 @@ package org.innovateuk.ifs.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -13,7 +16,7 @@ import java.io.IOException;
  * security context if the request is authenticated.
  */
 @Component
-public class AuthenticationFilter implements Filter {
+public class AuthenticationFilter extends OncePerRequestFilter {
 
     private TokenAuthenticationService tokenAuthenticationService;
 
@@ -23,20 +26,19 @@ public class AuthenticationFilter implements Filter {
     }
 
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
-    }
+    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final
+    FilterChain filterChain) throws ServletException, IOException {
+        AuthenticationRequestWrapper requestWrapper = new AuthenticationRequestWrapper(request);
 
-    @Override
-    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain)
-            throws IOException, ServletException {
-        AuthenticationRequestWrapper requestWrapper = new AuthenticationRequestWrapper(
-                (HttpServletRequest) request);
-        SecurityContextHolder.getContext().setAuthentication(
-                tokenAuthenticationService.getAuthentication(requestWrapper));
-        chain.doFilter(requestWrapper, response);
-    }
+        AuthenticationToken authentication = tokenAuthenticationService.getAuthentication(requestWrapper);
+        if (authentication != null) {
+            SecurityContextHolder.getContext().setAuthentication(
+                    tokenAuthenticationService.getAuthentication(requestWrapper));
+        } else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or no X-AUTH-TOKEN header found in " +
+                    "request");
+        }
 
-    @Override
-    public void destroy() {
+        filterChain.doFilter(requestWrapper, response);
     }
 }

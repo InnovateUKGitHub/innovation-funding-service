@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.config.security;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -13,6 +14,11 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
 public class AuthenticationFilterTest {
+
+    @Before
+    public void setUp() {
+        SecurityContextHolder.clearContext();
+    }
 
     @Test
     public void doFilter() throws Exception {
@@ -42,7 +48,6 @@ public class AuthenticationFilterTest {
         FilterChain chain = mock(FilterChain.class);
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-
         authenticationFilter.doFilter(request, response, chain);
 
         assertNull(SecurityContextHolder.getContext().getAuthentication());

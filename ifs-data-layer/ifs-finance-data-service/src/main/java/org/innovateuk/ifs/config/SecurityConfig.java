@@ -2,6 +2,7 @@ package org.innovateuk.ifs.config;
 
 import org.innovateuk.ifs.config.security.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${management.contextPath}")
+    private String monitoringEndpoint;
+
     @Autowired
     private AuthenticationFilter authenticationFilter;
 
@@ -28,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/monitoring/health").permitAll()
+                .antMatchers(monitoringEndpoint+"/**").permitAll()
                 .anyRequest().authenticated();
     }
 }
