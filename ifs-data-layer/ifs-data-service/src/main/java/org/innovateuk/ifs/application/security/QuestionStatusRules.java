@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.security;
 
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
