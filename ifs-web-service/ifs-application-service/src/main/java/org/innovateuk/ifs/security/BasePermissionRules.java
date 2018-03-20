@@ -20,12 +20,11 @@ public class BasePermissionRules {
     private UserService userService;
 
     public boolean isLeadApplicant(Long applicationId, UserResource loggedInUser) {
-        ApplicationResource applicationResource = getApplication(applicationId);
-        return loggedInUser.getId() == getLeadApplicantId(applicationResource);
+        return loggedInUser.getId() == getLeadApplicantId(applicationId);
     }
 
-    private long getLeadApplicantId(ApplicationResource applicationResource) {
-        return userService.getLeadApplicantProcessRoleOrNull(applicationResource).getUser();
+    private long getLeadApplicantId(Long applicationId) {
+        return userService.getLeadApplicantProcessRoleOrNull(applicationId).getUser();
     }
 
     public boolean applicationNotYetSubmitted(Long applicationId) {
