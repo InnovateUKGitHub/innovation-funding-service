@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.projectdetails.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.domain.Address;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -42,6 +44,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -177,11 +180,38 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updatePartnerProjectLocation(Long projectId, LocalDate projectStartDate) {
-        return validateProjectStartDate(projectStartDate).
-                andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
-                andOnSuccess(() -> getProject(projectId)).
-                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+    public ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postCode) {
+        return validatePostCode(postCode).
+                andOnSuccess(() -> validateIfPartnerProjectLocationCanBeChanged(composite.getProjectId())).
+                andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
+                andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostCode(postCode));
+    }
+
+    private ServiceResult<Void> validatePostCode(String postCode) {
+
+        if (StringUtils.isBlank(postCode)) {
+            return serviceFailure(GENERAL_INVALID_ARGUMENT);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateIfPartnerProjectLocationCanBeChanged(Long projectId) {
+
+        if (isMonitoringOfficerAssigned(projectId)) {
+            return serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED);
+        }
+
+        return serviceSuccess();
+    }
+
+    private boolean isMonitoringOfficerAssigned(Long projectId) {
+        MonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
+        return monitoringOfficer != null;
+    }
+
+    private MonitoringOfficer getMonitoringOfficerByProjectId(Long projectId) {
+        return monitoringOfficerRepository.findOneByProjectId(projectId);
     }
 
     @Override
