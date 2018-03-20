@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.forms.populator;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
