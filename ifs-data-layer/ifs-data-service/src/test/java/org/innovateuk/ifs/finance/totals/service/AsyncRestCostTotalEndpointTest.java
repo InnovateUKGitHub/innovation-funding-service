@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class AsyncResCostTotalEndpointTest {
+public class AsyncRestCostTotalEndpointTest {
 
     @Mock
     private AbstractRestTemplateAdaptor restTemplateAdaptorMock;
