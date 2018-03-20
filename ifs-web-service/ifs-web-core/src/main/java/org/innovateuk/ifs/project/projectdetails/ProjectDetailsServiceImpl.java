@@ -36,6 +36,11 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     }
 
     @Override
+    public ServiceResult<Void> updatePartnerProjectLocation(Long projectId, Long organisationId, String postCode) {
+        return projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postCode).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return projectDetailsRestService.updateProjectStartDate(projectId, projectStartDate).toServiceResult();
     }

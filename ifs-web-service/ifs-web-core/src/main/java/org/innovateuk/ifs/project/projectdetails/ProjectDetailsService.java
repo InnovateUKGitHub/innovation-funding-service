@@ -16,6 +16,8 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
 
+    ServiceResult<Void> updatePartnerProjectLocation(Long projectId, Long organisationId, String postCode);
+
     ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
 
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);

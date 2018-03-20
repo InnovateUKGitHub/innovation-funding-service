@@ -240,9 +240,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectDetailsService.updateProjectStartDate(projectId, form.getProjectStartDate());
+            ServiceResult<Void> updateResult = projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, form.getPostCode());
 
-            return validationHandler.addAnyErrors(updateResult, toField("projectStartDate")).
+            return validationHandler.addAnyErrors(updateResult, toField("postCode")).
                     failNowOrSucceedWith(failureView, () -> redirectToProjectDetails(projectId));
         });
     }
