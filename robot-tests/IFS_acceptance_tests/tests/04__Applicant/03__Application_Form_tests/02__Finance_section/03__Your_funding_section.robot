@@ -27,12 +27,15 @@ Applicant can see maximum funding size available to them
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    26
-    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
-    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    25
-    Then the user should not see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
-    And the user should not see the element    css=.error-message
+    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  26
+    And the user clicks the button/link        jQuery=button:contains("Mark as complete")
+    Then the user should see a field error     This field should be 25% or lower.
+    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  25.67
+    And the user moves focus to the element    css=button.extra-margin[type="submit"]
+    Then the user should see a field error     This field can only accept whole numbers.
+    #TODO add server side validation for the percentage field when double number is provided IFS-3066
+    When the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  24
+    Then the user should not see an error in the page
 
 Other funding validations
     [Documentation]    INFUND-6794

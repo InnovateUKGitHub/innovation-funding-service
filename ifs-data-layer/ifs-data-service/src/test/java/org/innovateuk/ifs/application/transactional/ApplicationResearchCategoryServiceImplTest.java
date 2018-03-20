@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import java.util.Collections;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;

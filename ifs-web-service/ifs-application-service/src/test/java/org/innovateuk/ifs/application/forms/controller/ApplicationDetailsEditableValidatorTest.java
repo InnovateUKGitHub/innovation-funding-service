@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.forms.validator.ApplicationDetailsEditableValidator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.APPLICATION_DETAILS;
 import static org.junit.Assert.assertFalse;

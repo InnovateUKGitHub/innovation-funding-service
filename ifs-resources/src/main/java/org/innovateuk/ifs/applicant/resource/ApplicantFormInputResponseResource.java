@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.applicant.resource;
 
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 
 /**
  * Rich resource for a form input response.
