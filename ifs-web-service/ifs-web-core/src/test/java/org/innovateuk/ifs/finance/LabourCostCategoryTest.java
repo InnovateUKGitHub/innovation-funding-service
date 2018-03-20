@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;

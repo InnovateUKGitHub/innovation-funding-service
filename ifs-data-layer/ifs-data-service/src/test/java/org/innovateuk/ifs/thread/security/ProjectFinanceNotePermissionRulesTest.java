@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.threads.resource.NoteResource;
-import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +15,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceNotePermissionRules> {
     private NoteResource noteResource;

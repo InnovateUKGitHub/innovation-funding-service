@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.application.team.security;
+package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.team.security.OrganisationPermissionRules;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -106,6 +107,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
     private UserResource setUpMocking(long loggedInUserId, long leadApplicantUserId, long applicationId, ApplicationState applicationState) {
         ApplicationResource applicationResource = ApplicationResourceBuilder.newApplicationResource()
+                .withId(applicationId)
                 .withApplicationState(applicationState)
                 .build();
         when(applicationServiceMock.getById(applicationId)).thenReturn(applicationResource);
@@ -113,7 +115,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         ProcessRoleResource processRoleResource = ProcessRoleResourceBuilder.newProcessRoleResource()
                 .withUserId(leadApplicantUserId)
                 .build();
-        when(userServiceMock.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(processRoleResource);
+        when(userServiceMock.getLeadApplicantProcessRoleOrNull(applicationResource.getId())).thenReturn(processRoleResource);
 
         UserResource loggedInUser = new UserResource();
         loggedInUser.setId(loggedInUserId);
