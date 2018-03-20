@@ -45,7 +45,7 @@ Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]    HappyPath
     Then The user should see the text in the page    days left to submit
-    And the days remaining should be correct (Top of the page)    2068-01-28
+    And the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
 
 Summary shows questions as incomplete
     [Documentation]    INFUND-550
