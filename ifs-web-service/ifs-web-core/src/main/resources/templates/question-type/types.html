@@ -205,10 +205,12 @@
                        id="application.durationInMonths"
                        th:field="*{__application.durationInMonths__}"
                        th:errorclass="form-control-error"
-                       type="text"
-                       pattern="^([1-9]|0[1-9]|[1-2][0-9]|3[0-6])$"
+                       type="number"
+                       th:min="${competition.minProjectDuration}"
+                       th:max="${competition.maxProjectDuration}"
                        required="required"
-                       th:attr="data-pattern-errormessage=#{validation.project.duration.range.invalid}" />
+                       th:attr="data-min-errormessage=#{validation.project.duration.input.invalid(${competition.minProjectDuration}, ${competition.maxProjectDuration})},
+                                data-max-errormessage=#{validation.project.duration.input.invalid(${competition.minProjectDuration}, ${competition.maxProjectDuration})}"/>
                 <!--/* this is solved with a pattern because setting a number and min="" and max="" doesn't support one message (your project should last between 1 and 36 months).
                 This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
             </div>

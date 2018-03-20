@@ -27,10 +27,6 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 @FieldRequiredIf(required = "previousApplicationNumber", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.number.required}")
 @FieldRequiredIf(required = "previousApplicationTitle", argument = "resubmission", predicate = true, message = "{validation.application.previous.application.title.required}")
 public class ApplicationResource {
-    private static final int MIN_DURATION_IN_MONTHS = 1;
-
-    private static final int MAX_DURATION_IN_MONTHS = 36;
-
     private static final List<CompetitionStatus> PUBLISHED_ASSESSOR_FEEDBACK_COMPETITION_STATES = singletonList(PROJECT_SETUP);
 
     private static final List<CompetitionStatus> EDITABLE_ASSESSOR_FEEDBACK_COMPETITION_STATES = asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK);
@@ -53,8 +49,7 @@ public class ApplicationResource {
     private LocalDate startDate;
 
     private ZonedDateTime submittedDate;
-    @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
-    @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
+
     @NotNull
     private Long durationInMonths;
 
