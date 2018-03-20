@@ -86,12 +86,6 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     private InterviewParticipantRepository interviewParticipantRepository;
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private CompetitionRepository competitionRepository;
 
     @Autowired
