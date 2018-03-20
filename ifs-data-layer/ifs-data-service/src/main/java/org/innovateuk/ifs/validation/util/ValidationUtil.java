@@ -1,6 +1,11 @@
 package org.innovateuk.ifs.validation.util;
 
+import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.assessment.validator.AssessorScopeValidator;
+import org.innovateuk.ifs.assessment.validator.AssessorScoreValidator;
+import org.innovateuk.ifs.assessment.validator.ResearchCategoryValidator;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -13,9 +18,8 @@ import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
-import org.innovateuk.ifs.validation.validator.ApplicationMarkAsCompleteValidator;
+import org.innovateuk.ifs.validation.validator.*;
 import org.innovateuk.ifs.finance.validator.MinRowCountValidator;
-import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
 import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
 import org.innovateuk.ifs.validation.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
@@ -63,6 +67,19 @@ public class ValidationUtil {
         this.minRowCountValidator = minRowCountValidator;
         this.spendProfileCostValidator = spendProfileCostValidator;
     }
+
+    @ZeroDowntime(reference = "IFS-3144", description = "Remove old package names and add flyway script to correct them in database.")
+    private static final Map<String, Class<?>> oldPackageClassMap = ImmutableMap.<String, Class<?>> builder()
+            .put("org.innovateuk.ifs.validator.EmailValidator", EmailValidator.class)
+            .put("org.innovateuk.ifs.validator.NotEmptyValidator", NotEmptyValidator.class)
+            .put("org.innovateuk.ifs.validator.WordCountValidator", WordCountValidator.class)
+            .put("org.innovateuk.ifs.validator.NonNegativeLongIntegerValidator", NonNegativeLongIntegerValidator.class)
+            .put("org.innovateuk.ifs.validator.SignedLongIntegerValidator", SignedLongIntegerValidator.class)
+            .put("org.innovateuk.ifs.validator.PastMMYYYYValidator", PastMMYYYYValidator.class)
+            .put("org.innovateuk.ifs.validator.AssessorScoreValidator", AssessorScoreValidator.class)
+            .put("org.innovateuk.ifs.validator.ResearchCategoryValidator", ResearchCategoryValidator.class)
+            .put("org.innovateuk.ifs.validator.AssessorScopeValidator", AssessorScopeValidator.class)
+            .build();
 
     /**
      * This method is needed because we want to add validator Group to validation.
@@ -120,8 +137,15 @@ public class ValidationUtil {
                     Validator validator = null;
                     try {
                         // Sometimes we want to allow the user to enter a empty response. Then we can ignore the NotEmptyValidator .
-                        if (!(ignoreEmpty && v.getClazzName().equals(NotEmptyValidator.class.getName()))) {
-                            validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
+                        if (!(ignoreEmpty &&
+                                (v.getClazzName().equals(NotEmptyValidator.class.getName())
+                                || v.getClazzName().equals(NotEmptyValidator.OLD_PACKAGE_NAME)))) {
+
+                            try {
+                                validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
+                            } catch (ClassNotFoundException e) {
+                                validator = (Validator) context.getBean(oldPackageClassMap.get(v.getClazzName()));
+                            }
                             binder.addValidators(validator);
                         }
                     } catch (Exception e) {

@@ -14,8 +14,8 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
  */
 @Component
 public class NotEmptyValidator extends BaseValidator {
+    public static final String OLD_PACKAGE_NAME = "org.innovateuk.ifs.validator.NotEmptyValidator";
     private static final Log LOG = LogFactory.getLog(NotEmptyValidator.class);
-
 
     @Override
     public void validate(Object target, Errors errors) {
