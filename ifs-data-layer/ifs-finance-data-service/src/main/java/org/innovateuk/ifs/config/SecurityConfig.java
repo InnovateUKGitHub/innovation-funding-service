@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(monitoringEndpoint+"/**").permitAll()
+                .antMatchers(monitoringEndpoint + "/**").permitAll()
                 .anyRequest().authenticated();
     }
 }

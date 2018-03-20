@@ -28,7 +28,7 @@ public class AuthenticationFilterTest {
         when(tokenAuthenticationService.getAuthentication(isA(AuthenticationRequestWrapper.class))).thenReturn
                 (authenticationToken);
 
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(tokenAuthenticationService);
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter("/monitoring", tokenAuthenticationService);
 
         FilterChain chain = mock(FilterChain.class);
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -37,13 +37,30 @@ public class AuthenticationFilterTest {
         authenticationFilter.doFilter(request, response, chain);
 
         assertEquals(authenticationToken, SecurityContextHolder.getContext().getAuthentication());
+        verify(tokenAuthenticationService).getAuthentication(isA(AuthenticationRequestWrapper.class));
+        verify(chain).doFilter(isA(AuthenticationRequestWrapper.class), same(response));
+    }
+
+    @Test
+    public void doFilter_monitoring() throws Exception {
+        TokenAuthenticationService tokenAuthenticationService = mock(TokenAuthenticationService.class);
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter("/monitoring", tokenAuthenticationService);
+
+        FilterChain chain = mock(FilterChain.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRequestURI("/monitoring/health");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        authenticationFilter.doFilter(request, response, chain);
+
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
+        verify(tokenAuthenticationService, never()).getAuthentication(isA(AuthenticationRequestWrapper.class));
         verify(chain).doFilter(isA(AuthenticationRequestWrapper.class), same(response));
     }
 
     @Test
     public void doFilter_notAuthenticated() throws Exception {
         TokenAuthenticationService tokenAuthenticationService = mock(TokenAuthenticationService.class);
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(tokenAuthenticationService);
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter("/monitoring", tokenAuthenticationService);
 
         FilterChain chain = mock(FilterChain.class);
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -51,6 +68,7 @@ public class AuthenticationFilterTest {
         authenticationFilter.doFilter(request, response, chain);
 
         assertNull(SecurityContextHolder.getContext().getAuthentication());
+        verify(tokenAuthenticationService).getAuthentication(isA(AuthenticationRequestWrapper.class));
         verify(chain).doFilter(isA(AuthenticationRequestWrapper.class), same(response));
     }
 }

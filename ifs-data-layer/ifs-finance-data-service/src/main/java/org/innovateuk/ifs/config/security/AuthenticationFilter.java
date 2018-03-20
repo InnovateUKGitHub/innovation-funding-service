@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,27 +19,30 @@ import java.io.IOException;
 @Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
+    private String monitoringEndpoint;
+
     private TokenAuthenticationService tokenAuthenticationService;
 
     @Autowired
-    public AuthenticationFilter(final TokenAuthenticationService tokenAuthenticationService) {
+    public AuthenticationFilter(@Value("${management.contextPath}") String monitoringEndpoint,
+                                TokenAuthenticationService tokenAuthenticationService) {
+        this.monitoringEndpoint = monitoringEndpoint;
         this.tokenAuthenticationService = tokenAuthenticationService;
     }
 
     @Override
-    protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final
-    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         AuthenticationRequestWrapper requestWrapper = new AuthenticationRequestWrapper(request);
-
-        AuthenticationToken authentication = tokenAuthenticationService.getAuthentication(requestWrapper);
-        if (authentication != null) {
-            SecurityContextHolder.getContext().setAuthentication(
-                    tokenAuthenticationService.getAuthentication(requestWrapper));
-        } else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or no X-AUTH-TOKEN header found in " +
-                    "request");
+        if (!request.getRequestURI().startsWith(monitoringEndpoint)) {
+            AuthenticationToken authentication = tokenAuthenticationService.getAuthentication(requestWrapper);
+            if (authentication != null) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or no X-AUTH-TOKEN header found" +
+                        " in request");
+            }
         }
-
         filterChain.doFilter(requestWrapper, response);
     }
 }
