@@ -1,1 +1,0 @@
-UPDATE `role` SET `url`='assessment/assessor/dashboard' WHERE `name`='assessor';

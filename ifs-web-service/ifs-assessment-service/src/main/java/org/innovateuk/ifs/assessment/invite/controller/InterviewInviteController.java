@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * Controller to manage Invites to an Assessment interview Panel.
  */
 @Controller
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = InterviewInviteController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can handle the decision to attend an interview panel", securedType = InterviewInviteController.class)
 @PreAuthorize("permitAll")
 public class InterviewInviteController {
 

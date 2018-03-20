@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.commons.ZeroDowntime;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -52,13 +53,17 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
 
     @Transactional
     @Override
+    @ZeroDowntime(reference = "IFS-2981", description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class")
     public ServiceResult<Map<Long, Boolean>> getQuestionStatuses(Long competitionId, CompetitionSetupSection parentSection) {
         Long parentSectionStatusId = getParentIdStatusObjectOrCreateOne(competitionId, parentSection);
         List<SetupStatusResource> setupStatuses = getSetupStatusByTargetAndParentId(competitionId, parentSectionStatusId);
 
         return ServiceResult.serviceSuccess(setupStatuses
                 .stream()
-                .filter(setupStatusResource -> setupStatusResource.getClassName().equals(Question.class.getName()))
+                .filter(setupStatusResource ->
+                        setupStatusResource.getClassName().equals(Question.class.getName())
+                        || setupStatusResource.getClass().equals(Question.PREVIOUS_PACKAGE_NAME)
+                )
                 .collect(toMap(SetupStatusResource::getClassPk, SetupStatusResource::getCompleted)));
     }
 
@@ -68,11 +73,17 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
                     .getSuccess();
     }
 
+    @ZeroDowntime(reference = "IFS-2981", description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class")
     private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, Long questionId, CompetitionSetupSection parentSection) {
-        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(Question.class.getName(), questionId, Competition.class.getName(), competitionId)
+        Optional<SetupStatusResource> setupStatusOpt =
+                setupStatusService.findSetupStatusAndTarget(Question.class.getName(), questionId, Competition.class.getName(), competitionId)
                 .getOptionalSuccessObject();
 
-        return setupStatusOpt.orElseGet(() -> createNewSetupStatus(competitionId, questionId, parentSection));
+        return setupStatusOpt.orElseGet(() ->
+                        setupStatusService.findSetupStatusAndTarget(Question.PREVIOUS_PACKAGE_NAME, questionId, Competition.class.getName(), competitionId)
+                                .getOptionalSuccessObject()
+                                .orElseGet(() -> createNewSetupStatus(competitionId, questionId, parentSection)));
+
     }
 
     private SetupStatusResource createNewSetupStatus(Long competitionId, Long questionId, CompetitionSetupSection parentSection) {

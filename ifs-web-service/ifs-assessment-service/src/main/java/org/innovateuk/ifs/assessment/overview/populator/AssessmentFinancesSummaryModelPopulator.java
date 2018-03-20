@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.assessment.overview.populator;
 
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.overview.viewmodel.AssessmentFinancesSummaryViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -31,6 +32,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.competition.resource.AssessorFinanceView.DETAILED;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -71,19 +73,19 @@ public class AssessmentFinancesSummaryModelPopulator {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
 
-        addApplicationAndOrganisationDetails(assessment.getApplication(), model);
+        addApplicationAndOrganisationDetails(model, assessment.getApplication(), competition.getAssessorFinanceView());
         addFinanceDetails(model, competition.getId(), assessment.getApplication());
 
         return new AssessmentFinancesSummaryViewModel(assessmentId, assessment.getApplication(),
                 assessment.getApplicationName(), competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage());
     }
 
-    private void addApplicationAndOrganisationDetails(long applicationId, Model model) {
+    private void addApplicationAndOrganisationDetails(Model model, long applicationId, AssessorFinanceView financeVew) {
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
-        addOrganisationDetails(model, userApplicationRoles);
+        addOrganisationDetails(model, userApplicationRoles, financeVew);
     }
 
-    private void addOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles) {
+    private void addOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles, AssessorFinanceView financeVew) {
         model.addAttribute("academicOrganisations", getAcademicOrganisations(getApplicationOrganisations(userApplicationRoles)));
         model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
 
@@ -91,6 +93,8 @@ public class AssessmentFinancesSummaryModelPopulator {
         leadOrganisation.ifPresent(org ->
                 model.addAttribute("leadOrganisation", org)
         );
+
+        model.addAttribute("showAssessorDetailedFinanceLink", financeVew.equals(DETAILED) ? true : false);
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
@@ -100,7 +104,6 @@ public class AssessmentFinancesSummaryModelPopulator {
                 .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
-
 
     private SortedSet<OrganisationResource> getApplicationOrganisations(List<ProcessRoleResource> userApplicationRoles) {
         Comparator<OrganisationResource> compareById =
@@ -138,7 +141,6 @@ public class AssessmentFinancesSummaryModelPopulator {
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccess());
-
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
@@ -168,7 +170,6 @@ public class AssessmentFinancesSummaryModelPopulator {
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
                 .collect(Collectors.toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
-
 
         //Remove all questions without non-empty form inputs.
         Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()

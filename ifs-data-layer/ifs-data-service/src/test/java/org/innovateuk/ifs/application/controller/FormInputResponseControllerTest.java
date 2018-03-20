@@ -5,8 +5,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
-import org.innovateuk.ifs.form.controller.FormInputResponseController;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
@@ -18,7 +17,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
@@ -57,7 +56,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 build();
         List<FormInputResponseResource> formInputResponseResources = Collections.singletonList(formInputResponseResource);
 
-        when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(serviceSuccess(formInputResponseResources));
+        when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(serviceSuccess(formInputResponseResources));
 
         mockMvc.
                 perform(
@@ -99,7 +98,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
 
         FormInputResponseResource formInputResponseResource = newFormInputResponseResource().build();
 
-        when(formInputServiceMock.findResponseByApplicationIdAndQuestionName(applicationId, questionName))
+        when(formInputResponseService.findResponseByApplicationIdAndQuestionName(applicationId, questionName))
                 .thenReturn(serviceSuccess(formInputResponseResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get(
@@ -108,13 +107,13 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(formInputResponseResource)));
 
-        verify(formInputServiceMock, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
+        verify(formInputResponseService, only()).findResponseByApplicationIdAndQuestionName(applicationId, questionName);
     }
 
     private void assertGetByFormInputIdAndApplicationIdButErrorOccurs(Error errorToReturn, String documentationSuffix, HttpStatus expectedStatus, String expectedErrorKey) throws Exception {
         ServiceResult<List<FormInputResponseResource>> failureResponse = serviceFailure(errorToReturn);
 
-        when(formInputServiceMock.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
+        when(formInputResponseService.findResponsesByFormInputIdAndApplicationId(anyLong(), anyLong())).thenReturn(failureResponse);
         MvcResult response = mockMvc.
                 perform(
                         get("/forminputresponse/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}", 456, 123).
