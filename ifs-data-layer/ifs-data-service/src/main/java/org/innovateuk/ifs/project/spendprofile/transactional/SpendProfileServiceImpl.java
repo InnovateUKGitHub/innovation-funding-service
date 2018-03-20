@@ -10,8 +10,8 @@ import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -52,8 +52,8 @@ import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -238,7 +238,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> sendFinanceContactEmail(Project project, Organisation organisation) {
         Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
         if (financeContact.isPresent() && financeContact.get().getUser() != null) {
-            NotificationTarget financeContactTarget = new ExternalUserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
+            NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
             Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail();
             return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         }

@@ -18,8 +18,8 @@ import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -176,7 +176,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private NotificationTarget createInviteInternalUserNotificationTarget(RoleInvite roleInvite) {
-        return new ExternalUserNotificationTarget(roleInvite.getName(), roleInvite.getEmail());
+        return new UserNotificationTarget(roleInvite.getName(), roleInvite.getEmail());
     }
 
     private Map<String, Object> createGlobalArgsForInternalUserInvite(RoleInvite roleInvite) {

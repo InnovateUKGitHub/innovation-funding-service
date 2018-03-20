@@ -10,10 +10,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -147,9 +147,9 @@ public class ApplicationNotificationServiceImplTest {
         processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
-                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
-                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
-                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new UserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
         );
 
         List<EmailContent> emailContents = newEmailContentResource()
@@ -279,9 +279,9 @@ public class ApplicationNotificationServiceImplTest {
         processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
-                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
-                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
-                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new UserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
         );
 
         List<EmailContent> emailContents = newEmailContentResource()
@@ -413,9 +413,9 @@ public class ApplicationNotificationServiceImplTest {
         processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
-                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
-                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
-                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new UserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
         );
 
         List<EmailContent> emailContents = newEmailContentResource()
@@ -550,7 +550,7 @@ public class ApplicationNotificationServiceImplTest {
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to = new ExternalUserNotificationTarget(fullName, email);
+        NotificationTarget to = new UserNotificationTarget(fullName, email);
         Notification notification = new Notification(
                 from,
                 singletonList(to),

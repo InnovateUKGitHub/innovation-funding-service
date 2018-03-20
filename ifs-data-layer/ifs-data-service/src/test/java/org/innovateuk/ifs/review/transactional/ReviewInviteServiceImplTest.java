@@ -14,10 +14,10 @@ import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.resource.ReviewState;
@@ -471,8 +471,8 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget(names.get(0), emails.get(0));
-        NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
+        NotificationTarget to1 = new UserNotificationTarget(names.get(0), emails.get(0));
+        NotificationTarget to2 = new UserNotificationTarget(names.get(1), emails.get(1));
 
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
@@ -529,7 +529,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 "competitionName", competition.getName()
                 );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessors_to_assessors_panel_text.txt";
 
@@ -584,7 +584,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 "competitionName", competition.getName()
         );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessors_to_assessors_panel_text.txt";
 
@@ -652,8 +652,8 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget(names.get(0), emails.get(0));
-        NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
+        NotificationTarget to1 = new UserNotificationTarget(names.get(0), emails.get(0));
+        NotificationTarget to2 = new UserNotificationTarget(names.get(1), emails.get(1));
 
         List<Notification> notifications = newNotification()
                 .withSource(from, from)

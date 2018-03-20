@@ -18,10 +18,10 @@ import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -186,7 +186,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "deadlineDate", deadlineDate.format(inviteFormatter)
         );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessor_preview_text.txt";
 
@@ -245,7 +245,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "deadlineDate", deadlineDate.format(inviteFormatter)
         );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessor_preview_text.txt";
 
@@ -296,7 +296,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessor_editable_text.txt";
 
@@ -344,7 +344,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
                 "deadlineDate", deadlineDate.format(inviteFormatter),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessor_editable_text.txt";
 
@@ -850,8 +850,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget(names.get(0), emails.get(0));
-        NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
+        NotificationTarget to1 = new UserNotificationTarget(names.get(0), emails.get(0));
+        NotificationTarget to2 = new UserNotificationTarget(names.get(1), emails.get(1));
 
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
@@ -932,8 +932,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget(names.get(0), emails.get(0));
-        NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
+        NotificationTarget to1 = new UserNotificationTarget(names.get(0), emails.get(0));
+        NotificationTarget to2 = new UserNotificationTarget(names.get(1), emails.get(1));
 
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
@@ -1032,7 +1032,7 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to = new ExternalUserNotificationTarget(name, email);
+        NotificationTarget to = new UserNotificationTarget(name, email);
         Notification notification = new Notification(from, singletonList(to), AssessmentInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(competitionParticipantRepositoryMock.getByInviteId(invite.getId())).thenReturn(competitionParticipant);

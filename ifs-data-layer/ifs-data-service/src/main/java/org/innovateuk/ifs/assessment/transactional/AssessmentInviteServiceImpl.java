@@ -21,10 +21,10 @@ import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -183,7 +183,7 @@ public class AssessmentInviteServiceImpl implements AssessmentInviteService {
     }
 
     private String getInviteContent(AssessmentInvite invite) {
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
         Competition competition = invite.getTarget();
 
         return getInviteContent(notificationTarget, asMap(
@@ -196,7 +196,7 @@ public class AssessmentInviteServiceImpl implements AssessmentInviteService {
     }
 
     private String getInvitePreviewContent(Competition competition) {
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName(),
@@ -553,7 +553,7 @@ public class AssessmentInviteServiceImpl implements AssessmentInviteService {
         // HTML'ify the plain content to add line breaks.
         String bodyHtml = plainTextToHtml(bodyPlain);
 
-        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(systemNotificationSource, singletonList(recipient),
                 Notifications.INVITE_ASSESSOR, asMap(
                 "subject", assessorInviteSendResource.getSubject(),
@@ -570,7 +570,7 @@ public class AssessmentInviteServiceImpl implements AssessmentInviteService {
                                                        String customTextHtml,
                                                        AssessmentInvite invite,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,

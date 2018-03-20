@@ -157,7 +157,7 @@ public class ApplicationInviteServiceImpl extends BaseApplicationInviteService i
     public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
         User loggedInUser = loggedInUserSupplier.get();
         NotificationSource from = systemNotificationSource;
-        NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget to = new UserNotificationTarget(invite.getName(), invite.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         if (StringUtils.isNotEmpty(invite.getTarget().getName())) {

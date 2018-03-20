@@ -22,10 +22,10 @@ import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
 import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -365,7 +365,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     }
 
     private String getInvitePreviewContent(Competition competition) {
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName()
@@ -376,7 +376,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
                                                        String customTextHtml,
                                                        InterviewInvite invite,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
