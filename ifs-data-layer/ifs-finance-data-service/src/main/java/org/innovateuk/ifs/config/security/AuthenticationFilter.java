@@ -35,13 +35,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         AuthenticationRequestWrapper requestWrapper = new AuthenticationRequestWrapper(request);
         if (!request.getRequestURI().startsWith(monitoringEndpoint)) {
-            AuthenticationToken authentication = tokenAuthenticationService.getAuthentication(requestWrapper);
-            if (authentication != null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or no X-AUTH-TOKEN header found" +
-                        " in request");
-            }
+            SecurityContextHolder.getContext().setAuthentication(tokenAuthenticationService.getAuthentication
+                    (requestWrapper));
         }
         filterChain.doFilter(requestWrapper, response);
     }
