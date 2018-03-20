@@ -10,6 +10,8 @@ import java.util.Collection;
  */
 public class AuthenticationToken implements Authentication {
 
+    private boolean authenticated = true;
+
     AuthenticationToken() {
     }
 
@@ -35,12 +37,12 @@ public class AuthenticationToken implements Authentication {
 
     @Override
     public boolean isAuthenticated() {
-        return true;
+        return authenticated;
     }
 
     @Override
-    public void setAuthenticated(final boolean isAuthenticated) throws IllegalArgumentException {
-
+    public void setAuthenticated(final boolean authenticated) {
+        this.authenticated = authenticated;
     }
 
     @Override
