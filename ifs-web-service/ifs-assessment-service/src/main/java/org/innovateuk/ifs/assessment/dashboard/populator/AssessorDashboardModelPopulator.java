@@ -27,20 +27,28 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class AssessorDashboardModelPopulator {
 
-    @Autowired
-    private CompetitionParticipantRestService competitionParticipantRestService;
+    private final CompetitionParticipantRestService competitionParticipantRestService;
 
-    @Autowired
-    private ProfileRestService profileRestService;
+    private final InterviewInviteRestService interviewInviteRestService;
 
-    @Autowired
-    private ReviewInviteRestService reviewInviteRestService;
+    private final ProfileRestService profileRestService;
 
-    @Autowired
-    private InterviewInviteRestService interviewInviteRestService;
+    private final ReviewInviteRestService reviewInviteRestService;
 
-    @Autowired
-    private CompetitionService competitionService;
+    private final CompetitionService competitionService;
+
+    public AssessorDashboardModelPopulator(CompetitionParticipantRestService competitionParticipantRestService,
+                                           InterviewInviteRestService interviewInviteRestService,
+                                           ProfileRestService profileRestService,
+                                           ReviewInviteRestService reviewInviteRestService,
+                                           CompetitionService competitionService
+                                           ) {
+        this.competitionParticipantRestService = competitionParticipantRestService;
+        this.interviewInviteRestService = interviewInviteRestService;
+        this.profileRestService = profileRestService;
+        this.reviewInviteRestService = reviewInviteRestService;
+        this.competitionService = competitionService;
+    }
 
     public AssessorDashboardViewModel populateModel(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
