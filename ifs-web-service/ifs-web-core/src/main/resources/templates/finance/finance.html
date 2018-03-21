@@ -704,9 +704,7 @@
                         <input name="fileoverheadid"
                                th:value="${overheadCosts?.id}"
                                class="visuallyhidden"
-                               th:id="|formInput[cost-${overheadCosts?.id}-calculationFile]|"
-                               th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')} ? 'form-control-error'"
-                               th:attr="data-required-errormessage=#{validation.finance.overhead.file.required}"/>
+                               th:id="${'formInput[cost-'+ overheadCosts?.id +'-calculationFile]'}"/>
                         <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
                                            filename=${overheadCosts?.calculationFile?.get()?.name},
