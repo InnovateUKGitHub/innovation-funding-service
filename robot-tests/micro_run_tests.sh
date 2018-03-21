@@ -51,7 +51,6 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-#    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data-service_1:/tmp/testing.pdf
     docker exec -d data-service  cp ${uploadFileDir}/testing.pdf /tmp/testing.pdf
 
     echo "***********Making the quarantined directory ***************"
