@@ -1,0 +1,3 @@
+Only add reference data scripts to this directory that you are happy running on a production environment.  And nothing else.
+Reference data are data required for the application to function.  E.g. activity_state, address_type, ethnicity etc.  
+These are not provided by user input through application.
