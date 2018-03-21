@@ -101,10 +101,10 @@ items:
   spec:
     host: "${PROTOTYPES_ADDRESS}"
     port:
-      targetPort: 443-tcp
+      targetPort: 8080-tcp
     tls:
-      termination: passthrough
+      termination: edge
       insecureEdgeTerminationPolicy: Redirect
     to:
       kind: Service
-      name: prototypes
+      name: prototypes-svc
