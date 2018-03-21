@@ -98,6 +98,32 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         });
     }
 
+
+
+    @GetMapping("/reviewResend")
+    public String getInvitesToResendFailureView(Model model,
+                                     @PathVariable("competitionId") long competitionId,
+                                     @ModelAttribute(name = "form", binding = false) ResendInviteForm inviteform,
+                                     ValidationHandler validationHandler,
+                                     BindingResult bindingResult) {
+
+        Supplier<String> failureView = () -> redirectToOverview(competitionId, 0);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
+                    competitionId,
+                    inviteform.getInviteIds()).getSuccess();
+            model.addAttribute("model", new SendInvitesViewModel(
+                    invites.getCompetitionId(),
+                    invites.getCompetitionName(),
+                    invites.getRecipients(),
+                    invites.getContent()
+            ));
+            populateResendInviteFormWithExistingValues(inviteform, invites);
+            return "assessors/resend-invites";
+        });
+    }
+
     @PostMapping("/reviewResend")
     public String getInvitesToResend(Model model,
                                      @PathVariable("competitionId") long competitionId,
@@ -137,7 +163,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                                  ValidationHandler validationHandler,
                                  HttpServletResponse response){
 
-        Supplier<String> failureView = () -> redirectToResendView(competitionId);
+        Supplier<String> failureView = () -> getInvitesToResendFailureView(model, competitionId, form, validationHandler, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> resendResult = competitionInviteRestService.resendInvites(form.getInviteIds(),
@@ -156,10 +182,6 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
 
         return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();
-    }
-
-    private String redirectToResendView(long competitionId) {
-        return format("redirect:/competition/%s/assessors/resend", competitionId);
     }
 
     private String redirectToInviteListView(long competitionId) {
