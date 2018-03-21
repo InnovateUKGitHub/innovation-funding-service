@@ -31,38 +31,42 @@
                 <h2 class="heading-medium">Project duration in months</h2>
             </legend>
             <div class="form-group" th:classappend="${#fields.hasErrors('minProjectDuration')} ? 'form-group-error'">
-                <label class="form-label" for="minimum">
+                <label class="form-label" for="minProjectDuration">
                     <span>Minimum</span>
                     <th:block th:if="${#fields.hasErrors('minProjectDuration')}">
                         <span class="error-message" th:each="err : ${#fields.errors('minProjectDuration')}" th:text="${err}"></span>
                     </th:block>
                 </label>
                 <input class="form-control width-small"
-                       id="minimum"
+                       id="minProjectDuration"
                        name="minimum"
                        th:field="*{minProjectDuration}"
+                       th:errorclass="form-control-error"
+                       th:attr="data-lowerthan-errormessage=#{competition.setup.applicationdetails.min.projectduration.exceedsmax}"
                        type="number"
                        required="required"
                        min="1"
                        max="60"
-                       data-lowerthan="maximum" />
+                       data-lowerthan="maxProjectDuration" />
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('maxProjectDuration')} ? 'form-group-error'">
-                <label class="form-label" for="maximum">
+                <label class="form-label" for="maxProjectDuration">
                     <span>Maximum</span>
                     <th:block th:if="${#fields.hasErrors('maxProjectDuration')}">
                         <span class="error-message" th:each="err : ${#fields.errors('maxProjectDuration')}" th:text="${err}"></span>
                     </th:block>
                 </label>
                 <input class="form-control width-small"
-                       id="maximum"
+                       id="maxProjectDuration"
                        name="maximum"
                        th:field="*{maxProjectDuration}"
+                       th:errorclass="form-control-error"
+                       th:attr="data-higherthan-errormessage=#{competition.setup.applicationdetails.max.projectduration.beneathmin}"
                        type="number"
                        required="required"
                        min="1"
                        max="60"
-                       data-higherthan="minimum" />
+                       data-higherthan="minProjectDuration" />
             </div>
         </fieldset>
 
