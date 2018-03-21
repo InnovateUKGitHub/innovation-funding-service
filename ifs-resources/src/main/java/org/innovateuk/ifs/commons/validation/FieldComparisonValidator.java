@@ -38,7 +38,7 @@ public class FieldComparisonValidator implements ConstraintValidator<FieldCompar
         boolean valid = isValid(value);
 
         if (!valid) {
-            addConstraintViolationMessageToField(context, message, secondFieldName);
+            addConstraintViolationMessageToField(context, message, firstFieldName);
         }
 
         return valid;

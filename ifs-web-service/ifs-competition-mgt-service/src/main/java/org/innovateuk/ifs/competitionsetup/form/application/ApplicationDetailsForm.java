@@ -10,12 +10,12 @@ import java.util.function.BiPredicate;
 @FieldComparison(
         firstField = "maxProjectDuration",
         secondField = "minProjectDuration",
-        message = "{competition.setup.applicationdetails.min.projectduration.exceedsmax}",
-        predicate = ApplicationDetailsForm.MaxExceedsMinPredicateProvider.class)
+        message = "{competition.setup.applicationdetails.max.projectduration.beneathmin}",
+        predicate = ApplicationDetailsForm.MaxBeneathMinPredicateProvider.class)
 @FieldComparison(
         firstField = "minProjectDuration",
         secondField = "maxProjectDuration",
-        message = "{competition.setup.applicationdetails.max.projectduration.beneathmin}",
+        message = "{competition.setup.applicationdetails.min.projectduration.exceedsmax}",
         predicate = ApplicationDetailsForm.MinExceedsMaxPredicateProvider.class)
 public class ApplicationDetailsForm extends CompetitionSetupForm {
 
@@ -51,8 +51,8 @@ public class ApplicationDetailsForm extends CompetitionSetupForm {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-    public static class MaxExceedsMinPredicateProvider implements BiPredicateProvider<Integer, Integer> {
-        public MaxExceedsMinPredicateProvider() { }
+    public static class MaxBeneathMinPredicateProvider implements BiPredicateProvider<Integer, Integer> {
+        public MaxBeneathMinPredicateProvider() { }
 
         public BiPredicate<Integer, Integer> predicate() {
             return (max, min) -> max >= min;

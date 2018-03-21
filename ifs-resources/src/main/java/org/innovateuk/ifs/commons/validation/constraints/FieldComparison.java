@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = FieldComparisonValidator.class)
 @Repeatable(FieldComparisonContainer.class)
 public @interface FieldComparison {
-    String message() default "{constraints.fieldlargerthan}";
+    String message() default "{constraints.fieldcomparison}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
     String firstField();
