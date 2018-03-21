@@ -8,6 +8,14 @@ createContainer.hostName="project-setup-mgt-svc"
 createContainer.containerName="project-setup-mgt-svc"
 createContainer.containerId="project-setup-mgt-svc"
 
+def enabled = project.hasProperty('ifs.project-setup-mgt-service.enabled') ? project.property('ifs.project-setup-mgt-service.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
+
 ext.serverContext = '/project-setup-management'
 
 dependencies {

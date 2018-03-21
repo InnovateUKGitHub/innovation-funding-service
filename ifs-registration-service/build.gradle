@@ -66,4 +66,12 @@ createContainer.hostName="registration-svc"
 createContainer.containerName="registration-svc"
 createContainer.containerId="registration-svc"
 
+def enabled = project.hasProperty('ifs.registration-service.enabled') ? project.property('ifs.registration-service.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
+
 deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"

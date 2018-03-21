@@ -15,6 +15,14 @@ createContainer.hostName="application-svc"
 createContainer.containerName="application-svc"
 createContainer.containerId="application-svc"
 
+def enabled = project.hasProperty('ifs.application-service.enabled') ? project.property('ifs.application-service.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
