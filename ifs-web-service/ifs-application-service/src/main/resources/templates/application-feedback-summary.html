@@ -41,7 +41,11 @@
 
                     <div class="column-half">
                         <h3 class="heading-small">Project timescales</h3>
-                        <p class="no-margin">Project start date: <br /><th:block th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" /></p>
+                        <p class="no-margin">Project start date: <br />
+                            <th:block
+                                th:if="${currentApplication.startDate != null}"
+                                th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
+                        </p>
                         <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
