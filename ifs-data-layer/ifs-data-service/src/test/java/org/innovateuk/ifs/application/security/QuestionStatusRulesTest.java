@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.application.builder.QuestionBuilder;
+import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;

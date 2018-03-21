@@ -107,18 +107,6 @@ include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/http-res
 include::{snippets}/project/approve-or-reject-signed-grant-offer-letter/curl-request.adoc[]
 
 
-=== Check if Signed Grant Offer Letter Is Approved
-
-==== Request
-include::{snippets}/project/is-signed-grant-offer-letter-approved/http-request.adoc[]
-include::{snippets}/project/is-signed-grant-offer-letter-approved/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/project/is-signed-grant-offer-letter-approved/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/project/is-signed-grant-offer-letter-approved/curl-request.adoc[]
-
 === Remove Signed Grant Offer Letter
 
 ==== Request

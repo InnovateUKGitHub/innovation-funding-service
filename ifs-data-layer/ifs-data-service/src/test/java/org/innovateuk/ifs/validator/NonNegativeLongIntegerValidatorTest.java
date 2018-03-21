@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.validator;
 
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;

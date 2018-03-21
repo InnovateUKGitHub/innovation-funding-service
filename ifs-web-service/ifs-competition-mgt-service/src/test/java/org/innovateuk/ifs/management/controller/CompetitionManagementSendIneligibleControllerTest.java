@@ -17,8 +17,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.application.UserApplicationRole.COLLABORATOR;
-import static org.innovateuk.ifs.application.UserApplicationRole.LEAD_APPLICANT;
+import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.COLLABORATOR;
+import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.LEAD_APPLICANT;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;

@@ -29,7 +29,7 @@ public class ApplicationResource {
     private LocalDate startDate;
 
     private ZonedDateTime submittedDate;
-
+    
     private Long durationInMonths;
 
     private ApplicationState applicationState;
