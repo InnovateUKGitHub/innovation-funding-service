@@ -27,15 +27,15 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class AssessorDashboardModelPopulator {
 
-    private final CompetitionParticipantRestService competitionParticipantRestService;
+    private CompetitionParticipantRestService competitionParticipantRestService;
 
-    private final InterviewInviteRestService interviewInviteRestService;
+    private InterviewInviteRestService interviewInviteRestService;
 
-    private final ProfileRestService profileRestService;
+    private ProfileRestService profileRestService;
 
-    private final ReviewInviteRestService reviewInviteRestService;
+    private ReviewInviteRestService reviewInviteRestService;
 
-    private final CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     public AssessorDashboardModelPopulator(CompetitionParticipantRestService competitionParticipantRestService,
                                            InterviewInviteRestService interviewInviteRestService,
