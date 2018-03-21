@@ -155,8 +155,6 @@ public class UserManagementController extends AsyncAdaptor {
         form.setLastName(userResource.getLastName());
         // userResource.getRolesString() will return a single role for internal users
 
-        // Tom: I'm not sure why we were going from rolesString -> Role using displayName?
-
         form.setRole(userResource.getRoles().stream().findFirst().get());
         form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);

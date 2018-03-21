@@ -42,12 +42,9 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected List<Role> allRoles;
 
-//    protected List<Role> allRolesResources;
-
     protected List<UserResource> allGlobalRoleUsers;
 
     protected List<UserResource> allInternalUsers;
-
 
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
@@ -84,7 +81,6 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     @Before
     public void setupSetsOfData() {
         allRoles = asList(Role.values());
-//        allRolesResources = asList(Role.values());
         allGlobalRoleUsers = simpleMap(allRoles, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
         allInternalUsers = asList(compAdminUser(), projectFinanceUser(), supportUser(), innovationLeadUser());
 

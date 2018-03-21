@@ -68,12 +68,11 @@ public class EditUserResource {
         this.lastName = lastName;
     }
 
-
     public Role getUserRoleType() {
         return userRoleType;
     }
 
-    public void getUserRoleType(Role userRole) {
+    public void setUserRoleType(Role userRole) {
         this.userRoleType = userRole;
     }
 

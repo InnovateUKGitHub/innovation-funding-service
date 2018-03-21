@@ -12,7 +12,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
 
-
 public class ApplicationAssessmentSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationAssessmentSummaryService> {
 
     @Test

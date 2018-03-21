@@ -993,9 +993,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        // what is the point in this?? missing assert?
-        existingUsers.get(0).hasRole(Role.ASSESSOR);
-        existingUsers.get(1).hasRole(Role.ASSESSOR);
+        assertTrue(existingUsers.get(0).hasRole(Role.ASSESSOR));
+        assertTrue(existingUsers.get(1).hasRole(Role.ASSESSOR));
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
                                   assessmentInviteRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
