@@ -11,6 +11,10 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Annotation to compare two field with a provided @{BiPredicate}
+ */
+
 @Target({TYPE})
 @Retention(RUNTIME)
 @Constraint(validatedBy = FieldComparisonValidator.class)
