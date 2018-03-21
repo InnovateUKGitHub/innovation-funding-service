@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -542,7 +541,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withInviteHash("")
                 .withCompetitionId(competitionResource.getId())
                 .withCompetitionName("Juggling Craziness")
-                .withInterviewDate(now().plusDays(10))
                 .build();
 
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()

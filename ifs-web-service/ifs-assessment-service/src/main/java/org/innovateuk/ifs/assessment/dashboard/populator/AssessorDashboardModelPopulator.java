@@ -13,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -163,8 +162,6 @@ public class AssessorDashboardModelPopulator {
                 .map(appr -> new AssessorDashboardInterviewAcceptedViewModel(
                         appr.getCompetitionName(),
                         appr.getCompetitionId(),
-                        appr.getInvite().getInterviewDate().toLocalDate(),
-                        appr.getInvite().getInterviewDaysLeft(),
                         appr.getAwaitingApplications()
                         ))
                 .collect(toList());
