@@ -27,7 +27,7 @@ User navigates to the Manage interview panel
     Then the user clicks the button/link   link=Manage interview panel
     And the user sees the Interview panel page and the Interview links
 
-CompAdmin can add an assessors to invite list
+CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-2778
     Given the user clicks the button/link   link=Invite assessors
     When the user clicks the button/link    link=Find
@@ -54,9 +54,8 @@ Assessors receives the invite to the interview panel
     Then the user should see the element       link=Find
     And the user reads his email               ${assessor_ben_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
     And the user reads his email               ${assessor_joel_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
-    #TODO Assesor is able to reject the invitation from email need to add once IFS-3143 done
 
-CompAdmin can add the applications to invite list
+CompAdmin can add the applications to the invite list
 #to assign applications to interview panel
     [Documentation]  IFS-2727
     [Setup]  the user clicks the button/link    link=Manage interview panel
@@ -67,7 +66,7 @@ CompAdmin can add the applications to invite list
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and add to invite list
 
-Assessors accept the invitation to interview panel
+Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
     [Tags]
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
@@ -76,6 +75,7 @@ Assessors accept the invitation to interview panel
     And the user clicks the button/link      css=.button[type="submit"]   #Confirm
     Then the user navigates to the page      ${server}/assessment/assessor/dashboard
     And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    #TODO Assesor is able to reject the invitation from email need to add once IFS-3143 done
     And the user should see the element      jQuery=h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 *** Keywords ***
