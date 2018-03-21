@@ -219,7 +219,8 @@
 
             <div class="interview-panel-invites">
                 <th:block th:unless="${#lists.isEmpty(model.interviewPanelAccepted)}">
-                    <div class="progress-list"><h2 class="heading-medium no-margin-top">Interviews you have agreed to attend (<span
+                    <div class="progress-list">
+                        <h2 class="heading-medium no-margin-top">Interviews you have agreed to attend (<span
                         th:text="${#lists.size(model.interviewPanelAccepted)}"/>)</h2>
                         <ul>
                             <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">
@@ -232,9 +233,7 @@
                                     <p th:if="${interviewPanelAccept.awaitingApplications == 0}">Applications awaiting review will be added here.</p>
 
                                     <div th:if="${interviewPanelAccept.awaitingApplications > 0}" class="action-required">
-                                        <strong>
-                                            <p th:text="${interviewPanelAccept.awaitingApplications}" class="accepted-applications">COUNT</p> applications awaiting review
-                                        </strong>
+                                        <p th:text="${interviewPanelAccept.awaitingApplications}" class="accepted-applications">COUNT</p> applications awaiting review
                                     </div>
                                 </div>
                             </li>
