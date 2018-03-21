@@ -225,28 +225,16 @@
                             <li th:each="interviewPanelAccept : ${model.interviewPanelAccepted}">
                                 <div class="task">
                                     <h3 class="heading-small">
-                                        <a class="buttonlink disabled"
+                                        <a class="disabled"
                                            th:text="${interviewPanelAccept.competitionName}"/>
                                     </h3>
 
-                                    <div th:if="${interviewPanelAccept.awaitingApplications == 0}">
-                                        Applications awaiting review will be added here.
-                                    </div>
+                                    <p th:if="${interviewPanelAccept.awaitingApplications == 0}">Applications awaiting review will be added here.</p>
 
                                     <div th:if="${interviewPanelAccept.awaitingApplications > 0}" class="action-required">
                                         <strong>
-                                            <span th:text="${interviewPanelAccept.awaitingApplications}" class="accepted-applications">COUNT
-                                            </span> applications awaiting review
+                                            <p th:text="${interviewPanelAccept.awaitingApplications}" class="accepted-applications">COUNT</p> applications awaiting review
                                         </strong>
-                                    </div>
-                                </div>
-                                <div class="status">
-                                    <div class="status-msg msg-deadline">
-                                        <strong class="bold-medium days-remaining" th:text="${interviewPanelAccept.daysLeft}"></strong>
-                                        <br />days left <br />
-                                        Deadline
-                                        <span class="day" th:text="${#temporals.day(interviewPanelAccept.interviewDateDeadline)}">END DAY</span>
-                                        <span class="month" th:text="${#temporals.monthName(interviewPanelAccept.interviewDateDeadline)}">END MONTH</span>
                                     </div>
                                 </div>
                             </li>
