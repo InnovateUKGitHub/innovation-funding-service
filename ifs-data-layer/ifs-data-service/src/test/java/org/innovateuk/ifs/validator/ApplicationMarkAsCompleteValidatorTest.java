@@ -6,10 +6,13 @@ import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
+
 import java.time.LocalDate;
 
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 
 /**
@@ -38,6 +41,9 @@ public class ApplicationMarkAsCompleteValidatorTest {
         application.setStartDate(currentDate.minusDays(1));
         application.setDurationInMonths(-5L);
         application.setResubmission(null);
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(20).build());
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
@@ -52,6 +58,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
         application.setResubmission(true);
         application.setPreviousApplicationNumber(null);
         application.setPreviousApplicationTitle(null);
+
 
         binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
@@ -74,6 +81,9 @@ public class ApplicationMarkAsCompleteValidatorTest {
     @Test
     public void testValidate_applicationInnovationAreaIsNotSetButApplicableShouldResultInError() {
         application  = new Application();
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(20).build());
 
         application.setNoInnovationAreaApplicable(false);
 
@@ -88,6 +98,9 @@ public class ApplicationMarkAsCompleteValidatorTest {
     @Test
     public void testValidate_applicationInnovationAreaIsApplicableButNotSetShouldResultInError() {
         application  = new Application();
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(20).build());
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
@@ -110,6 +123,9 @@ public class ApplicationMarkAsCompleteValidatorTest {
         application.setPreviousApplicationTitle("Failed Application");
         application.setNoInnovationAreaApplicable(true);
         application.setResearchCategory(newResearchCategory().build());
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(20).build());
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
@@ -131,12 +147,75 @@ public class ApplicationMarkAsCompleteValidatorTest {
         application.setNoInnovationAreaApplicable(false);
         application.setInnovationArea(newInnovationArea().build());
         application.setResearchCategory(newResearchCategory().build());
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(20).build());
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
         validator.validate(application, bindingResult);
 
         assertFalse(bindingResult.hasErrors());
+    }
+
+    @Test
+    public void testValid_applicationDurationExceedsMaxDurationShouldResultInError() {
+        application  = new Application();
+        application.setDurationInMonths(21L);
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(20).build());
+
+        DataBinder binder = new DataBinder(application);
+        bindingResult = binder.getBindingResult();
+        validator.validate(application, bindingResult);
+
+        assertFalse(simpleFilter(
+                bindingResult.getFieldErrors(),
+                error -> error.getField().equals("durationInMonths")
+                        && error.getDefaultMessage().equals("validation.project.duration.input.invalid")
+                        && (Integer) error.getArguments()[0] == 10
+                        && (Integer) error.getArguments()[1] == 20)
+                .isEmpty());
+    }
+
+    @Test
+    public void testValid_applicationDurationBeneathMinDurationShouldResultInError() {
+        application  = new Application();
+        application.setDurationInMonths(9L);
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(20).build());
+
+        DataBinder binder = new DataBinder(application);
+        bindingResult = binder.getBindingResult();
+        validator.validate(application, bindingResult);
+
+        assertFalse(simpleFilter(
+                bindingResult.getFieldErrors(),
+                error -> error.getField().equals("durationInMonths")
+                        && error.getDefaultMessage().equals("validation.project.duration.input.invalid")
+                        && (Integer) error.getArguments()[0] == 10
+                        && (Integer) error.getArguments()[1] == 20)
+                .isEmpty());
+    }
+
+    @Test
+    public void testValid_applicationDurationIsEqualToMaxAndMinDurationShouldNotResultInError() {
+        application  = new Application();
+        application.setDurationInMonths(10L);
+        application.setCompetition(newCompetition()
+                .withMinProjectDuration(10)
+                .withMaxProjectDuration(10).build());
+
+        DataBinder binder = new DataBinder(application);
+        bindingResult = binder.getBindingResult();
+        validator.validate(application, bindingResult);
+
+        assertTrue(simpleFilter(
+                bindingResult.getFieldErrors(),
+                error -> error.getField().equals("durationInMonths"))
+                .isEmpty());
     }
 
     @Test

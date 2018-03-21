@@ -112,6 +112,24 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((competition, name) -> setField("name", competition, name), names);
     }
 
+    public CompetitionBuilder withMaxProjectDuration(Integer... maxProjectDurations) {
+        return withArray(
+                (competition, maxProjectDuration) -> setField(
+                        "maxProjectDuration",
+                        competition,
+                        maxProjectDuration),
+                maxProjectDurations);
+    }
+
+    public CompetitionBuilder withMinProjectDuration(Integer... minProjectDurations) {
+        return withArray(
+                (competition, minProjectDuration) -> setField(
+                        "minProjectDuration",
+                        competition,
+                        minProjectDuration),
+                minProjectDurations);
+    }
+
     public CompetitionBuilder withStatus(CompetitionStatus status) {
         return with(competition -> setField("status", status, competition));
     }

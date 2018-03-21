@@ -338,6 +338,7 @@ public class CompetitionSetupApplicationController {
         Supplier<String> failureView = () -> getDetailsPage(model, competitionResource, true, form);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
+
         return validationHandler.addAnyErrors(
                 competitionSetupService.saveCompetitionSetupSubsection(form,
                         competitionResource,

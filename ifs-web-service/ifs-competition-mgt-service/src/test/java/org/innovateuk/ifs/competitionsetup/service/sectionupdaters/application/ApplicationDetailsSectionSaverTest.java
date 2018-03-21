@@ -81,33 +81,31 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.getErrors().size()).isEqualTo(2);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
-                        error.getErrorKey().equals("competition.setup.applicationdetails.min.projectduration"))
+                        error.getErrorKey().equals("javax.validation.constraints.NotNull.message"))
                 .isNotEmpty();
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
-                        error.getErrorKey().equals("competition.setup.applicationdetails.max.projectduration"))
+                        error.getErrorKey().equals("javax.validation.constraints.NotNull.message"))
                 .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);
     }
 
     @Test
-    public void doSaveSection_emptyFormReturnsLargerThanErrorWhenMinFieldIsEqualToMaxField() {
+    public void doSaveSection_emptyFormReturnsSuccessWhenMinFieldIsEqualToMaxField() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
 
         applicationDetailsForm.setMinProjectDuration(10);
         applicationDetailsForm.setMaxProjectDuration(10);
 
+        when(competitionSetupRestServiceMock.update(any())).thenReturn(RestResult.restSuccess());
+
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
-        assertThat(result.isFailure());
-        assertThat("minProjectDuration")
-                .isEqualTo(result.getFailure().getErrors().get(0).getFieldName());
-        assertThat("competition.setup.applicationdetails.min.projectduration.exceedsmax")
-                .isEqualTo(result.getFailure().getErrors().get(0).getErrorKey());
+        assertThat(result.isSuccess());
 
-        verifyZeroInteractions(competitionSetupRestServiceMock);
+        verify(competitionSetupRestServiceMock, times(1)).update(any());
     }
 
     @Test
@@ -121,9 +119,14 @@ public class ApplicationDetailsSectionSaverTest {
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
         assertThat(result.isFailure()).isTrue();
-        assertThat("minProjectDuration").isEqualTo(result.getFailure().getErrors().get(0).getFieldName());
-        assertThat("competition.setup.applicationdetails.min.projectduration.exceedsmax")
-                .isEqualTo(result.getFailure().getErrors().get(0).getErrorKey());
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.min.projectduration.exceedsmax"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.max.projectduration.beneathmin"))
+                .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);
     }

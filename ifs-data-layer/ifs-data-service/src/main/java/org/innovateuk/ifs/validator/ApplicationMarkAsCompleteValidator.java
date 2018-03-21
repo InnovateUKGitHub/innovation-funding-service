@@ -44,7 +44,8 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
         }
 
         Competition competition = application.getCompetition();
-        if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < competition.getMinProjectDuration()
+        if (StringUtils.isEmpty(application.getDurationInMonths())
+                || application.getDurationInMonths() < competition.getMinProjectDuration()
                 || application.getDurationInMonths() > competition.getMaxProjectDuration()) {
             LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
             rejectValue(errors, "durationInMonths", "validation.project.duration.input.invalid",
