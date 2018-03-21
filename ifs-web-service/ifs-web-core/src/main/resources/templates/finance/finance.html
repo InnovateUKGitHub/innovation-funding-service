@@ -701,10 +701,9 @@
                 <div class="upload-section extra-margin">
                     <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
                     <div class="form-group">
-                        <input name="fileoverheadid"
-                               th:value="${overheadCosts?.id}"
-                               class="visuallyhidden"
-                               th:id="${'formInput[cost-'+ overheadCosts?.id +'-calculationFile]'}"/>
+                        <input type="hidden"
+                               name="fileoverheadid"
+                               th:value="${overheadCosts?.id}"/>
                         <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'readonly' : 'edit') : 'edit',
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
                                            filename=${overheadCosts?.calculationFile?.get()?.name},
