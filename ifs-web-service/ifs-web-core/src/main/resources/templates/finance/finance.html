@@ -700,11 +700,7 @@
                 </div>
                 <div class="upload-section extra-margin">
                     <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
-                    <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-calculationFile]}')} ? 'form-group-error'">
-                        <label th:for="|formInput[cost-${overheadCosts?.id}-calculationFile]|">
-                            <span class="visuallyhidden">Overhead calculation spreadsheet</span>
-                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+overheadCosts?.id+'-calculationFile'})" />
-                        </label>
+                    <div class="form-group">
                         <input name="fileoverheadid"
                                th:value="${overheadCosts?.id}"
                                class="visuallyhidden"
@@ -715,7 +711,7 @@
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
                                            filename=${overheadCosts?.calculationFile?.get()?.name},
                                            inputField='overheadfile',
-                                           validationField='',
+                                           validationField=${'formInput[cost-'+ overheadCosts?.id +'-calculationFile]'},
                                            mayRemove=${viewmode != 'readonly'},
                                            removeName='overheadfiledelete',
                                            saveName='overheadfilesubmit'">
