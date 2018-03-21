@@ -71,7 +71,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Transactional
 public class InterviewInviteServiceImpl implements InterviewInviteService {
 
-    private static final String WEB_CONTEXT = "/interview";
+    private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
