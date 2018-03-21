@@ -103,9 +103,9 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
     @GetMapping("/reviewResend")
     public String getInvitesToResendFailureView(Model model,
                                      @PathVariable("competitionId") long competitionId,
-                                     @ModelAttribute(name = "form", binding = false) ResendInviteForm inviteform,
-                                     ValidationHandler validationHandler,
-                                     BindingResult bindingResult) {
+                                     @ModelAttribute(name = "form", binding = false) @Valid ResendInviteForm inviteform,
+                                     BindingResult bindingResult,
+                                     ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> redirectToOverview(competitionId, 0);
 
@@ -156,14 +156,14 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
     }
 
     @PostMapping("/resend")
-    public String resendInvites (Model model,
-                                 @PathVariable("competitionId") long competitionId,
-                                 @ModelAttribute("form") @Valid ResendInviteForm form,
-                                 BindingResult bindingResult,
-                                 ValidationHandler validationHandler,
-                                 HttpServletResponse response){
+    public String resendInvites(Model model,
+                                @PathVariable("competitionId") long competitionId,
+                                @ModelAttribute("form") @Valid ResendInviteForm form,
+                                BindingResult bindingResult,
+                                ValidationHandler validationHandler,
+                                HttpServletResponse response){
 
-        Supplier<String> failureView = () -> getInvitesToResendFailureView(model, competitionId, form, validationHandler, bindingResult);
+        Supplier<String> failureView = () -> getInvitesToResendFailureView(model, competitionId, form, bindingResult, validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> resendResult = competitionInviteRestService.resendInvites(form.getInviteIds(),
