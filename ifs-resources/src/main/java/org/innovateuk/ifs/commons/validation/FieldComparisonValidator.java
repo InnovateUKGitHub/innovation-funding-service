@@ -10,7 +10,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * A validator that tests two fields to be equal to each other
+ * Validator for the @{FieldComparison} annotation to compare two field with a provided @{BiPredicate}
  */
 
 public class FieldComparisonValidator implements ConstraintValidator<FieldComparison, Object> {
@@ -29,7 +29,7 @@ public class FieldComparisonValidator implements ConstraintValidator<FieldCompar
         try {
             predicate = (BiPredicateProvider) constraintAnnotation.predicate().newInstance();
         } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
+            LOG.error("Caught Exception: ", e);
         }
     }
 
