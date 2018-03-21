@@ -89,7 +89,7 @@ function buildAndDeploy() {
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
 
-    ./gradlew -Pcloud=development composeUp -Pifs.full-deployment.enabled=true -Pifs.finance-totals.enabled=false
+    ./gradlew -Pcloud=development composeUp -Pifs.full-deployment.enabled=true -Pifs.finance-totals.enabled=false -Pifs.prototypes.enabled=false
 }
 
 function injectRobotParameters() {
