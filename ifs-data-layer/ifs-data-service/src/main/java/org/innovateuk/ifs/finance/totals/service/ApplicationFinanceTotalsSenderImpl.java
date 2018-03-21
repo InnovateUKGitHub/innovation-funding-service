@@ -7,7 +7,6 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.innovateuk.ifs.finance.totals.filter.SpendProfileCostFilter;
 import org.innovateuk.ifs.finance.totals.mapper.FinanceCostTotalResourceMapper;
-import org.innovateuk.ifs.finance.totals.queue.CostTotalMessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +25,19 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
     private ApplicationFinanceHandler applicationFinanceHandler;
     private FinanceCostTotalResourceMapper financeCostTotalResourceMapper;
     private SpendProfileCostFilter spendProfileCostFilter;
-    private CostTotalMessageQueue messageQueueService;
+    private AsyncRestCostTotalEndpoint costTotalEndpoint;
 
     @Autowired
     public ApplicationFinanceTotalsSenderImpl(
             ApplicationFinanceHandler applicationFinanceHandler,
             FinanceCostTotalResourceMapper financeCostTotalResourceMapper,
             SpendProfileCostFilter spendProfileCostFilter,
-            CostTotalMessageQueue messageQueueService
+            AsyncRestCostTotalEndpoint costTotalEndpoint
     ) {
         this.applicationFinanceHandler = applicationFinanceHandler;
         this.financeCostTotalResourceMapper = financeCostTotalResourceMapper;
         this.spendProfileCostFilter = spendProfileCostFilter;
-        this.messageQueueService = messageQueueService;
+        this.costTotalEndpoint = costTotalEndpoint;
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
         List<FinanceCostTotalResource> financeCostTotalResourceList = financeCostTotalResourceMapper
                 .mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
-        return messageQueueService
+        return costTotalEndpoint
                 .sendCostTotals(spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList))
                 .andOnFailure(() -> LOG.error(
                         "Failed sending financeCostTotalResources for applicationId: {}",
