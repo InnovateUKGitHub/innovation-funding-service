@@ -11,26 +11,25 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle='PROJECT NAME',size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='heading-xlarge'" />
 
     <p>We will assign a Monitoring Officer who will visit your project location.</p>
 
-    <form action="">
+    <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
         <h2 class="heading-medium">Project location</h2>
 
-        <p class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</p>
-
         <div class="form-group">
-            <label class="form-label-bold" for="postcode">
+            <label class="form-label-bold" for="postCode">
                 Postcode
+                <span class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
             </label>
-            <input class="form-control width-medium" id="postcode" type="text">
+            <input class="form-control width-medium" name="postCode" id="postCode" type="text">
         </div>
 
         <p>You can change your project location up until a Monitoring Officer is assigned to your project.</p>
 
-        <button class="button">Save project location</button>
+        <button class="button" type="submit">Save project location</button>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
