@@ -8,6 +8,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-2779 Invite Assessor to Interview Panel: Review and Send Invite
 ...
 ...               IFS-2727 Interview Panels - Assign applications 'Find' tab
+...
+...               IFS-3054 Assessor dashboard - Invitation to interview panel box
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -38,7 +40,7 @@ Cancel sending invite returns to the invite tab
     When the user clicks the button/link      link=Cancel
     Then the user should see the element      jQuery=td:contains("${assessor_ben}")
 
-Assessors receives the invite to interview panel
+Assessors receives the invite to the interview panel
     [Documentation]  IFS-2779
     [Tags]
     Given the user clicks the button/link      link=Invite
@@ -61,6 +63,17 @@ CompAdmin can add the applications to invite list
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and add to invite list
+
+Assessors accept the invitation to the interview panel
+    [Documentation]  IFS-3054
+    [Tags]
+    Given log in as a different user         ${assessor_joel_email}   ${short_password}
+    And the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    When the user selects the radio button   acceptInvitation  true
+    And the user clicks the button/link      css=.button[type="submit"]   #Confirm
+    Then the user navigates to the page      ${server}/assessment/assessor/dashboard
+    And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    #TODO Assesor is able to reject the invitation from email need to add once IFS-3143 done
 
 *** Keywords ***
 the Interview Panel is activated in the db
