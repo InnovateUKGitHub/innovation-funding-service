@@ -104,7 +104,7 @@ public class ProjectDetailsViewModel {
                 .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
                 .findFirst()
                 .map(PartnerOrganisationResource::getPostCode)
-                .orElse("Select project location");
+                .orElse(null);
     }
 
     public OrganisationResource getLeadOrganisation() {
