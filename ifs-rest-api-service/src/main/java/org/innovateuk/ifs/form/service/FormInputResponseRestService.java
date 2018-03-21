@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResourc
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.List;
  * Interface for CRUD operations on {@link FormInputResponseResource} related data.
  */
 public interface FormInputResponseRestService {
-    RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(Long applicationId);
+    RestResult<List<FormInputResponseResource>> getResponsesByApplicationId(long applicationId);
 
-    RestResult<ValidationMessages> saveQuestionResponse(Long userId, Long applicationId, Long formInputId, String value, boolean ignoreEmpty);
+    RestResult<ValidationMessages> saveQuestionResponse(long userId, long applicationId, long formInputId, String value, boolean ignoreEmpty);
 
     RestResult<FileEntryResource> createFileEntry(long formInputId, long applicationId, long processRoleId, String contentType, long contentLength, String originalFilename, byte[] file);
 

@@ -30,8 +30,8 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
 
     @Test
     public void markQuestionSetupAsComplete() throws Exception {
-        Long competitionId = 2L;
-        Long questionId = 5L;
+        long competitionId = 2L;
+        long questionId = 5L;
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.markQuestionInSetupAsComplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
@@ -49,8 +49,8 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
 
     @Test
     public void markQuestionSetupAsIncomplete() throws Exception {
-        Long competitionId = 2L;
-        Long questionId = 5L;
+        long competitionId = 2L;
+        long questionId = 5L;
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
@@ -68,7 +68,7 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
 
     @Test
     public void getQuestionStatuses() throws Exception {
-        Long competitionId = 2L;
+        long competitionId = 2L;
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.getQuestionStatuses(competitionId, parentSection)).thenReturn(serviceSuccess(asMap(1L, Boolean.TRUE)));
 

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.dashboard.populator;
 
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;

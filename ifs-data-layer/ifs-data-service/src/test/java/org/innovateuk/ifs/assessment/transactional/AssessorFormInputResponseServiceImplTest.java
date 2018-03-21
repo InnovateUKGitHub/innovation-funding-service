@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
@@ -11,7 +11,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import java.util.List;
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;

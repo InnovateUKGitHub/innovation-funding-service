@@ -16,6 +16,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-1458 View unsuccessful applications after Inform state: initial navigation
 ...
 ...               IFS-1459 View unsuccessful applications after Inform state: list
+...
+...               IFS-1491 Inform Applicant - Ineligible page - couple of issues
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
