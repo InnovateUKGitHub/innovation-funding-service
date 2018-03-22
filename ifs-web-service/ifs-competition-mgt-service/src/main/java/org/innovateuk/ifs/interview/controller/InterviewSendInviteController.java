@@ -99,6 +99,6 @@ public class InterviewSendInviteController extends CompetitionManagementCookieCo
     }
 
     private String redirectToPanelOverviewTab(long competitionId) {
-        return format("redirect:/assessment/interview/competition/%s/assessors/overview", competitionId);
+        return format("redirect:/assessment/interview/competition/%s/assessors/pending-and-declined", competitionId);
     }
 }

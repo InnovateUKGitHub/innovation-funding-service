@@ -88,7 +88,7 @@ public class InterviewInviteAssessorsOverviewControllerTest extends BaseControll
                 .thenReturn(restSuccess(pageResource));
         when(interviewInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
 
-        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/overview", competition.getId())
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/pending-and-declined", competition.getId())
                 .param("page", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
