@@ -52,10 +52,6 @@ public class InterviewInviteResourceBuilder extends BaseBuilder<InterviewInviteR
         return withArraySetFieldByReflection("status", statuses);
     }
 
-    public InterviewInviteResourceBuilder withInterviewDate(ZonedDateTime... interviewDates) {
-        return withArraySetFieldByReflection("interviewDate", interviewDates);
-    }
-
     @Override
     protected InterviewInviteResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, InterviewInviteResource>> actions) {
         return new InterviewInviteResourceBuilder(actions);
