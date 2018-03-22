@@ -129,6 +129,7 @@ Change the close date of the Competition in the database to thirteen days
 Change the open date of the Competition in the database to tomorrow
     [Arguments]  ${competition}
     ${tomorrow} =  get tomorrow
+    Connect to Database    @{database}
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${tomorrow}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
 
 get yesterday
