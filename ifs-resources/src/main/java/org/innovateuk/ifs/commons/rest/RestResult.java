@@ -204,6 +204,18 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
         if (restFailure.has(ASSESSMENT_PANEL_INVITE_CLOSED)) {
             throw new InviteClosedException(error.getErrorKey(), error.getArguments());
         }
@@ -222,6 +234,14 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
         if (restFailure.has(ASSESSMENT_WITHDRAWN)) {
             throw new AssessmentWithdrawnException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_INVITE_CLOSED)) {
+            throw new InviteClosedException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(INTERVIEW_PANEL_INVITE_EXPIRED)) {
+            throw new InviteExpiredException(error.getErrorKey(), error.getArguments());
         }
 
         if (restFailure.has(COMPETITION_CANNOT_RELEASE_FEEDBACK)) {
