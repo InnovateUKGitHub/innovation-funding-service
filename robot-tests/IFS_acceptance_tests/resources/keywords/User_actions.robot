@@ -38,7 +38,7 @@ The user should not see the element in the paginated list
 
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
-    Wait Until Element Is Not Visible Without Screenshots    ${NOT_VISIBLE_ELEMENT}
+    Wait Until Element Is Not Visible    ${NOT_VISIBLE_ELEMENT}
 
 the user should get a new print window
     [Arguments]  ${title}

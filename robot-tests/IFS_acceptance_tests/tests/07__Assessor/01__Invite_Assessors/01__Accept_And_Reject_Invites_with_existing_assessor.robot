@@ -99,14 +99,13 @@ Existing assessor: Reject invitation from Dashboard
 
 Existing Assessor tries to accept expired invitation in closed assessment
     [Documentation]    INFUND-943
-    [Tags]
+    [Tags]  MySQL
     [Setup]    Close the competition in assessment
     Given Log in as a different user               &{existing_assessor1_credentials}
     And wait until element is not visible          jQuery=a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")  # the without screenshots keyword doesnt seemt to work here!
     When the user navigates to the page            ${Invitation_for_upcoming_comp_assessor1}
     Then the user should see the element           jQuery=h1:contains("This invitation is now closed")
-    [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]};
+    [Teardown]  Reset competition's milestone
 
 Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228  INFUND-304  INFUND-3716  INFUND-5509  INFUND-6500
@@ -141,11 +140,12 @@ Upcoming competition should be visible
     Then the user should see the element           jQuery=h2:contains("Upcoming competitions to assess")
 
 The assessment period starts the comp moves to the comp for assessment
+    [Documentation]  INFUND-3718  INFUND-3720
     [Tags]    MySQL    HappyPath
-    [Setup]    Connect to Database    @{database}
+    [Setup]  Retrieve original milestones
     Given the assessment start period changes in the db in the past     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the user should not see the element   jQuery=h2:contains("Upcoming competitions to assess")
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
+    [Teardown]  Reset milestones back to the original values
 
 Milestone date for assessment submission is visible
     [Documentation]    INFUND-3720
@@ -240,3 +240,26 @@ The user should get a competition brief window
 The user closes the competition brief
     Close Window
     Select Window
+
+
+*** Keywords ***
+Reset competition's milestone
+    # That is to reset competition's milestone back to its original value, that was NUll before pressing the button "Close assessment"
+    Connect to Database  @{database}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `type`='ASSESSMENT_CLOSED' AND `competition_id`='${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]}';
+
+Retrieve original milestones
+    Connect to Database  @{database}
+    ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='SUBMISSION_DATE';
+    ${result} =  get from list  ${result}  0
+    ${assessorsNotified} =  get from list  ${result}  0
+    Set suite variable  ${openDate}
+    Set suite variable  ${submissionDate}
+    Set suite variable  ${assessorsNotified}
+
+Reset milestones back to the original values
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `type`='OPEN_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='${assessorsNotified}' WHERE `type`='ASSESSORS_NOTIFIED' AND `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}';

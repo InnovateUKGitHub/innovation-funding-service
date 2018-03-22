@@ -59,7 +59,7 @@ CompAdmin can add the applications to invite list
     [Setup]  the user clicks the button/link    link=Manage interview panel
     Given the user clicks the button/link       link=Competition
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Closed")
-    Run Keyword If  '${status}' == 'PASS'  the user move the closed competition to in panel
+    Run Keyword If  '${status}' == 'PASS'  the user move the closed competition to panel
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and add to invite list
