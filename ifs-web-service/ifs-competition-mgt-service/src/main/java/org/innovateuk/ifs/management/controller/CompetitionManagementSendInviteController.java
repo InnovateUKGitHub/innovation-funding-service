@@ -101,25 +101,24 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
     @GetMapping("/reviewResend")
     public String getInvitesToResendFailureView(Model model,
                                      @PathVariable("competitionId") long competitionId,
-                                     @ModelAttribute(name = "form", binding = false) @Valid ResendInviteForm inviteform,
+                                     @ModelAttribute(name = "form", binding = false) ResendInviteForm inviteform,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler) {
+        if(inviteform.getInviteIds() == null || inviteform.getInviteIds().isEmpty()){
+            return redirectToOverview(competitionId, 0);
+        }
 
-        Supplier<String> failureView = () -> redirectToOverview(competitionId, 0);
-
-        return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
-                    competitionId,
-                    inviteform.getInviteIds()).getSuccess();
-            model.addAttribute("model", new SendInvitesViewModel(
-                    invites.getCompetitionId(),
-                    invites.getCompetitionName(),
-                    invites.getRecipients(),
-                    invites.getContent()
-            ));
-            populateResendInviteFormWithExistingValues(inviteform, invites);
-            return "assessors/resend-invites";
-        });
+        AssessorInvitesToSendResource invites = competitionInviteRestService.getAllInvitesToResend(
+                competitionId,
+                inviteform.getInviteIds()).getSuccess();
+        model.addAttribute("model", new SendInvitesViewModel(
+                invites.getCompetitionId(),
+                invites.getCompetitionName(),
+                invites.getRecipients(),
+                invites.getContent()
+        ));
+        populateResendInviteFormWithExistingValues(inviteform, invites);
+        return "assessors/resend-invites";
     }
 
     @PostMapping("/reviewResend")

@@ -23,9 +23,14 @@
 
             <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
 
-            <form th:action="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
-                <div class="form-group extra-margin-bottom">
-                    <label class="form-label-bold" for="subject">Subject</label>
+            <form th:action="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
+                <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+                    <label class="form-label-bold" th:for="${#ids.next('subject')}">
+                        <span>Subject</span>
+                        <th:block th:if="${#fields.hasErrors('subject')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                        </th:block>
+                    </label>
                     <input class="form-control width-full"
                            id="subject"
                            type="text"
