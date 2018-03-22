@@ -18,7 +18,7 @@ public class InformIneligibleForm implements BindingResultTarget {
     private String subject;
 
     @NotBlank(message = "{validation.informleadapplicant.message.required}")
-    private String content;
+    private String message;
 
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
@@ -31,12 +31,12 @@ public class InformIneligibleForm implements BindingResultTarget {
         this.subject = subject;
     }
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class InformIneligibleForm implements BindingResultTarget {
 
         return new EqualsBuilder()
                 .append(subject, that.subject)
-                .append(content, that.content)
+                .append(message, that.message)
                 .append(bindingResult, that.bindingResult)
                 .append(objectErrors, that.objectErrors)
                 .isEquals();
@@ -79,7 +79,7 @@ public class InformIneligibleForm implements BindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(subject)
-                .append(content)
+                .append(message)
                 .append(bindingResult)
                 .append(objectErrors)
                 .toHashCode();

@@ -63,7 +63,7 @@ public class CompetitionManagementSendIneligibleController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> sendResult = applicationRestService.informIneligible(applicationId,
-                    new ApplicationIneligibleSendResource(form.getSubject(), form.getContent()))
+                    new ApplicationIneligibleSendResource(form.getSubject(), form.getMessage()))
                     .toServiceResult();
             return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> getRedirect(applicationResource));
