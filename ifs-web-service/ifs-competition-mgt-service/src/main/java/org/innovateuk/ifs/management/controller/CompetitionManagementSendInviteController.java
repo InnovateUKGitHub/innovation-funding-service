@@ -98,8 +98,6 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
         });
     }
 
-
-
     @GetMapping("/reviewResend")
     public String getInvitesToResendFailureView(Model model,
                                      @PathVariable("competitionId") long competitionId,
