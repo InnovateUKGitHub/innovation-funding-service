@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.controller.ProjectFinanceRowController;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.validator.util.ValidationUtil;
+import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
