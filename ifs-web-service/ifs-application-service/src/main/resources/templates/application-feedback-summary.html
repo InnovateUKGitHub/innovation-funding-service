@@ -43,7 +43,7 @@
                         <h3 class="heading-small">Project timescales</h3>
                         <p class="no-margin">Project start date: <br />
                             <th:block
-                                th:if="${currentApplication.startDate != null}"
+                                th:if="${currentApplication.startDate}"
                                 th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
                         </p>
                         <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
