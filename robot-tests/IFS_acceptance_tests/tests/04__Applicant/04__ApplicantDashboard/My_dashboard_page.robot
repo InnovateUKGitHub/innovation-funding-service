@@ -33,7 +33,7 @@ Hours remaining should show the last 24hours
     When the user reloads the page
     Then the user should see the text in the page    hours left
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${openCompetitionRTOCloseDate} 11:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${openCompetitionRTOCloseDate} 00:00:00' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 
 *** Keywords ***
 Custom setup

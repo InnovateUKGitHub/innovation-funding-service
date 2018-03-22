@@ -83,6 +83,7 @@ Get competitions id and set it as suite variable
 
 Save competition's current dates
     [Arguments]  ${competitionId}
+    Connect to Database  @{database}
     ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${competitionId}' AND type='OPEN_DATE';
     ${result} =  get from list  ${result}  0
     ${openDate} =  get from list  ${result}  0
@@ -93,6 +94,7 @@ Save competition's current dates
 
 Return the competition's milestones to their initial values
     [Arguments]  ${competitionId}  ${openDate}  ${submissionDate}
+    Connect to Database  @{database}
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${openDate}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
     Execute SQL String  UPDATE `${database_name}`.`milestone` SET `date`='${submissionDate}' WHERE `competition_id`='${competitionId}' AND `type`='SUBMISSION_DATE';
 
