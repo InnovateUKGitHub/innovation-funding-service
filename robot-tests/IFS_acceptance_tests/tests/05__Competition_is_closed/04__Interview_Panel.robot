@@ -51,7 +51,7 @@ Assessors receives the invite to the interview panel
     And the user should see the element        jQuery=label:contains("Subject") ~ input[value="Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     And the user enters text to a text field   css=.editor   Additional message
     When the user clicks the button/link       css=button[type="submit"]   #Send invite
-    Then the user navigates to the page        ${server}/management/assessment/interview/competition/18/assessors/overview    #pending and rejected
+    Then the user navigates to the page        ${server}/management/assessment/interview/competition/18/assessors/pending-and-declined
     And the user should see the element        jQuery=td:contains("${assessor_ben}") ~ td:contains("Awaiting response")
     And the user should see the element        jQuery=td:contains("${assessor_joel}") ~ td:contains("Awaiting response")
     And the user reads his email               ${assessor_ben_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel

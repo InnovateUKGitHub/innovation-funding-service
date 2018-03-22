@@ -51,9 +51,9 @@ Check the initial key statistics
     [Tags]
     Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link    link=Pending and rejected
+    And the user clicks the button/link    link=Pending and declined
 
-Filtering in the Invite Pending and rejected page
+Filtering in the Invite Pending and declined page
     [Documentation]    INFUND-6453
     [Tags]
     Given the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=filterInnovationArea
@@ -180,7 +180,7 @@ Invite non-registered users
 Assessor overview information
     [Documentation]    INFUND-6450 INFUND-6449
     [Tags]
-    Given The user clicks the button/link  link=Pending and rejected
+    Given The user clicks the button/link  link=Pending and declined
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(6):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
@@ -208,7 +208,7 @@ Select to add all assessors to invite list
 Bulk resend button is disabled until user selects an assessor
     [Documentation]  IFS-1146
     [Tags]
-    [Setup]  the user clicks the button/link  link=Pending and rejected
+    [Setup]  the user clicks the button/link  link=Pending and declined
     Given the element should be disabled      jQuery=button:contains("Resend invites")
     When the user selects the checkbox        select-all-check
     And the user clicks the button/link       jQuery=button:contains("Resend invites")
