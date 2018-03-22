@@ -112,6 +112,28 @@ include::{snippets}/interview-panel-invite/open-invite/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/interview-panel-invite/open-invite/curl-request.adoc[]
 
+=== Accept invite by hash
+==== Request
+include::{snippets}/interview-panel-invite/accept-invite/http-request.adoc[]
+include::{snippets}/interview-panel-invite/accept-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel-invite/accept-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel-invite/accept-invite/curl-request.adoc[]
+
+=== Reject invite by hash
+==== Request
+include::{snippets}/interview-panel-invite/reject-invite/http-request.adoc[]
+include::{snippets}/interview-panel-invite/reject-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel-invite/reject-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel-invite/reject-invite/curl-request.adoc[]
+
 === Check if existing user by hash
 ==== Request
 include::{snippets}/interview-panel-invite/check-existing-user/http-request.adoc[]
