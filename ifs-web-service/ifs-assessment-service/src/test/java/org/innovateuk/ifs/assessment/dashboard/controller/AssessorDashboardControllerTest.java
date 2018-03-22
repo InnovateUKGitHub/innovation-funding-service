@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -37,6 +36,7 @@ import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilde
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.ASSESSOR;
+import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
@@ -537,6 +537,12 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withPanelDate(now().plusDays(10))
                 .build();
 
+        InterviewInviteResource interviewInvite = newInterviewInviteResource()
+                .withInviteHash("")
+                .withCompetitionId(competitionResource.getId())
+                .withCompetitionName("Juggling Craziness")
+                .build();
+
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource()
                 .withUser(3L)
                 .withCompetition(competitionResource.getId())
@@ -548,6 +554,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource()
+                .withUser(3L)
+                .withCompetition(competitionResource.getId())
+                .withStatus(ACCEPTED)
+                .withCompetitionParticipantRole(INTERVIEW_ASSESSOR)
+                .withAwaitingApplications(1L)
+                .withCompetitionName("Juggling Craziness")
+                .withInvite(interviewInvite)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));
