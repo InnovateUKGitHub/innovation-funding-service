@@ -2,11 +2,8 @@ package org.innovateuk.ifs.assessment.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.invite.form.InterviewInviteForm;
-import org.innovateuk.ifs.assessment.invite.form.ReviewInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.InterviewInviteModelPopulator;
-import org.innovateuk.ifs.assessment.invite.populator.ReviewInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.InterviewInviteViewModel;
-import org.innovateuk.ifs.assessment.invite.viewmodel.ReviewInviteViewModel;
 import org.innovateuk.ifs.invite.resource.InterviewInviteResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.resource.ReviewInviteResource;
@@ -22,7 +19,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -33,7 +29,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteResourceBuilder.newInterviewInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
-import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -84,12 +79,10 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
     @Test
     public void acceptInvite_notLoggedInAndExistingUser() throws Exception {
         setLoggedInUser(null);
-        ZonedDateTime interviewDate = ZonedDateTime.now();
         Boolean accept = true;
 
         InterviewInviteResource inviteResource = newInterviewInviteResource()
                 .withCompetitionName("my competition")
-                .withInterviewDate(interviewDate)
                 .build();
 
         InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, false);
@@ -133,10 +126,7 @@ public class InterviewInviteControllerTest extends BaseControllerMockMVCTest<Int
 
     @Test
     public void openInvite() throws Exception {
-        ZonedDateTime interviewDate = ZonedDateTime.now();
-
         InterviewInviteResource inviteResource = newInterviewInviteResource().withCompetitionName("my competition")
-                .withInterviewDate(interviewDate)
                 .build();
 
         InterviewInviteViewModel expectedViewModel = new InterviewInviteViewModel("hash", inviteResource, true);
