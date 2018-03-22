@@ -22,7 +22,6 @@ public abstract class InterviewInviteMapper extends BaseMapper<InterviewInvite, 
             @Mapping(source = "target.id", target = "competitionId"),
             @Mapping(source = "target.name", target = "competitionName"),
             @Mapping(source = "user.id", target = "userId"),
-            @Mapping(source = "target.panelDate", target = "interviewDate"),
     })
     @Override
     public abstract InterviewInviteResource mapToResource(InterviewInvite domain);

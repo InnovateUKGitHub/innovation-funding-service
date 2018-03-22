@@ -1,14 +1,9 @@
 subprojects {
 
-
-    apply from: rootProject.file("gradle-support/openshift-methods.gradle")
-    apply from: rootProject.file("gradle-support/openshift-build.gradle")
-
-    buildDocker.inputDir = project.file("$project.parent.projectDir/docker/")
-
-
     def sqlVersion = "5.6.29"
+    apply from: rootProject.file("gradle-support/openshift-build.gradle")
     buildDocker.tag = "innovateuk/ifs-mysql:" + sqlVersion
+    buildDocker.inputDir = project.file("$project.parent.projectDir/docker/")
 
     tagDocker.onlyIf { !isNamedEnv() }
     tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
@@ -45,11 +40,11 @@ subprojects {
     createContainer.enabled = true
     deploy.enabled = false
 
-    buildDocker.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-    stop.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-    removeContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-    createContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-    deploy.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+    buildDocker.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
+    stop.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
+    removeContainer.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
+    createContainer.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
+    deploy.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
 
     wait.enabled = true
     stop.enabled = true
@@ -79,6 +74,7 @@ subprojects {
     }
 
 }
+
 
 
 
