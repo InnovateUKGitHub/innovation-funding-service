@@ -27,6 +27,17 @@ function isProductionEnvironment() {
     fi
 }
 
+function isSysIntEnvironment() {
+
+    TARGET=$1
+
+    if [[ ${TARGET} != "sysint" ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+}
+
 function getProjectName() {
 
     PROJECT=$1

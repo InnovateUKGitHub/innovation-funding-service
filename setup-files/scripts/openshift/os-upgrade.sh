@@ -59,6 +59,7 @@ function forceReload {
     oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/registration-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/prototypes-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
 
@@ -82,6 +83,7 @@ function watchStatus {
     rolloutStatus project-setup-mgt-svc
     rolloutStatus project-setup-svc
     rolloutStatus registration-svc
+    rolloutStatus prototypes-svc
     rolloutStatus idp
     rolloutStatus shib
 
