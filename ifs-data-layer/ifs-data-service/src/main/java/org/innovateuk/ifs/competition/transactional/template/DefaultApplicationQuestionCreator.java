@@ -8,8 +8,8 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.validator.NotEmptyValidator;
-import org.innovateuk.ifs.validator.WordCountValidator;
+import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
+import org.innovateuk.ifs.validation.validator.WordCountValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
