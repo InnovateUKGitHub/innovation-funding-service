@@ -13,9 +13,7 @@ import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
-import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
+import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.mapper.InterviewParticipantMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
@@ -49,6 +47,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
@@ -350,8 +349,55 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     @Override
+    public ServiceResult<Void> acceptInvite(String inviteHash) {
+        return getParticipantByInviteHash(inviteHash)
+                .andOnSuccess(InterviewInviteServiceImpl::accept)
+                .andOnSuccessReturnVoid();
+    }
+
+    @Override
+    public ServiceResult<Void> rejectInvite(String inviteHash) {
+        return getParticipantByInviteHash(inviteHash)
+                .andOnSuccess(this::reject)
+                .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<InterviewParticipant> getParticipantByInviteHash(String inviteHash) {
+        return find(interviewParticipantRepository.getByInviteHash(inviteHash), notFoundError(InterviewParticipant.class, inviteHash));
+    }
+
+    @Override
     public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
         return super.checkUserExistsForInvite(inviteHash);
+    }
+
+    private static ServiceResult<InterviewParticipant> accept(InterviewParticipant participant) {
+        User user = participant.getUser();
+        if (participant.getInvite().getStatus() != OPENED) {
+            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == ACCEPTED) {
+            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == REJECTED) {
+            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
+        } else {
+            return serviceSuccess( participant.acceptAndAssignUser(user));
+        }
+    }
+
+    private ServiceResult<CompetitionParticipant> reject(InterviewParticipant participant) {
+        if (participant.getInvite().getStatus() != OPENED) {
+            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == ACCEPTED) {
+            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == REJECTED) {
+            return ServiceResult.serviceFailure(new Error(INTERVIEW_PANEL_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
+        } else {
+            return serviceSuccess(participant.reject());
+        }
+    }
+
+    private static String getInviteCompetitionName(InterviewParticipant participant) {
+        return participant.getInvite().getTarget().getName();
     }
 
     private ServiceResult<InterviewInvite> getByHashIfOpen(String inviteHash) {

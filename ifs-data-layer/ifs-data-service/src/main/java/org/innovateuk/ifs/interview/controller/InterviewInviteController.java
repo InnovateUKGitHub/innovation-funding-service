@@ -96,6 +96,16 @@ public class InterviewInviteController {
         return interviewInviteService.openInvite(inviteHash).toPostWithBodyResponse();
     }
 
+    @PostMapping("/accept-invite/{inviteHash}")
+    public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
+        return interviewInviteService.acceptInvite(inviteHash).toPostResponse();
+    }
+
+    @PostMapping("/reject-invite/{inviteHash}")
+    public RestResult<Void> rejectInvite(@PathVariable String inviteHash) {
+        return interviewInviteService.rejectInvite(inviteHash).toPostResponse();
+    }
+
     @GetMapping("/check-existing-user/{inviteHash}")
     public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
         return interviewInviteService.checkUserExistsForInvite(inviteHash).toGetResponse();
