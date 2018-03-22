@@ -7,7 +7,6 @@ apply from: rootProject.file("gradle-support/openshift-methods.gradle")
 
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
 
@@ -54,7 +53,6 @@ task createContainer(type: DockerCreateContainer, dependsOn: [buildDocker, remov
 task deploy(type: DockerStartContainer, dependsOn: createContainer) {
     targetContainerId { createContainer.getContainerId() }
 }
-
 
 task wait(type: DockerWaitHealthyContainer) {
     targetContainerId { createContainer.getContainerId() }
