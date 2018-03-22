@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-from logging import warn
 import pytz
 import pymysql
 import os
@@ -143,36 +142,47 @@ for comp in cursor.fetchall():
     competition_milestones[competitionId] = milestones_for_competition
     milestones_for_competition[milestoneType] = dates_for_milestone
 
+# format 2018-1-1 (no zero padding)
 def getSimpleMilestoneDate(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['simpleDate']
 
+# format 1 January (no zero padding)
 def getPrettyMilestoneDayMonth(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyDayMonth']
 
+# format 1 January 2018 (no zero padding)
 def getPrettyMilestoneDate(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyDate']
 
+# format 1 January 2018 9:01am (no zero padding on day and hour)
 def getPrettyMilestoneDateTime(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyDateTime']
 
+# format Monday 1 January 2018 (no zero padding on day)
 def getPrettyLongMilestoneDate(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyLongDate']
 
+# format Monday 1 January 2018 9:01am (no zero padding on day and hour)
 def getPrettyLongMilestoneDateTime(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyLongDateTime']
 
+# format 9:01am Monday 1 January 2018 (no zero padding on day and hour)
 def getPrettyLongMilestoneTimeDate(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['prettyLongTimeDate']
 
+# format 2018-01-01 00:00:00 - perfect format for database updates
 def getMilestoneDateTimeDb(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['dateTimeDb']
 
+# format 1 (no zero padding on day)
 def getMilestoneDay(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['day']
 
+# format 1 (no zero padding on month)
 def getMilestoneMonth(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['month']
 
+# format 2018
 def getMilestoneYear(competitionId, milestoneType):
     return competition_milestones[competitionId][milestoneType]['year']
 
