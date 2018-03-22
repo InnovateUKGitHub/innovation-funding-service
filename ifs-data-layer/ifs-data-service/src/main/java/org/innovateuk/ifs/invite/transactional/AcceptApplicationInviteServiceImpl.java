@@ -39,6 +39,7 @@ public class AcceptApplicationInviteServiceImpl extends InviteService<Applicatio
     @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
+    @Autowired
     private OrganisationRepository organisationRepository;
 
     @Autowired
