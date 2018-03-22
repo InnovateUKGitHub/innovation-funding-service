@@ -13,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -67,7 +66,8 @@ public class AssessorDashboardModelPopulator {
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(reviewParticipantResourceList),
                 getAssessmentPanelAccepted(reviewParticipantResourceList),
-                getInterviewPanelInvites(interviewParticipantResourceList)
+                getInterviewPanelInvites(interviewParticipantResourceList),
+                getInterviewPanelAccepted(interviewParticipantResourceList)
                 );
     }
 
@@ -150,6 +150,18 @@ public class AssessorDashboardModelPopulator {
                         appr.getCompetitionId(),
                         appr.getInvite().getPanelDate().toLocalDate(),
                         appr.getInvite().getPanelDaysLeft(),
+                        appr.getAwaitingApplications()
+                        ))
+                .collect(toList());
+    }
+
+    private List<AssessorDashboardInterviewAcceptedViewModel> getInterviewPanelAccepted(List<InterviewParticipantResource> interviewPanelAcceptedResourceList) {
+        return interviewPanelAcceptedResourceList.stream()
+                .filter(InterviewParticipantResource::isAccepted)
+                .filter(appr -> !isAfterPanelDate(appr.getCompetitionId()))
+                .map(appr -> new AssessorDashboardInterviewAcceptedViewModel(
+                        appr.getCompetitionName(),
+                        appr.getCompetitionId(),
                         appr.getAwaitingApplications()
                         ))
                 .collect(toList());
