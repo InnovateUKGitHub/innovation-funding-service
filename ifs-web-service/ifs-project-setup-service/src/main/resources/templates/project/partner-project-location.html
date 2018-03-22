@@ -24,7 +24,13 @@
                 Postcode
                 <span class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
             </label>
-            <input class="form-control width-medium" name="postCode" id="postCode" type="text">
+            <input class="form-control width-medium"
+                   name="postCode"
+                   id="postCode"
+                   type="text"
+                   required
+                   th:value="${form.getPostCode() != null ? form.getPostCode() : NULL}"
+            >
         </div>
 
         <p>You can change your project location up until a Monitoring Officer is assigned to your project.</p>
