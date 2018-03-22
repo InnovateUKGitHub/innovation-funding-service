@@ -14,21 +14,32 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='heading-xlarge'" />
 
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your project location.</h2>
+        <ul class="error-summary-list">
+            <li th:each="err : ${#fields.errors('${form.*}')}">
+                <a href="#postCode" th:text="${err}">The error message</a>
+            </li>
+        </ul>
+    </div>
+
     <p>We will assign a Monitoring Officer who will visit your project location.</p>
 
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
         <h2 class="heading-medium">Project location</h2>
 
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('postCode')} ? 'form-group-error'">
             <label class="form-label-bold" for="postCode">
                 Postcode
                 <span class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
             </label>
+            <th:block th:if="${#fields.hasErrors('postCode')}">
+                <span class="error-message" th:each="err : ${#fields.errors('postCode')}" th:text="${err}" />
+            </th:block>
             <input class="form-control width-medium"
                    name="postCode"
                    id="postCode"
                    type="text"
-                   required
                    th:value="${form.getPostCode() != null ? form.getPostCode() : NULL}"
             >
         </div>
