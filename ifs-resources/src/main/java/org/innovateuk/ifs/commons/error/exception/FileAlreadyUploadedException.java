@@ -2,6 +2,10 @@ package org.innovateuk.ifs.commons.error.exception;
 
 import java.util.List;
 
+/**
+ * This exception is thrown when a user tries to upload a file when one has already been uploaded on same form input response.
+ * User will be shown a validation error asking they remove existing file first before uploading a different one.
+ */
 public class FileAlreadyUploadedException extends IFSRuntimeException {
 
     public FileAlreadyUploadedException() {
