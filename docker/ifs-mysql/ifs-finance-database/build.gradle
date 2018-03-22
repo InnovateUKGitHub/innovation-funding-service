@@ -1,4 +1,5 @@
-
+ext.sqlContainer = "ifs-finance-database"
+ext.testSchema = "ifs_finance_test"
 
 List<String> env = new ArrayList();
 env.add("MYSQL_ROOT_PASSWORD=password")

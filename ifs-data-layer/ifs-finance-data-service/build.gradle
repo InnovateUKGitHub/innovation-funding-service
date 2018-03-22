@@ -5,8 +5,6 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
-apply from: "../database-support.gradle"
-
 configurations {
     providedRuntime
 }
@@ -32,8 +30,6 @@ networkAliases.add("ifs-finance-data-service")
 createContainer.networkAliases=networkAliases
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
-ext.sqlContainer = "ifs-finance-database"
-ext.testSchema = "ifs_finance_test"
 ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 
 ext {
