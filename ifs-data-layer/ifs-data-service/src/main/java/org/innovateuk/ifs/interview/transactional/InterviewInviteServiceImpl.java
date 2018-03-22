@@ -56,8 +56,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
-import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 /*
  * Service for managing {@link InterviewInvite}s.
@@ -163,12 +161,8 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
 
     @Override
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        return getCompetition(competitionId).andOnSuccess(competition -> {
-
-            String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
-            String customTextHtml = plainTextToHtml(customTextPlain);
-
-            return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+        return getCompetition(competitionId).andOnSuccess(competition ->
+                ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                     interviewInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         interviewParticipantRepository.save(
@@ -177,27 +171,22 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
 
                         return sendInviteNotification(
                                 assessorInviteSendResource.getSubject(),
-                                customTextPlain,
-                                customTextHtml,
+                                assessorInviteSendResource.getContent(),
                                 invite,
                                 Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
                         );
                     }
-            ));
-        });
+            ))
+        );
     }
 
     @Override
     public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
-        String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
-        String customTextHtml = plainTextToHtml(customTextPlain);
-
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                 interviewInviteRepository.getByIdIn(inviteIds),
                 invite -> sendInviteNotification(
                         assessorInviteSendResource.getSubject(),
-                        customTextPlain,
-                        customTextHtml,
+                        assessorInviteSendResource.getContent(),
                         invite.sendOrResend(loggedInUserSupplier.get(), now()),
                         Notifications.INVITE_ASSESSOR_GROUP_TO_INTERVIEW
                 )
@@ -326,7 +315,6 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     private ServiceResult<Void> sendInviteNotification(String subject,
-                                                       String customTextPlain,
                                                        String customTextHtml,
                                                        InterviewInvite invite,
                                                        Notifications notificationType) {
@@ -340,8 +328,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
                         "name", invite.getName(),
                         "competitionName", invite.getTarget().getName(),
                         "inviteUrl", format("%s/invite/interview/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
-                        "customTextPlain", customTextPlain,
-                        "customTextHtml", customTextHtml
+                        "message", customTextHtml
                 ));
 
         return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
