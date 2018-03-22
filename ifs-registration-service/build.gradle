@@ -74,4 +74,10 @@ createContainer.enabled = enabled
 deploy.enabled =enabled
 wait.enabled = enabled
 
+buildDocker.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+stop.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+removeContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+createContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+deploy.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+
 deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"
