@@ -328,7 +328,7 @@
                             <dt>Competition name</dt>
                             <dd th:text="${competition.name}"></dd>
                             <dt>When do you wish to start your project?</dt>
-                            <dd th:if="${model.application.startDate}" th:text="${#temporals.format(model.application.startDate, 'd MMMM yyyy')}"></dd>
+                            <dd th:text="${model.application.startDate} ? ${#temporals.format(model.application.startDate, 'd MMMM yyyy')} : ''"></dd>
                             <dt>Duration in months</dt>
                             <dd><th:block th:text="${model.application.durationInMonths}"/> months</dd>
                             <dt>Research category</dt>
