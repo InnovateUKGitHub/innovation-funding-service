@@ -205,7 +205,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     @Transactional
-    public ServiceResult<Void> withdrawProject(Long projectId) {
+    public ServiceResult<Void> withdrawProject(long projectId) {
 
         return getProject(projectId).andOnSuccess(
                 existingProject -> getCurrentlyLoggedInUser().andOnSuccess(user ->

@@ -245,7 +245,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> withdrawProject(Long projectId) {
+        public ServiceResult<Void> withdrawProject(long projectId) {
             return null;
         }
 
