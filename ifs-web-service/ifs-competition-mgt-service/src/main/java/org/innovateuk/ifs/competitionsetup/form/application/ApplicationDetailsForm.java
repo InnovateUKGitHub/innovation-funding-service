@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.form.application;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 
-import javax.validation.constraints.NotNull;
 import java.util.function.BiPredicate;
 
 @FieldComparison(
@@ -19,10 +19,10 @@ import java.util.function.BiPredicate;
         predicate = ApplicationDetailsForm.MinExceedsMaxPredicateProvider.class)
 public class ApplicationDetailsForm extends CompetitionSetupForm {
 
-    @NotNull
+    @NotEmpty(message="{validation.field.must.not.be.blank}")
     private Integer minProjectDuration;
 
-    @NotNull
+    @NotEmpty(message="{validation.field.must.not.be.blank}")
     private Integer maxProjectDuration;
 
     private boolean useResubmissionQuestion;
