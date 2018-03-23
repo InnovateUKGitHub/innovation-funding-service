@@ -122,12 +122,12 @@
                     </td>
                     <td>
                         <th:block th:unless="${model.getPostCodeForPartnerOrganisation(organisation.id) == null}">
-                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
                                 <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}"
                                    th:text="${model.getPostCodeForPartnerOrganisation(organisation.id)}">post code</a>
                             </th:block>
 
-                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
                                 <span th:text="${model.getPostCodeForPartnerOrganisation(organisation.id)}" />
                             </th:block>
 
@@ -135,11 +135,11 @@
 
                         <th:block th:if="${model.getPostCodeForPartnerOrganisation(organisation.id) == null}">
 
-                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                            <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
                                 <a th:href="@{/project/{projectId}/organisation/{organisationId}/partner-project-location(projectId=${model.project.getId()},organisationId=${organisation.id})}">Select project location</a>
                             </th:block>
 
-                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                            <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.monitoringOfficerAssigned}">
                                 <span>-</span>
                             </th:block>
 
