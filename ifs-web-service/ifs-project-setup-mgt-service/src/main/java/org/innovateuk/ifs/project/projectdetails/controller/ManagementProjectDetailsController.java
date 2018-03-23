@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -33,15 +37,21 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectDetailsController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ManagementProjectDetailsController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
-public class ProjectDetailsController {
+public class ManagementProjectDetailsController {
 
     @Autowired
     private ProjectService projectService;
 
     @Autowired
     private OrganisationService organisationService;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationService;
 
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
@@ -52,13 +62,22 @@ public class ProjectDetailsController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
 
-        List<OrganisationResource> partnerOrganisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
+        List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        List<PartnerOrganisationResource> partnerOrganisations = null;
+        if (competitionResource.isLocationPerPartner()) {
+            partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess();
+        }
+
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
-                getFinanceContactForPartnerOrganisation(projectUsers, partnerOrganisations)));
+                getFinanceContactForPartnerOrganisation(projectUsers, organisations),
+                competitionResource.isLocationPerPartner(),
+                partnerOrganisations));
 
         return "project/detail";
     }

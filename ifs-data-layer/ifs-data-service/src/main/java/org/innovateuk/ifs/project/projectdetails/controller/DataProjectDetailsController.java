@@ -23,7 +23,7 @@ import java.time.LocalDate;
  */
 @RestController
 @RequestMapping("/project")
-public class ProjectDetailsController {
+public class DataProjectDetailsController {
 
     @Autowired
     private ProjectDetailsService projectDetailsService;
