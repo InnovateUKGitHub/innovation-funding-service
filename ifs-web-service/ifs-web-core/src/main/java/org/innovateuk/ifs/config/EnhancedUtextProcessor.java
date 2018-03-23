@@ -2,6 +2,7 @@ package org.innovateuk.ifs.config;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+import org.springframework.beans.factory.annotation.Value;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
@@ -40,6 +41,8 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
             .addAttributes("td", "colspan", "rowspan", "width")
             .addAttributes("th", "colspan", "rowspan", "scope", "style", "width")
             .addAttributes("ul", "class", "id")
+
+            .preserveRelativeLinks(true)
 
             .addProtocols("a", "href", "ftp", "http", "https", "mailto");
 
@@ -150,7 +153,7 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
     }
 
     private String cleanString(Object result) {
-        return Jsoup.clean((result == null ? "" : result.toString()), WHITELIST);
+        return Jsoup.clean((result == null ? "" : result.toString()), "http://ifs.local-dev", WHITELIST);
     }
 
     /*
