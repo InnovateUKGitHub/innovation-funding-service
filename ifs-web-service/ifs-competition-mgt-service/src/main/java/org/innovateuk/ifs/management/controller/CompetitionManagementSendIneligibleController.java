@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -55,6 +55,7 @@ public class CompetitionManagementSendIneligibleController {
     public String sendEmail(Model model,
                             @PathVariable("applicationId") long applicationId,
                             @ModelAttribute("form") @Valid InformIneligibleForm form,
+                            BindingResult result,
                             ValidationHandler validationHandler) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccess();
 
@@ -62,7 +63,7 @@ public class CompetitionManagementSendIneligibleController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<Void> sendResult = applicationRestService.informIneligible(applicationId,
-                    new ApplicationIneligibleSendResource(form.getSubject(), form.getContent()))
+                    new ApplicationIneligibleSendResource(form.getSubject(), form.getMessage()))
                     .toServiceResult();
             return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> getRedirect(applicationResource));

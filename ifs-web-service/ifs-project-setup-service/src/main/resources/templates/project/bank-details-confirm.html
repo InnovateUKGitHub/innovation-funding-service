@@ -3,12 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" />
 </head>
-<body th:with="context='project'" class="bank-detail-confirm">
+<body class="bank-detail-confirm">
   <th:block th:insert="fragments/layout :: body-start" />
   <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit bank details',subTitle=${project.name},size='heading-xlarge'" />
 
@@ -34,5 +33,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

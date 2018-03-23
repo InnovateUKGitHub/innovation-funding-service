@@ -197,7 +197,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         ApplicationIneligibleSendResource applicationIneligibleSendResource =
                 newApplicationIneligibleSendResource()
                         .withSubject("Subject")
-                        .withContent("Message")
+                        .withMessage("Message")
                         .build();
 
         RestResult<Void> result = controller.informIneligible(APPLICATION_SUBMITTABLE_ID, applicationIneligibleSendResource);
