@@ -81,8 +81,8 @@ public class AssessorInviteOverviewMapper {
 
     private AssessorInviteOverviewResource mapUserToResource(
             User user,
-            AssessorInviteOverviewResource assessorInviteOverviewResource
-    ) {
+            AssessorInviteOverviewResource assessorInviteOverviewResource) {
+
         Profile profile = profileRepository.findOne(user.getProfileId());
 
         assessorInviteOverviewResource.setId(user.getId());

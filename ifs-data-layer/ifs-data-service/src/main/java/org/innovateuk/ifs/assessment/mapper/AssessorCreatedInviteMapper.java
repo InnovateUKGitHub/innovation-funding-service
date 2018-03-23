@@ -27,8 +27,8 @@ public class AssessorCreatedInviteMapper {
     @Autowired
     public AssessorCreatedInviteMapper(
             ProfileRepository profileRepository,
-            InnovationAreaMapper innovationAreaMapper
-    ) {
+            InnovationAreaMapper innovationAreaMapper) {
+        
         this.profileRepository = profileRepository;
         this.innovationAreaMapper = innovationAreaMapper;
     }

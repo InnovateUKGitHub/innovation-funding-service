@@ -23,8 +23,8 @@ public class AvailableAssessorMapper {
     @Autowired
     public AvailableAssessorMapper(
             ProfileRepository profileRepository,
-            InnovationAreaMapper innovationAreaMapper
-    ) {
+            InnovationAreaMapper innovationAreaMapper) {
+
         this.profileRepository = profileRepository;
         this.innovationAreaMapper = innovationAreaMapper;
     }
