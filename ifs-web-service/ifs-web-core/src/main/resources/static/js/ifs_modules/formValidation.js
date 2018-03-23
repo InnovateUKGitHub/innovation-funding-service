@@ -15,6 +15,10 @@ IFS.core.formValidation = (function () {
         fields: '[max]:not([data-date],[readonly])',
         messageInvalid: 'This field should be %max% or lower.'
       },
+      range: {
+        fields: '[data-range-min]:not([readonly])',
+        messageInvalid: 'This fields must be between %min% and %max%.'
+      },
       passwordPolicy: {
         fields: {
           password: '[name="password"]',
@@ -115,6 +119,7 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.number.fields, function () { IFS.core.formValidation.checkNumber(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.min.fields, function () { IFS.core.formValidation.checkMin(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.max.fields, function () { IFS.core.formValidation.checkMax(jQuery(this)) })
+      jQuery('body').on('change ifsValidate', s.range.fields, function () { IFS.core.formValidation.checkRange(jQuery(this)) })
       jQuery('body').on('blur change ifsValidate', s.required.fields, function () { IFS.core.formValidation.checkRequired(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.minlength.fields, function () { IFS.core.formValidation.checkMinLength(jQuery(this)) })
       jQuery('body').on('change ifsValidate', s.maxlength.fields, function () { IFS.core.formValidation.checkMaxLength(jQuery(this)) })
@@ -327,6 +332,30 @@ IFS.core.formValidation = (function () {
             IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
             return true
           }
+        }
+      }
+    },
+    checkRange: function (field) {
+      console.log('Check range')
+      var rangeAttribute = 'range'
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, rangeAttribute)
+      console.log(displayValidationMessages)
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, rangeAttribute)
+      console.log(errorMessage)
+      var min = parseInt(field.data('range-min'), 10)
+      var max = parseInt(field.data('range-max'), 10)
+      console.log('Min = ' + min)
+      console.log('Max = ' + max)
+      if (IFS.core.formValidation.checkNumber(field)) {
+        var fieldVal = parseInt(field.val(), 10)
+        if (fieldVal < min || fieldVal > max) {
+          console.log('Invalid')
+          IFS.core.formValidation.setInvalid(field, errorMessage, displayValidationMessages)
+          return false
+        } else {
+          console.log('Valid')
+          IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
+          return true
         }
       }
     },
