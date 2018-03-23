@@ -46,7 +46,7 @@ function deploy() {
     fi
 
     # conditionally deploy prototypes service
-    if ! $(isSysIntEnvironment ${TARGET}); then
+    if $(isSysIntEnvironment ${TARGET}); then
         oc create -f $(getBuildLocation)/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 

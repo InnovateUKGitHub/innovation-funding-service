@@ -31,7 +31,6 @@ function upgradeServices {
     oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f $(getBuildLocation)/46-prototypes-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
@@ -42,6 +41,11 @@ function upgradeServices {
 
     if ! $(isNamedEnvironment ${TARGET}); then
         oc apply -f $(getBuildLocation)/finance-data-service/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    # conditionally deploy prototypes service
+    if $(isSysIntEnvironment ${TARGET}); then
+        oc create -f $(getBuildLocation)/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
 
@@ -59,7 +63,6 @@ function forceReload {
     oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/registration-svc ${SVC_ACCOUNT_CLAUSE}
-    oc rollout latest dc/prototypes-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
 
@@ -70,6 +73,11 @@ function forceReload {
 
     if ! $(isNamedEnvironment ${TARGET}); then
         oc rollout latest dc/finance-data-service ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    # conditionally deploy prototypes service
+    if $(isSysIntEnvironment ${TARGET}); then
+        oc rollout latest dc/prototypes-svc ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
