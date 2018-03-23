@@ -72,7 +72,6 @@ dependencies {
     compile project(":ifs-data-layer:data-service-file")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.hibernate:hibernate-core:5.2.7.Final"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "mysql:mysql-connector-java"
