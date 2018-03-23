@@ -31,6 +31,8 @@ public class ProjectDetailsViewModel {
     private ApplicationResource app;
     private CompetitionResource competition;
     private boolean projectDetailsCompleteAndAllFinanceContactsAssigned;
+
+    private boolean monitoringOfficerAssigned;
     private boolean spendProfileGenerated;
     private boolean grantOfferLetterGenerated;
     private ProjectUserResource projectManager;
@@ -50,6 +52,7 @@ public class ProjectDetailsViewModel {
                                    boolean userIsLeadPartner,
                                    boolean projectDetailsCompleteAndAllFinanceContactsAssigned,
                                    ProjectUserResource projectManager,
+                                   boolean monitoringOfficerAssigned,
                                    boolean spendProfileGenerated,
                                    boolean grantOfferLetterGenerated,
                                    boolean readOnlyView) {
@@ -62,6 +65,7 @@ public class ProjectDetailsViewModel {
         this.app = app;
         this.competition = competition;
         this.projectDetailsCompleteAndAllFinanceContactsAssigned = projectDetailsCompleteAndAllFinanceContactsAssigned;
+        this.monitoringOfficerAssigned = monitoringOfficerAssigned;
         this.spendProfileGenerated = spendProfileGenerated;
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.projectManager = projectManager;
@@ -127,6 +131,10 @@ public class ProjectDetailsViewModel {
 
     public boolean isProjectDetailsCompleteAndAllFinanceContactsAssigned() {
         return projectDetailsCompleteAndAllFinanceContactsAssigned;
+    }
+
+    public boolean isMonitoringOfficerAssigned() {
+        return monitoringOfficerAssigned;
     }
 
     public boolean isSpendProfileGenerated() {

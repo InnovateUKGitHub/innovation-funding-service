@@ -50,6 +50,24 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
+    public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation) {
+
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Partner Project Location page until Companies House details are complete for Organisation")) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (isMonitoringOfficerAssigned()) {
+            return fail("Unable to access Partner Project Location page once Monitoring Officer has been assigned");
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public boolean isMonitoringOfficerAssigned() {
+        return setupProgressChecker.isMonitoringOfficerAssigned();
+    }
+
     public SectionAccess leadCanAccessProjectManagerPage(OrganisationResource organisation) {
 
         if (isCompaniesHouseIncompleteOrGOLAlreadyGeneratedOrNotLeadPartner(organisation)) {

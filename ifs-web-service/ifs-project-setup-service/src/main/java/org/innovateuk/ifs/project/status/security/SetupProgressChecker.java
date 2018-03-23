@@ -27,6 +27,10 @@ class SetupProgressChecker {
         return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
     }
 
+    public boolean isMonitoringOfficerAssigned() {
+        return COMPLETE.equals(projectTeamStatus.getLeadPartnerStatus().getMonitoringOfficerStatus());
+    }
+
     public boolean isFinanceContactSubmitted(OrganisationResource organisation) {
         return COMPLETE.equals(getMatchingPartnerStatus(organisation).getFinanceContactStatus());
     }
