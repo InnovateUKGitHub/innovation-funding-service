@@ -4,14 +4,13 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application progress'" />
     </head>
 
-    <body th:with="context='comp-management'" class="competition-management competition-setup">
+    <body class="competition-management competition-setup">
         <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}/applications(competitionId=${model.competitionId})}" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.inAssessment} ? 'Application progress' : 'Assign to application',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
@@ -209,23 +208,6 @@
                 <div class="column-two-thirds">
                     <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span> <span class="heading-small">Assessors</span></p>
                 </div>
-<!--/*
-                <div class="column-third alignright">
-                    <div class="form-group">
-                        <form method="get" th:object="${form}">
-                            <label for="sort-by">Sort by</label>
-                            <select th:field="*{sortField}" name="sort" id="sort-by" class="js-auto-submit form-control"
-                                    required="required"
-                                    th:attr="data-required-errormessage=#{validation.availableAssessorsForm.selectedSortField.required}">
-                                <option th:each="sortType : ${T(org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType).values()}"
-                                        th:value="${sortType}"
-                                        th:text="${sortType.label}">value</option>
-                            </select>
-                            <button class="button button-secondary button-small js-hidden" type="submit">Sort</button>
-                        </form>
-                    </div>
-                </div>
-                */-->
             </div>
 
             <div class="table-overflow">
@@ -268,5 +250,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>
