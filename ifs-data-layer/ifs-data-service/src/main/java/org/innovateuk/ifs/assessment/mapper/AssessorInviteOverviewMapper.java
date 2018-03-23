@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.mapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.profile.domain.Profile;
@@ -99,7 +100,10 @@ public class AssessorInviteOverviewMapper {
         String details = null;
 
         if (participant.getStatus() == REJECTED) {
-            details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
+            RejectionReason rejectionReason = participant.getRejectionReason();
+            details = format(
+                    "Invite declined: %s",
+                    rejectionReason != null ? lowerCase(rejectionReason.getReason()) : "");
         } else if (participant.getStatus() == PENDING) {
             if (participant.getInvite().getSentOn() != null) {
                 details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
