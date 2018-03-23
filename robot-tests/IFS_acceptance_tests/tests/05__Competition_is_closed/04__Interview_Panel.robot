@@ -11,9 +11,9 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-3054 Assessor dashboard - Invitation to interview panel box
 ...
-...               IFS-2780 Invite Assessor to Interview Panel: Pending and Declined Tab
-...
 ...               IFS-3055 Assessor dashboard - Attend interview panel box
+...
+...               IFS-2780 Invite Assessor to Interview Panel: Pending and Declined Tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -53,7 +53,7 @@ Assessors receives the invite to the interview panel
     And the user should see the element        jQuery=label:contains("Subject") ~ input[value="Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     And the user enters text to a text field   css=.editor   Additional message
     When the user clicks the button/link       css=button[type="submit"]   #Send invite
-    Then the user navigates to the page        ${server}/management/assessment/interview/competition/18/assessors/overview    #pending and rejected
+    Then the user navigates to the page        ${server}/management/assessment/interview/competition/18/assessors/pending-and-declined
     And the user should see the element        jQuery=td:contains("${assessor_ben}") ~ td:contains("Awaiting response")
     And the user should see the element        jQuery=td:contains("${assessor_joel}") ~ td:contains("Awaiting response")
     And the user reads his email               ${assessor_ben_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
