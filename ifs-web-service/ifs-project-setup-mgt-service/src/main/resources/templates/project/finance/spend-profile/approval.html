@@ -12,7 +12,6 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" />
     <div class="grid-row">
         <div class="column-two-thirds">
