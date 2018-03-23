@@ -81,7 +81,6 @@ Assessors accept the invitation to the interview panel
     And the user clicks the button/link      css=.button[type="submit"]   #Confirm
     Then the user navigates to the page      ${server}/assessment/assessor/dashboard
     And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
-    #TODO Assesor is able to reject the invitation from email need to add once IFS-3143 done
     And the user should see the element      jQuery=h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 Assessor accepts the invitation to the interview panel from email link
