@@ -34,4 +34,9 @@ public interface InterviewAssignmentInviteService {
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATIONS",
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATIONS",
+            description = "The Competition Admin user and Project Finance users can view template for inviting applicants")
+    ServiceResult<String> getEmailTemplate();
 }

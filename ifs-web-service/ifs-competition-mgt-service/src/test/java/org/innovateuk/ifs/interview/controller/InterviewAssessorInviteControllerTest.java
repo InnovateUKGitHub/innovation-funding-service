@@ -73,7 +73,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMVCTest<InterviewInviteAssessorsController> {
+public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVCTest<InterviewAssessorInviteController> {
 
     @Spy
     @InjectMocks
@@ -90,8 +90,8 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
     private CompetitionResource competition;
 
     @Override
-    protected InterviewInviteAssessorsController supplyControllerUnderTest() {
-        return new InterviewInviteAssessorsController();
+    protected InterviewAssessorInviteController supplyControllerUnderTest() {
+        return new InterviewAssessorInviteController();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .param("page", "2"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-find"))
+                .andExpect(view().name("assessors/interview/assessor-find"))
                 .andReturn();
 
         InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("interviewSelectionForm");
@@ -163,7 +163,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
         MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/find", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-find"))
+                .andExpect(view().name("assessors/interview/assessor-find"))
                 .andReturn();
 
         InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("interviewSelectionForm");
@@ -200,7 +200,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
                 .cookie(selectionFormCookie))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-find"))
+                .andExpect(view().name("assessors/interview/assessor-find"))
                 .andReturn();
 
         InterviewSelectionForm selectionForm = (InterviewSelectionForm) result.getModelAndView().getModel().get("interviewSelectionForm");
@@ -348,7 +348,7 @@ public class InterviewInviteAssessorsControllerTest extends BaseControllerMockMV
         MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/invite", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-invite"))
+                .andExpect(view().name("assessors/interview/assessor-invite"))
                 .andReturn();
 
         assertCompetitionDetails(competition, result);

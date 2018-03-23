@@ -52,4 +52,13 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
 
         return getWithRestResult(builder.toUriString(), InterviewAssignmentStagedApplicationPageResource.class);
     }
+
+    @Override
+    public RestResult<String> getEmailTemplate() {
+        String baseUrl = format("%s/%s", REST_URL, "email-template");
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), String.class);
+    }
 }

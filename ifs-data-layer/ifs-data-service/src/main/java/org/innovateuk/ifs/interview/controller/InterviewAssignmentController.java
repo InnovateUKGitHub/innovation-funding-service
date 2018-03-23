@@ -49,4 +49,9 @@ public class InterviewAssignmentController {
     public RestResult<Void> assignApplications(@Valid @RequestBody StagedApplicationListResource stagedApplicationListResource) {
         return interviewAssignmentInviteService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
     }
+
+    @GetMapping("/email-template")
+    public RestResult<String> getEmailTemplate() {
+        return interviewAssignmentInviteService.getEmailTemplate().toGetResponse();
+    }
 }

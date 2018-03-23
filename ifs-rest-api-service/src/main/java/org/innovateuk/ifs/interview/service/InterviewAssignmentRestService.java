@@ -19,4 +19,6 @@ public interface InterviewAssignmentRestService {
     RestResult<Void> assignApplications(StagedApplicationListResource stagedApplicationListResource);
 
     RestResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, int page);
+
+    RestResult<String> getEmailTemplate();
 }

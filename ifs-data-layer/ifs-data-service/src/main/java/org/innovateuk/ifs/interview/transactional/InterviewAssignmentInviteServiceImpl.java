@@ -7,6 +7,10 @@ import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -21,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -46,6 +51,12 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     @Autowired
     private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private NotificationTemplateRenderer renderer;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
 
     @Override
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
@@ -93,6 +104,14 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
         stagedInvites.forEach(invite -> getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition));
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<String> getEmailTemplate() {
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_applicants_to_interview_panel_text.txt",
+                Collections.emptyMap());
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {

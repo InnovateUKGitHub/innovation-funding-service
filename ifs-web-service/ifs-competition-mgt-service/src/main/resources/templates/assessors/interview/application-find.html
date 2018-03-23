@@ -44,10 +44,10 @@
 
     <ul class="inline-nav">
         <li class="selected">
-            <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
+            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
+            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
         <li class="not-selected">
             <a aria-disabled="true" class="buttonlink disabled">View status</a>
@@ -67,7 +67,7 @@
     </div>
 
     <form method="POST"
-          th:action="@{/assessment/interview-panel/competition/{competitionId}/applications/find/addSelected(competitionId=${model.competitionId})}"
+          th:action="@{/assessment/interview/competition/{competitionId}/applications/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${interviewAssignmentApplicationSelectionForm}"
           data-multipage-select=""
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">

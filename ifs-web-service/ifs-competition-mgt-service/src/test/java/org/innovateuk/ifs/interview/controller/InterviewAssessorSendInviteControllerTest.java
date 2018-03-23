@@ -29,13 +29,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest<InterviewSendInviteController> {
+public class InterviewAssessorSendInviteControllerTest extends BaseControllerMockMVCTest<InterviewAssessorSendInviteController> {
 
     private CompetitionResource competition;
 
     @Override
-    protected InterviewSendInviteController supplyControllerUnderTest() {
-        return new InterviewSendInviteController();
+    protected InterviewAssessorSendInviteController supplyControllerUnderTest() {
+        return new InterviewAssessorSendInviteController();
     }
 
     @Override
@@ -70,11 +70,11 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
 
         SendInvitesViewModel expectedViewModel = new SendInvitesViewModel(competitionId, "Photonics for health", singletonList( "Jessica Doe"), "Readonly content");
 
-        mockMvc.perform(get("/interview/competition/{competitionId}/assessors/invite/send", competitionId))
+        mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/invite/send", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("assessors/interview-send-invites"));
+                .andExpect(view().name("assessors/interview/assessor-send-invites"));
 
         verify(interviewInviteRestService, only()).getAllInvitesToSend(competitionId);
     }
@@ -90,7 +90,7 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
 
         when(interviewInviteRestService.sendAllInvites(competitionId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/interview/competition/{competitionId}/assessors/invite/send", competitionId)
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/invite/send", competitionId)
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
