@@ -248,13 +248,6 @@ public class CompetitionSetupQuestionResource {
         return asList(PDF, SPREADSHEET);
     }
 
-    private FileTypeCategory fromNameOrDisplayName(String name) {
-        return simpleFindFirst(FileTypeCategory.values(),
-                category -> category.getDisplayName().equals(name) ||
-                        category.name().equals(name))
-                .orElse(null);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
