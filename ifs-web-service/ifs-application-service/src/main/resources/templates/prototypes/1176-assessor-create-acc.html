@@ -12,7 +12,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
 
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your details')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})"  th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
 	<th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
