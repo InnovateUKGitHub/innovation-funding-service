@@ -367,7 +367,7 @@ The user is able to make the competition public
     Then the user selects the radio button               publishSetting  public
     And the user clicks the button/link                  jQuery=.button:contains("Publish and review")
     And the user clicks the button/link                  jQuery=.button:contains("Return to public content")
-    Then the user should see the element                 jQuery=.button:contains("Return to setup overview")
+    Then the user should see the element                 jQuery=.button-secondary:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
 
 Guest user can filter competitions by Keywords

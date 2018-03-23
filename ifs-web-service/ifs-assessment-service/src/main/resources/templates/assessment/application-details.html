@@ -4,12 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" />
     </head>
 
-    <body th:with="context='assessment'" class="assessment assessment-details">
+    <body class="assessment assessment-details">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
             <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.questionShortName},subTitle=${applicationName},size='heading-xlarge'" />
@@ -29,5 +28,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>
