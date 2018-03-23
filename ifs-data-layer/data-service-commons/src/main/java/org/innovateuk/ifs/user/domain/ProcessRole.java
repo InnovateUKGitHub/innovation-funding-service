@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 
 import javax.persistence.*;
 
@@ -20,8 +21,7 @@ public class ProcessRole {
 
     private Long applicationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="roleId", referencedColumnName="id")
+    @Column(name = "role_id")
     private Role role;
 
     private Long organisationId;

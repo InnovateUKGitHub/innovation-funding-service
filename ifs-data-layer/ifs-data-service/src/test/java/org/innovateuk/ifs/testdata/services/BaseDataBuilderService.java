@@ -2,8 +2,8 @@ package org.innovateuk.ifs.testdata.services;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.transactional.QuestionService;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -11,6 +11,7 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.getLoggedInUser;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 
 /**
  * This base class represents a service that {@link org.innovateuk.ifs.testdata.BaseGenerateTestData} uses to generate
@@ -69,7 +69,7 @@ public abstract class BaseDataBuilderService {
     }
 
     protected UserResource systemRegistrar() {
-        return newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build();
+        return newUserResource().withRolesGlobal(asList(Role.SYSTEM_REGISTRATION_USER)).build();
     }
 
     private <T> T doAs(UserResource user, Supplier<T> action) {

@@ -9,18 +9,15 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
-import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -57,11 +54,11 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
@@ -109,8 +106,6 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         Profile profile = newProfile().withId(profileId).build();
         User user = newUser().withId(userId).withProfileId(profile.getId()).build();
-
-        assessorRole = newRole().withName(UserRoleType.ASSESSOR.getName()).build();
 
         UserResource senderResource = newUserResource().withId(-1L).withUID(UID).build();
         User sender = newUser().withId(-1L).withUid(UID).build();
@@ -650,6 +645,48 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
         inOrder.verify(interviewInviteRepositoryMock).getByHash(INVITE_HASH);
         inOrder.verify(interviewInviteRepositoryMock).save(isA(InterviewInvite.class));
         inOrder.verify(interviewInviteMapperMock).mapToResource(isA(InterviewInvite.class));
+        inOrder.verifyNoMoreInteractions();
+    }
+    
+    @Test
+    public void acceptInvite() {
+        String openedInviteHash = "openedInviteHash";
+        Competition competition = newCompetition().build();
+        InterviewParticipant interviewParticipant = newInterviewParticipant()
+                .withInvite(newInterviewInvite().withStatus(OPENED))
+                .withUser(newUser())
+                .withCompetition(competition)
+                .build();
+
+        when(interviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(interviewParticipant);
+
+        service.acceptInvite(openedInviteHash).getSuccess();
+
+        assertEquals(ParticipantStatus.ACCEPTED, interviewParticipant.getStatus());
+
+        InOrder inOrder = inOrder(interviewParticipantRepositoryMock);
+        inOrder.verify(interviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void acceptInvite_existingApplicationsOnPanel() {
+        String openedInviteHash = "openedInviteHash";
+        Competition competition = newCompetition().build();
+        InterviewParticipant interviewParticipant = newInterviewParticipant()
+                .withInvite(newInterviewInvite().withStatus(OPENED))
+                .withUser(newUser())
+                .withCompetition(competition)
+                .build();
+
+        when(interviewParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(interviewParticipant);
+
+        service.acceptInvite(openedInviteHash).getSuccess();
+
+        assertEquals(ParticipantStatus.ACCEPTED, interviewParticipant.getStatus());
+
+        InOrder inOrder = inOrder(interviewParticipantRepositoryMock);
+        inOrder.verify(interviewParticipantRepositoryMock).getByInviteHash(openedInviteHash);
         inOrder.verifyNoMoreInteractions();
     }
 

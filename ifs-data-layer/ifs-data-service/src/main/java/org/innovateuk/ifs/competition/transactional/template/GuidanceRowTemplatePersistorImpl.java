@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
-import org.innovateuk.ifs.application.domain.GuidanceRow;
-import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
+import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

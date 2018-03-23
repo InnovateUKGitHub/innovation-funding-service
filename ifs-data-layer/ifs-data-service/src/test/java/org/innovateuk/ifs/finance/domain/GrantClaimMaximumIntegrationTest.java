@@ -20,9 +20,8 @@ import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +39,6 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 
@@ -197,8 +195,7 @@ public class GrantClaimMaximumIntegrationTest extends BaseIntegrationTest {
 
     private CompetitionData createApcCompetition(String researchCategory) {
 
-        RoleResource adminRole = newRoleResource().withType(UserRoleType.IFS_ADMINISTRATOR).build();
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(adminRole)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR)).build());
 
         CompetitionData competitionCreation = competitionDataBuilder.
                 createCompetition().

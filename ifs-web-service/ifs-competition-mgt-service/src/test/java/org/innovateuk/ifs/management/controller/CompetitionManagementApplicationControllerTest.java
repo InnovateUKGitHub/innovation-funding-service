@@ -16,7 +16,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.management.form.ReinstateIneligibleApplicationForm;
 import org.innovateuk.ifs.management.model.ApplicationOverviewIneligibilityModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationTeamModelPopulator;
@@ -26,11 +26,7 @@ import org.innovateuk.ifs.management.viewmodel.ApplicationOverviewIneligibilityV
 import org.innovateuk.ifs.management.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.management.viewmodel.ReinstateIneligibleApplicationViewModel;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -65,13 +61,11 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -116,7 +110,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
     @Test
     public void displayApplicationOverviewAsCompAdmin() throws Exception {
-        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
@@ -682,7 +676,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
         UserRoleType.internalRoles().forEach(role -> {
             try {
-                setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+                setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
                 Long formInputId = 35L;
                 long processRoleId = role.ordinal(); // mapping role ordinal as process role (just for mocking)
                 List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
@@ -716,7 +710,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void downloadAsPartner() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.PARTNER.getName()).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(Role.PARTNER)).build();
         setLoggedInUser(user);
 
         Long formInputId = 35L;
@@ -744,7 +738,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void downloadAsPartnerFileDetailsNotFound() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.PARTNER.getName()).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(Role.PARTNER)).build();
         setLoggedInUser(user);
 
         Long formInputId = 35L;
@@ -767,7 +761,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     public void downloadAsPartnerFileNotFound() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(RoleResourceBuilder.newRoleResource().withName(UserRoleType.PARTNER.getName()).build())).build();
+        UserResource user = newUserResource().withRolesGlobal(Collections.singletonList(Role.PARTNER)).build();
         setLoggedInUser(user);
 
         Long formInputId = 35L;
@@ -785,7 +779,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
     @Test
     public void displayApplicationOverviewAsSupport() throws Exception {
-        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build());
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
@@ -804,7 +798,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
     @Test
     public void displayApplicationOverviewAsInnovationLead() throws Exception {
-        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build());
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();

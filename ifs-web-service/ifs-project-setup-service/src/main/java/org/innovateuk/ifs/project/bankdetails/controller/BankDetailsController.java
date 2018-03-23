@@ -144,7 +144,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         }
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
-        form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());

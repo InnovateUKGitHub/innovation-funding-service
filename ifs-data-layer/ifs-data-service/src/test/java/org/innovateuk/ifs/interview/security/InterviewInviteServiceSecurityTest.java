@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.junit.Before;
@@ -23,9 +24,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewInviteService> {
@@ -120,12 +121,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
     @Test
     public void getAllInvitesByUser() throws Exception {
         UserResource assessorUserResource = newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                        .withType(ASSESSOR)
-                        .withId(1L)
-                        .build())
-                        )
+                .withRolesGlobal(singletonList(Role.ASSESSOR))
                 .build();
         when(userLookupStrategies.findById(1L)).thenReturn(assessorUserResource);
 
@@ -134,6 +130,76 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
                 () -> {
                     verify(interviewInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(interviewInvitePermissionRules);
+                }
+        );
+    }
+
+
+    @Test
+    public void acceptInvite() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
+
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
+                .thenReturn(interviewParticipantResource);
+        when(interviewParticipantPermissionRules.userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource))
+                .thenReturn(true);
+
+        setLoggedInUser(assessorUserResource);
+
+        classUnderTest.acceptInvite("hash");
+
+        verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+        verify(interviewParticipantPermissionRules, only()).userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource);
+    }
+
+    @Test
+    public void acceptInvite_notLoggedIn() {
+        setLoggedInUser(null);
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+                    verifyZeroInteractions(interviewParticipantPermissionRules);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_notSameUser() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
+                .thenReturn(interviewParticipantResource);
+        when(interviewParticipantPermissionRules.userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource))
+                .thenReturn(false);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+                    verify(interviewParticipantPermissionRules, only()).userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_hashNotExists() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash not exists")).thenReturn(null);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash not exists"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash not exists");
+                    verifyZeroInteractions(interviewParticipantPermissionRules);
                 }
         );
     }
@@ -209,6 +275,16 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
         @Override
         public ServiceResult<InterviewInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> acceptInvite(String inviteHash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> rejectInvite(String inviteHash) {
             return null;
         }
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
-import org.innovateuk.ifs.application.domain.Section;
-import org.innovateuk.ifs.application.repository.SectionRepository;
+import org.innovateuk.ifs.form.domain.Section;
+import org.innovateuk.ifs.form.repository.SectionRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

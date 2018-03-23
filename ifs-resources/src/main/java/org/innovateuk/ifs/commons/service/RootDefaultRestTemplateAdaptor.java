@@ -13,6 +13,13 @@ import org.springframework.stereotype.Component;
  */
 public class RootDefaultRestTemplateAdaptor extends AbstractInternalRestTemplateAdaptor {
 
+    public RootDefaultRestTemplateAdaptor() {
+    }
+
+    public RootDefaultRestTemplateAdaptor(String baseUrl) {
+        super(baseUrl);
+    }
+
     @Override
     protected void setAuthenticationToken(HttpHeaders headers) {
         if (SecurityContextHolder.getContext() != null &&

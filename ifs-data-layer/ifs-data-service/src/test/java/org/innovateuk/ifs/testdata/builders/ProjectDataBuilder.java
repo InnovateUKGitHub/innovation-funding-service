@@ -11,8 +11,8 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +111,7 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
     }
 
     private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRolesName(UserRoleType.PROJECT_FINANCE.getName());
+        List<User> projectFinanceUsers = userRepository.findByRoles(Role.PROJECT_FINANCE);
         return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 

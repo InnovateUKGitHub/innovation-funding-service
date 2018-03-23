@@ -30,7 +30,7 @@
 
 
 <main id="content">
-  <th:block th:insert="fragments/layout :: main-content-start" />
+
   <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications'}, ${'/prototypes/5052-view-applications'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
   <!-- HARDCODED PROTOTYPE HTML -->
 

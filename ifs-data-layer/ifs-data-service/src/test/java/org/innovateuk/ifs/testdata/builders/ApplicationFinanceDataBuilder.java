@@ -2,7 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
@@ -117,7 +117,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     boolean lastElement = i == questions.size() - 1;
 
                     if (lastElement && updateApplicationCompleteStatus) {
-                        questionService.markAsComplete(questionKey, processRoleId).getSuccess();
+                        questionStatusService.markAsComplete(questionKey, processRoleId).getSuccess();
                     } else {
                         testQuestionService.markAsCompleteWithoutApplicationCompletionStatusUpdate(questionKey, processRoleId).getSuccess();
                     }
