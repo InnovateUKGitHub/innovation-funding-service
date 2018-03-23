@@ -4,12 +4,11 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Reinstate ineligible application',hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
-<body th:with="context='assessment'" class="assessment-submit-confirm">
+<body class="assessment-submit-confirm">
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"/>
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId},origin='INELIGIBLE_APPLICATIONS')}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Reinstate application',subTitle=${model.applicationName},size='heading-xlarge'" />
 
@@ -36,5 +35,6 @@
 
 <th:block th:insert="fragments/layout :: footer"/>
 <th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

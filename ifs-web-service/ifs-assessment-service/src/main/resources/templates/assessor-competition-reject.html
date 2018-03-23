@@ -4,12 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Thank you'" />
     </head>
 
-    <body th:with="context='assessment'" class="app-dashboard">
+    <body class="app-dashboard">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Thank you',size='heading-large'" />
             <p>Thank you for letting us know you are unable to assess applications within this competition.</p>
             <p>We hope that you will be able to assess for us in the future.</p>
@@ -19,5 +18,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

@@ -12,7 +12,7 @@
 
 
 <main id="content">
-	<th:block th:insert="fragments/layout :: main-content-start" />
+
 
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Your skills'}, ${(param.edit == null ? '/prototypes/1176-assessor-create-acc' : '/prototypes/1178-assessor-profile-skills')})"  th:unless="${param.version != null and param.version[0] == 'v2'}" />
 

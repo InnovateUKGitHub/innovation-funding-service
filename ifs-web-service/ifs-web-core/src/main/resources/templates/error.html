@@ -10,8 +10,6 @@
 <th:block th:insert="fragments/layout :: global-header" th:with="hidePropositionLinks=true" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <h1 class="heading-large" th:if="${title != null}" th:text="${title}">Internal Server Error</h1>
     <h1 class="heading-large" th:unless="${title != null}">Internal Server Error</h1>
 
