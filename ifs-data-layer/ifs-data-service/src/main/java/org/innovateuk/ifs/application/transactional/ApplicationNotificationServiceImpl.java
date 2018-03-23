@@ -83,7 +83,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     }
 
                     applicationRepository.save(application);
-                    String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
+                    String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
                     String bodyHtml = plainTextToHtml(bodyPlain);
 
                     NotificationTarget recipient = new ExternalUserNotificationTarget(
