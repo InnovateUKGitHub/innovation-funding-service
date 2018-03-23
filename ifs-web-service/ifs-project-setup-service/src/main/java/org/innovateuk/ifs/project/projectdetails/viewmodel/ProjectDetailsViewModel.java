@@ -30,7 +30,7 @@ public class ProjectDetailsViewModel {
     private OrganisationResource leadOrganisation;
     private ApplicationResource app;
     private CompetitionResource competition;
-    private boolean projectDetailsCompleteAndAllFinanceContactsAssigned;
+    private boolean allProjectDetailsFinanceContactsAndProjectLocationsAssigned;
 
     private boolean monitoringOfficerAssigned;
     private boolean spendProfileGenerated;
@@ -50,7 +50,7 @@ public class ProjectDetailsViewModel {
                                    List<ProjectUserResource> projectUsers,
                                    CompetitionResource competition,
                                    boolean userIsLeadPartner,
-                                   boolean projectDetailsCompleteAndAllFinanceContactsAssigned,
+                                   boolean allProjectDetailsFinanceContactsAndProjectLocationsAssigned,
                                    ProjectUserResource projectManager,
                                    boolean monitoringOfficerAssigned,
                                    boolean spendProfileGenerated,
@@ -64,7 +64,7 @@ public class ProjectDetailsViewModel {
         this.leadOrganisation = leadOrganisation;
         this.app = app;
         this.competition = competition;
-        this.projectDetailsCompleteAndAllFinanceContactsAssigned = projectDetailsCompleteAndAllFinanceContactsAssigned;
+        this.allProjectDetailsFinanceContactsAndProjectLocationsAssigned = allProjectDetailsFinanceContactsAndProjectLocationsAssigned;
         this.monitoringOfficerAssigned = monitoringOfficerAssigned;
         this.spendProfileGenerated = spendProfileGenerated;
         this.grantOfferLetterGenerated = grantOfferLetterGenerated;
@@ -129,8 +129,8 @@ public class ProjectDetailsViewModel {
 
     public boolean isReadOnly() { return readOnlyView; }
 
-    public boolean isProjectDetailsCompleteAndAllFinanceContactsAssigned() {
-        return projectDetailsCompleteAndAllFinanceContactsAssigned;
+    public boolean isAllProjectDetailsFinanceContactsAndProjectLocationsAssigned() {
+        return allProjectDetailsFinanceContactsAndProjectLocationsAssigned;
     }
 
     public boolean isMonitoringOfficerAssigned() {

@@ -35,6 +35,10 @@ class SetupProgressChecker {
         return COMPLETE.equals(getMatchingPartnerStatus(organisation).getFinanceContactStatus());
     }
 
+    public boolean isPartnerProjectLocationSubmitted(OrganisationResource organisation) {
+        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getPartnerProjectLocationStatus());
+    }
+
     public boolean isBankDetailsApproved(OrganisationResource organisation) {
         return asList(COMPLETE, NOT_REQUIRED).contains(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }

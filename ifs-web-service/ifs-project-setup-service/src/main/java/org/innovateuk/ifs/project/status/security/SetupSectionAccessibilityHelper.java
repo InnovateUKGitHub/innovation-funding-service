@@ -260,6 +260,10 @@ public class SetupSectionAccessibilityHelper {
         return setupProgressChecker.isFinanceContactSubmitted(organisationResource);
     }
 
+    public boolean isPartnerProjectLocationSubmitted(OrganisationResource organisationResource) {
+        return setupProgressChecker.isPartnerProjectLocationSubmitted(organisationResource);
+    }
+
     private boolean isBankDetailsApproved(OrganisationResource organisation) {
         return setupProgressChecker.isBankDetailsApproved(organisation);
     }

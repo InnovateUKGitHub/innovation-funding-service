@@ -387,6 +387,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         boolean isLead = partnerOrganisation.equals(leadOrganisation);
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates partnerProjectLocationStatus = createPartnerProjectLocationStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
         ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
@@ -412,6 +413,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 otherDocumentsStatus,
                 grantOfferLetterStatus,
                 financeContactStatus,
+                partnerProjectLocationStatus,
                 grantOfferLetterSentToProjectTeam,
                 isLead);
     }

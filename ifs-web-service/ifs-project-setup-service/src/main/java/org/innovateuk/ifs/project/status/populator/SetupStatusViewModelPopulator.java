@@ -50,6 +50,7 @@ public class SetupStatusViewModelPopulator {
         ApplicationResource applicationResource = applicationService.getById(project.getApplication());
         CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
 
+        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
         Optional<MonitoringOfficerResource> monitoringOfficer = monitoringOfficerService.getMonitoringOfficerForProject(projectId);
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
@@ -60,8 +61,11 @@ public class SetupStatusViewModelPopulator {
         boolean isLeadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
         boolean isProjectManager = projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false);
         boolean isProjectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
-        boolean isProjectDetailsProcessCompleted = isLeadPartner ? checkLeadPartnerProjectDetailsProcessCompleted(teamStatus) : statusAccessor.isFinanceContactSubmitted(organisation);
-        boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(teamStatus);
+
+        boolean isProjectDetailsProcessCompleted = isLeadPartner ? checkLeadPartnerProjectDetailsProcessCompleted(teamStatus, partnerProjectLocationRequired)
+                : partnerProjectDetailsComplete(statusAccessor, organisation, partnerProjectLocationRequired);
+
+        boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(teamStatus, partnerProjectLocationRequired);
 
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
         SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
@@ -88,25 +92,48 @@ public class SetupStatusViewModelPopulator {
                 partnerOrganisationCount > 1, isProjectManager);
     }
 
-    public boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {
+    private boolean partnerProjectDetailsComplete(SetupSectionAccessibilityHelper statusAccessor, OrganisationResource organisation, boolean partnerProjectLocationRequired) {
+        boolean financeContactSubmitted = statusAccessor.isFinanceContactSubmitted(organisation);
 
-        ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
-
-        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
-                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                && allOtherPartnersFinanceContactStatusComplete(teamStatus);
+        return partnerProjectLocationRequired ? financeContactSubmitted && statusAccessor.isPartnerProjectLocationSubmitted(organisation)
+                : financeContactSubmitted;
     }
 
-    private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus) {
+    public boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
 
         ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
 
-        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+        boolean projectDetailsAndAllFinanceContactComplete =  COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
                 && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
+                && allOtherPartnersFinanceContactStatusComplete(teamStatus);
+
+        return partnerProjectLocationRequired ? projectDetailsAndAllFinanceContactComplete
+                                                && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
+                                                && allOtherPartnersProjectLocationStatusComplete(teamStatus)
+                : projectDetailsAndAllFinanceContactComplete;
+    }
+
+    private boolean awaitingProjectDetailsActionFromOtherPartners(ProjectTeamStatusResource teamStatus, boolean partnerProjectLocationRequired) {
+
+        ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
+
+        if (partnerProjectLocationRequired) {
+            return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                    && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                    && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
+                    && (!allOtherPartnersFinanceContactStatusComplete(teamStatus) || !allOtherPartnersProjectLocationStatusComplete(teamStatus));
+        } else {
+            return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                    && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                    && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
+        }
     }
 
     private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getFinanceContactStatus()));
+    }
+
+    private boolean allOtherPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
     }
 }

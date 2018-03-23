@@ -113,6 +113,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+        boolean partnerProjectLocationRequired = competitionResource.isLocationPerPartner();
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -120,7 +121,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
 
         List<PartnerOrganisationResource> partnerOrganisations = null;
-        if (competitionResource.isLocationPerPartner()) {
+        if (partnerProjectLocationRequired) {
             partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess();
         }
 
@@ -129,12 +130,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
         boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
 
-        boolean projectDetailsCompleteAndAllFinanceContactsAssigned = setupStatusViewModelPopulator.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus);
+        boolean allProjectDetailsFinanceContactsAndProjectLocationsAssigned = setupStatusViewModelPopulator.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus, partnerProjectLocationRequired);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 organisations, partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
-                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsCompleteAndAllFinanceContactsAssigned,
+                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), allProjectDetailsFinanceContactsAndProjectLocationsAssigned,
                 getProjectManager(projectResource.getId()).orElse(null), monitoringOfficerAssigned, spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
 
         return "project/detail";
