@@ -83,11 +83,57 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.getErrors().size()).isEqualTo(2);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
-                        error.getErrorKey().equals("javax.validation.constraints.NotNull.message"))
+                        error.getErrorKey().equals("validation.field.must.not.be.blank"))
                 .isNotEmpty();
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
-                        error.getErrorKey().equals("javax.validation.constraints.NotNull.message"))
+                        error.getErrorKey().equals("validation.field.must.not.be.blank"))
+                .isNotEmpty();
+
+        verifyZeroInteractions(competitionSetupRestServiceMock);
+    }
+
+    @Test
+    public void doSaveSection_negativeProjectDurationsReturnEmptyFieldErrorsWhenFormIsEmpty() {
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setMaxProjectDuration(new BigDecimal(-1));
+        applicationDetailsForm.setMinProjectDuration(new BigDecimal(-1));
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
+
+        assertThat(result.isFailure()).isTrue();
+        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
+                .isNotEmpty();
+
+        verifyZeroInteractions(competitionSetupRestServiceMock);
+    }
+
+    @Test
+    public void doSaveSection_decimalsInProjectDurationsReturnTypeErrorsWhenFormIsEmpty() {
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setMinProjectDuration(new BigDecimal(3.5));
+        applicationDetailsForm.setMaxProjectDuration(new BigDecimal(3.5));
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
+
+        assertThat(result.isFailure()).isTrue();
+        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
+                        error.getErrorKey().equals("validation.standard.integer.non.decimal.format"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
+                        error.getErrorKey().equals("validation.standard.integer.non.decimal.format"))
                 .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);

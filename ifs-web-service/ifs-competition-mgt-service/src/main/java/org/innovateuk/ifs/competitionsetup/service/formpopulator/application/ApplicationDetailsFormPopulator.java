@@ -25,10 +25,14 @@ public class ApplicationDetailsFormPopulator implements CompetitionSetupSubsecti
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 		ApplicationDetailsForm competitionSetupForm = new ApplicationDetailsForm();
 
-		competitionSetupForm.setMaxProjectDuration(BigDecimal.valueOf(competitionResource.getMaxProjectDuration()));
-		competitionSetupForm.setMinProjectDuration(BigDecimal.valueOf(competitionResource.getMinProjectDuration()));
+		competitionSetupForm.setMaxProjectDuration(convertIntegerToBigDecimal(competitionResource.getMaxProjectDuration()));
+		competitionSetupForm.setMinProjectDuration(convertIntegerToBigDecimal(competitionResource.getMinProjectDuration()));
 		competitionSetupForm.setUseResubmissionQuestion(competitionResource.isUseResubmissionQuestion());
 
 		return competitionSetupForm;
+	}
+
+	private BigDecimal convertIntegerToBigDecimal(Integer integer) {
+		return integer != null ? BigDecimal.valueOf(integer) : null; // Null safe conversion
 	}
 }
