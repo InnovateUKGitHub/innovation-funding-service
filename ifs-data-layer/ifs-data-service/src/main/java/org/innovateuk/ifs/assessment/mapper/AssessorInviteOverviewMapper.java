@@ -38,8 +38,7 @@ public class AssessorInviteOverviewMapper {
     public AssessorInviteOverviewMapper(
             ParticipantStatusMapper participantStatusMapper,
             ProfileRepository profileRepository,
-            InnovationAreaMapper innovationAreaMapper
-    ) {
+            InnovationAreaMapper innovationAreaMapper) {
         this.participantStatusMapper = participantStatusMapper;
         this.profileRepository = profileRepository;
         this.innovationAreaMapper = innovationAreaMapper;
