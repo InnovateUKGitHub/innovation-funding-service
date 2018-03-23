@@ -13,7 +13,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Interviews you have agreed to attend'}, ${(param.status != null ? '/prototypes/IFS-2254-apps-for-interview?status=' + param.status[0]:'/prototypes/IFS-2254-apps-for-interview')})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
