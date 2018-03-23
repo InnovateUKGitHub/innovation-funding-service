@@ -127,6 +127,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
         boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
+        boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
 
         boolean projectDetailsCompleteAndAllFinanceContactsAssigned = setupStatusViewModelPopulator.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus);
 
@@ -134,7 +135,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 organisations, partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsCompleteAndAllFinanceContactsAssigned,
-                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
+                getProjectManager(projectResource.getId()).orElse(null), monitoringOfficerAssigned, spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
 
         return "project/detail";
     }
@@ -161,12 +162,13 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
         boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
+        boolean monitoringOfficerAssigned = statusAccessor.isMonitoringOfficerAssigned();
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 organisations, partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true, true));
+                getProjectManager(projectResource.getId()).orElse(null), monitoringOfficerAssigned, spendProfileGenerated, true, true));
 
         return "project/detail";
     }
@@ -179,15 +181,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) FinanceContactForm financeContactForm,
                                      UserResource loggedInUser) {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
-    @GetMapping("/{projectId}/details/location")
-    public String viewProjectLocation(@PathVariable("projectId") final Long projectId,
-                                      @RequestParam(value="organisation",required=false) Long organisation,
-                                      Model model,
-                                      UserResource loggedInUser) {
-        return "project/location";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
@@ -208,7 +201,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    //TODO - ZZZ - @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")
     @GetMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
     public String viewPartnerProjectLocation(@PathVariable("projectId") final Long projectId,
                                              @PathVariable("organisationId") final Long organisationId,
@@ -236,7 +229,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/partner-project-location";
     }
 
-    //TODO - ZZZ - @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")
     @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
     public String updatePartnerProjectLocation(@PathVariable("projectId") final Long projectId,
                                                @PathVariable("organisationId") final Long organisationId,
