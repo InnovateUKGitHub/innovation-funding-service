@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Thank you for submitting your application'" />
 </head>
-<body th:with="context='applicant'" class="app-submitted">
+<body class="app-submitted">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
      <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=|${currentApplication.id} : ${currentApplication.name}|,size='heading-xlarge'" />
@@ -84,5 +83,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

@@ -4,13 +4,12 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+<body class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{(${backUrl.contains(T(org.innovateuk.ifs.management.service.CompetitionManagementApplicationService).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+backUrl} : ${backUrl})})" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -129,5 +128,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

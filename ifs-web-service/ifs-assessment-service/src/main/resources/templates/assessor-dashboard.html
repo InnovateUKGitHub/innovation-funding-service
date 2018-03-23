@@ -4,13 +4,11 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor dashboard'" />
 </head>
 
-    <body th:with="context='assessment'" class="assessor-dashboard">
+    <body class="assessor-dashboard">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
-
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor dashboard',size='heading-xlarge'" />
             <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
                 <h2 class="heading-small no-margin">Complete your assessor account</h2>
@@ -275,5 +273,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>
