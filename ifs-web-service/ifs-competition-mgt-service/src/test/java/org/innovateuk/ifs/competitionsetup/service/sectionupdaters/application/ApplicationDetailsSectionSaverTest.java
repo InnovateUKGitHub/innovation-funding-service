@@ -16,6 +16,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Matchers.any;
@@ -52,8 +54,8 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_validInputIsMappedProperlyAndResultsInUpdateRestCall() {
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
-        applicationDetailsForm.setMinProjectDuration(9);
-        applicationDetailsForm.setMaxProjectDuration(10);
+        applicationDetailsForm.setMinProjectDuration(new BigDecimal(9));
+        applicationDetailsForm.setMaxProjectDuration(new BigDecimal(10));
         applicationDetailsForm.setUseResubmissionQuestion(true);
 
         when(competitionSetupRestServiceMock.update(any())).thenReturn(RestResult.restSuccess());
@@ -96,8 +98,8 @@ public class ApplicationDetailsSectionSaverTest {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
 
-        applicationDetailsForm.setMinProjectDuration(10);
-        applicationDetailsForm.setMaxProjectDuration(10);
+        applicationDetailsForm.setMinProjectDuration(new BigDecimal(10));
+        applicationDetailsForm.setMaxProjectDuration(new BigDecimal(10));
 
         when(competitionSetupRestServiceMock.update(any())).thenReturn(RestResult.restSuccess());
 
@@ -113,8 +115,8 @@ public class ApplicationDetailsSectionSaverTest {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
 
-        applicationDetailsForm.setMinProjectDuration(11);
-        applicationDetailsForm.setMaxProjectDuration(10);
+        applicationDetailsForm.setMinProjectDuration(new BigDecimal(11));
+        applicationDetailsForm.setMaxProjectDuration(new BigDecimal(10));
 
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 

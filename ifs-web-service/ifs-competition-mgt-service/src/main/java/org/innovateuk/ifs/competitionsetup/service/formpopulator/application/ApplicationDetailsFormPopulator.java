@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsFo
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 /**
@@ -24,8 +25,8 @@ public class ApplicationDetailsFormPopulator implements CompetitionSetupSubsecti
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 		ApplicationDetailsForm competitionSetupForm = new ApplicationDetailsForm();
 
-		competitionSetupForm.setMaxProjectDuration(competitionResource.getMaxProjectDuration());
-		competitionSetupForm.setMinProjectDuration(competitionResource.getMinProjectDuration());
+		competitionSetupForm.setMaxProjectDuration(BigDecimal.valueOf(competitionResource.getMaxProjectDuration()));
+		competitionSetupForm.setMinProjectDuration(BigDecimal.valueOf(competitionResource.getMinProjectDuration()));
 		competitionSetupForm.setUseResubmissionQuestion(competitionResource.isUseResubmissionQuestion());
 
 		return competitionSetupForm;

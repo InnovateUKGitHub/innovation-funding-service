@@ -56,8 +56,8 @@ public class ApplicationDetailsSectionSaver extends AbstractSectionSaver impleme
 		}
 		else {
 			competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
-			competition.setMaxProjectDuration(form.getMaxProjectDuration());
-			competition.setMinProjectDuration(form.getMinProjectDuration());
+			competition.setMaxProjectDuration(Integer.valueOf(form.getMaxProjectDuration().intValue()));
+			competition.setMinProjectDuration(Integer.valueOf(form.getMinProjectDuration().intValue()));
 			return competitionSetupRestService.update(competition).toServiceResult();
 		}
 	}

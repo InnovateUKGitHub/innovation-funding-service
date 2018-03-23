@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.competitionsetup.form.application;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.function.BiPredicate;
+
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowItem.MAX_DIGITS;
 
 @FieldComparison(
         firstField = "maxProjectDuration",
@@ -19,27 +24,31 @@ import java.util.function.BiPredicate;
         predicate = ApplicationDetailsForm.MinExceedsMaxPredicateProvider.class)
 public class ApplicationDetailsForm extends CompetitionSetupForm {
 
-    @NotEmpty(message="{validation.field.must.not.be.blank}")
-    private Integer minProjectDuration;
+    @NotNull(message = "{validation.field.must.not.be.blank}")
+    @DecimalMin(value = "1", message = "{competition.setup.applicationdetails.projectduration.min}")
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = "{validation.standard.integer.non.decimal.format}")
+    private BigDecimal minProjectDuration;
 
-    @NotEmpty(message="{validation.field.must.not.be.blank}")
-    private Integer maxProjectDuration;
+    @NotNull(message = "{validation.field.must.not.be.blank}")
+    @DecimalMin(value = "1", message = "{competition.setup.applicationdetails.projectduration.min}")
+    @Digits(integer = MAX_DIGITS, fraction = 0, message = "{validation.standard.integer.non.decimal.format}")
+    private BigDecimal maxProjectDuration;
 
     private boolean useResubmissionQuestion;
 
-    public Integer getMinProjectDuration() {
+    public BigDecimal getMinProjectDuration() {
         return minProjectDuration;
     }
 
-    public void setMinProjectDuration(Integer minProjectDuration) {
+    public void setMinProjectDuration(BigDecimal minProjectDuration) {
         this.minProjectDuration = minProjectDuration;
     }
 
-    public Integer getMaxProjectDuration() {
+    public BigDecimal getMaxProjectDuration() {
         return maxProjectDuration;
     }
 
-    public void setMaxProjectDuration(Integer maxProjectDuration) {
+    public void setMaxProjectDuration(BigDecimal maxProjectDuration) {
         this.maxProjectDuration = maxProjectDuration;
     }
 
@@ -51,19 +60,19 @@ public class ApplicationDetailsForm extends CompetitionSetupForm {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-    public static class MaxBeneathMinPredicateProvider implements BiPredicateProvider<Integer, Integer> {
+    public static class MaxBeneathMinPredicateProvider implements BiPredicateProvider<BigDecimal, BigDecimal> {
         public MaxBeneathMinPredicateProvider() { }
 
-        public BiPredicate<Integer, Integer> predicate() {
-            return (max, min) -> max >= min;
+        public BiPredicate<BigDecimal, BigDecimal> predicate() {
+            return (max, min) -> max.compareTo(min) >= 0;
         }
     }
 
-    public static class MinExceedsMaxPredicateProvider implements BiPredicateProvider<Integer, Integer> {
+    public static class MinExceedsMaxPredicateProvider implements BiPredicateProvider<BigDecimal, BigDecimal> {
         public MinExceedsMaxPredicateProvider() { }
 
-        public BiPredicate<Integer, Integer> predicate() {
-            return (min, max) -> min <= max;
+        public BiPredicate<BigDecimal, BigDecimal> predicate() {
+            return (min, max) -> min.compareTo(max) <= 0;
         }
     }
 }
