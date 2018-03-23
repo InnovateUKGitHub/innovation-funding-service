@@ -13,13 +13,10 @@
 <th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/IFS-2249-dashboard'})"
-    />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/IFS-2249-dashboard'})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Technology inspired'}, ${'Feedback overview'}, ${null})"
-    />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Technology inspired'}, ${'Feedback overview'}, ${null})" />
 
     <!-- <div class="success-alert">
     <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
