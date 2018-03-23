@@ -227,6 +227,6 @@ public class AssessorInviteOverviewMapperTest {
                 assessorInviteOverviewMapper.mapToResource(competitionParticipant);
 
         assertThat(assessorInviteOverviewResource.getStatus()).isEqualTo(ParticipantStatusResource.REJECTED);
-        assertThat(assessorInviteOverviewResource.getDetails()).isEqualTo("Invite declined as could not attend");
+        assertThat(assessorInviteOverviewResource.getDetails()).isEqualTo("Invite declined: could not attend");
     }
 }
