@@ -21,7 +21,7 @@ def do_keyword_with_pagination(keyword, *args):
 
     keyword_succeeded = wait_until.run_keyword_and_return_status_without_screenshots(keyword, *args)
 
-    if keyword_succeeded == True:
+    if keyword_succeeded:
 
         return 'PASS'
 
@@ -29,7 +29,7 @@ def do_keyword_with_pagination(keyword, *args):
 
         next_button_clicked = wait_until.run_keyword_and_return_status_without_screenshots('The user clicks the button/link', 'css=li.next a')
 
-        if next_button_clicked == False:
+        if not next_button_clicked:
             return 'FAIL'
         else:
             return do_keyword_with_pagination(keyword, *args)
@@ -43,7 +43,7 @@ def do_keyword_with_pagination_and_ignore_error(keyword, *args):
 
     keyword_succeeded = wait_until.run_keyword_and_return_status_without_screenshots(keyword, *args)
 
-    if keyword_succeeded == True:
+    if keyword_succeeded:
 
         return True
 
@@ -51,7 +51,7 @@ def do_keyword_with_pagination_and_ignore_error(keyword, *args):
 
         next_button_clicked = wait_until.run_keyword_and_return_status_without_screenshots('The user clicks the button/link', 'css=li.next a')
 
-        if next_button_clicked == False:
+        if not next_button_clicked:
             return False
         else:
             return do_keyword_with_pagination_and_ignore_error(keyword, *args)
