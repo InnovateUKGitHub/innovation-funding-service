@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.interview.controller;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsSendModelPopulator;
+import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsSendViewModel;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +19,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.function.Supplier;
+
+import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.rest.RestFailure.error;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 
 /**
  * This controller will handle all Competition Management requests related to sending interview panel invites to assessors
@@ -29,6 +37,9 @@ public class InterviewApplicationSendInviteController {
 
     @Autowired
     private InterviewAssignmentApplicationsSendModelPopulator interviewAssignmentApplicationsSendModelPopulator;
+
+    @Autowired
+    private InterviewAssignmentRestService interviewAssignmentRestService;
 
     @GetMapping("/send")
     public String getInvitesToSend(Model model,
@@ -54,11 +65,23 @@ public class InterviewApplicationSendInviteController {
     public String sendInvites(Model model,
                               @PathVariable("competitionId") long competitionId,
                               @ModelAttribute("form") @Valid SendInviteForm form,
+                              @RequestParam MultiValueMap<String, String> queryParams,
                               BindingResult bindingResult,
                               ValidationHandler validationHandler) {
 
+        Supplier<String> failureView = () -> getInvitesToSend(model, competitionId, 0, queryParams, form, bindingResult);
 
-        return "redirect:/";
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<Void> sendResult = interviewAssignmentRestService
+                    .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()));
+
+            return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
+                    .failNowOrSucceedWith(failureView, () -> redirectToFindApplicationTab(competitionId));
+        });
+    }
+
+    private String redirectToFindApplicationTab(long competitionId) {
+        return format("redirect:/assessment/interview/competition/%s/applications/find", competitionId);
     }
 
     private void populateGroupInviteFormWithExistingValues(SendInviteForm form) {

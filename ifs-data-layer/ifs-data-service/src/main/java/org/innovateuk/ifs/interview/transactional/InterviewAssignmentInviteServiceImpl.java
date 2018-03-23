@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
@@ -29,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -107,11 +109,16 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     @Override
-    public ServiceResult<String> getEmailTemplate() {
+    public ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate() {
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_applicants_to_interview_panel_text.txt",
-                Collections.emptyMap());
+                Collections.emptyMap()).andOnSuccessReturn(content -> new ApplicantInterviewInviteResource(content));
+    }
+
+    @Override
+    public ServiceResult<Void> sendInvites(AssessorInviteSendResource assessorInviteSendResource) {
+        return serviceFailure(CommonFailureKeys.ADMIN_INVALID_USER_ROLE);
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {

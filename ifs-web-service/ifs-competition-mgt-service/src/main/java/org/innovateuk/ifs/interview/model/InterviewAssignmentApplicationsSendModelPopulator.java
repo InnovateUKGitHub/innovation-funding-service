@@ -36,7 +36,7 @@ public class InterviewAssignmentApplicationsSendModelPopulator {
                 .getStagedApplications(competition.getId(), page)
                 .getSuccess();
 
-        String content = interviewAssignmentRestService.getEmailTemplate().getSuccess();
+        String content = interviewAssignmentRestService.getEmailTemplate().getSuccess().getContent();
 
 
 

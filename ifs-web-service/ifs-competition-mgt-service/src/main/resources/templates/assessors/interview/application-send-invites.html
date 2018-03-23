@@ -10,8 +10,6 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionName},size='heading-xlarge'" />
 
@@ -57,7 +55,7 @@
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
 
-    <form th:action="@{/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+    <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
         <div class="form-group extra-margin-bottom">
             <label class="form-label-bold" for="subject">Email subject</label>
             <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
