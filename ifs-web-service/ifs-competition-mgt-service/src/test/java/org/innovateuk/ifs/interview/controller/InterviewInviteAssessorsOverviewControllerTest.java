@@ -1,17 +1,16 @@
-package org.innovateuk.ifs.review.controller;
+package org.innovateuk.ifs.interview.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.interview.viewmodel.InterviewInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.review.model.ReviewInviteAssessorsOverviewModelPopulator;
-import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
-import org.innovateuk.ifs.review.viewmodel.ReviewInviteAssessorsOverviewViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -34,7 +33,6 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResour
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
-import static org.innovateuk.ifs.review.builder.ReviewInviteStatisticsResourceBuilder.newReviewInviteStatisticsResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
@@ -46,20 +44,18 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<ReviewInviteAssessorsOverviewController> {
+public class InterviewInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<InterviewInviteAssessorsOverviewController> {
 
     @Spy
     @InjectMocks
-    private ReviewInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private InterviewInviteAssessorsOverviewModelPopulator interviewInviteAssessorsOverviewModelPopulator;
 
     @Override
-    protected ReviewInviteAssessorsOverviewController supplyControllerUnderTest() {
-        return new ReviewInviteAssessorsOverviewController();
+    protected InterviewInviteAssessorsOverviewController supplyControllerUnderTest() {
+        return new InterviewInviteAssessorsOverviewController();
     }
 
     private CompetitionResource competition;
-
-    private ReviewInviteStatisticsResource inviteStatistics;
 
     @Override
     @Before
@@ -74,14 +70,7 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
-        inviteStatistics = newReviewInviteStatisticsResource()
-                .withAssessorsInvited(5)
-                .withAssessorsAccepted(1)
-                .withAssessorsRejected(1)
-                .build();
-
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
     @Test
@@ -95,24 +84,24 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(reviewInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
+        when(interviewInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
                 .thenReturn(restSuccess(pageResource));
-        when(reviewInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
+        when(interviewInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
 
-        MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/pending-and-declined", competition.getId())
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/pending-and-declined", competition.getId())
                 .param("page", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/panel-overview"))
+                .andExpect(view().name("assessors/interview-overview"))
                 .andReturn();
 
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService);
-        inOrder.verify(reviewInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService);
+        inOrder.verify(interviewInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(reviewInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
+        inOrder.verify(interviewInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -137,7 +126,6 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
         assertEquals(expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
         assertInnovationSectorAndArea(expectedCompetition, model);
-        assertStatistics(model);
     }
 
     private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
@@ -145,16 +133,9 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
         assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
-    private void assertStatistics(InviteAssessorsViewModel model) {
-        assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
-        assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
-        assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
-        assertEquals(inviteStatistics.getPending(), model.getAssessorsStaged());
-    }
-
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof ReviewInviteAssessorsOverviewViewModel);
-        ReviewInviteAssessorsOverviewViewModel model = (ReviewInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof InterviewInviteAssessorsOverviewViewModel);
+        InterviewInviteAssessorsOverviewViewModel model = (InterviewInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInviteOverviews.size(), model.getAssessors().size());
 
