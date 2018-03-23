@@ -57,6 +57,6 @@ the competition admin should not see invited assessors on find tab
     And the user should not see the element   jQuery=td:contains("${assessor_joel}")
     And the user should not see the element   jquery=tr:contains("${assessor_madeleine}")
 
-the user move the closed competition to panel
+the user moves the closed competition to panel
     the user clicks the button/link     jQuery=button:contains("Notify assessors")
     the user clicks the button/link     jQuery=button:contains("Close assessment")

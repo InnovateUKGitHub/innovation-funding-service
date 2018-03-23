@@ -196,7 +196,7 @@ Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
     [Tags]
     [Setup]  the user clicks the button/link     link=Competition
-    Given the user move the closed competition to panel
+    Given the user moves the closed competition to panel
     And the user should see the element    jQuery=h1:contains("Panel")
     When the user clicks the button/link   link=Manage assessment panel
     And the user clicks the button/link    link=Assign applications to panel
