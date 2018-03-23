@@ -3,14 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant terms and conditions'" />
 </head>
-<body th:with="context='front-door'" class="grant-terms-conditions">
+<body class="grant-terms-conditions">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Terms and conditions of a Young Innovator’s UK grant award',size='heading-large'" />
 
     <p>These terms and conditions apply to individuals who have applied for grant funding. You must accept these terms and conditions before you can begin to claim any of your grant.</p>

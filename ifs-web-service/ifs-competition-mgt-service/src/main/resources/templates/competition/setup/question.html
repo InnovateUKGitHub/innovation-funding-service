@@ -3,14 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
-<body th:with="context='comp-management'" class="competition-management competition-setup">
+<body class="competition-management competition-setup">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
@@ -64,6 +62,7 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 
 </body>
 </html>
