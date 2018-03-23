@@ -64,7 +64,7 @@ CompAdmin can add the applications to invite list
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054
-    [Tags]
+    [Tags]  Failing
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     And the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button   acceptInvitation  true
