@@ -112,13 +112,13 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
-        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
+        boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
+        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
 
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
 
-        boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
         ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
 
         return new ProjectStatusResource(
@@ -140,12 +140,16 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 golWorkflowHandler.isSent(project));
     }
 
-    private ProjectActivityStates getProjectDetailsStatus(Project project) {
+    private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired) {
         for (Organisation organisation : project.getOrganisations()) {
             Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
             if (financeContact == null || !financeContact.isPresent()) {
                 return PENDING;
             }
+        }
+
+        if (locationPerPartnerRequired && PENDING.equals(getPartnerProjectLocationStatus(project))) {
+            return PENDING;
         }
         return createProjectDetailsCompetitionStatus(project);
     }

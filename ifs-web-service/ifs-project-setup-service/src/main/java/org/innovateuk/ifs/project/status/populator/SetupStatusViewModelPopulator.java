@@ -67,9 +67,11 @@ public class SetupStatusViewModelPopulator {
 
         boolean awaitingProjectDetailsActionFromOtherPartners = isLeadPartner && awaitingProjectDetailsActionFromOtherPartners(teamStatus, partnerProjectLocationRequired);
 
+        boolean requiredProjectDetailsForMonitoringOfficerComplete = requiredProjectDetailsForMonitoringOfficerComplete(partnerProjectLocationRequired, isProjectDetailsSubmitted, teamStatus);
+
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
         SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
-        SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation);
+        SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation, partnerProjectLocationRequired);
         SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
         SectionAccess financeChecksAccess = statusAccessor.canAccessFinanceChecksSection(organisation);
         SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
@@ -77,7 +79,7 @@ public class SetupStatusViewModelPopulator {
         SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
 
         SectionStatus projectDetailsStatus = sectionStatus.projectDetailsSectionStatus(isProjectDetailsProcessCompleted, awaitingProjectDetailsActionFromOtherPartners, isLeadPartner);
-        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), isProjectDetailsSubmitted);
+        SectionStatus monitoringOfficerStatus = sectionStatus.monitoringOfficerSectionStatus(monitoringOfficer.isPresent(), requiredProjectDetailsForMonitoringOfficerComplete);
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
@@ -90,6 +92,16 @@ public class SetupStatusViewModelPopulator {
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
                 projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus,
                 partnerOrganisationCount > 1, isProjectManager);
+    }
+
+    private boolean requiredProjectDetailsForMonitoringOfficerComplete(boolean partnerProjectLocationRequired, boolean isProjectDetailsSubmitted, ProjectTeamStatusResource teamStatus) {
+
+        if (partnerProjectLocationRequired) {
+            return isProjectDetailsSubmitted && allPartnersProjectLocationStatusComplete(teamStatus);
+        } else {
+            return isProjectDetailsSubmitted;
+        }
+
     }
 
     private boolean partnerProjectDetailsComplete(SetupSectionAccessibilityHelper statusAccessor, OrganisationResource organisation, boolean partnerProjectLocationRequired) {
@@ -135,5 +147,9 @@ public class SetupStatusViewModelPopulator {
 
     private boolean allOtherPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
         return teamStatus.checkForOtherPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
+    }
+
+    private boolean allPartnersProjectLocationStatusComplete(ProjectTeamStatusResource teamStatus) {
+        return teamStatus.checkForAllPartners(status -> COMPLETE.equals(status.getPartnerProjectLocationStatus()));
     }
 }

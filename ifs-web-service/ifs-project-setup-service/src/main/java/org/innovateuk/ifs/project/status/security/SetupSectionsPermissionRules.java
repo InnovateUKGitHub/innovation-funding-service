@@ -2,10 +2,14 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
@@ -37,6 +41,12 @@ public class SetupSectionsPermissionRules {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Autowired
     private StatusService statusService;
@@ -87,7 +97,12 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection);
+        ProjectResource project = projectService.getById(projectCompositeId.id());
+        ApplicationResource applicationResource = applicationService.getById(project.getApplication());
+        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+
+        boolean partnerProjectLocationRequired = competition.isLocationPerPartner();
+        return doSectionCheck(projectCompositeId.id(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, partnerProjectLocationRequired));
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A partner can access the Bank Details " +

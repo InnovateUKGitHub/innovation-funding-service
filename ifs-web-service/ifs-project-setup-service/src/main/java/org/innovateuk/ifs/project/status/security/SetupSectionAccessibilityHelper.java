@@ -130,7 +130,7 @@ public class SetupSectionAccessibilityHelper {
         return setupProgressChecker.isGrantOfferLetterAvailable();
     }
 
-    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {
+    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Monitoring Officer section until Companies House details are complete for Organisation")) {
@@ -139,6 +139,10 @@ public class SetupSectionAccessibilityHelper {
 
         if (!setupProgressChecker.isProjectDetailsSubmitted()) {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
+        }
+
+        if (partnerProjectLocationRequired && !setupProgressChecker.isAllPartnerProjectLocationsSubmitted()) {
+            return NOT_ACCESSIBLE;
         }
 
         return ACCESSIBLE;
