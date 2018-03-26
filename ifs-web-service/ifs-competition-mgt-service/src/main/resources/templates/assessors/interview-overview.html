@@ -1,42 +1,41 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors to interview panel'" />
     </head>
 
-    <body class="competition-management competition-overview">
+    <body th:with="context='comp-management'" class="competition-management competition-overview">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
-
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage interview panel',linkClass='link-back',linkUrl=@{/interview/panel/competition/{competitionId}(competitionId=${model.competitionId})}" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to interview panel',subTitle=${model.competitionName},size='heading-xlarge'" />
 
             <h2 class="heading-medium">Key statistics</h2>
 
             <div class="grid-row">
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
+                        <span class="heading-large" th:text="0">60</span><br/>
                         <small>Invited</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
+                        <span class="heading-large" th:text="0">23</span><br/>
                         <small>Accepted</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
+                        <span class="heading-large" th:text="0">3</span><br/>
                         <small>Declined</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
+                        <span class="heading-large" th:text="0">6</span><br/>
                         <small>Assessors on invite list</small>
                     </div>
                 </div>
@@ -54,16 +53,16 @@
 
             <ul class="inline-nav">
                 <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
                 </li>
                 <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
                 <li class="selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}">Pending and declined</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}">Pending and declined</a>
                 </li>
-                <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
+                <li class="not-selected" aria-label="Item not selected">
+                    <a class="buttonlink disabled">Accepted</a>
                 </li>
             </ul>
 
@@ -73,57 +72,6 @@
                 </div>
             </div>
 
-            <form method="GET" th:object="${filterForm}">
-                <div class="search-filters">
-                    <fieldset>
-                        <legend class="heading-medium">Filter assessors</legend>
-                        <div class="grid-row">
-                            <div class="column-third">
-                                <div class="form-group">
-                                    <label for="filterInnovationArea">Innovation area</label>
-                                    <select name="innovationArea" id="filterInnovationArea" class="form-control" th:field="*{innovationArea}">
-                                        <option value="">Any</option>
-                                        <option th:each="innovationArea : ${model.innovationAreaOptions}"
-                                                th:value="${innovationArea.id}"
-                                                th:text="${innovationArea.name}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="column-third">
-                                 <div class="form-group">
-                                     <label class="form-label" for="filterStatus">Status</label>
-                                     <select name="status" id="filterStatus" class="form-control" th:field="*{status}">
-                                         <option value="">All</option>
-                                         <option value="PENDING">Invite sent</option>
-                                         <option value="REJECTED">Invite declined</option>
-                                     </select>
-                                 </div>
-                            </div>
-                            <div class="column-third">
-                                 <div class="form-group">
-                                     <label class="form-label" for="filterContract">Contract and DOI</label>
-                                     <select name="compliant" id="filterContract" class="form-control" th:field="*{compliant}">
-                                         <option value="">Show all</option>
-                                         <option value="1">Yes</option>
-                                         <option value="0">No</option>
-                                     </select>
-                                 </div>
-                            </div>
-                        </div>
-                   </fieldset>
-
-                    <div class="grid-row">
-                        <input type="hidden" name="filterChanged" value="1"/>
-                        <div class="column-half">
-                            <a href="?page=0&filterChanged=1" class="button button-clear no-margin">Clear filters</a>
-                        </div>
-
-                        <div class="column-half alignright">
-                            <button class="button no-margin" type="submit">Filter</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
 
             <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
                 <p th:text="#{competition.management.limit.warning}"></p>
@@ -137,8 +85,8 @@
             </div>
 
             <form method="POST"
-                  th:action="@{/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
-                  th:object="${overviewSelectionForm}"
+                  th:action="@{/interview/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
+                  th:object="${interviewOverviewSelectionForm}"
                   data-multipage-select=""
                   th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
@@ -148,19 +96,18 @@
                             <input type="checkbox"
                                    data-select-all=""
                                    id="select-all-check"
-                                   th:checked="${overviewSelectionForm.getAllSelected()}"
+                                   th:checked="${interviewOverviewSelectionForm.getAllSelected()}"
                                    th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
                             <label for="select-all-check">
                                 Select all assessors
                             </label>
                         </div>
                         <span class="form-hint">
-                        <span data-count-selected="" th:text="${#lists.size(overviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
+                        <span data-count-selected="" th:text="${#lists.size(interviewOverviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
                     </div>
                     <div class="column-half select-all alignright">
-                        <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(overviewSelectionForm.selectedInviteIds)}">
-                            Resend invites
-                        </button>
+                        <!--/* <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewOverviewSelectionForm.selectedInviteIds)}">Resend invites</button> */-->
+                        <button class="button" disabled="disabled">Resend invites</button>
                     </div>
                 </div>
 
@@ -168,7 +115,7 @@
                     <table>
                         <thead>
                         <tr>
-                            <th scope="col">Select assessor</th>
+                            <th scope="col">Resend invites</th>
                             <th scope="col">Assessor name</th>
                             <th scope="col">Type</th>
                             <th scope="col">Innovation area</th>
@@ -206,7 +153,7 @@
                             <td th:text="${assessor.details}">assessor details</td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">
-                            <td colspan="7">There are no assessors invited to this competition.</td>
+                            <td colspan="7">There are no assessors invited to this interview panel.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -218,6 +165,5 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
-        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>
