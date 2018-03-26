@@ -12,7 +12,7 @@
 
 
 <main id="content">
-  <th:block th:insert="fragments/layout :: main-content-start" />
+
 
   <th:block th:unless="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite assessors to attend'}, ${'/prototypes/IFS-2247-invite-assessors?tab=invite'})" />
   <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Overview of invited assessors'}, ${'/prototypes/IFS-2247-invite-assessors?tab=overview'})" />

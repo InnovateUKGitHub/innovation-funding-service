@@ -34,7 +34,7 @@ public interface ProjectService {
     ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create a projects (by making decisions)" )
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only comp admin and project finance user are able to create projects (by making decisions)" )
     ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
@@ -53,4 +53,8 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
+
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectResource.class, description = "Only the IFS administrator users are able to withdraw projects")
+    ServiceResult<Void> withdrawProject(long projectId);
 }

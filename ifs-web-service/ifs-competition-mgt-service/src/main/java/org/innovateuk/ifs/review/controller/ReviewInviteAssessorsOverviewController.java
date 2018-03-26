@@ -48,7 +48,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         return ReviewOverviewSelectionForm.class;
     }
 
-    @GetMapping("/overview")
+    @GetMapping("/pending-and-declined")
     public String overview(Model model,
                            @ModelAttribute(name = SELECTION_FORM, binding = false) ReviewOverviewSelectionForm selectionForm,
                            @SuppressWarnings("unused") BindingResult bindingResult,
@@ -102,7 +102,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         return updatedSelectionForm;
     }
 
-    @PostMapping(value = "/overview", params = {"selectionId"})
+    @PostMapping(value = "/pending-and-declined", params = {"selectionId"})
     public @ResponseBody JsonNode selectAssessorForResendList(
             @PathVariable("competitionId") long competitionId,
             @RequestParam("selectionId") long assessorId,
@@ -135,7 +135,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         }
     }
 
-    @PostMapping(value = "/overview", params = {"addAll"})
+    @PostMapping(value = "/pending-and-declined", params = {"addAll"})
     public @ResponseBody JsonNode addAllAssessorsToResendList(Model model,
                                                               @PathVariable("competitionId") long competitionId,
                                                               @RequestParam("addAll") boolean addAll,

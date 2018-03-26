@@ -10,7 +10,6 @@
     <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/manage(competitionId=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Unsuccessful applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
 
@@ -61,5 +60,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>
