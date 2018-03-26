@@ -74,12 +74,12 @@ Assessment panel links are active if the assessment panel has been set
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
-There are no Assessors in Invite and Pending and rejected tab before sending invite
+There are no Assessors in Invite and Pending and declined tab before sending invite
     [Documentation]  IFS-1561
     [Tags]
     Given the user clicks the button/link  link=Invite
     And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this panel.")
-    Then the user clicks the button/link   link=Pending and rejected
+    Then the user clicks the button/link   link=Pending and declined
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
 CompAdmin can add an assessors to invite list
@@ -129,7 +129,7 @@ Bulk add assessor to invite list
 CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link    link=Pending and rejected
+    [Setup]  the user clicks the button/link    link=Pending and declined
     Given the user clicks the button/link     jQuery=tr:contains("${assessor_ben}") label
     And the user clicks the button/link       jQuery=tr:contains("${assessor_joel}") label
     And the user clicks the button/link       jQuery=button:contains("Resend invites")
@@ -166,14 +166,14 @@ Comp Admin can see the rejected and accepted invitation
     [Documentation]  IFS-37 IFS-1563
     [Tags]
     [Setup]  Log in as a different user        &{Comp_admin1_credentials}
-    Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
+    Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
     And the user should see the element        jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite declined")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
     When the user clicks the button/link       link=Accepted
     Then the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Assessors on invite list")
-    When the user clicks the button/link       link=Pending and rejected
+    When the user clicks the button/link       link=Pending and declined
     Then the user should not see the element   jQuery=td:contains("${assessor_ben}")
 
 Assessor tries to accept expired invitation

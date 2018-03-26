@@ -16,6 +16,8 @@ Documentation     INFUND-8942 - Filter and sorting on 'Ineligible applications' 
 ...               IFS-1458 View unsuccessful applications after Inform state: initial navigation
 ...
 ...               IFS-1459 View unsuccessful applications after Inform state: list
+...
+...               IFS-1491 Inform Applicant - Ineligible page - couple of issues
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -109,14 +111,16 @@ The Administrator should see the ineligible applications in unsuccessful list bu
     And the user should not see the element  jQuery=td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
 
 Inform a user their application is ineligible
-    [Documentation]  INFUND-7374
+    [Documentation]  INFUND-7374  IFS-1491
     [Tags]  HappyPath  Applicant
     [Setup]  log in as a different user       &{internal_finance_credentials}
     Given the user navigates to the page      ${ineligibleApplications}
+    And the user clicks the button/link       jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
+    And the user clicks the button/link       jQuery=a:contains("Cancel")
     When the user clicks the button/link      jQuery=td:contains("${ineligibleApplication}") ~ td > a:contains("Inform applicant")
-    # TODO include validation messages for the empty fields IFS-1491
-    And the user enters text to a text field  id=subject  This is ineligible
-    And the user enters text to a text field  id=message  Thank you for your application but this is ineligible
+    And the user is required to enter a subject/message    Please enter the email subject.  subject  This is ineligible
+    And the user clicks the button/link       jQuery=button:contains("Send")
+    And the user is required to enter a subject/message    Please enter the email message.  message  Thank you for your application but this is ineligible
     And the user clicks the button/link       jQuery=button:contains("Send")
     Then the user should see the element      jQuery=td:contains("${ineligibleApplication}") ~ td span:contains("Informed")
 
@@ -160,3 +164,9 @@ the user navigates to ineligible applications
 the reinstated application in no longer shown in the unsuccessful list
     the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
     the user should not see the element  jQuery=td:contains("${ineligibleApplication}")
+
+the user is required to enter a subject/message
+    [Arguments]  ${fieldValidation}  ${field}  ${fieldContent}
+    the user clicks the button/link      jQuery=button:contains("Send")
+    the user should see a field error      ${fieldValidation}
+    the user enters text to a text field  id=${field}  ${fieldContent}

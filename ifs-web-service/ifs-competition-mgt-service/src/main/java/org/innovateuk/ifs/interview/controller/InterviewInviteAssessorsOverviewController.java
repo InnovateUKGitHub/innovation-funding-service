@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.review.controller;
+package org.innovateuk.ifs.interview.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.interview.form.InterviewOverviewSelectionForm;
+import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.controller.CompetitionManagementCookieController;
-import org.innovateuk.ifs.review.form.ReviewOverviewSelectionForm;
-import org.innovateuk.ifs.review.model.ReviewInviteAssessorsOverviewModelPopulator;
-import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -22,21 +22,21 @@ import java.util.List;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
- * This controller handles the Overview tab for inviting assessors to an Assessor Panel.
+ * This controller handles the Overview tab for inviting assessors to an Interview Panel.
  */
 @Controller
-@RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewInviteAssessorsOverviewController.class)
+@RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewInviteAssessorsOverviewController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class ReviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<ReviewOverviewSelectionForm> {
+public class InterviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
 
-    private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
-
-    @Autowired
-    private ReviewInviteRestService reviewInviteRestService;
+    private static final String SELECTION_FORM = "interviewOverviewSelectionForm";
 
     @Autowired
-    private ReviewInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private InterviewInviteRestService interviewInviteRestService;
+
+    @Autowired
+    private InterviewInviteAssessorsOverviewModelPopulator interviewInviteAssessorsOverviewModelPopulator;
 
     @Override
     protected String getCookieName() {
@@ -44,13 +44,13 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
     }
 
     @Override
-    protected Class<ReviewOverviewSelectionForm> getFormType() {
-        return ReviewOverviewSelectionForm.class;
+    protected Class<InterviewOverviewSelectionForm> getFormType() {
+        return InterviewOverviewSelectionForm.class;
     }
 
     @GetMapping("/pending-and-declined")
     public String overview(Model model,
-                           @ModelAttribute(name = SELECTION_FORM, binding = false) ReviewOverviewSelectionForm selectionForm,
+                           @ModelAttribute(name = SELECTION_FORM, binding = false) InterviewOverviewSelectionForm selectionForm,
                            @SuppressWarnings("unused") BindingResult bindingResult,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
@@ -58,25 +58,25 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
                            HttpServletRequest request,
                            HttpServletResponse response) {
 
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_OVERVIEW, queryParams);
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.INTERVIEW_OVERVIEW, queryParams);
         updateOverviewSelectionForm(request, response, competitionId, selectionForm);
 
-        model.addAttribute("model", panelInviteAssessorsOverviewModelPopulator.populateModel(
+        model.addAttribute("model", interviewInviteAssessorsOverviewModelPopulator.populateModel(
                 competitionId,
                 page,
                 originQuery
         ));
 
-        return "assessors/panel-overview";
+        return "assessors/interview-overview";
     }
 
     private void updateOverviewSelectionForm(HttpServletRequest request,
                                              HttpServletResponse response,
                                              long competitionId,
-                                             ReviewOverviewSelectionForm selectionForm) {
-        ReviewOverviewSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ReviewOverviewSelectionForm());
+                                             InterviewOverviewSelectionForm selectionForm) {
+        InterviewOverviewSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewOverviewSelectionForm());
 
-        ReviewOverviewSelectionForm trimmedOverviewForm = trimSelectionByFilteredResult(
+        InterviewOverviewSelectionForm trimmedOverviewForm = trimSelectionByFilteredResult(
                 storedSelectionForm,
                 competitionId);
         selectionForm.setSelectedInviteIds(trimmedOverviewForm.getSelectedInviteIds());
@@ -85,10 +85,10 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         saveFormToCookie(response, competitionId, selectionForm);
     }
 
-    private ReviewOverviewSelectionForm trimSelectionByFilteredResult(ReviewOverviewSelectionForm selectionForm,
-                                                                      Long competitionId) {
+    private InterviewOverviewSelectionForm trimSelectionByFilteredResult(InterviewOverviewSelectionForm selectionForm,
+                                                                      long competitionId) {
         List<Long> filteredResults = getAllInviteIds(competitionId);
-        ReviewOverviewSelectionForm updatedSelectionForm = new ReviewOverviewSelectionForm();
+        InterviewOverviewSelectionForm updatedSelectionForm = new InterviewOverviewSelectionForm();
 
         selectionForm.getSelectedInviteIds().retainAll(filteredResults);
         updatedSelectionForm.setSelectedInviteIds(selectionForm.getSelectedInviteIds());
@@ -113,7 +113,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
         boolean limitExceeded = false;
         try {
             List<Long> InviteIds = getAllInviteIds(competitionId);
-            ReviewOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ReviewOverviewSelectionForm());
+            InterviewOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewOverviewSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedInviteIds().size() + 1;
                 if(limitIsExceeded(predictedSize)){
@@ -142,7 +142,7 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
                                                               HttpServletRequest request,
                                                               HttpServletResponse response) {
         try {
-            ReviewOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new ReviewOverviewSelectionForm());
+            InterviewOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new InterviewOverviewSelectionForm());
 
             if (addAll) {
                 selectionForm.setSelectedInviteIds(getAllInviteIds(competitionId));
@@ -161,6 +161,6 @@ public class ReviewInviteAssessorsOverviewController extends CompetitionManageme
     }
 
     private List<Long> getAllInviteIds(long competitionId) {
-        return reviewInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccess();
+        return interviewInviteRestService.getNonAcceptedAssessorInviteIds(competitionId).getSuccess();
     }
 }

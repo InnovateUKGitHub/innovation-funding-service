@@ -151,7 +151,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
 
     private String redirectToOverview(long competitionId, int page) {
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromPath("/competition/{competitionId}/assessors/overview")
+                .fromPath("/competition/{competitionId}/assessors/pending-and-declined")
                 .queryParam("page", page);
 
         return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
