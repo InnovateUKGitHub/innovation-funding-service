@@ -576,4 +576,20 @@
         </form>
     </div>
 </th:block>
+
+<!-- Withdraw a project -->
+<th:block th:fragment="modal-withdraw-project">
+    <div class="modal-withdraw-project" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Withdraw project from competition</h2>
+        <p>Are you sure you want to withdraw the project 'xxx' from the competition 'xxx'</p>
+        <hr />
+        <div>
+            <button class="button" name="approved" value="true">Accept documents</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+
 </html>
