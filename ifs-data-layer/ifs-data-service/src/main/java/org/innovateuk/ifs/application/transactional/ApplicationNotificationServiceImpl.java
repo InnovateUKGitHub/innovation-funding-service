@@ -83,7 +83,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     }
 
                     applicationRepository.save(application);
-                    String bodyPlain = stripHtml(applicationIneligibleSendResource.getContent());
+                    String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
                     String bodyHtml = plainTextToHtml(bodyPlain);
 
                     NotificationTarget recipient = new ExternalUserNotificationTarget(
@@ -123,6 +123,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ServiceResult<Void> sendNotificationApplicationSubmitted(Long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {

@@ -10,7 +10,6 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
-
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
 
 
@@ -61,7 +60,7 @@
                     <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
                 <li class="selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
+                    <a th:href="@{/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}">Pending and declined</a>
                 </li>
                 <li class="not-selected">
                     <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
@@ -70,7 +69,7 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top">View assessors who have not yet responded or have been rejected.</h2>
+                    <h2 class="heading-small no-margin-top">View assessors who have not yet responded or have declined the invite.</h2>
                 </div>
             </div>
 
