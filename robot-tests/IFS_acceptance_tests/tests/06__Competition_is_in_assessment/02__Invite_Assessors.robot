@@ -142,6 +142,7 @@ Invite multiple assessors
     And the user clicks the button/link                jQuery=button:contains("Add selected to invite list")
     When the user clicks the button/link               jQuery=a:contains("Review and send invites")
     And The user should see the text in the page       Please visit our online Innovation Funding Service to respond to this request
+    And client and server side validation for subject in invitation email
     And The user enters text to a text field           css=#subject  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}' @
     And the user clicks the button/link                jQuery=.button:contains("Send invite")
     And the user clicks the button/link                link=Invite
@@ -255,3 +256,8 @@ Custom teardown
     the user clicks the button/link  link=Invite
     the user clicks the button/link  jQuery=button:contains("Remove all")
     the user closes the browser
+
+client and server side validation for subject in invitation email
+    the user enters text to a text field        id=subject   ${EMPTY}
+    the user clicks the button/link             css=button[type="submit"]    #Send invite
+    the user should see a field and summary error  Please enter a subject for the email.
