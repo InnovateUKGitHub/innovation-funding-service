@@ -314,7 +314,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testUpdateProjectDurationWhenDurationLessThanAMonth() {
 
-        Long projectId = 123L;
+        long projectId = 123L;
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 0L);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
@@ -327,7 +327,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testUpdateProjectDurationWhenSpendProfileAlreadyGenerated() {
 
-        Long projectId = 123L;
+        long projectId = 123L;
 
         List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfiles);
@@ -340,7 +340,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testUpdateProjectDurationWhenProjectDoesNotExist() {
 
-        Long projectId = 123L;
+        long projectId = 123L;
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
 
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
@@ -351,14 +351,14 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     @Test
     public void testUpdateProjectDurationSuccess() {
 
-        Long projectId = 123L;
-        Long durationInMonths = 36L;
+        long projectId = 123L;
+        long durationInMonths = 36L;
         Project existingProject = newProject().build();
         when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
 
         ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, durationInMonths);
         assertTrue(updateResult.isSuccess());
-        assertEquals(durationInMonths, existingProject.getDurationInMonths());
+        assertEquals(durationInMonths, (long) existingProject.getDurationInMonths());
     }
 
     @Test

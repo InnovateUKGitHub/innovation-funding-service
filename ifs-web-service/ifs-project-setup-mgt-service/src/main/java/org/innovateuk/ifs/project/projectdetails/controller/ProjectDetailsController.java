@@ -79,8 +79,8 @@ public class ProjectDetailsController {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
     @GetMapping("/{projectId}/edit-duration")
-    public String editProjectDuration(@PathVariable("competitionId") final Long competitionId,
-                                      @PathVariable("projectId") final Long projectId, Model model,
+    public String editProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                      @PathVariable("projectId") final long projectId, Model model,
                                      UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -99,9 +99,9 @@ public class ProjectDetailsController {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
     @PostMapping("/{projectId}/update-duration")
-    public String updateProjectDuration(@PathVariable("competitionId") final Long competitionId,
-                                        @PathVariable("projectId") final Long projectId,
-                                        @RequestParam(value = "durationInMonths") final Long durationInMonths,
+    public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                        @PathVariable("projectId") final long projectId,
+                                        @RequestParam(value = "durationInMonths") final long durationInMonths,
                                         Model model,
                                         UserResource loggedInUser) {
 

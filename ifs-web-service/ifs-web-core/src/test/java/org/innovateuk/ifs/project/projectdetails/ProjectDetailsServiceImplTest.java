@@ -74,8 +74,8 @@ public class ProjectDetailsServiceImplTest {
     @Test
     public void testUpdateProjectDuration() {
 
-        Long projectId = 3L;
-        Long durationInMonths = 18L;
+        long projectId = 3L;
+        long durationInMonths = 18L;
 
         when(projectDetailsRestService.updateProjectDuration(projectId, durationInMonths)).thenReturn(restSuccess());
 

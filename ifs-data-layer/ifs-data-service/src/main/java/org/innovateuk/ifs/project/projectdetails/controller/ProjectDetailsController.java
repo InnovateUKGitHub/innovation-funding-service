@@ -40,8 +40,8 @@ public class ProjectDetailsController {
     }
 
     @PostMapping("/{projectId}/update-duration/{durationInMonths}")
-    public RestResult<Void> updateProjectDuration(@PathVariable("projectId") final Long projectId,
-                                                  @PathVariable("durationInMonths") final Long durationInMonths) {
+    public RestResult<Void> updateProjectDuration(@PathVariable("projectId") final long projectId,
+                                                  @PathVariable("durationInMonths") final long durationInMonths) {
         return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
     }
 

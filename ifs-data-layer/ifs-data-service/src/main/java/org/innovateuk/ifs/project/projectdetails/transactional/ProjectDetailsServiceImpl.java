@@ -225,14 +225,14 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> updateProjectDuration(Long projectId, Long durationInMonths) {
+    public ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
         return validateProjectDuration(durationInMonths).
                 andOnSuccess(() -> validateIfProjectDurationCanBeChanged(projectId)).
                 andOnSuccess(() -> getProject(projectId)).
                 andOnSuccessReturnVoid(project -> project.setDurationInMonths(durationInMonths));
     }
 
-    private ServiceResult<Void> validateProjectDuration(Long durationInMonths) {
+    private ServiceResult<Void> validateProjectDuration(long durationInMonths) {
 
         if (durationInMonths <1) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH);
@@ -241,7 +241,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(Long projectId) {
+    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(long projectId) {
 
         if (isSpendProfileIsGenerated(projectId)) {
             return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
