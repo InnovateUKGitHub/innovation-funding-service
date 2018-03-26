@@ -25,7 +25,7 @@ Resource          ../07__Assessor/Assessor_Commons.robot
 *** Test Cases ***
 User navigates to the Manage interview panel
     [Documentation]  IFS-2633 IFS-2637
-    [Tags]
+    [Tags]  MySQL
     Given the Interview Panel is activated in the db
     When the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
     Then the user clicks the button/link   link=Manage interview panel
@@ -67,14 +67,14 @@ CompAdmin can add the applications to the invite list
     [Setup]  the user clicks the button/link    link=Manage interview panel
     Given the user clicks the button/link       link=Competition
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Closed")
-    Run Keyword If  '${status}' == 'PASS'  the user move the closed competition to in panel
+    Run Keyword If  '${status}' == 'PASS'  the user moves the closed competition to panel
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
-    Then the competition admin selects the applications and add to invite list
+    Then the competition admin selects the applications and adds them to the invite list
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
-    [Tags]
+    [Tags]  Failing
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     And the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button   acceptInvitation  true
@@ -112,7 +112,7 @@ the user sees the Interview panel page and the Interview links
     And the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
     #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2783
 
-the competition admin selects the applications and add to invite list
+the competition admin selects the applications and adds them to the invite list
 #compadmin selecting the applications checkbox
     the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     the user clicks the button/link    jQuery=tr:contains("${computer_vision_application}") label
