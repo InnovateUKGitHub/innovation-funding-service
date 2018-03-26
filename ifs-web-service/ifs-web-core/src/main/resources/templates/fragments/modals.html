@@ -578,11 +578,13 @@
 </th:block>
 
 <!-- Confirmation of withdrawing a project -->
-<th:block th:fragment="modal-withdraw-project">
+<th:block th:fragment="modal-withdraw-project (projectId, competitionId)">
     <div class="modal-withdraw-project" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Withdraw project from competition</h2>
-        <p>Are you sure you want to withdraw the project 'xxx' from the competition 'xxx'</p>
+        <p>Are you sure you want to withdraw the project <span th:text="${projectId}"></span> from the competition<span th:text="${competitionId}"></span>?</p>
+        <p>The project will be marked as withdrawn and removed from project setup. You can still view the application in
+            previous competitions</p>
         <hr />
         <div>
             <button class="button" name="approved" value="true">Withdraw project</button>
