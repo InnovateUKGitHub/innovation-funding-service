@@ -19,7 +19,7 @@ public interface ProjectDetailsRestService {
 
     RestResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
-    RestResult<Void> updateProjectDuration(Long projectId, Long durationInMonths);
+    RestResult<Void> updateProjectDuration(long projectId, long durationInMonths);
 
     RestResult<Void> updateFinanceContact(ProjectOrganisationCompositeId compositeId, Long financeContactUserId);
 

@@ -24,8 +24,8 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
     @Test
     public void testUpdateProjectDuration() {
-        Long projectId = 3L;
-        Long durationInMonths = 18L;
+        long projectId = 3L;
+        long durationInMonths = 18L;
 
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/update-duration/" + durationInMonths, null, OK);
         RestResult<Void> result = service.updateProjectDuration(projectId, durationInMonths);

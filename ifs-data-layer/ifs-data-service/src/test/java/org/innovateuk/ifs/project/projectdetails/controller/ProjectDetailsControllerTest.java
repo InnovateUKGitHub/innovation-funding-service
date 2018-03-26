@@ -34,8 +34,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void updateProjectDuration() throws Exception {
 
-        Long projectId = 3L;
-        Long durationInMonths = 18L;
+        long projectId = 3L;
+        long durationInMonths = 18L;
 
         when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 

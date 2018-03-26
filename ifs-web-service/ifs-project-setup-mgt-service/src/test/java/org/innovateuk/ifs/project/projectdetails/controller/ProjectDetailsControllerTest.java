@@ -27,6 +27,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -109,9 +110,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Test
     public void editProjectDuration() throws Exception {
 
-        Long competitionId = 1L;
+        long competitionId = 1L;
         String competitionName = "Comp 1";
-        Long projectId = 11L;
+        long projectId = 11L;
 
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -137,19 +138,22 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         // Assert that the model has the correct values
         assertEquals(project, viewModel.getProject());
-        assertEquals(competitionId, viewModel.getCompetitionId());
+        assertEquals(competitionId, (long) viewModel.getCompetitionId());
         assertEquals(competitionName, viewModel.getCompetitionName());
         assertNull(viewModel.getLeadOrganisation());
         assertNull(viewModel.getProjectManager());
         assertNull(viewModel.getOrganisationFinanceContactMap());
+
+        verify(projectService).getById(projectId);
+        verify(competitionService).getById(competitionId);
     }
 
     @Test
     public void updateProjectDurationFailure() throws Exception {
 
-        Long competitionId = 1L;
-        Long projectId = 11L;
-        Long durationInMonths = 18L;
+        long competitionId = 1L;
+        long projectId = 11L;
+        long durationInMonths = 18L;
 
         when(projectDetailsService.updateProjectDuration(projectId, durationInMonths))
                 .thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
@@ -158,14 +162,16 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/" + competitionId + "/project/" + projectId + "/edit-duration"))
                 .andReturn();
+
+        verify(projectDetailsService).updateProjectDuration(projectId, durationInMonths);
     }
 
     @Test
     public void updateProjectDurationSuccess() throws Exception {
 
-        Long competitionId = 1L;
-        Long projectId = 11L;
-        Long durationInMonths = 18L;
+        long competitionId = 1L;
+        long projectId = 11L;
+        long durationInMonths = 18L;
 
         when(projectDetailsService.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
 
@@ -173,6 +179,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/" + projectId + "/finance-check"))
                 .andReturn();
+
+        verify(projectDetailsService).updateProjectDuration(projectId, durationInMonths);
     }
 
     private  List<ProjectUserResource> buildProjectUsers(OrganisationResource leadOrganisation, OrganisationResource partnerOrganisation) {
