@@ -108,7 +108,7 @@ public class InterviewInviteController {
 
     @GetMapping("/check-existing-user/{inviteHash}")
     public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
-        return interviewInviteService.checkExistingUser(inviteHash).toGetResponse();
+        return interviewInviteService.checkUserExistsForInvite(inviteHash).toGetResponse();
     }
 
     @DeleteMapping("/delete-invite")

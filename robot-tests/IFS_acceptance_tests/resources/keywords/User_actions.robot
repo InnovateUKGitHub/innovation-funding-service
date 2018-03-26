@@ -9,6 +9,10 @@ The user clicks the button/link
     wait for autosave
     Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
 
+The user clicks the button/link in the paginated list
+    [Arguments]    ${BUTTON}
+    Do Keyword With Pagination     The user clicks the button/link     ${BUTTON}
+
 the user clicks the button twice
     [Arguments]    ${element}
     the user clicks the button/link  ${element}
@@ -23,9 +27,18 @@ The user should see the element
     [Arguments]    ${ELEMENT}
     Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
 
+The user should see the element in the paginated list
+    [Arguments]    ${ELEMENT}
+    Do Keyword With Pagination     Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
+
+The user should not see the element in the paginated list
+    [Arguments]    ${ELEMENT}
+    ${elementFound}=   Do Keyword With Pagination And Ignore Error     Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
+    Run Keyword If   ${elementFound} == True    Fail   'Should not have found the element ${ELEMENT} in the paginated list'
+
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
-    Wait Until Element Is Not Visible Without Screenshots    ${NOT_VISIBLE_ELEMENT}
+    Wait Until Element Is Not Visible    ${NOT_VISIBLE_ELEMENT}
 
 the user should get a new print window
     [Arguments]  ${title}
