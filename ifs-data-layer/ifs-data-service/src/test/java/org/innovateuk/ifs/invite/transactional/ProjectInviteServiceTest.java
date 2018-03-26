@@ -3,17 +3,14 @@ package org.innovateuk.ifs.invite.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
-import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +36,6 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
-
-    @Mock
-    NotificationService notificationService;
-
-    @Mock
-    InviteOrganisationMapper inviteOrganisationMapper;
-
 
     @InjectMocks
     private ProjectInviteService projectInviteService = new ProjectInviteServiceImpl();
@@ -95,7 +85,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newProjectInvite().withEmail(user.getEmail()).withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(of(user));
-        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(projectInvite.getHash());
+        ServiceResult<Boolean> result = projectInviteService.checkUserExistsForInvite(projectInvite.getHash());
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccess());
     }
@@ -104,7 +94,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
     public void testCheckUserExistingByInviteHashHashNotFound() throws Exception {
         String hash = "hash";
         when(projectInviteRepositoryMock.getByHash(hash)).thenReturn(null);
-        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(hash);
+        ServiceResult<Boolean> result = projectInviteService.checkUserExistsForInvite(hash);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(ProjectInvite.class, hash)));
     }
@@ -114,7 +104,7 @@ public class ProjectInviteServiceTest extends BaseUnitTestMocksTest {
         ProjectInvite projectInvite = newProjectInvite().withEmail("email@example.com").withHash("hash").build();
         when(projectInviteRepositoryMock.getByHash(projectInvite.getHash())).thenReturn(projectInvite);
         when(userRepositoryMock.findByEmail(projectInvite.getEmail())).thenReturn(empty());
-        ServiceResult<Boolean> result = projectInviteService.checkUserExistingByInviteHash(projectInvite.getHash());
+        ServiceResult<Boolean> result = projectInviteService.checkUserExistsForInvite(projectInvite.getHash());
         assertTrue(result.isSuccess());
         assertFalse(result.getSuccess());
     }
