@@ -137,7 +137,7 @@ public class ReviewSendInviteControllerTest extends BaseControllerMockMVCTest<Re
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/overview", competitionId)));
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/pending-and-declined", competitionId)));
 
         InOrder inOrder = inOrder(reviewInviteRestService);
         inOrder.verify(reviewInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
@@ -164,7 +164,7 @@ public class ReviewSendInviteControllerTest extends BaseControllerMockMVCTest<Re
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/overview?page=0", competition.getId())));
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/pending-and-declined?page=0", competition.getId())));
 
         InOrder inOrder = inOrder(reviewInviteRestService);
         inOrder.verify(reviewInviteRestService).resendInvites(inviteIds, expectedAssessorInviteSendResource);

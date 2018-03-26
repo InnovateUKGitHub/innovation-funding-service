@@ -137,7 +137,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/overview?page=0", competitionId)));
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/pending-and-declined?page=0", competitionId)));
 
         InOrder inOrder = inOrder(competitionInviteRestService);
         inOrder.verify(competitionInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
@@ -164,7 +164,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/overview?page=0", competition.getId())));
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/pending-and-declined?page=0", competition.getId())));
 
         InOrder inOrder = inOrder(competitionInviteRestService);
         inOrder.verify(competitionInviteRestService).resendInvites(inviteIds, expectedAssessorInviteSendResource);

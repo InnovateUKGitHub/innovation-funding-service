@@ -13,30 +13,30 @@ public class ApplicationIneligibleSendResourceBuilderTest {
     @Test
     public void buildOne() {
         String subject = "subject";
-        String content = "content";
+        String message = "message";
 
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
                 .withSubject(subject)
-                .withContent(content)
+                .withMessage(message)
                 .build();
 
         assertEquals(subject, resource.getSubject());
-        assertEquals(content, resource.getContent());
+        assertEquals(message, resource.getMessage());
     }
 
     @Test
     public void buildMany() {
         String[] subjects = {"subject", "otherSubject"};
-        String[] contents = {"content", "otherContent"};
+        String[] messages = {"message", "otherMessage"};
 
         List<ApplicationIneligibleSendResource> resources = newApplicationIneligibleSendResource()
                 .withSubject(subjects)
-                .withContent(contents)
+                .withMessage(messages)
                 .build(2);
 
         for (int i = 0; i < resources.size(); i++) {
             assertEquals(subjects[i], resources.get(i).getSubject());
-            assertEquals(contents[i], resources.get(i).getContent());
+            assertEquals(messages[i], resources.get(i).getMessage());
         }
     }
 }
