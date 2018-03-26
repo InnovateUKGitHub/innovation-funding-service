@@ -240,7 +240,7 @@ public class CompetitionDataBuilderService extends BaseDataBuilderService {
                                                             MilestoneType milestoneWhereDatesStartInTheFuture, int lineNumber) {
 
         ZonedDateTime earliestDate = startOfDay().minusYears(2).plusDays(lineNumber);
-        ZonedDateTime firstFutureDate = startOfDay().plusDays(lineNumber);
+        ZonedDateTime firstFutureDate = startOfDay().plusYears(2).plusDays(lineNumber);
 
         List<MilestoneType> presetMilestoneTypes = simpleFilter(MilestoneType.values(), type ->
                 type.isPresetDate() && !type.equals(MilestoneType.REGISTRATION_DATE));
