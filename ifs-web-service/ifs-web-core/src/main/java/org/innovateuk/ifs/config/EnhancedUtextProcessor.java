@@ -2,7 +2,8 @@ package org.innovateuk.ifs.config;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.thymeleaf.IEngineConfiguration;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeName;
@@ -14,6 +15,7 @@ import org.thymeleaf.processor.element.IElementTagStructureHandler;
 import org.thymeleaf.standard.expression.*;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 /**
@@ -153,7 +155,10 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
     }
 
     private String cleanString(Object result) {
-        return Jsoup.clean((result == null ? "" : result.toString()), "http://ifs.local-dev", WHITELIST);
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        String baseUri = request.getScheme() + "://" + request.getServerName().toString();
+
+        return Jsoup.clean((result == null ? "" : result.toString()), baseUri, WHITELIST);
     }
 
     /*
