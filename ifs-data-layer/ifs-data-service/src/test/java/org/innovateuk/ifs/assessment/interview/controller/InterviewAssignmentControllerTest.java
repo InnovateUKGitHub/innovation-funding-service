@@ -139,7 +139,6 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(interviewInviteResource)));
 
-
         verify(interviewAssignmentInviteServiceMock, only()).getEmailTemplate();
     }
 

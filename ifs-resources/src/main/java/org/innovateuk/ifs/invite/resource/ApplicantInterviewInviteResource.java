@@ -10,7 +10,6 @@ public class ApplicantInterviewInviteResource extends InviteResource {
     public ApplicantInterviewInviteResource() {
     }
 
-
     public ApplicantInterviewInviteResource(String content) {
         this.content = content;
     }

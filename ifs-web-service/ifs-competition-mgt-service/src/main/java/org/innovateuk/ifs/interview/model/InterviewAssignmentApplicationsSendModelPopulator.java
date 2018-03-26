@@ -38,8 +38,6 @@ public class InterviewAssignmentApplicationsSendModelPopulator {
 
         String content = interviewAssignmentRestService.getEmailTemplate().getSuccess().getContent();
 
-
-
         return new InterviewAssignmentApplicationsSendViewModel(
                 competitionId,
                 competition.getName(),

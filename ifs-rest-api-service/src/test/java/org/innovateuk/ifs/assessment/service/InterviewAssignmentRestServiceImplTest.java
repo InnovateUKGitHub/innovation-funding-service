@@ -83,7 +83,6 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
 
         RestResult<Void> restResult = service.assignApplications(stagedApplicationListResource);
         assertTrue(restResult.isSuccess());
-
     }
 
     @Test
@@ -109,7 +108,6 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         ApplicantInterviewInviteResource actual = service.getEmailTemplate().getSuccess();
         assertEquals(expected, actual);
     }
-
 
     @Test
     public void sendAllInvites() {

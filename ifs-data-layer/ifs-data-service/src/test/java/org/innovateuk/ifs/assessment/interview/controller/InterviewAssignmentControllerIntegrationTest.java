@@ -39,7 +39,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -287,7 +286,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         List<InterviewAssignment> created = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.CREATED.getBackingState());
         List<InterviewAssignment> awaitingFeedback = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
 
-        assertThat(created.size(), equalTo(0));
-        assertThat(awaitingFeedback.size(), equalTo(1));
+        assertEquals(created.size(), 0);
+        assertEquals(awaitingFeedback.size(), 1);
     }
 }

@@ -163,7 +163,6 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
         });
     }
 
-
     private ServiceResult<Application> getApplication(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
     }

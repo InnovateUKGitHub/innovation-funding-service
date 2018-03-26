@@ -26,7 +26,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -39,7 +38,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -61,7 +59,6 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
                     .build(TOTAL_APPLICATIONS);
     private static final ActivityState CREATED_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
     private static final ActivityState PENDING_FEEDBACK_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.PENDING);
-
 
     @Override
     protected InterviewAssignmentInviteServiceImpl supplyServiceUnderTest() {
@@ -179,8 +176,8 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
         ServiceResult<ApplicantInterviewInviteResource> result = service.getEmailTemplate();
 
-        assertThat(result.isSuccess(), equalTo(true));
-        assertThat(result.getSuccess().getContent(), equalTo("Content"));
+        assertTrue(result.isSuccess());
+        assertEquals(result.getSuccess().getContent(),"Content");
     }
 
     @Test
@@ -211,10 +208,10 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
         ServiceResult<Void> result = service.sendInvites(COMPETITION_ID, sendResource);
 
-        assertThat(result.isSuccess(), equalTo(true));
+        assertTrue(result.isSuccess());
         verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
         verify(interviewAssignmentRepositoryMock).save(interviewAssignments.get(0));
-        assertThat(interviewAssignments.get(0).getActivityState(), equalTo(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE));
+        assertEquals(interviewAssignments.get(0).getActivityState(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE);
     }
 
     private static InterviewAssignment interviewPanellambdaMatcher(Application application) {
