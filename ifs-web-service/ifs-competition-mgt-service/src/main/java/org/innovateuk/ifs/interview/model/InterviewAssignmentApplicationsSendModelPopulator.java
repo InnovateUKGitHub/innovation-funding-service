@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Build the model for the Invite assessors for Assessment Interview Panel Invite view.
+ * Build the model for the Invite applicants for Assessment Interview Panel Invite view.
  */
 @Component
 public class InterviewAssignmentApplicationsSendModelPopulator {
