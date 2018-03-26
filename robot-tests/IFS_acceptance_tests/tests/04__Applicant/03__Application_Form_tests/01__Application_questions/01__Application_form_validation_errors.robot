@@ -4,8 +4,9 @@ Documentation     INFUND-43 As an applicant and I am on the application form on 
 ...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
-Suite Setup       Run keywords    log in and create new application if there is not one already  Robot test application
-...               AND    Applicant goes to the application details page of the Robot application
+...
+...               IFS-2776 As an Portfolio manager I am able to set the min/max project duration for a competition
+Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -14,16 +15,14 @@ Resource          ../../../../resources/defaultResources.robot
 Title field client side
     [Documentation]    INFUND-43, INFUND-2843
     [Tags]    HappyPath
-    Given the user should see the text in the page    Application details
-    When the user enters text to a text field    css=[id="application.name"]    ${EMPTY}
-    And the user should see an error    Please enter the full title of the project
-    And the user enters text to a text field    css=[id="application.name"]    Robot test application
-    And the applicant should not see the validation error any more
+    Given the user should see the element      jQuery=h1:contains("Application details")
+    When the user enters text to a text field  id=application.name  ${EMPTY}
+    Then The user should see a field error     Please enter the full title of the project
+    When the user enters text to a text field  id=application.name  Robot test application
+    Then the applicant should not see the validation error any more
 
 Day field client side
-    [Documentation]    INFUND-43
-    ...
-    ...    INFUND-2843
+    [Documentation]  INFUND-43 INFUND-2843
     [Tags]    HappyPath
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_day    32
@@ -38,9 +37,7 @@ Day field client side
     Then the applicant should not see the validation error any more
 
 Month field client side
-    [Documentation]    INFUND-43
-    ...
-    ...    INFUND-2843
+    [Documentation]  INFUND-43 INFUND-2843
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_month    0
@@ -55,13 +52,11 @@ Month field client side
     Then the applicant should not see the validation error any more
 
 Year field client side
-    [Documentation]    INFUND-43
-    ...
-    ...    INFUND-2843
-    [Tags]    HappyPath
-    [Setup]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
-    ...    AND    the user enters text to a text field    css=[id="application.durationInMonths"]    15
-    ...    AND    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
+    [Documentation]  INFUND-43 INFUND-2843
+    [Tags]  HappyPath
+#    Given the user enters text to a text field  id=application.name  Robot test application
+    Given the user enters text to a text field    id=application.durationInMonths  15
+    Then Run Keyword And Ignore Error Without Screenshots  Focus  id=application-question-complete
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date.
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
@@ -70,13 +65,9 @@ Year field client side
     Then the applicant should not see the validation error any more
 
 Duration field client side
-    [Documentation]    INFUND-43
-    ...
-    ...    INFUND-2843
+    [Documentation]  INFUND-43 INFUND-2843
     [Tags]
-    [Setup]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
-    ...    AND    the applicant inserts a valid date
-    When the user enters text to a text field    css=[id="application.durationInMonths"]    0
+    When the user enters text to a text field   id=application.durationInMonths  0
     Then the user should see an error    Your project should last between 1 and 36 months.
     When the user enters text to a text field    css=[id="application.durationInMonths"]    -1
     Then the user should see an error    Your project should last between 1 and 36 months.
@@ -86,11 +77,7 @@ Duration field client side
     And the applicant should not see the validation error of the duration any more
 
 Application details server side
-    [Documentation]    INFUND-2843
-    ...
-    ...    INFUND-4694
-    ...
-    ...    INFUND-6823
+    [Documentation]  INFUND-2843 INFUND-4694 INFUND-6823
     [Tags]
     Given the user should see the text in the page    Application details
     When the user clicks the button/link    jQuery=label:contains(Yes)
@@ -122,6 +109,10 @@ Empty text area
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
+Custom Suite Setup
+    log in and create new application if there is not one already  Robot test application
+    Applicant goes to the application details page of the Robot application
+
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
     Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
