@@ -24,7 +24,6 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates spendProfileStatus;
 
     private ProjectActivityStates financeContactStatus = COMPLETE;
-    // TODO DW - INFUND-4915 - blocked until Companies House Project Setup work tackled
     private ProjectActivityStates companiesHouseStatus = COMPLETE;
 
     /* Following properties are only applicable to lead partner */
