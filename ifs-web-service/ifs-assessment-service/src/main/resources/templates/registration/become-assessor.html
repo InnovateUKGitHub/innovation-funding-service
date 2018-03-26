@@ -4,13 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Become an assessor for Innovate UK'" />
     </head>
 
-    <body th:with="context='assessment'" class="sign-in">
+    <body class="sign-in">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
-
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Become an assessor for Innovate UK',size='heading-xlarge'" />
             <p>Welcome to Innovate UK’s assessment service.</p>
             <p>Please create your account. Once your account is created you will need to sign in before you can accept invitations to assess.</p>
@@ -22,5 +20,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

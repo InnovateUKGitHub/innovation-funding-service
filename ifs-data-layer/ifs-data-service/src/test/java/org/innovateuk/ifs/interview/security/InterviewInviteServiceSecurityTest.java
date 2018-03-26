@@ -134,6 +134,76 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
         );
     }
 
+
+    @Test
+    public void acceptInvite() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
+
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
+                .thenReturn(interviewParticipantResource);
+        when(interviewParticipantPermissionRules.userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource))
+                .thenReturn(true);
+
+        setLoggedInUser(assessorUserResource);
+
+        classUnderTest.acceptInvite("hash");
+
+        verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+        verify(interviewParticipantPermissionRules, only()).userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource);
+    }
+
+    @Test
+    public void acceptInvite_notLoggedIn() {
+        setLoggedInUser(null);
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+                    verifyZeroInteractions(interviewParticipantPermissionRules);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_notSameUser() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
+                .thenReturn(interviewParticipantResource);
+        when(interviewParticipantPermissionRules.userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource))
+                .thenReturn(false);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+                    verify(interviewParticipantPermissionRules, only()).userCanAcceptInterviewInvite(interviewParticipantResource, assessorUserResource);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_hashNotExists() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash not exists")).thenReturn(null);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash not exists"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash not exists");
+                    verifyZeroInteractions(interviewParticipantPermissionRules);
+                }
+        );
+    }
+
     @Test
     public void deleteInvite() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
@@ -205,6 +275,16 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
         @Override
         public ServiceResult<InterviewInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> acceptInvite(String inviteHash) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> rejectInvite(String inviteHash) {
             return null;
         }
 

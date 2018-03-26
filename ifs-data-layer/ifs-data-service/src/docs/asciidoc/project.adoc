@@ -115,6 +115,17 @@ include::{snippets}/project/create-project-from-application/response-fields.adoc
 ==== Curl Example
 include::{snippets}/project/create-project-from-application/curl-request.adoc[]
 
+=== Withdraw Project
+==== Request
+include::{snippets}/project/withdraw-project/http-request.adoc[]
+include::{snippets}/project/withdraw-project/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/withdraw-project/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/withdraw-project/curl-request.adoc[]
+
 === Save Monitoring Officer
 ==== Success
 ===== Request
@@ -671,56 +682,6 @@ include::{snippets}/project/send-grant-offer-letter/http-response.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/send-grant-offer-letter/curl-request.adoc[]
-
-
-=== Is Grant Offer Letter notification already sent
-==== Success
-===== Request
-include::{snippets}/project/is-grant-offer-letter-already-sent/http-request.adoc[]
-include::{snippets}/project/is-grant-offer-letter-already-sent/path-parameters.adoc[]
-
-===== Response
-include::{snippets}/project/is-grant-offer-letter-already-sent/http-response.adoc[]
-
-===== Curl Example
-include::{snippets}/project/is-grant-offer-letter-already-sent/curl-request.adoc[]
-
-
-=== Is Grant Offer Letter notification allowed
-==== Success
-===== Request
-include::{snippets}/project/is-send-grant-offer-letter-allowed/http-request.adoc[]
-include::{snippets}/project/is-send-grant-offer-letter-allowed/path-parameters.adoc[]
-
-===== Response
-include::{snippets}/project/is-send-grant-offer-letter-allowed/http-response.adoc[]
-
-===== Curl Example
-include::{snippets}/project/is-send-grant-offer-letter-allowed/curl-request.adoc[]
-
-=== Is Signed Grant Offer Letter Rejected
-==== Success
-===== Request
-include::{snippets}/project/is-signed-grant-offer-letter-rejected/http-request.adoc[]
-include::{snippets}/project/is-signed-grant-offer-letter-rejected/path-parameters.adoc[]
-
-===== Response
-include::{snippets}/project/is-signed-grant-offer-letter-rejected/http-response.adoc[]
-
-===== Curl Example
-include::{snippets}/project/is-signed-grant-offer-letter-rejected/curl-request.adoc[]
-
-=== Get Grant Offer Letter Workflow State
-==== Success
-===== Request
-include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/http-request.adoc[]
-include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/path-parameters.adoc[]
-
-===== Response
-include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/http-response.adoc[]
-
-===== Curl Example
-include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/curl-request.adoc[]
 
 === Get Grant Offer Letter State
 ==== Success
