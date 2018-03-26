@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Account verified'" />
 </head>
-<body th:with="context='applicant'" class="create-application-eligibility">
+<body class="create-application-eligibility">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Account verified',size='heading-xlarge'" />
     <p>Your account has been successfully verified. You can sign in with your registered email and password.</p>
     <a th:href="${userDashboardLink}" class="button">Sign in</a>
@@ -18,5 +17,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

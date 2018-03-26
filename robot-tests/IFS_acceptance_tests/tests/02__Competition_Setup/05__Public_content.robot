@@ -367,7 +367,7 @@ The user is able to make the competition public
     Then the user selects the radio button               publishSetting  public
     And the user clicks the button/link                  jQuery=.button:contains("Publish and review")
     And the user clicks the button/link                  jQuery=.button:contains("Return to public content")
-    Then the user should see the element                 jQuery=.button:contains("Return to setup overview")
+    Then the user should see the element                 jQuery=.button-secondary:contains("Return to setup overview")
     [Teardown]  the user logs out if they are logged in
 
 Guest user can filter competitions by Keywords
@@ -425,7 +425,6 @@ The guest user can see updated date information
    And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Competition closes")
    And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Applicants notified")
    And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Content 1")
-   And the user should see the element    jQuery=dt:contains("${nextyear}") + dd:contains("Content 2")
 
 Guest user can see the updated How-to-apply information
     [Documentation]  INFUND-7490
@@ -523,13 +522,16 @@ the user can add and remove multiple content groups for summary
 the user can add and remove multiple event groups
     When the user clicks the button/link       jQuery=button:contains("+ add new event")
     And the user clicks the button/link        jQuery=button:contains("Save and review")
-    Then the user should see a summary error   Please enter a valid date.
-    And the user should see a summary error    Please enter valid content.
+    Then The user should see a summary error   Please enter a valid date.
+    #TODO add keywork to check field error check when IFS-3126 done
+    And The user should see a field and summary error    Please enter valid content.
     And the user enters text to a text field   id=dates[0].day      60
     And the user enters text to a text field   id=dates[0].month    -6
+    And the user enters text to a text field   id=dates[0].year     22
     And the user clicks the button/link        jQuery=button:contains("Save and review")
-    Then the user should see a summary error   must be between 1 and 31
-    And the user should see a summary error    must be between 1 and 12
+    Then The user should see a field and summary error   Please enter a valid day.
+    And The user should see a field and summary error    Please enter a valid month.
+    And The user should see a field and summary error    Please enter a valid year.
     When the user enters text to a text field  id=dates[0].day      12
     And the user enters text to a text field   id=dates[0].month    12
     And the user enters text to a text field   id=dates[0].year     ${nextyear}
@@ -539,16 +541,11 @@ the user can add and remove multiple event groups
     And the user enters text to a text field   id=dates[1].month    12
     And the user enters text to a text field   id=dates[1].year     ${nextyear}
     And the user enters text to a text field   jQuery=.editor:eq(1)     Content 2
-    And the user clicks the button/link        jQuery=button:contains("+ add new event")
-    And the user enters text to a text field   id=dates[2].day      30
-    And the user enters text to a text field   id=dates[2].month    12
-    And the user enters text to a text field   id=dates[2].year     ${nextyear}
-    And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
-    And the user clicks the button/link        jQuery=button:contains("Remove event"):eq(2)
-    Then the user should not see the element   id=dates[2].day
-    And the user should not see the element    id=dates[2].month
-    And the user should not see the element    id=dates[2].year
-    And the user should not see the element    jQuery=.editor:eq(2)
+    And the user clicks the button/link        jQuery=button:contains("Remove event"):eq(1)
+    Then the user should not see the element   id=dates[1].day
+    And the user should not see the element    id=dates[1].month
+    And the user should not see the element    id=dates[1].year
+    And the user should not see the element    jQuery=.editor:eq(1)
     And the user clicks the button/link        jQuery=button:contains("Save and review")
     And the user clicks the button/link        jQuery=.button:contains("Return to public content")
 

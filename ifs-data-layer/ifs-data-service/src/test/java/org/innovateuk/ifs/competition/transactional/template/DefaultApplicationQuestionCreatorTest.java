@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
-import org.innovateuk.ifs.validator.NotEmptyValidator;
-import org.innovateuk.ifs.validator.WordCountValidator;
+import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
+import org.innovateuk.ifs.validation.validator.WordCountValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

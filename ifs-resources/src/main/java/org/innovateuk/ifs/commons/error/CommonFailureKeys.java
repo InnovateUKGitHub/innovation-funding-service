@@ -273,6 +273,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED(BAD_REQUEST),
 
     /**
+     * Withdrawing a project
+     */
+    PROJECT_CANNOT_BE_WITHDRAWN(BAD_REQUEST),
+
+    /**
      * SIL CRM
      */
     CONTACT_NOT_UPDATED(INTERNAL_SERVER_ERROR),

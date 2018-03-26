@@ -227,12 +227,12 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<CompetitionInviteResource> getInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<CompetitionInviteResource> getInvite(String inviteHash) {
             return null;
         }
 
         @Override
-        public ServiceResult<CompetitionInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
             return null;
         }
 
@@ -247,7 +247,7 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
             return null;
         }
 

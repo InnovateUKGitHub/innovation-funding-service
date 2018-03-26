@@ -151,7 +151,7 @@ public class ReviewSendInviteController extends CompetitionManagementCookieContr
 
     private String redirectToOverview(long competitionId, int page) {
         UriComponentsBuilder builder = UriComponentsBuilder
-                .fromPath("/assessment/panel/competition/{competitionId}/assessors/overview")
+                .fromPath("/assessment/panel/competition/{competitionId}/assessors/pending-and-declined")
                 .queryParam("page", page);
 
         return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
@@ -171,6 +171,6 @@ public class ReviewSendInviteController extends CompetitionManagementCookieContr
     }
 
     private String redirectToPanelOverviewTab(long competitionId) {
-        return format("redirect:/assessment/panel/competition/%s/assessors/overview", competitionId);
+        return format("redirect:/assessment/panel/competition/%s/assessors/pending-and-declined", competitionId);
     }
 }

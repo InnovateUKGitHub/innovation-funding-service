@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.form.controller.QuestionController;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -197,7 +198,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
         ApplicationIneligibleSendResource applicationIneligibleSendResource =
                 newApplicationIneligibleSendResource()
                         .withSubject("Subject")
-                        .withContent("Message")
+                        .withMessage("Message")
                         .build();
 
         RestResult<Void> result = controller.informIneligible(APPLICATION_SUBMITTABLE_ID, applicationIneligibleSendResource);

@@ -9,7 +9,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectDocs.*;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
@@ -93,6 +92,20 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("applicationId").description("Id of the application to turn into a project")
                         ),
                                 responseFields(projectResourceFields)
+                ));
+    }
+
+    @Test
+    public void withdrawProject() throws Exception {
+        Long projectId = 456L;
+        when(projectServiceMock.withdrawProject(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/withdraw", projectId))
+                .andDo(
+                        document("project/{method-name}",
+                         pathParameters(
+                                 parameterWithName("projectId").description("Id of the project to withdraw")
+                         )
                 ));
     }
 }
