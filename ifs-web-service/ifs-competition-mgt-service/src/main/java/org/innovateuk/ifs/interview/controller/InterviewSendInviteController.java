@@ -86,7 +86,7 @@ public class InterviewSendInviteController extends CompetitionManagementCookieCo
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()));
 
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                    .failNowOrSucceedWith(failureView, () -> redirectToInterviewPanelFindTab(competitionId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToPanelOverviewTab(competitionId));
         });
     }
 
@@ -96,5 +96,9 @@ public class InterviewSendInviteController extends CompetitionManagementCookieCo
 
     private String redirectToInterviewPanelFindTab(long competitionId) {
         return format("redirect:/assessment/interview/competition/%s/assessors/find", competitionId);
+    }
+
+    private String redirectToPanelOverviewTab(long competitionId) {
+        return format("redirect:/assessment/interview/competition/%s/assessors/pending-and-declined", competitionId);
     }
 }

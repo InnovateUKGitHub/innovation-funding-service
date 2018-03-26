@@ -4,12 +4,11 @@
             <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team'"/>
         </head>
 
-<body th:with="context='applicant'">
+<body>
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"/>
     <th:block th:insert="fragments/layout :: header-sub"
               th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}+${model.queryParams}"/>
 

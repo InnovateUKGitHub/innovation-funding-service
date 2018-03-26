@@ -13,7 +13,7 @@
 
 
 <main id="content">
-	<th:block th:insert="fragments/layout :: main-content-start" />
+
 
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : #httpServletRequest.requestURI)})" th:if="${(param.compStatus == null)}" />
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${(param.section == null ? 'Competition overview' : 'Competition set up')}, ${(param.section == null ? '/prototypes/3115-comp-dashboard?section=upcoming' : '/prototypes/2469-comp-setup?compStatus=ready')})" th:if="${(param.compStatus != null and param.compStatus[0] == 'ready')}" />
