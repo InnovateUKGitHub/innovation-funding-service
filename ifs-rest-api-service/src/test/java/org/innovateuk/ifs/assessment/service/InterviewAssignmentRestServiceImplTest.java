@@ -4,9 +4,8 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder;
+import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -99,5 +98,28 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
 
         InterviewAssignmentStagedApplicationPageResource actual = service.getStagedApplications(competitionId, page).getSuccess();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getEmailTemplate() {
+        ApplicantInterviewInviteResource expected = new ApplicantInterviewInviteResource("Content");
+
+        setupGetWithRestResultExpectations(format("%s/%s", REST_URL, "email-template"), ApplicantInterviewInviteResource.class, expected);
+
+        ApplicantInterviewInviteResource actual = service.getEmailTemplate().getSuccess();
+        assertEquals(expected, actual);
+    }
+
+
+    @Test
+    public void sendAllInvites() {
+        long competitionId = 1L;
+        AssessorInviteSendResource sendResource = AssessorInviteSendResourceBuilder.newAssessorInviteSendResource()
+                .withContent("content").withSubject("subject").build();
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", REST_URL, "send-invites", competitionId), sendResource, OK);
+
+        RestResult<Void> actual = service.sendAllInvites(competitionId, sendResource);
+        assertTrue(actual.isSuccess());
     }
 }

@@ -2,18 +2,20 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -30,10 +32,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * Service for managing {@link InterviewAssignment}s.
@@ -60,6 +62,12 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     @Autowired
     private SystemNotificationSource systemNotificationSource;
 
+    @Autowired
+    private NotificationSender notificationSender;
+
+    enum Notifications {
+        INVITE_APPLICANT_GROUP_TO_INTERVIEW
+    }
     @Override
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
 
@@ -117,9 +125,44 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     @Override
-    public ServiceResult<Void> sendInvites(AssessorInviteSendResource assessorInviteSendResource) {
-        return serviceFailure(CommonFailureKeys.ADMIN_INVALID_USER_ROLE);
+    public ServiceResult<Void> sendInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+        List<InterviewAssignment> interviewAssignments = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(
+                competitionId, InterviewAssignmentState.CREATED.getBackingState());
+
+        final ActivityState awaitingFeedbackActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
+
+        ServiceResult<Void> result = serviceSuccess();
+        for (InterviewAssignment assignment : interviewAssignments) {
+            if (result.isSuccess()) {
+                result = sendInvite(assessorInviteSendResource, assignment, awaitingFeedbackActivityState);
+            }
+        }
+
+        return result;
     }
+
+    private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment, ActivityState awaitingFeedbackActivityState) {
+        User user = assignment.getParticipant().getUser();
+        NotificationTarget recipient = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
+        Notification notification = new Notification(
+                systemNotificationSource,
+                recipient,
+                Notifications.INVITE_APPLICANT_GROUP_TO_INTERVIEW,
+                asMap(
+                        "subject", assessorInviteSendResource.getSubject(),
+                        "name", user.getName(),
+                        "competitionName", assignment.getTarget().getCompetition().getName(),
+                        "applicationId", assignment.getTarget().getId(),
+                        "applicationTitle", assignment.getTarget().getName(),
+                        "message", assessorInviteSendResource.getContent()
+                ));
+
+        return notificationSender.sendNotification(notification).andOnSuccessReturnVoid(() -> {
+            assignment.setActivityState(awaitingFeedbackActivityState);
+            interviewAssignmentRepository.save(assignment);
+        });
+    }
+
 
     private ServiceResult<Application> getApplication(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));

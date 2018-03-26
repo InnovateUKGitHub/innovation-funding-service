@@ -13,6 +13,7 @@ import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
@@ -38,6 +39,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -54,6 +56,8 @@ import static org.junit.Assert.*;
 public class InterviewAssignmentControllerIntegrationTest extends BaseControllerIntegrationTest<InterviewAssignmentController> {
 
     private List<Application> applications;
+
+    private List<ProcessRole> processRoles;
 
     private Competition competition;
 
@@ -131,7 +135,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         felixWilson.setProfileId(profile.getId());
 
-        List<ProcessRole> processRoles = newProcessRole()
+        processRoles = newProcessRole()
                 .withId()
                 .withRole(Role.ASSESSOR)
                 .withApplication(applications.get(0), applications.get(1))
@@ -256,5 +260,34 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = interviewPanelStagedApplicationPageResourceRestResult.getSuccess();
 
         assertEquals(1, interviewAssignmentStagedApplicationPageResource.getTotalElements());
+    }
+
+    @Test
+    public void sendInvites() {
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                InterviewAssignmentState.CREATED.getBackingState()
+        );
+
+        InterviewAssignment interviewPanel = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withTarget(applications.get(0))
+                .withParticipant(processRoles.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewPanel);
+
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+
+        RestResult<Void> result = controller.sendInvites(competition.getId(), sendResource);
+        assertTrue(result.isSuccess());
+
+        List<InterviewAssignment> created = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.CREATED.getBackingState());
+        List<InterviewAssignment> awaitingFeedback = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
+
+        assertThat(created.size(), equalTo(0));
+        assertThat(awaitingFeedback.size(), equalTo(1));
     }
 }

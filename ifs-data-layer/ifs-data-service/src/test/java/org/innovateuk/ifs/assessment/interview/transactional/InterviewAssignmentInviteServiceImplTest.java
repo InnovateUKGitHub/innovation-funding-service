@@ -3,10 +3,13 @@ package org.innovateuk.ifs.assessment.interview.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.resource.PageResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
@@ -21,9 +24,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -32,6 +39,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -52,6 +60,8 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
                     )
                     .build(TOTAL_APPLICATIONS);
     private static final ActivityState CREATED_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
+    private static final ActivityState PENDING_FEEDBACK_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.PENDING);
+
 
     @Override
     protected InterviewAssignmentInviteServiceImpl supplyServiceUnderTest() {
@@ -160,6 +170,51 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
                     ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
             inOrder.verify(interviewAssignmentRepositoryMock).save(interviewPanellambdaMatcher(expectedApplication));
         });
+    }
+
+    @Test
+    public void getEmailTemplate() {
+        when(notificationTemplateRendererMock.renderTemplate(eq(systemNotificationSourceMock), any(NotificationTarget.class), eq("invite_applicants_to_interview_panel_text.txt"),
+                any(Map.class))).thenReturn(serviceSuccess("Content"));
+
+        ServiceResult<ApplicantInterviewInviteResource> result = service.getEmailTemplate();
+
+        assertThat(result.isSuccess(), equalTo(true));
+        assertThat(result.getSuccess().getContent(), equalTo("Content"));
+    }
+
+    @Test
+    public void sendInvites() {
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+        List<InterviewAssignment> interviewAssignments = newInterviewAssignment()
+                .withParticipant(
+                        newProcessRole()
+                                .withRole(Role.INTERVIEW_LEAD_APPLICANT)
+                                .withOrganisationId(LEAD_ORGANISATION.getId())
+                                .withUser(newUser()
+                                        .withFirstName("Someone").withLastName("SomeName").withEmailAddress("someone@example.com").build())
+                                .build()
+                )
+                .withTarget(
+                        newApplication()
+                                .withCompetition(newCompetition().build())
+                                .build()
+
+                )
+                .build(1);
+
+        when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityStateState(
+                COMPETITION_ID, InterviewAssignmentState.CREATED.getBackingState())).thenReturn(interviewAssignments);
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState())).thenReturn(PENDING_FEEDBACK_ACTIVITY_STATE);
+        when(notificationSenderMock.sendNotification(any(Notification.class))).thenReturn(serviceSuccess(null));
+
+        ServiceResult<Void> result = service.sendInvites(COMPETITION_ID, sendResource);
+
+        assertThat(result.isSuccess(), equalTo(true));
+        verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
+        verify(interviewAssignmentRepositoryMock).save(interviewAssignments.get(0));
+        assertThat(interviewAssignments.get(0).getActivityState(), equalTo(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE));
     }
 
     private static InterviewAssignment interviewPanellambdaMatcher(Application application) {

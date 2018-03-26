@@ -1,0 +1,14 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${name},
+
+Competition: ${competitionName}
+Application number: ${applicationId}
+Project title: ${applicationTitle}
+
+${message}
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

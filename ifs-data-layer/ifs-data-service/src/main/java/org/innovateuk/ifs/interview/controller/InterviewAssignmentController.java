@@ -53,8 +53,8 @@ public class InterviewAssignmentController {
         return interviewAssignmentInviteService.getEmailTemplate().toGetResponse();
     }
 
-    @PostMapping("/send-invites")
-    public RestResult<Void> sendInvites(@Valid @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
-        return interviewAssignmentInviteService.sendInvites(assessorInviteSendResource).toPostWithBodyResponse();
+    @PostMapping("/send-invites/{competitionId}")
+    public RestResult<Void> sendInvites(@PathVariable long competitionId, @Valid @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return interviewAssignmentInviteService.sendInvites(competitionId, assessorInviteSendResource).toPostWithBodyResponse();
     }
 }

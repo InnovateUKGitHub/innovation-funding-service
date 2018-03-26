@@ -62,6 +62,6 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
 
     @Override
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
-        return postWithRestResult(format("%s/%s", REST_URL, "send-invites"), assessorInviteSendResource, Void.class);
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "send-invites", competitionId), assessorInviteSendResource, Void.class);
     }
 }

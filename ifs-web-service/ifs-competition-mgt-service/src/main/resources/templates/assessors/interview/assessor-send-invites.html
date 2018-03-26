@@ -22,7 +22,7 @@
 
     <p th:text="${#strings.listJoin(model.recipients, ', ')}">Paul Plum, Felix Wilson</p>
 
-    <form th:action="@{/interview/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+    <form th:action="@{/assessment/interview/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
         <div class="form-group extra-margin-bottom">
             <label class="form-label-bold" for="subject">Subject</label>
             <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
