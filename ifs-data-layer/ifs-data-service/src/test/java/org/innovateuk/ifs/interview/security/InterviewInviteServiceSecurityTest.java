@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
 
@@ -273,7 +272,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
         }
 
         @Override
-        public ServiceResult<InterviewInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<InterviewInviteResource> openInvite(String inviteHash) {
             return null;
         }
 
@@ -288,7 +287,7 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
             return null;
         }
 

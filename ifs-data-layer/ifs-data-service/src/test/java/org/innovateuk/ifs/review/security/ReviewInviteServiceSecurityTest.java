@@ -285,7 +285,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         }
 
         @Override
-        public ServiceResult<ReviewInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<ReviewInviteResource> openInvite(String inviteHash) {
             return null;
         }
 
@@ -295,12 +295,12 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         }
 
         @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Void> rejectInvite(String inviteHash) {
             return null;
         }
 
         @Override
-        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+        public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
             return null;
         }
 
