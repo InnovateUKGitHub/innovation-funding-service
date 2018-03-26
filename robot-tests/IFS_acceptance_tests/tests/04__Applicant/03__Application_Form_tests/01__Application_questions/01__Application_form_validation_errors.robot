@@ -11,6 +11,9 @@ Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 
+*** Variables ***
+${applicationTitle}  Robot test application
+
 *** Test Cases ***
 Title field client side
     [Documentation]    INFUND-43, INFUND-2843
@@ -18,7 +21,7 @@ Title field client side
     Given the user should see the element      jQuery=h1:contains("Application details")
     When the user enters text to a text field  id=application.name  ${EMPTY}
     Then The user should see a field error     Please enter the full title of the project
-    When the user enters text to a text field  id=application.name  Robot test application
+    When the user enters text to a text field  id=application.name  ${applicationTitle}
     Then the applicant should not see the validation error any more
 
 Day field client side
@@ -54,9 +57,7 @@ Month field client side
 Year field client side
     [Documentation]  INFUND-43 INFUND-2843
     [Tags]  HappyPath
-#    Given the user enters text to a text field  id=application.name  Robot test application
     Given the user enters text to a text field    id=application.durationInMonths  15
-    Then Run Keyword And Ignore Error Without Screenshots  Focus  id=application-question-complete
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date.
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
@@ -65,37 +66,42 @@ Year field client side
     Then the applicant should not see the validation error any more
 
 Duration field client side
-    [Documentation]  INFUND-43 INFUND-2843
+    [Documentation]  INFUND-43 INFUND-2843 IFS-2776
     [Tags]
-    When the user enters text to a text field   id=application.durationInMonths  0
-    Then the user should see an error    Your project should last between 1 and 36 months.
-    When the user enters text to a text field    css=[id="application.durationInMonths"]    -1
-    Then the user should see an error    Your project should last between 1 and 36 months.
-    When the user enters text to a text field    css=[id="application.durationInMonths"]    ${EMPTY}
-    Then the user should see an error    This field cannot be left blank.
-    And the user enters text to a text field    css=[id="application.durationInMonths"]    15
+    When the user enters text to a text field  id=application.durationInMonths  0
+    And the user clicks the button/link        id=application-question-complete
+    Then the user should see a field and summary error  Your project should last between 1 and 36 months.
+
+    When the user enters text to a text field  id=application.durationInMonths  -1
+    And the user clicks the button/link        id=application-question-complete
+    Then the user should see a field and summary error  Your project should last between 1 and 36 months.
+
+    When the user enters text to a text field  id=application.durationInMonths  ${EMPTY}
+    Then the user should see a field error     This field cannot be left blank.
+
+    And the user enters text to a text field   id=application.durationInMonths  25
     And the applicant should not see the validation error of the duration any more
 
 Application details server side
-    [Documentation]  INFUND-2843 INFUND-4694 INFUND-6823
+    [Documentation]  INFUND-2843 INFUND-4694 INFUND-6823 IFS-2776
     [Tags]
-    Given the user should see the text in the page    Application details
-    When the user clicks the button/link    jQuery=label:contains(Yes)
-    And the user enters text to a text field    css=[id="application.name"]    ${EMPTY}
-    And the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
-    And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
-    And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-    And the user enters text to a text field    css=[id="application.durationInMonths"]    ${EMPTY}
-    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then The user should see a field and summary error   Please enter the full title of the project.
-    And the user should see a field and summary error    Please enter a future date.
-    And the user should see a field and summary error    This field cannot be left blank.
-    And the user should see a field and summary error    Please tell us if this application is a resubmission or not.
-    And the user should see a field and summary error    Please enter the full title of the project.
-    And the user should see a field and summary error    Please select a research category.
-    And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
-    ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
+    Given the user should see the element     jQuery=h1:contains("Application details")
+    When the user clicks the button/link      jQuery=label:contains(Yes)
+    And the user enters text to a text field  id=application.name  ${EMPTY}
+    And the user enters text to a text field  id=application_details-startdate_day  ${EMPTY}
+    And the user enters text to a text field  id=application_details-startdate_month  ${EMPTY}
+    And the user enters text to a text field  id=application_details-startdate_year    ${EMPTY}
+    And the user enters text to a text field  id=application.durationInMonths    ${EMPTY}
+    And the user unchecks the resubmission radio button
+    And the user clicks the button/link       id=application-question-complete
+    Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
+    And The user should see a field and summary error   Please enter the full title of the project.
+    And the user should see a field and summary error   Please enter a future date.
+    And the user should see a field and summary error   This field cannot be left blank.
+    And the user should see a field and summary error   Please enter the full title of the project.
+    And the user should see a field and summary error   Please select a research category.
+    [Teardown]    Run keywords    the user enters text to a text field  id=application.name  ${applicationTitle}
+    ...    AND    Focus    id="application-question-save"
 
 Empty text area
     [Documentation]    INFUND-43
@@ -103,19 +109,19 @@ Empty text area
     [Setup]    The user clicks the button/link    link=Application overview
     Given the user clicks the button/link    link=Project summary
     When the applicant clears the text area of the "Project Summary"
-    When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
+    When the user clicks the button/link    id=application-question-complete
     Then the user should see an error    Please enter some text.
     When The user enters text to a text field    css=.textarea-wrapped .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
 Custom Suite Setup
-    log in and create new application if there is not one already  Robot test application
+    log in and create new application if there is not one already  ${applicationTitle}
     Applicant goes to the application details page of the Robot application
 
 the applicant should not see the validation error any more
     Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
-    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
+    Run Keyword And Ignore Error Without Screenshots    Focus  id=application-question-complete
     wait for autosave
     the user should not see the element    css=.error-message
 
@@ -143,8 +149,8 @@ the applicant clears the text area of the "Project Summary"
 
 Applicant goes to the application details page of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
-    When the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Application details
+    When the user clicks the button/link    link=${applicationTitle}
+    And the user clicks the button/link     link=Application details
 
 the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn
@@ -153,3 +159,7 @@ the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn
     wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months
+
+the user unchecks the resubmission radio button
+    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#application\\.resubmission-yes').get(0).removeAttribute('checked');
+    Run Keyword And Ignore Error Without Screenshots  Execute Javascript  jQuery('#application\\.resubmission-no').get(0).removeAttribute('checked');
