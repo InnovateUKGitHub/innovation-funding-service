@@ -13,7 +13,6 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessor agreement',size='heading-xlarge'" />
             <p>Please read through all of the terms of service before agreeing.</p>
 
-            <!--/* TODO INFUND-8899 ifs:utext is stripping relative links in the text. Switching to using th:utext. */-->
             <div ifs:utext="${model.text}" />
 
             <p class="form-hint">You can access this assessor agreement at any time from your profile. <a target="_blank" href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement (opens in a new window)</a>.</p>
