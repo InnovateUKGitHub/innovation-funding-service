@@ -3,14 +3,13 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details',hasFormErrors=${#fields.hasErrors('${userDetailsForm.*}')}" />
 </head>
-<body th:with="context='applicant'" class="user-profile-edit">
+<body class="user-profile-edit">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
 
     <div th:if="${#fields.hasErrors('${userDetailsForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -100,5 +99,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

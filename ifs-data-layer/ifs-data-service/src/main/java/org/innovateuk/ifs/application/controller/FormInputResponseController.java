@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.transactional.FormInputResponseService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.validator.util.ValidationUtil;
+import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
