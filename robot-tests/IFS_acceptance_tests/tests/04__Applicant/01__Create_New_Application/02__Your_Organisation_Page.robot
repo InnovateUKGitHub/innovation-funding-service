@@ -102,7 +102,7 @@ Manually add the details and pass to the confirmation page
 Applicant goes to the organisation search page
     Given the guest user opens the browser
     the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Home and industrial efficiency programme
+    Given the user clicks the button/link in the paginated list     link=${createApplicationOpenCompetition}
     When the user clicks the button/link    link=Start new application
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=span:contains("Business")
