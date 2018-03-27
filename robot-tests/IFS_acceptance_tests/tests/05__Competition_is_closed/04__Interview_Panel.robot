@@ -114,8 +114,3 @@ the competition admin selects the applications and adds them to the invite list
     the user should see the element    link=Review and send invites
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
-
-the user confirms and checks the competition is not in invitation panel
-#Assessor has answered the invite so it should not display in the invitation panel
-    the user clicks the button/link      css=.button[type="submit"]   #Confirm
-    the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
