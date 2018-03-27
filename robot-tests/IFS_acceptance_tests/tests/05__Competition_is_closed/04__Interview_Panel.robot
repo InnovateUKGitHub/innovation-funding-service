@@ -83,7 +83,7 @@ Assessors accept the invitation to the interview panel
     And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery=h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
-Assessor can respond to emnail invite and decline
+Assessor can respond to email invite and decline
     [Documentation]  IFS-3143
     [Tags]
     Given log in as a different user         ${assessor_madeleine_email}   ${short_password}
