@@ -610,7 +610,7 @@ Assessor: Contain the correct options
 Assessor: Mark as Done then Edit again
      [Documentation]    INFUND-5641 IFS-380
      [Tags]    HappyPath
-    When the user selects the checkbox         assessors-62
+    When the user selects the radio button     assessorCount   5
     Then the user enters text to a text field  id=assessorPay  100
     When the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the element       jQuery=dt:contains("How many assessors") + dd:contains("5")
