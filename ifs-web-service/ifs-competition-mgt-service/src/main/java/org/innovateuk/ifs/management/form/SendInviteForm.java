@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -13,7 +14,9 @@ import java.util.List;
  */
 public class SendInviteForm implements BindingResultTarget {
 
+    @NotBlank(message = "{validation.inviteAssessors.subject.required}")
     private String subject;
+
     private String content;
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;

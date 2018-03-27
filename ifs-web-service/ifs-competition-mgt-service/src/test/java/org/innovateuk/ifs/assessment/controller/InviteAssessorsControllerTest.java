@@ -829,7 +829,7 @@ public class InviteAssessorsControllerTest extends BaseControllerMockMVCTest<Inv
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withStatus(ACCEPTED, REJECTED)
-                .withDetails("", "Invite declined as person is too busy")
+                .withDetails("", "Invite declined: person is too busy")
                 .build(2);
     }
 

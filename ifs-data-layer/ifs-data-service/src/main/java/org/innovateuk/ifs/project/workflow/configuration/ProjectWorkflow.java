@@ -10,10 +10,15 @@ import org.springframework.statemachine.config.builders.StateMachineConfiguratio
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
 
+import java.util.LinkedHashSet;
+
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.project.resource.ProjectEvent.GOL_APPROVED;
 import static org.innovateuk.ifs.project.resource.ProjectEvent.PROJECT_CREATED;
+import static org.innovateuk.ifs.project.resource.ProjectEvent.PROJECT_WITHDRAWN;
 import static org.innovateuk.ifs.project.resource.ProjectState.LIVE;
 import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
+import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 
 /**
  * Describes the workflow for Project Setup.
@@ -32,6 +37,7 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
     public void configure(StateMachineStateConfigurer<ProjectState, ProjectEvent> states) throws Exception {
         states.withStates()
                 .initial(SETUP)
+                .states(new LinkedHashSet<>(asList(ProjectState.values())))
                 .end(LIVE);
     }
 
@@ -39,13 +45,18 @@ public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState,
     public void configure(StateMachineTransitionConfigurer<ProjectState, ProjectEvent> transitions) throws Exception {
         transitions
                 .withExternal()
-                .source(SETUP)
-                .event(PROJECT_CREATED)
-                .target(SETUP)
+                    .source(SETUP)
+                    .event(PROJECT_CREATED)
+                    .target(SETUP)
                 .and()
                 .withExternal()
-                .source(SETUP)
-                .event(GOL_APPROVED)
-                .target(LIVE);
+                    .source(SETUP)
+                    .event(GOL_APPROVED)
+                    .target(LIVE)
+                .and()
+                .withExternal()
+                    .source(SETUP)
+                    .event(PROJECT_WITHDRAWN)
+                    .target(WITHDRAWN);
     }
 }

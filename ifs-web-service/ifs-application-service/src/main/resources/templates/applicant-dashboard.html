@@ -5,14 +5,12 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Dashboard'" />
 </head>
 
-<body th:with="context='applicant'" class="app-dashboard">
+<body class="app-dashboard">
 
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
     <main tabindex="-1" id="content">
-        <th:block th:insert="fragments/layout :: main-content-start" />
-
         <div class="event-alert is-open" th:each="notification:${notifications}">
             <p>
                 <span th:text="${notification?.assignedByName + ' has assigned a question to you'}"></span>
@@ -141,6 +139,7 @@
 
     <th:block th:insert="fragments/layout :: footer" />
     <th:block th:insert="fragments/layout :: body-end" />
+    <th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 
 </html>

@@ -13,7 +13,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Interviews you have agreed to attend'}, ${(param.status != null ? '/prototypes/IFS-2254-apps-for-interview?status=' + param.status[0]:'/prototypes/IFS-2254-apps-for-interview')})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
@@ -64,7 +64,24 @@
 
     <th:block th:if="${param.status != null and param.status[0] == 'noResponse'}">
         <div class="message-alert">
-            <h2 class="heading-small">The lead applicant has not responded to feedback.</h2>
+            <p>The lead applicant can respond to feedback.</p>
+        </div>
+
+        <h2 class="heading-medium">Attachments</h2>
+        <p>The lead applicant has not yet uploaded a response.</p>
+    </th:block>
+
+    <th:block th:if="${param.status != null and param.status[0] == 'noResponseWithFeedback'}">
+        <div class="message-alert">
+            <p>The lead applicant can respond to feedback.</p>
+        </div>
+
+        <h2 class="heading-medium">Attachments</h2>
+        <p>The lead applicant has not yet uploaded a response.</p>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">Panel assessment feedback</h3>
+            <a target="_blank" href="#">panel-assessment-feedback.pdf, 7 KB (opens in a new window)</a>
         </div>
     </th:block>
 
@@ -75,11 +92,6 @@
         <div class="form-group download">
             <h3 class="heading-small no-margin">Applicant feedback repsonse</h3>
             <a target="_blank" href="#">feedback-document.pdf, 8 KB (opens in a new window)</a>
-        </div>
-
-        <div class="form-group download">
-            <h3 class="heading-small no-margin">Innovation Lead feedback</h3>
-            <a target="_blank" href="#">innovation-lead-feedback.pdf, 6 KB (opens in a new window)</a>
         </div>
 
         <div class="form-group download">

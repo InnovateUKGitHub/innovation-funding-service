@@ -3,12 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Overview'" />
 </head>
-<body th:with="context='front-door'" class="competition-overview">
+<body class="competition-overview">
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
     <main tabindex="-1" id="content">
-        <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
 
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},subTitle='Funding competition',size='heading-large'" />
@@ -19,11 +18,11 @@
             <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMMM yyyy')}"></span></li>
 
             <li th:unless="${model.nonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
-                         time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
+                         time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, 'h:mma'))}">
                 <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
 
             <li th:if="${model.nonIfs}" th:with="date=${#temporals.format(model.registrationCloseDate, 'EEEE d MMMM yyyy')},
-                                                 time=${#strings.toLowerCase(#temporals.format(model.registrationCloseDate, ' h:mma'))}">
+                                                 time=${#strings.toLowerCase(#temporals.format(model.registrationCloseDate, 'h:mma'))}">
                 <strong>Registration closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
 
         </ul>

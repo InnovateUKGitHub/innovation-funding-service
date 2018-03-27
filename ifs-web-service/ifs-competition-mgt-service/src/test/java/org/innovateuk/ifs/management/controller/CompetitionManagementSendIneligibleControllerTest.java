@@ -17,8 +17,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.application.UserApplicationRole.COLLABORATOR;
-import static org.innovateuk.ifs.application.UserApplicationRole.LEAD_APPLICANT;
+import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.COLLABORATOR;
+import static org.innovateuk.ifs.user.viewmodel.UserApplicationRole.LEAD_APPLICANT;
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
@@ -103,17 +103,16 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         long applicationId = 1L;
         long competitionId = 2L;
         String subject = "subject";
-        String content = "content";
+        String message = "message";
 
         ApplicationResource applicationResource = newApplicationResource()
                 .withId(applicationId)
                 .withCompetition(competitionId)
                 .build();
 
-
         ApplicationIneligibleSendResource expectedSendResource = newApplicationIneligibleSendResource()
                 .withSubject(subject)
-                .withContent(content)
+                .withMessage(message)
                 .build();
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
@@ -122,7 +121,7 @@ public class CompetitionManagementSendIneligibleControllerTest extends BaseContr
         mockMvc.perform(post("/competition/application/{applicationId}/ineligible/send", applicationId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("subject", subject)
-                .param("content", content))
+                .param("message", message))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + competitionId + "/applications/ineligible"));
 
