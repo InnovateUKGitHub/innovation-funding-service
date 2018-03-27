@@ -3,35 +3,34 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
-import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.mapper.ReviewParticipantMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -41,18 +40,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -70,16 +65,14 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
-
 /*
  * Service for managing {@link ReviewInvite}s.
  */
 @Service
 @Transactional
-public class ReviewInviteServiceImpl implements ReviewInviteService {
+public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> implements ReviewInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
-    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
     private ReviewInviteRepository reviewInviteRepository;
@@ -94,22 +87,10 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private InnovationAreaMapper innovationAreaMapper;
-
-    @Autowired
     private ReviewInviteMapper reviewInviteMapper;
 
     @Autowired
-    private ParticipantStatusMapper participantStatusMapper;
-
-    @Autowired
     private ReviewParticipantMapper reviewParticipantMapper;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
 
     @Autowired
     private NotificationSender notificationSender;
@@ -132,13 +113,32 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
-    enum Notifications {
-        INVITE_ASSESSOR_TO_PANEL,
-        INVITE_ASSESSOR_GROUP_TO_PANEL
-    }
+    @Autowired
+    private AvailableAssessorMapper availableAssessorMapper;
+
+    @Autowired
+    private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
+
+    @Autowired
+    private AssessorCreatedInviteMapper assessorCreatedInviteMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
+
+    enum Notifications {
+        INVITE_ASSESSOR_TO_PANEL,
+        INVITE_ASSESSOR_GROUP_TO_PANEL;
+    }
+
+    @Override
+    protected Class<ReviewInvite> getInviteClass() {
+        return ReviewInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<ReviewInvite> getInviteRepository() {
+        return reviewInviteRepository;
+    }
 
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
@@ -224,7 +224,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
                     pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
+                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResource),
                     pagedResult.getNumber(),
                     pagedResult.getSize()
             ));
@@ -237,41 +237,13 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }
 
-    private AvailableAssessorResource mapToAvailableAssessorResource(CompetitionParticipant participant) {
-        User assessor = participant.getUser();
-        Profile profile = profileRepository.findOne(assessor.getProfileId());
-
-        AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
-        availableAssessor.setId(assessor.getId());
-        availableAssessor.setEmail(assessor.getEmail());
-        availableAssessor.setName(assessor.getName());
-        availableAssessor.setBusinessType(profile.getBusinessType());
-        availableAssessor.setCompliant(profile.isCompliant(assessor));
-        availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-
-        return availableAssessor;
-    }
-
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
         Page<ReviewInvite> pagedResult = reviewInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),
-                competitionInvite -> {
-                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
-                    assessorCreatedInvite.setName(competitionInvite.getName());
-                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
-                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
-                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
-                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
-
-                    if (competitionInvite.getUser() != null) {
-                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
-                    }
-
-                    return assessorCreatedInvite;
-                }
+                assessorCreatedInviteMapper::mapToResource
         );
 
         return serviceSuccess(new AssessorCreatedInvitePageResource(
@@ -286,7 +258,7 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     @Override
     public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> stagedInvites) {
         return serviceSuccess(mapWithIndex(stagedInvites, (i, invite) ->
-                getUserById(invite.getUserId()).andOnSuccess(user ->
+                getUser(invite.getUserId()).andOnSuccess(user ->
                         getByEmailAndCompetition(user.getEmail(), invite.getCompetitionId()).andOnFailure(() ->
                                 inviteUserToCompetition(user, invite.getCompetitionId())
                         )))).andOnSuccessReturnVoid();
@@ -303,24 +275,8 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
-                participant -> {
-                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
-                    assessorInviteOverview.setName(participant.getInvite().getName());
-                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
-                    assessorInviteOverview.setDetails(getDetails(participant));
-                    assessorInviteOverview.setInviteId(participant.getInvite().getId());
-
-                    if (participant.getUser() != null) {
-                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
-
-                        assessorInviteOverview.setId(participant.getUser().getId());
-                        assessorInviteOverview.setBusinessType(profile.getBusinessType());
-                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
-                        assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-                    }
-
-                    return assessorInviteOverview;
-                });
+                assessorInviteOverviewMapper::mapToResource
+        );
 
         return serviceSuccess(new AssessorInviteOverviewPageResource(
                 pagedResult.getTotalElements(),
@@ -329,20 +285,6 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
                 pagedResult.getNumber(),
                 pagedResult.getSize()
         ));
-    }
-
-    private String getDetails(ReviewParticipant participant) {
-        String details = null;
-
-        if (participant.getStatus() == REJECTED) {
-            details = "Invite declined";
-        } else if (participant.getStatus() == PENDING) {
-            if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
-            }
-        }
-
-        return details;
     }
 
     @Override
@@ -417,26 +359,8 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
         return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<User> getUserById(long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
-    }
-
     private ServiceResult<ReviewInvite> getByEmailAndCompetition(String email, long competitionId) {
         return find(reviewInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(AssessmentInvite.class, email, competitionId));
-    }
-
-    private boolean isUserCompliant(ReviewInvite competitionInvite) {
-        if (competitionInvite == null || competitionInvite.getUser() == null) {
-            return false;
-        }
-        Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
-        return profile.isCompliant(competitionInvite.getUser());
-    }
-
-    private List<InnovationAreaResource> getInnovationAreasForInvite(ReviewInvite competitionInvite) {
-        return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
-                .map(innovationAreaMapper::mapToResource)
-                .collect(toList());
     }
 
     @Override
@@ -482,18 +406,8 @@ public class ReviewInviteServiceImpl implements ReviewInviteService {
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
-            if (invite.getUser() != null) {
-                return TRUE;
-            }
-
-            return userRepository.findByEmail(invite.getEmail()).isPresent();
-        });
-    }
-
-    private ServiceResult<ReviewInvite> getByHash(String inviteHash) {
-        return find(reviewInviteRepository.getByHash(inviteHash), notFoundError(AssessmentInvite.class, inviteHash));
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     private static ServiceResult<ReviewParticipant> accept(ReviewParticipant participant) {

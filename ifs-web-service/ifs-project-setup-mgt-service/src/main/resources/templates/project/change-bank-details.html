@@ -11,7 +11,6 @@
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Review bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">

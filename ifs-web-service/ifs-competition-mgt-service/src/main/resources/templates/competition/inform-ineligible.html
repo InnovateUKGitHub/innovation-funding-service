@@ -4,41 +4,67 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage applications'" />
 </head>
 
-<body th:with="context='comp-management'" class="competition-management competition-overview">
+<body class="competition-management competition-overview">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Ineligible applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/ineligible(competitionId=${model.competitionId})}" />
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to send email.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
 
     <div class="page-title">
         <h1 class="heading-xlarge">
-            <span class="heading-secondary" th:text="${model.competitionName}">Technology inspired</span>
+            <span class="heading-secondary" th:text="|${model.competitionId}: ${model.competitionName}|">9876: Technology inspired</span>
             Inform lead applicant
         </h1>
     </div>
 
     <p class="heading-medium">Application:</p>
-    <p th:text="${model.applicationName}"/>
+    <p th:text="|${model.applicationId}: ${model.applicationName}|"/>
 
-    <p>The following email will be sent to the lead applicant, after which this application will be no longer available for assessment.</p>
+    <div class="message-alert">The following email will be sent to the lead applicant after which the application will not be available for assessment.</div>
 
     <p class="heading-medium" th:text="|Recipient: ${model.leadApplicant}|">Dave smith</p>
 
-    <form th:action="@{/competition/application/{applicationId}/ineligible/send(applicationId=${model.applicationId})}" method="post" enctype="multipart/form-data" th:object="${form}">
-        <div class="form-group">
-            <label class="form-label-bold" for="subject">Subject</label>
-            <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
+    <form th:action="@{/competition/application/{applicationId}/ineligible/send(applicationId=${model.applicationId})}" novalidate="novalidate" method="post" enctype="multipart/form-data" th:object="${form}">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('subject')}">
+                <span>Subject</span>
+                <th:block th:if="${#fields.hasErrors('subject')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <input class="form-control width-full"
+                   id="subject"
+                   type="text"
+                   th:field="*{subject}"
+                   required="required"
+                   th:attr="data-required-errormessage=#{validation.informleadapplicant.subject.required}"   />
         </div>
 
-        <div class="form-group">
-            <label class="form-label-bold" for="message">Message</label>
-            <textarea id="message" rows="16" class="form-control width-full" th:field="*{content}"></textarea>
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{message}')} ? 'form-group-error'">
+            <label class="form-label" th:for="${#ids.next('message')}">
+                <span>Message</span>
+                <th:block th:if="${#fields.hasErrors('message')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('message')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <textarea id="message"
+                      rows="16"
+                      class="form-control width-full"
+                      th:field="*{message}"
+                      required="required"
+                      th:attr="data-required-errormessage=#{validation.informleadapplicant.message.required}"></textarea>
         </div>
 
-        <div class="alignright">
-            <button type="submit" class="button button-large">Send</button>
+        <div class="extra-margin">
+            <button type="submit" class="button">Send</button>
+            <a th:href="@{/competition/{competitionId}/applications/ineligible(competitionId=${model.competitionId})}"
+               class="button button-clear">Cancel</a>
         </div>
     </form>
 
@@ -47,5 +73,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

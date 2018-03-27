@@ -516,7 +516,7 @@ public class ApplicationNotificationServiceImplTest {
     public void informIneligible() throws Exception {
         long applicationId = 1L;
         String subject = "subject";
-        String content = "content";
+        String message = "message";
         String email = "email@address.com";
         String firstName = "first";
         String lastName = "last";
@@ -524,7 +524,7 @@ public class ApplicationNotificationServiceImplTest {
 
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
                 .withSubject(subject)
-                .withContent(content)
+                .withMessage(message)
                 .build();
 
         User[] users = newUser()
@@ -545,8 +545,8 @@ public class ApplicationNotificationServiceImplTest {
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "subject", subject,
-                "bodyPlain", content,
-                "bodyHtml", content
+                "bodyPlain", message,
+                "bodyHtml", message
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
@@ -578,11 +578,11 @@ public class ApplicationNotificationServiceImplTest {
     public void informIneligible_workflowError() throws Exception {
         long applicationId = 1L;
         String subject = "subject";
-        String content = "content";
+        String message = "message";
 
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
                 .withSubject(subject)
-                .withContent(content)
+                .withMessage(message)
                 .build();
 
         Application application = newApplication()
