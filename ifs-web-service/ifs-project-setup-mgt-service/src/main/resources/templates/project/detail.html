@@ -12,7 +12,6 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
@@ -23,7 +22,7 @@
         <thead>
             <tr>
                 <th scope="col" class="larger-cols">Question</th>
-                <th scope="col" class="larger-cols">Answer</th>
+                <th scope="col">Answer</th>
             </tr>
         </thead>
         <tbody>
@@ -66,8 +65,8 @@
             <thead>
             <tr>
                 <th scope="col" class="larger-cols">Partner</th>
-                <th scope="col" class="larger-cols">Finance contact</th>
-                <th scope="col" class="larger-cols">Project location</th>
+                <th scope="col">Finance contact</th>
+                <th scope="col">Project location</th>
             </tr>
             </thead>
             <tbody>
