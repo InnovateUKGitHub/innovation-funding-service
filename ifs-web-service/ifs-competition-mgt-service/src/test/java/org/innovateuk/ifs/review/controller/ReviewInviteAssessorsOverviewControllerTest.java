@@ -127,7 +127,7 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withStatus(PENDING, REJECTED)
-                .withDetails("", "Invite declined as person is too busy")
+                .withDetails("", "Invite declined: person is too busy")
                 .build(2);
     }
 

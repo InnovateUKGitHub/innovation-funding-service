@@ -62,10 +62,10 @@ the user chooses an organisation type
 the user starts a competition create account journey for both RTO and Business organisation types
     the guest user opens the browser
     the user navigates to the page    ${frontDoor}
-    the user starts a competition create account journey  Home and industrial efficiency programme
+    the user starts a competition create account journey  ${createApplicationOpenCompetition}
 
 the user starts a competition create account journey
     [Arguments]    ${competition_name}
-    the user clicks the button/link    link=${competition_name}
+    the user clicks the button/link in the paginated list    link=${competition_name}
     the user clicks the button/link    link=Start new application
     the user clicks the button/link    jQuery=.button:contains("Create account")
