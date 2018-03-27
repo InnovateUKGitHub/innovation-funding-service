@@ -100,4 +100,23 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         InterviewAssignmentStagedApplicationPageResource actual = service.getStagedApplications(competitionId, page).getSuccess();
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void unstageApplication() {
+        long applicationId = 1L;
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", REST_URL, "unstage-applications", applicationId), OK);
+
+        RestResult<Void> restResult = service.unstageApplication(applicationId);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void unstageApplications() {
+
+        setupPostWithRestResultExpectations(format("%s/%s", REST_URL, "unstage-applications"), OK);
+
+        RestResult<Void> restResult = service.unstageApplications();
+        assertTrue(restResult.isSuccess());
+    }
 }

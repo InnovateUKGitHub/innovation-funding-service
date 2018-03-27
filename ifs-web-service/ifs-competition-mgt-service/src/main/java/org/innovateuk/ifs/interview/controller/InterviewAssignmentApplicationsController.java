@@ -219,15 +219,52 @@ public class InterviewAssignmentApplicationsController extends CompetitionManage
     public String invite(Model model,
                          @PathVariable("competitionId") long competitionId,
                          @RequestParam(defaultValue = "0") int page,
-                         @RequestParam MultiValueMap<String, String> queryParams) {
+                         @RequestParam MultiValueMap<String, String> queryParams,
+                         @ModelAttribute(name = "form", binding = false) InterviewAssignmentSelectionForm selectionForm,
+                         @SuppressWarnings("unused") BindingResult bindingResult) {
 
         String originQuery = buildOriginQueryString(INTERVIEW_PANEL_INVITE, queryParams);
 
         model.addAttribute("model", interviewAssignmentApplicationsInviteModelPopulator
                 .populateModel(competitionId, page, originQuery));
+        model.addAttribute("form", selectionForm);
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview-panel-invite";
+    }
+
+    @PostMapping(value = "/invite", params = "remove")
+    public String remove(Model model,
+                         @PathVariable("competitionId") long competitionId,
+                         @RequestParam("remove") long applicationId,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam MultiValueMap<String, String> queryParams,
+                         @ModelAttribute(name = "form") InterviewAssignmentSelectionForm selectionForm,
+                         @SuppressWarnings("unused") BindingResult bindingResult,
+                         ValidationHandler validationHandler) {
+
+        Supplier<String> failureAndSuccess = () -> invite(model, competitionId, page, queryParams, selectionForm, bindingResult);
+
+        RestResult<Void> result = interviewAssignmentRestService.unstageApplication(applicationId);
+        return validationHandler.addAnyErrors(result)
+                .failNowOrSucceedWith(failureAndSuccess, failureAndSuccess);
+    }
+
+    @PostMapping(value = "/invite", params = "removeAll")
+    public String removeAll(Model model,
+                         @PathVariable("competitionId") long competitionId,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam MultiValueMap<String, String> queryParams,
+                         @ModelAttribute(name = "form") InterviewAssignmentSelectionForm selectionForm,
+                         @SuppressWarnings("unused") BindingResult bindingResult,
+                         ValidationHandler validationHandler) {
+
+        Supplier<String> successView = () -> redirectToFind(competitionId, 0, Optional.empty());
+        Supplier<String> failureView = () -> invite(model, competitionId, page, queryParams, selectionForm, bindingResult);
+
+        RestResult<Void> result = interviewAssignmentRestService.unstageApplications();
+        return validationHandler.addAnyErrors(result)
+                .failNowOrSucceedWith(failureView, successView);
     }
 
     private String redirectToInvite(long competitionId, int page) {

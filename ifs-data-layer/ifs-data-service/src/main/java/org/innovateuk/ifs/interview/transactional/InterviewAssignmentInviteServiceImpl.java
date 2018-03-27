@@ -95,6 +95,18 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
         return serviceSuccess();
     }
 
+    @Override
+    public ServiceResult<Void> unstageApplication(long applicationId) {
+        interviewAssignmentRepository.deleteByTargetIdAndActivityStateState(applicationId, InterviewAssignmentState.CREATED.getBackingState());
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> unstageApplications() {
+        interviewAssignmentRepository.deleteByActivityStateState(InterviewAssignmentState.CREATED.getBackingState());
+        return serviceSuccess();
+    }
+
     private ServiceResult<Application> getApplication(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
     }

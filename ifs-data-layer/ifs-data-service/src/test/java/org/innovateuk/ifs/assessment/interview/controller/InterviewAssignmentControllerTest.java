@@ -127,4 +127,28 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
         verify(interviewAssignmentInviteServiceMock, only()).assignApplications(applications.getInvites());
     }
+
+    @Test
+    public void unstageApplication() throws Exception {
+        long applicationId = 1L;
+
+        when(interviewAssignmentInviteServiceMock.unstageApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-applications/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplication(applicationId);
+    }
+
+    @Test
+    public void unstageApplications() throws Exception {
+        when(interviewAssignmentInviteServiceMock.unstageApplications()).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-applications")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications();
+    }
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.interview.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.resource.PageResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
@@ -161,6 +162,26 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
             inOrder.verify(interviewAssignmentRepositoryMock).save(interviewPanellambdaMatcher(expectedApplication));
         });
     }
+
+    @Test
+    public void unstageApplication() {
+        long applicationId = 1L;
+
+        ServiceResult<Void> result = service.unstageApplication(applicationId);
+
+        assertTrue(result.isSuccess());
+        verify(interviewAssignmentRepositoryMock).deleteByTargetIdAndActivityStateState(applicationId, InterviewAssignmentState.CREATED.getBackingState());
+    }
+
+    @Test
+    public void unstageApplications() {
+
+        ServiceResult<Void> result = service.unstageApplications();
+
+        assertTrue(result.isSuccess());
+        verify(interviewAssignmentRepositoryMock).deleteByActivityStateState(InterviewAssignmentState.CREATED.getBackingState());
+    }
+
 
     private static InterviewAssignment interviewPanellambdaMatcher(Application application) {
         return createLambdaMatcher((InterviewAssignment interviewPanel) -> {

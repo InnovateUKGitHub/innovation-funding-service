@@ -49,4 +49,14 @@ public class InterviewAssignmentController {
     public RestResult<Void> assignApplications(@Valid @RequestBody StagedApplicationListResource stagedApplicationListResource) {
         return interviewAssignmentInviteService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
     }
+
+    @PostMapping("/unstage-applications/{applicationId}")
+    public RestResult<Void> unstageApplication(@PathVariable long applicationId) {
+        return interviewAssignmentInviteService.unstageApplication(applicationId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/unstage-applications")
+    public RestResult<Void> unstageApplications() {
+        return interviewAssignmentInviteService.unstageApplications().toPostWithBodyResponse();
+    }
 }

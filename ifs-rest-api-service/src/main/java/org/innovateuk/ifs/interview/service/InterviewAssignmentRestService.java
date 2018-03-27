@@ -19,4 +19,8 @@ public interface InterviewAssignmentRestService {
     RestResult<Void> assignApplications(StagedApplicationListResource stagedApplicationListResource);
 
     RestResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, int page);
+
+    RestResult<Void> unstageApplication(long applicationId);
+
+    RestResult<Void> unstageApplications();
 }

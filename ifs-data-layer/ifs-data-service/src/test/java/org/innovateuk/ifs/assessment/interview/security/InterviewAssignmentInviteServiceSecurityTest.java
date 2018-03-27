@@ -57,6 +57,22 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
         );
     }
 
+    @Test
+    public void unstageApplication() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.unstageApplication(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void unstageApplications() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.unstageApplications(),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
     public static class TestInterviewAssignmentInviteService implements InterviewAssignmentInviteService {
 
         @Override
@@ -76,6 +92,16 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> unstageApplication(long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> unstageApplications() {
             return null;
         }
     }

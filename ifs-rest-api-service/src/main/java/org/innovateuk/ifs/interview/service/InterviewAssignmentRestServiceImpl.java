@@ -52,4 +52,14 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
 
         return getWithRestResult(builder.toUriString(), InterviewAssignmentStagedApplicationPageResource.class);
     }
+
+    @Override
+    public RestResult<Void> unstageApplication(long applicationId) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-applications", applicationId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> unstageApplications() {
+        return postWithRestResult(format("%s/%s", REST_URL, "unstage-applications"), Void.class);
+    }
 }

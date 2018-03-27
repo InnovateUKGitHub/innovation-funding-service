@@ -15,4 +15,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface InterviewAssignmentRepository extends ProcessRepository<InterviewAssignment>, PagingAndSortingRepository<InterviewAssignment, Long> {
 
     Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateState(long applicationId, State backingState, Pageable pagable);
+
+    void deleteByTargetIdAndActivityStateState(long applicationId, State backingState);
+    void deleteByActivityStateState(State backingState);
 }

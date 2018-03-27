@@ -136,4 +136,31 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
         verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplicationIds(competitionId);
     }
+
+    @Test
+    public void unstageApplication() throws Exception {
+        long applicationId = 123L;
+        when(interviewAssignmentInviteServiceMock.unstageApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-applications/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to unstage")
+                        )
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplication(applicationId);
+    }
+
+    @Test
+    public void unstageApplications() throws Exception {
+        when(interviewAssignmentInviteServiceMock.unstageApplications()).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-applications"))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}"));
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications();
+    }
 }
