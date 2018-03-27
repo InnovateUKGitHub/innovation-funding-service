@@ -49,9 +49,9 @@ public class FieldComparisonValidator implements ConstraintValidator<FieldCompar
             final Object firstObject = PropertyUtils.getProperty(value, firstFieldName);
             final Object secondObject = PropertyUtils.getProperty(value, secondFieldName);
 
-            if(firstObject == null
+            if (firstObject == null
                     || secondObject == null) {
-                return true; //Empty fields should be covered by other validation annotations
+                return true; // Empty fields should be covered by other validation annotations
             }
 
             return predicate.predicate().test(firstObject, secondObject);

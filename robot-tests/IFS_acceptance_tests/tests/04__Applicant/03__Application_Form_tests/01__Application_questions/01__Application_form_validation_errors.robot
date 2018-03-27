@@ -20,7 +20,7 @@ Title field client side
     [Tags]    HappyPath
     Given the user should see the element      jQuery=h1:contains("Application details")
     When the user enters text to a text field  id=application.name  ${EMPTY}
-    Then The user should see a field error     Please enter the full title of the project
+    Then the user should see a field error     Please enter the full title of the project
     When the user enters text to a text field  id=application.name  ${applicationTitle}
     Then the applicant should not see the validation error any more
 

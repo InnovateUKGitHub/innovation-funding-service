@@ -17,7 +17,7 @@ IFS.core.formValidation = (function () {
       },
       range: {
         fields: '[data-range-min]:not([readonly])',
-        messageInvalid: 'This fields must be between %min% and %max%.'
+        messageInvalid: 'This field must be between %min% and %max%.'
       },
       passwordPolicy: {
         fields: {
