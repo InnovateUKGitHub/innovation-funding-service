@@ -20,7 +20,8 @@ public enum ApplicationState implements ProcessState {
     IN_PANEL(State.IN_PANEL);
     final State backingState;
 
-    public static final ImmutableSet<ApplicationState> submittedStates = Sets.immutableEnumSet(ApplicationState.SUBMITTED,
+    public static final ImmutableSet<ApplicationState> submittedStates = Sets.immutableEnumSet(
+            ApplicationState.SUBMITTED,
             ApplicationState.INELIGIBLE,
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
