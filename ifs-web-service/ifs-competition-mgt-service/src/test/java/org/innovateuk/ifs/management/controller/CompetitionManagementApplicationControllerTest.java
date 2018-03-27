@@ -674,7 +674,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
 
-        UserRoleType.internalRoles().forEach(role -> {
+        UserRoleType.internalUserRoleTypes().forEach(role -> {
             try {
                 setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
                 Long formInputId = 35L;

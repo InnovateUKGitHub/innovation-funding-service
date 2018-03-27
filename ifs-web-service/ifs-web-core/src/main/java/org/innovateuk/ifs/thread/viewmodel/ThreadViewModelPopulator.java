@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.thread.viewmodel;
 
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
@@ -20,9 +22,20 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ThreadViewModelPopulator {
 
+    private OrganisationService organisationService;
+
+    @Autowired
+    public ThreadViewModelPopulator(OrganisationService organisationService) {
+        this.organisationService = organisationService;
+    }
+
+    public interface PostLabelingStrategy extends Function<UserResource, String> {
+
+    };
+
     public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId,
                                                                 List<QueryResource> queries,
-                                                                Function<UserResource, String> userToUsernameFn) {
+                                                                PostLabelingStrategy userToUsernameFn) {
 
         List<QueryResource> sortedQueries = queries.stream().
                 flatMap(t -> t.posts.stream()
@@ -35,7 +48,7 @@ public class ThreadViewModelPopulator {
         return simpleMap(sortedQueries, query -> threadViewModelFromQuery(projectId, organisationId, query, userToUsernameFn));
     }
 
-    public ThreadViewModel threadViewModelFromQuery(long projectId, long organisationId, QueryResource query, Function<UserResource, String> userToUsernameFn) {
+    public ThreadViewModel threadViewModelFromQuery(long projectId, long organisationId, QueryResource query, PostLabelingStrategy userToUsernameFn) {
 
         List<ThreadPostViewModel> posts = addPosts(query.posts, userToUsernameFn);
 
@@ -69,7 +82,29 @@ public class ThreadViewModelPopulator {
                 organisationId, projectId, null, null);
     }
 
-    private List<ThreadPostViewModel> addPosts(List<PostResource> posts, Function<UserResource, String> userToUsernameFn) {
+    public PostLabelingStrategy projectFinanceOrExternalUserLabelingStrategy() {
+
+        return user -> {
+
+            if (user.isInternalUser()) {
+                return user.getName() + " - Innovate UK (Finance team)";
+            } else {
+                return user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName();
+            }
+        };
+    }
+
+    public PostLabelingStrategy projectFinanceOrExternalUserLabelingStrategyHyphenated() {
+        return user -> {
+            if (user.isInternalUser()) {
+                return "Innovate UK - Finance team";
+            } else {
+                return user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName();
+            }
+        };
+    }
+
+    private List<ThreadPostViewModel> addPosts(List<PostResource> posts, PostLabelingStrategy userToUsernameFn) {
         return simpleMap(posts, p -> {
             ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
             post.setUsername(userToUsernameFn.apply(p.author));

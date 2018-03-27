@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Sets;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.internalUserRoleTypes;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -147,6 +149,10 @@ public class UserResource {
         return roles;
     }
 
+    public List<UserRoleType> getUserRoleTypes() {
+        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
+    }
+
     public void setRoles(List<Role> roles) {
         roles.sort(comparing(Role::getId));
         this.roles = roles;
@@ -162,6 +168,10 @@ public class UserResource {
 
     public boolean hasRole(UserRoleType role) {
         return simpleMap(roles, Role::getName).contains(role.getName());
+    }
+
+    public boolean isInternalUser() {
+        return CollectionUtils.containsAny(internalUserRoleTypes(), getUserRoleTypes());
     }
 
     public boolean hasRoles(UserRoleType... acceptedRoles) {

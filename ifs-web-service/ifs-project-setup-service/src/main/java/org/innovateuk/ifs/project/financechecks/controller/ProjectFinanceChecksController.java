@@ -39,7 +39,6 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadState;
@@ -84,7 +83,8 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
 /**
  * This controller will handle requests related to finance checks for external users
@@ -414,22 +414,17 @@ public class ProjectFinanceChecksController {
 
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
-        List<Long> projectUserIds =
-                removeDuplicates(simpleMap(projectService.getProjectUsersForProject(projectId), ProjectUserResource::getUser));
-
         return queriesResult.handleSuccessOrFailure(
 
                 failure -> emptyMap(),
                 success -> {
-                    List<ThreadViewModel> queryThreads = threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
-                            projectUserIds.contains(user.getId()) ?
-                                    user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
-                                    "Innovate UK - Finance team");
+                    List<ThreadViewModel> queryThreads =
+                            threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
+                            threadViewModelPopulator.projectFinanceOrExternalUserLabelingStrategyHyphenated());
 
                     return queryThreads
                             .stream()
-                            .collect(groupingBy(ThreadViewModel::getState)
-                            );
+                            .collect(groupingBy(ThreadViewModel::getState));
                 });
     }
 

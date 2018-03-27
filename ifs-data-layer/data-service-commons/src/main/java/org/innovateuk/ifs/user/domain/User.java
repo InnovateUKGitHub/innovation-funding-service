@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,6 +20,8 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.user.resource.UserRoleType.internalUserRoleTypes;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -112,6 +115,10 @@ public class User extends AuditableEntity implements Serializable{
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public List<UserRoleType> getUserRoleTypes() {
+        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
     }
 
     public void addRole(Role role) {
@@ -260,4 +267,9 @@ public class User extends AuditableEntity implements Serializable{
     public void setAllowMarketingEmails(boolean allowMarketingEmails) {
         this.allowMarketingEmails = allowMarketingEmails;
     }
+
+    public boolean isInternalUser() {
+        return CollectionUtils.containsAny(internalUserRoleTypes(), getUserRoleTypes());
+    }
+
 }
