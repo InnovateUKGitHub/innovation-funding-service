@@ -25,7 +25,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
@@ -180,7 +179,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testWithdrawProject() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.withdrawProject(123L),
-                UserRoleType.IFS_ADMINISTRATOR);
+                Role.IFS_ADMINISTRATOR);
     }
 
     @Override
