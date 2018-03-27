@@ -106,14 +106,20 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteAllowedIfGlobalCompAdminRole() {
+        final Long questionId = 1L;
+        final String sectionName = "Application questions";
+
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
-        classUnderTest.delete(1L);
+        classUnderTest.delete(questionId, sectionName);
     }
 
     @Test
     public void testDeleteAllowedIfNoGlobalRolesAtAll() {
+        final Long questionId = 1L;
+        final String sectionName = "Application questions";
+
         try {
-            classUnderTest.delete(1L);
+            classUnderTest.delete(questionId, sectionName);
             fail("Should not have been able to update question without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -122,6 +128,8 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteDeniedIfNotCorrectGlobalRoles() {
+        final Long questionId = 1L;
+        final String sectionName = "Application questions";
 
         List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
                 .collect(toList());
@@ -131,7 +139,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
-                classUnderTest.delete(1L);
+                classUnderTest.delete(questionId, sectionName);
                 fail("Should not have been able to update question without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -186,7 +194,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
         }
 
         @Override
-        public ServiceResult<Void> delete(Long questionId) {
+        public ServiceResult<Void> delete(Long questionId, String sectionName) {
             return null;
         }
 

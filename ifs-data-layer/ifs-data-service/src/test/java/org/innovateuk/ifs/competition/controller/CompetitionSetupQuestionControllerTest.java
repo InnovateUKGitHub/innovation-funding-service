@@ -59,12 +59,13 @@ public class CompetitionSetupQuestionControllerTest extends BaseControllerMockMV
     @Test
     public void deleteById() throws Exception {
         final Long questionId = 1L;
+        final String sectionName = "Application questions";
 
-        when(competitionSetupQuestionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
+        when(competitionSetupQuestionServiceMock.delete(questionId, sectionName)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/competition-setup-question/deleteById/{questionId}", questionId))
+        mockMvc.perform(delete("/competition-setup-question/deleteByIdAndSection/{questionId}/{sectionName}", questionId, sectionName))
                 .andExpect(status().isNoContent());
 
-        verify(competitionSetupQuestionServiceMock, only()).delete(questionId);
+        verify(competitionSetupQuestionServiceMock, only()).delete(questionId, sectionName);
     }
 }

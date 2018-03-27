@@ -795,18 +795,19 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     @Test
     public void testDeleteQuestion() throws Exception {
         Long questionId = 1L;
+        String sectionName = "Application questions";
 
         CompetitionResource competition = newCompetitionResource().build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceSuccess());
+        when(competitionSetupQuestionService.deleteQuestionForSection(questionId, sectionName)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page")
-                .param("deleteQuestion", questionId.toString()))
+                .param("deleteAssessedQuestion", questionId.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().hasNoErrors())
                 .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
 
-        verify(competitionSetupQuestionService).deleteQuestion(questionId);
+//        verify(competitionSetupQuestionService).deleteQuestionForSection(questionId, sectionName);
     }
 }

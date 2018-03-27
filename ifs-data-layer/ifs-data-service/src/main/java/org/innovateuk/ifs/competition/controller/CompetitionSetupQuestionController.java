@@ -32,9 +32,10 @@ public class CompetitionSetupQuestionController {
         return competitionSetupQuestionService.createByCompetitionId(competitionId).toPostCreateResponse();
     }
 
-    @DeleteMapping("/deleteById/{id}")
-    public RestResult<Void> deleteById(@PathVariable("id") final Long questionId) {
-        return competitionSetupQuestionService.delete(questionId).toDeleteResponse();
+    @DeleteMapping("/deleteByIdAndSection/{id}/{sectionName}")
+    public RestResult<Void> deleteByIdAndSection(@PathVariable("id") final Long questionId,
+                                       @PathVariable("sectionName") final String sectionName) {
+        return competitionSetupQuestionService.delete(questionId, sectionName).toDeleteResponse();
     }
 
 }

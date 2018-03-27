@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.*;
 import org.innovateuk.ifs.commons.service.*;
 import org.innovateuk.ifs.competition.resource.*;
@@ -36,7 +35,7 @@ public class CompetitionSetupQuestionRestServiceImpl extends BaseRestService imp
     }
 
     @Override
-    public RestResult<Void> deleteById(Long questionId) {
-        return deleteWithRestResult(competitionsSetupRestURL + "/deleteById/" + questionId, Void.class);
+    public RestResult<Void> deleteByIdAndSection(Long questionId, String sectionName) {
+        return deleteWithRestResult(competitionsSetupRestURL + "/deleteByIdAndSection/" + questionId + "/" + sectionName, Void.class);
     }
 }

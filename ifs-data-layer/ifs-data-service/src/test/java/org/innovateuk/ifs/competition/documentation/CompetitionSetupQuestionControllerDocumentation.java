@@ -80,11 +80,12 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
     }
 
     @Test
-    public void deleteById() throws Exception {
+    public void deleteByIdAndSection() throws Exception {
         final Long questionId = 1L;
-        when(competitionSetupQuestionService.delete(questionId)).thenReturn(serviceSuccess());
+        final String sectionName = "Application questions";
+        when(competitionSetupQuestionService.delete(questionId, sectionName)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete(baseUrl + "/deleteById/{id}", questionId)).
+        mockMvc.perform(delete(baseUrl + "/deleteByIdAndSection/{id}/{sectionName}", questionId, sectionName)).
                 andExpect(status().isNoContent())
                 .andDo(document("competition-setup-question/{method-name}",
                         pathParameters(

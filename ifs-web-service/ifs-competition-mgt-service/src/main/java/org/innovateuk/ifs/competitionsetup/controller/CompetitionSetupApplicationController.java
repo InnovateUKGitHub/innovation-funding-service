@@ -55,6 +55,8 @@ public class CompetitionSetupApplicationController {
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
     private static final String questionView = "competition/setup/question";
     private static final String MODEL = "model";
+    private static final String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
+    private static final String PROJECT_DETAILS_SECTION_NAME = "Project details";
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -89,10 +91,20 @@ public class CompetitionSetupApplicationController {
         return successView.get();
     }
 
-    @PostMapping(value = "/landing-page", params = "deleteQuestion")
-    public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
+    @PostMapping(value = "/landing-page", params = "deleteAssessedQuestion")
+    public String deleteAssessedQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
                                  @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
+        return deleteQuestionForSection(deleteQuestionForm.getDeleteQuestion(), ASSESSED_QUESTIONS_SECTION_NAME, competitionId);
+    }
+
+    @PostMapping(value = "/landing-page", params = "deleteProjectDetailsQuestion")
+    public String deleteProjectDetailsQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
+                                               @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        return deleteQuestionForSection(deleteQuestionForm.getDeleteQuestion(), PROJECT_DETAILS_SECTION_NAME, competitionId);
+    }
+
+    private String deleteQuestionForSection(Long deleteQuestion, String sectionName, long competitionId) {
+        competitionSetupQuestionService.deleteQuestionForSection(deleteQuestion, sectionName);
 
         Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 

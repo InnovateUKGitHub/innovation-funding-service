@@ -50,6 +50,11 @@
                                th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
                         </h4>
                     </div>
+                    <div class="task-status">
+                        <th:form>
+                            <button type="submit" th:value="${question.id}" name="deleteProjectDetailsQuestion" class="buttonlink no-margin">Remove</button>
+                        </th:form>
+                    </div>
                 </th:block>
             </li>
         </ul>
@@ -79,7 +84,7 @@
                     </div>
                     <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
                         <th:form>
-                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteAssessedQuestion" class="buttonlink no-margin">Remove</button>
                         </th:form>
                     </div>
                 </th:block>

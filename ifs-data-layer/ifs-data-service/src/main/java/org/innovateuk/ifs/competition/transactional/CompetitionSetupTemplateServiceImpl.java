@@ -38,6 +38,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
     private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
+    private static String PROJECT_DETAILS_SECTION_NAME = "Project details";
 
     @Autowired
     private SectionRepository sectionRepository;
