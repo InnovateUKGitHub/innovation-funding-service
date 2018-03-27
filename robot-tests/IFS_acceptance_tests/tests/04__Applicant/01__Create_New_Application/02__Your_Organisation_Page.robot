@@ -36,6 +36,14 @@ Companies House: User can choose the organisation and same operating address
     And the user should see the element    id=manual-company-input
     [Teardown]    the user goes back to the previous page
 
+Companies House: Invalid company name
+    [Documentation]    INFUND-887
+    [Tags]
+    When the user enters text to a text field    id=organisationSearchName    no results
+    And the user clicks the button/link    id=org-search
+    Then the user should see the text in the page    No results found.
+    [Teardown]    the user goes back to the previous page
+
 Companies House: Valid registration number
     [Documentation]    INFUND-887
     [Tags]    HappyPath
