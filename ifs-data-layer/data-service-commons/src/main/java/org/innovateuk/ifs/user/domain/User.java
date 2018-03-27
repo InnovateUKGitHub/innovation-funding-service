@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -117,10 +116,6 @@ public class User extends AuditableEntity implements Serializable{
         return roles;
     }
 
-    public List<UserRoleType> getUserRoleTypes() {
-        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
-    }
-
     public void addRole(Role role) {
         roles.add(role);
     }
@@ -142,7 +137,6 @@ public class User extends AuditableEntity implements Serializable{
         this.title = title;
     }
 
-    @JsonIgnore
     public String getName() {
         return Stream.of(this.getFirstName(), this.getLastName()).filter(StringUtils::isNotBlank).collect(joining(" "));
     }
@@ -272,4 +266,7 @@ public class User extends AuditableEntity implements Serializable{
         return CollectionUtils.containsAny(internalUserRoleTypes(), getUserRoleTypes());
     }
 
+    private List<UserRoleType> getUserRoleTypes() {
+        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
+    }
 }

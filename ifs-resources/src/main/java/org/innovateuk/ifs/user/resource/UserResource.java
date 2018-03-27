@@ -149,10 +149,6 @@ public class UserResource {
         return roles;
     }
 
-    public List<UserRoleType> getUserRoleTypes() {
-        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
-    }
-
     public void setRoles(List<Role> roles) {
         roles.sort(comparing(Role::getId));
         this.roles = roles;
@@ -170,6 +166,7 @@ public class UserResource {
         return simpleMap(roles, Role::getName).contains(role.getName());
     }
 
+    @JsonIgnore
     public boolean isInternalUser() {
         return CollectionUtils.containsAny(internalUserRoleTypes(), getUserRoleTypes());
     }
@@ -269,6 +266,10 @@ public class UserResource {
                     .map(Role::getDisplayName)
                     .collect(Collectors.joining(", "));
         }
+    }
+
+    private List<UserRoleType> getUserRoleTypes() {
+        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
     }
 
     @Override
