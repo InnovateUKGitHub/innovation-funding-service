@@ -42,7 +42,6 @@ Companies House: Invalid company name
     When the user enters text to a text field    id=organisationSearchName    no results
     And the user clicks the button/link    id=org-search
     Then the user should see the text in the page    No results found.
-    [Teardown]    the user goes back to the previous page
 
 Companies House: Valid registration number
     [Documentation]    INFUND-887
