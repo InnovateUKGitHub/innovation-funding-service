@@ -87,12 +87,14 @@ Assessor can respond to email invite and decline
     [Documentation]  IFS-3143
     [Tags]
     Given log in as a different user         ${assessor_madeleine_email}   ${short_password}
-    Then the user reads his email and clicks the link   ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
-    And The user should see the element      jQuery=h1:contains("Invitation to interview panel")
+    When the user reads his email and clicks the link   ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
+    Then The user should see the element     jQuery=h1:contains("Invitation to interview panel")
     And The user should see the element      jQuery=span:contains("Are you able to attend the interview panel")
     When the user selects the radio button   acceptInvitation  false
-    And the user confirms and checks the competition is not in invitation panel
+    Then the user clicks the button/link     css=.button[type="submit"]   #Confirm
     And the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
+    Then the user navigates to the page      ${server}/assessment/assessor/dashboard
+    And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 *** Keywords ***
 the Interview Panel is activated in the db
