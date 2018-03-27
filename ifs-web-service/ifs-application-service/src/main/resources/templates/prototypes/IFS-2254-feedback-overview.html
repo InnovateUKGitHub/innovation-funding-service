@@ -64,11 +64,25 @@
 
     <th:block th:if="${param.status != null and param.status[0] == 'noResponse'}">
         <div class="message-alert">
-            <p>The lead applicant has not responded to feedback.</p>
+            <p>The lead applicant can respond to feedback.</p>
         </div>
 
         <h2 class="heading-medium">Attachments</h2>
         <p>The lead applicant has not yet uploaded a response.</p>
+    </th:block>
+
+    <th:block th:if="${param.status != null and param.status[0] == 'noResponseWithFeedback'}">
+        <div class="message-alert">
+            <p>The lead applicant can respond to feedback.</p>
+        </div>
+
+        <h2 class="heading-medium">Attachments</h2>
+        <p>The lead applicant has not yet uploaded a response.</p>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">Panel assessment feedback</h3>
+            <a target="_blank" href="#">panel-assessment-feedback.pdf, 7 KB (opens in a new window)</a>
+        </div>
     </th:block>
 
     <th:block th:if="${param.status == null}">

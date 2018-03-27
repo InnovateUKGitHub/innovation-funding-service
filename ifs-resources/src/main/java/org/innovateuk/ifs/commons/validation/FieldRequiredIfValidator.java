@@ -95,6 +95,8 @@ public class FieldRequiredIfValidator implements ConstraintValidator<FieldRequir
 
     private void addConstraintViolationMessageToField(ConstraintValidatorContext context, String message, String fieldName) {
         context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(message).addPropertyNode(fieldName).addConstraintViolation();
+        context.buildConstraintViolationWithTemplate(message)
+                .addPropertyNode(fieldName)
+                .addConstraintViolation();
     }
 }
