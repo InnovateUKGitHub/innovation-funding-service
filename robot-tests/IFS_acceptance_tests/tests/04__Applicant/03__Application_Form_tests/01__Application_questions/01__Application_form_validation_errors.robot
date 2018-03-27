@@ -94,14 +94,15 @@ Application details server side
     And the user enters text to a text field  id=application.durationInMonths    ${EMPTY}
     And the user unchecks the resubmission radio button
     And the user clicks the button/link       id=application-question-complete
-    Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
+#    Then the user should see a field and summary error  Please tell us if this application is a resubmission or not.
+# TODO IFS-3188
     And The user should see a field and summary error   Please enter the full title of the project.
     And the user should see a field and summary error   Please enter a future date.
     And the user should see a field and summary error   This field cannot be left blank.
     And the user should see a field and summary error   Please enter the full title of the project.
     And the user should see a field and summary error   Please select a research category.
-    [Teardown]    Run keywords    the user enters text to a text field  id=application.name  ${applicationTitle}
-    ...    AND    Focus    id="application-question-save"
+    [Teardown]  the user enters text to a text field    id=application.name  ${applicationTitle}
+
 
 Empty text area
     [Documentation]    INFUND-43
