@@ -466,5 +466,5 @@ the logged in user should not be able to apply in a competition he has not right
     [Arguments]  ${email}  ${competition}
     log in as a different user       ${email}  ${short_password}
     the user clicks the button/link  id=proposition-name
-    the user clicks the button/link  link=${competition}
+    the user clicks the button/link in the paginated list  link=${competition}
     the user clicks the button/link  link=Start new application

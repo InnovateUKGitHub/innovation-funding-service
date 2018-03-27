@@ -138,7 +138,7 @@ the lead applicant fills all the questions and marks as complete(EOI comp type)
 Milestones are updated in database to move competition to assessment state
     ${competitionId} =  get comp id from comp title  ${comp_name}
     Set suite variable  ${competitionId}
-    the assessment start period changes in the db in the past   ${competitionId}
+    the submission date changes in the db in the past   ${competitionId}
 
 the assessor submits the assessment
     the assessor adds score and feedback for every question    5   # value 5: is the number of questions to loop through to submit feedback
