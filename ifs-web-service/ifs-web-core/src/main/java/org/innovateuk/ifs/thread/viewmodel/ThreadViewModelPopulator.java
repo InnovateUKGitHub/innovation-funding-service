@@ -29,9 +29,12 @@ public class ThreadViewModelPopulator {
         this.organisationService = organisationService;
     }
 
+    /**
+     * Marker interface for implementation strategies for naming authors on individual Thread Posts
+     */
     public interface AuthorLabellingStrategy extends Function<UserResource, String> {
 
-    };
+    }
 
     public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId,
                                                                 List<QueryResource> queries,
@@ -95,6 +98,10 @@ public class ThreadViewModelPopulator {
         };
     }
 
+    /**
+     * A strategy for naming authors of posts by either explicitly identifying them as anonymous Project Finance members or
+     * otherwise simply as named external users
+     */
     public AuthorLabellingStrategy namedProjectFinanceOrNamedExternalUser() {
 
         return user -> {
@@ -107,6 +114,10 @@ public class ThreadViewModelPopulator {
         };
     }
 
+    /**
+     * A strategy for naming authors of posts by either explicitly identifying them as named Project Finance members or
+     * otherwise simply as named external users
+     */
     public AuthorLabellingStrategy anonymousProjectFinanceOrNamedExternalUser() {
         return user -> {
             if (user.isInternalUser()) {
