@@ -48,7 +48,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
 
 
     /*
-     * TODO: ZDD contract cleanup up for IFS-2776 as part of IFS-xxxx.
+     * TODO: ZDD contract cleanup up for IFS-2776 as part of IFS-3186.
      * The web-service might send an old CompetitionResource without the min/max project duration fields.
      * These values would be set onto the domain object as null values. To prevent erroneously saving these values
      * we'll assume an empty min/max field should have contained the default values.
