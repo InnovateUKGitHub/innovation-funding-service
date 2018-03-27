@@ -485,7 +485,7 @@ Removing an Assessed Application Question
     [Documentation]  IFS-182
     [Tags]
     Given the user clicks the button/link     jQuery=a:contains("Costs and value for money")
-    When the user clicks the button/link      css=button[name="deleteQuestion"]
+    When the user clicks the button/link      css=button[name="deleteAssessedQuestion"]
     Then the user should not see the element  jQuery=a:contains("Costs and value for money")
     When the user should see the element      jQuery=li:contains("Additionality") .task-status-complete
     Then the user should not see the element  jQuery=li:contains("Additionality") button:contains("Remove")

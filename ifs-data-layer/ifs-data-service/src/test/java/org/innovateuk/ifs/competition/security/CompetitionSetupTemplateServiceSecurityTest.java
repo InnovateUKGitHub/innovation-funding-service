@@ -18,6 +18,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     private CompetitionPermissionRules rules;
 
     private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
+    private static String PROJECT_DETAILS_SECTION_NAME = "Project details";
 
     @Before
     public void lookupPermissionRules() {
@@ -34,11 +35,11 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testAllServiceFunctionsShouldBeAuthorizedForCompAdmin() {
-
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
+        classUnderTest.deleteQuestionInCompetitionBySection(null, PROJECT_DETAILS_SECTION_NAME);
     }
 
     @Test
@@ -47,6 +48,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
         classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
+        classUnderTest.deleteQuestionInCompetitionBySection(null, PROJECT_DETAILS_SECTION_NAME);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -65,6 +67,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
         classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
+        classUnderTest.deleteQuestionInCompetitionBySection(null, PROJECT_DETAILS_SECTION_NAME);
     }
 
     public static class TestCompetitionSetupTemplateService implements CompetitionSetupTemplateService {

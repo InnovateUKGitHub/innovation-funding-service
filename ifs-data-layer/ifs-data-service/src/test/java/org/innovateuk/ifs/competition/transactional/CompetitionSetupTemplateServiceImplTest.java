@@ -37,6 +37,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
+    private static String PROJECT_DETAILS_SECTION_NAME = "Project details";
 
     @Mock
     private CompetitionTypeRepository competitionTypeRepositoryMock;
@@ -193,69 +194,81 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void testDeleteAssessedQuestionInCompetition_questionNotFoundShouldResultInServiceFailure() {
-        Long questionId = 1L;
+    public void testDeleteQuestionInCompetition_questionNotFoundShouldResultInServiceFailure() {
+        final Long questionIdAssessedQuestion = 1L;
+        final Long questionIdProjectDetails = 2L;
 
-        when(questionRepositoryMock.findFirstByIdAndSectionName(questionId, ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(null);
+        when(questionRepositoryMock.findFirstByIdAndSectionName(questionIdAssessedQuestion, ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(null);
+        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetitionBySection(questionIdAssessedQuestion, ASSESSED_QUESTIONS_SECTION_NAME);
+        assertTrue(resultAssessedQuestion.isFailure());
 
-        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(questionId, ASSESSED_QUESTIONS_SECTION_NAME);
-
-        assertTrue(result.isFailure());
+        when(questionRepositoryMock.findFirstByIdAndSectionName(questionIdProjectDetails, PROJECT_DETAILS_SECTION_NAME)).thenReturn(null);
+        ServiceResult<Void> resultProjectDetails = service.deleteQuestionInCompetitionBySection(questionIdProjectDetails, PROJECT_DETAILS_SECTION_NAME);
+        assertTrue(resultProjectDetails.isFailure());
     }
 
     @Test
-    public void testDeleteAssessedQuestionInCompetition_questionWithoutCompetitionShouldResultInServiceFailure() {
-        Question question = newQuestion().withId(1L).build();
+    public void testDeleteQuestionInCompetition_questionWithoutCompetitionShouldResultInServiceFailure() {
+        final Long questionIdAssessedQuestion = 1L;
+        final Long questionIdProjectDetails = 2L;
+        Question assessedQuestion = newQuestion().withId(questionIdAssessedQuestion).build();
+        Question projectDetailsQuestion = newQuestion().withId(questionIdProjectDetails).build();
 
-        when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
+        when(questionRepositoryMock.findFirstByIdAndSectionName(assessedQuestion.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(assessedQuestion);
+        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetitionBySection(assessedQuestion.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
+        assertTrue(resultAssessedQuestion.isFailure());
 
-        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
-
-        assertTrue(result.isFailure());
+        when(questionRepositoryMock.findFirstByIdAndSectionName(projectDetailsQuestion.getId(), PROJECT_DETAILS_SECTION_NAME)).thenReturn(projectDetailsQuestion);
+        ServiceResult<Void> resultProjectDetails = service.deleteQuestionInCompetitionBySection(projectDetailsQuestion.getId(), PROJECT_DETAILS_SECTION_NAME);
+        assertTrue(resultProjectDetails.isFailure());
     }
 
     @Test
     public void testDeleteAssessedQuestionInCompetition_competitionNotInSetupOrReadyStateShouldResultInFailure() {
-        Question question = newQuestion().withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).withId(1L).build();
+        final Long questionIdAssessedQuestion = 1L;
+        final Long questionIdProjectDetails = 2L;
 
-        when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
+        Question assessedQuestion = newQuestion().withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).withId(questionIdAssessedQuestion).build();
+        Question projectDetailsQuestion = newQuestion().withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()).withId(questionIdProjectDetails).build();
 
-        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
 
-        assertTrue(result.isFailure());
+        when(questionRepositoryMock.findFirstByIdAndSectionName(assessedQuestion.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(assessedQuestion);
+        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetitionBySection(assessedQuestion.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
+        assertTrue(resultAssessedQuestion.isFailure());
+
+        when(questionRepositoryMock.findFirstByIdAndSectionName(projectDetailsQuestion.getId(), PROJECT_DETAILS_SECTION_NAME)).thenReturn(assessedQuestion);
+        ServiceResult<Void> resultProjectDetails = service.deleteQuestionInCompetitionBySection(projectDetailsQuestion.getId(), PROJECT_DETAILS_SECTION_NAME);
+        assertTrue(resultProjectDetails.isFailure());
     }
 
     @Test
     public void testDeleteAssessedQuestionInCompetition_questionSectionTotalQuestionIsOneOrLessShouldResultInFailure() {
-        Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
+        final Long questionId = 1L;
 
-        Question question = newQuestion().withCompetition(readyToOpenCompetition).withId(1L).build();
+        Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
+        Question question = newQuestion().withCompetition(readyToOpenCompetition).withId(questionId).build();
 
         when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
-        when(questionRepositoryMock.countByCompetitionIdAndSectionName(readyToOpenCompetition.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(1L);
-
-        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
-
-        assertTrue(result.isFailure());
+        when(questionRepositoryMock.countByCompetitionIdAndSectionName(readyToOpenCompetition.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(questionId);
+        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
+        assertTrue(resultAssessedQuestion.isFailure());
     }
 
     @Test
-    public void testDeleteAssessedQuestionInCompetition_validQuestionShouldResultInDeleteAndReprioritizeCallAndSuccess() {
+    public void testDeleteQuestionInCompetition_invalidSectionShouldResultInFailure() {
+        final Long questionId = 1L;
+        final String nonExistingSectionName = "Non existing section name";
+        final String invalidSectionName = "Application details";
+
         Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
+        Question question = newQuestion().withCompetition(readyToOpenCompetition).withId(questionId).build();
 
-        Question question = newQuestion().withCompetition(readyToOpenCompetition).withId(1L).build();
+        ServiceResult<Void> resultNonExisting = service.deleteQuestionInCompetitionBySection(question.getId(), nonExistingSectionName);
+        assertTrue(resultNonExisting.isFailure());
 
-        when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
-        when(questionRepositoryMock.countByCompetitionIdAndSectionName(readyToOpenCompetition.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(2L);
-
-        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
-
-        assertTrue(result.isSuccess());
-
-        verify(questionTemplatePersistorServiceMock).deleteEntityById(question.getId());
-        verify(questionPriorityOrderServiceMock).reprioritiseAssessedQuestionsAfterDeletion(question);
+        ServiceResult<Void> resultInvalid = service.deleteQuestionInCompetitionBySection(question.getId(), invalidSectionName);
+        assertTrue(resultInvalid.isFailure());
     }
-
 
     @Test
     public void testAddDefaultAssessedQuestionToCompetition_competitionIsNullShouldResultInFailure() throws Exception {

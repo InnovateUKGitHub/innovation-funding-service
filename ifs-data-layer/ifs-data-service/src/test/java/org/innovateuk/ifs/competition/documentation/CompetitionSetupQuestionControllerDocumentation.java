@@ -89,7 +89,8 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
                 andExpect(status().isNoContent())
                 .andDo(document("competition-setup-question/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("id of the question to be removed")
+                                parameterWithName("id").description("id of the question to be removed"),
+                                parameterWithName("sectionName").description("section name of the question to be removed")
                         )
                 ));
     }
