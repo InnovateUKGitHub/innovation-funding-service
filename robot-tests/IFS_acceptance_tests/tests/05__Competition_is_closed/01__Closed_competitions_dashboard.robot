@@ -53,14 +53,11 @@ Invite Assessors
     [Teardown]    The user clicks the button/link    link=Competition
 
 Notify Assessors
-    [Documentation]    INFUND-6458
-    ...
-    ...    INFUND-7362
+    [Documentation]  INFUND-6458 INFUND-7362
     [Tags]
     When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
     Then the user should see the text in the page    In assessment
-    [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=${competition_ids['${CLOSED_COMPETITION_NAME}']};
+    [Teardown]  Reset competition's milestone
 
 *** Keywords ***
 Get The expected values from the invite page
@@ -89,3 +86,6 @@ the counts of the key statistics of the closed competition should be correct
     ${Assessor_without_app}=    Get text     css=ul:nth-child(3)> li:nth-child(3) > div > span
     Should Be Equal As Integers    ${Assessor_without_app}   10
 
+Reset competition's milestone
+    Connect to Database  @{database}
+    Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `competition_id`='${competition_ids['${CLOSED_COMPETITION_NAME}']}' and `type`='ASSESSORS_NOTIFIED';

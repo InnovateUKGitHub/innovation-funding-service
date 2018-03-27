@@ -50,7 +50,7 @@ public class InviteProjectController {
 
     @GetMapping(CHECK_EXISTING_USER_URL + "{hash}")
     public RestResult<Boolean> checkExistingUser( @PathVariable("hash") String hash) {
-        return projectInviteService.checkUserExistingByInviteHash(hash).toGetResponse();
+        return projectInviteService.checkUserExistsForInvite(hash).toGetResponse();
     }
 
     @GetMapping(GET_USER_BY_HASH_MAPPING + "{hash}")
