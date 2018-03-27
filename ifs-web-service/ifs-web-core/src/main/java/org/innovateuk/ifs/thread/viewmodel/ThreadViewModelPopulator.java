@@ -29,13 +29,13 @@ public class ThreadViewModelPopulator {
         this.organisationService = organisationService;
     }
 
-    public interface PostLabelingStrategy extends Function<UserResource, String> {
+    public interface AuthorLabellingStrategy extends Function<UserResource, String> {
 
     };
 
     public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId,
                                                                 List<QueryResource> queries,
-                                                                PostLabelingStrategy userToUsernameFn) {
+                                                                AuthorLabellingStrategy userToUsernameFn) {
 
         List<QueryResource> sortedQueries = queries.stream().
                 flatMap(t -> t.posts.stream()
@@ -48,7 +48,7 @@ public class ThreadViewModelPopulator {
         return simpleMap(sortedQueries, query -> threadViewModelFromQuery(projectId, organisationId, query, userToUsernameFn));
     }
 
-    public ThreadViewModel threadViewModelFromQuery(long projectId, long organisationId, QueryResource query, PostLabelingStrategy userToUsernameFn) {
+    public ThreadViewModel threadViewModelFromQuery(long projectId, long organisationId, QueryResource query, AuthorLabellingStrategy userToUsernameFn) {
 
         List<ThreadPostViewModel> posts = addPosts(query.posts, userToUsernameFn);
 
@@ -72,17 +72,30 @@ public class ThreadViewModelPopulator {
 
     public ThreadViewModel threadViewModelFromNote(long projectId, long organisationId, NoteResource note) {
 
-        List<ThreadPostViewModel> posts = addPosts(note.posts, user ->
-            user.hasRole(PROJECT_FINANCE) ?
-                user.getName() + " - Innovate UK (Finance team)" :
-                user.getName() + " - Innovate UK");
+        List<ThreadPostViewModel> posts = addPosts(note.posts, namedInternalUserWithExplicitProjectFinanceTeamIdentification());
 
         return new ThreadViewModel(posts, null,
                 note.title, note.createdOn, note.id,
                 organisationId, projectId, null, null);
     }
 
-    public PostLabelingStrategy projectFinanceOrExternalUserLabelingStrategy() {
+    /**
+     * A strategy for naming authors of posts by either explicitly identifying them as Project Finance members or otherwise
+     * simply as internal users
+     */
+    private AuthorLabellingStrategy namedInternalUserWithExplicitProjectFinanceTeamIdentification() {
+
+        return user -> {
+
+            if (user.hasRole(PROJECT_FINANCE)) {
+                return user.getName() + " - Innovate UK (Finance team)";
+            } else {
+                return user.getName() + " - Innovate UK";
+            }
+        };
+    }
+
+    public AuthorLabellingStrategy namedProjectFinanceOrNamedExternalUser() {
 
         return user -> {
 
@@ -94,7 +107,7 @@ public class ThreadViewModelPopulator {
         };
     }
 
-    public PostLabelingStrategy projectFinanceOrExternalUserLabelingStrategyHyphenated() {
+    public AuthorLabellingStrategy anonymousProjectFinanceOrNamedExternalUser() {
         return user -> {
             if (user.isInternalUser()) {
                 return "Innovate UK - Finance team";
@@ -104,7 +117,7 @@ public class ThreadViewModelPopulator {
         };
     }
 
-    private List<ThreadPostViewModel> addPosts(List<PostResource> posts, PostLabelingStrategy userToUsernameFn) {
+    private List<ThreadPostViewModel> addPosts(List<PostResource> posts, AuthorLabellingStrategy userToUsernameFn) {
         return simpleMap(posts, p -> {
             ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
             post.setUsername(userToUsernameFn.apply(p.author));

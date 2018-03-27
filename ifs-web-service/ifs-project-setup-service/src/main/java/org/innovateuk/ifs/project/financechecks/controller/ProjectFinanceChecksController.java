@@ -420,7 +420,7 @@ public class ProjectFinanceChecksController {
                 success -> {
                     List<ThreadViewModel> queryThreads =
                             threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
-                            threadViewModelPopulator.projectFinanceOrExternalUserLabelingStrategyHyphenated());
+                            threadViewModelPopulator.anonymousProjectFinanceOrNamedExternalUser());
 
                     return queryThreads
                             .stream()
