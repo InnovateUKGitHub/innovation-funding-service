@@ -23,5 +23,5 @@ public interface CompetitionSetupTemplateService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "DELETE_QUESTION_FROM_COMPETITION",
             description = "The Competition Admin user and Project Finance users can create competition invites for existing users")
-    ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId);
+    ServiceResult<Void> deleteQuestionInCompetitionBySection(Long questionId, String sectionName);
 }

@@ -126,17 +126,21 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     @Override
-    public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
-        return find(questionRepository.findFirstByIdAndSectionName(questionId, ASSESSED_QUESTIONS_SECTION_NAME), notFoundError(Question.class))
-                .andOnSuccess(question -> deleteQuestion(question));
+    public ServiceResult<Void> deleteQuestionInCompetitionBySection(Long questionId, String sectionName) {
+        return find(questionRepository.findFirstByIdAndSectionName(questionId, sectionName), notFoundError(Question.class))
+                .andOnSuccess(question -> deleteQuestionBySection(question, sectionName));
     }
 
-    private ServiceResult<Void> deleteQuestion(Question question) {
+    private ServiceResult<Void> deleteQuestionBySection(Question question, String sectionName) {
+        if(sectionIsInValidForDeletion(sectionName)) {
+            return serviceFailure(new Error(GENERAL_FORBIDDEN));
+        }
+
         if (question.getCompetition() == null || competitionIsNotInSetupOrReadyToOpenState(question.getCompetition())) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME) <= 1) {
+        if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId(), sectionName) <= 1) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
@@ -165,5 +169,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private boolean competitionIsNotInSetupOrReadyToOpenState(Competition competition) {
         return !(competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)
                 || competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
+    }
+
+    private boolean sectionIsInValidForDeletion(String sectionName) {
+        return !sectionName.equals(ASSESSED_QUESTIONS_SECTION_NAME) && !sectionName.equals(PROJECT_DETAILS_SECTION_NAME);
     }
 }

@@ -141,8 +141,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Override
     @Transactional
     public ServiceResult<Void> delete(Long questionId, String sectionName) {
-        //TODO: if sectionname
-        competitionSetupTemplateService.deleteAssessedQuestionInCompetition(questionId);
+        competitionSetupTemplateService.deleteQuestionInCompetitionBySection(questionId, sectionName);
 
         return serviceSuccess();
     }

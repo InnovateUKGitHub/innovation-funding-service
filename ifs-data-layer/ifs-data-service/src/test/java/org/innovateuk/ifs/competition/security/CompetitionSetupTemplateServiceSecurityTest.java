@@ -17,6 +17,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupTemplateService> {
     private CompetitionPermissionRules rules;
 
+    private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
+
     @Before
     public void lookupPermissionRules() {
 
@@ -36,7 +38,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
     }
 
     @Test
@@ -44,7 +46,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -62,7 +64,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     @Test(expected = AccessDeniedException.class)
     public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
     }
 
     public static class TestCompetitionSetupTemplateService implements CompetitionSetupTemplateService {
@@ -74,7 +76,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
             return null;
         }
 
-        public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
+        public ServiceResult<Void> deleteQuestionInCompetitionBySection(Long questionId, String sectionName) {
             return null;
         }
     }

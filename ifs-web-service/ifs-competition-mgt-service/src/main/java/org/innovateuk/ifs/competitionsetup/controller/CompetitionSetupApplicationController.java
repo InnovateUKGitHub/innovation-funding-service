@@ -92,15 +92,15 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping(value = "/landing-page", params = "deleteAssessedQuestion")
-    public String deleteAssessedQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
+    public String deleteAssessedQuestion(@ModelAttribute("deleteAssessedQuestion") DeleteAssessedQuestionForm deleteAssessedQuestionForm,
                                  @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        return deleteQuestionForSection(deleteQuestionForm.getDeleteQuestion(), ASSESSED_QUESTIONS_SECTION_NAME, competitionId);
+        return deleteQuestionForSection(deleteAssessedQuestionForm.getDeleteAssessedQuestion(), ASSESSED_QUESTIONS_SECTION_NAME, competitionId);
     }
 
     @PostMapping(value = "/landing-page", params = "deleteProjectDetailsQuestion")
-    public String deleteProjectDetailsQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
+    public String deleteProjectDetailsQuestion(@ModelAttribute("deleteAssessedQuestion") DeleteProjectDetailsQuestionForm deleteProjectDetailsQuestionForm,
                                                @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        return deleteQuestionForSection(deleteQuestionForm.getDeleteQuestion(), PROJECT_DETAILS_SECTION_NAME, competitionId);
+        return deleteQuestionForSection(deleteProjectDetailsQuestionForm.getDeleteProjectDetailsQuestion(), PROJECT_DETAILS_SECTION_NAME, competitionId);
     }
 
     private String deleteQuestionForSection(Long deleteQuestion, String sectionName, long competitionId) {

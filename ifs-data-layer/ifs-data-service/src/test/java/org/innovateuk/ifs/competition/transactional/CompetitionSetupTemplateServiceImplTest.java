@@ -198,7 +198,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(questionRepositoryMock.findFirstByIdAndSectionName(questionId, ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(null);
 
-        ServiceResult<Void> result = service.deleteAssessedQuestionInCompetition(questionId);
+        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(questionId, ASSESSED_QUESTIONS_SECTION_NAME);
 
         assertTrue(result.isFailure());
     }
@@ -209,7 +209,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
 
-        ServiceResult<Void> result = service.deleteAssessedQuestionInCompetition(question.getId());
+        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
 
         assertTrue(result.isFailure());
     }
@@ -220,7 +220,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
         when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
 
-        ServiceResult<Void> result = service.deleteAssessedQuestionInCompetition(question.getId());
+        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
 
         assertTrue(result.isFailure());
     }
@@ -234,7 +234,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
         when(questionRepositoryMock.countByCompetitionIdAndSectionName(readyToOpenCompetition.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(1L);
 
-        ServiceResult<Void> result = service.deleteAssessedQuestionInCompetition(question.getId());
+        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
 
         assertTrue(result.isFailure());
     }
@@ -248,7 +248,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         when(questionRepositoryMock.findFirstByIdAndSectionName(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(question);
         when(questionRepositoryMock.countByCompetitionIdAndSectionName(readyToOpenCompetition.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(2L);
 
-        ServiceResult<Void> result = service.deleteAssessedQuestionInCompetition(question.getId());
+        ServiceResult<Void> result = service.deleteQuestionInCompetitionBySection(question.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
 
         assertTrue(result.isSuccess());
 
