@@ -24,6 +24,7 @@ Companies House: Valid company name
     [Teardown]    The user goes back to the previous page
 
 Companies House: User can choose the organisation and same operating address
+    [Documentation]    INFUND-887
     [Tags]    HappyPath
     When the user clicks the button/link    Link=${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}
     And the user should see the text in the page    Registered name
@@ -33,14 +34,7 @@ Companies House: User can choose the organisation and same operating address
     Then the user should not see the element    id=manual-company-input
     And the user unselects the checkbox    address-same
     And the user should see the element    id=manual-company-input
-    [Teardown]    And the user goes back to the previous page
-
-Companies House: Invalid company name
-    [Documentation]    INFUND-887
-    [Tags]
-    When the user enters text to a text field    id=organisationSearchName    innoavte
-    And the user clicks the button/link    id=org-search
-    Then the user should see the text in the page    No results found.
+    [Teardown]    the user goes back to the previous page
 
 Companies House: Valid registration number
     [Documentation]    INFUND-887
@@ -51,6 +45,8 @@ Companies House: Valid registration number
     [Teardown]    The user goes back to the previous page
 
 Companies House: Empty company name field
+    [Documentation]    INFUND-887
+    [Tags]
     Given the user should see the text in the page    Create your account
     When the user enters text to a text field    id=organisationSearchName    ${EMPTY}
     And the user clicks the button/link    id=org-search

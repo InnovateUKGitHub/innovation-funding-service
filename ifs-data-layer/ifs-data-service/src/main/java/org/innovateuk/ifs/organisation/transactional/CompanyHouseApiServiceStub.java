@@ -1,27 +1,22 @@
 package org.innovateuk.ifs.organisation.transactional;
 
-
-import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 
-
 /**
  * This class stubs out the Companies House API.
- * Necessary to remove the dependency on this API from developer and tester machines
+ * Necessary to remove this dependency from developer and tester machines
  * since that API is unreliable and therefore should not be regularly used for automated regression testing.
  *
  * @see <a href="https://developer.companieshouse.gov.uk/api/docs/">Company House API site</a>
@@ -43,7 +38,6 @@ public class CompanyHouseApiServiceStub implements CompanyHouseApiService {
 
     private OrganisationSearchResult getDummyResultById(String id) {
         switch(id) {
-
             case "08852342" : return getHiveIt();
             case "09872150" : return getWorthIt();
             case "04214477" : return getNomensa();
