@@ -83,21 +83,15 @@ Assessors accept the invitation to the interview panel
     And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element      jQuery=h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
-Assessor clicks on the invitation link to the interview panel from email
+Assessor can respond to emnail invite and decline
     [Documentation]  IFS-3143
     [Tags]
     Given log in as a different user         ${assessor_madeleine_email}   ${short_password}
     Then the user reads his email and clicks the link   ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     And The user should see the element      jQuery=h1:contains("Invitation to interview panel")
     And The user should see the element      jQuery=span:contains("Are you able to attend the interview panel")
-
-Assessor declines the invitation to the interview panel from email link
-    [Documentation]  IFS-3143
-    [Tags]
-    Given log in as a different user         ${assessor_riley_email}   ${short_password}
-    Then the user reads his email and clicks the link   ${assessor_riley}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     When the user selects the radio button   acceptInvitation  false
-    And the user confirms and checks competition is not in invitation panel
+    And the user confirms and checks the competition is not in invitation panel
     And the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
 
 *** Keywords ***
@@ -119,7 +113,7 @@ the competition admin selects the applications and adds them to the invite list
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
 
-the user confirms and checks competition is not in invitation panel
+the user confirms and checks the competition is not in invitation panel
 #Assessor has answered the invite so it should not display in the invitation panel
     the user clicks the button/link      css=.button[type="submit"]   #Confirm
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
