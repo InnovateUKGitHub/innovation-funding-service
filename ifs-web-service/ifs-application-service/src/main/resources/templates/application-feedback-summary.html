@@ -4,12 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Feedback overview'" />
     </head>
 
-    <body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+    <body class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
             <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
@@ -141,5 +140,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

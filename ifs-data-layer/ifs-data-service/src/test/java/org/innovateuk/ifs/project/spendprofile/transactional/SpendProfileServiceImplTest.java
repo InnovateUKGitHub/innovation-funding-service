@@ -28,7 +28,7 @@ import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.validator.util.ValidationUtil;
+import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;

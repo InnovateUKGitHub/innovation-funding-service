@@ -9,7 +9,6 @@ import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 import org.innovateuk.ifs.finance.totals.filter.SpendProfileCostFilter;
 import org.innovateuk.ifs.finance.totals.mapper.FinanceCostTotalResourceMapper;
-import org.innovateuk.ifs.finance.totals.queue.CostTotalMessageQueue;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +37,7 @@ public class ApplicationFinanceTotalsSenderImplTest {
     private FinanceCostTotalResourceMapper financeCostTotalResourceMapper;
 
     @Mock
-    private CostTotalMessageQueue costTotalMessageQueue;
+    private AsyncRestCostTotalEndpoint costTotalEndpoint;
 
     @Mock
     private SpendProfileCostFilter spendProfileCostFilter;
@@ -51,7 +50,7 @@ public class ApplicationFinanceTotalsSenderImplTest {
                 applicationFinanceHandler,
                 financeCostTotalResourceMapper,
                 spendProfileCostFilter,
-                costTotalMessageQueue
+                costTotalEndpoint
         );
     }
 
@@ -86,11 +85,11 @@ public class ApplicationFinanceTotalsSenderImplTest {
         when(applicationFinanceHandler.getApplicationFinances(applicationId)).thenReturn(applicationFinanceResource);
         when(financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(any())).thenReturn(expectedFinanceCostTotalResource);
         when(spendProfileCostFilter.filterBySpendProfile(expectedFinanceCostTotalResource)).thenReturn(expectedFilteredFinanceCostTotalResource);
-        when(costTotalMessageQueue.sendCostTotals(any())).thenReturn(ServiceResult.serviceSuccess());
+        when(costTotalEndpoint.sendCostTotals(any())).thenReturn(ServiceResult.serviceSuccess());
 
         ServiceResult<Void> serviceResult = applicationFinanceTotalsSender.sendFinanceTotalsForApplication(applicationId);
 
         assertTrue(serviceResult.isSuccess());
-        verify(costTotalMessageQueue, times(1)).sendCostTotals(expectedFilteredFinanceCostTotalResource);
+        verify(costTotalEndpoint, times(1)).sendCostTotals(expectedFilteredFinanceCostTotalResource);
     }
 }

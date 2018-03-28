@@ -13,7 +13,7 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Allocate assessors'}, ${'/prototypes/5472-assign-assessors'} + ${(param.comp != null ? '?comp=' + param.comp[0] : '')})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->

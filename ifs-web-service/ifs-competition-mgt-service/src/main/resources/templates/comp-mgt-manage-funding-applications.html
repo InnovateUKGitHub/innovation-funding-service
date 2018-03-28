@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage funding applications',hasFormErrors=${#fields.hasErrors('${fundingNotificationFilterForm.*}')}" />
 </head>
 
-<body th:with="context='comp-management'" class="competition-management">
+<body class="competition-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -156,5 +156,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>
