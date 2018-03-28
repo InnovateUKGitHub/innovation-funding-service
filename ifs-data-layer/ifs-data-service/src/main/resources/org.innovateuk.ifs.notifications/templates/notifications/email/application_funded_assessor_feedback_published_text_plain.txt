@@ -1,0 +1,14 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+The feedback for your application ${applicationName} to the competition ${competitionName} is now available for you to view.
+
+The feedback provided by the independent assessors has been reviewed by Innovate UK.
+
+Please sign into your Innovation Funding Service dashboard (${dashboardUrl}).
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

@@ -11,16 +11,6 @@ apply from: "db-baseline.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-task('copyFreemarkerResources', type: Copy) {
-//Copy freemarker resources to build path to support running as a jar.
-    from 'src/main/java/org/innovateuk/ifs/notifications/templates'
-    into 'build/classes/main/org/innovateuk/ifs/notifications/templates'
-    include '**/*'
-}
-
-compileJava.dependsOn copyFreemarkerResources
-
-
 configurations {
     providedRuntime
 }

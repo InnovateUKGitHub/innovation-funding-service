@@ -1,0 +1,12 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+You have recently set up an account with the Innovation Funding Service. We now need you to verify your email address.
+
+${verificationLink}
+
+Once verified you can sign into your account.
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

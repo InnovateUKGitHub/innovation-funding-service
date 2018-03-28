@@ -1,0 +1,19 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+    <@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name}</p>
+
+    <p style="margin: 0 0 1em 0;">Your Innovation Funding Service account has been created. Please check your details:</p>
+
+
+    <p style="margin: 0 0 1em 0;">
+        Name: ${notificationTarget.name}<br />
+        Role: ${role}
+    </p>
+
+    <p style="margin: 0 0 1em 0;">Please confirm your account and create your password here: <a href="${inviteUrl}">${inviteUrl}</a></p>
+
+    <p style="margin: 0 0 1em 0;">Yours sincerely</p>
+
+    <p style="margin: 0 0 1em 0;">IFS Team</p>
+</@layout.default>

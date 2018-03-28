@@ -1,0 +1,7 @@
+Dear [recipient name],
+
+We are inviting you to the assessment panel for the competition '${competitionName}'.
+
+We recognise your expertise and would greatly appreciate your comments on the scientific / business merit of the applications assigned to the panel assessment.
+
+Please visit our online Innovation Funding Service to respond to this request: [invite URL]
