@@ -89,7 +89,7 @@ Bank details server side validations
 
 The user enters bank details, wants to manually enter their address, leaves the address empty and submits
     [Documentation]  IFS-2731
-    [Tags]  HappyPath
+    [Tags]
     Given the user enters text to a text field    name = accountNumber    24681012
     And the user enters text to a text field      name = sortCode         36912
     When the user selects the radio button        addressType             ADD_NEW
