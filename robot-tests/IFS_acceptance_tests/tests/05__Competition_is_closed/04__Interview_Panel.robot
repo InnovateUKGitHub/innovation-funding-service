@@ -14,6 +14,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3055 Assessor dashboard - Attend interview panel box
 ...
 ...               IFS-2780 Invite Assessor to Interview Panel: Pending and Declined Tab
+...
+...               IFS-2782 Assign Applications to Interview Panel: Send Invites
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -38,18 +40,14 @@ CompAdmin can add an assessors to the invite list
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-2779
     [Tags]
-    [Setup]  the user clicks the button/link  link=Invite
-    Given the user clicks the button/link     link=Review and send invites
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
+    Given the compAdmin navigate to send invite email page
     When the user clicks the button/link      link=Cancel
     Then the user should see the element      jQuery=td:contains("${assessor_ben}")
 
 Assessors receives the invite to the interview panel
     [Documentation]  IFS-2779  IFS-2780
     [Tags]
-    Given the user clicks the button/link      link=Invite
-    When the user clicks the button/link       link=Review and send invites
-    Then the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
+    Given the compAdmin navigate to send invite email page
     And the user should see the element        jQuery=label:contains("Subject") ~ input[value="Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     And the user enters text to a text field   css=.editor   Additional message
     When the user clicks the button/link       css=button[type="submit"]   #Send invite
@@ -69,6 +67,15 @@ CompAdmin can add the applications to the invite list
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and adds them to the invite list
+
+CompAdmin send the applications to applicants
+    [Documentation]  IFS-2782
+    [Tags]
+    When the user clicks the button/link       link=Review and send invites
+    Then the user should see the element       jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+    And the user should see the element       jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+    When the user clicks the button/link       css=.button[type="submit"]     #Send invite
+    Then the user reads his email              aaron.robertson@load.example.com   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -100,3 +107,8 @@ the competition admin selects the applications and adds them to the invite list
     the user should see the element    link=Review and send invites
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+
+the compAdmin navigate to send invite email page
+    the user clicks the button/link    link=Invite
+    the user clicks the button/link    link=Review and send invites
+    the user should see the element    jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
