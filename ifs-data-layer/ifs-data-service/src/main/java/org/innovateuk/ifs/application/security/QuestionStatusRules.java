@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.security;
 
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
@@ -19,7 +21,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @Component
 @PermissionRules
-public class QuestionStatusRules {
+public class QuestionStatusRules extends BasePermissionRules {
 
     private static final Log LOG = LogFactory.getLog(QuestionStatusRules.class);
 
@@ -51,6 +53,21 @@ public class QuestionStatusRules {
     @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatusComposite(QuestionApplicationCompositeId ids, UserResource user) {
         return userIsLeadApplicant(ids.applicationId, user) || (userIsAllowed(ids, user) && userIsConnected(ids.applicationId, user));
+    }
+
+    @PermissionRule(value = "MARK_SECTION_AS_COMPLETE", description = "Only member of project team can mark a section as complete")
+    public boolean onlyMemberOfProjectTeamCanMarkSectionAsComplete(ApplicationResource applicationResource, UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "MARK_SECTION_AS_INCOMPLETE", description = "Only member of project team can mark a section as incomplete")
+    public boolean onlyMemberOfProjectTeamCanMarkSectionAsInComplete(ApplicationResource applicationResource, UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "MARK_SECTION_AS_NOT_REQUIRED", description = "Only member of project team can mark a section as not required")
+    public boolean onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(ApplicationResource applicationResource, UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
     private boolean userIsAllowed(final QuestionApplicationCompositeId ids, final UserResource user) {
