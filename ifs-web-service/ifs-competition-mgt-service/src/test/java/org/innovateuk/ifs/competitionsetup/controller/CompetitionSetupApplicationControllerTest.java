@@ -725,6 +725,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .withId(COMPETITION_ID)
                 .build();
 
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(APPLICATION_DETAILS))).thenReturn(ServiceResult.serviceSuccess());
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(post(URL_PREFIX + "/detail/edit")
