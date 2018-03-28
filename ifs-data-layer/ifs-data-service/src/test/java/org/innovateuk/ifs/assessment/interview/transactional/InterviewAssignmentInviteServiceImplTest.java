@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
+import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
@@ -200,6 +201,11 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
                 )
                 .build(1);
 
+        InterviewAssignmentMessageOutcome outcome = new InterviewAssignmentMessageOutcome();
+        outcome.setAssessmentInterviewPanel(interviewAssignments.get(0));
+        outcome.setMessage(sendResource.getContent());
+        outcome.setSubject(sendResource.getSubject());
+
         when(interviewAssignmentRepositoryMock.findByTargetCompetitionIdAndActivityStateState(
                 COMPETITION_ID, InterviewAssignmentState.CREATED.getBackingState())).thenReturn(interviewAssignments);
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(
@@ -210,8 +216,7 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
         assertTrue(result.isSuccess());
         verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
-        verify(interviewAssignmentRepositoryMock).save(interviewAssignments.get(0));
-        assertEquals(interviewAssignments.get(0).getActivityState(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE);
+        verify(interviewAssignmentWorkflowHandler).notifyInterviewPanel(interviewAssignments.get(0), outcome);
     }
 
     private static InterviewAssignment interviewPanellambdaMatcher(Application application) {
