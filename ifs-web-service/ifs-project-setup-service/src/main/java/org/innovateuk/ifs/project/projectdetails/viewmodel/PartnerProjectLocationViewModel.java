@@ -7,21 +7,21 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * View model for partner project location
  */
 public class PartnerProjectLocationViewModel {
-    private Long projectId;
+    private long projectId;
     private String projectName;
-    private Long organisationId;
+    private long organisationId;
 
-    public PartnerProjectLocationViewModel(Long projectId, String projectName, Long organisationId) {
+    public PartnerProjectLocationViewModel(long projectId, String projectName, long organisationId) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.organisationId = organisationId;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(long projectId) {
         this.projectId = projectId;
     }
 
@@ -33,11 +33,11 @@ public class PartnerProjectLocationViewModel {
         this.projectName = projectName;
     }
 
-    public Long getOrganisationId() {
+    public long getOrganisationId() {
         return organisationId;
     }
 
-    public void setOrganisationId(Long organisationId) {
+    public void setOrganisationId(long organisationId) {
         this.organisationId = organisationId;
     }
 

@@ -21,7 +21,7 @@ public interface ProjectDetailsRestService {
 
     RestResult<Void> updateFinanceContact(ProjectOrganisationCompositeId compositeId, Long financeContactUserId);
 
-    RestResult<Void> updatePartnerProjectLocation(Long projectId, Long organisationId, String postCode);
+    RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postCode);
 
     RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 

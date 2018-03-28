@@ -204,8 +204,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")
     @GetMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
-    public String viewPartnerProjectLocation(@PathVariable("projectId") final Long projectId,
-                                             @PathVariable("organisationId") final Long organisationId,
+    public String viewPartnerProjectLocation(@PathVariable("projectId") final long projectId,
+                                             @PathVariable("organisationId") final long organisationId,
                                              Model model,
                                              UserResource loggedInUser) {
 
@@ -216,7 +216,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     }
 
-    private String doViewPartnerProjectLocation(Long projectId, Long organisationId, UserResource loggedInUser, Model model, PartnerProjectLocationForm form) {
+    private String doViewPartnerProjectLocation(long projectId, long organisationId, UserResource loggedInUser, Model model, PartnerProjectLocationForm form) {
 
         if(!projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())){
             return redirectToProjectDetails(projectId);
@@ -232,8 +232,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PARTNER_PROJECT_LOCATION_PAGE')")
     @PostMapping("/{projectId}/organisation/{organisationId}/partner-project-location")
-    public String updatePartnerProjectLocation(@PathVariable("projectId") final Long projectId,
-                                               @PathVariable("organisationId") final Long organisationId,
+    public String updatePartnerProjectLocation(@PathVariable("projectId") final long projectId,
+                                               @PathVariable("organisationId") final long organisationId,
                                                @ModelAttribute(FORM_ATTR_NAME) PartnerProjectLocationForm form,
                                                @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                                Model model,

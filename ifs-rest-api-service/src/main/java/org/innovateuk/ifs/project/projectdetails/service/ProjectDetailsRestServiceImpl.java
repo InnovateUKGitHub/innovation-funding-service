@@ -42,7 +42,7 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> updatePartnerProjectLocation(Long projectId, Long organisationId, String postCode) {
+    public RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postCode) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postCode=" + postCode, Void.class);
     }
 

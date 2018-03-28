@@ -184,7 +184,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return validatePostCode(postCode).
                 andOnSuccess(() -> validateIfPartnerProjectLocationCanBeChanged(composite.getProjectId())).
                 andOnSuccess(() -> getPartnerOrganisation(composite.getProjectId(), composite.getOrganisationId())).
-                andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostCode(postCode));
+                andOnSuccessReturnVoid(partnerOrganisation -> partnerOrganisation.setPostCode(postCode.toUpperCase()));
     }
 
     private ServiceResult<Void> validatePostCode(String postCode) {
@@ -196,7 +196,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateIfPartnerProjectLocationCanBeChanged(Long projectId) {
+    private ServiceResult<Void> validateIfPartnerProjectLocationCanBeChanged(long projectId) {
 
         if (isMonitoringOfficerAssigned(projectId)) {
             return serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED);
@@ -205,12 +205,12 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    private boolean isMonitoringOfficerAssigned(Long projectId) {
+    private boolean isMonitoringOfficerAssigned(long projectId) {
         MonitoringOfficer monitoringOfficer = getMonitoringOfficerByProjectId(projectId);
         return monitoringOfficer != null;
     }
 
-    private MonitoringOfficer getMonitoringOfficerByProjectId(Long projectId) {
+    private MonitoringOfficer getMonitoringOfficerByProjectId(long projectId) {
         return monitoringOfficerRepository.findOneByProjectId(projectId);
     }
 

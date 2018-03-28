@@ -18,7 +18,7 @@ public class PartnerOrganisationRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
-    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId) {
+    public RestResult<PartnerOrganisationResource> getPartnerOrganisation(long projectId, long organisationId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/partner/" + organisationId, PartnerOrganisationResource.class);
     }
 }
