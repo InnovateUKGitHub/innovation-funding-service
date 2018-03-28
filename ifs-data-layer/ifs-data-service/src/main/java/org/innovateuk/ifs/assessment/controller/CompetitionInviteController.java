@@ -68,7 +68,7 @@ public class CompetitionInviteController {
 
     @GetMapping("/checkExistingUser/{inviteHash}")
     public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
-        return assessmentInviteService.checkExistingUser(inviteHash).toGetResponse();
+        return assessmentInviteService.checkUserExistsForInvite(inviteHash).toGetResponse();
     }
 
     @GetMapping("/getAvailableAssessors/{competitionId}")

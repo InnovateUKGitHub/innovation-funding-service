@@ -26,9 +26,10 @@ Assessment overview should show all the questions
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]
-    Then The user should see the text in the page                 days left to submit
-    And the days remaining should be correct (Top of the page)    2068-01-28
+    [Tags]  MySQL
+    Given the user should see the element  jQuery=.sub-header:contains("days left to submit")
+    #Then the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+    # TODO IFS-3176
 
 Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540

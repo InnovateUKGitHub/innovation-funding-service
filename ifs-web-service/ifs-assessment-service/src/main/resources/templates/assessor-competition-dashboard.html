@@ -4,13 +4,12 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionTitle},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-    <body th:with="context='assessment'" class="assessor-comp-dashboard">
+    <body class="assessor-comp-dashboard">
         <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -165,5 +164,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

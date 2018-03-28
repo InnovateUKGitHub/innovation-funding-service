@@ -3,6 +3,7 @@ package org.innovateuk.ifs.validation.validator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -42,9 +43,20 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
             rejectValue(errors, "startDate", "validation.project.start.date.not.in.future");
         }
 
-        if (StringUtils.isEmpty(application.getDurationInMonths()) || application.getDurationInMonths() < 1 || application.getDurationInMonths() > 36) {
+        Competition competition = application.getCompetition();
+        if (StringUtils.isEmpty(application.getDurationInMonths())){
             LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
-            rejectValue(errors, "durationInMonths", "validation.project.duration.range.invalid");
+            rejectValue(errors, "durationInMonths", "validation.field.must.not.be.blank");
+        } else if (application.getDurationInMonths() < competition.getMinProjectDuration()
+                || application.getDurationInMonths() > competition.getMaxProjectDuration()) {
+            LOG.debug("MarkAsComplete application details validation message for duration in months: " + application.getDurationInMonths());
+            rejectValue(
+                    errors,
+                    "durationInMonths",
+                    "validation.project.duration.input.invalid",
+                    competition.getMinProjectDuration(),
+                    competition.getMaxProjectDuration()
+            );
         }
 
         if (!applicationInnovationAreaIsInCorrectState(application)) {

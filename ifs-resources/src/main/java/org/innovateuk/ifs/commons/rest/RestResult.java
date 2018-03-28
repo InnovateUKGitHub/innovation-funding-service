@@ -116,6 +116,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new DuplicateFileCreatedException(error.getErrorKey(), error.getArguments());
         }
 
+        if(restFailure.has(FILES_ALREADY_UPLOADED)){
+            throw new FileAlreadyUploadedException(error.getErrorKey(), error.getArguments());
+        }
+
         if(restFailure.has(FILES_FILE_ALREADY_LINKED_TO_FORM_INPUT_RESPONSE)){
             throw new FileAlreadyLinkedToFormInputResponseException(error.getErrorKey(), error.getArguments());
         }
