@@ -4,8 +4,10 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
+import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -64,6 +66,9 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     @Autowired
     private NotificationSender notificationSender;
+
+    @Autowired
+    private InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
 
     enum Notifications {
         INVITE_APPLICANT_GROUP_TO_INTERVIEW
@@ -158,8 +163,11 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
                 ));
 
         return notificationSender.sendNotification(notification).andOnSuccessReturnVoid(() -> {
-            assignment.setActivityState(awaitingFeedbackActivityState);
-            interviewAssignmentRepository.save(assignment);
+            InterviewAssignmentMessageOutcome outcome = new InterviewAssignmentMessageOutcome();
+            outcome.setAssessmentInterviewPanel(assignment);
+            outcome.setMessage(assessorInviteSendResource.getContent());
+            outcome.setSubject(assessorInviteSendResource.getSubject());
+            interviewAssignmentWorkflowHandler.notifyInterviewPanel(assignment, outcome);
         });
     }
 
