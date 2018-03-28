@@ -30,6 +30,20 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
+    public void testUpdatePartnerProjectLocation() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "TW14 9QG";
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postCode=" + postCode, null, OK);
+
+        RestResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postCode);
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postCode=" + postCode, Void.class, null);
+    }
+
+    @Test
     public void testUpdateProjectAddress() {
 
         AddressResource addressResource = new AddressResource();

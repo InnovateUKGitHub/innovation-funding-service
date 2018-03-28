@@ -37,9 +37,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ManagementProjectDetailsController.class)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectDetailsController.class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
-public class ManagementProjectDetailsController {
+public class ProjectDetailsController {
 
     @Autowired
     private ProjectService projectService;

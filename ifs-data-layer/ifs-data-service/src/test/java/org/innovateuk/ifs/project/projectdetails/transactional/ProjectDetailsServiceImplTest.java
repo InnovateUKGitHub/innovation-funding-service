@@ -15,8 +15,10 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.builder.SpendProfileBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
@@ -429,6 +431,97 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         assertEquals(1, organisationFinanceContacts.size());
         assertEquals(anotherUser, organisationFinanceContacts.get(0).getUser());
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenPostCodeIsNullOrEmpty() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = null;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(GENERAL_INVALID_ARGUMENT));
+
+        postCode = "";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(GENERAL_INVALID_ARGUMENT));
+
+        postCode = "    ";
+        updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(GENERAL_INVALID_ARGUMENT));
+
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenMonitoringOfficerAssigned() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(projectId)).thenReturn(new MonitoringOfficer());
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenPartnerOrganisationDoesNotExist() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(PartnerOrganisation.class, projectId, organisationId)));
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationEnsureLowerCasePostCodeIsSavedAsUpperCase() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "tw14 9qg";
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals(postCode.toUpperCase(), partnerOrganisationInDb.getPostCode());
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationSuccess() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "UB7 8QF";
+
+        PartnerOrganisation partnerOrganisationInDb = new PartnerOrganisation();
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDb);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isSuccess());
+
+        assertEquals(postCode, partnerOrganisationInDb.getPostCode());
     }
 
     @Test

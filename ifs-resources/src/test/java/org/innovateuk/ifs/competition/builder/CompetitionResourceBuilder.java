@@ -179,6 +179,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setSetupComplete(setupComplete));
     }
 
+    public CompetitionResourceBuilder withLocationPerPartner(Boolean locationPerPartner) {
+        return with(competition -> competition.setLocationPerPartner(locationPerPartner));
+    }
+
     public CompetitionResourceBuilder withFullApplicationFinance(Boolean fullApplicationFinance) {
         return with(competitionResource -> competitionResource.setFullApplicationFinance(fullApplicationFinance));
     }

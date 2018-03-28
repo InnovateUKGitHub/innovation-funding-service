@@ -50,6 +50,20 @@ public class ProjectDetailsServiceImplTest {
     }
 
     @Test
+    public void testUpdatePartnerProjectLocation() {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        when(projectDetailsRestService.updatePartnerProjectLocation(projectId, organisationId, postCode)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.updatePartnerProjectLocation(projectId, organisationId, postCode);
+        assertTrue(result.isSuccess());
+
+        verify(projectDetailsRestService).updatePartnerProjectLocation(projectId, organisationId, postCode);
+    }
+
+    @Test
     public void testUpdateProjectManager() {
         when(projectDetailsRestService.updateProjectManager(1L, 2L)).thenReturn(restSuccess());
 

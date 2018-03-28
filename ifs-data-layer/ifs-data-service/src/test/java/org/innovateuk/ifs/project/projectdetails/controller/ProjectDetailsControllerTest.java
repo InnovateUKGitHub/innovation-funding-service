@@ -43,6 +43,20 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void updatePartnerProjectLocation() throws Exception {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "TW14 9QG";
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postCode={postCode}", projectId, organisationId, postCode))
+                .andExpect(status().isOk());
+
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(new ProjectOrganisationCompositeId(projectId, organisationId), postCode);
+    }
+
+    @Test
     public void updateProjectAddress() throws Exception {
         AddressResource addressResource = newAddressResource().withId(1L).build();
 
