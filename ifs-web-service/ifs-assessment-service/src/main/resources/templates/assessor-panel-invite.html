@@ -14,14 +14,14 @@
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
-            <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assessment panel for '${model.competitionName}'|,size='heading-xlarge'" />
+            <p>You are invited to the assessment panel for the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
             <section class="boxed">
                 <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.panelDate, 'd MMMM yyyy')}: assessment panel|">
                     21 March 2017: assessment panel
                 </h2>
-                <p>Are you are available to take part in this assessment panel? <br>
+                <p>Are you available to take part in this assessment panel? <br>
                     If you respond ‘Yes’ below, you will be required to attend the panel on this date.</p>
             </section>
 
