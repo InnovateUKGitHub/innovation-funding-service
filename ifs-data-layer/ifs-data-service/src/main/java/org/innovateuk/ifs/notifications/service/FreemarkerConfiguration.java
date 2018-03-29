@@ -21,7 +21,7 @@ public class FreemarkerConfiguration {
         // backward-compatible. See the Configuration JavaDoc for details.
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_23);
         // Specify the source where the template files come from.
-        cfg.setClassForTemplateLoading(Application.class, "notifications/templates");
+        cfg.setClassForTemplateLoading(Application.class, "/templates/");
         // Set the preferred charset template files are stored in. UTF-8 is
         // a good choice in most applications:
         cfg.setDefaultEncoding("UTF-8");

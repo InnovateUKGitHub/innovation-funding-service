@@ -370,7 +370,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, FEEDBACK_RELEASED);
     }
 
-    private CompetitionDataBuilder withMilestoneUpdate(ZonedDateTime date, MilestoneType milestoneType) {
+    public CompetitionDataBuilder withMilestoneUpdate(ZonedDateTime date, MilestoneType milestoneType) {
 
         if (date == null) {
             return this;
@@ -384,7 +384,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                             success -> success
                     );
 
-            milestone.setDate(date);
+            milestone.setDate(adjustTimeForMilestoneType(date, milestoneType));
             milestoneService.updateMilestone(milestone);
 
             data.addOriginalMilestone(milestone);
@@ -449,5 +449,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     protected void postProcess(int index, CompetitionData instance) {
         super.postProcess(index, instance);
         LOG.info("Created Competition '{}'", instance.getCompetition().getName());
+    }
+
+    private ZonedDateTime adjustTimeForMilestoneType(ZonedDateTime day, MilestoneType milestoneType) {
+        return asList(SUBMISSION_DATE, ASSESSOR_ACCEPTS, ASSESSOR_DEADLINE).contains(milestoneType) ? day.withHour(12) : day;
     }
 }
