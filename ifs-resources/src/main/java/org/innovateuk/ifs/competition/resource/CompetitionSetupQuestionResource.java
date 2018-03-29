@@ -236,12 +236,6 @@ public class CompetitionSetupQuestionResource {
         this.allowedFileTypes = allowedFileTypes;
     }
 
-    // TODO: IFS-2565 remove function in ZDD contract
-    @JsonProperty("allowedFileTypes")
-    public void setAllowedFileTypesByDisplayName(List<String> names) {
-        this.allowedFileTypes = simpleToLinkedHashSet(names, this::fromNameOrDisplayName);
-    }
-
     public String getAppendixGuidance() {
         return appendixGuidance;
     }
@@ -252,13 +246,6 @@ public class CompetitionSetupQuestionResource {
 
     public static List<FileTypeCategory> getSupportedTypeCategories(){
         return asList(PDF, SPREADSHEET);
-    }
-
-    private FileTypeCategory fromNameOrDisplayName(String name) {
-        return simpleFindFirst(FileTypeCategory.values(),
-                category -> category.getDisplayName().equals(name) ||
-                        category.name().equals(name))
-                .orElse(null);
     }
 
     @Override
