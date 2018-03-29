@@ -159,7 +159,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private ServiceResult<Void> sendNotification(User user, Competition competition) {
-        NotificationTarget recipient = new UserNotificationTarget(user);
+        NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         Notification notification = new Notification(
                 systemNotificationSource,
