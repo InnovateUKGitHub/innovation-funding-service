@@ -73,13 +73,13 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
 
         ApplicationPageResource applicationPage = new ApplicationPageResource();
 
-        when(competitionServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+        when(applicationServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
 
         mockMvc.perform(get("/competition/postSubmission/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationPage)));
 
-        verify(competitionServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
+        verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
     }
 
     @Test

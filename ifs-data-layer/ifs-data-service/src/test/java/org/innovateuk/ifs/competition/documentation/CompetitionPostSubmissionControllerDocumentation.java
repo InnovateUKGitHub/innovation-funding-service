@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
@@ -31,6 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionPostSubmissionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionPostSubmissionController> {
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private ApplicationService applicationService;
 
     @Override
     protected CompetitionPostSubmissionController supplyControllerUnderTest() {
@@ -175,7 +179,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         ApplicationPageResource applicationPage = new ApplicationPageResource();
 
-        when(competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+        when(applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
 
         mockMvc.perform(get("/competition/postSubmission/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
                 .andExpect(status().isOk())
@@ -187,7 +191,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                         )
                 ));
 
-        verify(competitionService, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
+        verify(applicationService, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
 
     }
 
