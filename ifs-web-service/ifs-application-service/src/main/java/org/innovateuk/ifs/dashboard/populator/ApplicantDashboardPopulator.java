@@ -16,10 +16,7 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -175,7 +172,7 @@ public class ApplicantDashboardPopulator {
 
     @SafeVarargs
     private final Map<Long, CompetitionResource> createCompetitionMap(Long userId, List<ApplicationResource>... resources) {
-        List<CompetitionResource> allUserCompetitions = competitionRestService.getCompetitionsByUserId(userId).getSuccess();
+        List<CompetitionResource> allUserCompetitions = getAllCompetitionsForUser(userId);
 
         return combineLists(resources).stream()
                 .collect(
@@ -186,5 +183,17 @@ public class ApplicantDashboardPopulator {
                                         .findFirst()
                                         .orElse(null), (p1, p2) -> p1)
                 );
+    }
+
+    private  List<CompetitionResource> getAllCompetitionsForUser(Long userId) {
+        List<ApplicationResource> userApplications = applicationRestService.getApplicationsByUserId(userId).getSuccess();
+        List<Long> competitionIdsForUser = userApplications.stream()
+                .map(ApplicationResource::getCompetition)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return competitionIdsForUser.stream()
+                .map(id -> competitionRestService.getCompetitionById(id).getSuccess())
+                .collect(Collectors.toList());
     }
 }

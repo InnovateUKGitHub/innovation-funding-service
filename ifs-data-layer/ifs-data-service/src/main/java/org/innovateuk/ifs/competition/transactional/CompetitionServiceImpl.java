@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -151,6 +152,15 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
     }
 
+    /**
+     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
+     * the endpoint is not used anymore, so this function can also be deleted
+     *
+     * TODO: remove in ZDD cleanup
+     * @param userId
+     * @return
+     */
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
     @Override
     public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
         List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccess();
