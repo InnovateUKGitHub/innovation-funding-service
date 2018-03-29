@@ -2,8 +2,8 @@ package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;

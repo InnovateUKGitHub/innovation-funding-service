@@ -8,12 +8,10 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 
 import javax.persistence.*;
@@ -219,7 +217,7 @@ public class Application implements ProcessActivity {
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {
-        return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
+        return this.processRoles.stream().filter(processRole -> processRole.getRole().isLeadApplicant()).findAny();
     }
 
     public User getLeadApplicant() {
@@ -286,9 +284,6 @@ public class Application implements ProcessActivity {
             return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
         }
     }
-
-
-
 
     public BigDecimal getCompletion() {
         return completion;

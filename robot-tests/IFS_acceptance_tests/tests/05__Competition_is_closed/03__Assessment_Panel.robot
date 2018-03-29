@@ -43,13 +43,13 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...
 ...               INF-2637 Manage interview panel link on competition dashboard - Internal
 Suite Setup       Custom Suite Setup
-Suite Teardown    The user closes the browser
+Suite Teardown    Custom Tear Down
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Variables ***
-${assessment_panel}          ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
+${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -74,12 +74,12 @@ Assessment panel links are active if the assessment panel has been set
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
-There are no Assessors in Invite and Pending and rejected tab before sending invite
+There are no Assessors in Invite and Pending and declined tab before sending invite
     [Documentation]  IFS-1561
     [Tags]
     Given the user clicks the button/link  link=Invite
     And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this panel.")
-    Then the user clicks the button/link   link=Pending and rejected
+    Then the user clicks the button/link   link=Pending and declined
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
 CompAdmin can add an assessors to invite list
@@ -129,7 +129,7 @@ Bulk add assessor to invite list
 CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link    link=Pending and rejected
+    [Setup]  the user clicks the button/link    link=Pending and declined
     Given the user clicks the button/link     jQuery=tr:contains("${assessor_ben}") label
     And the user clicks the button/link       jQuery=tr:contains("${assessor_joel}") label
     And the user clicks the button/link       jQuery=button:contains("Resend invites")
@@ -166,40 +166,40 @@ Comp Admin can see the rejected and accepted invitation
     [Documentation]  IFS-37 IFS-1563
     [Tags]
     [Setup]  Log in as a different user        &{Comp_admin1_credentials}
-    Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
+    Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
     And the user should see the element        jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite declined")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
     When the user clicks the button/link       link=Accepted
     Then the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Assessors on invite list")
-    When the user clicks the button/link       link=Pending and rejected
+    When the user clicks the button/link       link=Pending and declined
     Then the user should not see the element   jQuery=td:contains("${assessor_ben}")
 
 Assessor tries to accept expired invitation
     [Documentation]  IFS-2114
-    [Tags]
-    [Setup]   the assessment panel period changes in the db   2017-02-24 00:00:00
-    When the user reads his email and clicks the link   ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
-    Then the user should see the text in the page       This invitation is now closed
-    [Teardown]  the assessment panel period changes in the db   2068-02-24 00:00:00
+    [Tags]  MySQL
+    [Setup]  get the initial milestone value
+    Given we are moving the milestone to yesterday  ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
+    When the user reads his email and clicks the link  ${assessor_riley_email}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    Then the user should see the text in the page      This invitation is now closed
+    [Teardown]  we are moving the milestone to tomorrow  ASSESSMENT_PANEL  ${CLOSED_COMPETITION}
 
 Assign application link decativated if competition is in close state
     [Documentation]   IFS-25
     [Tags]
-    [Setup]  Log in as a different user     &{Comp_admin1_credentials}
-    Given the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
-    When the user clicks the button/link    link=Manage assessment panel
-    Then the user should see the element    jQuery=.disabled:contains("Assign applications to panel")
+    [Setup]  Log in as a different user   &{Comp_admin1_credentials}
+    Given the user navigates to the page  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
+    Then the user should see the element  jQuery=.disabled:contains("Assign applications to panel")
 
 Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
     [Tags]
     [Setup]  the user clicks the button/link     link=Competition
-    Given the user move the closed competition to in panel
+    Given the user moves the closed competition to panel
     And the user should see the element    jQuery=h1:contains("Panel")
     When the user clicks the button/link   link=Manage assessment panel
-    And the user clicks the button/link    jQuery=a:contains("Assign applications to panel")
+    And the user clicks the button/link    link=Assign applications to panel
     Then the user should see the element   jQuery=h1:contains("Assign applications to panel")
 
 Manage Assessment Panel Assign and remove button functionality
@@ -207,9 +207,9 @@ Manage Assessment Panel Assign and remove button functionality
     [Tags]
     When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td:contains("Assign")
     Then the user should see the element    jQuery=h2:contains("Assigned applications (1)")
-    And the user clicks the button/link     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Remove")
-    Then the user should see the element    jQuery=td:contains("${Neural_network_application}") ~ td:contains("Assign")
-    And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td:contains("Remove")
+    Then the user should see the element    jQuery=h2:contains("Assigned applications (0)")
+    And the user should see the element     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Assign")
 
 Filter by application number
     [Documentation]  IFS-2049
@@ -229,9 +229,9 @@ Assign applications to panel
     Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
     When the user clicks the button/link    link=Manage assessment panel
     And the user clicks the button/link     jQuery=button:contains("Confirm actions")
-    And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
+    And the user reads his email            ${assessor_ben}  Applications ready for review  You have been allocated applications to review within the competition ${CLOSED_COMPETITION_NAME}.
 
-Assign applicaitons to assessor upon acceting invite in panel
+Assign applications to assessor upon accepting invite in panel
     [Documentation]   IFS-2549
     [Tags]
     # When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
@@ -289,11 +289,12 @@ Assessor can attend Panel and see applications that he has assessed
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138
-    [Tags]
-    Given the funders panel period changes in the db          2017-06-27 00:00:00
-    When the user clicks the button/link         link=Dashboard
-    Then the user should not see the element                  jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    [Teardown]  the funders panel period changes in the db    2068-06-27 00:00:00
+    [Tags]  MySQL
+    ${fundersPanel} =  Get the proper milestone value from the db  FUNDERS_PANEL
+    Given we are moving the milestone to yesterday  FUNDERS_PANEL  ${CLOSED_COMPETITION}
+    When the user clicks the button/link      link=Dashboard
+    Then the user should not see the element  jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    [Teardown]  return back to original milestone  FUNDERS_PANEL  ${fundersPanel}  ${CLOSED_COMPETITION}
 
 *** Keywords ***
 Custom Suite Setup
@@ -301,15 +302,41 @@ Custom Suite Setup
     ${today} =  get today short month
     set suite variable  ${today}
 
-the assessment panel period changes in the db
-    [Arguments]  ${Date}
-    Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id='${CLOSED_COMPETITION}';
+Custom Tear Down
+    return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${CLOSED_COMPETITION}
+    the user closes the browser
 
-the funders panel period changes in the db
-    [Arguments]  ${Date}
+Get the proper milestone value from the db
+    [Arguments]  ${type}
     Connect to Database    @{database}
-    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE `type`='FUNDERS_PANEL' AND `competition_id`='${CLOSED_COMPETITION}'
+    ${result} =  Query  SELECT DATE_FORMAT(`date`, '%Y-%l-%d %H:%i:%s') FROM `${database_name}`.`milestone` WHERE `competition_id`='${CLOSED_COMPETITION}' AND type='${type}';
+    ${result} =  get from list  ${result}  0
+    ${milestone} =  get from list  ${result}  0
+    [Return]  ${milestone}
+
+return back to original milestone
+    [Arguments]  ${type}  ${date}  ${competitionId}
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
+
+we are moving the milestone to yesterday
+    [Arguments]  ${type}  ${competitionId}
+    ${date} =  get yesterday
+    update the database  ${date}  ${type}  ${competitionId}
+
+we are moving the milestone to tomorrow
+    [Arguments]  ${type}  ${competitionId}
+    ${date} =  get tomorrow
+    update the database  ${date}  ${type}  ${competitionId}
+
+update the database
+    [Arguments]  ${date}  ${type}  ${competitionId}
+    Connect to Database    @{database}
+    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
+
+get the initial milestone value
+    ${assessmentPanelDate} =  Get the proper milestone value from the db  ASSESSMENT_PANEL
+    set suite variable  ${assessmentPanelDate}
 
 enable assessment panel for the competition
     the user clicks the button/link    link=View and update competition setup

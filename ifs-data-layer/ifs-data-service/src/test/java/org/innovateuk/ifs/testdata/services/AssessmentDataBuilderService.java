@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.testdata.services;
 
-import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;

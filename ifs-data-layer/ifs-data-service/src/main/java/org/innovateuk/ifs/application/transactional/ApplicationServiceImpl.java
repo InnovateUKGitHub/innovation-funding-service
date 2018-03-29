@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -13,14 +14,16 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +37,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -97,12 +99,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setCompetition(competition);
         setInnovationArea(application, competition);
 
-        return getRole(LEADAPPLICANT).andOnSuccess(role -> {
-            Application savedApplication = applicationRepository.save(application);
-            generateProcessRolesForApplication(user, role, savedApplication);
-            savedApplication = applicationRepository.findOne(savedApplication.getId());
-            return serviceSuccess(applicationMapper.mapToResource(savedApplication));
-        });
+        Application savedApplication = applicationRepository.save(application);
+        generateProcessRolesForApplication(user, Role.LEADAPPLICANT, savedApplication);
+        savedApplication = applicationRepository.findOne(savedApplication.getId());
+        return serviceSuccess(applicationMapper.mapToResource(savedApplication));
     }
 
     // Default to the competition's innovation area if only one set.
@@ -229,6 +229,14 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             });
             return simpleMap(applications, applicationMapper::mapToResource);
         });
+    }
+
+    @Override
+    public ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable) {
+
+        Page<Application> pagedResult = applicationRepository.searchByIdLike(searchString, pageable);
+        List<ApplicationResource> applicationResource = simpleMap(pagedResult.getContent(), application -> applicationMapper.mapToResource(application));
+        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), applicationResource, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override

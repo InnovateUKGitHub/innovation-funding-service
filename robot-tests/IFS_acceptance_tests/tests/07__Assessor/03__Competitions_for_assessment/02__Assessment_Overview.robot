@@ -19,16 +19,17 @@ Assessment overview should show all the questions
     ...    INFUND-1188
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When the user clicks the button/link     link=Intelligent water system
+    When the user clicks the button/link     link=${IN_ASSESSMENT_APPLICATION_5_TITLE}
     Then The user should see the element     jQuery=h2:contains("Project details")
     And The user should see the element      jQuery=h2:contains("Application questions")
     And The user should see the element      jQuery=h2:contains("Finances")
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]
-    Then The user should see the text in the page                 days left to submit
-    And the days remaining should be correct (Top of the page)    2068-01-28
+    [Tags]  MySQL
+    Given the user should see the element  jQuery=.sub-header:contains("days left to submit")
+    #Then the days remaining should be correct (Top of the page)  ${getSimpleMilestoneDate(${IN_ASSESSMENT_COMPETITION}, "ASSESSOR_DEADLINE")}
+    # TODO IFS-3176
 
 Reject application (Unable to assess this application)
     [Documentation]    INFUND-3540
@@ -39,7 +40,7 @@ Reject application (Unable to assess this application)
     And the user fills in rejection details
     And the user clicks the button/link                       jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And The user should not see the element                   link=Intelligent water system
+    And The user should not see the element                   link=${IN_ASSESSMENT_APPLICATION_5_TITLE}
 
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188

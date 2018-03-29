@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
+import org.innovateuk.ifs.form.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -36,7 +36,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -70,7 +70,7 @@ public class ApplicationModelPopulatorTest {
     protected OrganisationService organisationService;
 
     @Mock
-    protected FinanceHandler financeHandler;
+    protected FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Mock
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -178,7 +178,7 @@ public class ApplicationModelPopulatorTest {
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
 
         when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
-        when(financeHandler.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
+        when(financeViewHandlerProvider.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole  = newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));

@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.populator.finance;
 
 import org.innovateuk.ifs.applicant.resource.*;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.application.viewmodel.finance.GrantClaimCostViewModel;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionStatusResour
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder.newQuestionStatusResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -51,7 +51,7 @@ public class GrantClaimCostPopulatorTest {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Mock
-    private FinanceHandler financeHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Test
     public void testPopulate() {
@@ -83,7 +83,7 @@ public class GrantClaimCostPopulatorTest {
         GrantClaim grantClaim = mock(GrantClaim.class);
         when(applicationFinanceRestService.getFinanceDetails(section.getApplication().getId(), currentApplicant.getOrganisation().getId())).thenReturn(restSuccess(financeResource));
         when(financeResource.getFinanceOrganisationDetails(FinanceRowType.FINANCE)).thenReturn(category);
-        when(financeHandler.getFinanceFormHandler(currentApplicant.getOrganisation().getOrganisationType())).thenReturn(formHandler);
+        when(financeViewHandlerProvider.getFinanceFormHandler(currentApplicant.getOrganisation().getOrganisationType())).thenReturn(formHandler);
         when(formHandler.addCostWithoutPersisting(section.getApplication().getId(), section.getCurrentUser().getId(), question.getQuestion().getId())).thenReturn(rowItem);
         when(financeResource.getMaximumFundingLevel()).thenReturn(MAXIMUM_GRANT_CLAIM);
         when(financeResource.getGrantClaim()).thenReturn(grantClaim);

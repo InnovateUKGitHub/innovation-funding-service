@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -20,7 +20,7 @@ import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.view.ProjectFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -42,8 +42,8 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantResourceBuilder.newApplicantResource;
 import static org.innovateuk.ifs.applicant.builder.ApplicantSectionResourceBuilder.newApplicantSectionResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
+import static org.innovateuk.ifs.form.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -146,8 +146,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
+        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(projectFinanceFormHandler);
 
         when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(Boolean.FALSE);
         when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(Boolean.TRUE);
@@ -209,8 +209,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
+        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), academicOrganisation.getId())).
@@ -230,8 +230,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
+        when(financeViewHandlerProvider.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeViewHandlerProvider.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getId())).thenReturn(projectFinanceFormHandler);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().build();
         when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 1L)).thenReturn(appFinanceResource);

@@ -2,9 +2,11 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.app
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -77,6 +80,24 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
 
         assertNotNull(applications);
         assertEquals(returnedApplications, applications);
+    }
+
+    @Test
+    public void test_wildcardSearchById() {
+
+        String searchString = "12";
+        int pageNumber = 0;
+        int pageSize = 5;
+
+        String expectedUrl = applicationRestURL + "/wildcardSearchById?searchString=12&page=0&size=5";
+        ApplicationPageResource applicationPageResource = new ApplicationPageResource();
+        setupGetWithRestResultExpectations(expectedUrl, ApplicationPageResource.class, applicationPageResource);
+
+        RestResult<ApplicationPageResource> result = service.wildcardSearchById(searchString, pageNumber, pageSize);
+        assertTrue(result.isSuccess());
+        assertEquals(applicationPageResource, result.getSuccess());
+
+        setupGetWithRestResultVerifications(expectedUrl, null, ApplicationPageResource.class);
     }
 
     @Test

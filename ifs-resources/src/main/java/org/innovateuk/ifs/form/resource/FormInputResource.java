@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
@@ -15,10 +14,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.emptySet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 
 public class FormInputResource {
     private Long id;
@@ -160,65 +157,11 @@ public class FormInputResource {
         this.scope = scope;
     }
 
-    /**
-     * TODO: IFS-2564 - Remove in ZDD migrate.
-     */
-    public String getAllowedFileTypes() {
-        return simpleJoiner(allowedFileTypes, ",");
-    }
-
-    /**
-     * TODO: IFS-2564 - Rename and remove JsonIgnore in ZDD migrate.
-     */
-    @JsonIgnore
-    public Set<FileTypeCategory> getAllowedFileTypesSet() {
+    public Set<FileTypeCategory> getAllowedFileTypes() {
         return this.allowedFileTypes;
     }
 
-    /**
-     * TODO: IFS-2564 - Remove deserializer in ZDD contract.
-     */
-    @JsonDeserialize(using = AllowedFileTypesDeserializer.class)
     public void setAllowedFileTypes(Set<FileTypeCategory> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
-    }
-
-    /**
-     * Custom deserializer for the 'allowedFileTypes' property.
-     *
-     * This is required as this property may come through from the
-     * data-tier as either an array or a string.
-     * Ideally we would use overloading on setter methods,
-     * but Jackson doesn't seem to deserialize correctly if we do this.
-     *
-     * TODO: IFS-2564 - Remove in ZDD contract.
-     */
-    static class AllowedFileTypesDeserializer extends JsonDeserializer<Set<FileTypeCategory>> {
-        @Override
-        public Set<FileTypeCategory> deserialize(JsonParser p, DeserializationContext ctxt)
-                throws IOException, JsonProcessingException
-        {
-            if (p.isExpectedStartArrayToken()) {
-                Set<FileTypeCategory> result = newHashSet();
-
-                while (p.nextToken() != JsonToken.END_ARRAY) {
-                    result.add(FileTypeCategory.valueOf(p.getValueAsString()));
-                }
-
-                return result;
-            }
-
-            if (p.getCurrentToken() == JsonToken.VALUE_STRING) {
-                String valueAsString = p.getValueAsString();
-
-                if (valueAsString.isEmpty()) {
-                    return emptySet();
-                }
-
-                return simpleMapSet(valueAsString.split(","), FileTypeCategory::valueOf);
-            }
-
-            throw ctxt.wrongTokenException(p, p.getCurrentToken(), "Token should be an Array or String.");
-        }
     }
 }

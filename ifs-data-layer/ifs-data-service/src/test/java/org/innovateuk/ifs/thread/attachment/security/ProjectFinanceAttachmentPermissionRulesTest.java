@@ -4,12 +4,13 @@ package org.innovateuk.ifs.thread.attachment.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.financechecks.security.AttachmentPermissionsRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.domain.Query;
-import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,7 +24,6 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PA
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
@@ -48,8 +48,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         projectFinanceUser = projectFinanceUser();
         projectPartnerUser = getUserWithRole(PARTNER);
 
-        intruder = newUserResource().withId(1993L).withRolesGlobal(newRoleResource()
-                .withType(PARTNER).build(1)).build();
+        intruder = newUserResource().withId(1993L).withRolesGlobal(singletonList(Role.PARTNER)).build();
         intruder.setId(1993L);
     }
 

@@ -8,8 +8,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,9 +30,7 @@ import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceB
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -113,7 +111,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(defaultExpectedCompetitionSummary));
 
         {
-            UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build();
+            UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();
 
             setLoggedInUser(userResource);
 
@@ -128,7 +126,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         }
 
         {
-            UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(INNOVATION_LEAD).build())).build();
+            UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
 
             setLoggedInUser(userResource);
 
@@ -561,10 +559,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     public void markApplicationAsSuccessful() throws Exception {
 
         setLoggedInUser(newUserResource()
-                .withRolesGlobal(singletonList(
-                        newRoleResource()
-                                .withType(IFS_ADMINISTRATOR)
-                                .build()))
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
                 .build());
 
         ProjectResource projectResource = newProjectResource()
@@ -591,7 +586,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
     @Test
     public void allApplicationsSupportView() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.SUPPORT)).build();
 
         Long[] ids = {1L, 2L, 3L};
         String[] titles = {"Title 1", "Title 2", "Title 3"};
@@ -640,14 +635,14 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
-        assertEquals("Dashboard", model.getBackTitle());
-        assertEquals("/dashboard/live", model.getBackURL());
+        assertEquals("Applications", model.getBackTitle());
+        assertEquals("/competition/1/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 
     @Test
     public void allApplicationsSupportViewInnovationLead() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(Role.INNOVATION_LEAD)).build();
 
         Long[] ids = {1L, 2L, 3L};
         String[] titles = {"Title 1", "Title 2", "Title 3"};
@@ -696,8 +691,8 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
-        assertEquals("Dashboard", model.getBackTitle());
-        assertEquals("/dashboard/live", model.getBackURL());
+        assertEquals("Applications", model.getBackTitle());
+        assertEquals("/competition/1/applications", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 

@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.user.viewmodel.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -52,7 +52,7 @@ public class ApplicationModelPopulator {
     protected OrganisationService organisationService;
 
     @Autowired
-    protected FinanceHandler financeHandler;
+    protected FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
@@ -185,7 +185,7 @@ public class ApplicationModelPopulator {
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
             if(!form.isAdminMode() || optionalOrganisationId.isPresent()) {
                 Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
+                financeViewHandlerProvider.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
             }
         }
     }

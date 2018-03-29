@@ -2,12 +2,12 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
@@ -18,7 +18,7 @@ import org.springframework.ui.Model;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.form.resource.SectionType.FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
@@ -37,7 +37,7 @@ public class FinanceOverviewPopulator {
     private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     //TODO - INFUND-7482 - remove usages of Model model
     public void addOverviewDetails(OpenSectionViewModel openSectionViewModel, Model model, ApplicationForm form, ApplicantSectionResource applicantSection) {
@@ -54,7 +54,7 @@ public class FinanceOverviewPopulator {
             if(!form.isAdminMode()){
 
                 if(applicantSection.getCompetition().isOpen()) {
-                    openSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
+                    openSectionViewModel.setFinanceViewModel(financeViewHandlerProvider.getFinanceModelManager(organisationType).getFinanceViewModel(applicantSection.getApplication().getId(), costsQuestions, applicantSection.getCurrentUser().getId(), form, applicantSection.getCurrentApplicant().getOrganisation().getId()));
                 }
             }
         }

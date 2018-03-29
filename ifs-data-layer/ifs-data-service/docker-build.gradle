@@ -14,14 +14,16 @@ project.ext['flyway.password']="password"
 
 def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
 project.ext['flyway.locations']=flywayPatchesPath + "/migration," +
+                                flywayPatchesPath + "/reference," +
                                 flywayPatchesPath + "/setup," +
                                 flywayPatchesPath + "/webtest"
 
 project.ext['flyway.placeholders.ifs.system.user.uuid']='c0d02979-e66e-11e7-ac43-0242ac120002'
 
 ext.ifsFinanceTotalsEnabled=true
+ext.ifsFinanceTotalsAuthSecretKey="supersecretkey"
 
-ext.ifsFlywayLocations="db/migration,db/setup,db/webtest"
+ext.ifsFlywayLocations="db/migration,db/reference,db/setup,db/webtest"
 
 ext.silRestBaseURL="http://sil-stub:8080/silstub"
 ext.silRestCrmBaseURL="http://sil-stub:8080/silstub"

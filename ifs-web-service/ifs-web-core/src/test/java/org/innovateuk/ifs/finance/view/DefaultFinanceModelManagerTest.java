@@ -2,12 +2,12 @@ package org.innovateuk.ifs.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -41,7 +41,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.form.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -66,7 +66,7 @@ public class DefaultFinanceModelManagerTest {
     private OrganisationTypeRestService organisationTypeService;
 
     @Mock
-    private FinanceHandler financeHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Mock
     private OrganisationService organisationService;
@@ -173,7 +173,7 @@ public class DefaultFinanceModelManagerTest {
 
 		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
 		
-		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
+		when(financeViewHandlerProvider.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
     	when(formInputRestService.getByQuestionIdAndScope(isA(Long.class), eq(APPLICATION))).thenReturn(restSuccess(asList(newFormInputResource().withType(FormInputType.LABOUR).build())));
 

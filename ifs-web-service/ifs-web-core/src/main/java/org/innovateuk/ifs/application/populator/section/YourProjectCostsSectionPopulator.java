@@ -2,11 +2,11 @@ package org.innovateuk.ifs.application.populator.section;
 
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
-import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.form.resource.QuestionType;
+import org.innovateuk.ifs.form.resource.SectionType;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractYourProjectCostsSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.section.DefaultProjectCostSection;
@@ -35,7 +35,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
     private SectionService sectionService;
 
     @Autowired
-    private FinanceHandler financeHandler;
+    private FinanceViewHandlerProvider financeViewHandlerProvider;
 
     @Autowired
     private FormInputViewModelGenerator formInputViewModelGenerator;
@@ -54,7 +54,7 @@ public class YourProjectCostsSectionPopulator extends AbstractSectionPopulator<A
                 section.allQuestions()
                         .filter(question -> QuestionType.COST.equals(question.getQuestion().getType()))
                         .collect(Collectors.toList());
-        financeHandler.getFinanceModelManager(
+        financeViewHandlerProvider.getFinanceModelManager(
                 section.getCurrentApplicant().getOrganisation().getOrganisationType()
         )
                 .addOrganisationFinanceDetails(

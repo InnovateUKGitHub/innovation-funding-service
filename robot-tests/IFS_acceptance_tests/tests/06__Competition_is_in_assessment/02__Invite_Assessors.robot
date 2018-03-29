@@ -51,9 +51,9 @@ Check the initial key statistics
     [Tags]
     Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link    link=Pending and rejected
+    And the user clicks the button/link    link=Pending and declined
 
-Filtering in the Invite Pending and rejected page
+Filtering in the Invite Pending and declined page
     [Documentation]    INFUND-6453
     [Tags]
     Given the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=filterInnovationArea
@@ -130,7 +130,7 @@ The user can select the profile link
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
     [Tags]
-    Given the user should see the element  jQuery=.heading-secondary:contains("Sustainable living models for the future")
+    Given the user should see the element  jQuery=.heading-secondary:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
@@ -144,7 +144,8 @@ Invite multiple assessors
     And the user clicks the button/link                jQuery=button:contains("Add selected to invite list")
     When the user clicks the button/link               jQuery=a:contains("Review and send invites")
     And The user should see the text in the page       Please visit our online Innovation Funding Service to respond to this request
-    And The user enters text to a text field           css=#subject  Invitation to assess 'Sustainable living models for the future' @
+    And the user should see the client and server side validation for subject
+    And The user enters text to a text field           css=#subject  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}' @
     And the user clicks the button/link                jQuery=.button:contains("Send invite")
     And the user clicks the button/link                link=Invite
     Then The user should not see the text in the page  ${assessor_to_add}
@@ -182,11 +183,11 @@ Invite non-registered users
 Assessor overview information
     [Documentation]    INFUND-6450 INFUND-6449
     [Tags]
-    Given The user clicks the button/link  link=Pending and rejected
+    Given The user clicks the button/link  link=Pending and declined
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(6):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
-    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
+    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined: not available")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
     And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(6):contains("Awaiting response")
     And the user should see the element    jQuery=td:contains("${assessor_to_add}") ~ td:nth-of-type(7):contains("Invite sent:")
@@ -210,7 +211,7 @@ Select to add all assessors to invite list
 Bulk resend button is disabled until user selects an assessor
     [Documentation]  IFS-1146
     [Tags]
-    [Setup]  the user clicks the button/link  link=Pending and rejected
+    [Setup]  the user clicks the button/link  link=Pending and declined
     Given the element should be disabled      jQuery=button:contains("Resend invites")
     When the user selects the checkbox        select-all-check
     And the user clicks the button/link       jQuery=button:contains("Resend invites")
@@ -257,3 +258,8 @@ Custom teardown
     the user clicks the button/link  link=Invite
     the user clicks the button/link  jQuery=button:contains("Remove all")
     the user closes the browser
+
+the user should see the client and server side validation for subject
+    the user enters text to a text field        id=subject   ${EMPTY}
+    the user clicks the button/link             css=button[type="submit"]    #Send invite
+    the user should see a field and summary error  Please enter a subject for the email.

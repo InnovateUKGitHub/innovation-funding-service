@@ -4,6 +4,7 @@ import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.singleton;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 
@@ -95,7 +96,7 @@ public class QueryTest {
     }
 
     private void addPostWithUserHavingRole(UserRoleType role) {
-        final User user = newUser().withRoles(newRole().withType(role).buildSet(1)).build();
+        final User user = newUser().withRoles(singleton(Role.getByName(role.getName()))).build();
         final Post p1 = new Post(33L, user, null, null, null);
         query.addPost(p1);
     }

@@ -11,7 +11,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
-import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
@@ -114,9 +113,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(internalUserServiceMock.editInternalUser(Mockito.any()))
                 .thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.NOT_AN_INTERNAL_USER_ROLE));
 
-        RoleResource role = RoleResourceBuilder.newRoleResource()
-                .withName("ifs_administrator")
-                .build();
+        Role role = Role.IFS_ADMINISTRATOR;
 
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withRolesGlobal(Collections.singletonList(role))
@@ -151,9 +148,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     @Test
     public void viewEditUserSuccess() throws Exception {
 
-        RoleResource role = RoleResourceBuilder.newRoleResource()
-                .withName("ifs_administrator")
-                .build();
+        Role role = Role.IFS_ADMINISTRATOR;
 
         String email = "asdf@asdf.com";
         UserResource userResource = UserResourceBuilder.newUserResource()
@@ -184,9 +179,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void deactivateUserSuccess() throws Exception {
 
         String email = "asdf@asdf.com";
-        RoleResource role = RoleResourceBuilder.newRoleResource()
-                .withName("ifs_administrator")
-                .build();
+        Role role = Role.IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
@@ -208,9 +201,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void deactivateUserDeactivateFails() throws Exception {
 
         String email = "asdf@asdf.com";
-        RoleResource role = RoleResourceBuilder.newRoleResource()
-                .withName("ifs_administrator")
-                .build();
+        Role role = Role.IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
@@ -239,9 +230,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void reactivateUserSuccess() throws Exception {
 
         String email = "asdf@asdf.com";
-        RoleResource role = RoleResourceBuilder.newRoleResource()
-                .withName("ifs_administrator")
-                .build();
+        Role role = Role.IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")
@@ -263,9 +252,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void reactivateUserReactivateFails() throws Exception {
 
         String email = "asdf@asdf.com";
-        RoleResource role = RoleResourceBuilder.newRoleResource()
-                .withName("ifs_administrator")
-                .build();
+        Role role = Role.IFS_ADMINISTRATOR;
         UserResource userResource = UserResourceBuilder.newUserResource()
                 .withFirstName("first")
                 .withLastName("last")

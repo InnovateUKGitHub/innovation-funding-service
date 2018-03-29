@@ -76,6 +76,9 @@ public class CompetitionResource {
     private List<Long> leadApplicantTypes;
     private Set<Long> researchCategories;
 
+    private Integer minProjectDuration;
+    private Integer maxProjectDuration;
+
     private Integer assessorCount;
     private BigDecimal assessorPay;
 
@@ -591,6 +594,22 @@ public class CompetitionResource {
         this.termsAndConditions = termsAndConditions;
     }
 
+    public Integer getMinProjectDuration() {
+        return minProjectDuration;
+    }
+
+    public void setMinProjectDuration(Integer minProjectDuration) {
+        this.minProjectDuration = minProjectDuration;
+    }
+
+    public Integer getMaxProjectDuration() {
+        return maxProjectDuration;
+    }
+
+    public void setMaxProjectDuration(Integer maxProjectDuration) {
+        this.maxProjectDuration = maxProjectDuration;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -706,4 +725,6 @@ public class CompetitionResource {
                 .append(termsAndConditions)
                 .toHashCode();
     }
+
+
 }
