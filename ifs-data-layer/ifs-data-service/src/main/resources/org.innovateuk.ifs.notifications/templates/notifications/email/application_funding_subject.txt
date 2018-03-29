@@ -1,1 +1,0 @@
-Notification regarding your application ${applicationNumber?c}: ${applicationName}
