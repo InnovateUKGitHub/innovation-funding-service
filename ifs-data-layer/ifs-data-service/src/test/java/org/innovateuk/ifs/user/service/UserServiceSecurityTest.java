@@ -119,7 +119,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindActiveByProcessRoles(){
-        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(UserRoleType.internalUserRoleTypes(), new PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -127,7 +127,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindInactiveByProcessRoles(){
-        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(UserRoleType.internalUserRoleTypes(), new PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });

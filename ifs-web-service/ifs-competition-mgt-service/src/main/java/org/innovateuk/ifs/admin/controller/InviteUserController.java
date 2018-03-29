@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.groups.Default;
 import java.util.function.Supplier;
 
@@ -31,7 +30,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteUserController.class)
+@SecuredBySpring(value = "Controller", description = "Only IFS Administrators can invite internal users", securedType = InviteUserController.class)
 @PreAuthorize("hasAuthority('ifs_administrator')")
 public class InviteUserController {
 
@@ -41,10 +40,7 @@ public class InviteUserController {
     private InviteUserService inviteUserService;
 
     @GetMapping("/invite-user")
-    public String inviteNewUser(Model model,
-                                HttpServletRequest request,
-                                UserResource loggedInUser) {
-
+    public String inviteNewUser(Model model) {
         return viewInviteNewUser(model);
     }
 
