@@ -89,7 +89,12 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Test
     public void financeContactPageAccess() {
-        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessFinanceContactPage(organisation), () -> rules.partnerCanAccessFinanceContactPage(ProjectCompositeId.id(123L), user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessFinanceContactPage, () -> rules.partnerCanAccessFinanceContactPage(ProjectCompositeId.id(123L), user));
+    }
+
+    @Test
+    public void partnerProjectLocationPageAccess() {
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessPartnerProjectLocationPage, () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(123L), user));
     }
 
     @Test
