@@ -99,7 +99,7 @@ public class ThreadViewModelPopulator {
     }
 
     /**
-     * A strategy for naming authors of posts by either explicitly identifying them as anonymous Project Finance members or
+     * A strategy for naming authors of posts by either explicitly identifying them as named Project Finance members or
      * otherwise simply as named external users
      */
     public AuthorLabellingStrategy namedProjectFinanceOrNamedExternalUser() {
@@ -115,7 +115,7 @@ public class ThreadViewModelPopulator {
     }
 
     /**
-     * A strategy for naming authors of posts by either explicitly identifying them as named Project Finance members or
+     * A strategy for naming authors of posts by either explicitly identifying them as anonymous Project Finance members or
      * otherwise simply as named external users
      */
     public AuthorLabellingStrategy anonymousProjectFinanceOrNamedExternalUser() {
