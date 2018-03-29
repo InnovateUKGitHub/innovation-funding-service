@@ -22,10 +22,13 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "VIEW_PARTNER_ORGANISATION", description = "Internal users can see partner organisations for any project OR " +
-            "a user of a particular partner organisation can see their own partner organisation")
+    @PermissionRule(value = "VIEW_PARTNER_ORGANISATION", description = "Internal users can see partner organisations for any project")
     public boolean internalUsersCanViewPartnerOrganisations(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
-        return isInternal(user) || partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
+        return isInternal(user);
     }
 
+    @PermissionRule(value = "VIEW_PARTNER_ORGANISATION", description = "Partners can view their own partner organisation")
+    public boolean partnersCanViewTheirOwnPartnerOrganisation(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
+    }
 }
