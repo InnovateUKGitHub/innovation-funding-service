@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -89,6 +90,13 @@ public class CompetitionSetupApplicationController {
         Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccess());
 
         return successView.get();
+    }
+
+    @ZeroDowntime(reference = "IFS-2832", description = "Changed the endpoint. TODO: This endpoint needs to be removed")
+    @PostMapping(value = "/landing-page", params = "deleteQuestion")
+    public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
+                                         @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        return deleteQuestionForSection(deleteQuestionForm.getDeleteQuestion(), ASSESSED_QUESTIONS_SECTION_NAME, competitionId);
     }
 
     @PostMapping(value = "/landing-page", params = "deleteAssessedQuestion")

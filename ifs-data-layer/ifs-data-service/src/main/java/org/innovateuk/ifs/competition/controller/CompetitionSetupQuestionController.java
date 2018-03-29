@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.*;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.*;
@@ -36,6 +37,12 @@ public class CompetitionSetupQuestionController {
     public RestResult<Void> deleteByIdAndSection(@PathVariable("id") final Long questionId,
                                        @PathVariable("sectionName") final String sectionName) {
         return competitionSetupQuestionService.delete(questionId, sectionName).toDeleteResponse();
+    }
+
+    @ZeroDowntime(reference = "IFS-2832", description = "Changed the endpoint. TODO: This endpoint needs to be removed")
+    @DeleteMapping("/deleteById/{id}")
+    public RestResult<Void> deleteById(@PathVariable("id") final Long questionId) {
+        return competitionSetupQuestionService.delete(questionId, "Application questions").toDeleteResponse();
     }
 
 }
