@@ -6,12 +6,12 @@ import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.projectdetails.form.PartnerProjectLocationForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
@@ -36,7 +36,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.*;
 
-import static java.util.Collections.asLifoQueue;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -45,7 +44,9 @@ import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newA
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
@@ -159,7 +160,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void testProjectDetailsReadOnlyView() throws Exception {
         Long projectId = 20L;
 
-        CompetitionResource competitionResource = newCompetitionResource().build();
+        boolean partnerProjectLocationRequired = true;
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withLocationPerPartner(partnerProjectLocationRequired)
+                .build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource project = newProjectResource().withId(projectId).build();
 
@@ -172,7 +176,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withIsLeadPartner(true)
+                        .withMonitoringOfficerStatus(ProjectActivityStates.NOT_STARTED)
+                        .build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -181,6 +188,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
+
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
@@ -201,6 +211,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(null, model.getProjectManager());
         assertTrue(model.isUserLeadPartner());
         assertFalse(model.isSpendProfileGenerated());
+        assertFalse(model.isMonitoringOfficerAssigned());
         assertTrue(model.isReadOnly());
         assertTrue(model.isGrantOfferLetterGenerated());
     }
@@ -288,7 +299,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void testProjectManagerAndAddressCannotBeChangedWhenGOLAlreadyGenerated() throws Exception {
         Long projectId = 20L;
 
-        CompetitionResource competitionResource = newCompetitionResource().build();
+        boolean partnerProjectLocationRequired = true;
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withLocationPerPartner(partnerProjectLocationRequired)
+                .build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource project = newProjectResource().withId(projectId).build();
 
@@ -310,6 +324,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
@@ -441,6 +457,91 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 andReturn();
 
         verify(projectDetailsService).updateFinanceContact(new ProjectOrganisationCompositeId(projectId, organisationId), invitedUserId);
+    }
+
+    @Test
+    public void testViewPartnerProjectLocation() throws Exception {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withName("Project 1")
+                .build();
+
+        PartnerOrganisationResource partnerOrganisation = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource()
+                .withPostCode("TW14 9QG")
+                .build();
+        when(partnerOrganisationRestService.getPartnerOrganisation(projectId, organisationId)).thenReturn(restSuccess(partnerOrganisation));
+        when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/partner-project-location"))
+                .andReturn();
+
+        PartnerProjectLocationViewModel model = (PartnerProjectLocationViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(projectId, model.getProjectId());
+        assertEquals("Project 1", model.getProjectName());
+        assertEquals(organisationId, model.getOrganisationId());
+
+        PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
+        assertEquals("TW14 9QG", form.getPostCode());
+
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenUpdateFails() throws Exception {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "UB7 8QF";
+
+        ProjectResource projectResource = newProjectResource()
+                .withId(projectId)
+                .withName("Project 1")
+                .build();
+
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postCode))
+                .thenReturn(serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED));
+        when(projectService.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("postCode", postCode)).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/partner-project-location")).
+                andReturn();
+
+        PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
+        assertEquals(new PartnerProjectLocationForm(postCode), form);
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationSuccess() throws Exception {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "UB7 8QF";
+
+        when(projectDetailsService.updatePartnerProjectLocation(projectId, organisationId, postCode))
+                .thenReturn(serviceSuccess());
+
+        MvcResult result = mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location", projectId, organisationId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("postCode", postCode)).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId  + "/details")).
+                andReturn();
+
+        PartnerProjectLocationForm form = (PartnerProjectLocationForm) result.getModelAndView().getModel().get(FORM_ATTR_NAME);
+        assertEquals(new PartnerProjectLocationForm(postCode), form);
+
+        verify(projectService, never()).userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId());
+        verify(projectService, never()).getById(projectId);
     }
 
     @Test
@@ -887,18 +988,14 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void testViewProjectDetailsInReadOnly() throws Exception {
         Long projectId = 15L;
 
-        CompetitionResource competitionResource = newCompetitionResource().build();
+        boolean partnerProjectLocationRequired = true;
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withLocationPerPartner(partnerProjectLocationRequired)
+                .build();
         ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
         ProjectResource project = newProjectResource().withId(projectId).build();
 
         OrganisationResource leadOrganisation = newOrganisationResource().build();
-
-        List<ProjectUserResource> projectUsers = newProjectUserResource().
-                withUser(loggedInUser.getId()).
-                withOrganisation(leadOrganisation.getId()).
-                withRoleName(PARTNER.getName()).
-
-                build(1);
 
         List<ProjectUserResource> projectManagerProjectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
@@ -907,7 +1004,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                         build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withIsLeadPartner(true)
+                        .withMonitoringOfficerStatus(ProjectActivityStates.NOT_STARTED)
+                        .build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -916,6 +1016,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectManagerProjectUsers);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        List<PartnerOrganisationResource> partnerOrganisationResourceList = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build(3);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(restSuccess(partnerOrganisationResourceList));
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
 
@@ -932,6 +1034,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(projectManagerProjectUsers.get(0), model.getProjectManager());
         assertFalse(model.isSpendProfileGenerated());
+        assertFalse(model.isMonitoringOfficerAssigned());
         assertTrue(model.isReadOnly());
         assertTrue(model.isGrantOfferLetterGenerated());
     }
