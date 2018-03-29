@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -153,9 +154,12 @@ public class UserManagementController extends AsyncAdaptor {
         UserResource userResource = userRestService.retrieveUserById(userId).getSuccess();
         form.setFirstName(userResource.getFirstName());
         form.setLastName(userResource.getLastName());
-        // userResource.getRolesString() will return a single role for internal users
 
-        form.setRole(userResource.getRoles().stream().findFirst().get());
+        if (userResource.getRoles().contains(Role.IFS_ADMINISTRATOR)) {
+            form.setRole(Role.IFS_ADMINISTRATOR);
+        } else {
+            form.setRole(userResource.getRoles().stream().findFirst().get());
+        }
         form.setEmailAddress(userResource.getEmail());
         model.addAttribute(FORM_ATTR_NAME, form);
         model.addAttribute("user", userResource);
