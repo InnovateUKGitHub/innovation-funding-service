@@ -296,10 +296,9 @@ public class FinanceChecksQueriesController {
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
         if (queriesResult.isSuccess()) {
-            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
-                    user.hasRole(PROJECT_FINANCE) ?
-                        user.getName() + " - Innovate UK (Finance team)" :
-                        user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
+                    threadViewModelPopulator.namedProjectFinanceOrNamedExternalUser());
+
         } else {
             return emptyList();
         }

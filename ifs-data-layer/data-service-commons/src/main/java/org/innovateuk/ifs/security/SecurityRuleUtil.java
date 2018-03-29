@@ -11,10 +11,6 @@ import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class SecurityRuleUtil {
 
-    public static boolean isInternal(User user) {
-        return user.hasRole(COMP_ADMIN) || user.hasRole(PROJECT_FINANCE) || user.hasRole(SUPPORT) || user.hasRole(INNOVATION_LEAD);
-    }
-
     public static boolean isProjectFinanceUser(User user) {
         return user.hasRole(PROJECT_FINANCE);
     }

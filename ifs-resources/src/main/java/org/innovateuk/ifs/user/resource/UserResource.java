@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Collections.disjoint;
 import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 
 /**
  * User Data Transfer Object
@@ -160,6 +162,11 @@ public class UserResource {
 
     public boolean hasRole(Role role) {
         return roles.contains(role);
+    }
+
+    @JsonIgnore
+    public boolean isInternalUser() {
+        return CollectionUtils.containsAny(internalRoles(), roles);
     }
 
     public boolean hasRoles(Role... acceptedRoles) {
