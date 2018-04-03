@@ -6,9 +6,7 @@ import au.com.dius.pact.consumer.PactVerification;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.model.RequestResponsePact;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
-import org.innovateuk.ifs.finance.resource.totals.FinanceType;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +19,8 @@ import java.security.InvalidKeyException;
 import java.util.List;
 
 import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
+import static org.innovateuk.ifs.finance.resource.totals.FinanceType.APPLICATION;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -38,19 +38,22 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
     private HashBasedMacTokenHandler hashBasedMacTokenHandler = new HashBasedMacTokenHandler();
 
     @Rule
-    public PactProviderRuleMk2 mockProvider = new PactProviderRuleMk2("CostTotalProvider",
-            "localhost", 8080, this);
+    public PactProviderRuleMk2 mockProvider = new PactProviderRuleMk2(
+            "CostTotalProvider",
+            "localhost",
+            8080,
+            this);
 
     @Pact(consumer = "AsyncRestCostTotalEndpointPactConsumer")
     public RequestResponsePact createPact(final PactDslWithProvider builder) throws Exception {
 
         String costTotalResourcesString = toJson(getCostTotalResources());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("x-auth-token", getAuthToken(costTotalResourcesString));
-        headers.add("user-agent", "Java/" + System.getProperty("java.version"));
-        headers.setConnection("keep-alive");
-        headers.setContentType(APPLICATION_JSON);
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add("x-auth-token", getAuthToken(costTotalResourcesString));
+        requestHeaders.add("user-agent", "Java/" + System.getProperty("java.version"));
+        requestHeaders.setConnection("keep-alive");
+        requestHeaders.setContentType(APPLICATION_JSON);
 
         return builder
                 .given("SendCostTotalsState")
@@ -58,9 +61,9 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
                 .path("/cost-totals")
                 .body(costTotalResourcesString)
                 .method("POST")
-                .headers(headers.toSingleValueMap())
+                .headers(requestHeaders.toSingleValueMap())
                 .willRespondWith()
-                // TODO any headers for verification?
+                .body("")
                 .status(CREATED.value())
                 .toPact();
     }
@@ -75,12 +78,12 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
     private List<FinanceCostTotalResource> getCostTotalResources() {
         if (costTotalResources == null) {
             costTotalResources = newFinanceCostTotalResource()
-                    .withFinanceType(FinanceType.APPLICATION)
+                    .withFinanceType(APPLICATION)
                     .withFinanceId(123L)
                     .withFinanceRowType(
-                            FinanceRowType.LABOUR,
-                            FinanceRowType.OVERHEADS,
-                            FinanceRowType.MATERIALS)
+                            LABOUR,
+                            OVERHEADS,
+                            MATERIALS)
                     .withTotal(
                             BigDecimal.valueOf(5970.00),
                             BigDecimal.valueOf(552.35),
