@@ -89,7 +89,7 @@ Assessor can respond to email invite and decline
     Given log in as a different user         ${assessor_madeleine_email}   ${short_password}
     When the user reads his email and clicks the link   ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     Then The user should see the element     jQuery=h1:contains("Invitation to interview panel")
-    And the assessor declines the interview invitation no longer seeing the competition in the dashboard
+    And the assessor declines the interview invitation and longer sees the competition in the dashboard
 
 *** Keywords ***
 the Interview Panel is activated in the db
