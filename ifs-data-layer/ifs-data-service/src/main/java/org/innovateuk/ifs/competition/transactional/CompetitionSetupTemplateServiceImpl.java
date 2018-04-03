@@ -127,7 +127,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Override
     public ServiceResult<Void> deleteQuestionInCompetitionBySection(Long questionId, String sectionName) {
-        return find(questionRepository.findFirstByIdAndSectionName(questionId, sectionName), notFoundError(Question.class))
+        return find(questionRepository.findFirstByIdAndSectionName(questionId, sectionName),
+                    notFoundError(Question.class, questionId, sectionName))
                 .andOnSuccess(question -> deleteQuestionBySection(question, sectionName));
     }
 
