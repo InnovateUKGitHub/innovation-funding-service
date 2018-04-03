@@ -9,10 +9,10 @@ import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -73,7 +73,7 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     enum Notifications {
         INVITE_APPLICANT_GROUP_TO_INTERVIEW
     }
-    
+
     @Override
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
 
@@ -124,7 +124,7 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     @Override
     public ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate() {
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_applicants_to_interview_panel_text.txt",
                 Collections.emptyMap()).andOnSuccessReturn(content -> new ApplicantInterviewInviteResource(content));
@@ -149,7 +149,7 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment, ActivityState awaitingFeedbackActivityState) {
         User user = assignment.getParticipant().getUser();
-        NotificationTarget recipient = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
+        NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
