@@ -110,7 +110,7 @@ the competition admin selects the applications and adds them to the invite list
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
 
-the assessor declines the interview invitation no longer seeing the competition in the dashboard
+the assessor declines the interview invitation and longer sees the competition in the dashboard
     the user selects the radio button   acceptInvitation  false
     the user clicks the button/link     css=.button[type="submit"]   #Confirm
     the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
