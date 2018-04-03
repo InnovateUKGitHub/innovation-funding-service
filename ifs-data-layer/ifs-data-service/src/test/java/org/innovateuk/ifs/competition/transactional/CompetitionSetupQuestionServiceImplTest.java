@@ -409,17 +409,10 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     @Test
     public void test_delete() {
         final Long questionId = 1L;
-        final String sectionNameAssessedQuestion = "Application questions";
-        final String sectionNameProjectDetails = "Project details";
 
-        when(competitionSetupTemplateService.deleteQuestionInCompetitionBySection(questionId, sectionNameAssessedQuestion)).thenReturn(serviceSuccess());
-        ServiceResult<Void> resultAssessedQuestion = service.delete(questionId, sectionNameAssessedQuestion);
+        when(competitionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
+        ServiceResult<Void> resultAssessedQuestion = service.delete(questionId);
         assertTrue(resultAssessedQuestion.isSuccess());
-
-        when(competitionSetupTemplateService.deleteQuestionInCompetitionBySection(questionId, sectionNameProjectDetails)).thenReturn(serviceSuccess());
-        ServiceResult<Void> resultProjectDetails = service.delete(questionId, sectionNameProjectDetails);
-        assertTrue(resultProjectDetails.isSuccess());
-
     }
 
     @Test

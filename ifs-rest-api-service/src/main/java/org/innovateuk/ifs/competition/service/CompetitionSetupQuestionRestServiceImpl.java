@@ -35,7 +35,7 @@ public class CompetitionSetupQuestionRestServiceImpl extends BaseRestService imp
     }
 
     @Override
-    public RestResult<Void> deleteByIdAndSection(Long questionId, String sectionName) {
-        return deleteWithRestResult(competitionsSetupRestURL + "/deleteByIdAndSection/" + questionId + "/" + sectionName, Void.class);
+    public RestResult<Void> deleteById(Long questionId) {
+        return deleteWithRestResult(competitionsSetupRestURL + "/deleteById/" + questionId, Void.class);
     }
 }

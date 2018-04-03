@@ -38,8 +38,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
-        classUnderTest.deleteQuestionInCompetitionBySection(null, PROJECT_DETAILS_SECTION_NAME);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 
     @Test
@@ -47,8 +46,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
-        classUnderTest.deleteQuestionInCompetitionBySection(null, PROJECT_DETAILS_SECTION_NAME);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -66,8 +64,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     @Test(expected = AccessDeniedException.class)
     public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
-        classUnderTest.deleteQuestionInCompetitionBySection(null, ASSESSED_QUESTIONS_SECTION_NAME);
-        classUnderTest.deleteQuestionInCompetitionBySection(null, PROJECT_DETAILS_SECTION_NAME);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 
     public static class TestCompetitionSetupTemplateService implements CompetitionSetupTemplateService {
@@ -79,7 +76,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
             return null;
         }
 
-        public ServiceResult<Void> deleteQuestionInCompetitionBySection(Long questionId, String sectionName) {
+        public ServiceResult<Void> deleteQuestionInCompetition(Long questionId) {
             return null;
         }
     }

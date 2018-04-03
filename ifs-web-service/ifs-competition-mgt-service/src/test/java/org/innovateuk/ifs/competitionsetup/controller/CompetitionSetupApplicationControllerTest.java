@@ -793,40 +793,20 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    public void testDeleteAssessedQuestion() throws Exception {
+    public void testDeleteQuestion() throws Exception {
         Long questionId = 1L;
-        String sectionName = "Application questions";
 
         CompetitionResource competition = newCompetitionResource().build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupQuestionService.deleteQuestionForSection(questionId, sectionName)).thenReturn(serviceSuccess());
+        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page")
-                .param("deleteAssessedQuestion", questionId.toString()))
+                .param("deleteQuestion", questionId.toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().hasNoErrors())
                 .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
 
-        verify(competitionSetupQuestionService).deleteQuestionForSection(questionId, sectionName);
-    }
-
-    @Test
-    public void testDeleteProjectDetailsQuestion() throws Exception {
-        Long questionId = 1L;
-        String sectionName = "Project details";
-
-        CompetitionResource competition = newCompetitionResource().build();
-
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupQuestionService.deleteQuestionForSection(questionId, sectionName)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post(URL_PREFIX + "/landing-page")
-                .param("deleteProjectDetailsQuestion", questionId.toString()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(model().hasNoErrors())
-                .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
-
-        verify(competitionSetupQuestionService).deleteQuestionForSection(questionId, sectionName);
+        verify(competitionSetupQuestionService).deleteQuestion(questionId);
     }
 }

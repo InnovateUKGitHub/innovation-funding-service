@@ -60,17 +60,10 @@ public class CompetitionSetupQuestionServiceImplTest {
 
     @Test
     public void testDeleteQuestion() throws Exception {
-        final Long assessedQuestionId = 1L;
-        final Long projectDetailsQuestionId = 2L;
-        final String sectionNameAssessedQuestion = "Application questions";
-        final String sectionNameProjectDetails = "Project details";
+        final Long questionId = 1L;
 
-        when(restService.deleteByIdAndSection(assessedQuestionId, sectionNameAssessedQuestion)).thenReturn(restSuccess());
-        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionForSection(assessedQuestionId, sectionNameAssessedQuestion);
+        when(restService.deleteById(questionId)).thenReturn(restSuccess());
+        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestion(questionId);
         assertTrue(resultAssessedQuestion.isSuccess());
-
-        when(restService.deleteByIdAndSection(projectDetailsQuestionId, sectionNameProjectDetails)).thenReturn(restSuccess());
-        ServiceResult<Void> resultProjectDetails = service.deleteQuestionForSection(projectDetailsQuestionId, sectionNameProjectDetails);
-        assertTrue(resultProjectDetails.isSuccess());
     }
 }

@@ -57,8 +57,8 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     }
 
     @Override
-    public ServiceResult<Void> deleteQuestionForSection(Long questionId, String sectionName) {
-        return competitionSetupQuestionRestService.deleteByIdAndSection(questionId, sectionName).toServiceResult();
+    public ServiceResult<Void> deleteQuestion(Long questionId) {
+        return competitionSetupQuestionRestService.deleteById(questionId).toServiceResult();
     }
 
     @Override

@@ -92,27 +92,10 @@ public class CompetitionSetupApplicationController {
         return successView.get();
     }
 
-    @ZeroDowntime(reference = "IFS-2832", description = "Changed the endpoint. TODO: This endpoint needs to be removed")
     @PostMapping(value = "/landing-page", params = "deleteQuestion")
     public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
                                          @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        return deleteQuestionForSection(deleteQuestionForm.getDeleteQuestion(), ASSESSED_QUESTIONS_SECTION_NAME, competitionId);
-    }
-
-    @PostMapping(value = "/landing-page", params = "deleteAssessedQuestion")
-    public String deleteAssessedQuestion(@ModelAttribute("deleteAssessedQuestion") DeleteAssessedQuestionForm deleteAssessedQuestionForm,
-                                 @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        return deleteQuestionForSection(deleteAssessedQuestionForm.getDeleteAssessedQuestion(), ASSESSED_QUESTIONS_SECTION_NAME, competitionId);
-    }
-
-    @PostMapping(value = "/landing-page", params = "deleteProjectDetailsQuestion")
-    public String deleteProjectDetailsQuestion(@ModelAttribute("deleteAssessedQuestion") DeleteProjectDetailsQuestionForm deleteProjectDetailsQuestionForm,
-                                               @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        return deleteQuestionForSection(deleteProjectDetailsQuestionForm.getDeleteProjectDetailsQuestion(), PROJECT_DETAILS_SECTION_NAME, competitionId);
-    }
-
-    private String deleteQuestionForSection(Long deleteQuestion, String sectionName, long competitionId) {
-        competitionSetupQuestionService.deleteQuestionForSection(deleteQuestion, sectionName);
+        competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
 
         Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 

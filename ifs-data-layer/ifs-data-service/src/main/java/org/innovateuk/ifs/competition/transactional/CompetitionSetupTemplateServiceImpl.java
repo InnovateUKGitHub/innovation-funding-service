@@ -126,14 +126,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     @Override
-    public ServiceResult<Void> deleteQuestionInCompetitionBySection(Long questionId, String sectionName) {
-        return find(questionRepository.findFirstByIdAndSectionName(questionId, sectionName),
-                    notFoundError(Question.class, questionId, sectionName))
-                .andOnSuccess(question -> deleteQuestionBySection(question, sectionName));
+    public ServiceResult<Void> deleteQuestionInCompetition(Long questionId) {
+        return find(questionRepository.findFirstById(questionId),
+                    notFoundError(Question.class, questionId))
+                .andOnSuccess(question -> deleteQuestion(question));
     }
 
-    private ServiceResult<Void> deleteQuestionBySection(Question question, String sectionName) {
-        if(sectionIsInValidForDeletion(sectionName)) {
+    private ServiceResult<Void> deleteQuestion(Question question) {
+        if(sectionIsInValidForDeletion(question.getName())) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
@@ -141,7 +141,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId(), sectionName) <= 1) {
+        if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId()) <= 1) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 

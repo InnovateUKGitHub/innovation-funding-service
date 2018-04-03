@@ -52,7 +52,7 @@
                     </div>
                     <div class="task-status">
                         <form>
-                            <button type="submit" th:value="${question.id}" name="deleteProjectDetailsQuestion" class="buttonlink no-margin">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
                         </form>
                     </div>
                 </th:block>
@@ -84,7 +84,7 @@
                     </div>
                     <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
                         <form>
-                            <button type="submit" th:value="${question.id}" name="deleteAssessedQuestion" class="buttonlink no-margin">Remove</button>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
                         </form>
                     </div>
                 </th:block>
