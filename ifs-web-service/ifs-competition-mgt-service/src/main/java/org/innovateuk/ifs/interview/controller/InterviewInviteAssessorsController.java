@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewSelectionForm;
+import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
@@ -55,6 +56,9 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
 
     @Autowired
     private InterviewInviteAssessorsInviteModelPopulator interviewInviteAssessorsInviteModelPopulator;
+
+    @Autowired
+    private InterviewInviteAssessorsAcceptedModelPopulator interviewInviteAssessorsAcceptedModelPopulator;
 
 
     protected String getCookieName() {
@@ -250,6 +254,22 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
                                                  @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         deleteAllInvites(competitionId).getSuccess();
         return redirectToInvite(competitionId, page);
+    }
+
+    @GetMapping("/accepted")
+    public String accepted(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
+
+        model.addAttribute("model", interviewInviteAssessorsAcceptedModelPopulator.populateModel(
+                competitionId,
+                page,
+                originQuery
+        ));
+
+        return "assessors/interview-accepted";
     }
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
