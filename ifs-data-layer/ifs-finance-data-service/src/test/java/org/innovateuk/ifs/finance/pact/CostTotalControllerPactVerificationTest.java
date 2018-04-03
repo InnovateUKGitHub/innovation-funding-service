@@ -8,7 +8,10 @@ import au.com.dius.pact.provider.junit.target.Target;
 import au.com.dius.pact.provider.junit.target.TestTarget;
 import au.com.dius.pact.provider.spring.SpringRestPactRunner;
 import au.com.dius.pact.provider.spring.target.SpringBootHttpTarget;
+import org.innovateuk.ifs.finance.repository.CostTotalRepository;
+import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -19,6 +22,14 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
 public class CostTotalControllerPactVerificationTest {
+
+    @Autowired
+    private CostTotalRepository costTotalRepository;
+
+    @Before
+    public void cleanRepository() {
+        costTotalRepository.deleteAll();
+    }
 
     @TestTarget
     public final Target target = new SpringBootHttpTarget();
