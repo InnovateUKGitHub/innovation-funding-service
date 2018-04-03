@@ -106,8 +106,9 @@
                         <span data-count-selected="" th:text="${#lists.size(interviewOverviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
                     </div>
                     <div class="column-half select-all alignright">
-                        <!--/* <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewOverviewSelectionForm.selectedInviteIds)}">Resend invites</button> */-->
-                        <button class="button" disabled="disabled">Resend invites</button>
+                        <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(interviewOverviewSelectionForm.selectedInviteIds)}">
+                            Resend invites
+                        </button>
                     </div>
                 </div>
 
@@ -165,5 +166,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>
