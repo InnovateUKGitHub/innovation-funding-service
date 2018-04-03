@@ -261,7 +261,7 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.INTERVIEW_ACCEPTED, queryParams);
 
         model.addAttribute("model", interviewInviteAssessorsAcceptedModelPopulator.populateModel(
                 competitionId,
