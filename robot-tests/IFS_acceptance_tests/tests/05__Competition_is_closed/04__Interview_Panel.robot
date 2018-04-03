@@ -40,14 +40,14 @@ CompAdmin can add an assessors to the invite list
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-2779
     [Tags]
-    Given the compAdmin navigate to send invite email page
+    Given the compAdmin navigate to the send invite email page
     When the user clicks the button/link      link=Cancel
     Then the user should see the element      jQuery=td:contains("${assessor_ben}")
 
 Assessors receives the invite to the interview panel
     [Documentation]  IFS-2779  IFS-2780
     [Tags]
-    Given the compAdmin navigate to send invite email page
+    Given the compAdmin navigate to the send invite email page
     And the user should see the element        jQuery=label:contains("Subject") ~ input[value="Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     And the user enters text to a text field   css=.editor   Additional message
     When the user clicks the button/link       css=button[type="submit"]   #Send invite
@@ -68,13 +68,16 @@ CompAdmin can add the applications to the invite list
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and adds them to the invite list
 
-CompAdmin send the applications to applicants
+CompAdmin can send or cancel sending the applications to applicants
     [Documentation]  IFS-2782
     [Tags]
     When the user clicks the button/link       link=Review and send invites
     Then the user should see the element       jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
-    And the user should see the element       jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
-    When the user clicks the button/link       css=.button[type="submit"]     #Send invite
+    And the user should see the element        jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+    When the user clicks the button/link       link=Cancel
+    Then the user navigates to the page        ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite
+    When the user clicks the button/link       link=Review and send invites
+    And the user clicks the button/link        css=.button[type="submit"]     #Send invite
     Then the user reads his email              aaron.robertson@load.example.com   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
 
 Assessors accept the invitation to the interview panel
@@ -108,7 +111,7 @@ the competition admin selects the applications and adds them to the invite list
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
 
-the compAdmin navigate to send invite email page
+the compAdmin navigate to the send invite email page
     the user clicks the button/link    link=Invite
     the user clicks the button/link    link=Review and send invites
     the user should see the element    jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
