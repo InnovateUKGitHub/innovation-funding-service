@@ -32,7 +32,7 @@ public class EmailServiceTest extends BaseServiceUnitTest<EmailService> {
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+        NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
         Notification notification1 = new Notification(from, Collections.singletonList(to1), Notifications.TEST_ENUM, expectedNotificationArguments);
 
         when(notificationServiceMock.sendNotification(notification1, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceSuccess());
@@ -49,7 +49,7 @@ public class EmailServiceTest extends BaseServiceUnitTest<EmailService> {
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+        NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
         Notification notification1 = new Notification(from, Collections.singletonList(to1), Notifications.TEST_ENUM, expectedNotificationArguments);
 
         when(notificationServiceMock.sendNotification(notification1, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));

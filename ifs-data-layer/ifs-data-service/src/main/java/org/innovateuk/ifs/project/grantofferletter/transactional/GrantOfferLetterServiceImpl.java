@@ -20,7 +20,6 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
@@ -563,7 +562,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         List<NotificationTarget> notificationTargets = new ArrayList<>();
         User projectManager = getExistingProjectManager(project).get().getUser();
         NotificationTarget projectManagerTarget = createProjectManagerNotificationTarget(projectManager);
-        List<NotificationTarget> financeTargets = simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()), pu -> new UserNotificationTarget(pu.getUser()));
+        List<NotificationTarget> financeTargets = simpleMap(simpleFilter(project.getProjectUsers(), pu -> pu.getRole().isFinanceContact()), pu -> new UserNotificationTarget(pu.getUser().getName(), pu.getUser().getEmail()));
         List<NotificationTarget> uniqueFinanceTargets = simpleFilterNot(financeTargets, target -> target.getEmailAddress().equals(projectManager.getEmail()));
         notificationTargets.add(projectManagerTarget);
         notificationTargets.addAll(uniqueFinanceTargets);
@@ -574,7 +573,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
         String fullName = getProjectManagerFullName(projectManager);
 
-        return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
+        return new UserNotificationTarget(fullName, projectManager.getEmail());
     }
 
     private String getProjectManagerFullName(User projectManager) {
