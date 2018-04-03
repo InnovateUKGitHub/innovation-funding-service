@@ -286,8 +286,8 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
 
         List<NotificationTarget> recipients = asList(
-                new UserNotificationTarget(users.get(0)),
-                new UserNotificationTarget(users.get(1))
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail())
         );
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
@@ -374,7 +374,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
 
         EmailContent emailContent = newEmailContentResource().build();
-        NotificationTarget recipient = new UserNotificationTarget(user);
+        NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
         Notification expectedNotification = new Notification(
