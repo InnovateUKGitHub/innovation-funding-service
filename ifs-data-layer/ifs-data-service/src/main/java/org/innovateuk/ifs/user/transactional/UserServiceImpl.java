@@ -136,7 +136,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             String hash = getAndSavePasswordResetToken(user);
 
             NotificationSource from = systemNotificationSource;
-            NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
+            NotificationTarget to = new UserNotificationTarget(user.getName(), user.getEmail());
 
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));

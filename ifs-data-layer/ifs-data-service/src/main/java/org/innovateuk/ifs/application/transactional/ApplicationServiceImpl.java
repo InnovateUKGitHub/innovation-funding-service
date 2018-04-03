@@ -201,8 +201,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
-                .andOnSuccess((user) ->
-                        serviceSuccess(org.innovateuk.ifs.security.SecurityRuleUtil.isInternal(user)));
+                .andOnSuccessReturn(User::isInternalUser);
     }
 
     @Override

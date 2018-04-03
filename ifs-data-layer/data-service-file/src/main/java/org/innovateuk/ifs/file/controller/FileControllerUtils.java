@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.file.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -22,7 +24,6 @@ import java.io.OutputStream;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-import static org.hibernate.jpa.internal.QueryImpl.LOG;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_EXCEPTION_WHILE_RETRIEVING_FILE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
@@ -32,6 +33,7 @@ import static org.springframework.http.HttpStatus.OK;
  */
 public class FileControllerUtils {
 
+    private static final Log LOG = LogFactory.getLog(FileControllerUtils.class);
     /**
      * A convenience method to create a response to a file download request, given a supplier of a FileAndContents
      */
