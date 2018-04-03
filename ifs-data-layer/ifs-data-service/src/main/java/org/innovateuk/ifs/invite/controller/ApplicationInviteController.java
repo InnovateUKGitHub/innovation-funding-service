@@ -72,13 +72,13 @@ public class ApplicationInviteController {
         return applicationInviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();
     }
 
-    @GetMapping("/checkExistingUser/{hash}")
-    public RestResult<Boolean> checkExistingUser( @PathVariable("hash") String hash) {
-        return applicationInviteService.checkUserExistingByInviteHash(hash).toGetResponse();
+    @GetMapping("/checkExistingUser/{inviteHash}")
+    public RestResult<Boolean> checkExistingUser(@PathVariable("inviteHash") String inviteHash) {
+        return applicationInviteService.checkUserExistsForInvite(inviteHash).toGetResponse();
     }
 
-    @GetMapping(GET_USER_BY_HASH_MAPPING + "{hash}")
-    public RestResult<UserResource> getUser( @PathVariable("hash") String hash) {
-        return applicationInviteService.getUserByInviteHash(hash).toGetResponse();
+    @GetMapping(GET_USER_BY_HASH_MAPPING + "{inviteHash}")
+    public RestResult<UserResource> getUser(@PathVariable("inviteHash") String inviteHash) {
+        return applicationInviteService.getUserByInviteHash(inviteHash).toGetResponse();
     }
 }

@@ -92,7 +92,7 @@ public class ApplicationQuestionSaverTest {
         when(request.getParameterMap()).thenReturn(asMap(MARK_AS_INCOMPLETE, new String[]{"1"}));
         when(request.getParameter(MARK_AS_INCOMPLETE)).thenReturn("1");
 
-        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, false, Optional.empty());
+        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, Optional.empty());
 
         assertFalse(result.hasErrors());
         verify(fileSaver, never()).saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong());
@@ -110,7 +110,7 @@ public class ApplicationQuestionSaverTest {
         when(fileSaver.saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong())).thenReturn(messages);
         when(nonFileSaver.saveNonFileUploadQuestions(anyList(), any(HttpServletRequest.class), anyLong(), anyLong(), anyBoolean())).thenReturn(new ValidationMessages());
 
-        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, false, Optional.empty());
+        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, Optional.empty());
 
         assertTrue(result.hasErrors());
         verify(fileSaver, times(1)).saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong());
@@ -128,7 +128,7 @@ public class ApplicationQuestionSaverTest {
         when(fileSaver.saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong())).thenReturn(messages);
         when(nonFileSaver.saveNonFileUploadQuestions(anyList(), any(HttpServletRequest.class), anyLong(), anyLong(), anyBoolean())).thenReturn(new ValidationMessages());
 
-        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, false, Optional.of(Boolean.TRUE));
+        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, Optional.of(Boolean.TRUE));
 
         assertTrue(result.hasErrors());
         verify(fileSaver, times(1)).saveFileUploadQuestionsIfAny(anyList(), anyMap(), any(HttpServletRequest.class), anyLong(), anyLong());
@@ -140,7 +140,7 @@ public class ApplicationQuestionSaverTest {
     public void saveApplicationForm_UserIsLead() {
         when(userService.isLeadApplicant(userId, application)).thenReturn(true);
 
-        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, false, Optional.empty());
+        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, Optional.empty());
 
         assertFalse(result.hasErrors());
         verify(applicationService, times(1)).save(any(ApplicationResource.class));
@@ -152,7 +152,7 @@ public class ApplicationQuestionSaverTest {
         when(request.getParameter(MARK_AS_COMPLETE)).thenReturn(String.valueOf(questionId));
         when(questionService.markAsComplete(questionId, applicationId, processRoleId)).thenReturn(Collections.emptyList());
 
-        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, false, Optional.empty());
+        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, Optional.empty());
 
         assertFalse(result.hasErrors());
         verify(questionService, times(1)).markAsComplete(questionId, applicationId, processRoleId);
@@ -168,7 +168,7 @@ public class ApplicationQuestionSaverTest {
         when(questionService.markAsComplete(questionId, applicationId, processRoleId)).thenReturn(asList(messages));
         when(detailsSaver.handleApplicationDetailsValidationMessages(asList(messages))).thenReturn(messages);
 
-        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, false, Optional.empty());
+        ValidationMessages result = questionSaver.saveApplicationForm(applicationId, form, questionId, userId, request, response, Optional.empty());
 
         assertTrue(result.hasErrors());
         verify(questionService, times(1)).markAsComplete(questionId, applicationId, processRoleId);
