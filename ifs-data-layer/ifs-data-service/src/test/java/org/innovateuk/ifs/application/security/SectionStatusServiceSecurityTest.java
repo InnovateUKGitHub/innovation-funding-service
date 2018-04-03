@@ -41,7 +41,7 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSectionAsComplete(isA(ApplicationResource.class), isA(UserResource.class))
+                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSection(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 
@@ -53,7 +53,7 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSectionAsInComplete(isA(ApplicationResource.class), isA(UserResource.class))
+                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSection(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 
@@ -65,7 +65,7 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(isA(ApplicationResource.class), isA(UserResource.class))
+                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSection(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 

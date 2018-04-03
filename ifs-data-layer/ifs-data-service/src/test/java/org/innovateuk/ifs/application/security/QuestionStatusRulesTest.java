@@ -120,13 +120,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         when(processRoleRepository.findByUserIdAndApplicationId(nonProjectTeamMember.getId(), application.getId()))
                 .thenReturn(null);
 
-        assertTrue(rules.onlyMemberOfProjectTeamCanMarkSectionAsComplete(application, leadApplicant));
-        assertFalse(rules.onlyMemberOfProjectTeamCanMarkSectionAsComplete(application, nonProjectTeamMember));
-
-        assertTrue(rules.onlyMemberOfProjectTeamCanMarkSectionAsInComplete(application, leadApplicant));
-        assertFalse(rules.onlyMemberOfProjectTeamCanMarkSectionAsInComplete(application, nonProjectTeamMember));
-
-        assertTrue(rules.onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(application, leadApplicant));
-        assertFalse(rules.onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(application, nonProjectTeamMember));
+        assertTrue(rules.onlyMemberOfProjectTeamCanMarkSection(application, leadApplicant));
+        assertFalse(rules.onlyMemberOfProjectTeamCanMarkSection(application, nonProjectTeamMember));
     }
 }
