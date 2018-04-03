@@ -30,6 +30,8 @@ public enum UserRoleType {
     PANEL_ASSESSOR("panel_assessor", "Panel Assessor"),
     INTERVIEW_ASSESSOR("interview_assessor", "Interview Assessor"),
     INTERVIEW_LEAD_APPLICANT("interview_lead_applicant", "Interview Lead Applicant");
+    public static final HashSet<UserRoleType> EXTERNAL_APPLICANT_ROLES = new HashSet<>(Arrays.asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
+    public static final HashSet<UserRoleType> INTERNAL_ROLES = new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
 
     private String name;
     private String displayName;
@@ -69,11 +71,11 @@ public enum UserRoleType {
         return Arrays.stream(roles).map(UserRoleType::getName).collect(toList());
     }
 
-    public static Set<UserRoleType> internalRoles(){
-        return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
+    public static Set<UserRoleType> internalUserRoleTypes(){
+        return INTERNAL_ROLES;
     }
 
     public static Set<UserRoleType> externalApplicantRoles(){
-        return new HashSet<>(Arrays.asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
+        return EXTERNAL_APPLICANT_ROLES;
     }
 }
