@@ -5,8 +5,8 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
@@ -154,9 +154,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+        NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
 
-        NotificationTarget to2 = new ExternalUserNotificationTarget("A A", "a@abc.com");
+        NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
 
         when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
         when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
@@ -290,9 +290,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+        NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
 
-        NotificationTarget to2 = new ExternalUserNotificationTarget("A A", "a@abc.com");
+        NotificationTarget to2 = new UserNotificationTarget("A A", "a@abc.com");
 
         when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
         when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
@@ -462,7 +462,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+        NotificationTarget to1 = new UserNotificationTarget("A Z", "z@abc.com");
 
         when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
 

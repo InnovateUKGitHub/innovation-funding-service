@@ -9,10 +9,10 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationSource;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -351,7 +351,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
 
         final NotificationSource from = systemNotificationSourceMock;
-        final NotificationTarget to = new ExternalUserNotificationTarget(userResource.getName(), userResource.getEmail());
+        final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
 
         final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.save(isA(Token.class))).thenReturn(token);
@@ -387,7 +387,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         final Map<String, Object> expectedNotificationArguments = asMap("verificationLink", verificationLink);
 
         final NotificationSource from = systemNotificationSourceMock;
-        final NotificationTarget to = new ExternalUserNotificationTarget(userResource.getName(), userResource.getEmail());
+        final NotificationTarget to = new UserNotificationTarget(userResource.getName(), userResource.getEmail());
 
         final Notification notification = new Notification(from, singletonList(to), RegistrationServiceImpl.Notifications.VERIFY_EMAIL_ADDRESS, expectedNotificationArguments);
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L)).thenReturn(of(existingToken));

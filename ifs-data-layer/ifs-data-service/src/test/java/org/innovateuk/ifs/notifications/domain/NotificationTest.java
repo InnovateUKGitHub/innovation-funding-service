@@ -7,11 +7,10 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.notifications.domain.NotificationTest.DummyNotification.DUMMY;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -26,9 +25,9 @@ public class NotificationTest {
     @Test
     public void testMergingOfTemplateReplacementsForRecipientsWithoutTargetSpecificReplacements() {
 
-        UserNotificationSource source = new UserNotificationSource(newUser().build());
-        UserNotificationTarget target1 = new UserNotificationTarget(newUser().build());
-        UserNotificationTarget target2 = new UserNotificationTarget(newUser().build());
+        UserNotificationSource source = new UserNotificationSource("1", "1@1.1");
+        UserNotificationTarget target1 = new UserNotificationTarget("2", "2@2.2");
+        UserNotificationTarget target2 = new UserNotificationTarget("3", "3@3.3");
 
         Map<String, Object> globalTemplateReplacements = asMap("thing1", 1L, "thing2", "a string");
         Notification notification = new Notification(source, asList(target1, target2), DUMMY, globalTemplateReplacements);
@@ -40,9 +39,9 @@ public class NotificationTest {
     @Test
     public void testMergingOfTemplateReplacementsForRecipientsWithTargetSpecificReplacements() {
 
-        UserNotificationSource source = new UserNotificationSource(newUser().build());
-        UserNotificationTarget target1 = new UserNotificationTarget(newUser().build());
-        UserNotificationTarget target2 = new UserNotificationTarget(newUser().build());
+        UserNotificationSource source = new UserNotificationSource("1", "1@1.1");
+        UserNotificationTarget target1 = new UserNotificationTarget("2", "2@2.2");
+        UserNotificationTarget target2 = new UserNotificationTarget("3", "3@3.3");
 
         Map<String, Object> globalTemplateReplacements = asMap("thing1", Long.valueOf(1L), "thing2", "a string");
         Map<String, Object> target1SpecificTemplateReplacements = asMap("thing2", Long.valueOf(222L), "thing3", Long.valueOf(3L));

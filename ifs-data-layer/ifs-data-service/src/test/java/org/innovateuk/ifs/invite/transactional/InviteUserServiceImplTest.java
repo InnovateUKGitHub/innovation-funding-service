@@ -12,8 +12,8 @@ import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
@@ -158,7 +158,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         Role roleResource = Role.IFS_ADMINISTRATOR;
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
+        NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(serviceSuccess());
 
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
@@ -204,7 +204,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         when(roleInviteRepositoryMock.save(any(RoleInvite.class))).thenReturn(expectedRoleInvite);
         when(userRepositoryMock.findByEmail(invitedUser.getEmail())).thenReturn(Optional.empty());
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
+        NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
 
         ServiceResult<Void> result = service.saveUserInvite(invitedUser, SUPPORT);
@@ -239,7 +239,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         Role roleResource = Role.IFS_ADMINISTRATOR;
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
+        NotificationTarget notificationTarget = new UserNotificationTarget("Astle Pimenta", "Astle.Pimenta@innovateuk.gov.uk");
         when(emailService.sendEmail(eq(singletonList(notificationTarget)), any(), eq(INVITE_INTERNAL_USER))).thenReturn(serviceSuccess());
 
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
@@ -534,7 +534,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
         Role roleResource = Role.PROJECT_FINANCE;
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget(existingInvite.getName(), existingInvite.getEmail());
+        NotificationTarget notificationTarget = new UserNotificationTarget(existingInvite.getName(), existingInvite.getEmail());
 
         Map<String, Object> emailTemplateArgs = asMap("role", roleResource.getDisplayName(),
                 "inviteUrl", "base/management/registration/hashhashhash/register");
