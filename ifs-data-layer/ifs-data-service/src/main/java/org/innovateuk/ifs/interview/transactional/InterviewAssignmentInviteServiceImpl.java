@@ -73,6 +73,7 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     enum Notifications {
         INVITE_APPLICANT_GROUP_TO_INTERVIEW
     }
+    
     @Override
     public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
 
