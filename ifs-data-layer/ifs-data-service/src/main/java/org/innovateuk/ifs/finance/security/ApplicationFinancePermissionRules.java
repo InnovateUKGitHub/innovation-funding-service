@@ -128,6 +128,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     }
 
     private boolean hasDetailedView(long applicationId) {
+
         Competition competition = competitionRepository.findByApplicationsId(applicationId);
         return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
     }

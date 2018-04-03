@@ -192,8 +192,6 @@ public class ApplicantDashboardPopulator {
                 .distinct()
                 .collect(Collectors.toList());
 
-        return competitionIdsForUser.stream()
-                .map(id -> competitionRestService.getCompetitionById(id).getSuccess())
-                .collect(Collectors.toList());
+        return simpleMap(competitionIdsForUser, id -> competitionRestService.getCompetitionById(id).getSuccess());
     }
 }
