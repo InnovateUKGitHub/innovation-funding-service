@@ -64,8 +64,8 @@ public class InterviewApplicationSendInviteController {
     @PostMapping("/send")
     public String sendInvites(Model model,
                               @PathVariable("competitionId") long competitionId,
-                              @ModelAttribute("form") @Valid SendInviteForm form,
                               @RequestParam MultiValueMap<String, String> queryParams,
+                              @ModelAttribute("form") @Valid SendInviteForm form,
                               BindingResult bindingResult,
                               ValidationHandler validationHandler) {
 

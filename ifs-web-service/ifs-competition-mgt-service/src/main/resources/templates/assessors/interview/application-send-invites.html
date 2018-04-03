@@ -38,7 +38,7 @@
             <tbody>
             <tr th:each="app : ${model.applications}">
                 <td>
-                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
+                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${model.originQuery}"
                        th:text="${app.applicationId}">123
                     </a>
                 </td>
