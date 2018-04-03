@@ -30,6 +30,7 @@ public class TeamStatusController {
     @Autowired
     private StatusService statusService;
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW')")
     @GetMapping
     public String viewProjectTeamStatus(Model model, @PathVariable("projectId") final Long projectId) {
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());

@@ -49,6 +49,11 @@ public class SetupSectionsPermissionRules {
 
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
+    @PermissionRule(value = "VIEW", description = "A partner can access the Project Setup Status page when the project is in the correct state to do so")
+    public boolean partnerCanAccessProjectSetupStatus(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectInViewableState(projectCompositeId.id());
+    }
+
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
     public boolean partnerCanAccessProjectDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
@@ -160,13 +165,16 @@ public class SetupSectionsPermissionRules {
         return !organisation.getId().equals(organisationCompositeId.id());
     }
 
-    private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
+    private boolean doSectionCheck(long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
         try {
-            Long organisationId = projectService.getOrganisationIdFromUser(projectId, user);
 
-            ProjectTeamStatusResource teamStatus;
+            if (!isProjectInViewableState(projectId)) {
+                return false;
+            }
 
-            teamStatus = statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
+            long organisationId = projectService.getOrganisationIdFromUser(projectId, user);
+
+            ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(organisationId).get();
 
@@ -181,6 +189,15 @@ public class SetupSectionsPermissionRules {
             return false;
         }
     }
+
+    private boolean isProjectInViewableState(long projectId) {
+        return !isProjectWithdrawn(projectId);
+    }
+
+    private boolean isProjectWithdrawn(long projectId) {
+        return true;
+    }
+
 
     public class SetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, SetupSectionAccessibilityHelper> {
         @Override
