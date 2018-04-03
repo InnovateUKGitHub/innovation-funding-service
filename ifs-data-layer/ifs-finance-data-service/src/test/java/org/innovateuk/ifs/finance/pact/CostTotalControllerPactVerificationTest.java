@@ -25,6 +25,6 @@ public class CostTotalControllerPactVerificationTest {
 
     @State("SendCostTotalsState")
     public void setState() {
-        // Any preparation that needs to take place for the "SendCostTotalsState" state
+        // no state required
     }
 }
