@@ -175,13 +175,11 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
     @Test
     public void unstageApplications() {
-
         ServiceResult<Void> result = service.unstageApplications();
 
         assertTrue(result.isSuccess());
         verify(interviewAssignmentRepositoryMock).deleteByActivityStateState(InterviewAssignmentState.CREATED.getBackingState());
     }
-
 
     private static InterviewAssignment interviewPanellambdaMatcher(Application application) {
         return createLambdaMatcher((InterviewAssignment interviewPanel) -> {

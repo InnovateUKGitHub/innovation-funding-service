@@ -289,20 +289,13 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
                 InterviewAssignmentState.CREATED.getBackingState()
         );
 
-        InterviewAssignment interviewPanel1 = newInterviewAssignment()
+        List<InterviewAssignment> interviewPanels = newInterviewAssignment()
                 .with(id(null))
                 .withActivityState(activityState)
-                .withTarget(applications.get(0))
-                .build();
+                .withTarget(applications.get(0), applications.get(1))
+                .build(2);
 
-        InterviewAssignment interviewPanel2 = newInterviewAssignment()
-                .with(id(null))
-                .withActivityState(activityState)
-                .withTarget(applications.get(1))
-                .build();
-
-        interviewAssignmentRepository.save(interviewPanel1);
-        interviewAssignmentRepository.save(interviewPanel2);
+        interviewAssignmentRepository.save(interviewPanels);
 
         RestResult<Void> result = controller.unstageApplications();
         assertTrue(result.isSuccess());

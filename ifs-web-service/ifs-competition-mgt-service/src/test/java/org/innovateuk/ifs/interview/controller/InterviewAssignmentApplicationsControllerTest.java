@@ -352,7 +352,6 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
 
         setupDefaultInviteViewExpectations(page, interviewAssignmentStagedApplicationPageResource);
 
-
         when(interviewAssignmentRestService.unstageApplication(applicationId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/invite", competition.getId())
