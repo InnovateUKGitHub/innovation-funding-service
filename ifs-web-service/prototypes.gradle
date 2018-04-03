@@ -1,0 +1,8 @@
+ext.dockerComposeFile = "docker-compose/docker-compose-prototypes.yml"
+
+task startPrototypes(type: Exec) {
+    workingDir '../../'
+    doFirst {
+        commandLine 'docker-compose', '-p', 'innovation-funding-service', '-f', dockerComposeFile, 'up', '-d'
+    }
+}

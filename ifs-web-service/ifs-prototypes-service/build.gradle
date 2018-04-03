@@ -1,3 +1,5 @@
+apply from: "../prototypes.gradle"
+
 bootRun {
     addResources = false
 }

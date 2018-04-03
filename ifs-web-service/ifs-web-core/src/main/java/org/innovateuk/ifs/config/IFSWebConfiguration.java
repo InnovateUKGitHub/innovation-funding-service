@@ -8,6 +8,7 @@ import org.innovateuk.ifs.interceptors.MenuLinksHandlerInterceptor;
 import org.innovateuk.ifs.invite.formatter.RejectionReasonFormatter;
 import org.innovateuk.ifs.user.formatter.EthnicityFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -29,6 +30,9 @@ import java.util.Locale;
 public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public static final int CACHE_PERIOD = 60 * 60 * 24 * 60;
 
+    @Value("${ifs.web.alertMessagesEnabled:true}")
+    private boolean alertMessagesEnabled;
+
     @Autowired
     Environment env;
 
@@ -36,8 +40,11 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         super.addInterceptors(registry);
         registry.addInterceptor(getMenuLinksHandlerInterceptor());
-        registry.addInterceptor(getAlertMessageHandlerInterceptor());
         registry.addInterceptor(getGoogleAnalyticsHandlerInterceptor());
+
+        if (alertMessagesEnabled) {
+            registry.addInterceptor(getAlertMessageHandlerInterceptor());
+        }
     }
 
     @Override
