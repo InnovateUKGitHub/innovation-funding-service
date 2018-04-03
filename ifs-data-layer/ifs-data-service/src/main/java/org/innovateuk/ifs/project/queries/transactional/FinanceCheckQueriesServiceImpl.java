@@ -137,7 +137,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
 
         Application application = project.getApplication();
 
-        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+        NotificationTarget pmTarget = new UserNotificationTarget(fullName, financeContact.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + project.getId());
@@ -153,7 +153,7 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
         NotificationSource from = systemNotificationSource;
         String fullName = financeContact.getName();
 
-        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+        NotificationTarget pmTarget = new UserNotificationTarget(fullName, financeContact.getEmail());
 
         Map<String, Object> notificationArguments = new HashMap<>();
         notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);

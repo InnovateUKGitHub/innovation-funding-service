@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.project.monitoringofficer.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
-import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -29,9 +29,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_ID_IN_URL_MUST_MATCH_PROJECT_ID_IN_MONITORING_OFFICER_RESOURCE;
-import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -162,7 +160,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
 
         String fullName = getMonitoringOfficerFullName(monitoringOfficer);
 
-        return new ExternalUserNotificationTarget(fullName, monitoringOfficer.getEmail());
+        return new UserNotificationTarget(fullName, monitoringOfficer.getEmail());
 
     }
 
@@ -174,7 +172,7 @@ public class MonitoringOfficerServiceImpl extends AbstractProjectServiceImpl imp
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
         String fullName = getProjectManagerFullName(projectManager);
 
-        return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
+        return new UserNotificationTarget(fullName, projectManager.getEmail());
     }
 
     private String getProjectManagerFullName(User projectManager) {
