@@ -13,7 +13,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public enum ProjectState implements ProcessState {
 
     SETUP(State.PENDING),
-    LIVE(State.ACCEPTED);
+    LIVE(State.ACCEPTED),
+    WITHDRAWN(State.WITHDRAWN);
 
     //the status string value
     private State backingState;
