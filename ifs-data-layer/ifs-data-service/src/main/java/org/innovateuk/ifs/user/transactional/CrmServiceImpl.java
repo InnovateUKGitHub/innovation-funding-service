@@ -25,7 +25,6 @@ import java.util.Optional;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -44,7 +43,7 @@ public class CrmServiceImpl implements CrmService {
     @Override
     public ServiceResult<Void> syncCrmContact(long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId)).andOnSuccess((user) -> {
-            if (!isInternal(user)) {
+            if (!user.isInternalUser()) {
                 List<Organisation> organisations = organisationRepository.findByUsersId(userId);
                 if (organisations.size() != 1) {
                     return serviceFailure(CommonErrors.notFoundError(Organisation.class));

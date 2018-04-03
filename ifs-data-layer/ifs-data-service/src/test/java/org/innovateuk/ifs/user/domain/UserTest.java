@@ -1,10 +1,17 @@
 package org.innovateuk.ifs.user.domain;
 
+import org.innovateuk.ifs.user.resource.Role;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.google.common.collect.Sets.newHashSet;
+import java.util.Set;
+
+import static java.util.Arrays.stream;
+import static java.util.Collections.singleton;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.junit.Assert.assertEquals;
 
 public class UserTest {
     User user;
@@ -37,5 +44,17 @@ public class UserTest {
         Assert.assertEquals(user.getId(), id);
         Assert.assertEquals(user.getImageUrl(), imageUrl);
         Assert.assertEquals(user.getUid(), uid);
+    }
+
+    @Test
+    public void testInternalUserMethod() {
+
+        Set<UserRoleType> expectedInternalRoles = UserRoleType.internalUserRoleTypes();
+
+        stream(UserRoleType.values()).forEach(type -> {
+
+            User userWithRole = newUser().withRoles(singleton(Role.getByName(type.getName()))).build();
+            assertEquals(expectedInternalRoles.contains(type), userWithRole.isInternalUser());
+        });
     }
 }
