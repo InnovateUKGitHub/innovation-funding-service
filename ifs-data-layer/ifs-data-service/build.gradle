@@ -11,16 +11,6 @@ apply from: "db-baseline.gradle"
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
-task('copyFreemarkerResources', type: Copy) {
-//Copy freemarker resources to build path to support running as a jar.
-    from 'src/main/java/org/innovateuk/ifs/notifications/templates'
-    into 'build/classes/main/org/innovateuk/ifs/notifications/templates'
-    include '**/*'
-}
-
-compileJava.dependsOn copyFreemarkerResources
-
-
 configurations {
     providedRuntime
 }
@@ -74,9 +64,9 @@ dependencies {
     compile project(":ifs-data-layer:data-service-file")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.hibernate:hibernate-core:5.2.7.Final"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-freemarker"
     compile "mysql:mysql-connector-java"
     compile "org.springframework:spring-web"
     compile "com.jayway.jsonpath:json-path-assert:2.0.0"
@@ -89,7 +79,6 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
-    compile 'org.freemarker:freemarker:2.3.25-incubating'
     compile "org.apache.poi:poi:3.14"
     compile "org.apache.poi:poi-ooxml:3.14"
 

@@ -86,7 +86,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
                     String bodyPlain = stripHtml(applicationIneligibleSendResource.getMessage());
                     String bodyHtml = plainTextToHtml(bodyPlain);
 
-                    NotificationTarget recipient = new ExternalUserNotificationTarget(
+                    NotificationTarget recipient = new UserNotificationTarget(
                                     application.getLeadApplicant().getName(),
                                     application.getLeadApplicant().getEmail()
                     );
@@ -106,7 +106,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         Application application = applicationRepository.findOne(processRole.getApplicationId());
 
         NotificationTarget recipient =
-                new ExternalUserNotificationTarget(processRole.getUser().getName(), processRole.getUser().getEmail());
+                new UserNotificationTarget(processRole.getUser().getName(), processRole.getUser().getEmail());
 
         Notification notification = new Notification(
                 systemNotificationSource,
@@ -128,7 +128,7 @@ public class ApplicationNotificationServiceImpl implements ApplicationNotificati
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId))
                 .andOnSuccess(application -> {
                     NotificationSource from = systemNotificationSource;
-                    NotificationTarget to = new ExternalUserNotificationTarget(
+                    NotificationTarget to = new UserNotificationTarget(
                             application.getLeadApplicant().getName(),
                             application.getLeadApplicant().getEmail()
                     );

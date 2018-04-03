@@ -7,9 +7,9 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
@@ -137,7 +137,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
 
@@ -229,7 +229,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
 
@@ -343,7 +343,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
                                                                   "applicationName", "App1");
@@ -491,7 +491,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
         ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+        NotificationTarget target = new UserNotificationTarget(u.getName(), u.getEmail());
 
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
                 "applicationName", "App1");

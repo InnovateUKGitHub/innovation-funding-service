@@ -19,6 +19,7 @@ import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -209,7 +210,8 @@ public class ReviewServiceImpl implements ReviewService {
     private ServiceResult<Void> sendInviteNotification(String subject,
                                                        Review review,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new UserNotificationTarget(review.getParticipant().getUser());
+        User target  = review.getParticipant().getUser();
+        NotificationTarget recipient = new UserNotificationTarget(target.getName(), target.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,

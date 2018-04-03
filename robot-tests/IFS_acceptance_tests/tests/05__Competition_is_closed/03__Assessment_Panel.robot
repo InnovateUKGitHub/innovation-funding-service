@@ -315,7 +315,7 @@ Get the proper milestone value from the db
 return back to original milestone
     [Arguments]  ${type}  ${date}  ${competitionId}
     Connect to Database    @{database}
-    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='type' AND `competition_id`='${competitionId}'
+    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
 
 we are moving the milestone to yesterday
     [Arguments]  ${type}  ${competitionId}
