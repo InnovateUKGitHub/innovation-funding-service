@@ -206,7 +206,7 @@
             <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
             <p>
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
-                <th:block th:if="${(competition.assessorFeedbackDate !=null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')+'.'}" />
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')+'.'}" />
             </p>
         </div>
 </th:block>
