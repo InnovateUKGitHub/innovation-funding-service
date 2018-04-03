@@ -39,7 +39,12 @@ public class CompetitionSetupQuestionController {
         return competitionSetupQuestionService.delete(questionId, sectionName).toDeleteResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-2832", description = "Changed the endpoint. TODO: This endpoint needs to be removed")
+    /**
+     * TODO: This endpoint needs to be removed
+     * @param questionId
+     * @return
+     */
+    @ZeroDowntime(reference = "IFS-2832", description = "Changed the endpoint. deleteByIdAndSection is now used")
     @DeleteMapping("/deleteById/{id}")
     public RestResult<Void> deleteById(@PathVariable("id") final Long questionId) {
         return competitionSetupQuestionService.delete(questionId, "Application questions").toDeleteResponse();
