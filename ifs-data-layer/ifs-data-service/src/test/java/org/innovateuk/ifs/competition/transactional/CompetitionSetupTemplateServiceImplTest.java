@@ -233,7 +233,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         Question question = newQuestion().withCompetition(readyToOpenCompetition).withId(questionId).build();
 
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
-        when(questionRepositoryMock.countByCompetitionIdAndSectionName(readyToOpenCompetition.getId())).thenReturn(questionId);
+        when(questionRepositoryMock.countByCompetitionId(readyToOpenCompetition.getId())).thenReturn(questionId);
         ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetition(question.getId());
         assertTrue(resultAssessedQuestion.isFailure());
     }

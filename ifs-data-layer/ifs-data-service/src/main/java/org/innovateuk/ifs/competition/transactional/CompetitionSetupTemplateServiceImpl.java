@@ -143,7 +143,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
-        if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId()) <= 1) {
+        if(questionRepository.countByCompetitionId(question.getCompetition().getId()) <= 1) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
