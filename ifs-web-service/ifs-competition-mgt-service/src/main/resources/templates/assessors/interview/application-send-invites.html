@@ -55,7 +55,8 @@
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
 
-    <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
+    <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}"
+          method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
         <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
             <label class="form-label-bold" th:for="${#ids.next('subject')}">
                 <span>Email subject</span>
