@@ -10,6 +10,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.review.builder.ReviewInviteResourceBuilder.newReviewInviteResource;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -27,7 +28,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
                 .build();
         UserResource userResource = newUserResource()
                 .withId(1L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertTrue(rules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource, userResource));
@@ -40,7 +41,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
                 .build();
         UserResource userResource = newUserResource()
                 .withId(2L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertFalse(rules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource, userResource));
@@ -53,7 +54,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
                 .build();
         UserResource userResource = newUserResource()
                 .withEmail("tom@poly.io")
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertTrue(rules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource, userResource));
@@ -66,7 +67,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
                 .build();
         UserResource userResource = newUserResource()
                 .withEmail("non-existent-email@poly.io")
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertFalse(rules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource, userResource));
@@ -80,7 +81,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
                 .build();
         UserResource userResource = newUserResource()
                 .withId(7L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertTrue(rules.userCanViewTheirOwnAssessmentPanelParticipation(reviewParticipantResource, userResource));
@@ -93,7 +94,7 @@ public class ReviewParticipantPermissionRulesTest extends BasePermissionRulesTes
                 .build();
         UserResource userResource = newUserResource()
                 .withId(11L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertFalse(rules.userCanViewTheirOwnAssessmentPanelParticipation(reviewParticipantResource, userResource));

@@ -5,11 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
-import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -24,7 +20,8 @@ import java.util.Set;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -119,7 +116,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindActiveByProcessRoles(){
-        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(internalRoles(), new PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -127,7 +124,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindInactiveByProcessRoles(){
-        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5)), () -> {
+        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(internalRoles(), new PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
         });
@@ -185,7 +182,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         }
 
         @Override
-        public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+        public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<Role> roleTypes, Pageable pageable) {
             return serviceSuccess(new UserPageResource());
         }
 
@@ -196,12 +193,12 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         }*/
 
         @Override
-        public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
+        public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory) {
             return serviceSuccess(newUserOrganisationResource().build(2));
         }
 
         @Override
-        public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+        public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<Role> roleTypes, Pageable pageable) {
             return serviceSuccess(new UserPageResource());
         }
 

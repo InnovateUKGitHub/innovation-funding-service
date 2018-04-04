@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummaryService> {
 
