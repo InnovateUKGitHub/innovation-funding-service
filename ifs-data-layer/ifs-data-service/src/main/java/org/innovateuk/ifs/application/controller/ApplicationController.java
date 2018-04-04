@@ -27,6 +27,8 @@ public class ApplicationController {
 
     private static final String DEFAULT_PAGE_SIZE = "40";
 
+    private static final String DEFAULT_SORT_BY = "id";
+
     @Autowired
     private IneligibleOutcomeMapper ineligibleOutcomeMapper;
 
@@ -130,5 +132,14 @@ public class ApplicationController {
     public RestResult<Boolean> showApplicationTeam(@PathVariable("applicationId") final Long applicationId,
                                                    @PathVariable("userId") final Long userId) {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/unsuccessful-applications")
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
+
+        return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
     }
 }

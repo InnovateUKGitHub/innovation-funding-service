@@ -194,4 +194,19 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupPostWithRestResultExpectations(applicationRestURL + "/informIneligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
         service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccess();
     }
+
+    @Test
+    public void findUnsuccessfulApplications() {
+        int pageNumber = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+
+        setupGetWithRestResultExpectations(applicationRestURL + "/123" + "/unsuccessful-applications?page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
+
+        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccess();
+        assertNotNull(result);
+        Assert.assertEquals(applicationPage, result);
+    }
 }

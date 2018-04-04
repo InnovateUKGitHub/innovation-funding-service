@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.UnsuccessfulApplicationsViewModel;
@@ -25,12 +25,13 @@ public class UnsuccessfulApplicationsModelPopulator {
     private UserService userService;
 
     @Autowired
-    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
+    private ApplicationRestService applicationRestService;
 
     public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, UserResource loggedInUser, String existingQueryString) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccess();
-        ApplicationPageResource unsuccessfulApplicationsPagedResult = competitionPostSubmissionRestService
+
+        ApplicationPageResource unsuccessfulApplicationsPagedResult = applicationRestService
                 .findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)
                 .getSuccess();
 
