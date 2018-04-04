@@ -264,16 +264,15 @@
     </script>
     <script>
         jQuery(document).ready(function(){
-            /* jQuery("form").submit(function(event) {
+            jQuery("form").submit(function(event) {
                 var emailField = jQuery("[type='email']").first();
                 var passwordField = jQuery("[type='password']").first();
                 var button = jQuery("button[type='submit']").first();
                 var valid = IFS.core.formValidation.checkEmail(emailField) && IFS.core.formValidation.checkRequired(passwordField);
                 if (valid) {
-                    console.log('Valid')
                     button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
                 }
-            }); */
+            });
             jQuery.ajax({
                 url: '$resourcesDomain/alert/findAllVisibleByType/MAINTENANCE',
                 method: 'GET'

@@ -5,7 +5,6 @@ IFS.core.passwordToggle = (function () {
     init: function () {
       var button = jQuery('.password-toggle button')
       var passwordInput = button.prev()
-      var form = button.closest('form')
       var submitButton = form.find('[type=submit]')
       fieldName = passwordInput.prop('name')
       button.on('click', function (e) {
@@ -14,32 +13,26 @@ IFS.core.passwordToggle = (function () {
         if (inputType === 'password') {
           IFS.core.passwordToggle.showPassword(button, passwordInput, submitButton, form)
         } else {
-          IFS.core.passwordToggle.hidePassword(button, passwordInput, submitButton)
+          IFS.core.passwordToggle.hidePassword(button, passwordInput)
         }
       })
     },
-    showPassword: function (button, passwordInput, submitButton, form) {
-      submitButton.prop('type', 'button')
+    showPassword: function (button, passwordInput, submitButton) {
       passwordInput.prop('type', 'text')
       passwordInput.prop('name', Math.random().toString(36).replace(/[^a-z]+/g, ''))
       passwordInput.focus()
       button.text('Hide')
       button.attr('aria-checked', true)
       submitButton.on('click', function () {
-        console.log('Submit')
-        // IFS.core.passwordToggle.hidePassword(button, passwordInput, submitButton)
-        submitButton.prop('type', 'submit')
-        form.submit()
+        passwordInput.prop('name', fieldName)
       })
     },
-    hidePassword: function (button, passwordInput, submitButton) {
-      submitButton.prop('type', 'submit')
+    hidePassword: function (button, passwordInput) {
       passwordInput.prop('type', 'password')
       passwordInput.prop('name', fieldName)
       passwordInput.focus()
       button.text('Show')
       button.attr('aria-checked', false)
-      submitButton.off('click')
     }
   }
 })()
