@@ -5,8 +5,6 @@ import org.innovateuk.ifs.finance.totals.service.CompetitionFinanceTotalsSender;
 import org.innovateuk.ifs.finance.totals.service.CompetitionFinanceTotalsSenderImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 
 public class CompetitionFinanceTotalsSenderSecurityTest extends
@@ -20,6 +18,5 @@ public class CompetitionFinanceTotalsSenderSecurityTest extends
     public void testSendFinanceTotalsForCompetition() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
                 classUnderTest.sendFinanceTotalsForCompetition(1L), SYSTEM_MAINTAINER);
-
     }
 }

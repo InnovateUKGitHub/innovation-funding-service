@@ -5,14 +5,12 @@ import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<BankDetailsService> {
 

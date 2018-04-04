@@ -5,17 +5,19 @@ import org.innovateuk.ifs.application.transactional.ApplicationAssessmentSummary
 import org.innovateuk.ifs.application.transactional.ApplicationAssessmentSummaryServiceImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
-public class ApplicationAssessmentSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationAssessmentSummaryService> {
+public class ApplicationAssessmentSummaryServiceSecurityTest extends
+        BaseServiceSecurityTest<ApplicationAssessmentSummaryService> {
 
     @Test
     public void testGetAvailableAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getAvailableAssessors(1L,0,20, 0L), COMP_ADMIN, PROJECT_FINANCE
+                () -> classUnderTest.getAvailableAssessors(1L, 0, 20, 0L), COMP_ADMIN, PROJECT_FINANCE
         );
     }
+
     @Test
     public void testGetAssignedAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
@@ -25,7 +27,8 @@ public class ApplicationAssessmentSummaryServiceSecurityTest extends BaseService
 
     @Test
     public void testGetApplicationAssessmentSummaryIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getApplicationAssessmentSummary(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getApplicationAssessmentSummary(1L), COMP_ADMIN,
+                PROJECT_FINANCE);
     }
 
     @Override

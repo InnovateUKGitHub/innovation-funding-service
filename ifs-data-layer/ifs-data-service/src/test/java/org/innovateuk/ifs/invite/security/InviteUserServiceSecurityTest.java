@@ -1,31 +1,21 @@
 package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
-import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
-import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<InviteUserService> {
 
@@ -60,7 +50,8 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
                 () -> classUnderTest.findPendingInternalUserInvites(pageable),
                 () -> {
                     verify(inviteUserPermissionRules)
-                            .internalUsersCanViewPendingInternalUserInvites(any(RoleInvitePageResource.class), any(UserResource.class));
+                            .internalUsersCanViewPendingInternalUserInvites(any(RoleInvitePageResource.class), any
+                                    (UserResource.class));
                     verifyNoMoreInteractions(inviteUserPermissionRules);
                 });
     }

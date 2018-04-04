@@ -6,7 +6,6 @@ import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,25 +13,16 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
-import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
-import static junit.framework.TestCase.fail;
-import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
-import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -156,7 +146,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
+    public void
+    test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.finance.totals.service.AllFinanceTotalsSender;
 import org.innovateuk.ifs.finance.totals.service.AllFinanceTotalsSenderImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 
 public class AllFinanceTotalsSenderSecurityTest extends BaseServiceSecurityTest<AllFinanceTotalsSender> {
     @Override

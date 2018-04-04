@@ -7,25 +7,24 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.EnumSet;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Testing the permission rules applied to the secured methods in OrganisationService.  This set of tests tests for the
- * individual rules that are called whenever an OrganisationService method is called.  They do not however test the logic
- * within those rules
+ * individual rules that are called whenever an OrganisationService method is called.  They do not however test the
+ * logic within those rules
  */
 public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupService> {
 
@@ -56,16 +55,19 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.create(), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            assertAccessDenied(() -> classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L), () -> {
+            assertAccessDenied(() -> classUnderTest.updateCompetitionInitialDetails(competitionId, new
+                    CompetitionResource(), 7L), () -> {
                 verifyNoMoreInteractions(rules);
             });
             assertAccessDenied(() -> classUnderTest.createNonIfs(), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
+            assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection
+                    .INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            assertAccessDenied(() -> classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
+            assertAccessDenied(() -> classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection
+                    .INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
             assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
@@ -76,7 +78,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testCompAdminAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(COMP_ADMIN)).build());
 
         classUnderTest.findAllTypes();
         Long competitionId = 2L;
@@ -87,12 +89,15 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.getSectionStatuses(competitionId);
         classUnderTest.getSubsectionStatuses(competitionId);
-        classUnderTest.markSubsectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSubsection.APPLICATION_DETAILS);
-        classUnderTest.markSubsectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSubsection.APPLICATION_DETAILS);
+        classUnderTest.markSubsectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS,
+                CompetitionSetupSubsection.APPLICATION_DETAILS);
+        classUnderTest.markSubsectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS,
+                CompetitionSetupSubsection.APPLICATION_DETAILS);
     }
+
     @Test
     public void testProjectFinanceAllAccessAllowed() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(PROJECT_FINANCE)).build());
 
         classUnderTest.findAllTypes();
         Long competitionId = 2L;

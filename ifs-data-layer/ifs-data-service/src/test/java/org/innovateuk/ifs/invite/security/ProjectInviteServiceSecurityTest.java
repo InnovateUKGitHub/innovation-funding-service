@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteService;
 import org.innovateuk.ifs.invite.transactional.ProjectInviteServiceImpl;
-import org.innovateuk.ifs.invite.transactional.ProjectInviteServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +13,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
-import static org.innovateuk.ifs.invite.security.ProjectInviteServiceSecurityTest.TestProjectInviteService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;

@@ -100,7 +100,8 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         assertAccessDenied(
                 () -> classUnderTest.sendUserVerificationEmail(userToSendVerificationEmail, of(123L)),
                 () -> {
-                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail,
+                            getLoggedInUser());
                     verifyNoMoreInteractions(rules);
                 });
     }
@@ -112,7 +113,8 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         assertAccessDenied(
                 () -> classUnderTest.resendUserVerificationEmail(userToSendVerificationEmail),
                 () -> {
-                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail,
+                            getLoggedInUser());
                     verifyNoMoreInteractions(rules);
                 });
     }
