@@ -206,7 +206,7 @@ Notify an assigned user
 Assessor should see the assigned application
     [Documentation]    INFUND-7050
     [Setup]    Log in as a different user  &{assessor_credentials}
-    When The user clicks the button/link   link=Sustainable living models for the future
+    When The user clicks the button/link   link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link=Living with Cryptocurrencies
 
 Remove and notify an assessor (Notified)
@@ -228,7 +228,7 @@ Remove and notify an assessor (Notified)
 Assessor should not see the removed application
     [Documentation]    INFUND-7232
     [Setup]    Log in as a different user     &{assessor_credentials}
-    When The user clicks the button/link      link=Sustainable living models for the future
+    When The user clicks the button/link      link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should not see the element  Link=Living with Cryptocurrencies
 
 Reassign and notify an assessor (Notified)
@@ -252,7 +252,7 @@ Reassign and notify an assessor (Notified)
 Assessor should see the reassigned application
     [Documentation]    INFUND-7050
     [Setup]    Log in as a different user  &{assessor_credentials}
-    When The user clicks the button/link   link=Sustainable living models for the future
+    When The user clicks the button/link   link=${IN_ASSESSMENT_COMPETITION_NAME}
     Then The user should see the element   Link=Living with Cryptocurrencies
 
 *** Keywords ***

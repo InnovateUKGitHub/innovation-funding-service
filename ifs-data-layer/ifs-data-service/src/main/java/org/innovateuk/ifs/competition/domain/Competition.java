@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -51,7 +51,6 @@ public class Competition implements ProcessActivity {
     private CompetitionType competitionType;
 
     private Integer assessorCount;
-
     private BigDecimal assessorPay;
 
     @OneToMany(mappedBy = "competition", cascade = CascadeType.PERSIST)
@@ -74,6 +73,9 @@ public class Competition implements ProcessActivity {
 
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
+
+    private Integer maxProjectDuration;
+    private Integer minProjectDuration;
 
     @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
     private CompetitionInnovationSectorLink innovationSector;
@@ -696,6 +698,22 @@ public class Competition implements ProcessActivity {
 
     public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
+    }
+
+    public Integer getMaxProjectDuration() {
+        return maxProjectDuration;
+    }
+
+    public void setMaxProjectDuration(Integer maxProjectDuration) {
+        this.maxProjectDuration = maxProjectDuration;
+    }
+
+    public Integer getMinProjectDuration() {
+        return minProjectDuration;
+    }
+
+    public void setMinProjectDuration(Integer minProjectDuration) {
+        this.minProjectDuration = minProjectDuration;
     }
 }
 

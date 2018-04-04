@@ -5,13 +5,14 @@ import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.interview.service.InterviewInviteRestService;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
+import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.invite.resource.ReviewParticipantResource;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.review.service.ReviewInviteRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -25,17 +26,28 @@ import static java.util.stream.Collectors.toList;
 @Component
 public class AssessorDashboardModelPopulator {
 
-    @Autowired
     private CompetitionParticipantRestService competitionParticipantRestService;
 
-    @Autowired
+    private InterviewInviteRestService interviewInviteRestService;
+
     private ProfileRestService profileRestService;
 
-    @Autowired
     private ReviewInviteRestService reviewInviteRestService;
 
-    @Autowired
     private CompetitionService competitionService;
+
+    public AssessorDashboardModelPopulator(CompetitionParticipantRestService competitionParticipantRestService,
+                                           InterviewInviteRestService interviewInviteRestService,
+                                           ProfileRestService profileRestService,
+                                           ReviewInviteRestService reviewInviteRestService,
+                                           CompetitionService competitionService
+                                           ) {
+        this.competitionParticipantRestService = competitionParticipantRestService;
+        this.interviewInviteRestService = interviewInviteRestService;
+        this.profileRestService = profileRestService;
+        this.reviewInviteRestService = reviewInviteRestService;
+        this.competitionService = competitionService;
+    }
 
     public AssessorDashboardViewModel populateModel(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
@@ -45,14 +57,18 @@ public class AssessorDashboardModelPopulator {
 
         List<ReviewParticipantResource> reviewParticipantResourceList = reviewInviteRestService.getAllInvitesByUser(userId).getSuccess();
 
+        List<InterviewParticipantResource> interviewParticipantResourceList = interviewInviteRestService.getAllInvitesByUser(userId).getSuccess();
+
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),
                 getActiveCompetitions(participantResourceList),
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(reviewParticipantResourceList),
-                getAssessmentPanelAccepted(reviewParticipantResourceList)
-        );
+                getAssessmentPanelAccepted(reviewParticipantResourceList),
+                getInterviewPanelInvites(interviewParticipantResourceList),
+                getInterviewPanelAccepted(interviewParticipantResourceList)
+                );
     }
 
     private AssessorProfileStatusViewModel getProfileStatus(UserProfileStatusResource assessorProfileStatusResource) {
@@ -113,6 +129,18 @@ public class AssessorDashboardModelPopulator {
                 .collect(toList());
     }
 
+    private List<AssessorDashboardInterviewInviteViewModel> getInterviewPanelInvites(List<InterviewParticipantResource> interviewParticipantResourcesList) {
+        return interviewParticipantResourcesList.stream()
+                .filter(InterviewParticipantResource::isPending)
+                .filter(appr -> !isAfterPanelDate(appr.getCompetitionId()))
+                .map(appr -> new AssessorDashboardInterviewInviteViewModel(
+                        appr.getCompetitionName(),
+                        appr.getCompetitionId(),
+                        appr.getInvite().getHash()
+                ))
+                .collect(toList());
+    }
+
     private List<AssessorDashboardAssessmentPanelAcceptedViewModel> getAssessmentPanelAccepted(List<ReviewParticipantResource> assessmentPanelAcceptedResourceList) {
         return assessmentPanelAcceptedResourceList.stream()
                 .filter(ReviewParticipantResource::isAccepted)
@@ -122,6 +150,18 @@ public class AssessorDashboardModelPopulator {
                         appr.getCompetitionId(),
                         appr.getInvite().getPanelDate().toLocalDate(),
                         appr.getInvite().getPanelDaysLeft(),
+                        appr.getAwaitingApplications()
+                        ))
+                .collect(toList());
+    }
+
+    private List<AssessorDashboardInterviewAcceptedViewModel> getInterviewPanelAccepted(List<InterviewParticipantResource> interviewPanelAcceptedResourceList) {
+        return interviewPanelAcceptedResourceList.stream()
+                .filter(InterviewParticipantResource::isAccepted)
+                .filter(appr -> !isAfterPanelDate(appr.getCompetitionId()))
+                .map(appr -> new AssessorDashboardInterviewAcceptedViewModel(
+                        appr.getCompetitionName(),
+                        appr.getCompetitionId(),
                         appr.getAwaitingApplications()
                         ))
                 .collect(toList());

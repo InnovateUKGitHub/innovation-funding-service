@@ -14,6 +14,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<BankDetailsService> {
+
     @Override
     protected Class<? extends BankDetailsService> getClassUnderTest() {
         return BankDetailsServiceImpl.class;
@@ -23,13 +24,15 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
     public void testGetProjectBankDetailsStatusSummaryAllowedIfProjectFinanceRole() {
 
         stream(UserRoleType.values()).forEach(role -> {
-            UserResource user = newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build();
+            UserResource user = newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName())))
+                    .build();
             setLoggedInUser(user);
 
             if (role == PROJECT_FINANCE) {
                 classUnderTest.getProjectBankDetailsStatusSummary(123L);
             } else {
-                assertAccessDenied(() -> classUnderTest.getProjectBankDetailsStatusSummary(123L), () -> {});
+                assertAccessDenied(() -> classUnderTest.getProjectBankDetailsStatusSummary(123L), () -> {
+                });
             }
         });
 
@@ -42,6 +45,7 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
 
     @Test
     public void countPendingBankDetailsApprovals() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countPendingBankDetailsApprovals(), PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countPendingBankDetailsApprovals(),
+                PROJECT_FINANCE);
     }
 }

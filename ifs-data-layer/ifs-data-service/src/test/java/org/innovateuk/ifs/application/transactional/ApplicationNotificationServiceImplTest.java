@@ -10,10 +10,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -46,8 +46,6 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -149,9 +147,9 @@ public class ApplicationNotificationServiceImplTest {
         processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
-                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
-                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
-                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new UserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
         );
 
         List<EmailContent> emailContents = newEmailContentResource()
@@ -281,9 +279,9 @@ public class ApplicationNotificationServiceImplTest {
         processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
-                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
-                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
-                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new UserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
         );
 
         List<EmailContent> emailContents = newEmailContentResource()
@@ -415,9 +413,9 @@ public class ApplicationNotificationServiceImplTest {
         processRoles.get(2).setApplicationId(applicationThreeId);
 
         List<NotificationTarget> notificationTargets = asList(
-                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
-                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
-                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new UserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
         );
 
         List<EmailContent> emailContents = newEmailContentResource()
@@ -518,7 +516,7 @@ public class ApplicationNotificationServiceImplTest {
     public void informIneligible() throws Exception {
         long applicationId = 1L;
         String subject = "subject";
-        String content = "content";
+        String message = "message";
         String email = "email@address.com";
         String firstName = "first";
         String lastName = "last";
@@ -526,7 +524,7 @@ public class ApplicationNotificationServiceImplTest {
 
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
                 .withSubject(subject)
-                .withContent(content)
+                .withMessage(message)
                 .build();
 
         User[] users = newUser()
@@ -547,12 +545,12 @@ public class ApplicationNotificationServiceImplTest {
 
         Map<String, Object> expectedNotificationArguments = asMap(
                 "subject", subject,
-                "bodyPlain", content,
-                "bodyHtml", content
+                "bodyPlain", message,
+                "bodyHtml", message
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to = new ExternalUserNotificationTarget(fullName, email);
+        NotificationTarget to = new UserNotificationTarget(fullName, email);
         Notification notification = new Notification(
                 from,
                 singletonList(to),
@@ -580,11 +578,11 @@ public class ApplicationNotificationServiceImplTest {
     public void informIneligible_workflowError() throws Exception {
         long applicationId = 1L;
         String subject = "subject";
-        String content = "content";
+        String message = "message";
 
         ApplicationIneligibleSendResource resource = newApplicationIneligibleSendResource()
                 .withSubject(subject)
-                .withContent(content)
+                .withMessage(message)
                 .build();
 
         Application application = newApplication()

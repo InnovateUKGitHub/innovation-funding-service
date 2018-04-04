@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.competition.mapper;
 
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
-import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.form.mapper.QuestionMapper;
+import org.innovateuk.ifs.form.mapper.SectionMapper;
 import org.innovateuk.ifs.user.mapper.OrganisationTypeMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
@@ -45,6 +46,18 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);
 
+
+    /*
+     * TODO: ZDD contract cleanup up for IFS-2776 as part of IFS-3186.
+     * The web-service might send an old CompetitionResource without the min/max project duration fields.
+     * These values would be set onto the domain object as null values. To prevent erroneously saving these values
+     * we'll assume an empty min/max field should have contained the default values.
+     */
+    @ZeroDowntime(
+            reference = "IFS-2776",
+            description = "@Mapping with defaults for max / min project duration are necessary during migration phase, and can be removed" +
+                    " in contract deploy."
+    )
     @Mappings({
             @Mapping(target = "sections", ignore = true),
             @Mapping(target = "questions", ignore = true),
@@ -52,6 +65,8 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "applications", ignore = true),
             @Mapping(target = "assessmentPanelDate", ignore = true),
             @Mapping(target = "panelDate", ignore = true),
+            @Mapping(target = "maxProjectDuration", defaultValue = "36"),
+            @Mapping(target = "minProjectDuration", defaultValue = "1")
     })
     public abstract Competition mapToDomain(CompetitionResource domain);
 

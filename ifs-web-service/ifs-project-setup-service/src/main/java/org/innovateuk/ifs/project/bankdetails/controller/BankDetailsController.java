@@ -95,7 +95,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
                 () -> {
                     if (isNewAddressNotValid(form)) {
-                        addAddressNotProvidedValidationError(bindingResult, validationHandler);
                         return bankDetails(model, projectId, loggedInUser, form);
                     }
 
@@ -145,7 +144,6 @@ public class BankDetailsController extends AddressLookupBaseController {
         }
         form.getAddressForm().setSelectedPostcodeIndex(null);
         form.getAddressForm().setTriedToSearch(true);
-        form.setAddressType(OrganisationAddressType.valueOf(form.getAddressType().name()));
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());

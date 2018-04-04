@@ -48,7 +48,8 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         verify(invitePermissionRules, times(nInvites))
                 .leadApplicantCanInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
         verify(invitePermissionRules, times(nInvites))
-                .collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
+                .collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any
+                        (UserResource.class));
     }
 
     @Test
@@ -61,7 +62,8 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
                     verify(invitePermissionRules)
                             .leadApplicantCanInviteToTheApplication(eq(invite), any(UserResource.class));
                     verify(invitePermissionRules)
-                            .collaboratorCanInviteToApplicationForTheirOrganisation(eq(invite), any(UserResource.class));
+                            .collaboratorCanInviteToApplicationForTheirOrganisation(eq(invite), any(UserResource
+                                    .class));
                 });
     }
 
@@ -73,7 +75,8 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
                 () -> classUnderTest.createApplicationInvites(inviteOrganisation, Optional.of(applicationId)),
                 () -> {
                     verify(inviteOrganisationPermissionRules)
-                            .leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation), any(UserResource.class));
+                            .leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation),
+                                    any(UserResource.class));
                 });
     }
 
@@ -84,7 +87,8 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         when(classUnderTestMock.getInvitesByApplication(applicationId))
                 .thenReturn(serviceSuccess(newInviteOrganisationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
 
-        final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
+        final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication
+                (applicationId);
 
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
                 .consortiumCanViewAnyInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
@@ -98,9 +102,11 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(nInvites);
         classUnderTest.saveInvites(invites);
         verify(invitePermissionRules, times(nInvites))
-                .collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any(UserResource.class));
+                .collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any
+                        (UserResource.class));
         verify(invitePermissionRules, times(nInvites))
-                .leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource.class));
+                .leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource
+                        .class));
     }
 
     @Override

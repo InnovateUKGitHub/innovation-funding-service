@@ -2,19 +2,15 @@ package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.security.evaluator.DefaultPermissionMethodHandler;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 public class SecurityRuleUtil {
-
-    public static boolean isInternal(User user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE) || user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
-    }
 
     public static boolean isProjectFinanceUser(User user) {
         return user.hasRole(PROJECT_FINANCE);

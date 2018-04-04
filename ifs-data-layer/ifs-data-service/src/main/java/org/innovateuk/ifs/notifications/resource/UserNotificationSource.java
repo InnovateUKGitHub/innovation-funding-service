@@ -1,25 +1,26 @@
 package org.innovateuk.ifs.notifications.resource;
 
-import org.innovateuk.ifs.user.domain.User;
-
 /**
  * Represents a User as the source of a given Notification
  */
 public class UserNotificationSource implements NotificationSource {
 
-    private User user;
+    private final String name;
 
-    public UserNotificationSource(User user) {
-        this.user = user;
+    private final String emailAddress;
+
+    public UserNotificationSource(String name, String emailAddress) {
+        this.name = name;
+        this.emailAddress = emailAddress;
     }
 
     @Override
     public String getName() {
-        return user.getName();
+        return name;
     }
 
     @Override
     public String getEmailAddress() {
-        return user.getEmail();
+        return emailAddress;
     }
 }

@@ -25,7 +25,8 @@ import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuild
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentInviteService> {
@@ -41,7 +42,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
     @Before
     public void setUp() throws Exception {
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
-        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
+        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean
+                (CompetitionParticipantLookupStrategy.class);
     }
 
     @Test
@@ -53,7 +55,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
 
         when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash"))
                 .thenReturn(competitionParticipantResource);
-        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource))
+        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(competitionParticipantResource,
+                assessorUserResource))
                 .thenReturn(true);
 
         setLoggedInUser(assessorUserResource);
@@ -61,7 +64,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.acceptInvite("hash", getLoggedInUser());
 
         verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
-        verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource);
+        verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite
+                (competitionParticipantResource, assessorUserResource);
     }
 
     @Test
@@ -84,7 +88,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         CompetitionParticipantResource competitionParticipantResource = newCompetitionParticipantResource().build();
         when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash"))
                 .thenReturn(competitionParticipantResource);
-        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource))
+        when(competitionParticipantPermissionRules.userCanAcceptCompetitionInvite(competitionParticipantResource,
+                assessorUserResource))
                 .thenReturn(false);
 
         setLoggedInUser(assessorUserResource);
@@ -93,7 +98,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
                 () -> classUnderTest.acceptInvite("hash", getLoggedInUser()),
                 () -> {
                     verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash");
-                    verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite(competitionParticipantResource, assessorUserResource);
+                    verify(competitionParticipantPermissionRules, only()).userCanAcceptCompetitionInvite
+                            (competitionParticipantResource, assessorUserResource);
                 }
         );
     }
@@ -104,14 +110,16 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
                 .withRolesGlobal(singletonList(Role.ASSESSOR)
                 ).build();
 
-        when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash not exists")).thenReturn(null);
+        when(competitionParticipantLookupStrategy.getCompetitionParticipantResource("hash not exists")).thenReturn
+                (null);
 
         setLoggedInUser(assessorUserResource);
 
         assertAccessDenied(
                 () -> classUnderTest.acceptInvite("hash not exists", getLoggedInUser()),
                 () -> {
-                    verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash not exists");
+                    verify(competitionParticipantLookupStrategy, only()).getCompetitionParticipantResource("hash not " +
+                            "exists");
                     verifyZeroInteractions(competitionParticipantPermissionRules);
                 }
         );
@@ -121,17 +129,20 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
     public void getCreatedInvites() {
         Pageable pageable = new PageRequest(0, 20);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L, pageable), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L, pageable), COMP_ADMIN,
+                PROJECT_FINANCE);
     }
 
     @Test
     public void getResendInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)),
+                COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void resendInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L), newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L),
+                newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -141,7 +152,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         List<ParticipantStatus> status = singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable,
+                innovationArea, status, compliant), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -150,7 +162,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         List<ParticipantStatus> status = singletonList(PENDING);
         Optional<Boolean> compliant = of(TRUE);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorsNotAcceptedInviteIds(1L,
+                innovationArea, status, compliant), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -158,22 +171,26 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
         Pageable pageable = new PageRequest(0, 20);
         Optional<Long> innovationArea = of(1L);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable, innovationArea), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable,
+                innovationArea), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void getInviteStatistics() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInviteStatistics(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInviteStatistics(1L), COMP_ADMIN,
+                PROJECT_FINANCE);
     }
 
     @Test
     public void inviteUser_existing() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newExistingUserStagedInviteResource()
+                .build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void inviteUser_new() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newNewUserStagedInviteResource().build()), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newNewUserStagedInviteResource()
+                .build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -199,7 +216,8 @@ public class AssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void deleteInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN,
+                PROJECT_FINANCE);
     }
 
     @Test

@@ -4,7 +4,7 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -60,7 +60,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
                                                   Long userId,
                                                   HttpServletRequest request,
                                                   HttpServletResponse response,
-                                                  Boolean hasErrorsInBindingResult,
                                                   Optional<Boolean> markAsCompleteRequest) {
         final ApplicationResource application = applicationService.getById(applicationId);
         final List<QuestionResource> questionList = singletonList(questionService.getById(questionId));
@@ -81,7 +80,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         }
 
         if ((markAsCompleteRequest.isPresent() && markAsCompleteRequest.get())
-                || (isMarkQuestionRequest(params) && hasNoErrors(errors, hasErrorsInBindingResult))) {
+                || (isMarkQuestionRequest(params) && !errors.hasErrors())) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors, request));
         }
 
@@ -100,11 +99,6 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
         return messages;
     }
-
-    private boolean hasNoErrors(ValidationMessages errorsSoFar, Boolean hasErrorsInBindingResult) {
-        return !errorsSoFar.hasErrors() && !hasErrorsInBindingResult;
-    }
-
 
     private List<ValidationMessages> markApplicationQuestions(Long applicationId, Long questionId, Long processRoleId, ValidationMessages errorsSoFar, HttpServletRequest request) {
 

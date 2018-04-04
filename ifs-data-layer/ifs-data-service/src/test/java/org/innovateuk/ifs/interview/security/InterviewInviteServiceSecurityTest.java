@@ -7,6 +7,7 @@ import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteServiceImpl;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
+import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
@@ -22,9 +23,11 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.interview.builder.InterviewParticipantResourceBuilder.newInterviewParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
-import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder
+        .newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewInviteService> {
@@ -44,11 +47,13 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
     @Before
     public void setUp() throws Exception {
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
-        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
+        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean
+                (CompetitionParticipantLookupStrategy.class);
         interviewInvitePermissionRules = getMockPermissionRulesBean(InterviewInvitePermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
         interviewParticipantPermissionRules = getMockPermissionRulesBean(InterviewParticipantPermissionRules.class);
-        interviewParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(InterviewParticipantLookupStrategy.class);
+        interviewParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean
+                (InterviewParticipantLookupStrategy.class);
     }
 
     @Test
@@ -100,12 +105,14 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Test
     public void getResendInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)),
+                COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void resendInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L), newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L),
+                newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -113,7 +120,8 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
         Pageable pageable = new PageRequest(0, 20);
         List<ParticipantStatus> statuses = asList(ParticipantStatus.PENDING, ParticipantStatus.REJECTED);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, statuses), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, statuses),
+                COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -129,15 +137,92 @@ public class InterviewInviteServiceSecurityTest extends BaseServiceSecurityTest<
         assertAccessDenied(
                 () -> classUnderTest.getAllInvitesByUser(1L),
                 () -> {
-                    verify(interviewInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
+                    verify(interviewInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA
+                            (UserResource.class));
                     verifyNoMoreInteractions(interviewInvitePermissionRules);
+                }
+        );
+    }
+
+
+    @Test
+    public void acceptInvite() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
+
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
+                .thenReturn(interviewParticipantResource);
+        when(interviewParticipantPermissionRules.userCanAcceptInterviewInvite(interviewParticipantResource,
+                assessorUserResource))
+                .thenReturn(true);
+
+        setLoggedInUser(assessorUserResource);
+
+        classUnderTest.acceptInvite("hash");
+
+        verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+        verify(interviewParticipantPermissionRules, only()).userCanAcceptInterviewInvite
+                (interviewParticipantResource, assessorUserResource);
+    }
+
+    @Test
+    public void acceptInvite_notLoggedIn() {
+        setLoggedInUser(null);
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+                    verifyZeroInteractions(interviewParticipantPermissionRules);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_notSameUser() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        InterviewParticipantResource interviewParticipantResource = newInterviewParticipantResource().build();
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash"))
+                .thenReturn(interviewParticipantResource);
+        when(interviewParticipantPermissionRules.userCanAcceptInterviewInvite(interviewParticipantResource,
+                assessorUserResource))
+                .thenReturn(false);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash");
+                    verify(interviewParticipantPermissionRules, only()).userCanAcceptInterviewInvite
+                            (interviewParticipantResource, assessorUserResource);
+                }
+        );
+    }
+
+    @Test
+    public void acceptInvite_hashNotExists() {
+        UserResource assessorUserResource = newUserResource().withRolesGlobal(asList(Role.ASSESSOR)).build();
+
+        when(interviewParticipantLookupStrategy.getInterviewParticipantResource("hash not exists")).thenReturn(null);
+
+        setLoggedInUser(assessorUserResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.acceptInvite("hash not exists"),
+                () -> {
+                    verify(interviewParticipantLookupStrategy, only()).getInterviewParticipantResource("hash not " +
+                            "exists");
+                    verifyZeroInteractions(interviewParticipantPermissionRules);
                 }
         );
     }
 
     @Test
     public void deleteInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN,
+                PROJECT_FINANCE);
     }
 
     @Test

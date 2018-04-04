@@ -11,10 +11,16 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.transactional.FinanceChecksGenerator;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.spendprofile.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,20 +29,21 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_CANNOT_BE_WITHDRAWN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
 import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
@@ -224,6 +231,73 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
         verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+    }
+
+    @Test
+    public void testWithdrawProject() {
+        Long projectId = 123L;
+        Long userId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(true);
+
+        ServiceResult<Void> result = service.withdrawProject(projectId);
+        assertTrue(result.isSuccess());
+
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
+    }
+
+    @Test
+    public void testWithdrawProjectFails() {
+        Long projectId = 321L;
+        Long userId = 987L;
+        Project project = newProject().withId(projectId).build();
+        UserResource loggedInUser = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .withId(userId)
+                .build();
+        User user = newUser()
+                .withId(userId)
+                .build();
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        setLoggedInUser(loggedInUser);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
+
+        ServiceResult<Void> result = service.withdrawProject(projectId);
+        assertTrue(result.isFailure());
+        assertEquals(PROJECT_CANNOT_BE_WITHDRAWN.getErrorKey(), result.getErrors().get(0).getErrorKey());
+        verify(projectRepositoryMock).findOne(projectId);
+        verify(userRepositoryMock).findOne(userId);
+        verify(projectWorkflowHandlerMock).projectWithdrawn(eq(project), any());
+    }
+
+    @Test
+    public void testWithdrawProjectCannotFindIdFails() {
+        Long projectId = 456L;
+        Project project = newProject().withId(projectId).build();
+        UserResource user = newUserResource()
+                .withRolesGlobal(singletonList(Role.IFS_ADMINISTRATOR))
+                .build();
+        setLoggedInUser(user);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+        when(projectWorkflowHandlerMock.projectWithdrawn(eq(project), any())).thenReturn(false);
+
+        ServiceResult<Void> result = service.withdrawProject(projectId);
+        assertTrue(result.isFailure());
+        verify(projectRepositoryMock).findOne(projectId);
+        verifyZeroInteractions(projectWorkflowHandlerMock);
     }
 
     @Test

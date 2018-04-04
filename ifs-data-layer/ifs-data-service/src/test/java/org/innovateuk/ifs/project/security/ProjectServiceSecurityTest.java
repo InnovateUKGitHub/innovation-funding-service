@@ -16,17 +16,17 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -75,7 +75,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         try {
             classUnderTest.createProjectFromApplication(123L);
             fail("Should not have been able to create project from application as applicant");
-        } catch(AccessDeniedException ade){
+        } catch (AccessDeniedException ade) {
             //expected behaviour
         }
     }
@@ -90,7 +90,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testCreateProjectFromFundingDecisionsAllowedIfNoGlobalRolesAtAll() {
         try {
             classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
-            Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
+            Assert.fail("Should not have been able to create project from application without the global Comp Admin " +
+                    "role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
@@ -99,7 +100,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     @Test
     public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
 
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type !=
+                COMP_ADMIN && type != PROJECT_FINANCE)
                 .collect(toList());
 
         nonCompAdminRoles.forEach(role -> {
@@ -108,7 +110,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
-                Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
+                Assert.fail("Should not have been able to create project from application without the global Comp " +
+                        "Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
@@ -142,6 +145,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             }
         });
     }
+
     @Test
     public void testAddPartnerAllowedIfSystemRegistrar() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_REGISTRATION_USER)).build());
@@ -150,7 +154,8 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
+    public void
+    test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
         nonSystemRegistrationRoles.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
@@ -164,7 +169,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
 
     @Test
-    public void testGetProjectManager(){
+    public void testGetProjectManager() {
         ProjectResource project = newProjectResource().build();
 
         when(classUnderTestMock.getProjectManager(123L))
@@ -187,6 +192,13 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                     verifyNoMoreInteractions(projectPermissionRules);
                 }
         );
+    }
+
+    @Test
+    public void testWithdrawProject() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.withdrawProject(123L),
+                UserRoleType.IFS_ADMINISTRATOR);
     }
 
     @Override

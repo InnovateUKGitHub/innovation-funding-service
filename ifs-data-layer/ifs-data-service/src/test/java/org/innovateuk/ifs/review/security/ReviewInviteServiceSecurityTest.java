@@ -22,10 +22,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
-import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder
+        .newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<ReviewInviteService> {
@@ -45,11 +47,13 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
     @Before
     public void setUp() throws Exception {
         competitionParticipantPermissionRules = getMockPermissionRulesBean(CompetitionParticipantPermissionRules.class);
-        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionParticipantLookupStrategy.class);
+        competitionParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean
+                (CompetitionParticipantLookupStrategy.class);
         reviewInvitePermissionRules = getMockPermissionRulesBean(ReviewInvitePermissionRules.class);
         userLookupStrategies = getMockPermissionEntityLookupStrategiesBean(UserLookupStrategies.class);
         reviewParticipantPermissionRules = getMockPermissionRulesBean(ReviewParticipantPermissionRules.class);
-        reviewParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ReviewParticipantLookupStrategy.class);
+        reviewParticipantLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ReviewParticipantLookupStrategy
+                .class);
     }
 
     @Test
@@ -101,12 +105,14 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
     @Test
     public void getResendInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)),
+                COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void resendInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L), newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L),
+                newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -114,7 +120,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         Pageable pageable = new PageRequest(0, 20);
         List<ParticipantStatus> statuses = asList(ParticipantStatus.PENDING, ParticipantStatus.REJECTED);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, statuses), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, statuses),
+                COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -122,7 +129,7 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         UserResource assessorUserResource = newUserResource()
                 .withRolesGlobal(singletonList(
                         Role.ASSESSOR
-                        ))
+                ))
                 .build();
 
         when(classUnderTestMock.getAllInvitesByUser(1L))
@@ -132,7 +139,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         assertAccessDenied(
                 () -> classUnderTest.getAllInvitesByUser(1L),
                 () -> {
-                    verify(reviewInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
+                    verify(reviewInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource
+                            .class));
                     verifyNoMoreInteractions(reviewInvitePermissionRules);
                 }
         );
@@ -149,7 +157,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
         when(reviewParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
                 .thenReturn(reviewParticipantResource);
-        when(reviewParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource, assessorUserResource))
+        when(reviewParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource,
+                assessorUserResource))
                 .thenReturn(true);
 
         setLoggedInUser(assessorUserResource);
@@ -157,7 +166,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         classUnderTest.acceptInvite("hash");
 
         verify(reviewParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-        verify(reviewParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(reviewParticipantResource, assessorUserResource);
+        verify(reviewParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite
+                (reviewParticipantResource, assessorUserResource);
     }
 
     @Test
@@ -182,7 +192,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         ReviewParticipantResource reviewParticipantResource = newReviewParticipantResource().build();
         when(reviewParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
                 .thenReturn(reviewParticipantResource);
-        when(reviewParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource, assessorUserResource))
+        when(reviewParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(reviewParticipantResource,
+                assessorUserResource))
                 .thenReturn(false);
 
         setLoggedInUser(assessorUserResource);
@@ -191,7 +202,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
                 () -> classUnderTest.acceptInvite("hash"),
                 () -> {
                     verify(reviewParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-                    verify(reviewParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(reviewParticipantResource, assessorUserResource);
+                    verify(reviewParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite
+                            (reviewParticipantResource, assessorUserResource);
                 }
         );
     }
@@ -211,7 +223,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
         assertAccessDenied(
                 () -> classUnderTest.acceptInvite("hash not exists"),
                 () -> {
-                    verify(reviewParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash not exists");
+                    verify(reviewParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash not " +
+                            "exists");
                     verifyZeroInteractions(reviewParticipantPermissionRules);
                 }
         );
@@ -219,7 +232,8 @@ public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<Rev
 
     @Test
     public void deleteInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN,
+                PROJECT_FINANCE);
     }
 
     @Test
