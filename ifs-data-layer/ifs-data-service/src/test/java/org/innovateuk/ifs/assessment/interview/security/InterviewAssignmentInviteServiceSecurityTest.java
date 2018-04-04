@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.interview.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
@@ -57,6 +58,13 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
         );
     }
 
+    @Test
+    public void getKeyStatistics() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.getKeyStatistics(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
     public static class TestInterviewAssignmentInviteService implements InterviewAssignmentInviteService {
 
         @Override
@@ -76,6 +84,11 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
             return null;
         }
     }

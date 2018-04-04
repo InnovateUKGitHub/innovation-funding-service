@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
@@ -98,6 +100,17 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "staged-applications", competitionId), InterviewAssignmentStagedApplicationPageResource.class, expected);
 
         InterviewAssignmentStagedApplicationPageResource actual = service.getStagedApplications(competitionId, page).getSuccess();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getKeyStatistics() {
+        long competitionId = 1L;
+        InterviewAssignmentKeyStatisticsResource expected = newInterviewAssignmentKeyStatisticsResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class, expected);
+
+        InterviewAssignmentKeyStatisticsResource actual = service.getKeyStatistics(competitionId).getSuccess();
         assertEquals(expected, actual);
     }
 }

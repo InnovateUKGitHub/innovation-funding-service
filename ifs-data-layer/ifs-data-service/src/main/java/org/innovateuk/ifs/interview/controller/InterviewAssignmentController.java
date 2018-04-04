@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
@@ -23,8 +24,13 @@ public class InterviewAssignmentController {
 
     private static final int DEFAULT_PAGE_SIZE = 20;
 
-    @Autowired
     private InterviewAssignmentInviteService interviewAssignmentInviteService;
+
+    @Autowired
+    public InterviewAssignmentController(InterviewAssignmentInviteService interviewAssignmentInviteService) {
+        this.interviewAssignmentInviteService = interviewAssignmentInviteService;
+    }
+
 
     @GetMapping("/available-applications/{competitionId}")
     public RestResult<AvailableApplicationPageResource> getAvailableApplications(
@@ -40,7 +46,7 @@ public class InterviewAssignmentController {
         return interviewAssignmentInviteService.getStagedApplications(competitionId, pageable).toGetResponse();
     }
 
-    @GetMapping(value = "/available-application-ids/{competitionId}")
+    @GetMapping("/available-application-ids/{competitionId}")
     public RestResult<List<Long>> getAvailableApplicationIds(@PathVariable long competitionId) {
         return interviewAssignmentInviteService.getAvailableApplicationIds(competitionId).toGetResponse();
     }
@@ -48,5 +54,10 @@ public class InterviewAssignmentController {
     @PostMapping("/assign-applications")
     public RestResult<Void> assignApplications(@Valid @RequestBody StagedApplicationListResource stagedApplicationListResource) {
         return interviewAssignmentInviteService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
+    }
+
+    @GetMapping("key-statistics/{competitionId}")
+    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(@PathVariable long competitionId) {
+        return interviewAssignmentInviteService.getKeyStatistics(competitionId).toGetResponse();
     }
 }

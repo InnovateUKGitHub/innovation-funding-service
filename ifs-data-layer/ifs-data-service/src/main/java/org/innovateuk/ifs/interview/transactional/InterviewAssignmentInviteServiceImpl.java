@@ -2,9 +2,11 @@ package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -23,9 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -93,6 +97,19 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
         stagedInvites.forEach(invite -> getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition));
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
+        int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.SUBMITTED.getBackingState());
+        int applicationsAssigned = interviewAssignmentRepository.
+                countByTargetCompetitionIdAndActivityStateStateIn(competitionId,
+                        simpleMapSet(
+                                asList(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE),
+                                InterviewAssignmentState::getBackingState)
+                );
+
+        return serviceSuccess(new InterviewAssignmentKeyStatisticsResource(applicationsInCompetition, applicationsAssigned));
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {

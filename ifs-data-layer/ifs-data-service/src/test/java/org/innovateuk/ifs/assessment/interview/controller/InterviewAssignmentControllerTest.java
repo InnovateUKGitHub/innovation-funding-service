@@ -33,7 +33,7 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
     @Override
     protected InterviewAssignmentController supplyControllerUnderTest() {
-        return new InterviewAssignmentController();
+        return new InterviewAssignmentController(null);
     }
 
     @Test

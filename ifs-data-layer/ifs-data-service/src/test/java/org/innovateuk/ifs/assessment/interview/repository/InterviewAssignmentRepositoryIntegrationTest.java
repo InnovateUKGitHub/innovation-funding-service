@@ -76,4 +76,9 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         assertEquals(expected.getId(), actual.getContent().get(0).getId());
     }
+
+    @Test
+    public void countByTargetCompetitionIdAndActivityStateState() {
+        // TODO
+    }
 }

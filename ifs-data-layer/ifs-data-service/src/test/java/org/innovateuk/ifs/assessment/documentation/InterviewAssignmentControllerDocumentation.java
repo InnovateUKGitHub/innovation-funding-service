@@ -41,7 +41,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Override
     public InterviewAssignmentController supplyControllerUnderTest() {
-        return new InterviewAssignmentController();
+        return new InterviewAssignmentController(null);
     }
 
     @Test
