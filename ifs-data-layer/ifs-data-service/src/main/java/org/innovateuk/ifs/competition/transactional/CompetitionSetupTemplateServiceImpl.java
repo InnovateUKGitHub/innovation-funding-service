@@ -135,12 +135,12 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     private ServiceResult<Void> deleteQuestion(Question question) {
-        if(sectionIsInValidForDeletion(question.getName())) {
-            return serviceFailure(new Error(GENERAL_FORBIDDEN));
-        }
-
         if (question.getCompetition() == null || competitionIsNotInSetupOrReadyToOpenState(question.getCompetition())) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
+        }
+
+        if(sectionIsInValidForDeletion(question.getName())) {
+            return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
         if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId()) <= 1) {
