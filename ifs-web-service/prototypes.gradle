@@ -5,4 +5,12 @@ task startPrototypes(type: Exec) {
     doFirst {
         commandLine 'docker-compose', '-p', 'innovation-funding-service', '-f', dockerComposeFile, 'up', '-d'
     }
+    doLast {
+        exec {
+            //wait for prototypes container to start.
+            //TODO need better method of waiting for startup.
+            workingDir '.'
+            commandLine 'sleep', '10'
+        }
+    }
 }
