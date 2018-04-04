@@ -82,12 +82,8 @@
             </tr>
         </tbody>
     </table>
-    <!--<th:block>-->
-        <!--<div th:if="${user.isAdmin()} == false">-->
         <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
             <th:block th:insert="fragments/modals :: modal-withdraw-project" />
-        <!--</div>-->
-    <!--</th:block>-->
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
