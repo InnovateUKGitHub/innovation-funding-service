@@ -18,6 +18,7 @@ import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplate
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionCreator;
 import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorImpl;
+import org.innovateuk.ifs.setup.resource.QuestionSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +38,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
-    private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
-    private static String PROJECT_DETAILS_SECTION_NAME = "Project details";
 
     @Autowired
     private SectionRepository sectionRepository;
@@ -113,7 +112,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME), notFoundError(Section.class))
+        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), QuestionSection.APPLICATION_QUESTIONS.getName()), notFoundError(Section.class))
                 .andOnSuccess(section -> initializeAndPersistQuestion(section, competition));
     }
 
@@ -175,6 +174,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     private boolean sectionIsInValidForDeletion(String sectionName) {
-        return !sectionName.equals(ASSESSED_QUESTIONS_SECTION_NAME) && !sectionName.equals(PROJECT_DETAILS_SECTION_NAME);
+        return !sectionName.equals(QuestionSection.APPLICATION_QUESTIONS.getName()) && !sectionName.equals(QuestionSection.PROJECT_DETAILS.getName());
     }
 }

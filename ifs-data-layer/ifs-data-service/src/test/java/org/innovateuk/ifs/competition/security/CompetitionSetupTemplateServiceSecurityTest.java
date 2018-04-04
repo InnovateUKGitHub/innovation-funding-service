@@ -17,9 +17,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupTemplateService> {
     private CompetitionPermissionRules rules;
 
-    private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
-    private static String PROJECT_DETAILS_SECTION_NAME = "Project details";
-
     @Before
     public void lookupPermissionRules() {
 

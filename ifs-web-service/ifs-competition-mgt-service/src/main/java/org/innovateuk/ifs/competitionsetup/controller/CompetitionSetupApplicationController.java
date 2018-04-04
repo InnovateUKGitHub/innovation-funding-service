@@ -58,8 +58,6 @@ public class CompetitionSetupApplicationController {
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
     private static final String questionView = "competition/setup/question";
     private static final String MODEL = "model";
-    private static final String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
-    private static final String PROJECT_DETAILS_SECTION_NAME = "Project details";
 
     @Autowired
     private CompetitionSetupService competitionSetupService;

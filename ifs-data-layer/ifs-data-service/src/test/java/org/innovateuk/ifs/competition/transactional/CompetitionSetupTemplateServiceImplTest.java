@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionCreator;
 import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorImpl;
+import org.innovateuk.ifs.setup.resource.QuestionSection;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -35,9 +36,6 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     public CompetitionSetupTemplateService supplyServiceUnderTest() {
         return new CompetitionSetupTemplateServiceImpl();
     }
-
-    private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
-    private static String PROJECT_DETAILS_SECTION_NAME = "Project details";
 
     @Mock
     private CompetitionTypeRepository competitionTypeRepositoryMock;
@@ -272,7 +270,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     public void testAddDefaultAssessedQuestionToCompetition_sectionCannotBeFoundShouldResultInServiceFailure() throws Exception {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
 
-        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competitionInWrongState.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(null);
+        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competitionInWrongState.getId(), QuestionSection.APPLICATION_QUESTIONS.getName())).thenReturn(null);
 
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competitionInWrongState);
 
@@ -285,7 +283,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         Section section = newSection().build();
         Question createdQuestion = newQuestion().build();
 
-        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME)).thenReturn(section);
+        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competition.getId(), QuestionSection.APPLICATION_QUESTIONS.getName())).thenReturn(section);
         when(defaultApplicationQuestionCreatorMock.buildQuestion(competition)).thenReturn(createdQuestion);
         when(questionTemplatePersistorServiceMock.persistByEntity(any())).thenReturn(Arrays.asList(createdQuestion));
 

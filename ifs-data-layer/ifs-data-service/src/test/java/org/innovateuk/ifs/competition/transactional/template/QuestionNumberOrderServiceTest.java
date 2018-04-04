@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.setup.resource.QuestionSection;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,8 +16,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<QuestionNumberOrderService> {
-
-    private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
 
     public QuestionNumberOrderService supplyServiceUnderTest() {
         return new QuestionNumberOrderService();
@@ -33,7 +32,7 @@ public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<Question
                 .withCompetition(competition)
                 .build(4);
 
-        when(questionRepositoryMock.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME))
+        when(questionRepositoryMock.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), QuestionSection.APPLICATION_QUESTIONS.getName()))
                 .thenReturn(existingQuestions);
 
         service.updateAssessedQuestionsNumbers(competition.getId());
