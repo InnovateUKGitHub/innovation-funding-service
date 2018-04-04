@@ -7,8 +7,8 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -37,7 +39,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(
-                () -> classUnderTest.saveUserInvite(invitedUser, UserRoleType.SUPPORT),
+                () -> classUnderTest.saveUserInvite(invitedUser, SUPPORT),
                 () -> {
                     verify(inviteUserPermissionRules).ifsAdminCanSaveNewUserInvite(any(UserResource.class), any(UserResource.class));
                     verifyNoMoreInteractions(inviteUserPermissionRules);
@@ -61,7 +63,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     public void testResendPendingInternalUserInvites() {
 
         assertRolesCanPerform(() -> classUnderTest.resendInternalUserInvite(123L),
-                UserRoleType.IFS_ADMINISTRATOR);
+                IFS_ADMINISTRATOR);
     }
 
     @Override
@@ -72,7 +74,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     public static class TestInviteUserService implements InviteUserService {
 
         @Override
-        public ServiceResult<Void> saveUserInvite(UserResource invitedUser, UserRoleType adminRoleType) {
+        public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role adminRoleType) {
             return null;
         }
 

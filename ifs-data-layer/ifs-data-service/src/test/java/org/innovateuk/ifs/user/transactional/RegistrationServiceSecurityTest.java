@@ -5,8 +5,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
@@ -125,10 +125,9 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     @Test
     public void testEditInternalUser() throws Exception {
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
-        UserRoleType userRoleType = UserRoleType.SUPPORT;
 
         assertAccessDenied(
-                () -> classUnderTest.editInternalUser(userToEdit, userRoleType),
+                () -> classUnderTest.editInternalUser(userToEdit, Role.SUPPORT),
                 () -> {
                     verify(rules).ifsAdminCanEditInternalUser(userToEdit, getLoggedInUser());
                     verifyNoMoreInteractions(rules);
@@ -173,7 +172,7 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         }
 
         @Override
-        public ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType) {
+        public ServiceResult<Void> editInternalUser(UserResource userToEdit, Role userRoleType) {
             return null;
         }
 

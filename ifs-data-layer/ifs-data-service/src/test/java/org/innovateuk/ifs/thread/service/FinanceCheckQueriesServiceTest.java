@@ -23,6 +23,8 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
