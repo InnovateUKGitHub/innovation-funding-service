@@ -13,7 +13,10 @@ import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.*;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
 import org.innovateuk.ifs.invite.mapper.InterviewParticipantMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
@@ -63,7 +66,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Transactional
 public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> implements InterviewInviteService {
 
-    private static final String WEB_CONTEXT = "/interview";
+    private static final String WEB_CONTEXT = "/assessment";
 
     @Autowired
     private InterviewInviteRepository interviewInviteRepository;
