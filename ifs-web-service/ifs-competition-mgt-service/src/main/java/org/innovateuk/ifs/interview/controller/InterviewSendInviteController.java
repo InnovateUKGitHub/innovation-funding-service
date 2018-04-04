@@ -188,7 +188,7 @@ public class InterviewSendInviteController extends CompetitionManagementCookieCo
     }
 
     private void populateResendInviteFormWithExistingValues(ResendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
-        form.setSubject(format("Invitation to assessment panel for '%s'", assessorInviteToSendResource.getCompetitionName()));
+        form.setSubject(format("Invitation to Innovate UK interview panel for '%s'", assessorInviteToSendResource.getCompetitionName()));
     }
 
     private String redirectToInterviewPanelFindTab(long competitionId) {
