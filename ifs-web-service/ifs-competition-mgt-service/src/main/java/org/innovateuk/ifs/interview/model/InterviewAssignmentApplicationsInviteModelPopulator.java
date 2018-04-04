@@ -43,15 +43,13 @@ public class InterviewAssignmentApplicationsInviteModelPopulator {
 
         InterviewAssignmentKeyStatisticsResource keyStatistics = interviewAssignmentRestService.getKeyStatistics(competitionId).getSuccess();
 
-        // TODO move key statistics to InterviewAssignmentApplicationsInviteViewModel constructor
         return new InterviewAssignmentApplicationsInviteViewModel(
                 competitionId,
                 competition.getName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
-                keyStatistics.getApplicationsInCompetition(),
-                keyStatistics.getApplicationsAssigned(),
+                keyStatistics,
                 new PaginationViewModel(pageResource, originQuery),
                 originQuery
         );

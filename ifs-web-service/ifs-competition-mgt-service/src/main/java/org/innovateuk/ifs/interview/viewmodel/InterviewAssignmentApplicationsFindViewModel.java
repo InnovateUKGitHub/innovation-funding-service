@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.interview.viewmodel;
 
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
@@ -17,13 +18,13 @@ public class InterviewAssignmentApplicationsFindViewModel extends InterviewAssig
             String innovationArea,
             String innovationSector,
             List<InterviewAssignmentApplicationRowViewModel> applications,
-            int applicationsInCompetition,
-            int applicationsInPanel,
+            InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
             PaginationViewModel pagination,
             String originQuery,
             boolean selectAllDisabled) {
         super(competitionId, competitionName, innovationArea, innovationSector, applications,
-                applicationsInCompetition, applicationsInPanel, pagination, originQuery);
+                keyStatisticsResource.getApplicationsInCompetition(), keyStatisticsResource.getApplicationsAssigned(),
+                pagination, originQuery);
         this.selectAllDisabled = selectAllDisabled;
     }
 

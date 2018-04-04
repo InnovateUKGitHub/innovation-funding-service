@@ -56,8 +56,7 @@ public class InterviewAssignmentApplicationsFindModelPopulator {
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 competition.getInnovationSectorName(),
                 applications,
-                keyStatistics.getApplicationsInCompetition(),
-                keyStatistics.getApplicationsAssigned(),
+                keyStatistics,
                 new PaginationViewModel(pageResource, originQuery), originQuery, pageResource.getTotalElements() > SELECTION_LIMIT);
     }
 
