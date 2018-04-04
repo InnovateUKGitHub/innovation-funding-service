@@ -103,9 +103,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         int applicationsInCompetition = applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, ApplicationState.SUBMITTED.getBackingState());
         int applicationsAssigned = interviewAssignmentRepository.
                 countByTargetCompetitionIdAndActivityStateStateIn(competitionId,
-                        simpleMapSet(
-                                asList(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE),
-                                InterviewAssignmentState::getBackingState)
+                        simpleMapSet(asList(InterviewAssignmentState.ASSIGNED_STATES), InterviewAssignmentState::getBackingState)
                 );
 
         return serviceSuccess(new InterviewAssignmentKeyStatisticsResource(applicationsInCompetition, applicationsAssigned));
