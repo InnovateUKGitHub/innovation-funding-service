@@ -213,8 +213,9 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status"),
         UNSUCCESSFUL_APPLICATIONS("/competition/{competitionId}/applications/unsuccessful"),
         MANAGE_APPLICATIONS_PANEL("/assessment/panel/competition/{competitionId}/manage-applications"),
-        INTERVIEW_PANEL_FIND("/assessment/interview-panel/competition/{competitionId}/applications/find"),
-        INTERVIEW_PANEL_INVITE("/assessment/interview-panel/competition/{competitionId}/applications/invite");
+        INTERVIEW_PANEL_FIND("/assessment/interview/competition/{competitionId}/applications/find"),
+        INTERVIEW_PANEL_INVITE("/assessment/interview/competition/{competitionId}/applications/invite"),
+        INTERVIEW_PANEL_SEND("/assessment/interview/competition/{competitionId}/applications/send");
 
         private String baseOriginUrl;
 

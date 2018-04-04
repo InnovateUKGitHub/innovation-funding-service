@@ -4,9 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +56,22 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
+    public void getEmailTemplate() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.getEmailTemplate(),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void sendInvites() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.sendInvites(1L, new AssessorInviteSendResource("Subject", "Content")),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
     public void getKeyStatistics() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getKeyStatistics(1L),
@@ -83,6 +97,16 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
 
         @Override
         public ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate() {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> sendInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
             return null;
         }
 

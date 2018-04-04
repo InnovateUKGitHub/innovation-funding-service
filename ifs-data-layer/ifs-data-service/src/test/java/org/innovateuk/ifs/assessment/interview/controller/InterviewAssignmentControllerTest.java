@@ -127,4 +127,33 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
         verify(interviewAssignmentServiceMock, only()).assignApplications(applications.getInvites());
     }
+
+    @Test
+    public void getEmailTemplate() throws Exception {
+        ApplicantInterviewInviteResource interviewInviteResource = new ApplicantInterviewInviteResource("content");
+
+        when(interviewAssignmentServiceMock.getEmailTemplate()).thenReturn(serviceSuccess(interviewInviteResource));
+
+        mockMvc.perform(get("/interview-panel/email-template")
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(interviewInviteResource)));
+
+        verify(interviewAssignmentServiceMock, only()).getEmailTemplate();
+    }
+
+    @Test
+    public void sendInvites() throws Exception {
+        long competitionId = 1L;
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+
+        when(interviewAssignmentServiceMock.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/send-invites/{competitionId}", competitionId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(sendResource)))
+                .andExpect(status().isOk());
+
+        verify(interviewAssignmentServiceMock, only()).sendInvites(competitionId, sendResource);
+    }
 }
