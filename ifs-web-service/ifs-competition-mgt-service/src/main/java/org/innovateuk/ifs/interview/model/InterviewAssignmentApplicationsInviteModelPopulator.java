@@ -26,7 +26,6 @@ public class InterviewAssignmentApplicationsInviteModelPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-
     public InterviewAssignmentApplicationsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)

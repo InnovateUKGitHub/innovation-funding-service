@@ -107,6 +107,25 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     @Override
+    @Transactional
+    public ServiceResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, Pageable pageable) {
+
+        final Page<InterviewAssignment> pagedResult =
+                interviewAssignmentRepository
+                        .findByTargetCompetitionIdAndActivityStateStateNot(
+                                competitionId, InterviewAssignmentState.CREATED.getBackingState(), pageable);
+
+        return serviceSuccess(new InterviewAssignmentApplicationPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                simpleMap(pagedResult.getContent(), this::mapToPanelResource),
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+
+    }
+
+    @Override
     public ServiceResult<List<Long>> getAvailableApplicationIds(long competitionId) {
         return serviceSuccess(
                 simpleMap(
@@ -195,6 +214,21 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
                                 application.getId(),
                                 application.getName(),
                                 leadOrganisation.getName()
+                        )
+                ).getSuccess();
+    }
+
+    private InterviewAssignmentApplicationResource mapToPanelResource(InterviewAssignment panelInvite) {
+        final Application application = panelInvite.getTarget();
+
+        return getOrganisation(panelInvite.getParticipant().getOrganisationId())
+                .andOnSuccessReturn(leadOrganisation ->
+                        new InterviewAssignmentApplicationResource(
+                                panelInvite.getId(),
+                                application.getId(),
+                                application.getName(),
+                                leadOrganisation.getName(),
+                                panelInvite.getActivityState()
                         )
                 ).getSuccess();
     }

@@ -52,6 +52,15 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
+    public RestResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, int page) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "assigned-applications", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl).queryParam("page", page);
+
+        return getWithRestResult(builder.toUriString(), InterviewAssignmentApplicationPageResource.class);
+    }
+
+    @Override
     public RestResult<ApplicantInterviewInviteResource> getEmailTemplate() {
         String baseUrl = format("%s/%s", REST_URL, "email-template");
 

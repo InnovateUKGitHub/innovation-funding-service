@@ -20,4 +20,6 @@ public interface InterviewAssignmentRepository extends ProcessRepository<Intervi
 
     List<InterviewAssignment> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
 
+    Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateStateNot(long competitionId, State backingState, Pageable pagable);
+
 }

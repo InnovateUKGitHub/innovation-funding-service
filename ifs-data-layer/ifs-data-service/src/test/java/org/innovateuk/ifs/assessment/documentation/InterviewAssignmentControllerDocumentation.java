@@ -24,6 +24,9 @@ import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedAppli
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentInvitedPageResourceDocs.interviewAssignmentInvitedPageResourceBuilder;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentInvitedPageResourceDocs.interviewAssignmentInvitedPageResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentInvitedResourceDocs.interviewAssignmentInvitedResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -122,6 +125,37 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
         verify(interviewAssignmentInviteServiceMock, only()).getStagedApplications(competitionId, pageable);
     }
+
+    @Test
+    public void getAssignedApplications() throws Exception {
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        when(interviewAssignmentInviteServiceMock.getAssignedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentInvitedPageResourceBuilder.build()));
+
+        mockMvc.perform(get("/interview-panel/assigned-applications/{competitionId}", 1L)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "name,asc"))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition")
+                        ),
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
+                        ),
+                        responseFields(interviewAssignmentInvitedPageResourceFields)
+                                .andWithPrefix("content[].", interviewAssignmentInvitedResourceFields)
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).getAssignedApplications(competitionId, pageable);
+    }
+
 
     @Test
     public void getAvailableApplicationIds() throws Exception {
