@@ -82,8 +82,11 @@
             </tr>
         </tbody>
     </table>
+    <!--uncomment th:if when withdrawn viewmodel is created-->
+    <!--<th:block th:if="${model.ifsAdmin}">-->
         <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
             <th:block th:insert="fragments/modals :: modal-withdraw-project" />
+    <!--</th:block>-->
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
