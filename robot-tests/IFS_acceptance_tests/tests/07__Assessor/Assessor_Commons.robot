@@ -60,3 +60,9 @@ the competition admin should not see invited assessors on find tab
 the user moves the closed competition to panel
     the user clicks the button/link     jQuery=button:contains("Notify assessors")
     the user clicks the button/link     jQuery=button:contains("Close assessment")
+
+the compadmin can remove assessor or application from inivte list
+    [Arguments]   ${assessor_or_application}
+    the user clicks the button/link          jQuery=td:contains("${assessor_or_application}") ~ td:contains("Remove")
+    And the user clicks the button/link      link=Find
+    Then the user should see the element     jQuery=tr:contains("${assessor_or_application}")

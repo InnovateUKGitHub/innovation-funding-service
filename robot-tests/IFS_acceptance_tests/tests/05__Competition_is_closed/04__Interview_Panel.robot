@@ -14,6 +14,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3055 Assessor dashboard - Attend interview panel box
 ...
 ...               IFS-2780 Invite Assessor to Interview Panel: Pending and Declined Tab
+...
+...               IFS-3156 Assign applications to interview panel - Remove application(s) from invite tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -61,7 +63,7 @@ Assessors receives the invite to the interview panel
 
 CompAdmin can add the applications to the invite list
 #to assign applications to interview panel
-    [Documentation]  IFS-2727
+    [Documentation]  IFS-2727   IFS-3156
     [Setup]  the user clicks the button/link    link=Manage interview panel
     Given the user clicks the button/link       link=Competition
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Closed")
@@ -69,6 +71,7 @@ CompAdmin can add the applications to the invite list
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and adds them to the invite list
+    And the compadmin can remove assessor or application from inivte list    Crowd sourced cycling navigator
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -96,6 +99,7 @@ the competition admin selects the applications and adds them to the invite list
 #compadmin selecting the applications checkbox
     the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     the user clicks the button/link    jQuery=tr:contains("${computer_vision_application}") label
+    the user clicks the button/link    jQuery=tr:contains("Crowd sourced cycling navigator") label
     the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     the user should see the element    link=Review and send invites
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")

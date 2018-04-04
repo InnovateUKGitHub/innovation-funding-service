@@ -91,10 +91,8 @@ CompAdmin can add an assessors to invite list
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
     [Tags]   HappyPath
-    Given the user clicks the button/link    link=Invite
-    When the user clicks the button/link     jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Remove")
-    And the user clicks the button/link      link=Find
-    Then the user should see the element     jQuery=tr:contains("${assessor_madeleine}")
+    When the user clicks the button/link    link=Invite
+    Then the compadmin can remove assessor or application from inivte list   ${assessor_madeleine}
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
