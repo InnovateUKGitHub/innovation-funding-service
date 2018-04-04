@@ -16,7 +16,6 @@ import org.innovateuk.ifs.finance.transactional.FinanceRowCostsServiceImpl;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuild
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -218,10 +217,10 @@ public class FinanceRowCostsServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Test
     public void testAddProjectCostWithoutPersisting() {
-        final Long projectFinanceId = 1L;
-        final Long questionId = 2L;
+        final long projectFinanceId = 1L;
+        final long questionId = 2L;
 
-        EnumSet<UserRoleType> nonProjectFinanceRoles = complementOf(of(PROJECT_FINANCE));
+        EnumSet<Role> nonProjectFinanceRoles = complementOf(of(PROJECT_FINANCE));
         nonProjectFinanceRoles.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {

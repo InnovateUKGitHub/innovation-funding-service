@@ -6,6 +6,8 @@ import org.innovateuk.ifs.finance.totals.service.CompetitionFinanceTotalsSenderI
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 
 public class CompetitionFinanceTotalsSenderSecurityTest extends
         BaseServiceSecurityTest<CompetitionFinanceTotalsSender> {

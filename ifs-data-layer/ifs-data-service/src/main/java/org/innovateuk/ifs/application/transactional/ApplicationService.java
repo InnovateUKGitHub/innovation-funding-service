@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -56,7 +56,7 @@ public interface ApplicationService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                      final Long userId,
-                                                                                     final UserRoleType role);
+                                                                                     final Role role);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the applications")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

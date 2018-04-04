@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -41,7 +41,7 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
 
         List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").withPhoneNumber("01234123123")
                 .withEmail("d@d.com")
-                .withRoleName(PROJECT_MANAGER.getName()).build(1);
+                .withRole(PROJECT_MANAGER).build(1);
 
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().withName("Org1", "Org2", "Org3").build(3);
 

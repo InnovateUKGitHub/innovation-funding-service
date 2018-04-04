@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsServ
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsServiceImpl;
 import org.junit.Test;
 
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecurityTest<CompetitionKeyStatisticsService> {

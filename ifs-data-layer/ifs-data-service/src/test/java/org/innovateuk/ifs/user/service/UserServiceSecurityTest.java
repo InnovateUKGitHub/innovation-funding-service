@@ -15,7 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -126,10 +127,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindActiveByProcessRoles() {
-        when(classUnderTestMock.findActiveByProcessRoles(UserRoleType.internalUserRoleTypes(), new PageRequest(0, 5)))
+        when(classUnderTestMock.findActiveByProcessRoles(internalRoles(), new PageRequest(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(UserRoleType.internalUserRoleTypes(), new
+        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(internalRoles(), new
                 PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
@@ -138,10 +139,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindInactiveByProcessRoles() {
-        when(classUnderTestMock.findInactiveByProcessRoles(UserRoleType.internalUserRoleTypes(), new PageRequest(0, 5)))
+        when(classUnderTestMock.findInactiveByProcessRoles(internalRoles(), new PageRequest(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(UserRoleType.internalUserRoleTypes(), new
+        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(internalRoles(), new
                 PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);

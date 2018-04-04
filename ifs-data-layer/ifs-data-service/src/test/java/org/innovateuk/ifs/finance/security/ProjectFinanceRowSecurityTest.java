@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowServiceImpl;
 import org.innovateuk.ifs.project.security.ProjectFinancePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -25,7 +24,8 @@ import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -77,11 +77,10 @@ public class ProjectFinanceRowSecurityTest extends BaseServiceSecurityTest<Proje
      */
     @Test
     public void testAllInternalUsersCanUpdateFinanceCosts(){
-        asList(UserRoleType.values()).forEach(role -> {
-            Role roleResource = Role.getByName(role.getName());
-            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+        asList(Role.values()).forEach(role -> {
+            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(role)).build();
             setLoggedInUser(userWithRole);
-            if (PROJECT_FINANCE.equals(role) || UserRoleType.COMP_ADMIN.equals(role)) {
+            if (role == PROJECT_FINANCE || role == COMP_ADMIN) {
                 classUnderTest.updateCost(1L, new ProjectFinanceResource());
             } else {
                 try{

@@ -26,8 +26,8 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
         .newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantResourceBuilder.newReviewParticipantResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class ReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<ReviewInviteService> {

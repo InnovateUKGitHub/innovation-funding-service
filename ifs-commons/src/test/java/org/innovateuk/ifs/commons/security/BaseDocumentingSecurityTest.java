@@ -11,7 +11,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.ProxyUtils;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.aop.framework.Advised;
@@ -309,11 +308,11 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
         return asList(annotations).stream().anyMatch(annotation -> findAnnotation(method, annotation) != null);
     }
 
-    protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, UserRoleType... roles){
-        EnumSet<UserRoleType> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
-        EnumSet<UserRoleType> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
+    protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, Role... roles){
+        EnumSet<Role> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
+        EnumSet<Role> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
             try {
                 functionToCall.run();
                 fail("Should not have been able to run the function given the role: " + role);

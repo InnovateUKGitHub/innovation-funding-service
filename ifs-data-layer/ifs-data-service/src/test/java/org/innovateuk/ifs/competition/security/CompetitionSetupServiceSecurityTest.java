@@ -29,6 +29,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupService> {
 
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE));
     private CompetitionPermissionRules rules;
 
     @Before
@@ -46,13 +47,10 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testAllAccessDenied() {
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
 
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRolesGlobal(singletonList(role)).build());
             Long competitionId = 2L;
 
             assertAccessDenied(() -> classUnderTest.create(), () -> {

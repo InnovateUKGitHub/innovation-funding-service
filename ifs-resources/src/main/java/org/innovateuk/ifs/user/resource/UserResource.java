@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.user.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,15 +8,14 @@ import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Collections.disjoint;
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.internalUserRoleTypes;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.internalRoles;
 
 /**
  * User Data Transfer Object
@@ -162,21 +160,21 @@ public class UserResource {
         this.status = status;
     }
 
-    public boolean hasRole(UserRoleType role) {
-        return simpleMap(roles, Role::getName).contains(role.getName());
+    public boolean hasRole(Role role) {
+        return roles.contains(role);
     }
 
     @JsonIgnore
     public boolean isInternalUser() {
-        return CollectionUtils.containsAny(internalUserRoleTypes(), getUserRoleTypes());
+        return CollectionUtils.containsAny(internalRoles(), roles);
     }
 
-    public boolean hasRoles(UserRoleType... acceptedRoles) {
-        return roles.stream().map(role -> UserRoleType.fromName(role.getName())).collect(toList()).containsAll(Sets.newHashSet(acceptedRoles));
+    public boolean hasRoles(Role... acceptedRoles) {
+        return roles.containsAll(newHashSet(acceptedRoles));
     }
 
-    public boolean hasAnyRoles(UserRoleType... acceptedRoles) {
-        return !Collections.disjoint(roles.stream().map(role -> UserRoleType.fromName(role.getName())).collect(toList()), Sets.newHashSet(acceptedRoles));
+    public boolean hasAnyRoles(Role... acceptedRoles) {
+        return !disjoint(roles, newHashSet(acceptedRoles));
     }
 
     public Gender getGender() {
@@ -259,17 +257,13 @@ public class UserResource {
     @JsonIgnore
     public String getRolesString(){
         //TODO: Replace and simplify this once IFS-656 is implemented
-        if(roles.size() > 0 && roles.stream().anyMatch(role -> role.getName().equals(IFS_ADMINISTRATOR.getName()))){
+        if (hasRole(IFS_ADMINISTRATOR)) {
             return IFS_ADMINISTRATOR.getDisplayName();
         } else {    // Most are not yet hierarchical so in most cases this will also return single role at present.
             return roles.stream()
                     .map(Role::getDisplayName)
                     .collect(Collectors.joining(", "));
         }
-    }
-
-    private List<UserRoleType> getUserRoleTypes() {
-        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
     }
 
     @Override

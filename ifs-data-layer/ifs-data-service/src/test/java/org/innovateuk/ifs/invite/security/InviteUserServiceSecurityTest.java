@@ -8,6 +8,7 @@ import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.invite.transactional.InviteUserServiceImpl;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -38,7 +41,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
         UserResource invitedUser = UserResourceBuilder.newUserResource().build();
 
         assertAccessDenied(
-                () -> classUnderTest.saveUserInvite(invitedUser, UserRoleType.SUPPORT),
+                () -> classUnderTest.saveUserInvite(invitedUser, SUPPORT),
                 () -> {
                     verify(inviteUserPermissionRules)
                             .ifsAdminCanSaveNewUserInvite(any(UserResource.class), any(UserResource.class));
@@ -65,7 +68,7 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
     @Test
     public void testResendPendingInternalUserInvites() {
         assertRolesCanPerform(() -> classUnderTest.resendInternalUserInvite(123L),
-                UserRoleType.IFS_ADMINISTRATOR);
+                IFS_ADMINISTRATOR);
     }
 
     @Override

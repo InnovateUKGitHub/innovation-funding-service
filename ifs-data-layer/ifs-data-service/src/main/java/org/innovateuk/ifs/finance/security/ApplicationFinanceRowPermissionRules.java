@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 

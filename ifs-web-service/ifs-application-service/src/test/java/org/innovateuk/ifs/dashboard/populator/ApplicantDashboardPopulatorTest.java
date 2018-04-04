@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +19,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
@@ -73,7 +74,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
 
         when(processRoleService.getByUserId(loggedInUser.getId())).thenReturn(newProcessRoleResource()
                 .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
-                .withRoleName(UserRoleType.LEADAPPLICANT.getName(),UserRoleType.LEADAPPLICANT.getName(), UserRoleType.APPLICANT.getName(), UserRoleType.APPLICANT.getName())
+                .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT)
                 .build(4));
     }
 

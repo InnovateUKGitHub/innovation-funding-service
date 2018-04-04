@@ -11,6 +11,7 @@ import org.junit.Test;
 import static java.util.Arrays.stream;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<BankDetailsService> {
@@ -23,8 +24,8 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
     @Test
     public void testGetProjectBankDetailsStatusSummaryAllowedIfProjectFinanceRole() {
 
-        stream(UserRoleType.values()).forEach(role -> {
-            UserResource user = newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName())))
+        stream(Role.values()).forEach(role -> {
+            UserResource user = newUserResource().withRolesGlobal(singletonList(role))
                     .build();
             setLoggedInUser(user);
 

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,15 +18,14 @@ import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<ContentGroupService> {
 
-    private static final EnumSet<UserRoleType> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
+    private static final EnumSet<Role> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
     private ContentGroupPermissionRules rules;
     private ContentGroupLookupStrategy contentGroupLookupStrategies;
 
@@ -77,12 +75,12 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
         verify(rules).internalUsersCanViewAllContentGroupFiles(any(), any());
     }
 
-    private void runAsAllowedRoles(EnumSet<UserRoleType> allowedRoles, Runnable serviceCall) {
+    private void runAsAllowedRoles(EnumSet<Role> allowedRoles, Runnable serviceCall) {
         allowedRoles.forEach(roleType -> runAsRole(roleType, serviceCall));
         complementOf(allowedRoles).forEach(roleType -> assertAccessDeniedAsRole(roleType, serviceCall, () -> {}));
     }
 
-    private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
+    private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
                         .withRolesGlobal(singletonList(Role.getByName(roleType.getName()))
@@ -91,7 +89,7 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
         serviceCall.run();
     }
 
-    private void assertAccessDeniedAsRole(UserRoleType roleType, Runnable serviceCall, Runnable verifications) {
+    private void assertAccessDeniedAsRole(Role roleType, Runnable serviceCall, Runnable verifications) {
         runAsRole(roleType, () -> assertAccessDenied(serviceCall, verifications) );
     }
 }

@@ -17,7 +17,7 @@ public class AcceptApplicationInviteServiceSecurityTest extends BaseServiceSecur
     public void acceptInvite() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.acceptInvite("abcdef", 1L),
-                UserRoleType.SYSTEM_REGISTRATION_USER
+                Role.SYSTEM_REGISTRATION_USER
         );
     }
 }
