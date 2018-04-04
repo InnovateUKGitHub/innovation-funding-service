@@ -9,16 +9,15 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-2779 Invite Assessor to Interview Panel: Review and Send Invite
 ...
-...               IFS-2780 Invite Assessor to Interview Panel: Pending and Declined Tab
-...
 ...               IFS-3054 Assessor dashboard - Invitation to interview panel box
 ...
 ...               IFS-3055 Assessor dashboard - Attend interview panel box
 ...
 ...               IFS-2780 Invite Assessor to Interview Panel: Pending and Declined Tab
 ...
-...               IFS-2782 Assign Applications to Interview Panel: Send Invites
 ...               IFS-3143 Interview panels - Include URL in assessor invite
+...
+...               IFS-2782 Assign Applications to Interview Panel: Send Invites
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -128,8 +127,8 @@ the compAdmin navigates to the send invite email page
     the user should see the element    jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
 
 the assessor declines the interview invitation and longer sees the competition in the dashboard
-    the user selects the radio button   acceptInvitation  false
-    the user clicks the button/link     css=.button[type="submit"]   #Confirm
+    the user selects the radio button    acceptInvitation  false
+    the user clicks the button/link      css=.button[type="submit"]   #Confirm
     the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
-    the user navigates to the page      ${server}/assessment/assessor/dashboard
+    the user navigates to the page       ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
