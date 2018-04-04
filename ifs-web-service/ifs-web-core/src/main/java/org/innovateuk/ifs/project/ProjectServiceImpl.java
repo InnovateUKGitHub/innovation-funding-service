@@ -8,8 +8,8 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -129,7 +129,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId) {
         List<ProjectUserResource> projectUsers = getProjectUsersForProject(projectId);
-        return simpleFilter(projectUsers, pu -> PARTNER.getName().equals(pu.getRoleName()));
+        return simpleFilter(projectUsers, pu -> PARTNER.getId() == pu.getRole());
     }
 
     @Override
@@ -169,7 +169,7 @@ public class ProjectServiceImpl implements ProjectService {
     public Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
-                user.getId().equals(pu.getUser()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
+                user.getId().equals(pu.getUser()) && Role.PARTNER.getId() == pu.getRole());
         return projectUser.map(ProjectUserResource::getOrganisation).orElseThrow(() -> new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(projectId)));
     }
 
