@@ -17,7 +17,6 @@ import java.util.Map;
 
 import static java.io.File.separator;
 import static java.util.Collections.emptyMap;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertTrue;
@@ -217,8 +216,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
-        UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());
-        UserNotificationTarget notificationTarget = new UserNotificationTarget(newUser().withFirstName("User").withLastName("2").build());
+        UserNotificationSource notificationSource = new UserNotificationSource("User 1", "user1@example.com");
+        UserNotificationTarget notificationTarget = new UserNotificationTarget("User 2", "user2@example.com");
 
         ServiceResult<String> renderResult = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + templateName, templateArguments);
         assertTrue(renderResult.isSuccess());
@@ -234,8 +233,8 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, String expectedFileName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
-        UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());
-        UserNotificationTarget notificationTarget = new UserNotificationTarget(newUser().withFirstName("User").withLastName("2").build());
+        UserNotificationSource notificationSource = new UserNotificationSource("User 1", "user1@example.com");
+        UserNotificationTarget notificationTarget = new UserNotificationTarget("User 2", "user2@example.com");
 
         ServiceResult<String> renderResult = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + templateName, templateArguments);
         assertTrue(renderResult.isSuccess());

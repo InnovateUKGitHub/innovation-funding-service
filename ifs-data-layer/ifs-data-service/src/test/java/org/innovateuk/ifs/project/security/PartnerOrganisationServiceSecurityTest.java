@@ -15,6 +15,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 

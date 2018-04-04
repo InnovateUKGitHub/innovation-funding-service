@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -161,8 +161,7 @@ public class ApplicationControllerIntegrationTest extends BaseControllerIntegrat
     public void testGetApplicationsByCompetitionIdAndUserId() throws Exception {
         Long competitionId = 1L;
         Long userId = 1L ;
-        UserRoleType role = UserRoleType.LEADAPPLICANT;
-        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).getSuccess();
+        List<ApplicationResource> applications = controller.getApplicationsByCompetitionIdAndUserId(competitionId, userId, Role.LEADAPPLICANT).getSuccess();
 
         assertEquals(6, applications.size());
         Optional<ApplicationResource> application = applications.stream().filter(a -> a.getId().equals(APPLICATION_ID)).findAny();
