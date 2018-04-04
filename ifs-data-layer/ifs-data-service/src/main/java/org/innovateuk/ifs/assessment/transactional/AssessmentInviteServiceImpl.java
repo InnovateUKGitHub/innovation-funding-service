@@ -13,10 +13,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
@@ -64,6 +61,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
@@ -498,14 +496,18 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
         return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                 assessmentInviteRepository.getByIdIn(inviteIds),
-                invite -> sendInviteNotification(
-                        assessorInviteSendResource.getSubject(),
-                        inviteFormatter,
-                        customTextPlain,
-                        customTextHtml,
-                        invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
-                        Notifications.INVITE_ASSESSOR_GROUP
-                )
+                invite -> {
+                    updateParticipantStatus(invite);
+
+                    return sendInviteNotification(
+                            assessorInviteSendResource.getSubject(),
+                            inviteFormatter,
+                            customTextPlain,
+                            customTextHtml,
+                            invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
+                            Notifications.INVITE_ASSESSOR_GROUP
+                    );
+                }
         ));
     }
 
@@ -597,8 +599,8 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 .collect(Collectors.toList());
 
         List<String> userIsAlreadyInvitedList = existingEmails.stream()
-                    .filter(e -> e.equals(email))
-                    .collect(Collectors.toList());
+                .filter(e -> e.equals(email))
+                .collect(Collectors.toList());
 
         Optional<User> userExists = userRepository.findByEmail(email);
 
@@ -609,7 +611,7 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
         } else {
             return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
         }
-}
+    }
 
     private ServiceResult<Void> deleteInvite(AssessmentInvite invite) {
         if (invite.getStatus() != CREATED) {
@@ -714,5 +716,11 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
                 pagedResult.getNumber(),
                 pagedResult.getSize()
         ));
+    }
+
+    private void updateParticipantStatus(AssessmentInvite invite){
+        AssessmentParticipant assessmentParticipant = competitionParticipantRepository.getByInviteHash(invite.getHash());
+        assessmentParticipant.setStatus(PENDING);
+        competitionParticipantRepository.save(assessmentParticipant);
     }
 }
