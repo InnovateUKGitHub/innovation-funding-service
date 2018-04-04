@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
@@ -36,6 +37,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -44,6 +46,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.CREATED;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -194,7 +197,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
+                CREATED.getBackingState()
         );
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
@@ -217,7 +220,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
+                CREATED.getBackingState()
         );
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
@@ -242,7 +245,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
+                CREATED.getBackingState()
         );
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
@@ -263,15 +266,9 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
     @Test
     public void sendInvites() {
-
-        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
-                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                InterviewAssignmentState.CREATED.getBackingState()
-        );
-
         InterviewAssignment interviewPanel = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState)
+                .withActivityState(activityState(CREATED))
                 .withTarget(applications.get(0))
                 .withParticipant(processRoles.get(0))
                 .build();
@@ -283,10 +280,34 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         RestResult<Void> result = controller.sendInvites(competition.getId(), sendResource);
         assertTrue(result.isSuccess());
 
-        List<InterviewAssignment> created = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.CREATED.getBackingState());
+        List<InterviewAssignment> created = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), CREATED.getBackingState());
         List<InterviewAssignment> awaitingFeedback = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
 
         assertEquals(created.size(), 0);
         assertEquals(awaitingFeedback.size(), 1);
+    }
+
+    @Test
+    public void getKeyStatistics() {
+        InterviewAssignment interviewAssignment = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE))
+                .withTarget(applications.get(0))
+                .withParticipant(processRoles.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewAssignment);
+
+        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = controller.getKeyStatistics(competition.getId()).getSuccess();
+
+        assertEquals(2, keyStatisticsResource.getApplicationsInCompetition());
+        assertEquals(1, keyStatisticsResource.getApplicationsAssigned());
+    }
+
+    private ActivityState activityState(InterviewAssignmentState interviewAssignmentState) {
+        return activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                interviewAssignmentState.getBackingState()
+        );
     }
 }

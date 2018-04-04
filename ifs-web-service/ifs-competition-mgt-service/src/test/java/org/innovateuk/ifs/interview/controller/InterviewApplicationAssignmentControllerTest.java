@@ -81,8 +81,6 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
 
     private CompetitionResource competition;
 
-    private InterviewAssignmentKeyStatisticsResource interviewAssignmentKeyStatisticsResource;
-
     @Override
     protected InterviewApplicationAssignmentController supplyControllerUnderTest() {
         return new InterviewApplicationAssignmentController();
