@@ -122,6 +122,31 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
+    public void updatePartnerProjectLocation() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        String postCode = "TW14 9QG";
+
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        when(projectDetailsServiceMock.updatePartnerProjectLocation(composite, postCode)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/partner-project-location?postCode={postCode}", projectId, organisationId, postCode))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the Project"),
+                                parameterWithName("organisationId").description("Id of the Organisation")
+                        ),
+                        requestParameters(
+                                parameterWithName("postCode").description("The project location which is being set for the given Project and Organisation")
+                        ))
+                );
+
+        verify(projectDetailsServiceMock).updatePartnerProjectLocation(composite, postCode);
+    }
+
+    @Test
     public void updateFinanceContactButUserIsNotOnProjectForOrganisation() throws Exception {
         ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(123L, 456L);
 
