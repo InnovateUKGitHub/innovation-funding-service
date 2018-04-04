@@ -11,7 +11,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
