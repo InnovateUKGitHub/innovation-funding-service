@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -35,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTest<InterviewAssignmentInviteServiceImpl> {
+public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<InterviewAssignmentServiceImpl> {
 
     private static final long COMPETITION_ID = 1L;
     private static final Pageable PAGE_REQUEST = new PageRequest(0, 20);
@@ -54,8 +54,8 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
     private static final ActivityState CREATED_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
 
     @Override
-    protected InterviewAssignmentInviteServiceImpl supplyServiceUnderTest() {
-        return new InterviewAssignmentInviteServiceImpl();
+    protected InterviewAssignmentServiceImpl supplyServiceUnderTest() {
+        return new InterviewAssignmentServiceImpl();
     }
 
     @Test

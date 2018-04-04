@@ -46,7 +46,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void assignApplication() throws Exception {
-        when(interviewAssignmentInviteServiceMock.assignApplications(stagedInviteResources)).thenReturn(serviceSuccess());
+        when(interviewAssignmentServiceMock.assignApplications(stagedInviteResources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/assign-applications")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -58,14 +58,14 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                         ).andWithPrefix("invites[].", stagedApplicationResourceFields)
                 ));
 
-        verify(interviewAssignmentInviteServiceMock, only()).assignApplications(stagedInviteResources);
+        verify(interviewAssignmentServiceMock, only()).assignApplications(stagedInviteResources);
     }
 
     @Test
     public void getAvailableApplications() throws Exception {
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        when(interviewAssignmentInviteServiceMock.getAvailableApplications(competitionId, pageable)).thenReturn(serviceSuccess(availableApplicationPageResourceBuilder.build()));
+        when(interviewAssignmentServiceMock.getAvailableApplications(competitionId, pageable)).thenReturn(serviceSuccess(availableApplicationPageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel/available-applications/{competitionId}", 1L)
                 .param("size", "20")
@@ -88,14 +88,14 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                                 .andWithPrefix("content[].", availableApplicationResourceFields)
                 ));
 
-        verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplications(competitionId, pageable);
+        verify(interviewAssignmentServiceMock, only()).getAvailableApplications(competitionId, pageable);
     }
 
     @Test
     public void getStagedApplications() throws Exception {
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        when(interviewAssignmentInviteServiceMock.getStagedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentCreatedInvitePageResourceBuilder.build()));
+        when(interviewAssignmentServiceMock.getStagedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentCreatedInvitePageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel/staged-applications/{competitionId}", 1L)
                 .param("size", "20")
@@ -118,12 +118,12 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                                 .andWithPrefix("content[].", interviewAssignmentCreatedInviteResourceFields)
                 ));
 
-        verify(interviewAssignmentInviteServiceMock, only()).getStagedApplications(competitionId, pageable);
+        verify(interviewAssignmentServiceMock, only()).getStagedApplications(competitionId, pageable);
     }
 
     @Test
     public void getAvailableApplicationIds() throws Exception {
-        when(interviewAssignmentInviteServiceMock.getAvailableApplicationIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
+        when(interviewAssignmentServiceMock.getAvailableApplicationIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
         mockMvc.perform(get("/interview-panel/available-application-ids/{competitionId}", 1L))
                 .andExpect(status().isOk())
@@ -134,6 +134,6 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                         responseFields(fieldWithPath("[].").description("List of available application ids "))
                 ));
 
-        verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplicationIds(competitionId);
+        verify(interviewAssignmentServiceMock, only()).getAvailableApplicationIds(competitionId);
     }
 }

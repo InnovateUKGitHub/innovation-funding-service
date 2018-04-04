@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 @Transactional
-public class InterviewAssignmentInviteServiceImpl implements InterviewAssignmentInviteService {
+public class InterviewAssignmentServiceImpl implements InterviewAssignmentService {
 
     @Autowired
     private ApplicationRepository applicationRepository;

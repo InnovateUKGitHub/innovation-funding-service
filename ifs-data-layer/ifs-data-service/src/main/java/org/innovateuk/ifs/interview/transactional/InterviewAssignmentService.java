@@ -14,8 +14,7 @@ import java.util.List;
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.competition.InterviewInvite}s
  */
-// TODO rename to InterviewAssignmentService
-public interface InterviewAssignmentInviteService {
+public interface InterviewAssignmentService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",

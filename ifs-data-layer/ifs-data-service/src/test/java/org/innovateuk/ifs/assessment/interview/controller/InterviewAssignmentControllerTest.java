@@ -53,7 +53,7 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "id"));
 
-        when(interviewAssignmentInviteServiceMock.getAvailableApplications(COMPETITION_ID, pageable))
+        when(interviewAssignmentServiceMock.getAvailableApplications(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedAvailableApplications));
 
         mockMvc.perform(get("/interview-panel/available-applications/{competition-id}", COMPETITION_ID)
@@ -63,7 +63,7 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableApplications)));
 
-        verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplications(COMPETITION_ID, pageable);
+        verify(interviewAssignmentServiceMock, only()).getAvailableApplications(COMPETITION_ID, pageable);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "id"));
 
-        when(interviewAssignmentInviteServiceMock.getStagedApplications(COMPETITION_ID, pageable))
+        when(interviewAssignmentServiceMock.getStagedApplications(COMPETITION_ID, pageable))
                 .thenReturn(serviceSuccess(expectedStagedApplications));
 
         mockMvc.perform(get("/interview-panel/staged-applications/{competition-id}", COMPETITION_ID)
@@ -93,7 +93,7 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedStagedApplications)));
 
-        verify(interviewAssignmentInviteServiceMock, only()).getStagedApplications(COMPETITION_ID, pageable);
+        verify(interviewAssignmentServiceMock, only()).getStagedApplications(COMPETITION_ID, pageable);
 
     }
 
@@ -101,14 +101,14 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
     public void getAvailableApplicationIds() throws Exception {
         List<Long> expectedAvailableApplicationIds = asList(1L, 2L);
 
-        when(interviewAssignmentInviteServiceMock.getAvailableApplicationIds(COMPETITION_ID))
+        when(interviewAssignmentServiceMock.getAvailableApplicationIds(COMPETITION_ID))
                 .thenReturn(serviceSuccess(expectedAvailableApplicationIds));
 
         mockMvc.perform(get("/interview-panel/available-application-ids/{competitionId}", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAvailableApplicationIds)));
 
-        verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplicationIds(COMPETITION_ID);
+        verify(interviewAssignmentServiceMock, only()).getAvailableApplicationIds(COMPETITION_ID);
 
     }
 
@@ -118,13 +118,13 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
                 .withInvites(newStagedApplicationResource().build(2))
                 .build();
 
-        when(interviewAssignmentInviteServiceMock.assignApplications(applications.getInvites())).thenReturn(serviceSuccess());
+        when(interviewAssignmentServiceMock.assignApplications(applications.getInvites())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/interview-panel/assign-applications")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(applications)))
                 .andExpect(status().isOk());
 
-        verify(interviewAssignmentInviteServiceMock, only()).assignApplications(applications.getInvites());
+        verify(interviewAssignmentServiceMock, only()).assignApplications(applications.getInvites());
     }
 }

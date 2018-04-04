@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.interview.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
@@ -16,11 +16,11 @@ import java.util.List;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.resource.Role.*;
 
-public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentInviteService> {
+public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentService> {
 
     @Override
-    protected Class<? extends InterviewAssignmentInviteService> getClassUnderTest() {
-        return TestInterviewAssignmentInviteService.class;
+    protected Class<? extends InterviewAssignmentService> getClassUnderTest() {
+        return TestInterviewAssignmentService.class;
     }
 
     private static Pageable PAGE_REQUEST = new PageRequest(0,20);
@@ -64,7 +64,7 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
                 COMP_ADMIN, PROJECT_FINANCE
         );
     }
-    public static class TestInterviewAssignmentInviteService implements InterviewAssignmentInviteService {
+    public static class TestInterviewAssignmentService implements InterviewAssignmentService {
 
         @Override
         public ServiceResult<AvailableApplicationPageResource> getAvailableApplications(long competitionId, Pageable pageable) {
