@@ -83,9 +83,6 @@
 
                     <td th:if="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}"><span class="yes"></span>Responded to feedback</td>
                     <td th:unless="${app.status == T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE}">Awaiting response</td>
-                    <!--T(org.innovateuk.ifs.interview.resource.InterviewAssignmentState).SUBMITTED_FEEDBACK_RESPONSE-->
-                    <!--T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE-->
-                    <!--<td th:text="${app.status}">Status</td>-->
                     <td><a class="button button-secondary disabled">View invite</a></td>
 
                 </tr>

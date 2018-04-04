@@ -6,10 +6,10 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentInvitedResourceBuilder.newInterviewAssignmentApplicationResource;
 
-public class InterviewAssignmentInvitedPageResourceDocs extends PageResourceDocs {
-    public static final FieldDescriptor[] interviewAssignmentInvitedPageResourceFields = pageResourceFields;
+public class InterviewAssignmentAssignedPageResourceDocs extends PageResourceDocs {
+    public static final FieldDescriptor[] interviewAssignmentAssignedPageResourceFields = pageResourceFields;
 
-    public static final InterviewAssignmentApplicationPageResourceBuilder interviewAssignmentInvitedPageResourceBuilder =
+    public static final InterviewAssignmentApplicationPageResourceBuilder interviewAssignmentAssignedPageResourceBuilder =
             newInterviewAssignmentApplicationPageResource()
                     .withContent(newInterviewAssignmentApplicationResource().build(2))
                     .withSize(20)

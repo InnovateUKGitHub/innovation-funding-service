@@ -21,12 +21,11 @@ import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceD
 import static org.innovateuk.ifs.documentation.AvailableApplicationResourceDocs.availableApplicationResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationListResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentApplicationResourceDocs.interviewAssignmentAssignedResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.*;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentInvitedPageResourceDocs.interviewAssignmentInvitedPageResourceBuilder;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentInvitedPageResourceDocs.interviewAssignmentInvitedPageResourceFields;
-import static org.innovateuk.ifs.documentation.InterviewAssignmentInvitedResourceDocs.interviewAssignmentInvitedResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -130,7 +129,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
     public void getAssignedApplications() throws Exception {
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        when(interviewAssignmentInviteServiceMock.getAssignedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentInvitedPageResourceBuilder.build()));
+        when(interviewAssignmentInviteServiceMock.getAssignedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentAssignedPageResourceBuilder.build()));
 
         mockMvc.perform(get("/interview-panel/assigned-applications/{competitionId}", 1L)
                 .param("size", "20")
@@ -149,13 +148,12 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                                 parameterWithName("sort").optional()
                                         .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
                         ),
-                        responseFields(interviewAssignmentInvitedPageResourceFields)
-                                .andWithPrefix("content[].", interviewAssignmentInvitedResourceFields)
+                        responseFields(interviewAssignmentAssignedPageResourceFields)
+                                .andWithPrefix("content[].", interviewAssignmentAssignedResourceFields)
                 ));
 
         verify(interviewAssignmentInviteServiceMock, only()).getAssignedApplications(competitionId, pageable);
     }
-
 
     @Test
     public void getAvailableApplicationIds() throws Exception {
