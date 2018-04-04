@@ -10,8 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class ApplicationAssessmentSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationAssessmentSummaryService> {
 

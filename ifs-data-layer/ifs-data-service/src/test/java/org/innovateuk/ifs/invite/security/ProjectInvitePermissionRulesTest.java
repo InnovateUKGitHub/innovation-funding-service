@@ -20,7 +20,8 @@ import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUs
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -38,7 +39,6 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
     private ProjectUser projectUserForUserOnOgranisationTwo;
     private InviteProjectResource inviteProjectResourceForOrganisationOne;
     private InviteProjectResource inviteProjectResourceForOrganisationTwo;
-    private Role partnerRole;
 
     @Override
     protected ProjectInvitePermissionRules supplyPermissionRulesUnderTest() {
@@ -72,8 +72,6 @@ public class ProjectInvitePermissionRulesTest extends BasePermissionRulesTest<Pr
                 .withProject(project.getId())
                 .withOrganisation(organisationTwo.getId())
                 .build();
-
-        partnerRole = getRole(PARTNER);
 
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), userOnProjectForOrganisationOne.getId(), PROJECT_PARTNER)).thenReturn(asList(projectUserForUserOnOgranisationOne));
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), userOnProjectForOrganisationTwo.getId(), PROJECT_PARTNER)).thenReturn(asList(projectUserForUserOnOgranisationTwo));

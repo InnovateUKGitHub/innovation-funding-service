@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,17 +21,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
-import static java.util.stream.Collectors.toList;
-import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
+import static junit.framework.TestCase.fail;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -40,6 +39,9 @@ import static org.mockito.Mockito.*;
  * Testing how the secured methods in ProjectService interact with Spring Security
  */
 public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectService> {
+
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE));
+    private static final EnumSet<Role> NON_SYSTEM_REGISTRATION_ROLES = complementOf(of(SYSTEM_REGISTRATION_USER));
 
     private ProjectPermissionRules projectPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -100,14 +102,9 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
     @Test
     public void testCreateProjectFromFundingDecisionsDeniedIfNotCorrectGlobalRoles() {
-
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
-
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRolesGlobal(singletonList(role)).build());
             try {
                 classUnderTest.createProjectsFromFundingDecisions(new HashMap<>());
                 Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
@@ -133,8 +130,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
     @Test
     public void testAddPartnerDeniedIfNotSystemRegistrar() {
-        EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
-        nonSystemRegistrationRoles.forEach(role -> {
+        NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.addPartner(1L, 2L, 3L);
@@ -146,15 +142,14 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     }
     @Test
     public void testAddPartnerAllowedIfSystemRegistrar() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.SYSTEM_REGISTRATION_USER)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(SYSTEM_REGISTRATION_USER)).build());
         classUnderTest.addPartner(1L, 2L, 3L);
         // There should be no exception thrown
     }
 
     @Test
     public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
-        EnumSet<UserRoleType> nonSystemRegistrationRoles = complementOf(of(SYSTEM_REGISTRATION_USER));
-        nonSystemRegistrationRoles.forEach(role -> {
+        NON_SYSTEM_REGISTRATION_ROLES.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.addPartner(1L, 2L, 3L);
@@ -184,7 +179,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
     public void testWithdrawProject() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.withdrawProject(123L),
-                UserRoleType.IFS_ADMINISTRATOR);
+                Role.IFS_ADMINISTRATOR);
     }
 
     @Override

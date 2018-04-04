@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.testdata.builders.data;
 
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.List;
 
@@ -9,15 +9,15 @@ import java.util.List;
  */
 public class InternalUserData extends BaseUserData {
 
-    private List<UserRoleType> roles;
+    private List<Role> roles;
 
     private String emailAddress;
 
-    public List<UserRoleType> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<UserRoleType> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
