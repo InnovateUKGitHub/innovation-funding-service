@@ -53,6 +53,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
         assertAccessDenied(() -> classUnderTest.getPartnerOrganisation(123L, 234L),
                 () -> {
                     verify(partnerOrganisationPermissionRules).internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+                    verify(partnerOrganisationPermissionRules).partnersCanViewTheirOwnPartnerOrganisation(isA(PartnerOrganisationResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(partnerOrganisationPermissionRules);
                 });
     }
