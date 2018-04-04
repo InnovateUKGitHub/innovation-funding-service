@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.resource;
 
 import org.innovateuk.ifs.util.enums.Identifiable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -102,4 +103,6 @@ public enum Role implements Identifiable {
     public boolean isProjectManager() {
         return this == PROJECT_MANAGER;
     }
+
+    public static List<Role> applicantRoles() { return Arrays.asList(LEADAPPLICANT, COLLABORATOR, APPLICANT); }
 }

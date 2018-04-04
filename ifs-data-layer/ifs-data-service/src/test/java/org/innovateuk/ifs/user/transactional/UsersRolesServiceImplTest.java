@@ -12,6 +12,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -84,7 +85,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         ProcessRole processRole = newProcessRole().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().build();
 
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(1L, 1L)).thenReturn(processRole);
+        when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(1L, applicantRoles(), 1L)).thenReturn(processRole);
 
         when(processRoleMapperMock.mapToResource(same(processRole))).thenReturn(processRoleResource);
 
@@ -93,7 +94,7 @@ public class UsersRolesServiceImplTest extends BaseServiceUnitTest<UsersRolesSer
         assertTrue(result.isSuccess());
         assertEquals(processRoleResource, result.getSuccess());
 
-        verify(processRoleRepositoryMock, only()).findByUserIdAndApplicationId(1L, 1L);
+        verify(processRoleRepositoryMock, only()).findOneByUserIdAndRoleInAndApplicationId(1L, applicantRoles(), 1L);
     }
 
     @Test

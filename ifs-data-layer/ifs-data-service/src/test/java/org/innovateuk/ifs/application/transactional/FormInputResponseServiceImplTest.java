@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.form.transactional.FormInputServiceImpl;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -78,7 +78,7 @@ public class FormInputResponseServiceImplTest extends BaseServiceUnitTest<FormIn
         final String value = "<html>This is my html saving</html>";
         final FormInputResponseCommand formInputResponseCommand = new FormInputResponseCommand(formInputId, applicationId, userId, value);
 
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(userId, applicationId)).thenReturn(newProcessRole().build());
+        when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(userId, applicantRoles(), applicationId)).thenReturn(newProcessRole().build());
         when(userRepositoryMock.findOne(userId)).thenReturn(newUser().withId(userId).withFirstName("Test").withLastName("User").build());
         when(formInputRepositoryMock.findOne(formInputId)).thenReturn(newFormInput().withId(formInputId).withQuestion(newQuestion().withMultipleStatuses(Boolean.FALSE).build()).build());
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(newApplication().with(application -> application.setFormInputResponses(new ArrayList<FormInputResponse>()))

@@ -17,6 +17,7 @@ import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -68,7 +69,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
                 .thenReturn(true);
 
         ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
-        when(processRoleRepository.findByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(allowedAndConnectedUser.getId(), applicantRoles(), questionStatusResource.getApplication()))
                 .thenReturn(allowedProccesRole);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), Role.APPLICANT))
                 .thenReturn(true);
@@ -81,7 +82,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
                 .thenReturn(QuestionBuilder.newQuestion().withMultipleStatuses(false).build());
 
         ProcessRole connectedProcessRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
-        when(processRoleRepository.findByUserIdAndApplicationId(connectedUserAndNotAllowedUser.getId(), questionStatusResource.getApplication()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(connectedUserAndNotAllowedUser.getId(), applicantRoles(), questionStatusResource.getApplication()))
                 .thenReturn(connectedProcessRole);
 
         assertTrue(rules.userCanUpdateQuestionStatus(questionStatusResource, leadApplicant));

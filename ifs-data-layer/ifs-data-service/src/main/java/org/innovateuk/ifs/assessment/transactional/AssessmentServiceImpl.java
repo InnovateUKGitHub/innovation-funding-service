@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN;
@@ -284,7 +285,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private ProcessRole getExistingOrCreateNewProcessRole(User assessor, Application application, Role role) {
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(assessor.getId(), application.getId());
+        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(assessor.getId(), singletonList(Role.ASSESSOR), application.getId());
 
         if (processRole == null) {
             processRole = new ProcessRole();

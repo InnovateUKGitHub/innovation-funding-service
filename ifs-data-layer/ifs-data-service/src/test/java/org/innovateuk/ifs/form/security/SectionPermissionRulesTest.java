@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -54,7 +55,7 @@ public class SectionPermissionRulesTest extends BasePermissionRulesTest<SectionP
 
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT))
                 .thenReturn(true);
-        when(processRoleRepository.findByUserIdAndApplicationId(nonProjectTeamMember.getId(), application.getId()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), applicantRoles(), application.getId()))
                 .thenReturn(null);
 
         assertTrue(rules.onlyMemberOfProjectTeamCanMarkSectionAsComplete(application, leadApplicant));
