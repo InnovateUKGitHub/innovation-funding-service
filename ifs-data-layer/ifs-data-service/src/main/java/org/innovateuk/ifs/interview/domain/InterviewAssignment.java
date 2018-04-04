@@ -106,8 +106,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
-                .append(message, that.message)
-                .append(response, that.response)
                 .isEquals();
     }
 
@@ -117,8 +115,6 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
-                .append(message)
-                .append(response)
                 .toHashCode();
     }
 
