@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
+
 /**
  * Service that can renumber questions by their set priority.
  */
@@ -22,7 +24,7 @@ public class QuestionNumberOrderService {
     @NotSecured("Must be secured by other services.")
     public void updateAssessedQuestionsNumbers(Long competitionId) {
         List<Question> assessedQuestions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competitionId,
-                QuestionSection.APPLICATION_QUESTIONS.getName());
+                APPLICATION_QUESTIONS.getName());
 
         Integer questionNumber = 1;
 

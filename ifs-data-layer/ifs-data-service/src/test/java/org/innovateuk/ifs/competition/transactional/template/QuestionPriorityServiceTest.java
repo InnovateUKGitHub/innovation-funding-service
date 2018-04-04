@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.form.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.*;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +36,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
 
 
         when(questionRepositoryMock.findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(lastPrioritizedQuestion.getCompetition().getId(),
-                QuestionSection.APPLICATION_QUESTIONS.getName())).thenReturn(lastPrioritizedQuestion);
+                APPLICATION_QUESTIONS.getName())).thenReturn(lastPrioritizedQuestion);
 
         service.prioritiseAssessedQuestionAfterCreation(newlyCreatedQuestion);
 
@@ -64,7 +65,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
 
         when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
                 deletedQuestion.getCompetition().getId(),
-                QuestionSection.APPLICATION_QUESTIONS.getName(),
+                APPLICATION_QUESTIONS.getName(),
                 deletedQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 
@@ -97,7 +98,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
 
         when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
                 deletedQuestion.getCompetition().getId(),
-                QuestionSection.APPLICATION_QUESTIONS.getName(),
+                APPLICATION_QUESTIONS.getName(),
                 deletedQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 
@@ -130,7 +131,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPri
 
         when(questionRepositoryMock.findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(
                 lastQuestion.getCompetition().getId(),
-                QuestionSection.APPLICATION_QUESTIONS.getName(),
+                APPLICATION_QUESTIONS.getName(),
                 lastQuestion.getPriority()))
                 .thenReturn(existingQuestions);
 

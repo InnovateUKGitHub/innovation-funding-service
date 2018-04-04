@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.form.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.APPLICATION_QUESTIONS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -270,7 +271,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     public void testAddDefaultAssessedQuestionToCompetition_sectionCannotBeFoundShouldResultInServiceFailure() throws Exception {
         Competition competitionInWrongState = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
 
-        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competitionInWrongState.getId(), QuestionSection.APPLICATION_QUESTIONS.getName())).thenReturn(null);
+        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competitionInWrongState.getId(), APPLICATION_QUESTIONS.getName())).thenReturn(null);
 
         ServiceResult<Question> result = service.addDefaultAssessedQuestionToCompetition(competitionInWrongState);
 
@@ -283,7 +284,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         Section section = newSection().build();
         Question createdQuestion = newQuestion().build();
 
-        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competition.getId(), QuestionSection.APPLICATION_QUESTIONS.getName())).thenReturn(section);
+        when(sectionRepositoryMock.findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName())).thenReturn(section);
         when(defaultApplicationQuestionCreatorMock.buildQuestion(competition)).thenReturn(createdQuestion);
         when(questionTemplatePersistorServiceMock.persistByEntity(any())).thenReturn(Arrays.asList(createdQuestion));
 

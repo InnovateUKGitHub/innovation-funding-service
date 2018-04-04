@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -112,7 +113,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), QuestionSection.APPLICATION_QUESTIONS.getName()), notFoundError(Section.class))
+        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName()), notFoundError(Section.class))
                 .andOnSuccess(section -> initializeAndPersistQuestion(section, competition));
     }
 
@@ -174,6 +175,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     private boolean sectionIsInValidForDeletion(String sectionName) {
-        return !sectionName.equals(QuestionSection.APPLICATION_QUESTIONS.getName()) && !sectionName.equals(QuestionSection.PROJECT_DETAILS.getName());
+        return !sectionName.equals(APPLICATION_QUESTIONS.getName()) && !sectionName.equals(PROJECT_DETAILS.getName());
     }
 }
