@@ -570,7 +570,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition competition = repository.save(newCompetition().withId(7L).build());
         Application application = applicationRepository.save(newApplication().withId(11L).withCompetition(competition).build());
 
-        Competition retrieved = repository.findByApplicationsId(application.getId());
+        Competition retrieved = repository.findById(application.getCompetition().getId());
 
         assertEquals(competition, retrieved);
     }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -54,6 +56,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             leadApplicant = newUserResource().build();
             assessor = newUserResource().build();
             collaborator = newUserResource().build();
+            Competition competition = newCompetition()
+                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+            Application application = newApplication().withId(applicationId).withCompetition(competition).build();
 
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
@@ -67,10 +72,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
 
-            Competition competition = newCompetition()
-                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
-
-            when(competitionRepositoryMock.findByApplicationsId(applicationId)).thenReturn(competition);
+            when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(competition);
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
