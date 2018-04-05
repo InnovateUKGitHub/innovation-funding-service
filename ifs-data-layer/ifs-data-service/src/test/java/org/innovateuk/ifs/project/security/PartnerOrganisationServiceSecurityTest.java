@@ -33,7 +33,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void testGetProjectPartnerOrganisationsIsNotOpenToAll() {
-        when(classUnderTest.getProjectPartnerOrganisations(123L))
+        when(classUnderTestMock.getProjectPartnerOrganisations(123L))
                 .thenReturn(serviceSuccess(partnerOrganisations));
 
         assertPostFilter(classUnderTest.getProjectPartnerOrganisations(123L).getSuccess(), () -> {
