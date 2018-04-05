@@ -51,14 +51,16 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             // Set up users on an organisation and application
             final long applicationId = 1L;
             final long organisationId = 2L;
+
+            Competition competition = newCompetition()
+                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+            Application application = newApplication().with(id(applicationId)).withCompetition(competition).build();
+
             organisation = newOrganisationResource().with(id(organisationId)).build();
-            applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(applicationId).build();
+            applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(application.getId()).build();
             leadApplicant = newUserResource().build();
             assessor = newUserResource().build();
             collaborator = newUserResource().build();
-            Competition competition = newCompetition()
-                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
-            Application application = newApplication().withId(applicationId).withCompetition(competition).build();
 
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(leadApplicant.getId(), Role.LEADAPPLICANT, applicationId, organisationId)).thenReturn(newProcessRole().build());
@@ -72,6 +74,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
 
+            when(applicationRepositoryMock.findById(application.getId())).thenReturn(application);
             when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(competition);
         }
         {
@@ -79,7 +82,9 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             final long otherApplicationId = 3L;
             final long otherOrganisationId = 4L;
             otherOrganisation = newOrganisationResource().with(id(otherOrganisationId)).build();
-            otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
+            Competition otherCompetition = newCompetition().withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+            Application otherApplication = newApplication().with(id(otherApplicationId)).withCompetition(otherCompetition).build();
+            otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplication.getId()).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, Role.LEADAPPLICANT)).thenReturn(true);
