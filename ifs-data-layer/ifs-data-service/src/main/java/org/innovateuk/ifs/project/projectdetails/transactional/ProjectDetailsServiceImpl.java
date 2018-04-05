@@ -19,8 +19,8 @@ import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.ProjectInviteRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.project.domain.Project;
@@ -42,7 +42,6 @@ import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -375,7 +374,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
-        return new ExternalUserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
+        return new UserNotificationTarget(projectInvite.getName(), projectInvite.getEmail());
     }
 
     private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {

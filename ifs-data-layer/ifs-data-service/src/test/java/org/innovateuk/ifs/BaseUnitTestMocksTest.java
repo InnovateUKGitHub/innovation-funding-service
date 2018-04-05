@@ -70,6 +70,7 @@ import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
+import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.*;
@@ -140,7 +141,7 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.innovateuk.ifs.util.AuthenticationHelper;
-import org.innovateuk.ifs.validator.util.ValidationUtil;
+import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -224,6 +225,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InterviewInviteService interviewInviteServiceMock;
+
+    @Mock
+    protected InterviewAssignmentWorkflowHandler interviewAssignmentWorkflowHandler;
 
     @Mock
     protected InterviewAssignmentRepository interviewAssignmentRepositoryMock;

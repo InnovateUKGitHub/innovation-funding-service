@@ -2,6 +2,9 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -14,10 +17,10 @@ import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.review.domain.Review;
 import org.innovateuk.ifs.review.resource.ReviewState;
@@ -30,6 +33,7 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.mockito.Mock;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -58,6 +62,7 @@ import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilesto
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
@@ -92,6 +97,13 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
     private Role assessorRole;
+
+    @Mock
+    private AvailableAssessorMapper availableAssessorMapperMock;
+    @Mock
+    private AssessorInviteOverviewMapper assessorInviteOverviewMapperMock;
+    @Mock
+    private AssessorCreatedInviteMapper assessorCreatedInviteMapperMock;
 
     @Override
     protected ReviewInviteServiceImpl supplyServiceUnderTest() {
@@ -202,17 +214,15 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnAssessmentPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
-        when(profileRepositoryMock.findOne(assessors.get(0).getProfileId())).thenReturn(profile.get(0));
-        when(profileRepositoryMock.findOne(assessors.get(1).getProfileId())).thenReturn(profile.get(1));
-        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResources.get(0));
+        when(availableAssessorMapperMock.mapToResource(participants.get(0))).thenReturn(assessorItems.get(0));
+        when(availableAssessorMapperMock.mapToResource(participants.get(1))).thenReturn(assessorItems.get(1));
 
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable)
                 .getSuccess();
 
         verify(competitionParticipantRepositoryMock).findParticipantsNotOnAssessmentPanel(competitionId, pageable);
-        verify(profileRepositoryMock).findOne(assessors.get(0).getProfileId());
-        verify(profileRepositoryMock).findOne(assessors.get(1).getProfileId());
-        verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
+        verify(availableAssessorMapperMock).mapToResource(participants.get(0));
+        verify(availableAssessorMapperMock).mapToResource(participants.get(1));
 
         assertEquals(expected.getNumber(), actual.getNumber());
         assertEquals(expected.getSize(), actual.getSize());
@@ -377,11 +387,12 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         Page<ReviewInvite> page = new PageImpl<>(existingUserInvites, pageable, totalElements);
 
         when(reviewInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED, pageable)).thenReturn(page);
-        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
-        when(profileRepositoryMock.findOne(profile1.getId())).thenReturn(profile1);
-        when(profileRepositoryMock.findOne(profile2.getId())).thenReturn(profile2);
-        when(profileRepositoryMock.findOne(profile3.getId())).thenReturn(profile3);
-        when(profileRepositoryMock.findOne(profile4.getId())).thenReturn(profile4);
+        when(assessorCreatedInviteMapperMock.mapToResource(isA(ReviewInvite.class))).thenReturn(
+                expectedInvites.get(0),
+                expectedInvites.get(1),
+                expectedInvites.get(2),
+                expectedInvites.get(3)
+        );
 
         AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, pageable).getSuccess();
         assertEquals(totalElements, actual.getTotalElements());
@@ -390,9 +401,10 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         assertEquals(0, actual.getNumber());
         assertEquals(20, actual.getSize());
 
-        InOrder inOrder = inOrder(reviewInviteRepositoryMock, innovationAreaMapperMock);
+        InOrder inOrder = inOrder(reviewInviteRepositoryMock, assessorCreatedInviteMapperMock);
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
-        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
+        inOrder.verify(assessorCreatedInviteMapperMock, times(4))
+                .mapToResource(isA(ReviewInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -471,8 +483,8 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget(names.get(0), emails.get(0));
-        NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
+        NotificationTarget to1 = new UserNotificationTarget(names.get(0), emails.get(0));
+        NotificationTarget to2 = new UserNotificationTarget(names.get(1), emails.get(1));
 
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
@@ -529,7 +541,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 "competitionName", competition.getName()
                 );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessors_to_assessors_panel_text.txt";
 
@@ -584,7 +596,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 "competitionName", competition.getName()
         );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessors_to_assessors_panel_text.txt";
 
@@ -652,8 +664,8 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         );
 
         SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget(names.get(0), emails.get(0));
-        NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
+        NotificationTarget to1 = new UserNotificationTarget(names.get(0), emails.get(0));
+        NotificationTarget to2 = new UserNotificationTarget(names.get(1), emails.get(1));
 
         List<Notification> notifications = newNotification()
                 .withSource(from, from)
@@ -695,12 +707,27 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
 
         when(reviewParticipantRepositoryMock.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
                 .thenReturn(pageResult);
+
+        List<AssessorInviteOverviewResource> overviewResources = newAssessorInviteOverviewResource()
+                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
+                .build(5);
+
+        when(assessorInviteOverviewMapperMock.mapToResource(isA(ReviewParticipant.class)))
+                .thenReturn(
+                        overviewResources.get(0),
+                        overviewResources.get(1),
+                        overviewResources.get(2),
+                        overviewResources.get(3),
+                        overviewResources.get(4)
+                );
         when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
 
         ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, singletonList(PENDING));
 
-        verify(reviewParticipantRepositoryMock).getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
-        verify(participantStatusMapperMock, times(5)).mapToResource(PENDING);
+        verify(reviewParticipantRepositoryMock)
+                .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
+        verify(assessorInviteOverviewMapperMock, times(5))
+                .mapToResource(isA(ReviewParticipant.class));
 
         assertTrue(result.isSuccess());
 

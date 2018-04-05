@@ -27,8 +27,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
@@ -84,7 +84,7 @@ public class ProjectDetailsController {
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
         return  projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
+                .filter(uar -> uar.getRole() == PARTNER.getId())
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
                 .collect(Collectors.toList());
     }
@@ -96,7 +96,7 @@ public class ProjectDetailsController {
     }
 
     private Optional<ProjectUserResource> getProjectManager(List<ProjectUserResource> projectUsers) {
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
     private Map<OrganisationResource, ProjectUserResource> getFinanceContactForPartnerOrganisation(List<ProjectUserResource> projectUsers, List<OrganisationResource> partnerOrganisations) {

@@ -5,14 +5,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
+import org.innovateuk.ifs.invite.transactional.ApplicationInviteServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,18 +18,17 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.builder.InviteResultResourceBuilder.newInviteResultResource;
-import static org.innovateuk.ifs.invite.security.ApplicationInviteServiceSecurityTest.TestApplicationInviteService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in ApplicationInviteService interact with Spring Security
  */
 public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTest<ApplicationInviteService> {
+
+    private static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
 
     ApplicationInvitePermissionRules invitePermissionRules;
     InviteOrganisationPermissionRules inviteOrganisationPermissionRules;
@@ -48,8 +45,11 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         final String baseUrl = "test";
         final List<ApplicationInvite> invites = newApplicationInvite().build(nInvites);
         classUnderTest.inviteCollaborators(baseUrl, invites);
-        verify(invitePermissionRules, times(nInvites)).leadApplicantCanInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
-        verify(invitePermissionRules, times(nInvites)).collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites))
+                .leadApplicantCanInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites))
+                .collaboratorCanInviteToApplicationForTheirOrganisation(any(ApplicationInvite.class), any
+                        (UserResource.class));
     }
 
     @Test
@@ -59,8 +59,11 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(
                 () -> classUnderTest.inviteCollaboratorToApplication(baseUrl, invite),
                 () -> {
-                    verify(invitePermissionRules).leadApplicantCanInviteToTheApplication(eq(invite), any(UserResource.class));
-                    verify(invitePermissionRules).collaboratorCanInviteToApplicationForTheirOrganisation(eq(invite), any(UserResource.class));
+                    verify(invitePermissionRules)
+                            .leadApplicantCanInviteToTheApplication(eq(invite), any(UserResource.class));
+                    verify(invitePermissionRules)
+                            .collaboratorCanInviteToApplicationForTheirOrganisation(eq(invite), any(UserResource
+                                    .class));
                 });
     }
 
@@ -71,15 +74,25 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         assertAccessDenied(
                 () -> classUnderTest.createApplicationInvites(inviteOrganisation, Optional.of(applicationId)),
                 () -> {
-                    verify(inviteOrganisationPermissionRules).leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation), any(UserResource.class));
+                    verify(inviteOrganisationPermissionRules)
+                            .leadApplicantCanCreateApplicationInvitesIfApplicationEditable(eq(inviteOrganisation),
+                                    any(UserResource.class));
                 });
     }
 
     @Test
     public void testGetInvitesByApplication() {
         long applicationId = 1L;
-        final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
-        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanViewAnyInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
+
+        when(classUnderTestMock.getInvitesByApplication(applicationId))
+                .thenReturn(serviceSuccess(newInviteOrganisationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS)));
+
+        final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication
+                (applicationId);
+
+        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS))
+                .consortiumCanViewAnyInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
+
         assertTrue(results.getSuccess().isEmpty());
     }
 
@@ -88,72 +101,16 @@ public class ApplicationInviteServiceSecurityTest extends BaseServiceSecurityTes
         int nInvites = 2;
         final List<ApplicationInviteResource> invites = newApplicationInviteResource().build(nInvites);
         classUnderTest.saveInvites(invites);
-        verify(invitePermissionRules, times(nInvites)).collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any(UserResource.class));
-        verify(invitePermissionRules, times(nInvites)).leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource.class));
+        verify(invitePermissionRules, times(nInvites))
+                .collaboratorCanSaveInviteToApplicationForTheirOrganisation(any(ApplicationInviteResource.class), any
+                        (UserResource.class));
+        verify(invitePermissionRules, times(nInvites))
+                .leadApplicantCanSaveInviteToTheApplication(any(ApplicationInviteResource.class), any(UserResource
+                        .class));
     }
 
     @Override
     protected Class<? extends ApplicationInviteService> getClassUnderTest() {
-        return TestApplicationInviteService.class;
-    }
-
-    public static class TestApplicationInviteService implements ApplicationInviteService {
-
-        static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
-
-        @Override
-        public List<ServiceResult<Void>> inviteCollaborators(String baseUrl, List<ApplicationInvite> invites) {
-            return new ArrayList<>();
-        }
-
-        @Override
-        public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApplicationInvite> findOneByHash(String hash) {
-            return serviceSuccess(newApplicationInvite().build());
-        }
-
-        @Override
-        public ServiceResult<InviteResultsResource> createApplicationInvites(InviteOrganisationResource inviteOrganisationResource, Optional<Long> applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-            return serviceSuccess(newInviteOrganisationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
-        }
-
-        @Override
-        public ServiceResult<InviteResultsResource> saveInvites(List<ApplicationInviteResource> inviteResources) {
-            return serviceSuccess(newInviteResultResource().build());
-        }
-
-        @Override
-        public ServiceResult<ApplicationInviteResource> getInviteByHash(String hash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> checkUserExistingByInviteHash(@P("hash") String hash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> removeApplicationInvite(long applicationInviteId) {
-            return null;
-        }
+        return ApplicationInviteServiceImpl.class;
     }
 }

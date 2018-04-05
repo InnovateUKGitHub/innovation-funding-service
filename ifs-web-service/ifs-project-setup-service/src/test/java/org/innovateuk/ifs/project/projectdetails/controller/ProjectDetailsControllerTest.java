@@ -61,8 +61,8 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteStatus.PENDING;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -110,7 +110,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRoleName(PARTNER.getName()).
+                withRole(PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -172,7 +172,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRoleName(PARTNER.getName()).
+                withRole(PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -231,7 +231,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRoleName(PARTNER.getName()).
+                withRole(PARTNER).
                 build(1);
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -270,7 +270,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), projectManagerUserId).
                 withOrganisation(leadOrganisation.getId()).
-                withRoleName(PARTNER.getName()).
+                withRole(PARTNER).
                 build(2);
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -311,7 +311,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRoleName(PARTNER.getName()).
+                withRole(PARTNER).
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -357,7 +357,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                withRoleName(PARTNER.getName()).
+                withRole(PARTNER).
                 build(1);
 
         when(projectService.getById(project.getId())).thenReturn(project);
@@ -425,7 +425,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
                 withOrganisation(organisationId).
-                withRoleName(PARTNER).
+                withRole(PARTNER).
                 build(2);
 
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
@@ -598,7 +598,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
                 withOrganisation(organisationId).
-                withRoleName(PARTNER).
+                withRole(PARTNER).
                 build(2);
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
 
@@ -649,7 +649,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
                 withOrganisation(organisationId).
-                withRoleName(PARTNER).
+                withRole(PARTNER).
                 build(2);
 
         InviteProjectResource createdInvite = newInviteProjectResource().withId(null)
@@ -853,7 +853,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
                 withOrganisation(organisationId).
-                withRoleName(PARTNER).
+                withRole(PARTNER).
                 build(2);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
@@ -902,7 +902,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> availableUsers = newProjectUserResource().
                 withUser(loggedInUser.getId(), loggedInUserId).
                 withOrganisation(organisationId).
-                withRoleName(PARTNER).
+                withRole(PARTNER).
                 build(2);
 
         List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(2L)
@@ -1000,7 +1000,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         List<ProjectUserResource> projectManagerProjectUsers = newProjectUserResource().
                 withUser(loggedInUser.getId()).
                 withOrganisation(leadOrganisation.getId()).
-                        withRoleName(PROJECT_MANAGER.getName()).
+                withRole(PROJECT_MANAGER).
                         build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().

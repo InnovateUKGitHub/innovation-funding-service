@@ -4,12 +4,11 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Feedback overview'" />
     </head>
 
-    <body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+    <body class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
             <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
@@ -41,7 +40,11 @@
 
                     <div class="column-half">
                         <h3 class="heading-small">Project timescales</h3>
-                        <p class="no-margin">Project start date: <br /><th:block th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" /></p>
+                        <p class="no-margin">Project start date: <br />
+                            <th:block
+                                th:if="${currentApplication.startDate}"
+                                th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" />
+                        </p>
                         <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
@@ -137,5 +140,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

@@ -32,7 +32,7 @@ public class ApplicationIneligibleSendResourceBuilder extends BaseBuilder<Applic
         return withArraySetFieldByReflection("subject", subject);
     }
 
-    public ApplicationIneligibleSendResourceBuilder withContent(String... content) {
-        return withArraySetFieldByReflection("content", content);
+    public ApplicationIneligibleSendResourceBuilder withMessage(String... message) {
+        return withArraySetFieldByReflection("message", message);
     }
 }

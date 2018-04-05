@@ -16,8 +16,8 @@ import org.innovateuk.ifs.project.ProjectServiceImpl;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -129,7 +129,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         ProcessRoleResource processRoleResource = newProcessRoleResource()
                 .withApplication(applicationResource.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(UserRoleType.LEADAPPLICANT.getName())
+                .withRole(Role.LEADAPPLICANT)
                 .build();
 
         when(projectRestService.getProjectById(projectResource.getId())).thenReturn(restSuccess(projectResource));
@@ -245,7 +245,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         setLoggedInUser(userResource);
 
         when(projectService.getProjectUsersForProject(projectId)).
-                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRoleName(UserRoleType.PARTNER.getName()).build()));
+                thenReturn(Collections.singletonList(newProjectUserResource().withUser(userId).withOrganisation(anotherOrgId).withRole(Role.PARTNER).build()));
 
         boolean result = projectService.userIsPartnerInOrganisationForProject(projectId, expectedOrgId, userId);
 

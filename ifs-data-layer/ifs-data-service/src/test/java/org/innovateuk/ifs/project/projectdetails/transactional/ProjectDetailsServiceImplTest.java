@@ -9,8 +9,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.builder.SpendProfileBuilder;
@@ -607,7 +607,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("projectName", "Project 1");
         globalArgs.put("leadOrganisation", organisation.getName());
@@ -649,7 +649,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
         Map<String, Object> globalArgs = new HashMap<>();
         globalArgs.put("projectName", "Project 1");
         globalArgs.put("leadOrganisation", organisation.getName());
@@ -710,7 +710,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .withApplication(application)
                 .build();
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
@@ -804,7 +804,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         Project project = newProject().withId(projectId).withName("Project 1").withApplication(a).build();
 
-        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        NotificationTarget to = new UserNotificationTarget("A B", "a@b.com");
 
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);

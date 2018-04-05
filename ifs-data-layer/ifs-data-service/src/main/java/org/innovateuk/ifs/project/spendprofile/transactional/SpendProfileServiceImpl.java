@@ -10,8 +10,8 @@ import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -48,12 +48,12 @@ import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
-import org.innovateuk.ifs.validator.util.ValidationUtil;
+import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigDecimal;
@@ -75,6 +75,8 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
+import static org.innovateuk.ifs.project.resource.ApprovalType.APPROVED;
+import static org.innovateuk.ifs.project.resource.ApprovalType.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -238,7 +240,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ServiceResult<Void> sendFinanceContactEmail(Project project, Organisation organisation) {
         Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
         if (financeContact.isPresent() && financeContact.get().getUser() != null) {
-            NotificationTarget financeContactTarget = new ExternalUserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
+            NotificationTarget financeContactTarget = new UserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
             Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail();
             return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, SpendProfileNotifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         }
@@ -300,7 +302,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         Project project = projectRepository.findOne(projectId);
-        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) && Arrays.asList(ApprovalType.APPROVED, ApprovalType.REJECTED).stream().anyMatch(e -> e.equals(approvalType))) {
+        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) &&
+                (APPROVED.equals(approvalType) || REJECTED.equals(approvalType))) {
             updateApprovalOfSpendProfile(projectId, approvalType);
             return approveSpendProfile(approvalType, project);
         } else {
@@ -310,13 +313,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<Void> approveSpendProfile(ApprovalType approvalType, Project project) {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            if (approvalType.equals(ApprovalType.APPROVED)) {
+            if (approvalType.equals(APPROVED)) {
                 if (spendProfileWorkflowHandler.spendProfileApproved(project, user))
                     return grantOfferLetterService.generateGrantOfferLetterIfReady(project.getId());
                 else
                     return serviceFailure(SPEND_PROFILE_CANNOT_BE_APPROVED);
             }
-            if (approvalType.equals(ApprovalType.REJECTED)) {
+            if (approvalType.equals(REJECTED)) {
                 if (spendProfileWorkflowHandler.spendProfileRejected(project, user))
                     return serviceSuccess();
                 else
@@ -569,7 +572,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
-        if (ApprovalType.REJECTED.equals(approvalType)) {
+        if (REJECTED.equals(approvalType)) {
             rejectSpendProfileSubmission(projectId);
         }
 

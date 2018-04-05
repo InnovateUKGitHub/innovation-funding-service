@@ -127,6 +127,17 @@ include::{snippets}/project/create-project-from-application/response-fields.adoc
 ==== Curl Example
 include::{snippets}/project/create-project-from-application/curl-request.adoc[]
 
+=== Withdraw Project
+==== Request
+include::{snippets}/project/withdraw-project/http-request.adoc[]
+include::{snippets}/project/withdraw-project/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/withdraw-project/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/withdraw-project/curl-request.adoc[]
+
 === Save Monitoring Officer
 ==== Success
 ===== Request

@@ -132,8 +132,7 @@ Non IFS competitions do not appear in search results
 
 *** Keywords ***
 Custom suite setup
-    Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2019-02-24 00:00:00' WHERE type='OPEN_DATE' AND competition_id='${READY_TO_OPEN_COMPETITION}';
+    Change the open date of the Competition in the database to tomorrow  ${READY_TO_OPEN_COMPETITION}
     The user logs-in in new browser  &{Comp_admin1_credentials}
 
 the total calculation should be correct

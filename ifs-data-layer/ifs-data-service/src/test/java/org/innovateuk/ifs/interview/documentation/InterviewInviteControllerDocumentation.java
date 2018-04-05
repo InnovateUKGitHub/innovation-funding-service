@@ -320,10 +320,40 @@ public class InterviewInviteControllerDocumentation extends BaseControllerMockMV
     }
 
     @Test
+    public void acceptInvite() throws Exception {
+        String hash = "invitehash";
+
+        when(interviewInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel-invite/accept-invite/{hash}", hash))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel-invite/{method-name}",
+                        pathParameters(
+                                parameterWithName("hash").description("hash of the invite being accepted")
+                        )
+                ));
+    }
+
+    @Test
+    public void rejectInvite() throws Exception {
+        String hash = "invitehash";
+
+        when(interviewInviteServiceMock.rejectInvite(hash)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel-invite/reject-invite/{hash}", hash))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel-invite/{method-name}",
+                        pathParameters(
+                                parameterWithName("hash").description("hash of the invite being rejected")
+                        )
+                ));
+    }
+
+    @Test
     public void checkExistingUser() throws Exception {
         String hash = "invitehash";
 
-        when(interviewInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
+        when(interviewInviteServiceMock.checkUserExistsForInvite(hash)).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(get("/interview-panel-invite/check-existing-user/{hash}", hash))
                 .andExpect(status().isOk())
