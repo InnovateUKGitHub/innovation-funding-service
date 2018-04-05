@@ -3,12 +3,14 @@ package org.innovateuk.ifs.assessment.interview.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
 public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentInviteService> {
 
@@ -17,7 +19,7 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
         return InterviewAssignmentInviteServiceImpl.class;
     }
 
-    private static Pageable PAGE_REQUEST = new PageRequest(0,20);
+    private static Pageable PAGE_REQUEST = new PageRequest(0, 20);
 
     @Test
     public void getAvailableApplications() {
@@ -30,7 +32,7 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
     @Test
     public void getStagedApplications() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getStagedApplications(1L,PAGE_REQUEST),
+                () -> classUnderTest.getStagedApplications(1L, PAGE_REQUEST),
                 COMP_ADMIN, PROJECT_FINANCE
         );
     }
