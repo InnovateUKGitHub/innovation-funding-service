@@ -5,6 +5,7 @@ IFS.core.passwordToggle = (function () {
     init: function () {
       var button = jQuery('.password-toggle button')
       var passwordInput = button.prev()
+      var form = button.closest('form')
       var submitButton = form.find('[type=submit]')
       fieldName = passwordInput.prop('name')
       button.on('click', function (e) {
@@ -18,6 +19,7 @@ IFS.core.passwordToggle = (function () {
       })
     },
     showPassword: function (button, passwordInput, submitButton) {
+      form.sub
       passwordInput.prop('type', 'text')
       passwordInput.prop('name', Math.random().toString(36).replace(/[^a-z]+/g, ''))
       passwordInput.focus()
@@ -25,6 +27,7 @@ IFS.core.passwordToggle = (function () {
       button.attr('aria-checked', true)
       submitButton.on('click', function () {
         passwordInput.prop('name', fieldName)
+        passwordInput.prop('type', 'password')
       })
     },
     hidePassword: function (button, passwordInput) {
