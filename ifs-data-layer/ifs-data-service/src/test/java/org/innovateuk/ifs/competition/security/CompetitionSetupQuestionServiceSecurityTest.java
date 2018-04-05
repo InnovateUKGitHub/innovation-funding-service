@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,7 +30,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Override
     protected Class<? extends CompetitionSetupQuestionService> getClassUnderTest() {
-        return TestCompetitionService.class;
+        return CompetitionSetupQuestionServiceImpl.class;
     }
 
     @Test
@@ -157,30 +156,5 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
                 // expected behaviour
             }
         });
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestCompetitionService implements CompetitionSetupQuestionService {
-
-        @Override
-        public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> delete(Long questionId) {
-            return null;
-        }
-
-        public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
-            return null;
-        }
-
-        public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-            return null;
-        }
     }
 }
