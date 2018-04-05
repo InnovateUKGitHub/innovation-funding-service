@@ -72,7 +72,7 @@ CompAdmin can add the applications to the invite list
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and adds them to the invite list
 
-CompAdmin can send or cancel sending the invitation to the applicants
+Competition Admin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
     [Documentation]  IFS-2782  IFS-3155
     [Tags]
@@ -84,7 +84,7 @@ CompAdmin can send or cancel sending the invitation to the applicants
     When the user clicks the button/link       link=Review and send invites
     And the user clicks the button/link        css=.button[type="submit"]     #Send invite
     Then the user reads his email              aaron.robertson@load.example.com   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
-    And the compAdmin should see the assigned applications in the View status tab
+    And the Competition Admin should see the assigned applications in the View status tab
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -136,7 +136,7 @@ the assessor declines the interview invitation and longer sees the competition i
     the user navigates to the page       ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
-the compAdmin should see the assigned applications in the View status tab
+the Competition Admin should see the assigned applications in the View status tab
     the user clicks the button/link         jQuery=li:contains("View status")
     the user should see the element         jQuery=td:contains("${Neural_network_application}")
     the user should see the element         jQuery=td:contains("${computer_vision_application}")
