@@ -92,7 +92,7 @@ CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
     [Tags]   HappyPath
     When the user clicks the button/link    link=Invite
-    Then the compadmin can remove an assessor or application from the inivte list    ${assessor_madeleine}
+    Then the compadmin can remove an assessor or application from the invite list    ${assessor_madeleine}
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560

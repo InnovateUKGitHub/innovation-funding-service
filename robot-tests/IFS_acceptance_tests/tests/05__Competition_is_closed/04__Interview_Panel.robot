@@ -71,7 +71,7 @@ CompAdmin can add or remove the applications from the invite list
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and adds them to the invite list
-    And the compadmin can remove an assessor or application from the inivte list   ${crowd_source_application_name}
+    And the compadmin can remove an assessor or application from the invite list   ${crowd_source_application_name}
 
 CompAdmin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
