@@ -1,14 +1,19 @@
 package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.implementation.attribute.MethodAttributeAppender;
+import net.bytebuddy.implementation.bind.annotation.AllArguments;
+import net.bytebuddy.implementation.bind.annotation.Origin;
+import net.bytebuddy.implementation.bind.annotation.RuntimeType;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.ProxyUtils;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.aop.framework.Advised;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,14 +29,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
+import static net.bytebuddy.matcher.ElementMatchers.*;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
@@ -48,6 +54,22 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
 public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTest {
 
     protected T classUnderTest;
+
+    /**
+     * The underlying mock of the class that is currently
+     * being security tested. Expectations can be set
+     * on this like you would normally e.g.
+     * {@code when(classUnderTestMock.doSomething()).thenReturn();}
+     */
+    protected T classUnderTestMock;
+
+    /**
+     * As developers might still be using the old security
+     * testing pattern of defining a stub implementation,
+     * we should acquire the 'true' intended target class
+     * that we will be recording interactions with.
+     */
+    private Class<T> targetClass;
 
     /**
      * Service calls and their associated Permission Rules calls are recorded as they occur.  This enum allows us to
@@ -84,32 +106,78 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      */
     @Before
     public void setup() {
+        Class<?>[] interfaces = getClassUnderTest().getInterfaces();
+        targetClass = (Class<T>) (interfaces.length >= 1 ? interfaces[0] : getClassUnderTest());
 
-        applicationContext.registerBeanDefinition("beanUndergoingSecurityTesting", new RootBeanDefinition(getClassUnderTest()));
+        classUnderTestMock = createDelegatingProxy(targetClass, mock(targetClass));
 
-        T serviceBeanWithSpringSecurity = (T) applicationContext.getBean("beanUndergoingSecurityTesting");
+        Object securedSpringProxy = ProxyUtils.createProxy(
+                targetClass,
+                classUnderTestMock,
+                getAdvisedSecuredBean().getAdvisors()
+        );
 
-        classUnderTest = createRecordingProxy(serviceBeanWithSpringSecurity, getClassUnderTest(),
-                method -> hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class),
-                methodCalled -> recordServiceMethodCall(methodCalled)
+        classUnderTest = createRecordingProxy(
+                targetClass,
+                securedSpringProxy,
+                method -> {
+                    if (hasOneAnnotation(method, PreAuthorize.class, PostAuthorize.class, PreFilter.class, PostFilter.class)) {
+                        recordServiceMethodCall(method);
+                    }
+                }
         );
 
         super.setup();
     }
 
+    private Advised getAdvisedSecuredBean() {
+        if (applicationContext.getBeanNamesForType(targetClass).length >= 1) {
+            return (Advised) applicationContext.getBean(targetClass);
+        } else {
+            applicationContext.registerBeanDefinition(
+                    "beanUndergoingSecurityTesting",
+                    new RootBeanDefinition(targetClass)
+            );
+
+            return (Advised) applicationContext.getBean("beanUndergoingSecurityTesting");
+        }
+    }
+
+    private static <U> U createDelegatingProxy(Class<U> targetClass, Object targetInstance) {
+        try {
+            return new ByteBuddy()
+                    .subclass(targetClass)
+                    .method(isPublic().and(not(isDeclaredBy(Object.class))))
+                    .intercept(MethodDelegation.to(targetInstance))
+                    .attribute(MethodAttributeAppender.ForInstrumentedMethod.INCLUDING_RECEIVER)
+                    .make()
+                    .load(targetClass.getClassLoader())
+                    .getLoaded()
+                    .newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Could not delegate method calls to target class through target instance.", e);
+        }
+    }
+
     private void recordPermissionRuleMethodCall(Method methodCalled, Class<?> permissionRuleClass) {
-        recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, permissionRuleClass.getSimpleName() + "." + methodCalled.getName()));
+        recordedRuleInteractions.add(Pair.of(
+                RecordingSource.PERMISSION_RULE,
+                permissionRuleClass.getSimpleName() + "." + methodCalled.getName()
+        ));
     }
 
     private void recordServiceMethodCall(Method methodCalled) {
-
-        Class<?>[] interfaces = getClassUnderTest().getInterfaces();
-        Class<?> serviceInterface = interfaces.length > 0 ? interfaces[0] : getClassUnderTest();
-        recordedRuleInteractions.add(Pair.of(RecordingSource.SERVICE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
+        recordedRuleInteractions.add(Pair.of(
+                RecordingSource.SERVICE,
+                targetClass.getSimpleName() + "." + methodCalled.getName()
+        ));
 
         SecuredBySpring simpleSecuredAnnotation = AnnotationUtils.findAnnotation(methodCalled, SecuredBySpring.class);
         if (simpleSecuredAnnotation != null) {
-            recordedRuleInteractions.add(Pair.of(RecordingSource.PERMISSION_RULE, serviceInterface.getSimpleName() + "." + methodCalled.getName()));
+            recordedRuleInteractions.add(Pair.of(
+                    RecordingSource.PERMISSION_RULE,
+                    targetClass.getSimpleName() + "." + methodCalled.getName()
+            ));
         }
     }
 
@@ -120,8 +188,9 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      */
     @After
     public void unregisterBeanAndDocument() {
-
-        applicationContext.removeBeanDefinition("beanUndergoingSecurityTesting");
+        if (applicationContext.isBeanNameInUse("beanUndergoingSecurityTesting")) {
+            applicationContext.removeBeanDefinition("beanUndergoingSecurityTesting");
+        }
 
         documentServiceAndPermissionRuleInteractions();
     }
@@ -188,53 +257,62 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
      */
     @Override
     protected Object createPermissionRuleMock(Object mock, Class<?> mockClass) {
-        return createRecordingProxy(mock, mockClass,
-                method -> hasOneAnnotation(method, PermissionRule.class),
-                methodCalled -> recordPermissionRuleMethodCall(methodCalled, mockClass)
+        return createRecordingProxy(
+                mockClass,
+                mock,
+                method -> {
+                    if (hasOneAnnotation(method, PermissionRule.class)) {
+                        recordPermissionRuleMethodCall(method, mockClass);
+                    }
+                }
         );
     }
 
     /**
-     * Create a pass-through proxy that is able to record interactions with mock objects in a similar way that Mockito does
-     * (Mockito does not expose its recordings and so it is necessary to do this manually if you want a list of interactions available)
+     * Interceptor that catches any matching methods
+     * (according to criteria set by the ByteBuddy dynamic subclass)
+     * and delegates their invocation to a target instance.
      *
-     * @param instance
-     * @param clazz
-     * @param <T>
-     * @return
+     * It also accepts a method handler that allows some logic to be
+     * performed before the method is invoked on the target instance.
      */
-    public static <T> T createRecordingProxy(Object instance, Class<T> clazz, Predicate<Method> proxyMethodFilter, Consumer<Method> methodCallHandler) {
+    public static class DelegatingMethodInterceptor {
 
-        ProxyFactory factory = new ProxyFactory();
-        factory.setSuperclass(clazz);
-        factory.setFilter(proxyMethodFilter::test);
+        private Object target;
+        private Consumer<Method> handler;
 
-        MethodHandler handler = (self, thisMethod, proceed, args) -> {
-            Method originalMethod = instance.getClass().getMethod(thisMethod.getName(), thisMethod.getParameterTypes());
-            methodCallHandler.accept(originalMethod);
+        public DelegatingMethodInterceptor(Object target, Consumer<Method> handler) {
+            this.target = target;
+            this.handler = handler;
+        }
+
+        @RuntimeType
+        public Object intercept(@Origin Method method, @AllArguments Object... args) throws Throwable {
+            handler.accept(method);
+
             try {
-                return originalMethod.invoke(instance, args);
-            } catch (InvocationTargetException e) {
+                return method.invoke(target, args);
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 throw e.getCause();
             }
-        };
-
-        try {
-            return (T) factory.create(new Class<?>[0], new Object[0], handler);
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
         }
+    }
+
+    private static <U> U createRecordingProxy(Class<U> targetClass, Object targetInstance, Consumer<Method> methodHandler) {
+        DelegatingMethodInterceptor interceptor = new DelegatingMethodInterceptor(targetInstance, methodHandler);
+
+        return createDelegatingProxy(targetClass, interceptor);
     }
 
     private boolean hasOneAnnotation(Method method, Class<? extends Annotation>... annotations) {
         return asList(annotations).stream().anyMatch(annotation -> findAnnotation(method, annotation) != null);
     }
 
-    protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, UserRoleType... roles){
-        EnumSet<UserRoleType> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
-        EnumSet<UserRoleType> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
+    protected final void testOnlyAUserWithOneOfTheGlobalRolesCan(Runnable functionToCall, Role... roles){
+        EnumSet<Role> rolesThatShouldSucceed = EnumSet.copyOf(asList(roles));
+        EnumSet<Role> rolesThatShouldFail = complementOf(rolesThatShouldSucceed);
         rolesThatShouldFail.forEach(role -> {
-            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+            BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
             try {
                 functionToCall.run();
                 fail("Should not have been able to run the function given the role: " + role);

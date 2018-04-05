@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INV
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.externalApplicantRoles;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
@@ -382,10 +382,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         List<User> activeUsers = newUser().withStatus(UserStatus.ACTIVE).withRoles(internalRoles).build(6);
         Page<User> expectedPage = new PageImpl<>(activeUsers, pageable, 6L);
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, UserRoleType.internalUserRoleTypes().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, Role.internalRoles().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(UserRoleType.internalUserRoleTypes(), pageable);
+        ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(Role.internalRoles(), pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
@@ -423,11 +423,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .withLastName("Pimenta")
                 .build();
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, UserRoleType.internalUserRoleTypes().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, Role.internalRoles(), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(user1)).thenReturn(userResource1);
         when(userMapperMock.mapToResource(user2)).thenReturn(userResource2);
 
-        ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(UserRoleType.internalUserRoleTypes(), pageable);
+        ServiceResult<UserPageResource> result = service.findActiveByProcessRoles(Role.internalRoles(), pageable);
 
         assertTrue(result.isSuccess());
         UserPageResource resultObject = result.getSuccess();
@@ -442,10 +442,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         List<User> inactiveUsers = newUser().withStatus(UserStatus.INACTIVE).withRoles(internalRoles).build(4);
         Page<User> expectedPage = new PageImpl<>(inactiveUsers, pageable, 4L);
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, UserRoleType.internalUserRoleTypes().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, Role.internalRoles(), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(any(User.class))).thenReturn(newUserResource().withFirstName("First").build());
 
-        ServiceResult<UserPageResource> result = service.findInactiveByProcessRoles(UserRoleType.internalUserRoleTypes(), pageable);
+        ServiceResult<UserPageResource> result = service.findInactiveByProcessRoles(Role.internalRoles(), pageable);
 
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccess().getSize());
@@ -483,11 +483,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
                 .withLastName("Pimenta")
                 .build();
 
-        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, UserRoleType.internalUserRoleTypes().stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable)).thenReturn(expectedPage);
+        when(userRepositoryMock.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, Role.internalRoles(), pageable)).thenReturn(expectedPage);
         when(userMapperMock.mapToResource(user1)).thenReturn(userResource1);
         when(userMapperMock.mapToResource(user2)).thenReturn(userResource2);
 
-        ServiceResult<UserPageResource> result = service.findInactiveByProcessRoles(UserRoleType.internalUserRoleTypes(), pageable);
+        ServiceResult<UserPageResource> result = service.findInactiveByProcessRoles(Role.internalRoles(), pageable);
 
         assertTrue(result.isSuccess());
 

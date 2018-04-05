@@ -8,6 +8,7 @@ import au.com.dius.pact.model.RequestResponsePact;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+@Ignore
 public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationTest {
 
     @Autowired

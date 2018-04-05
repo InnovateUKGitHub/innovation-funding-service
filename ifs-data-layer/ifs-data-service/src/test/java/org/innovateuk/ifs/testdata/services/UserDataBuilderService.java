@@ -3,7 +3,6 @@ package org.innovateuk.ifs.testdata.services;
 import org.innovateuk.ifs.testdata.builders.*;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -61,7 +60,7 @@ public class UserDataBuilderService extends BaseDataBuilderService {
 
             setDefaultSystemRegistrar();
 
-            List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
+            List<Role> roles = simpleMap(line.roles, Role::getByName);
 
             InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
 

@@ -28,7 +28,6 @@ import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -1005,8 +1004,8 @@ public class AssessmentInviteServiceImplTest extends BaseServiceUnitTest<Assessm
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        existingUsers.get(0).hasRole(UserRoleType.ASSESSOR);
-        existingUsers.get(1).hasRole(UserRoleType.ASSESSOR);
+        assertTrue(existingUsers.get(0).hasRole(Role.ASSESSOR));
+        assertTrue(existingUsers.get(1).hasRole(Role.ASSESSOR));
 
         InOrder inOrder = inOrder(competitionRepositoryMock,
                                   assessmentInviteRepositoryMock, userRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
