@@ -4,6 +4,8 @@ Documentation   IFS-1012 As a comp exec I am able to set Research and Public sec
 ...             IFS-182 As a comp exec I am able to configure Assessed questions in Competition setup
 ...
 ...             IFS-2879: As a Research applicant I MUST accept the grant terms and conditions
+...
+...             IFS-2832 As a Portfolio manager I am able to remove the Project details questions
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
@@ -24,8 +26,9 @@ ${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research or Public sector can lead
-    [Documentation]  IFS-1012 IFS-182
+    [Documentation]  IFS-1012 IFS-182 IFS-2832
     [Tags]  CompAdmin  HappyPath
+    # In this test case we also check that we can remove the Project details questions in Comp Setup.
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${ACADEMIC_TYPE_ID}  ${compResearch}  Research
     And The competition admin creates a competition for   ${PUBLIC_SECTOR_TYPE_ID}  ${compPublic}  Public
@@ -91,7 +94,7 @@ The competition admin creates a competition for
     the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
-    the user marks the Application as done  yes  Generic
+    The user removes the Project details questions and marks the Application section as done
     the user fills in the CS Assessors
     the user clicks the button/link  link=Public content
     the user fills in the Public content and publishes  ${extraKeyword}
@@ -100,6 +103,22 @@ The competition admin creates a competition for
     the user clicks the button/link  jQuery=a:contains("Done")
     the user navigates to the page   ${CA_UpcomingComp}
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
+
+The user removes the Project details questions and marks the Application section as done
+    the user clicks the button/link  link=Application
+    the user marks each question as complete  Application details
+    the user removes some of the Project details questions
+    the user marks the Assessed questions as complete  yes  Generic
+
+the user removes some of the Project details questions
+    [Documentation]  IFS-2832
+    the user clicks the button/link      jQuery=li:contains("Project summary") button:contains("Remove")
+    the user should not see the element  jQuery=li:contains("Project summary")
+    the user marks each question as complete  Public description
+    the user marks each question as complete  Scope
+    the user clicks the button/link      link=Public description
+    the user clicks the button/link      css=button[name="deleteQuestion"]
+    the user should not see the element  jQuery=li:contains("Public description")
 
 user is not able to submit his application as he exceeds research participation
     the user navigates to the page   ${dashboard_url}

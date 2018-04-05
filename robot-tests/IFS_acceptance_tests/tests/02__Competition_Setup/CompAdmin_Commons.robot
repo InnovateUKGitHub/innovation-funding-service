@@ -91,6 +91,10 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
     the user marks the Application details section as complete    ${comp_type}
+    the user marks the Assessed questions as complete  ${growthTable}  ${comp_type}
+
+the user marks the Assessed questions as complete
+    [Arguments]  ${growthTable}  ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
