@@ -12,7 +12,12 @@ public class InterviewAssignmentApplicationResource {
     private final String leadOrganisationName;
     private final InterviewAssignmentState status;
 
-    public InterviewAssignmentApplicationResource(long id, long applicationId, String applicationName, String leadOrganisationName, InterviewAssignmentState status) {
+    public InterviewAssignmentApplicationResource(long id,
+                                                  long applicationId,
+                                                  String applicationName,
+                                                  String leadOrganisationName,
+                                                  InterviewAssignmentState status
+    ) {
         this.id = id;
         this.applicationId = applicationId;
         this.applicationName = applicationName;

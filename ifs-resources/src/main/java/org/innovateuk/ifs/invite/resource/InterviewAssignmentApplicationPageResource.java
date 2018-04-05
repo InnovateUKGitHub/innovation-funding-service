@@ -13,10 +13,10 @@ public class InterviewAssignmentApplicationPageResource extends PageResource<Int
     }
 
     public InterviewAssignmentApplicationPageResource(long totalElements,
-                                                            int totalPages,
-                                                            List<InterviewAssignmentApplicationResource> content,
-                                                            int number,
-                                                            int size) {
+                                                      int totalPages,
+                                                      List<InterviewAssignmentApplicationResource> content,
+                                                      int number,
+                                                      int size) {
         super(totalElements, totalPages, content, number, size);
     }
 }
