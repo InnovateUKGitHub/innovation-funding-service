@@ -388,6 +388,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAssignedApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getKeyStatistics(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 

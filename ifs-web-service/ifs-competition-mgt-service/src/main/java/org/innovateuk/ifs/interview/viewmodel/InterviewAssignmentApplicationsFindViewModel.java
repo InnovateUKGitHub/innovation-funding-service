@@ -22,8 +22,7 @@ public class InterviewAssignmentApplicationsFindViewModel extends InterviewAssig
             PaginationViewModel pagination,
             String originQuery,
             boolean selectAllDisabled) {
-        super(competitionId, competitionName, innovationArea, innovationSector, applications,
-                keyStatisticsResource.getApplicationsInCompetition(), keyStatisticsResource.getApplicationsAssigned(),
+        super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource,
                 pagination, originQuery);
         this.selectAllDisabled = selectAllDisabled;
     }
