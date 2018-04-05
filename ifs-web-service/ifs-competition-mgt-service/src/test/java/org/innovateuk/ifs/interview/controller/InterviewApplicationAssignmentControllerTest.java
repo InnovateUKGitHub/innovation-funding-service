@@ -354,11 +354,11 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
 
         when(interviewAssignmentRestService.unstageApplication(applicationId)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/invite", competition.getId())
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
                 .param("remove", String.valueOf(applicationId)))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-panel-invite"));
+                .andExpect(view().name("assessors/interview/application-invite"));
 
         verify(interviewAssignmentRestService).unstageApplication(applicationId);
     }
@@ -367,10 +367,10 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
     public void removeAll() throws Exception {
         when(interviewAssignmentRestService.unstageApplications()).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/invite", competition.getId())
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
                 .param("removeAll", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessment/interview-panel/competition/13/applications/find?page=0"));
+                .andExpect(redirectedUrl("/assessment/interview/competition/13/applications/find?page=0"));
 
         verify(interviewAssignmentRestService).unstageApplications();
     }
