@@ -28,7 +28,7 @@ public class SetupStatusController {
 
     public static final String PROJECT_SETUP_PAGE = "project/setup-status";
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'VIEW')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_SETUP_STATUS')")
     @GetMapping("/{projectId}")
     public String viewProjectSetupStatus(@PathVariable("projectId") final Long projectId,
                                          Model model,

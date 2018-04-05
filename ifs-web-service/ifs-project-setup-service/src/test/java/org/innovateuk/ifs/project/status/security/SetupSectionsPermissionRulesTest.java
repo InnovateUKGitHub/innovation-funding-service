@@ -119,6 +119,67 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test
+    public void projectSetupStatusAccessUnavailableForWithdrawnProject() {
+        assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectSetupStatus(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void projectTeamStatusAccessUnavailableForWithdrawnProject() {
+        assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectTeamStatus(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void projectDetailsSectionAccessUnavailableForWithdrawnProject() {
+        assertLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessProjectDetailsSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void projectManagerPageAccessUnavailableForWithdrawnProject() {
+        assertLeadPartnerWithdrawnProjectAccess(() -> rules.leadCanAccessProjectManagerPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void projectStartDatePageAccessUnavailableForWithdrawnProject() {
+        assertLeadPartnerWithdrawnProjectAccess(() -> rules.leadCanAccessProjectStartDatePage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void projectAddressPageAccessUnavailableForWithdrawnProject() {
+        assertLeadPartnerWithdrawnProjectAccess(() -> rules.leadCanAccessProjectAddressPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void financeContactPageAccessUnavailableForWithdrawnProject() {
+        assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessFinanceContactPage(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void monitoringOfficerSectionAccessUnavailableForWithdrawnProject() {
+        assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void bankDetailsSectionAccessUnavailableForWithdrawnProject() {
+        assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void spendProfileSectionAccessUnavailableForWithdrawnProject() {
+        assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
+    public void editSpendProfileSectionAccessUnavailableForWithdrawnProject() {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(withdrawnProject.getId(), 22L);
+        assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanEditSpendProfileSection(projectOrganisationCompositeId, user));
+    }
+
+    @Test
+    public void otherDocumentsSectionAccessUnavailableForWithdrawnProject() {
+        assertNonLeadPartnerWithdrawnProjectAccess(() -> rules.partnerCanAccessOtherDocumentsSection(ProjectCompositeId.id(withdrawnProject.getId()), user));
+    }
+
+    @Test
     public void submitOtherDocumentsSectionSuccessfulAccessByProjectManager() {
         
         UserResource user = newUserResource().build();
@@ -309,6 +370,17 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
     }
 
+    private void assertLeadPartnerWithdrawnProjectAccess(Supplier<Boolean> ruleCheck) {
+
+        when(projectServiceMock.getById(withdrawnProject.getId())).thenReturn(withdrawnProject);
+
+        assertFalse(ruleCheck.get());
+
+        verify(projectServiceMock).getById(withdrawnProject.getId());
+        verify(projectServiceMock, never()).getOrganisationIdFromUser(withdrawnProject.getId(), user);
+        verify(statusServiceMock, never()).getProjectTeamStatus(withdrawnProject.getId(), Optional.of(user.getId()));
+    }
+
     private void assertNonLeadPartnerSuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
                                                       Supplier<Boolean> ruleCheck) {
 
@@ -352,6 +424,17 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         verify(statusServiceMock).getProjectTeamStatus(activeProject.getId(), Optional.of(user.getId()));
 
         accessorCheck.apply(verify(accessor), expectedOrganisation);
+    }
+
+    private void assertNonLeadPartnerWithdrawnProjectAccess(Supplier<Boolean> ruleCheck) {
+
+        when(projectServiceMock.getById(withdrawnProject.getId())).thenReturn(withdrawnProject);
+
+        assertFalse(ruleCheck.get());
+
+        verify(projectServiceMock).getById(withdrawnProject.getId());
+        verify(projectServiceMock, never()).getOrganisationIdFromUser(withdrawnProject.getId(), user);
+        verify(statusServiceMock, never()).getProjectTeamStatus(withdrawnProject.getId(), Optional.of(user.getId()));
     }
 
     private void assertNotOnProjectExpectations(Supplier<Boolean> ruleCheck) {
