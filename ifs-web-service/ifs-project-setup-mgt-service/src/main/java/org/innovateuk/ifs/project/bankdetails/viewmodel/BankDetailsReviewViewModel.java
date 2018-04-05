@@ -4,7 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD;
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
 
 public class BankDetailsReviewViewModel {
     private Long projectId;
@@ -201,11 +202,11 @@ public class BankDetailsReviewViewModel {
     }
 
     public boolean getCompanyNameVerified(){
-        return companyNameScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD;
+        return companyNameScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
     }
 
     public boolean getAddressScoreVerified(){
-        return addressScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD;
+        return addressScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
     }
 
     public Long getApplicationId() {
