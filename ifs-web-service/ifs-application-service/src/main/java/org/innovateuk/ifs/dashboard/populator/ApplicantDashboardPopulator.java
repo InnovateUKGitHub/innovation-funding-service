@@ -16,12 +16,11 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
@@ -32,13 +31,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  */
 @Service
 public class ApplicantDashboardPopulator {
-
-    private EnumSet<ApplicationState> inProgress = EnumSet.of(ApplicationState.CREATED, ApplicationState.OPEN);
-    private EnumSet<ApplicationState> submitted = EnumSet.of(ApplicationState.SUBMITTED, ApplicationState.INELIGIBLE);
-    private EnumSet<ApplicationState> finished = EnumSet.of(ApplicationState.APPROVED, ApplicationState.REJECTED, ApplicationState.INELIGIBLE_INFORMED);
-    private EnumSet<CompetitionStatus> fundingNotYetCompete = EnumSet.of(CompetitionStatus.OPEN, CompetitionStatus.CLOSED, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
-    private EnumSet<CompetitionStatus> fundingComplete = EnumSet.of(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
-    private EnumSet<CompetitionStatus> open = EnumSet.of(CompetitionStatus.OPEN);
 
     @Autowired
     private ApplicationService applicationService;
@@ -55,52 +47,59 @@ public class ApplicantDashboardPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+
     public ApplicantDashboardViewModel populate(Long userId) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
         List<ProjectResource> projectsInSetup = projectService.findByUser(userId).getSuccess();
 
         Map<Long, ApplicationState> applicationStatusMap = createApplicationStateMap(allApplications);
-        List<ApplicationResource> inProgress = simpleFilter(allApplications, this::applicationInProgress);
+        List<ApplicationResource> inProgressApplications = simpleFilter(allApplications, this::applicationInProgress);
 
         Map<Long, Integer> applicationProgress =
-                simpleToMap(inProgress, ApplicationResource::getId, a -> a.getCompletion().intValue());
-        List<ApplicationResource> finished = simpleFilter(allApplications, this::applicationFinished);
+                simpleToMap(inProgressApplications, ApplicationResource::getId, a -> a.getCompletion().intValue());
+        List<ApplicationResource> finishedApplications = simpleFilter(allApplications, this::applicationFinished);
 
-        Map<Long, Optional<ProcessRoleResource>> inProgressProcessRoles = simpleToMap(inProgress, ApplicationResource::getId,
-                applicationResource -> usersProcessRoles.stream()
-                        .filter(processRoleResource -> processRoleResource.getApplicationId().equals(applicationResource.getId()))
-                        .findFirst()
-        );
+        Map<Long, Optional<ProcessRoleResource>> inProgressProcessRoles = simpleToMap(
+                inProgressApplications,
+                ApplicationResource::getId,
+                applicationResource -> getInProgressProcessRoleResource(applicationResource, usersProcessRoles)
+                );
 
         List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles);
         List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles);
 
-        Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(userId, inProgress, finished, getApplicationsForProjectsInSetup(projectsInSetup));
+        Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(userId, inProgressApplications, finishedApplications, getApplicationsForProjectsInSetup(projectsInSetup));
 
-        return new ApplicantDashboardViewModel(applicationProgress, inProgress,
-                applicationsAssigned, finished,
-                projectsInSetup, competitionApplicationMap,
-                applicationStatusMap, leadApplicantApplications);
+        return new ApplicantDashboardViewModel(applicationProgress,
+                                               inProgressApplications,
+                                               applicationsAssigned,
+                                               finishedApplications,
+                                               projectsInSetup,
+                                               competitionApplicationMap,
+                                               applicationStatusMap,
+                                               leadApplicantApplications);
     }
 
     private List<ApplicationResource> getAllApplicationsAsApplicant(Long userId, List<ProcessRoleResource> usersProcessRoles) {
-        List<Long> usersProcessRolesApplicationIds = usersProcessRoles.stream()
-                .map(processRoleResource -> processRoleResource.getApplicationId())
-                .collect(toList());
 
-        return applicationRestService.getApplicationsByUserId(userId)
-                .getSuccess()
-                .stream()
-                .filter(applicationResource -> usersProcessRolesApplicationIds.contains(applicationResource.getId()))
-                .collect(toList());
+        List<Long> usersProcessRolesApplicationIds = simpleMap(
+                usersProcessRoles,
+                ProcessRoleResource::getApplicationId
+        );
+
+        return simpleFilter(
+                applicationRestService.getApplicationsByUserId(userId).getSuccess(),
+                appResource -> usersProcessRolesApplicationIds.contains(appResource.getId())
+        );
     }
 
     private List<ProcessRoleResource> getUserProcessRolesWithApplicationRole(Long userId) {
-        return processRoleService.getByUserId(userId)
-                .stream()
-                .filter(processRoleResource -> hasAnApplicantRole(processRoleResource))
-                .collect(toList());
+
+        return simpleFilter(
+                processRoleService.getByUserId(userId),
+                this::hasAnApplicantRole
+        );
     }
 
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
@@ -109,22 +108,32 @@ public class ApplicantDashboardPopulator {
                 processRoleResource.getRole() == COLLABORATOR.getId();
     }
 
+
+
+    private Optional<ProcessRoleResource> getInProgressProcessRoleResource(ApplicationResource applicationResource, List<ProcessRoleResource> processRoleResources) {
+        return simpleFindFirst(
+                processRoleResources,
+                processRoleResource -> processRoleResource.getApplicationId().equals(applicationResource.getId())
+        );
+    }
+
     private List<Long> getAssignedApplications(Map<Long, Optional<ProcessRoleResource>> inProgressProcessRoles) {
-        return inProgressProcessRoles.entrySet().stream().filter(entry -> {
-            if (entry.getValue().isPresent()
-                    && LEADAPPLICANT.getId() != entry.getValue().get().getRole()) {
-                int count = applicationRestService.getAssignedQuestionsCount(entry.getKey(), entry.getValue().get().getId())
-                        .getSuccess();
-                return count != 0;
-            } else {
-                return false;
-            }
-        }).map(Map.Entry::getKey).collect(toList());
+        return inProgressProcessRoles
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isPresent())
+                .filter(entry -> !LEADAPPLICANT.getName().equals(entry.getValue().get().getRoleName()))
+                .filter(entry -> applicationRestService.getAssignedQuestionsCount(entry.getKey(), entry.getValue().get().getId()).getSuccess() > 0)
+                .map(Map.Entry::getKey)
+                .collect(toList());
     }
 
     private List<Long> getLeadApplicantApplications(Map<Long, Optional<ProcessRoleResource>> inProgressProcessRoles) {
-        return inProgressProcessRoles.entrySet().stream()
-                .filter(entry -> entry.getValue().isPresent() && LEADAPPLICANT.getId() == entry.getValue().get().getRole())
+        return inProgressProcessRoles
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().isPresent()
+                        && LEADAPPLICANT.getId() == entry.getValue().get().getRole())
                 .map(Map.Entry::getKey).collect(toList());
     }
 
@@ -132,61 +141,65 @@ public class ApplicantDashboardPopulator {
         return simpleToMap(resources, ApplicationResource::getId, ApplicationResource::getApplicationState);
     }
 
-    private boolean applicationInProgress(ApplicationResource a) {
-        return (applicationStateInProgress(a) && competitionOpen(a))
-                || (applicationStateSubmitted(a) && competitionFundingNotYetComplete(a));
+    private boolean applicationInProgress(ApplicationResource application) {
+        return (applicationStateInProgress(application) && competitionOpen(application))
+                || (applicationStateSubmitted(application) && competitionFundingNotYetComplete(application));
     }
 
-    private boolean applicationFinished(ApplicationResource a) {
-        return (applicationStateFinished(a))
-                || (applicationStateInProgress(a) && competitionClosed(a))
-                || (applicationStateSubmitted(a) && competitionFundingComplete(a));
+    private boolean applicationFinished(ApplicationResource application) {
+        return (applicationStateFinished(application))
+                || (applicationStateInProgress(application) && !competitionOpen(application))
+                || (applicationStateSubmitted(application) && competitionFundingComplete(application));
     }
 
-    private boolean applicationStateInProgress(ApplicationResource a) {
-        return inProgress.contains(a.getApplicationState());
+    private boolean applicationStateInProgress(ApplicationResource application) {
+        return ApplicationState.inProgressStates.contains(application.getApplicationState());
     }
 
-    private boolean competitionOpen(ApplicationResource a) {
-        return open.contains(a.getCompetitionStatus());
+    private boolean competitionOpen(ApplicationResource application) {
+        return CompetitionStatus.OPEN.equals(application.getCompetitionStatus());
     }
 
-    private boolean competitionClosed(ApplicationResource a) {
-        return !competitionOpen(a);
+    private boolean applicationStateSubmitted(ApplicationResource application) {
+        return ApplicationState.blahStates.contains(application.getApplicationState());
     }
 
-    private boolean applicationStateSubmitted(ApplicationResource a) {
-        return submitted.contains(a.getApplicationState());
+    private boolean applicationStateFinished(ApplicationResource application) {
+        return ApplicationState.finishedStates.contains(application.getApplicationState());
     }
 
-    private boolean applicationStateFinished(ApplicationResource a) {
-        return finished.contains(a.getApplicationState());
+    private boolean competitionFundingNotYetComplete(ApplicationResource application) {
+        return CompetitionStatus.fundingNotCompleteStatuses.contains(application.getCompetitionStatus());
     }
 
-    private boolean competitionFundingNotYetComplete(ApplicationResource a) {
-        return fundingNotYetCompete.contains(a.getCompetitionStatus());
-    }
-
-    private boolean competitionFundingComplete(ApplicationResource a) {
-        return fundingComplete.contains(a.getCompetitionStatus());
+    private boolean competitionFundingComplete(ApplicationResource application) {
+        return CompetitionStatus.fundingCompleteStatuses.contains(application.getCompetitionStatus());
     }
 
     private List<ApplicationResource> getApplicationsForProjectsInSetup(List<ProjectResource> resources) {
-        return resources.stream().map(project -> applicationService.getById(project.getApplication())).collect(Collectors.toList());
+
+        return simpleMap(
+                resources,
+                project -> applicationService.getById(project.getApplication())
+        );
+    }
+
+    private CompetitionResource getCompetitionFromApplication(ApplicationResource application,
+                                                              List<CompetitionResource> competitions) {
+        return simpleFindFirst(
+                competitions,
+                comp -> comp.getId().equals(application.getCompetition())
+        ).orElse(null);
     }
 
     @SafeVarargs
     private final Map<Long, CompetitionResource> createCompetitionMap(Long userId, List<ApplicationResource>... resources) {
         List<CompetitionResource> allUserCompetitions = competitionRestService.getCompetitionsByUserId(userId).getSuccess();
 
-        return combineLists(resources).stream()
-                .collect(
-                        Collectors.toMap(
-                                ApplicationResource::getId,
-                                application -> allUserCompetitions.stream()
-                                        .filter(competitionResource -> competitionResource.getId().equals(application.getCompetition()))
-                                        .findFirst()
-                                        .orElse(null), (p1, p2) -> p1)
+        return simpleToMap(
+                combineLists(resources),
+                ApplicationResource::getId,
+                application -> getCompetitionFromApplication(application, allUserCompetitions)
                 );
     }
 }

@@ -87,11 +87,8 @@ public class ApplicantDashboardViewModel {
     }
 
     public String getApplicationInProgressText() {
-        if(applicationsInProgress.size() > 1) {
-            return "Applications in progress";
-        } else {
-            return "Application in progress";
-        }
+        return applicationsInProgress.size() == 1 ?
+                "Application in progress" : "Applications in progress";
     }
 
     public boolean applicationIsAssignedToMe(Long applicationId) {
