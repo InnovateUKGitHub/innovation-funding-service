@@ -68,6 +68,8 @@ public class CompetitionManagementDashboardController {
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
 
+        
+
         Long countBankDetails = 0L;
         boolean projectFinanceUser = isProjectFinanceUser(user);
         if (projectFinanceUser) {

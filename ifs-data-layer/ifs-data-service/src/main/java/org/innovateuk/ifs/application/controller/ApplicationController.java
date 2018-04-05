@@ -131,4 +131,9 @@ public class ApplicationController {
                                                    @PathVariable("userId") final Long userId) {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
     }
+
+    @GetMapping("/getLatestEmailFundingDate/{competitionId}")
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
+        return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
+    }
 }

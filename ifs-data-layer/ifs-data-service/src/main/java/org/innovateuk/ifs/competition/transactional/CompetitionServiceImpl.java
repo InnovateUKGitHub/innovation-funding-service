@@ -209,12 +209,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 competitions = competitionRepository.findProjectSetup();
             }
             // Only competitions with at least one funded and informed application can be considered as in project setup
+//            return serviceSuccess(simpleMap(
+//                    CollectionFunctions.reverse(competitions.stream()
+//                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
+//                            .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
+//                            .sorted(Comparator.comparing(Pair::getKey))
+//                            .map(Pair::getValue)
+//                            .collect(Collectors.toList())),
+//                    this::searchResultFromCompetition));
+
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
                             .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
-                            .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
-                            .sorted(Comparator.comparing(Pair::getKey))
-                            .map(Pair::getValue)
                             .collect(Collectors.toList())),
                     this::searchResultFromCompetition));
         });

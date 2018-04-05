@@ -2,10 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.Role;
@@ -75,6 +72,10 @@ public interface ApplicationService {
     @SecuredBySpring(value = "READ", description = "Support or IFS Admin can search applications from competition dashboard")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable);
+
+    @SecuredBySpring(value = "SAVE_FUNDING_DECISION_DATA", securedType = FundingDecision.class, description = "Comp Admins should be able to save the decision of what applications to fund for a given competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);

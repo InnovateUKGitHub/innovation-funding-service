@@ -57,6 +57,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
                                " WHERE str(a.id) LIKE CONCAT('%', :searchString, '%') ";
 
     Application findById(long applicationId);
+
     @Override
     List<Application> findAll();
     Page<Application> findByCompetitionId(long competitionId, Pageable pageable);
