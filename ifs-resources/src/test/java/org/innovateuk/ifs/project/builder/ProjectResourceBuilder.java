@@ -5,6 +5,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -96,5 +97,9 @@ public class ProjectResourceBuilder extends BaseBuilder<ProjectResource, Project
 
     public ProjectResourceBuilder withDuration(Long... durations) {
         return withArray((duration, project) -> project.setDurationInMonths(duration), durations);
+    }
+
+    public ProjectResourceBuilder withProjectState(ProjectState... projectState) {
+        return withArray((state, project) -> project.setProjectState(state), projectState);
     }
 }
