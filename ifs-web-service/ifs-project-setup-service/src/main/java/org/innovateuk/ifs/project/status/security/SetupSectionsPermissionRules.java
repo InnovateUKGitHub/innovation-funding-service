@@ -195,7 +195,7 @@ public class SetupSectionsPermissionRules {
     }
 
     private boolean isProjectWithdrawn(long projectId) {
-        return true;
+        return false;
     }
 
 
