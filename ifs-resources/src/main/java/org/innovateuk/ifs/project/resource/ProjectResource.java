@@ -27,6 +27,7 @@ public class ProjectResource {
     private ApprovalType otherDocumentsApproved;
     private String grantOfferLetterRejectionReason;
     private ZonedDateTime spendProfileSubmittedDate;
+    private ProjectState projectState;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -175,5 +176,13 @@ public class ProjectResource {
 
     public void setSpendProfileSubmittedDate(ZonedDateTime spendProfileSubmittedDate) {
         this.spendProfileSubmittedDate = spendProfileSubmittedDate;
+    }
+
+    public ProjectState getProjectState() {
+        return projectState;
+    }
+
+    public void setProjectState(ProjectState projectState) {
+        this.projectState = projectState;
     }
 }
