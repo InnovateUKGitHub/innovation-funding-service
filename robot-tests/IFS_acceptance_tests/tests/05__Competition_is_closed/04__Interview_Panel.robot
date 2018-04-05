@@ -61,7 +61,7 @@ Assessors receives the invite to the interview panel
     And the user reads his email               ${assessor_ben_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
     And the user reads his email               ${assessor_joel_email}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel
 
-CompAdmin can add the applications to the invite list
+CompAdmin can add or remove the applications from the invite list
 #to assign applications to interview panel
     [Documentation]  IFS-2727   IFS-3156
     [Setup]  the user clicks the button/link    link=Manage interview panel
@@ -71,12 +71,13 @@ CompAdmin can add the applications to the invite list
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and adds them to the invite list
-    And the compadmin can remove assessor or application from inivte list    Crowd sourced cycling navigator
+    And the compadmin can remove an assessor or application from the inivte list   ${crowd_source_application_name}
 
 CompAdmin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
     [Documentation]  IFS-2782
     [Tags]
+    Given the user clicks the button/link      link=Invite
     When the user clicks the button/link       link=Review and send invites
     Then the user should see the element       jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     And the user should see the element        jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
@@ -119,11 +120,12 @@ the competition admin selects the applications and adds them to the invite list
 #compadmin selecting the applications checkbox
     the user clicks the button/link    jQuery=tr:contains("${Neural_network_application}") label
     the user clicks the button/link    jQuery=tr:contains("${computer_vision_application}") label
-    the user clicks the button/link    jQuery=tr:contains("Crowd sourced cycling navigator") label
+    the user clicks the button/link    jQuery=tr:contains("${crowd_source_application_name}") label
     the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
     the user should see the element    link=Review and send invites
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+    the user should see the element    jQuery=td:contains("${crowd_source_application}") + td:contains("${crowd_source_application_name}")
 
 the compAdmin navigates to the send invite email page
     the user clicks the button/link    link=Invite

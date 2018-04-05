@@ -13,6 +13,8 @@ ${assessor_riley_email}      riley.butler@gmail.com
 ${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${computer_vision_application_name}  Computer vision and machine learning for transport networks
 ${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
+${crowd_source_application_name}   Crowd sourced cycling navigator
+${crowd_source_application}        ${application_ids["${crowd_source_application_name}"]}
 
 *** Keywords ***
 Invited guest user log in
@@ -61,8 +63,8 @@ the user moves the closed competition to panel
     the user clicks the button/link     jQuery=button:contains("Notify assessors")
     the user clicks the button/link     jQuery=button:contains("Close assessment")
 
-the compadmin can remove assessor or application from inivte list
+the compadmin can remove an assessor or application from the inivte list
     [Arguments]   ${assessor_or_application}
-    the user clicks the button/link          jQuery=td:contains("${assessor_or_application}") ~ td:contains("Remove")
-    And the user clicks the button/link      link=Find
-    Then the user should see the element     jQuery=tr:contains("${assessor_or_application}")
+    the user clicks the button/link      jQuery=td:contains("${assessor_or_application}") ~ td:contains("Remove")
+    the user clicks the button/link      link=Find
+    the user should see the element      jQuery=tr:contains("${assessor_or_application}")

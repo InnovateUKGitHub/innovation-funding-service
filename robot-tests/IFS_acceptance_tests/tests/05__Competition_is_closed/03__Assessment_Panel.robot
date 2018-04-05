@@ -82,7 +82,7 @@ There are no Assessors in Invite and Pending and declined tab before sending inv
     Then the user clicks the button/link   link=Pending and declined
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
-CompAdmin can add an assessors to invite list
+CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
     When the user clicks the button/link     link=Find
@@ -92,7 +92,7 @@ CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
     [Tags]   HappyPath
     When the user clicks the button/link    link=Invite
-    Then the compadmin can remove assessor or application from inivte list   ${assessor_madeleine}
+    Then the compadmin can remove an assessor or application from the inivte list    ${assessor_madeleine}
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
