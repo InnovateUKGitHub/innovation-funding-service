@@ -52,7 +52,7 @@
         </div>
         <div class="extra-margin" th:if="${competitionSetupForm.isRemovable()}">
             <form method="post" th:action="@{'/competition/setup/{competitionId}/section/application/landing-page'(competitionId=${model.general.competition.id})}" th:unless="${model.general.state.preventEdit}">
-                <button type="submit" th:value="${competitionSetupForm.question.questionId}" name="deleteAssessedQuestion" class="buttonlink no-margin">Remove question</button>
+                <button type="submit" th:value="${competitionSetupForm.question.questionId}" name="deleteQuestion" class="buttonlink no-margin">Remove question</button>
             </form>
         </div>
     </th:block>

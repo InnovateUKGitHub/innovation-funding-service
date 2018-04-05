@@ -229,7 +229,8 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         final Long questionId = 1L;
 
         Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
-        Question question = newQuestion().withCompetition(readyToOpenCompetition).withId(questionId).build();
+        Section section = newSection().withName(APPLICATION_QUESTIONS.getName()).build();
+        Question question = newQuestion().withCompetition(readyToOpenCompetition).withSection(section).withId(questionId).build();
 
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
         when(questionRepositoryMock.countByCompetitionId(readyToOpenCompetition.getId())).thenReturn(questionId);

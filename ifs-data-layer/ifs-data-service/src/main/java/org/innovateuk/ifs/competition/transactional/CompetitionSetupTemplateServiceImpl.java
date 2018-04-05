@@ -139,7 +139,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        if(sectionIsInValidForDeletion(question.getName())) {
+        if(sectionIsInValidForDeletion(question.getSection().getName())) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
