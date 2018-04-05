@@ -500,7 +500,9 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     private void updateParticipantStatus(ReviewInvite invite){
         ReviewParticipant reviewParticipant = reviewParticipantRepository.getByInviteHash(invite.getHash());
-        reviewParticipant.setStatus(PENDING);
-        reviewParticipantRepository.save(reviewParticipant);
+        if(reviewParticipant.getStatus() != PENDING){
+            reviewParticipant.setStatus(PENDING);
+            reviewParticipantRepository.save(reviewParticipant);
+        }
     }
 }

@@ -720,7 +720,9 @@ public class AssessmentInviteServiceImpl extends InviteService<AssessmentInvite>
 
     private void updateParticipantStatus(AssessmentInvite invite){
         AssessmentParticipant assessmentParticipant = competitionParticipantRepository.getByInviteHash(invite.getHash());
-        assessmentParticipant.setStatus(PENDING);
-        competitionParticipantRepository.save(assessmentParticipant);
+        if(assessmentParticipant.getStatus() != PENDING){
+            assessmentParticipant.setStatus(PENDING);
+            competitionParticipantRepository.save(assessmentParticipant);
+        }
     }
 }

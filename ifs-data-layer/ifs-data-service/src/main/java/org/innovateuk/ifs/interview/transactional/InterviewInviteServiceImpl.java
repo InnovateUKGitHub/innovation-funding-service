@@ -461,7 +461,9 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
 
     private void updateParticipantStatus(InterviewInvite invite){
         InterviewParticipant interviewParticipant = interviewParticipantRepository.getByInviteHash(invite.getHash());
-        interviewParticipant.setStatus(PENDING);
-        interviewParticipantRepository.save(interviewParticipant);
+        if(interviewParticipant.getStatus() != PENDING){
+            interviewParticipant.setStatus(PENDING);
+            interviewParticipantRepository.save(interviewParticipant);
+        }
     }
 }
