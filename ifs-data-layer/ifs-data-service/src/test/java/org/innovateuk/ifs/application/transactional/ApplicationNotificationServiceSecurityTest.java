@@ -5,15 +5,14 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.application.builder.ApplicationIneligibleSendResourceBuilder.newApplicationIneligibleSendResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,27 +55,6 @@ public class ApplicationNotificationServiceSecurityTest extends BaseServiceSecur
 
     @Override
     protected Class<? extends ApplicationNotificationService> getClassUnderTest() {
-        return ApplicationNotificationServiceSecurityTest.TestApplicationNotificationService.class;
-    }
-
-    /**
-     * Dummy implementation (for satisfying Spring Security's need to read parameter information from
-     * methods, which is lost when using mocks)
-     */
-    public static class TestApplicationNotificationService implements ApplicationNotificationService {
-        @Override
-        public ServiceResult<Void> sendNotificationApplicationSubmitted(Long application) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource) {
-            return null;
-        }
+        return ApplicationNotificationServiceImpl.class;
     }
 }

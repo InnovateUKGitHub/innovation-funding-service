@@ -89,3 +89,6 @@ jar {
     manifest.attributes provider: 'gradle'
 }
 
+compileJava {
+    options.compilerArgs += '-parameters'
+}
