@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
+import org.innovateuk.ifs.assessment.transactional.AssessorServiceImpl;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.Role.*;
@@ -13,7 +11,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
 
     @Override
     protected Class<? extends AssessorService> getClassUnderTest() {
-        return TestAssessorService.class;
+        return AssessorServiceImpl.class;
     }
 
     @Test
@@ -27,22 +25,5 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     public void notifyAssessorsByCompetition() throws Exception {
         long competitionId = 1L;
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessorsByCompetition(competitionId), COMP_ADMIN, PROJECT_FINANCE);
-    }
-
-    public static class TestAssessorService implements AssessorService {
-        @Override
-        public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessorProfileResource> getAssessorProfile(long assessorId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
-            return null;
-        }
     }
 }
