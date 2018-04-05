@@ -20,7 +20,7 @@ public interface InterviewAssignmentRestService {
 
     RestResult<Void> unstageApplication(long applicationId);
 
-    RestResult<Void> unstageApplications();
+    RestResult<Void> unstageApplications(long competitionId);
 
     RestResult<ApplicantInterviewInviteResource> getEmailTemplate();
 

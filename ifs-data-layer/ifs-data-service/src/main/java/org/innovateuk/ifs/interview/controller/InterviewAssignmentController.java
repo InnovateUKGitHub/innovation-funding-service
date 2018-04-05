@@ -48,14 +48,14 @@ public class InterviewAssignmentController {
         return interviewAssignmentInviteService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
     }
 
-    @PostMapping("/unstage-applications/{applicationId}")
+    @PostMapping("/unstage-application/{applicationId}")
     public RestResult<Void> unstageApplication(@PathVariable long applicationId) {
         return interviewAssignmentInviteService.unstageApplication(applicationId).toPostWithBodyResponse();
     }
 
-    @PostMapping("/unstage-applications")
-    public RestResult<Void> unstageApplications() {
-        return interviewAssignmentInviteService.unstageApplications().toPostWithBodyResponse();
+    @PostMapping("/unstage-applications/{competitionId}")
+    public RestResult<Void> unstageApplications(@PathVariable long competitionId) {
+        return interviewAssignmentInviteService.unstageApplications(competitionId).toPostWithBodyResponse();
     }
 
     @GetMapping("/email-template")

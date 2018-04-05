@@ -331,7 +331,7 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
 
         interviewAssignmentRepository.save(interviewPanels);
 
-        RestResult<Void> result = controller.unstageApplications();
+        RestResult<Void> result = controller.unstageApplications(applications.get(0).getCompetition().getId());
         assertTrue(result.isSuccess());
 
         InterviewAssignment interview1 = interviewAssignmentRepository.findOneByTargetId(applications.get(0).getId());

@@ -365,14 +365,14 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
 
     @Test
     public void removeAll() throws Exception {
-        when(interviewAssignmentRestService.unstageApplications()).thenReturn(restSuccess());
+        when(interviewAssignmentRestService.unstageApplications(competition.getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
                 .param("removeAll", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessment/interview/competition/13/applications/find?page=0"));
 
-        verify(interviewAssignmentRestService).unstageApplications();
+        verify(interviewAssignmentRestService).unstageApplications(competition.getId());
     }
 
     private List<InterviewAssignmentStagedApplicationResource> setUpApplicationCreatedInviteResources() {

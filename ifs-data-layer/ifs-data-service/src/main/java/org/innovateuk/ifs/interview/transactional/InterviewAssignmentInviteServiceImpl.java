@@ -128,8 +128,8 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     @Override
-    public ServiceResult<Void> unstageApplications() {
-        interviewAssignmentRepository.deleteByActivityStateState(InterviewAssignmentState.CREATED.getBackingState());
+    public ServiceResult<Void> unstageApplications(long competitionId) {
+        interviewAssignmentRepository.deleteByTargetCompetitionIdAndActivityStateState(competitionId, InterviewAssignmentState.CREATED.getBackingState());
         return serviceSuccess();
     }
 

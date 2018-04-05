@@ -262,7 +262,7 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
         Supplier<String> successView = () -> redirectToFind(competitionId, 0, Optional.empty());
         Supplier<String> failureView = () -> invite(model, competitionId, page, queryParams, selectionForm, bindingResult);
 
-        RestResult<Void> result = interviewAssignmentRestService.unstageApplications();
+        RestResult<Void> result = interviewAssignmentRestService.unstageApplications(competitionId);
         return validationHandler.addAnyErrors(result)
                 .failNowOrSucceedWith(failureView, successView);
     }

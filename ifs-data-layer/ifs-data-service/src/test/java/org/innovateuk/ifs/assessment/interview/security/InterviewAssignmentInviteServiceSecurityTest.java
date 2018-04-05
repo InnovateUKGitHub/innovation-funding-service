@@ -72,7 +72,7 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
     @Test
     public void unstageApplications() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.unstageApplications(),
+                () -> classUnderTest.unstageApplications(1L),
                 COMP_ADMIN, PROJECT_FINANCE
         );
     }
@@ -117,7 +117,7 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
-        public ServiceResult<Void> unstageApplications() {
+        public ServiceResult<Void> unstageApplications(long competitionId) {
             return null;
         }
 

@@ -53,12 +53,12 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
 
     @Override
     public RestResult<Void> unstageApplication(long applicationId) {
-        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-applications", applicationId), Void.class);
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-application", applicationId), Void.class);
     }
 
     @Override
-    public RestResult<Void> unstageApplications() {
-        return postWithRestResult(format("%s/%s", REST_URL, "unstage-applications"), Void.class);
+    public RestResult<Void> unstageApplications(long competitionId) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-applications", competitionId), Void.class);
     }
 
     @Override

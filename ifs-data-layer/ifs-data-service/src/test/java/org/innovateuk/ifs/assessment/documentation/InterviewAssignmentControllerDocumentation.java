@@ -144,7 +144,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
         long applicationId = 123L;
         when(interviewAssignmentInviteServiceMock.unstageApplication(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel/unstage-applications/{applicationId}", applicationId))
+        mockMvc.perform(post("/interview-panel/unstage-application/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}",
                         pathParameters(
@@ -157,13 +157,14 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
     @Test
     public void unstageApplications() throws Exception {
-        when(interviewAssignmentInviteServiceMock.unstageApplications()).thenReturn(serviceSuccess());
+        long competitionId = 123L;
+        when(interviewAssignmentInviteServiceMock.unstageApplications(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel/unstage-applications"))
+        mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("interview-panel/{method-name}"));
 
-        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications();
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications(competitionId);
     }
 
     @Test

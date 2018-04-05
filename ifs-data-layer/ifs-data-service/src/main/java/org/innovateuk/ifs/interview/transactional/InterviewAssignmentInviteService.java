@@ -41,7 +41,7 @@ public interface InterviewAssignmentInviteService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "UNSTAGE_INTERVIEW_PANEL_APPLICATIONS",
             description = "The Competition Admin user and Project Finance users can unstage applications")
-    ServiceResult<Void> unstageApplications();
+    ServiceResult<Void> unstageApplications(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATIONS",

@@ -182,10 +182,11 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
     @Test
     public void unstageApplications() {
-        ServiceResult<Void> result = service.unstageApplications();
+        long competitionId = 1L;
+        ServiceResult<Void> result = service.unstageApplications(1L);
 
         assertTrue(result.isSuccess());
-        verify(interviewAssignmentRepositoryMock).deleteByActivityStateState(InterviewAssignmentState.CREATED.getBackingState());
+        verify(interviewAssignmentRepositoryMock).deleteByTargetCompetitionIdAndActivityStateState(competitionId, InterviewAssignmentState.CREATED.getBackingState());
     }
 
     @Test

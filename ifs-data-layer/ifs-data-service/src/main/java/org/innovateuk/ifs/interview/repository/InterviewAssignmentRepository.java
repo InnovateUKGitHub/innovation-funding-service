@@ -18,7 +18,7 @@ public interface InterviewAssignmentRepository extends ProcessRepository<Intervi
 
     void deleteByTargetIdAndActivityStateState(long applicationId, State backingState);
 
-    void deleteByActivityStateState(State backingState);
+    void deleteByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
 
     Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState, Pageable pagable);
 

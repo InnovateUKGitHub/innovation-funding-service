@@ -134,7 +134,7 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
         when(interviewAssignmentInviteServiceMock.unstageApplication(applicationId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel/unstage-applications/{applicationId}", applicationId)
+        mockMvc.perform(post("/interview-panel/unstage-application/{applicationId}", applicationId)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -143,13 +143,14 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void unstageApplications() throws Exception {
-        when(interviewAssignmentInviteServiceMock.unstageApplications()).thenReturn(serviceSuccess());
+        long competitionId = 1L;
+        when(interviewAssignmentInviteServiceMock.unstageApplications(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/interview-panel/unstage-applications")
+        mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId)
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications();
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications(competitionId);
     }
 
     @Test

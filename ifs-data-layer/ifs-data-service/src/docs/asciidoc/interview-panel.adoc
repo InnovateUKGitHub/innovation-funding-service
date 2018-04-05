@@ -52,7 +52,6 @@ include::{snippets}/interview-panel/unstage-application/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/interview-panel/unstage-application/http-response.adoc[]
-include::{snippets}/interview-panel/unstage-application/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/unstage-application/curl-request.adoc[]
@@ -64,7 +63,6 @@ include::{snippets}/interview-panel/unstage-applications/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/interview-panel/unstage-applications/http-response.adoc[]
-include::{snippets}/interview-panel/unstage-applications/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/unstage-applications/curl-request.adoc[]
