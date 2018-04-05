@@ -99,7 +99,7 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the finance details " +
             " when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(ProjectCompositeId projectCompositeId, UserResource user) {
-            return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
@@ -195,9 +195,9 @@ public class SetupSectionsPermissionRules {
     }
 
     private boolean isProjectWithdrawn(long projectId) {
-        return false;
+        ProjectResource project = projectService.getById(projectId);
+        return ProjectState.WITHDRAWN.equals(project.getProjectState());
     }
-
 
     public class SetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, SetupSectionAccessibilityHelper> {
         @Override
