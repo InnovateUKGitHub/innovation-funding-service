@@ -16,7 +16,7 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3055 Assessor dashboard - Attend interview panel box
 ...
 ...               IFS-3143 Interview panels - Include URL in assessor invite
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
+Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
@@ -91,7 +91,31 @@ Assessor can respond to email invite and decline
     Then The user should see the element     jQuery=h1:contains("Invitation to interview panel")
     And the assessor declines the interview invitation and longer sees the competition in the dashboard
 
+CompAdmin resend invites to multiple assessors to interview panel
+    [Documentation]  IFS-3154
+    [Tags]
+    Given log in as a different user          &{Comp_admin1_credentials}  #${short_password}
+    When the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
+    Then the user clicks the button/link      link=Manage interview panel
+    And the user clicks the button/link       link=Invite assessors
+    Then the user clicks the button/link      link=Pending and declined
+    When the user clicks the button/link      jQuery=tr:contains("${assessor_ben}") label
+    And the user clicks the button/link       jQuery=tr:contains("${assessor_madeleine}") label
+    Then the user clicks the button/link      jQuery=button:contains("Resend invites")
+    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
+    When the user clicks the button/link      jQuery=button:contains("Send invite")
+    Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
+    #TODO The below should be updated once IFS-3208 has been fixed.
+    #And the user should see the element       jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Invite sent: ${today}")
+    When the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
+    And the user reads his email and clicks the link    ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
+
 *** Keywords ***
+Custom Suite Setup
+    The user logs-in in new browser  &{Comp_admin1_credentials}
+    ${today} =  get today short month
+    set suite variable  ${today}
+
 the Interview Panel is activated in the db
     Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
@@ -116,3 +140,4 @@ the assessor declines the interview invitation and longer sees the competition i
     the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
     the user navigates to the page      ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+
