@@ -1,38 +1,36 @@
 package org.innovateuk.ifs.project.grantofferletter.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterApprovalResource;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.io.InputStream;
+import java.util.EnumSet;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.mockito.Mockito.*;
 
 public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest<GrantOfferLetterService> {
+
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = EnumSet.complementOf(EnumSet.of(COMP_ADMIN, PROJECT_FINANCE));
 
     private GrantOfferLetterPermissionRules projectGrantOfferPermissionRules;
     private ProjectLookupStrategy projectLookupStrategy;
@@ -58,7 +56,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -80,7 +79,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -103,7 +103,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -119,7 +120,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         assertAccessDenied(() -> classUnderTest.createSignedGrantOfferLetterFileEntry(projectId, null, null), () -> {
             verify(projectGrantOfferPermissionRules).leadPartnerCanUploadGrantOfferLetter(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).projectManagerCanUploadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).projectManagerCanUploadGrantOfferLetter(project, getLoggedInUser
+                    ());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -135,11 +137,14 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser
+                    ());
 
-            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -157,11 +162,14 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> classUnderTest.getSignedGrantOfferLetterFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser
+                    ());
 
-            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -179,11 +187,14 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> classUnderTest.getAdditionalContractFileAndContents(projectId), () -> {
             verify(projectGrantOfferPermissionRules).partnersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
 
-            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser
+                    ());
 
-            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project,
+                    getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -206,13 +217,11 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
 
-        List<UserRoleType> nonCompAdminRoles = Arrays.stream(UserRoleType.values()).filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
+        EnumSet<Role> nonCompAdminRoles = EnumSet.complementOf(EnumSet.of(COMP_ADMIN, PROJECT_FINANCE));
 
         nonCompAdminRoles.forEach(role -> {
-
             setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                    newUserResource().withRolesGlobal(singletonList(role)).build());
             try {
                 classUnderTest.generateGrantOfferLetter(projectId, fileEntryResource);
                 Assert.fail("Should not have been able to generate GOL without the global Comp Admin role");
@@ -224,19 +233,16 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testGenerateGrantOfferLetterIfReadyDeniedIfNotCorrectGlobalRoles() {
-
         final Long projectId = 1L;
 
-        List<UserRoleType> nonCompAdminRoles = Arrays.stream(UserRoleType.values()).filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
 
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
                 classUnderTest.generateGrantOfferLetterIfReady(projectId);
-                Assert.fail("Should not have been able to generate GOL automatically without the global Comp Admin role");
+                Assert.fail("Should not have been able to generate GOL automatically without the global Comp Admin " +
+                        "role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
@@ -252,7 +258,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.removeSignedGrantOfferLetterFileEntry(projectId), () -> {
-            verify(projectGrantOfferPermissionRules).leadPartnerCanDeleteSignedGrantOfferLetter(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).leadPartnerCanDeleteSignedGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -273,8 +280,10 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, new GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null)), () -> {
-            verify(projectGrantOfferPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project, getLoggedInUser());
+        assertAccessDenied(() -> classUnderTest.approveOrRejectSignedGrantOfferLetter(123L, new
+                GrantOfferLetterApprovalResource(ApprovalType.APPROVED, null)), () -> {
+            verify(projectGrantOfferPermissionRules).internalUsersCanApproveSignedGrantOfferLetter(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -285,109 +294,20 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterState(123L), () -> {
-            verify(projectGrantOfferPermissionRules).internalAdminUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).supportUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).innovationLeadUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalAdminUserCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).supportUserCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUserCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project,
+                    getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
 
     @Override
     protected Class<? extends GrantOfferLetterService> getClassUnderTest() {
-        return TestGrantOfferLetterService.class;
-    }
-
-    public static class TestGrantOfferLetterService implements GrantOfferLetterService {
-
-        @Override
-        public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getSignedGrantOfferLetterFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getGrantOfferLetterFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> getAdditionalContractFileEntryDetails(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createSignedGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createGrantOfferLetterFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> generateGrantOfferLetter(Long projectId, FileEntryResource fileEntryResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> sendGrantOfferLetter(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, GrantOfferLetterApprovalResource grantOfferLetterApprovalResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
-            return null;
-        }
+        return GrantOfferLetterServiceImpl.class;
     }
 }

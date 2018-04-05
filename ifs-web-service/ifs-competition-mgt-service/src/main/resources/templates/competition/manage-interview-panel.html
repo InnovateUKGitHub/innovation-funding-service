@@ -35,7 +35,7 @@
     <ul class="link-list extra-margin">
 
         <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
-               th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">
+               th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">
             Assign applications
         </a>
             <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
