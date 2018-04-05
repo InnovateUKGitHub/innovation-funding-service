@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +32,7 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
 
     @Override
     protected Class<? extends PublicContentItemService> getClassUnderTest() {
-        return TestPublicContentItemService.class;
+        return PublicContentItemServiceImpl.class;
     }
 
     @Test
@@ -58,14 +56,5 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
                         .withRolesGlobal(singletonList(Role.getByName(roleType.getName())))
                         .build());
         serviceCall.run();
-    }
-
-    public static class TestPublicContentItemService implements PublicContentItemService {
-        @Override
-        public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) { return null; }
-
-        @Override
-        public ServiceResult<PublicContentItemResource> byCompetitionId(Long id) { return null; }
-
     }
 }

@@ -21,15 +21,15 @@ public interface SectionStatusService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Map<Long, Set<Long>>> getCompletedSections(long applicationId);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_COMPLETE')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION')")
     ServiceResult<List<ValidationMessages>> markSectionAsComplete(long sectionId,
                                                                   @P("applicationId") final long id,
                                                                   long markedAsCompleteById);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_NOT_REQUIRED')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION')")
     ServiceResult<Void> markSectionAsNotRequired(long sectionId, long applicationId, long markedAsNotRequiredById);
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_INCOMPLETE')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION')")
     ServiceResult<Void> markSectionAsInComplete(long sectionId,
                                                 @P("applicationId") final long id,
                                                 long markedAsInCompleteById);

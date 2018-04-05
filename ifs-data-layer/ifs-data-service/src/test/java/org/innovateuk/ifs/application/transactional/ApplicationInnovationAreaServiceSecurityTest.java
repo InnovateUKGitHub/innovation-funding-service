@@ -4,13 +4,9 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.mockito.Mockito.*;
@@ -19,10 +15,9 @@ public class ApplicationInnovationAreaServiceSecurityTest extends BaseServiceSec
     private ApplicationLookupStrategy applicationLookupStrategy;
     private ApplicationPermissionRules applicationRules;
 
-
     @Override
     protected Class<? extends ApplicationInnovationAreaService> getClassUnderTest() {
-        return TestApplicationInnovationAreaService.class;
+        return ApplicationInnovationAreaServiceImpl.class;
     }
 
     @Before
@@ -61,19 +56,5 @@ public class ApplicationInnovationAreaServiceSecurityTest extends BaseServiceSec
                 () -> classUnderTest.getAvailableInnovationAreas(applicationId),
                 () -> verify(applicationRules).usersConnectedToTheApplicationCanViewInnovationAreas(isA(ApplicationResource.class), isA(UserResource.class))
         );
-    }
-
-    public static class TestApplicationInnovationAreaService implements ApplicationInnovationAreaService {
-        public ServiceResult<List<InnovationAreaResource>> getAvailableInnovationAreas(Long applicationId) {
-            return null;
-        }
-
-        public ServiceResult<ApplicationResource> setNoInnovationAreaApplies(Long applicationId) {
-            return null;
-        }
-
-        public ServiceResult<ApplicationResource> setInnovationArea(Long applicationId, Long innovationAreaId) {
-            return null;
-        }
     }
 }
