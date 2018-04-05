@@ -18,8 +18,8 @@ IFS.core.passwordToggle = (function () {
         }
       })
     },
-    showPassword: function (button, passwordInput, submitButton) {
-      form.sub
+    showPassword: function (button, passwordInput, submitButton, form) {
+      form.off('submit')
       passwordInput.prop('type', 'text')
       passwordInput.prop('name', Math.random().toString(36).replace(/[^a-z]+/g, ''))
       passwordInput.focus()
