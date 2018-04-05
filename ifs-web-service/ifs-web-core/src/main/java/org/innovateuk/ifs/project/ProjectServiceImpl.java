@@ -73,6 +73,19 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectResource getByWithdrawnProject(Long projectId) {
+        if(projectId == null) {
+            return null;
+        }
+        RestResult<ProjectResource> restResult =  projectRestService.getByWithdrawnProject(projectId);
+        if(restResult.isSuccess()){
+            return restResult.getSuccess();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public ServiceResult<List<ProjectResource>> findByUser(Long userId) {
         return projectRestService.findByUserId(userId).toServiceResult();
     }

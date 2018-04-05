@@ -18,6 +18,8 @@ public interface ProjectRestService {
 
     RestResult<ProjectResource> getByApplicationId(Long applicationId);
 
+    RestResult<ProjectResource> getByWithdrawnProject(Long projectId);
+
     RestResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
     RestResult<ProjectUserResource> getProjectManager(Long projectId);

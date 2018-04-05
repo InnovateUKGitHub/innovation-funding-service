@@ -66,7 +66,7 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/withdraw")
     public String withdrawProject(@PathVariable("projectId") final long projectId) {
-        ProjectResource projectResource = projectService.getWithdrawnProject(projectId);
+        ProjectResource projectResource = projectService.getByWithdrawnProject(projectId);
 
         return "redirect:/project/withdraw";
     }
