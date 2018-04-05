@@ -20,7 +20,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -238,9 +237,8 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
-        final Role leadApplicantRole = Role.getByName(UserRoleType.INTERVIEW_LEAD_APPLICANT.getName());
         final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
-        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), leadApplicantRole, application.getLeadOrganisationId());
+        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
         final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
 
         interviewAssignmentRepository.save(panel);

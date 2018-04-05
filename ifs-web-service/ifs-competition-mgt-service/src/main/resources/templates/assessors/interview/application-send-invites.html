@@ -11,7 +11,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assign applications to interview panel',linkClass='link-back',linkUrl=@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Send invites to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
@@ -32,13 +32,13 @@
                 <th scope="col" class="width-small">Application number</th>
                 <th scope="col">Project title</th>
                 <th scope="col">Lead organisation</th>
-                <td scope="col">Additional feedback</td>
+                <th scope="col">Additional feedback</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="app : ${model.applications}">
                 <td>
-                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${originQuery}"
+                    <a th:href="@{/competition/{competitionId}/application/{appId}(competitionId=${model.competitionId},appId=${app.applicationId})} + ${model.originQuery}"
                        th:text="${app.applicationId}">123
                     </a>
                 </td>
@@ -55,10 +55,21 @@
     <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
 
 
-    <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" method="post" enctype="multipart/form-data" th:object="${form}">
-        <div class="form-group extra-margin-bottom">
-            <label class="form-label-bold" for="subject">Email subject</label>
-            <input class="form-control width-full" id="subject" type="text" th:field="*{subject}" />
+    <form th:action="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}"
+          method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate">
+        <div class="form-group extra-margin-bottom" th:classappend="${#fields.hasErrors('*{subject}')} ? 'form-group-error'">
+            <label class="form-label-bold" th:for="${#ids.next('subject')}">
+                <span>Email subject</span>
+                <th:block th:if="${#fields.hasErrors('subject')}">
+                    <span class="error-message" th:each="err : ${#fields.errors('subject')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <input class="form-control width-full"
+                   id="subject"
+                   type="text"
+                   th:field="*{subject}"
+                   required="required"
+                   th:attr="data-required-errormessage=#{validation.inviteAssessors.subject.required}"  />
         </div>
 
         <h3 class="heading-small">Message</h3>
@@ -95,5 +106,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

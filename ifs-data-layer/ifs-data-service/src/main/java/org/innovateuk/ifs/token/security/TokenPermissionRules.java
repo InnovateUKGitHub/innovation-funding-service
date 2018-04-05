@@ -6,7 +6,7 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
 
 /**
  * Rules around who has permissions to perform CRUD around Tokens
