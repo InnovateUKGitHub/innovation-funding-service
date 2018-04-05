@@ -18,6 +18,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3143 Interview panels - Include URL in assessor invite
 ...
 ...               IFS-2782 Assign Applications to Interview Panel: Send Invites
+...
+...               IFS-3155 Assign applications to interview panel - View status tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -72,7 +74,7 @@ CompAdmin can add the applications to the invite list
 
 CompAdmin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
-    [Documentation]  IFS-2782
+    [Documentation]  IFS-2782  IFS-3155
     [Tags]
     When the user clicks the button/link       link=Review and send invites
     Then the user should see the element       jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
