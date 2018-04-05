@@ -6,7 +6,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 
 public class ProjectUserResource {
     private Long id;
@@ -94,7 +94,7 @@ public class ProjectUserResource {
 
     @JsonIgnore
     public boolean isFinanceContact() {
-        return FINANCE_CONTACT.getName().equals(getRoleName());
+        return role.equals(FINANCE_CONTACT.getId());
     }
 
     public String getEmail() {

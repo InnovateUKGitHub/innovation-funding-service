@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.transactional.ApplicationProgressService;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -94,7 +94,7 @@ public class ApplicationController {
     @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                                          @PathVariable("userId") final Long userId,
-                                                                                         @PathVariable("role") final UserRoleType role) {
+                                                                                         @PathVariable("role") final Role role) {
 
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }

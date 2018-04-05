@@ -19,10 +19,10 @@ import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.review.domain.Review;
@@ -330,7 +330,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     }
 
     private String getInvitePreviewContent(Competition competition) {
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName()
@@ -342,7 +342,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
                                                        String customTextHtml,
                                                        ReviewInvite invite,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
@@ -387,7 +387,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         applicationsInPanel.forEach(application -> {
-            Review review = new Review(application, participant, Role.PANEL_ASSESSOR);
+            Review review = new Review(application, participant);
             review.setActivityState(pendingActivityState);
             reviewRepository.save(review);
         });

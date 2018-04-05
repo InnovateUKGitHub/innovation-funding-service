@@ -15,8 +15,8 @@ import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
@@ -464,7 +464,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
                 "competitionName", competition.getName()
                 );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessors_to_interview_panel_text.txt";
 
@@ -519,7 +519,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
                 "competitionName", competition.getName()
         );
 
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         String templatePath = "invite_assessors_to_interview_panel_text.txt";
 

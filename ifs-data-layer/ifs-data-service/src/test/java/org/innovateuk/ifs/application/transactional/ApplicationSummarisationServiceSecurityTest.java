@@ -9,8 +9,8 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.math.BigDecimal;
 
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static java.util.Collections.singletonList;
 import static org.junit.Assert.fail;
 
 public class ApplicationSummarisationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationSummarisationService> {

@@ -3,17 +3,21 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-2633 Manage interview panel dashboard - Internal
 ...
+...               IFS-2727 Interview Panels - Assign applications 'Find' tab
+...
 ...               IFS-2778 Invite Assessor to Interview Panel: Find and Invite Tabs
 ...
 ...               IFS-2779 Invite Assessor to Interview Panel: Review and Send Invite
-...
-...               IFS-2727 Interview Panels - Assign applications 'Find' tab
 ...
 ...               IFS-3054 Assessor dashboard - Invitation to interview panel box
 ...
 ...               IFS-3055 Assessor dashboard - Attend interview panel box
 ...
 ...               IFS-2780 Invite Assessor to Interview Panel: Pending and Declined Tab
+...
+...               IFS-3143 Interview panels - Include URL in assessor invite
+...
+...               IFS-2782 Assign Applications to Interview Panel: Send Invites
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -38,18 +42,14 @@ CompAdmin can add an assessors to the invite list
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-2779
     [Tags]
-    [Setup]  the user clicks the button/link  link=Invite
-    Given the user clicks the button/link     link=Review and send invites
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
+    Given the compAdmin navigates to the send invite email page
     When the user clicks the button/link      link=Cancel
     Then the user should see the element      jQuery=td:contains("${assessor_ben}")
 
 Assessors receives the invite to the interview panel
     [Documentation]  IFS-2779  IFS-2780
     [Tags]
-    Given the user clicks the button/link      link=Invite
-    When the user clicks the button/link       link=Review and send invites
-    Then the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
+    Given the compAdmin navigates to the send invite email page
     And the user should see the element        jQuery=label:contains("Subject") ~ input[value="Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'"]
     And the user enters text to a text field   css=.editor   Additional message
     When the user clicks the button/link       css=button[type="submit"]   #Send invite
@@ -70,17 +70,37 @@ CompAdmin can add the applications to the invite list
     When the user clicks the button/link        link=Assign applications
     Then the competition admin selects the applications and adds them to the invite list
 
+CompAdmin can send or cancel sending the invitation to the applicants
+#competition admin send the email to applicant with application details to attend interview panel
+    [Documentation]  IFS-2782
+    [Tags]
+    When the user clicks the button/link       link=Review and send invites
+    Then the user should see the element       jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+    And the user should see the element        jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+    When the user clicks the button/link       link=Cancel
+    Then the user navigates to the page        ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite
+    When the user clicks the button/link       link=Review and send invites
+    And the user clicks the button/link        css=.button[type="submit"]     #Send invite
+    Then the user reads his email              aaron.robertson@load.example.com   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
+
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
-    [Tags]  Failing
+    [Tags]
     Given log in as a different user         ${assessor_joel_email}   ${short_password}
     And the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button   acceptInvitation  true
     And the user clicks the button/link      css=.button[type="submit"]   #Confirm
     Then the user navigates to the page      ${server}/assessment/assessor/dashboard
     And the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
-    #TODO Assesor is able to reject the invitation from email need to add once IFS-3143 done
     And the user should see the element      jQuery=h2:contains("Interviews you have agreed to attend") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+
+Assessor can respond to email invite and decline
+    [Documentation]  IFS-3143
+    [Tags]
+    Given log in as a different user         ${assessor_madeleine_email}   ${short_password}
+    When the user reads his email and clicks the link   ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
+    Then The user should see the element     jQuery=h1:contains("Invitation to interview panel")
+    And the assessor declines the interview invitation and longer sees the competition in the dashboard
 
 *** Keywords ***
 the Interview Panel is activated in the db
@@ -88,8 +108,8 @@ the Interview Panel is activated in the db
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
 
 the user sees the Interview panel page and the Interview links
-    And the user should see the element    jQuery=h1:contains("Manage interview panel")
-    And the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
+    the user should see the element    jQuery=h1:contains("Manage interview panel")
+    the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
     #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2783
 
 the competition admin selects the applications and adds them to the invite list
@@ -100,3 +120,15 @@ the competition admin selects the applications and adds them to the invite list
     the user should see the element    link=Review and send invites
     the user should see the element    jQuery=td:contains("${Neural_network_application}") + td:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
     the user should see the element    jQuery=td:contains("${computer_vision_application}") + td:contains("${computer_vision_application_name}")
+
+the compAdmin navigates to the send invite email page
+    the user clicks the button/link    link=Invite
+    the user clicks the button/link    link=Review and send invites
+    the user should see the element    jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
+
+the assessor declines the interview invitation and longer sees the competition in the dashboard
+    the user selects the radio button    acceptInvitation  false
+    the user clicks the button/link      css=.button[type="submit"]   #Confirm
+    the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
+    the user navigates to the page       ${server}/assessment/assessor/dashboard
+    the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
