@@ -50,4 +50,20 @@ public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSec
                 COMP_ADMIN, PROJECT_FINANCE
         );
     }
+
+    @Test
+    public void getEmailTemplate() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.getEmailTemplate(),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void sendInvites() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.sendInvites(1L, new AssessorInviteSendResource("Subject", "Content")),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
 }
