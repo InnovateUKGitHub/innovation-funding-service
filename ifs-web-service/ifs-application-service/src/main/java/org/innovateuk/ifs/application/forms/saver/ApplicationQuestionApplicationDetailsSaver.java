@@ -28,7 +28,7 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
                         .forEach(e -> {
                             if (validationMessage.getObjectName().equals("target")) {
                                 if (hasText(e.getErrorKey())) {
-                                    toFieldErrors.addError(fieldError("application." + e.getFieldName(), e.getFieldRejectedValue(), e.getErrorKey()));
+                                    toFieldErrors.addError(fieldError("application." + e.getFieldName(), e.getFieldRejectedValue(), e.getErrorKey(), e.getArguments()));
                                 }
                             }
                         }));

@@ -10,6 +10,7 @@ import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBu
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static freemarker.template.utility.Collections12.singletonList;
+import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -27,7 +28,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
                 .build();
         UserResource userResource = newUserResource()
                 .withId(1L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertTrue(rules.userCanAcceptCompetitionInvite(competitionParticipantResource, userResource));
@@ -40,7 +41,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
                 .build();
         UserResource userResource = newUserResource()
                 .withId(2L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertFalse(rules.userCanAcceptCompetitionInvite(competitionParticipantResource, userResource));
@@ -53,7 +54,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
                 .build();
         UserResource userResource = newUserResource()
                 .withEmail("tom@poly.io")
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertTrue(rules.userCanAcceptCompetitionInvite(competitionParticipantResource, userResource));
@@ -66,7 +67,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
                 .build();
         UserResource userResource = newUserResource()
                 .withEmail("non-existent-email@poly.io")
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertFalse(rules.userCanAcceptCompetitionInvite(competitionParticipantResource, userResource));
@@ -80,7 +81,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
                 .build();
         UserResource userResource = newUserResource()
                 .withId(7L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertTrue(rules.userCanViewTheirOwnCompetitionParticipation(competitionParticipantResource, userResource));
@@ -93,7 +94,7 @@ public class CompetitionParticipantPermissionRulesTest extends BasePermissionRul
                 .build();
         UserResource userResource = newUserResource()
                 .withId(11L)
-                .withRolesGlobal(singletonList(assessorRole()))
+                .withRolesGlobal(singletonList(ASSESSOR))
                 .build();
 
         assertFalse(rules.userCanViewTheirOwnCompetitionParticipation(competitionParticipantResource, userResource));

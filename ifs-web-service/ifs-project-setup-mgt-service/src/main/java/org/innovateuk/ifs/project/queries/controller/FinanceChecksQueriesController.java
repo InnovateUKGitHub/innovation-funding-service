@@ -23,7 +23,6 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +49,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -296,10 +296,9 @@ public class FinanceChecksQueriesController {
         ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
 
         if (queriesResult.isSuccess()) {
-            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(), user ->
-                    user.hasRole(UserRoleType.PROJECT_FINANCE) ?
-                        user.getName() + " - Innovate UK (Finance team)" :
-                        user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccess(),
+                    threadViewModelPopulator.namedProjectFinanceOrNamedExternalUser());
+
         } else {
             return emptyList();
         }

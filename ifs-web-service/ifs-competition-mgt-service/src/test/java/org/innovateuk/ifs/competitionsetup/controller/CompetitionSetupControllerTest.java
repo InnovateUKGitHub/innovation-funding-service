@@ -15,7 +15,6 @@ import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +49,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuil
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.*;
 import static org.innovateuk.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -92,7 +93,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void setUp() {
         super.setUp();
 
-        when(userService.findUserByType(UserRoleType.COMP_ADMIN))
+        when(userService.findUserByType(COMP_ADMIN))
                 .thenReturn(
                         newUserResource()
                                 .withFirstName("Comp")
@@ -100,7 +101,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                                 .build(1)
                 );
 
-        when(userService.findUserByType(UserRoleType.INNOVATION_LEAD))
+        when(userService.findUserByType(INNOVATION_LEAD))
                 .thenReturn(
                         newUserResource()
                                 .withFirstName("Comp")

@@ -2,6 +2,8 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
+import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.junit.Test;
@@ -135,5 +137,37 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                 ));
 
         verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplicationIds(competitionId);
+    }
+
+    @Test
+    public void getEmailTemplate() throws Exception {
+        when(interviewAssignmentInviteServiceMock.getEmailTemplate()).thenReturn(serviceSuccess(new ApplicantInterviewInviteResource("Content")));
+
+        mockMvc.perform(get("/interview-panel/email-template"))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        responseFields(fieldWithPath("content").description("The content of the email template sent to applicants"))
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).getEmailTemplate();
+    }
+
+    @Test
+    public void sendInvites() throws Exception {
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+        when(interviewAssignmentInviteServiceMock.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/send-invites/{competitionId}", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(sendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        requestFields(
+                                fieldWithPath("subject").description("Subject of the email to send to applicants"),
+                                fieldWithPath("content").description("Content of the email to send to applicants")
+                        )
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).sendInvites(competitionId, sendResource);
     }
 }

@@ -7,7 +7,9 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -26,10 +28,10 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.StatusService;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -54,13 +56,15 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteStatus.EXISTING;
 import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteStatus.PENDING;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 /**
  * This controller will handle all requests that are related to project details.
@@ -508,7 +512,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
     private void populateProjectManagerModel(Model model, final Long projectId,
@@ -636,7 +640,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
         SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
+                .filter(uar -> uar.getRole() == PARTNER.getId())
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
                 .collect(Collectors.toCollection(supplier));
 
@@ -678,5 +682,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private String redirectToProjectManager(long projectId){
         return "redirect:/project/" + projectId + "/details/project-manager";
+    }
+
+    private void addAddressNotProvidedValidationError(BindingResult bindingResult, ValidationHandler validationHandler){
+        ValidationMessages validationMessages = new ValidationMessages(bindingResult);
+        validationMessages.addError(fieldError("addressType", new Error(PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY)));
+        validationHandler.addAnyErrors(validationMessages);
     }
 }

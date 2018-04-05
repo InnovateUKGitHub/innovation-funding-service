@@ -4,8 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 public class UserTest {
     User user;
 

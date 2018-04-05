@@ -13,7 +13,6 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResourc
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,12 +45,12 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void testGenerateSpendProfile() {
 
-        asList(UserRoleType.values()).forEach(role -> {
+        asList(Role.values()).forEach(role -> {
             Role roleResource = Role.getByName(role.getName());
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 
-            if (UserRoleType.PROJECT_FINANCE == role || UserRoleType.COMP_ADMIN == role) {
+            if (role == PROJECT_FINANCE || role == COMP_ADMIN) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
