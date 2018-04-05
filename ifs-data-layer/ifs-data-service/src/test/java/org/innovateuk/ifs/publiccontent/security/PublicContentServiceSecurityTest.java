@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Test;
 
@@ -24,7 +23,7 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
 
     @Override
     protected Class<? extends PublicContentService> getClassUnderTest() {
-        return TestPublicContentService.class;
+        return PublicContentServiceImpl.class;
     }
 
     @Test
@@ -64,33 +63,5 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
 
     private void assertAccessDeniedAsRole(Role roleType, Runnable serviceCall, Runnable verifications) {
         runAsRole(roleType, () -> assertAccessDenied(serviceCall, verifications) );
-    }
-
-    public static class TestPublicContentService implements PublicContentService {
-
-        @Override
-        public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> initialiseByCompetitionId(Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> publishByCompetitionId(Long id) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
-            return null;
-        }
     }
 }

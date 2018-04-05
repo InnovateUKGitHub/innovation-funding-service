@@ -4,14 +4,13 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseServiceImpl;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -30,7 +29,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
     @Override
     protected Class<? extends AssessorFormInputResponseService> getClassUnderTest() {
-        return TestAssessorFormInputResponseService.class;
+        return AssessorFormInputResponseServiceImpl.class;
     }
 
     @Before
@@ -107,47 +106,5 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
                 () -> classUnderTest.getAssessmentAggregateFeedback(applicationId, questionId),
                 () -> verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class))
         );
-    }
-
-    public static class TestAssessorFormInputResponseService implements AssessorFormInputResponseService {
-        @Override
-        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> updateFormInputResponses(AssessorFormInputResponsesResource responses) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId) {
-            return null;
-        }
     }
 }
