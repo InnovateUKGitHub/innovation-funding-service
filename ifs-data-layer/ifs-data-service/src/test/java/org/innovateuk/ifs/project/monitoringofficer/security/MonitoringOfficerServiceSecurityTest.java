@@ -1,20 +1,16 @@
 package org.innovateuk.ifs.project.monitoringofficer.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
-import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
+import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.monitoringofficer.transactional.SaveMonitoringOfficerResult;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing how the secured methods in ProjectMonitoringOfficerService interact with Spring Security
@@ -69,25 +65,7 @@ public class MonitoringOfficerServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Override
-    protected Class<TestProjectService> getClassUnderTest() {
-        return TestProjectService.class;
-    }
-
-    public static class TestProjectService implements MonitoringOfficerService {
-
-        @Override
-        public ServiceResult<SaveMonitoringOfficerResult> saveMonitoringOfficer(final Long projectId, final MonitoringOfficerResource monitoringOfficerResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> notifyStakeholdersOfMonitoringOfficerChange(MonitoringOfficerResource monitoringOfficer) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<MonitoringOfficerResource> getMonitoringOfficer(Long projectId) {
-            return null;
-        }
+    protected Class<? extends MonitoringOfficerService> getClassUnderTest() {
+        return MonitoringOfficerServiceImpl.class;
     }
 }

@@ -1,19 +1,16 @@
 package org.innovateuk.ifs.project.spendprofile.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
-import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,12 +43,12 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void testGenerateSpendProfile() {
 
-        asList(UserRoleType.values()).forEach(role -> {
+        asList(Role.values()).forEach(role -> {
             Role roleResource = Role.getByName(role.getName());
             UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
             setLoggedInUser(userWithRole);
 
-            if (UserRoleType.PROJECT_FINANCE == role || UserRoleType.COMP_ADMIN == role) {
+            if (role == PROJECT_FINANCE || role == COMP_ADMIN) {
                 classUnderTest.generateSpendProfile(123L);
             } else {
                 try {
@@ -230,71 +227,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     @Override
-    protected Class<TestSpendProfileService> getClassUnderTest() {
-        return TestSpendProfileService.class;
-    }
-
-    public static class TestSpendProfileService implements SpendProfileService {
-
-        @Override
-        public ServiceResult<Void> generateSpendProfile(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ApprovalType> getSpendProfileStatus(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<SpendProfileResource> getSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> saveSpendProfile(ProjectOrganisationCompositeId projectOrganisationCompositeId, SpendProfileTableResource table) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSpendProfileComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> markSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
+    protected Class<? extends SpendProfileService> getClassUnderTest() {
+        return SpendProfileServiceImpl.class;
     }
 
     private List<Role> getNonInternalAdminOrSupportUserRoles() {

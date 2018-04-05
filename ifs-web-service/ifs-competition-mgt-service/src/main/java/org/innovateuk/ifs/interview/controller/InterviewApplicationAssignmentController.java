@@ -37,10 +37,10 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  * This controller will handle all Competition Management requests related to assigning applications to an interview Panel.
  */
 @Controller
-@RequestMapping("/assessment/interview-panel/competition/{competitionId}/applications")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = InterviewAssignmentApplicationsController.class)
+@RequestMapping("/assessment/interview/competition/{competitionId}/applications")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = InterviewApplicationAssignmentController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class InterviewAssignmentApplicationsController extends CompetitionManagementCookieController<InterviewAssignmentSelectionForm> {
+public class InterviewApplicationAssignmentController extends CompetitionManagementCookieController<InterviewAssignmentSelectionForm> {
 
     private static final String SELECTION_FORM = "interviewAssignmentApplicationSelectionForm";
 
@@ -82,7 +82,7 @@ public class InterviewAssignmentApplicationsController extends CompetitionManage
         model.addAttribute("model", interviewPanelApplicationsFindModel);
         model.addAttribute("originQuery", originQuery);
 
-        return "assessors/interview-panel-find";
+        return "assessors/interview/application-find";
     }
 
     private void updateSelectionForm(HttpServletRequest request,
@@ -206,7 +206,7 @@ public class InterviewAssignmentApplicationsController extends CompetitionManage
     }
 
     private String redirectToFind(long competitionId, int page, Optional<Long> innovationArea) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/assessment/interview-panel/competition/{competitionId}/applications/find")
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/assessment/interview/competition/{competitionId}/applications/find")
                 .queryParam("page", page);
 
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
@@ -227,11 +227,11 @@ public class InterviewAssignmentApplicationsController extends CompetitionManage
                 .populateModel(competitionId, page, originQuery));
         model.addAttribute("originQuery", originQuery);
 
-        return "assessors/interview-panel-invite";
+        return "assessors/interview/application-invite";
     }
 
     private String redirectToInvite(long competitionId, int page) {
-        return "redirect:" + UriComponentsBuilder.fromPath("/assessment/interview-panel/competition/{competitionId}/applications/invite")
+        return "redirect:" + UriComponentsBuilder.fromPath("/assessment/interview/competition/{competitionId}/applications/invite")
                 .queryParam("page", page)
                 .buildAndExpand(asMap("competitionId", competitionId))
                 .toUriString();
