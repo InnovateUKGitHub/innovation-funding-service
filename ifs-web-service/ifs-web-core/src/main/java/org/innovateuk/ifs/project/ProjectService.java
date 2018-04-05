@@ -22,6 +22,8 @@ public interface ProjectService {
 
     ProjectResource getByApplicationId(Long applicationId);
 
+    ProjectResource getWithdrawnProject(Long projectId);
+
     ServiceResult<List<ProjectResource>> findByUser(Long userId);
 
     OrganisationResource getLeadOrganisation(Long projectId);
