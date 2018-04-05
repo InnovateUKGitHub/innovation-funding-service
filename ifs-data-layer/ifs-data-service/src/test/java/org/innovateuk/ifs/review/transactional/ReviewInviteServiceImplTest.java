@@ -647,6 +647,15 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withUser(newUser().build())
                 .build(2);
 
+        List<ReviewParticipant> reviewParticipants = newReviewParticipant()
+                .with(id(null))
+                .withStatus(PENDING, REJECTED)
+                .withRole(ASSESSOR, ASSESSOR)
+                .withCompetition(competition, competition)
+                .withInvite(invites.get(0), invites.get(1))
+                .withUser()
+                .build(2);
+
         AssessorInviteSendResource assessorInviteSendResource = setUpAssessorInviteSendResource();
 
         Map<String, Object> expectedNotificationArguments1 = asMap(
@@ -678,15 +687,19 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .build(2);
 
         when(reviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
+        when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(reviewParticipants.get(0));
+        when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(reviewParticipants.get(1));
         when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
         when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
 
         ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(reviewInviteRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(reviewInviteRepositoryMock).getByIdIn(inviteIds);
+        inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
         inOrder.verifyNoMoreInteractions();
     }
