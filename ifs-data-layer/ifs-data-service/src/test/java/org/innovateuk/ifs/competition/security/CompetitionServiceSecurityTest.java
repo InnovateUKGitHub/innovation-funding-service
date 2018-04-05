@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +20,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -228,7 +227,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countPendingSpendProfiles(1L), PROJECT_FINANCE);
     }
 
-    private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
+    private void runAsRole(Role roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
                         .withRolesGlobal(singletonList(Role.getByName(roleType.getName())))

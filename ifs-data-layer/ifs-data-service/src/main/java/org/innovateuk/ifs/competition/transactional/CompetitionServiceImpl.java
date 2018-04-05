@@ -33,7 +33,6 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +56,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.Role.SUPPORT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -204,7 +205,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             List<Competition> competitions;
-            if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+            if (user.hasRole(INNOVATION_LEAD)) {
                 competitions = competitionRepository.findProjectSetupForInnovationLead(user.getId());
             } else {
                 competitions = competitionRepository.findProjectSetup();
@@ -244,9 +245,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         String searchQueryLike = String.format("%%%s%%", searchQuery);
         PageRequest pageRequest = new PageRequest(page, size);
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
-            if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+            if (user.hasRole(INNOVATION_LEAD)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
-            } else if (user.hasRole(UserRoleType.SUPPORT)) {
+            } else if (user.hasRole(SUPPORT)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
             } else {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));

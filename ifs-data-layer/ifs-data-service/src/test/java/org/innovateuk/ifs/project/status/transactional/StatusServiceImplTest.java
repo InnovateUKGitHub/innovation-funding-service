@@ -31,7 +31,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -70,7 +69,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganis
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
@@ -184,9 +183,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
         Mockito.when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
-        User internalUser = newUser().withRoles(singleton(Role.COMP_ADMIN)).build();
+        User internalUser = newUser().withRoles(singleton(COMP_ADMIN)).build();
         when(userRepositoryMock.findOne(internalUser.getId())).thenReturn(internalUser);
-        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
+        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(COMP_ADMIN)).build());
     }
 
     @Override
@@ -355,7 +354,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -394,7 +393,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -433,7 +432,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -464,7 +463,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -497,7 +496,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(REJECTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, REJECTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, REJECTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -530,7 +529,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, COMPLETE);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, COMPLETE);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -562,7 +561,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, PENDING);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, PENDING);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -594,7 +593,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -626,7 +625,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, ACTION_REQUIRED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -658,7 +657,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(REJECTED, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getGrantOfferLetterStatus());
 
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
 
 
@@ -698,7 +697,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
     }
 
@@ -737,7 +736,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
     }
 
@@ -772,7 +771,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
         assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
-        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        Map<Role, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
         assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
     }
 
@@ -865,7 +864,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
         // Status shown to comp admin user when MO is not set is ACTION_REQUIRED
-        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(Role.COMP_ADMIN)).build());
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(singleton(COMP_ADMIN)).build());
         result = service.getProjectStatusByProjectId(projectId);
         returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());

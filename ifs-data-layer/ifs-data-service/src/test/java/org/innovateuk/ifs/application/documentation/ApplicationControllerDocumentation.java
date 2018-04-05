@@ -11,7 +11,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.JsonMappingUtil;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
@@ -202,9 +202,8 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void getApplicationsByCompetitionIdAndUserId() throws Exception {
         Long competitionId = 1L;
         Long userId = 1L;
-        UserRoleType role = LEADAPPLICANT;
-
         List<ApplicationResource> applicationResources = applicationResourceBuilder.build(2);
+        Role role= Role.LEADAPPLICANT;
 
         when(applicationServiceMock.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role)).thenReturn(serviceSuccess(applicationResources));
 

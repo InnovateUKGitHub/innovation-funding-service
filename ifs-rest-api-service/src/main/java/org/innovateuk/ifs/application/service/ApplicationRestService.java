@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -19,7 +19,7 @@ public interface ApplicationRestService {
     RestResult<List<ApplicationResource>> getApplicationsByUserId(Long userId);
     RestResult<ApplicationPageResource> wildcardSearchById(String searchString, int pageNumber, int pageSize);
     RestResult<Boolean> isApplicationReadyForSubmit(Long applicationId);
-    RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, UserRoleType role);
+    RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userId, Role role);
     RestResult<Void> saveApplication(ApplicationResource application);
     RestResult<ApplicationResource> createApplication(Long competitionId, Long userId, String applicationName);
     RestResult<Void> updateApplicationState(Long applicationId, ApplicationState state);

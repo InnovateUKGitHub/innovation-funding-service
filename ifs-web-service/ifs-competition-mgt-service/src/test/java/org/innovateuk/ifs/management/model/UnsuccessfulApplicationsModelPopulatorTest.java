@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.UnsuccessfulApplicationsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +23,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.IFS_ADMINISTRATOR;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +72,7 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
                 .thenReturn(restSuccess(competitionResource));
         when(applicationRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField))
                 .thenReturn(restSuccess(unsuccessfulApplicationsPagedResult));
-        when(userService.existsAndHasRole(5L, UserRoleType.IFS_ADMINISTRATOR)).thenReturn(true);
+        when(userService.existsAndHasRole(5L, IFS_ADMINISTRATOR)).thenReturn(true);
 
         UnsuccessfulApplicationsViewModel viewModel = unsuccessfulApplicationsModelPopulator.populateModel(competitionId,
                 pageNumber, pageSize, sortField, userResource, existingQueryString);

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
     @Test
     public void testInternalUsersOtherThanInnovationLeadsCanViewAllMilestones() {
         allGlobalRoleUsers.forEach(user -> {
-            if (!user.hasRole(UserRoleType.INNOVATION_LEAD) && allInternalUsers.contains(user)) {
+            if (!user.hasRole(Role.INNOVATION_LEAD) && allInternalUsers.contains(user)) {
                 assertTrue(rules.allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(CompetitionCompositeId.id(1L), user));
             } else {
                 assertFalse(rules.allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(CompetitionCompositeId.id(1L), user));
