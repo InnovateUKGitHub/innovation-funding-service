@@ -1,0 +1,20 @@
+<#ftl output_format="HTML" auto_esc=true>
+    <#import "layout/default.html" as layout>
+        <@layout.default>
+
+        <p>Dear ${name},</p>
+
+        <p>Competition: ${competitionName}</p>
+
+        <p>Application number: ${applicationId}</p>
+
+        <p>Project title: ${applicationTitle}</p>
+
+        <p style="margin: 0 0 1em 0;">
+            ${message?no_esc}
+        </p>
+
+        <p>Yours sincerely,</p>
+
+        <@layout.senderHTML />
+    </@layout.default>

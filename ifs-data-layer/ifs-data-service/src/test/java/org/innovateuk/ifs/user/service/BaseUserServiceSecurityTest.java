@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.junit.Before;
@@ -105,7 +105,7 @@ public class BaseUserServiceSecurityTest extends BaseServiceSecurityTest<BaseUse
         }
 
         @Override
-        public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
+        public ServiceResult<List<UserResource>> findByProcessRole(Role roleType) {
             return serviceSuccess(newUserResource().build(2));
         }
 

@@ -63,8 +63,8 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteStatus.EXISTING;
 import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInviteStatus.PENDING;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 /**
  * This controller will handle all requests that are related to project details.
@@ -512,7 +512,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getId() == pu.getRole());
     }
 
     private void populateProjectManagerModel(Model model, final Long projectId,
@@ -640,7 +640,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
 
         SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
-                .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
+                .filter(uar -> uar.getRole() == PARTNER.getId())
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
                 .collect(Collectors.toCollection(supplier));
 
