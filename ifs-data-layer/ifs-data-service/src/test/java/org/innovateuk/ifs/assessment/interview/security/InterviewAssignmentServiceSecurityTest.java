@@ -91,6 +91,11 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
         }
 
         @Override
+        public ServiceResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, Pageable pageable) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<Long>> getAvailableApplicationIds(long competitionId) {
             return null;
         }

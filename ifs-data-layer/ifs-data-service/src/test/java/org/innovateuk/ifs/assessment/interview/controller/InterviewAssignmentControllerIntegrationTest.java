@@ -14,10 +14,7 @@ import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -262,6 +259,30 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = interviewPanelStagedApplicationPageResourceRestResult.getSuccess();
 
         assertEquals(1, interviewAssignmentStagedApplicationPageResource.getTotalElements());
+    }
+
+    @Test
+    public void getAssignedApplications() {
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState()
+        );
+
+        InterviewAssignment interviewPanel = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withTarget(applications.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewPanel);
+
+        RestResult<InterviewAssignmentApplicationPageResource> interviewPanelApplicationPageResourceRestResult = controller.getAssignedApplications(competition.getId(), pageable);
+        assertTrue(interviewPanelApplicationPageResourceRestResult.isSuccess());
+
+        InterviewAssignmentApplicationPageResource interviewAssignmentApplicationPageResource = interviewPanelApplicationPageResourceRestResult.getSuccess();
+
+        assertEquals(1, interviewAssignmentApplicationPageResource.getTotalElements());
     }
 
     @Test

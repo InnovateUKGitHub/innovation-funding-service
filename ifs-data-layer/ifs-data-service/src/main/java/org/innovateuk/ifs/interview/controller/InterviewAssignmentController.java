@@ -43,6 +43,13 @@ public class InterviewAssignmentController {
         return interviewAssignmentService.getStagedApplications(competitionId, pageable).toGetResponse();
     }
 
+    @GetMapping("/assigned-applications/{competitionId}")
+    public RestResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(
+            @PathVariable long competitionId,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"target.id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        return interviewAssignmentService.getAssignedApplications(competitionId, pageable).toGetResponse();
+    }
+
     @GetMapping("/available-application-ids/{competitionId}")
     public RestResult<List<Long>> getAvailableApplicationIds(@PathVariable long competitionId) {
         return interviewAssignmentService.getAvailableApplicationIds(competitionId).toGetResponse();

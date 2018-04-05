@@ -50,7 +50,7 @@
             <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
         <li class="not-selected">
-            <a aria-disabled="true" class="buttonlink disabled">View status</a>
+            <a th:href="@{/assessment/interview/competition/{competitionId}/applications/view-status(competitionId=${model.competitionId})}">View status</a>
         </li>
     </ul>
 
