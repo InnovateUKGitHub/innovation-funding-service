@@ -28,12 +28,16 @@
       <label for="durationInMonths">
         <span class="form-label-bold">Duration</span>
       </label>
-      <input name="durationInMonths"
-             id="durationInMonths"
-             type="number"
-             class="form-control width-small"
-             required="required"
-             min="1" />
+
+        <input name="durationInMonths"
+               id="durationInMonths"
+               type="text"
+               class="form-control width-small"
+               required="required"
+               pattern="[0-9]"
+               maxlength="6"
+               data-prevent-input-regex="[^0-9]" />
+
       <span>months</span>
     </div>
     <button type="submit" class="button">Save and return to finances</button>
