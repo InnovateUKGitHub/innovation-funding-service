@@ -13,7 +13,10 @@ import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.*;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
 import org.innovateuk.ifs.invite.mapper.InterviewParticipantMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
@@ -21,10 +24,10 @@ import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
@@ -63,7 +66,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Transactional
 public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> implements InterviewInviteService {
 
-    private static final String WEB_CONTEXT = "/interview";
+    private static final String WEB_CONTEXT = "/assessment";
 
     @Autowired
     private InterviewInviteRepository interviewInviteRepository;
@@ -306,7 +309,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
     }
 
     private String getInvitePreviewContent(Competition competition) {
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName()
@@ -317,7 +320,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
                                                        String customTextHtml,
                                                        InterviewInvite invite,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,

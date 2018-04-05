@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
 
@@ -23,4 +21,8 @@ public interface InterviewAssignmentRestService {
     RestResult<Void> unstageApplication(long applicationId);
 
     RestResult<Void> unstageApplications();
+
+    RestResult<ApplicantInterviewInviteResource> getEmailTemplate();
+
+    RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
 }

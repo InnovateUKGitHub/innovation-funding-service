@@ -2,9 +2,7 @@ package org.innovateuk.ifs.interview.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -58,5 +56,15 @@ public class InterviewAssignmentController {
     @PostMapping("/unstage-applications")
     public RestResult<Void> unstageApplications() {
         return interviewAssignmentInviteService.unstageApplications().toPostWithBodyResponse();
+    }
+
+    @GetMapping("/email-template")
+    public RestResult<ApplicantInterviewInviteResource> getEmailTemplate() {
+        return interviewAssignmentInviteService.getEmailTemplate().toGetResponse();
+    }
+
+    @PostMapping("/send-invites/{competitionId}")
+    public RestResult<Void> sendInvites(@PathVariable long competitionId, @Valid @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return interviewAssignmentInviteService.sendInvites(competitionId, assessorInviteSendResource).toPostWithBodyResponse();
     }
 }

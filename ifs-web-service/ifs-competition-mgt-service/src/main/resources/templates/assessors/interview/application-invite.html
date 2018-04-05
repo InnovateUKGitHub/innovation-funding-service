@@ -46,17 +46,17 @@
             <div><br></div>
             <ul class="inline-nav">
                 <li class="not-selected">
-                    <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
                 </li>
                 <li class="selected">
-                    <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
                 <li class="not-selected">
                     <a aria-disabled="true" class="buttonlink disabled">View status</a>
                 </li>
             </ul>
 
-            <form method="POST" th:action="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
+            <form method="POST" th:action="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
 
                 <div class="grid-row sorting">
                     <div class="column-half">
@@ -65,7 +65,7 @@
                     </div>
 
                     <div class="column-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
-                        <a aria-disabled="true" class="button disabled">Review and send invites</a>
+                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
                     </div>
                 </div>
 

@@ -2,9 +2,7 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -61,5 +59,19 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     @Override
     public RestResult<Void> unstageApplications() {
         return postWithRestResult(format("%s/%s", REST_URL, "unstage-applications"), Void.class);
+    }
+
+    @Override
+    public RestResult<ApplicantInterviewInviteResource> getEmailTemplate() {
+        String baseUrl = format("%s/%s", REST_URL, "email-template");
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), ApplicantInterviewInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "send-invites", competitionId), assessorInviteSendResource, Void.class);
     }
 }

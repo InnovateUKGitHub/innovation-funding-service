@@ -5,19 +5,18 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-import java.util.List;
+import java.util.EnumSet;
 
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static freemarker.template.utility.Collections12.singletonList;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.fail;
 
 /**
@@ -27,6 +26,7 @@ import static org.junit.Assert.fail;
  */
 public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecurityTest<CompetitionSetupQuestionService> {
 
+    private static final EnumSet<Role> NON_COMP_ADMIN_ROLES = complementOf(of(COMP_ADMIN, PROJECT_FINANCE));
     private static final long QUESTION_ID = 1L;
 
     @Override
@@ -52,12 +52,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testGetQuestionIdDeniedIfNotCorrectGlobalRoles() {
-
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
-
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
@@ -87,12 +82,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testSaveDeniedIfNotCorrectGlobalRoles() {
-
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
-
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
@@ -122,12 +112,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteDeniedIfNotCorrectGlobalRoles() {
-
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
-
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
@@ -157,12 +142,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testCreateByCompetitionDeniedIfNotCorrectGlobalRoles() {
-
-        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonCompAdminRoles.forEach(role -> {
-
+        NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
