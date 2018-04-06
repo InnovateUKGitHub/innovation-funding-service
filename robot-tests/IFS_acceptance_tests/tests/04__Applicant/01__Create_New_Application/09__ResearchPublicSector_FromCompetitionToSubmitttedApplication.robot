@@ -41,7 +41,7 @@ Requesting the id of this Competition
     Set suite variable  ${reseachCompId}
 
 The Applicant is able to apply to the competition once is Open and see the correct Questions
-    [Documentation]  IFS-182
+    [Documentation]  IFS-182 IFS-2832
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
