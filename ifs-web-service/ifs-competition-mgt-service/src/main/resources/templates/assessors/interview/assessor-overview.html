@@ -48,10 +48,8 @@
                 <dt>Innovation area</dt>
                 <dd th:text="${model.innovationArea}">Agriculture and food</dd>
             </dl>
-
-            <div><br></div>
-
-            <ul class="inline-nav">
+            
+            <ul class="inline-nav extra-margin">
                 <li class="not-selected">
                     <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
                 </li>
