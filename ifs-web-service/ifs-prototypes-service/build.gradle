@@ -1,5 +1,3 @@
-apply from: "../prototypes.gradle"
-
 bootRun {
     addResources = false
 }
@@ -12,6 +10,19 @@ tagDocker.tag = prototypesServiceVersion
 osStageRemote.tag = prototypesServiceVersion
 tagDockerLocal.tag = prototypesServiceVersion
 osStageLocal.tag = prototypesServiceVersion
+
+createContainer.hostName="prototypes-svc"
+createContainer.containerName="prototypes-svc"
+createContainer.containerId="prototypes-svc"
+createContainer.portBindings = ['1234:8080']
+
+def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
 
 jar {
     baseName = 'ifs-prototypes-service'
