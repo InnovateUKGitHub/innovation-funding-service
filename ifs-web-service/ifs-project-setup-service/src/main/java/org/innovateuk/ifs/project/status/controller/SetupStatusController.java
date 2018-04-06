@@ -30,7 +30,7 @@ public class SetupStatusController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_SETUP_STATUS')")
     @GetMapping("/{projectId}")
-    public String viewProjectSetupStatus(@PathVariable("projectId") final Long projectId,
+    public String viewProjectSetupStatus(@PathVariable("projectId") final long projectId,
                                          Model model,
                                          UserResource loggedInUser,
                                          NativeWebRequest springRequest) {
