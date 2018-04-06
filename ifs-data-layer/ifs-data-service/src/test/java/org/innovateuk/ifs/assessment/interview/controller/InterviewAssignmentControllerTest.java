@@ -129,6 +129,31 @@ public class InterviewAssignmentControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void unstageApplication() throws Exception {
+        long applicationId = 1L;
+
+        when(interviewAssignmentInviteServiceMock.unstageApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-application/{applicationId}", applicationId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplication(applicationId);
+    }
+
+    @Test
+    public void unstageApplications() throws Exception {
+        long competitionId = 1L;
+        when(interviewAssignmentInviteServiceMock.unstageApplications(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId)
+                .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications(competitionId);
+    }
+
+    @Test
     public void getEmailTemplate() throws Exception {
         ApplicantInterviewInviteResource interviewInviteResource = new ApplicantInterviewInviteResource("content");
 
