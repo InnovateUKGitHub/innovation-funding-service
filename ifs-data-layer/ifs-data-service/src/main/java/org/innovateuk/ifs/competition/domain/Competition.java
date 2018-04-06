@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
@@ -30,9 +29,6 @@ public class Competition implements ProcessActivity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @OneToMany(mappedBy = "competition")
-    private List<Application> applications = new ArrayList<>();
 
     @OneToMany(mappedBy = "competition")
     private List<Question> questions = new ArrayList<>();
@@ -124,9 +120,8 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate, TermsAndConditions termsAndConditions) {
+    public Competition(Long id, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate, TermsAndConditions termsAndConditions) {
         this.id = id;
-        this.applications = applications;
         this.questions = questions;
         this.sections = sections;
         this.name = name;
@@ -171,17 +166,9 @@ public class Competition implements ProcessActivity {
         return sections;
     }
 
-    public void addApplication(Application... apps) {
-        if (applications == null) {
-            applications = new ArrayList<>();
-        }
-        this.applications.addAll(Arrays.asList(apps));
-    }
-
     public Long getId() {
         return id;
     }
-
 
     public String getName() {
         return name;
@@ -203,10 +190,6 @@ public class Competition implements ProcessActivity {
         this.questions = questions;
     }
 
-    public void setApplications(List<Application> applications) {
-        this.applications = applications;
-    }
-
     @JsonIgnore
     public long getDaysLeft() {
         return getDaysBetween(ZonedDateTime.now(), this.getEndDate());
@@ -220,11 +203,6 @@ public class Competition implements ProcessActivity {
     @JsonIgnore
     public long getStartDateToEndDatePercentage() {
         return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
-    }
-
-    @JsonIgnore
-    public List<Application> getApplications() {
-        return applications;
     }
 
     @JsonIgnore

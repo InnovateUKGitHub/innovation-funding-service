@@ -13,15 +13,12 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.tuple.Pair;
-
-import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.service.CompetitionServiceImpl.COMPETITION_PAGE_SIZE;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Implementation of the competition dashboard searches.
