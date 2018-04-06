@@ -23,13 +23,16 @@
     <dd th:text="${#temporals.format(model.project.targetStartDate, 'd MMM yyyy')}"></dd>
   </dl>
   <form th:action="@{/competition/{competitionId}/project/{projectId}/update-duration(competitionId=${model.competitionId},projectId=${model.project.id})}"
+        th:object="${form}"
         method="post"
         novalidate="novalidate">
-    <div class="form-group">
+    <div class="form-group" th:classappend="${#fields.hasErrors('durationInMonths')} ? 'form-group-error'">
       <label for="durationInMonths">
         <span class="form-label-bold">Duration</span>
       </label>
-
+        <th:block th:if="${#fields.hasErrors('durationInMonths')}">
+          <span class="error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}" />
+        </th:block>
         <input name="durationInMonths"
                id="durationInMonths"
                type="text"

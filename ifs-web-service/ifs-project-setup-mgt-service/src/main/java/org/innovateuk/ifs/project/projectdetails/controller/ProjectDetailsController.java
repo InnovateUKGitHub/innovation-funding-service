@@ -3,14 +3,13 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -27,19 +26,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -51,6 +50,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @Controller
 @RequestMapping("/competition/{competitionId}/project")
 public class ProjectDetailsController {
+
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private CompetitionService competitionService;
@@ -124,22 +125,12 @@ public class ProjectDetailsController {
                                       @PathVariable("projectId") final long projectId, Model model,
                                       UserResource loggedInUser) {
 
-        return doViewEditProjectDuration(competitionId, projectId, model);
 
-/*        ProjectResource project = projectService.getById(projectId);
-        CompetitionResource competition = competitionService.getById(competitionId);
-
-        model.addAttribute("model", new ProjectDetailsViewModel(project,
-                competitionId,
-                competition.getName(),
-                null,
-                null,
-                null));
-
-        return "project/edit-duration";*/
+        ProjectDurationForm form = new ProjectDurationForm();
+        return doViewEditProjectDuration(competitionId, projectId, model, form);
     }
 
-    private String doViewEditProjectDuration(long competitionId, long projectId, Model model) {
+    private String doViewEditProjectDuration(long competitionId, long projectId, Model model, ProjectDurationForm form) {
 
         ProjectResource project = projectService.getById(projectId);
         CompetitionResource competition = competitionService.getById(competitionId);
@@ -150,6 +141,7 @@ public class ProjectDetailsController {
                 null,
                 null,
                 null));
+        model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";
 
@@ -160,37 +152,35 @@ public class ProjectDetailsController {
     @PostMapping("/{projectId}/update-duration")
     public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
                                         @PathVariable("projectId") final long projectId,
-                                        @ModelAttribute("durationInMonths")  final String durationInMonths,
+                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDurationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler,
                                         Model model,
                                         UserResource loggedInUser) {
 
-        Supplier<String> failureView = () -> doViewEditProjectDuration(competitionId, projectId, model);
+        Supplier<String> failureView = () -> doViewEditProjectDuration(competitionId, projectId, model, form);
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        validateDuration(durationInMonths, validationHandler);
+        validateDuration(form.getDurationInMonths(), validationHandler);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            ServiceResult<Void> updateResult = projectDetailsService.updateProjectDuration(projectId, Long.parseLong(durationInMonths));
+            ServiceResult<Void> updateResult = projectDetailsService.updateProjectDuration(projectId, Long.parseLong(form.getDurationInMonths()));
 
-            return validationHandler.addAnyErrors(updateResult, asGlobalErrors()).failNowOrSucceedWith(failureView, successView);
+            return validationHandler.addAnyErrors(updateResult, toField("durationInMonths")).failNowOrSucceedWith(failureView, successView);
         });
     }
 
-    private boolean validateDuration(String durationInMonths, ValidationHandler validationHandler) {
+    private void validateDuration(String durationInMonths, ValidationHandler validationHandler) {
 
         if (StringUtils.isBlank(durationInMonths) || !StringUtils.isNumeric(durationInMonths)) {
-            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT), asGlobalErrors());
-            return false;
+            validationHandler.addAnyErrors(serviceFailure(GENERAL_INVALID_ARGUMENT), toField("durationInMonths"));
+            return;
         }
 
         if (Long.parseLong(durationInMonths) < 1) {
-            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH), asGlobalErrors());
-            return false;
+            validationHandler.addAnyErrors(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH), toField("durationInMonths"));
         }
-        return true;
     }
 }
