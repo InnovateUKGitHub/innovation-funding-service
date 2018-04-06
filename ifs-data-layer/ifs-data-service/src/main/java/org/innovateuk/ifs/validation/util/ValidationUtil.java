@@ -68,19 +68,6 @@ public class ValidationUtil {
         this.spendProfileCostValidator = spendProfileCostValidator;
     }
 
-    @ZeroDowntime(reference = "IFS-3144", description = "Remove old package names and add flyway script to correct them in database.")
-    private static final Map<String, Class<?>> oldPackageClassMap = ImmutableMap.<String, Class<?>> builder()
-            .put("org.innovateuk.ifs.validator.EmailValidator", EmailValidator.class)
-            .put("org.innovateuk.ifs.validator.NotEmptyValidator", NotEmptyValidator.class)
-            .put("org.innovateuk.ifs.validator.WordCountValidator", WordCountValidator.class)
-            .put("org.innovateuk.ifs.validator.NonNegativeLongIntegerValidator", NonNegativeLongIntegerValidator.class)
-            .put("org.innovateuk.ifs.validator.SignedLongIntegerValidator", SignedLongIntegerValidator.class)
-            .put("org.innovateuk.ifs.validator.PastMMYYYYValidator", PastMMYYYYValidator.class)
-            .put("org.innovateuk.ifs.validator.AssessorScoreValidator", AssessorScoreValidator.class)
-            .put("org.innovateuk.ifs.validator.ResearchCategoryValidator", ResearchCategoryValidator.class)
-            .put("org.innovateuk.ifs.validator.AssessorScopeValidator", AssessorScopeValidator.class)
-            .build();
-
     /**
      * This method is needed because we want to add validator Group to validation.
      * Because we can't use the spring validators for this, we need to convert the validation messages.
@@ -141,11 +128,7 @@ public class ValidationUtil {
                                 (v.getClazzName().equals(NotEmptyValidator.class.getName())
                                 || v.getClazzName().equals(NotEmptyValidator.OLD_PACKAGE_NAME)))) {
 
-                            try {
-                                validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
-                            } catch (ClassNotFoundException e) {
-                                validator = (Validator) context.getBean(oldPackageClassMap.get(v.getClazzName()));
-                            }
+                            validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
                             binder.addValidators(validator);
                         }
                     } catch (Exception e) {
