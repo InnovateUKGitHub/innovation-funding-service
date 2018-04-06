@@ -36,10 +36,10 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  * This controller will handle all Competition Management requests related to sending interview panel invites to assessors
  */
 @Controller
-@RequestMapping("/interview/competition/{competitionId}/assessors/invite")
-@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewSendInviteController.class)
+@RequestMapping("/assessment/interview/competition/{competitionId}/assessors/invite")
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewAssessorSendInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class InterviewSendInviteController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
+public class InterviewAssessorSendInviteController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "interviewOverviewSelectionForm";
 
@@ -78,7 +78,7 @@ public class InterviewSendInviteController extends CompetitionManagementCookieCo
             populateGroupInviteFormWithExistingValues(form, invites);
         }
 
-        return "assessors/interview-send-invites";
+        return "assessors/interview/assessor-send-invites";
     }
 
     @PostMapping("/send")

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowServiceImpl;
 import org.innovateuk.ifs.project.security.ProjectFinancePermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -29,17 +30,15 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTest<ProjectFinanceRowService> {
+public class ProjectFinanceRowSecurityTest extends BaseServiceSecurityTest<ProjectFinanceRowService> {
 
     private ProjectFinancePermissionRules projectFinancePermissionRules;
     private ProjectFinanceLookupStrategy projectFinanceLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
-
         projectFinancePermissionRules = getMockPermissionRulesBean(ProjectFinancePermissionRules.class);
         projectFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectFinanceLookupStrategy.class);
-
     }
 
     @Test
@@ -48,19 +47,26 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
         assertAccessDenied(
                 () -> classUnderTest.addCostWithoutPersisting(1L, 2L),
                 () -> {
-                    verify(projectFinancePermissionRules).partnersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
-                    verify(projectFinancePermissionRules).internalUsersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .partnersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .internalUsersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
                 }
         );
     }
 
     @Test
     public void testFinanceChecksDetails(){
+        when(classUnderTestMock.financeChecksDetails(1L, 2L))
+                .thenReturn(serviceSuccess(newProjectFinanceResource().build()));
+
         assertAccessDenied(
                 () -> classUnderTest.financeChecksDetails(1L, 2L),
                 () -> {
-                    verify(projectFinancePermissionRules).internalUserCanSeeProjectFinancesForOrganisations(isA(ProjectFinanceResource.class), isA(UserResource.class));
-                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinancesForTheirOrganisation(isA(ProjectFinanceResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .internalUserCanSeeProjectFinancesForOrganisations(isA(ProjectFinanceResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .partnersCanSeeTheProjectFinancesForTheirOrganisation(isA(ProjectFinanceResource.class), isA(UserResource.class));
                 }
         );
     }
@@ -88,70 +94,7 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
     }
 
     @Override
-    protected Class<TestProjectFinanceRowCostsService> getClassUnderTest() {
-        return TestProjectFinanceRowCostsService.class;
-    }
-
-    public static class TestProjectFinanceRowCostsService implements ProjectFinanceRowService {
-
-        @Override
-        public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceRowItem> getCostItem(Long costItemId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<FinanceRowItem>> getCostItems(Long projectFinanceId, String costTypeName, Long questionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<FinanceRowItem>> getCostItems(Long projectFinanceId, Long questionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceRowItem> addCost(@P("projectFinanceId") Long projectFinanceId, Long questionId, FinanceRowItem newCostItem) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceRowItem> updateCost(@P("costId") Long costId, FinanceRowItem newCostItem) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceRowItem> addCostWithoutPersisting(@P("projectFinanceId") Long projectFinanceId, Long questionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deleteCost(@P("projectId") Long projectId, @P("organisationId") Long organisationId, @P("costId") Long costId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectFinanceResource> updateCost(@P("projectFinanceId") Long projectFinanceId, ProjectFinanceResource applicationFinance) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId) {
-            return serviceSuccess(newProjectFinanceResource().build());
-        }
-
-        @Override
-        public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public FinanceRowHandler getCostHandler(FinanceRowItem costItemId) {
-            return null;
-        }
+    protected Class<? extends ProjectFinanceRowService> getClassUnderTest() {
+        return ProjectFinanceRowServiceImpl.class;
     }
 }
