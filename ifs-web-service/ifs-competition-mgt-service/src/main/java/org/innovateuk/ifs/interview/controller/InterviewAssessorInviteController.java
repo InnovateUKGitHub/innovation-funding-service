@@ -268,7 +268,7 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
                 originQuery
         ));
 
-        return "assessors/interview-accepted";
+        return "assessors/interview/assessor-accepted";
     }
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {

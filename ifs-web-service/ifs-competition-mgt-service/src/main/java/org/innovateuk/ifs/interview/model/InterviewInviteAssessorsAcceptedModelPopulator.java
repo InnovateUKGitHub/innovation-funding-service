@@ -23,9 +23,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class InterviewInviteAssessorsAcceptedModelPopulator extends InterviewInviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
 
-    private final InterviewInviteRestService interviewInviteRestService;
+    private InterviewInviteRestService interviewInviteRestService;
 
-    private final CompetitionRestService competitionsRestService;
+    private CompetitionRestService competitionsRestService;
 
     @Autowired
     public InterviewInviteAssessorsAcceptedModelPopulator(InterviewInviteRestService interviewInviteRestService, CompetitionRestService competitionsRestService) {

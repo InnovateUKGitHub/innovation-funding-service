@@ -431,7 +431,7 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
                 .param("page", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-accepted"))
+                .andExpect(view().name("assessors/interview/assessor-accepted"))
                 .andReturn();
 
         assertCompetitionDetails(competition, result);
