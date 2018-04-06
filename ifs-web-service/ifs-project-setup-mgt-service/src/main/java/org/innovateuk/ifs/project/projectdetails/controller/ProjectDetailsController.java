@@ -1,9 +1,14 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
@@ -16,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +33,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -76,42 +87,6 @@ public class ProjectDetailsController {
         return "project/detail";
     }
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
-    @GetMapping("/{projectId}/edit-duration")
-    public String editProjectDuration(@PathVariable("competitionId") final long competitionId,
-                                      @PathVariable("projectId") final long projectId, Model model,
-                                     UserResource loggedInUser) {
-
-        ProjectResource project = projectService.getById(projectId);
-        CompetitionResource competition = competitionService.getById(competitionId);
-
-        model.addAttribute("model", new ProjectDetailsViewModel(project,
-                competitionId,
-                competition.getName(),
-                null,
-                null,
-                null));
-
-        return "project/edit-duration";
-    }
-
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
-    @PostMapping("/{projectId}/update-duration")
-    public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
-                                        @PathVariable("projectId") final long projectId,
-                                        @RequestParam(value = "durationInMonths") final long durationInMonths,
-                                        Model model,
-                                        UserResource loggedInUser) {
-
-        Supplier<String> failureView = () -> "redirect:/competition/" + competitionId + "/project/" + projectId + "/edit-duration";
-        Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
-        return projectDetailsService.updateProjectDuration(projectId, durationInMonths)
-                                    .handleSuccessOrFailure(failure -> failureView.get(),
-                                                            success -> successView.get());
-    }
-
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
         return  projectRoles.stream()
                 .filter(uar -> uar.getRole() == PARTNER.getId())
@@ -142,4 +117,80 @@ public class ProjectDetailsController {
         return organisationFinanceContactMap;
     }
 
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
+    @GetMapping("/{projectId}/edit-duration")
+    public String editProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                      @PathVariable("projectId") final long projectId, Model model,
+                                      UserResource loggedInUser) {
+
+        return doViewEditProjectDuration(competitionId, projectId, model);
+
+/*        ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        model.addAttribute("model", new ProjectDetailsViewModel(project,
+                competitionId,
+                competition.getName(),
+                null,
+                null,
+                null));
+
+        return "project/edit-duration";*/
+    }
+
+    private String doViewEditProjectDuration(long competitionId, long projectId, Model model) {
+
+        ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        model.addAttribute("model", new ProjectDetailsViewModel(project,
+                competitionId,
+                competition.getName(),
+                null,
+                null,
+                null));
+
+        return "project/edit-duration";
+
+    }
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
+    @PostMapping("/{projectId}/update-duration")
+    public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                        @PathVariable("projectId") final long projectId,
+                                        @ModelAttribute("durationInMonths")  final String durationInMonths,
+                                        @SuppressWarnings("unused") BindingResult bindingResult,
+                                        ValidationHandler validationHandler,
+                                        Model model,
+                                        UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> doViewEditProjectDuration(competitionId, projectId, model);
+
+        Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
+
+        validateDuration(durationInMonths, validationHandler);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            ServiceResult<Void> updateResult = projectDetailsService.updateProjectDuration(projectId, Long.parseLong(durationInMonths));
+
+            return validationHandler.addAnyErrors(updateResult, asGlobalErrors()).failNowOrSucceedWith(failureView, successView);
+        });
+    }
+
+    private boolean validateDuration(String durationInMonths, ValidationHandler validationHandler) {
+
+        if (StringUtils.isBlank(durationInMonths) || !StringUtils.isNumeric(durationInMonths)) {
+            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT), asGlobalErrors());
+            return false;
+        }
+
+        if (Long.parseLong(durationInMonths) < 1) {
+            validationHandler.addAnyErrors(serviceFailure(CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH), asGlobalErrors());
+            return false;
+        }
+        return true;
+    }
 }
