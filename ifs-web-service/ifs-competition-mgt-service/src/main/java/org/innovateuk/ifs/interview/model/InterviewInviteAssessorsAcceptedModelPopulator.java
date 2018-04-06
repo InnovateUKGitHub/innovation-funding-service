@@ -23,15 +23,19 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class InterviewInviteAssessorsAcceptedModelPopulator extends InterviewInviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
 
-    @Autowired
-    private InterviewInviteRestService interviewInviteRestService;
+    private final InterviewInviteRestService interviewInviteRestService;
+
+    private final CompetitionRestService competitionsRestService;
 
     @Autowired
-    private CompetitionRestService competitionsRestService;
+    public InterviewInviteAssessorsAcceptedModelPopulator(InterviewInviteRestService interviewInviteRestService, CompetitionRestService competitionsRestService) {
+        this.interviewInviteRestService = interviewInviteRestService;
+        this.competitionsRestService = competitionsRestService;
+    }
 
     public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
-                                                               int page,
-                                                               String originQuery) {
+                                                          int page,
+                                                          String originQuery) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
                 .getSuccess();

@@ -60,7 +60,6 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
     @Autowired
     private InterviewInviteAssessorsAcceptedModelPopulator interviewInviteAssessorsAcceptedModelPopulator;
 
-
     protected String getCookieName() {
         return SELECTION_FORM;
     }

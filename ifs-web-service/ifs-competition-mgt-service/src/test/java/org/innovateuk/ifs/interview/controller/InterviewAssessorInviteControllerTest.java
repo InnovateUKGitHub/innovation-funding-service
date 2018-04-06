@@ -96,7 +96,6 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
     @InjectMocks
     private InterviewInviteAssessorsAcceptedModelPopulator interviewInviteAssessorsAcceptedModelPopulator;
 
-
     private CompetitionResource competition;
 
     @Override
@@ -414,7 +413,6 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
         verify(interviewInviteRestService).deleteAllInvites(competition.getId());
     }
 
-
     @Test
     public void accepted() throws Exception {
         int page = 1;
@@ -462,7 +460,6 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
             assertEquals(inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
         });
     }
-
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
