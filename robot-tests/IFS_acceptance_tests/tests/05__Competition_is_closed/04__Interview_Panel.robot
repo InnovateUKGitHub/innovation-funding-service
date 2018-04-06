@@ -115,9 +115,9 @@ CompAdmin resend invites to multiple assessors to interview panel
     When the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
     Then the user clicks the button/link      link=Manage interview panel
     And the user clicks the button/link       link=Invite assessors
-    Then the assessor resends the invites     ${assessor_ben}
+    When the assessor resends the invites for interview panel     ${assessor_ben}
     And the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
-    When the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
+    Then the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
 
 *** Keywords ***
@@ -158,10 +158,10 @@ the assessor declines the interview invitation and longer sees the competition i
     the user navigates to the page       ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
-the assessor resends the invites
+the assessor resends the invites for interview panel
     [Arguments]  ${resendAssessor}
-    Then the user clicks the button/link      link=Pending and declined
-    When the user clicks the button/link      jQuery=tr:contains("${resendAssessor}") label
-    Then the user clicks the button/link      jQuery=button:contains("Resend invites")
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor}")
-    When the user clicks the button/link      jQuery=button:contains("Send invite")
+    the user clicks the button/link      link=Pending and declined
+    the user clicks the button/link      jQuery=tr:contains("${resendAssessor}") label
+    the user clicks the button/link      jQuery=button:contains("Resend invites")
+    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor}")
+    the user clicks the button/link      jQuery=button:contains("Send invite")
