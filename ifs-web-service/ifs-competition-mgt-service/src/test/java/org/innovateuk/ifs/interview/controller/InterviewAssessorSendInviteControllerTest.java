@@ -118,7 +118,7 @@ public class InterviewAssessorSendInviteControllerTest extends BaseControllerMoc
 
         when(interviewInviteRestService.resendInvites(inviteIds, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/interview/competition/{competitionId}/assessors/invite/resend", competition.getId())
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/invite/resend", competition.getId())
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("inviteIds[0]", inviteIds.get(0).toString())
                 .param("inviteIds[1]", inviteIds.get(1).toString())

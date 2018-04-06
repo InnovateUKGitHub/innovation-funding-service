@@ -118,7 +118,7 @@ public class InterviewAssessorSendInviteController extends CompetitionManagement
                 invites.getContent()
         ));
         populateResendInviteFormWithExistingValues(inviteform, invites);
-        return "assessors/interview-resend-invites";
+        return "assessors/interview/assessor-resend-invites";
     }
 
     @PostMapping("/reviewResend")
@@ -148,7 +148,7 @@ public class InterviewAssessorSendInviteController extends CompetitionManagement
             ));
             inviteform.setInviteIds(submittedSelectionForm.getSelectedInviteIds());
             populateResendInviteFormWithExistingValues(inviteform, invites);
-            return "assessors/interview-resend-invites";
+            return "assessors/interview/assessor-resend-invites";
         });
     }
 
