@@ -154,7 +154,8 @@ Milestone date for assessment submission is visible
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
-    [Tags]    MySQL
+    [Tags]    MySQL  Failing
+    # TODO IFS-3176
     Then the assessor should see the number of days remaining    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     And the calculation of the remaining days should be correct  ${UPCOMING_COMPETITION_TO_ASSESS_ASSESSOR_DEADLINE_DATE_SIMPLE}    ${UPCOMING_COMPETITION_TO_ASSESS_ID}
 

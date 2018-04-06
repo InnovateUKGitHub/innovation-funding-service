@@ -52,6 +52,16 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     }
 
     @Override
+    public RestResult<Void> unstageApplication(long applicationId) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-application", applicationId), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> unstageApplications(long competitionId) {
+        return postWithRestResult(format("%s/%s/%s", REST_URL, "unstage-applications", competitionId), Void.class);
+    }
+
+    @Override
     public RestResult<ApplicantInterviewInviteResource> getEmailTemplate() {
         String baseUrl = format("%s/%s", REST_URL, "email-template");
 
