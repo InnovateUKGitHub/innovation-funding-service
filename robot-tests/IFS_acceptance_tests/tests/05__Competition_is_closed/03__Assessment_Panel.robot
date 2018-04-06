@@ -82,7 +82,7 @@ There are no Assessors in Invite and Pending and declined tab before sending inv
     Then the user clicks the button/link   link=Pending and declined
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
-CompAdmin can add an assessors to invite list
+CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
     When the user clicks the button/link     link=Find
@@ -91,10 +91,8 @@ CompAdmin can add an assessors to invite list
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
     [Tags]   HappyPath
-    Given the user clicks the button/link    link=Invite
-    When the user clicks the button/link     jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Remove")
-    And the user clicks the button/link      link=Find
-    Then the user should see the element     jQuery=tr:contains("${assessor_madeleine}")
+    When the user clicks the button/link    link=Invite
+    Then the compadmin can remove an assessor or application from the invite list    ${assessor_madeleine}
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
@@ -315,7 +313,7 @@ Get the proper milestone value from the db
 return back to original milestone
     [Arguments]  ${type}  ${date}  ${competitionId}
     Connect to Database    @{database}
-    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='type' AND `competition_id`='${competitionId}'
+    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${date}' WHERE `type`='${type}' AND `competition_id`='${competitionId}'
 
 we are moving the milestone to yesterday
     [Arguments]  ${type}  ${competitionId}

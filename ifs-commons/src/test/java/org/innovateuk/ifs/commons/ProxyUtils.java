@@ -1,15 +1,19 @@
 package org.innovateuk.ifs.commons;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.util.CollectionFunctions;
+import org.springframework.aop.Advisor;
 import org.springframework.aop.framework.Advised;
+import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
@@ -23,6 +27,26 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
  * Utility class to help with Spring wrapped proxies and other reflection methods
  */
 public class ProxyUtils {
+
+    /**
+     * Create a new Spring proxy with some sensible defaults via
+     * Spring's {@link ProxyFactory}.
+     *
+     * Not necessarily useful in most cases as Spring usually
+     * proxies things correctly, but can be for cases where
+     * we need some un-managed proxy.
+     */
+    public static <T> T createProxy(Class<T> targetClass, T targetInstance, Advisor[] advisors) {
+        ProxyFactory proxyFactory = new ProxyFactory();
+
+        proxyFactory.setTargetClass(targetClass);
+        proxyFactory.setTarget(targetInstance);
+        proxyFactory.setProxyTargetClass(true);
+        proxyFactory.setPreFiltered(true);
+        proxyFactory.addAdvisors(advisors);
+
+        return (T) proxyFactory.getProxy();
+    }
 
     public static List<Object> unwrapProxies(Collection<Object> services) {
         return simpleMap(services, ProxyUtils::unwrapProxy);

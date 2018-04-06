@@ -674,9 +674,9 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupCompetition();
         this.setupApplicationWithRoles();
 
-        UserRoleType.internalRoles().forEach(role -> {
+        Role.internalRoles().forEach(role -> {
             try {
-                setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
+                setLoggedInUser(newUserResource().withRolesGlobal(singletonList(role)).build());
                 Long formInputId = 35L;
                 long processRoleId = role.ordinal(); // mapping role ordinal as process role (just for mocking)
                 List<FormInputResponseResource> inputResponse = newFormInputResponseResource().withUpdatedBy(processRoleId).build(1);
