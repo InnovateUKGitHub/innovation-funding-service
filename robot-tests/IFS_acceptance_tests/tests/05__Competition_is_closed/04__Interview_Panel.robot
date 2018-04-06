@@ -106,16 +106,16 @@ Assessor can respond to email invite and decline
     Given log in as a different user         ${assessor_madeleine_email}   ${short_password}
     When the user reads his email and clicks the link   ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     Then The user should see the element     jQuery=h1:contains("Invitation to interview panel")
-    And the assessor declines the interview invitation and longer sees the competition in the dashboard
+    And the assessor declines the interview invitation and no longer sees the competition in the dashboard
 
 CompAdmin resend invites to multiple assessors to interview panel
     [Documentation]  IFS-3154
     [Tags]
-    Given log in as a different user          &{Comp_admin1_credentials}  #${short_password}
+    Given log in as a different user          &{Comp_admin1_credentials}
     When the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
     Then the user clicks the button/link      link=Manage interview panel
     And the user clicks the button/link       link=Invite assessors
-    When the assessor resends the invites for interview panel     ${assessor_ben}
+    When the compAdmin resends the invites for interview panel     ${assessor_ben}
     And the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     Then the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
@@ -151,14 +151,14 @@ the compAdmin navigates to the send invite email page
     the user clicks the button/link    link=Review and send invites
     the user should see the element    jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
 
-the assessor declines the interview invitation and longer sees the competition in the dashboard
+the assessor declines the interview invitation and no longer sees the competition in the dashboard
     the user selects the radio button    acceptInvitation  false
     the user clicks the button/link      css=.button[type="submit"]   #Confirm
     the user should see the element      jQuery=p:contains("Thank you for letting us know you are unable to assess applications for this interview.")
     the user navigates to the page       ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
-the assessor resends the invites for interview panel
+the compAdmin resends the invites for interview panel
     [Arguments]  ${resendAssessor}
     the user clicks the button/link      link=Pending and declined
     the user clicks the button/link      jQuery=tr:contains("${resendAssessor}") label
