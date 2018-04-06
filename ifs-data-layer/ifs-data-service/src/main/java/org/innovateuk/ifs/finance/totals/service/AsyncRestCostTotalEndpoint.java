@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.security.InvalidKeyException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 
@@ -45,7 +47,12 @@ public class AsyncRestCostTotalEndpoint {
     }
 
     public ServiceResult<Void> sendCostTotals(List<FinanceCostTotalResource> financeCostTotalResources) {
-        restTemplateAdaptor.restPostWithEntityAsync("/cost-totals", financeCostTotalResources,
+        sendCostTotalsCompletable(financeCostTotalResources);
+        return ServiceResult.serviceSuccess();
+    }
+
+    CompletableFuture<ResponseEntity<Void>> sendCostTotalsCompletable(List<FinanceCostTotalResource> financeCostTotalResources) {
+        return restTemplateAdaptor.restPostWithEntityAsync("/cost-totals", financeCostTotalResources,
                 createFinanceServiceAuthHeader(financeCostTotalResources), Void.class)
                 .whenComplete((response, exception) -> {
                     if (exception != null) {
@@ -56,8 +63,6 @@ public class AsyncRestCostTotalEndpoint {
                         );
                     }
                 });
-
-        return ServiceResult.serviceSuccess();
     }
 
     private HttpHeaders createFinanceServiceAuthHeader(List<FinanceCostTotalResource> financeCostTotalResources) {
