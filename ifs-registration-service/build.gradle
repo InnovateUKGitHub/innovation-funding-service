@@ -61,3 +61,23 @@ tagDocker.tag = registrationServiceVersion
 osStageRemote.tag = registrationServiceVersion
 tagDockerLocal.tag = registrationServiceVersion
 osStageLocal.tag = registrationServiceVersion
+
+createContainer.hostName="registration-svc"
+createContainer.containerName="registration-svc"
+createContainer.containerId="registration-svc"
+
+def enabled = project.hasProperty('ifs.registration-service.enabled') ? project.property('ifs.registration-service.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
+
+buildDocker.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+stop.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+removeContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+createContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+deploy.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+
+deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"

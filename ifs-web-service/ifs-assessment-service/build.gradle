@@ -8,6 +8,20 @@ osStageRemote.tag = assessmentServiceVersion
 tagDockerLocal.tag = assessmentServiceVersion
 osStageLocal.tag = assessmentServiceVersion
 
+createContainer.hostName="assessment-svc"
+createContainer.containerName="assessment-svc"
+createContainer.containerId="assessment-svc"
+
+def enabled = project.hasProperty('ifs.assessment-service.enabled') ? project.property('ifs.assessment-service.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
+
+ext.serverContext = '/assessment'
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

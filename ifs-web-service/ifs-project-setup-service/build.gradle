@@ -5,6 +5,20 @@ osStageRemote.tag = projectSetupServiceVersion
 tagDockerLocal.tag = projectSetupServiceVersion
 osStageLocal.tag = projectSetupServiceVersion
 
+createContainer.hostName="project-setup-svc"
+createContainer.containerName="project-setup-svc"
+createContainer.containerId="project-setup-svc"
+
+def enabled = project.hasProperty('ifs.project-setup-service.enabled') ? project.property('ifs.project-setup-service.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
+
+ext.serverContext = '/project-setup'
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

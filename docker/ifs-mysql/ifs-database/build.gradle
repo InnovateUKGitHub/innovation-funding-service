@@ -1,0 +1,29 @@
+ext.sqlContainer = "ifs-database"
+ext.testSchema = "ifs_test"
+
+List<String> env = new ArrayList();
+env.add("MYSQL_ROOT_PASSWORD=password")
+env.add("MYSQL_DATABASE=ifs")
+
+List<String> cmd = new ArrayList<>();
+cmd.add("--character-set-server=utf8, --collation-server=utf8_bin")
+
+
+createContainer.containerName = "ifs-database"
+createContainer.containerId = "ifs-database"
+createContainer.env= env
+createContainer.cmd = cmd
+createContainer.portBindings = ['3306:3306']
+createContainer.hostName="ifs-database"
+
+def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property('ifs.data-service.enabled').toBoolean() : true
+stop.enabled = enabled
+removeContainer.enabled = enabled
+buildDocker.enabled = enabled
+createContainer.enabled = enabled
+deploy.enabled =enabled
+wait.enabled = enabled
+
+
+
+

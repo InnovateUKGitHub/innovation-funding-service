@@ -106,6 +106,25 @@ tagDockerLocal.tag = idpVersion
 osStageRemote.tag = idpVersion
 osStageLocal.tag = idpVersion
 
+List<String> env = new ArrayList();
+env.add("SP_DOMAIN=ifs.local-dev")
+env.add("IDP_DOMAIN=auth.local-dev:9443")
+env.add("HTTPS_PORT=9443")
+env.add("HTTP_PORT=9080")
+
+List<String> networkAliases = new ArrayList<>()
+networkAliases.add("auth.local-dev")
+networkAliases.add("iuk-auth-localdev")
+
+
+createContainer.containerName = "idp"
+createContainer.containerId = "idp"
+createContainer.env= env
+createContainer.networkAliases=networkAliases
+createContainer.portBindings = ['9443:9443']
+createContainer.hostName="idp"
+createContainer.workingDir="/usr/local/bin"
+
 
 
 
