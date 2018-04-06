@@ -5,9 +5,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +20,7 @@ import java.util.List;
 public interface InviteUserService {
 
     @PreAuthorize("hasPermission(#invitedUser, 'SAVE_USER_INVITE')")
-    ServiceResult<Void> saveUserInvite(UserResource invitedUser, UserRoleType adminRoleType);
+    ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role adminRoleType);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_EXISTING_INVITE_FOR_HASH", description = "The System Registration user can get invite using hash to process registration")

@@ -8,16 +8,17 @@ import au.com.dius.pact.model.RequestResponsePact;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.finance.resource.totals.FinanceCostTotalResource;
 import org.innovateuk.ifs.security.HashBasedMacTokenHandler;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.security.InvalidKeyException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
@@ -26,7 +27,6 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@Ignore
 public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationTest {
 
     @Autowired
@@ -53,8 +53,6 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
 
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("x-auth-token", getAuthToken(costTotalResourcesString));
-        requestHeaders.add("user-agent", "Java/" + System.getProperty("java.version"));
-        requestHeaders.setConnection("keep-alive");
         requestHeaders.setContentType(APPLICATION_JSON);
 
         return builder
@@ -74,7 +72,11 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
     @PactVerification
     public void sendCostTotals() throws Exception {
         List<FinanceCostTotalResource> costTotalResources = getCostTotalResources();
-        asyncRestCostTotalEndpoint.sendCostTotals(costTotalResources);
+
+        CompletableFuture<ResponseEntity<Void>> sendCostTotalsCompletable = asyncRestCostTotalEndpoint
+                .sendCostTotalsCompletable(costTotalResources);
+
+        sendCostTotalsCompletable.get();
     }
 
     private List<FinanceCostTotalResource> getCostTotalResources() {

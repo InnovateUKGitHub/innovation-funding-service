@@ -13,7 +13,6 @@ import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,6 +38,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -234,7 +234,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
                     List<Long> organisationIds = application.getProcessRoles()
                             .stream()
-                            .filter(pr -> pr.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                            .filter(pr -> pr.getRole() == COLLABORATOR)
                             .map(u -> u.getOrganisationId())
                             .distinct()
                             .map(oId -> Pair.of(oId, organisationRepository.findOne(oId).getName()))

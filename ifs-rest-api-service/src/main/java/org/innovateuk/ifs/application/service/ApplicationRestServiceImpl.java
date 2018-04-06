@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -76,7 +76,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, UserRoleType role) {
+    public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(Long competitionID, Long userID, Role role) {
         return getWithRestResult(applicationRestURL + "/getApplicationsByCompetitionIdAndUserId/" + competitionID + "/" + userID + "/" + role, ParameterizedTypeReferences.applicationResourceListType());
     }
 

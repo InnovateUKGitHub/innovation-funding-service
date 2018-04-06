@@ -24,7 +24,6 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +54,8 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -80,7 +81,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withRolesGlobal(singletonList(PROJECT_FINANCE)).build();
     UserResource financeContactUser = newUserResource().withFirstName("B").withLastName("Z").build();
 
-    ProjectUserResource financeContactProjectUser = newProjectUserResource().withOrganisation(organisationId).withUserName("User1").withUser(financeContactUser.getId()).withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
+    ProjectUserResource financeContactProjectUser = newProjectUserResource().withOrganisation(organisationId).withUserName("User1").withUser(financeContactUser.getId()).withEmail("e@mail.com").withPhoneNumber("0117").withRole(FINANCE_CONTACT).build();
 
     ProjectPartnerStatusResource statusResource = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE)
             .withFinanceContactStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).build();
@@ -144,6 +145,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
         when(projectService.getOrganisationIdFromUser(projectId, loggedInUser)).thenReturn(organisationId);
 
         MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
@@ -164,6 +166,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Test
     public void testViewFinanceChecksWithQueries() throws Exception {
         setLoggedInUser(financeContactUser);
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(financeContactUser.getId()).withOrganisation(organisationId).withRole(PARTNER).build(1));
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);

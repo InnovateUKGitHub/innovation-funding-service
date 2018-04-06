@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.form.builder.QuestionBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
@@ -8,6 +10,7 @@ import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
+import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
@@ -105,5 +108,20 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, supportUser));
         assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, projectFinanceUser));
         assertFalse(rules.internalUserCanReadQuestionStatus(questionStatusResource, nonInternalUser));
+    }
+
+    @Test
+    public void testOnlyMemberOfProjectTeamCanMarkSection() {
+        ApplicationResource application = ApplicationResourceBuilder.newApplicationResource().build();
+        UserResource leadApplicant = UserResourceBuilder.newUserResource().build();
+        UserResource nonProjectTeamMember = UserResourceBuilder.newUserResource().build();
+
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT))
+                .thenReturn(true);
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), applicantRoles(), application.getId()))
+                .thenReturn(null);
+
+        assertTrue(rules.onlyMemberOfProjectTeamCanMarkSection(application, leadApplicant));
+        assertFalse(rules.onlyMemberOfProjectTeamCanMarkSection(application, nonProjectTeamMember));
     }
 }

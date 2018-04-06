@@ -3,7 +3,7 @@ package org.innovateuk.ifs.invite.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -31,13 +31,13 @@ public class EditUserResource {
     })
     private String lastName;
 
-    private UserRoleType userRoleType;
+    private Role userRoleType;
 
     public EditUserResource() {
 
     }
 
-    public EditUserResource(Long userId, String firstName, String lastName, UserRoleType userRoleType) {
+    public EditUserResource(Long userId, String firstName, String lastName, Role userRoleType) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -68,12 +68,12 @@ public class EditUserResource {
         this.lastName = lastName;
     }
 
-    public UserRoleType getUserRoleType() {
+    public Role getUserRoleType() {
         return userRoleType;
     }
 
-    public void setUserRoleType(UserRoleType userRoleType) {
-        this.userRoleType = userRoleType;
+    public void setUserRoleType(Role userRole) {
+        this.userRoleType = userRole;
     }
 
     @Override

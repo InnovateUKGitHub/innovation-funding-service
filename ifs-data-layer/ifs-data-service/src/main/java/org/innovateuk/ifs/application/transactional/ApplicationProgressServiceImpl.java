@@ -11,7 +11,6 @@ import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
@@ -97,9 +96,9 @@ public class ApplicationProgressServiceImpl implements ApplicationProgressServic
         List<ProcessRole> processRoles = application.getProcessRoles();
 
         Set<Organisation> organisations = processRoles.stream()
-                .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName())
-                        || p.getRole().getName().equals(UserRoleType.APPLICANT.getName())
-                        || p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
+                .filter(p -> p.getRole() == LEADAPPLICANT
+                        || p.getRole() == APPLICANT
+                        || p.getRole() == COLLABORATOR)
                 .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()))
                 .collect(Collectors.toSet());
 

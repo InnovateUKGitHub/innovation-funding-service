@@ -3,9 +3,12 @@ package org.innovateuk.ifs.user.resource;
 import org.innovateuk.ifs.util.enums.Identifiable;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -84,10 +87,6 @@ public enum Role implements Identifiable {
         return dashboardUrl;
     }
 
-    public boolean isOfType(UserRoleType roleType) {
-        return roleType.getName().equals(name);
-    }
-
     public boolean isPartner() {
         return this == PARTNER;
     }
@@ -105,4 +104,12 @@ public enum Role implements Identifiable {
     }
 
     public static List<Role> applicantRoles() { return Arrays.asList(LEADAPPLICANT, COLLABORATOR, APPLICANT); }
+
+    public static Set<Role> internalRoles(){
+        return new HashSet<>(asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
+    }
+
+    public static Set<Role> externalApplicantRoles(){
+        return new HashSet<>(asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
+    }
 }

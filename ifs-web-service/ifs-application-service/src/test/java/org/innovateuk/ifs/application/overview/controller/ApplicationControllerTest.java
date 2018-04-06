@@ -27,7 +27,6 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +58,8 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.application.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -378,7 +379,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         app.setApplicationState(ApplicationState.CREATED);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
 
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(LEADAPPLICANT).build();
 
         when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
@@ -397,7 +398,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         app.setApplicationState(ApplicationState.CREATED);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
 
-        ProcessRoleResource processRoleResource = newProcessRoleResource().withRoleName(UserRoleType.COLLABORATOR.getName()).build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withRole(COLLABORATOR).build();
 
         when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));

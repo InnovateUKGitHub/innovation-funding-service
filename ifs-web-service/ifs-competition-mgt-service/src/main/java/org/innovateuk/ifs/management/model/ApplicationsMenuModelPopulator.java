@@ -4,9 +4,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.management.viewmodel.ApplicationsMenuViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 
 /**
  * Builds the model for the Competition Management Applications Menu view model.
@@ -27,7 +28,7 @@ public class ApplicationsMenuModelPopulator {
                 summary.getApplicationsInProgress(),
                 summary.getApplicationsSubmitted(),
                 summary.getIneligibleApplications(),
-                user.hasRole(UserRoleType.INNOVATION_LEAD)
+                user.hasRole(INNOVATION_LEAD)
         );
     }
 }

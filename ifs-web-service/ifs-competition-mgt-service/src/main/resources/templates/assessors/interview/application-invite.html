@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite applications to panel'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite applications to panel',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="competition-management competition-overview">
@@ -10,9 +10,13 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
-
             <th:block th:insert="fragments/layout :: page-title"
                       th:with="pageTitle='Assign applications to interview panel',subTitle=${model.competitionId + ': ' + model.competitionName},size='heading-xlarge'"/>
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
 
             <h2 class="heading-medium">Key statistics</h2>
 
@@ -42,17 +46,17 @@
             <div><br></div>
             <ul class="inline-nav">
                 <li class="not-selected">
-                    <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/find(competitionId=${model.competitionId})}">Find</a>
                 </li>
                 <li class="selected">
-                    <a th:href="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
+                    <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
                 <li class="not-selected">
                     <a aria-disabled="true" class="buttonlink disabled">View status</a>
                 </li>
             </ul>
 
-            <form method="POST" th:action="@{/assessment/interview-panel/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
+            <form method="POST" th:action="@{/assessment/interview/competition/{competitionId}/applications/invite(competitionId=${model.competitionId})}">
 
                 <div class="grid-row sorting">
                     <div class="column-half">
@@ -61,7 +65,7 @@
                     </div>
 
                     <div class="column-half alignright" th:if="${!#lists.isEmpty(model.applications)}">
-                        <a aria-disabled="true" class="button disabled">Review and send invites</a>
+                        <a th:href="@{/assessment/interview/competition/{competitionId}/applications/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
                     </div>
                 </div>
 
@@ -73,7 +77,7 @@
                             <th scope="col">Project title</th>
                             <th scope="col">Lead organisation</th>
                             <td scope="col" class="alignright">
-                                <button disabled="disabled" name="removeAll" class="buttonlink alignright disabled" aria-disabled="true"
+                                <button name="removeAll" class="buttonlink alignright"
                                         th:if="${!#lists.isEmpty(model.applications)}">
                                     Remove all
                                 </button>
@@ -90,7 +94,7 @@
                             <td th:text="${app.applicationName}">Application name</td>
                             <td th:text="${app.leadOrganisation}">Lead organisation</td>
                             <td class="alignright">
-                                <button  disabled="disabled" class="buttonlink alignright disabled" name="remove" th:value="${app.id}" aria-disabled="true">
+                                <button class="buttonlink alignright" name="remove" th:value="${app.applicationId}">
                                     <span class="hidden" th:text="${app.applicationName}">John Barnes </span>Remove
                                 </button>
                             </td>
