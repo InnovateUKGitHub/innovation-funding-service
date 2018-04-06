@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -15,12 +18,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
@@ -33,16 +39,22 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = ProjectDetailsController.class)
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
 public class ProjectDetailsController {
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Autowired
     private ProjectService projectService;
 
     @Autowired
+    private ProjectDetailsService projectDetailsService;
+
+    @Autowired
     private OrganisationService organisationService;
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
@@ -56,11 +68,48 @@ public class ProjectDetailsController {
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
+                null,
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, partnerOrganisations)));
 
         return "project/detail";
+    }
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
+    @GetMapping("/{projectId}/edit-duration")
+    public String editProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                      @PathVariable("projectId") final long projectId, Model model,
+                                     UserResource loggedInUser) {
+
+        ProjectResource project = projectService.getById(projectId);
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        model.addAttribute("model", new ProjectDetailsViewModel(project,
+                competitionId,
+                competition.getName(),
+                null,
+                null,
+                null));
+
+        return "project/edit-duration";
+    }
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
+    @PostMapping("/{projectId}/update-duration")
+    public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                        @PathVariable("projectId") final long projectId,
+                                        @RequestParam(value = "durationInMonths") final long durationInMonths,
+                                        Model model,
+                                        UserResource loggedInUser) {
+
+        Supplier<String> failureView = () -> "redirect:/competition/" + competitionId + "/project/" + projectId + "/edit-duration";
+        Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
+        return projectDetailsService.updateProjectDuration(projectId, durationInMonths)
+                                    .handleSuccessOrFailure(failure -> failureView.get(),
+                                                            success -> successView.get());
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
