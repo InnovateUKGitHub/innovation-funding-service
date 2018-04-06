@@ -20,7 +20,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-2782 Assign Applications to Interview Panel: Send Invites
 ...
 ...               IFS-3156 Assign applications to interview panel - Remove application(s) from invite tab
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
+...
+...               IFS-3154 Invite Assessor to Interview Panel: Resend invite
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -114,17 +115,10 @@ CompAdmin resend invites to multiple assessors to interview panel
     When the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
     Then the user clicks the button/link      link=Manage interview panel
     And the user clicks the button/link       link=Invite assessors
-    Then the user clicks the button/link      link=Pending and declined
-    When the user clicks the button/link      jQuery=tr:contains("${assessor_ben}") label
-    And the user clicks the button/link       jQuery=tr:contains("${assessor_madeleine}") label
-    Then the user clicks the button/link      jQuery=button:contains("Resend invites")
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
-    When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
-    #TODO The below should be updated once IFS-3208 has been fixed.
-    #And the user should see the element       jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Invite sent: ${today}")
+    Then the assessor resends the invites     ${assessor_ben}
+    And the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     When the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
-    And the user reads his email and clicks the link    ${assessor_madeleine}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
+    #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
 
 *** Keywords ***
 Custom Suite Setup
@@ -164,3 +158,10 @@ the assessor declines the interview invitation and longer sees the competition i
     the user navigates to the page       ${server}/assessment/assessor/dashboard
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
+the assessor resends the invites
+    [Arguments]  ${resendAssessor}
+    Then the user clicks the button/link      link=Pending and declined
+    When the user clicks the button/link      jQuery=tr:contains("${resendAssessor}") label
+    Then the user clicks the button/link      jQuery=button:contains("Resend invites")
+    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor}")
+    When the user clicks the button/link      jQuery=button:contains("Send invite")
