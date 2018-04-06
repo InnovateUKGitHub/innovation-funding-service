@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.transactional;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -190,11 +189,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<List<QuestionResource>> getQuestionsByAssessmentId(Long assessmentId) {
-        return find(getAssessment(assessmentId)).andOnSuccess(assessment -> {
-            Application application = applicationRepository.findOne(assessment.getParticipant().getApplicationId());
-            return sectionService.getByCompetitionIdVisibleForAssessment(application.getCompetition().getId())
-                    .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain).flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource).collect(toList()));
-        });
+        return find(getAssessment(assessmentId)).andOnSuccess(assessment ->
+             sectionService.getByCompetitionIdVisibleForAssessment(
+                    applicationRepository.findOne(assessment.getParticipant().getApplicationId()).getCompetition().getId())
+                    .andOnSuccessReturn(sections -> sections.stream().map(sectionMapper::mapToDomain)
+                            .flatMap(section -> section.getQuestions().stream()).map(questionMapper::mapToResource)
+                            .collect(toList())));
     }
 
     @Override

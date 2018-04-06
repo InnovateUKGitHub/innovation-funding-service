@@ -6,9 +6,8 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 
 public class SecurityRuleUtil {
 
@@ -21,7 +20,7 @@ public class SecurityRuleUtil {
     public static boolean checkProcessRole(final UserResource user,
                                            final Long applicationId,
                                            final Long organisationId,
-                                           final UserRoleType userRoleType,
+                                           final Role userRoleType,
                                            final ProcessRoleRepository processRoleRepository)
     {
         final Role role = Role.getByName(userRoleType.getName());
@@ -29,7 +28,7 @@ public class SecurityRuleUtil {
         return processRole != null;
     }
 
-    public static boolean checkProcessRole(final UserResource user, final long applicationId, UserRoleType userRoleType, final ProcessRoleRepository processRoleRepository) {
+    public static boolean checkProcessRole(final UserResource user, final long applicationId, Role userRoleType, final ProcessRoleRepository processRoleRepository) {
         return processRoleRepository.existsByUserIdAndApplicationIdAndRole(user.getId(), applicationId, Role.getByName(userRoleType.getName()));
     }
 

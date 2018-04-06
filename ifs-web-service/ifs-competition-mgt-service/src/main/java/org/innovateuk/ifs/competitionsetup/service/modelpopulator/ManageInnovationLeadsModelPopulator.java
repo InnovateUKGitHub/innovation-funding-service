@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.viewmodel.ManageInnovationLeadsViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 
 @Service
 public class ManageInnovationLeadsModelPopulator {
@@ -24,7 +25,7 @@ public class ManageInnovationLeadsModelPopulator {
 
     public ManageInnovationLeadsViewModel populateModel(CompetitionResource competition) {
 
-        List<UserResource> availableInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
+        List<UserResource> availableInnovationLeads = userService.findUserByType(INNOVATION_LEAD);
         List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competition.getId());
         availableInnovationLeads.removeAll(innovationLeadsAssignedToCompetition);
 

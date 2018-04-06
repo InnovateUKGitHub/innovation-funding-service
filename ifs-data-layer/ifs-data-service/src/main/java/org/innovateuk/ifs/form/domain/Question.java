@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.form.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.form.resource.QuestionType;
@@ -15,11 +14,7 @@ import java.util.List;
  */
 @Entity
 public class Question {
-    @ZeroDowntime(reference = "IFS-2981",
-            description = "Remove use of PREVIOUS_PACKAGE_NAME only need to check Question.class " +
-                    "NOTE: The script V116_2_0__migrate_old_question_package_name.sql will need to be ran again " +
-                    "to cleanup any statuses that were created with old package name while deploying.")
-    public static final String PREVIOUS_PACKAGE_NAME = "org.innovate.ifs.application.domain.Question";
+
     private static final String SCOPE = "Scope";
 
     @Id

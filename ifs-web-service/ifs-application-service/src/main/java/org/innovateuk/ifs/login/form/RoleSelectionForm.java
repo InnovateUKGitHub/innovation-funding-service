@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.login.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,13 +13,13 @@ import javax.validation.constraints.NotNull;
 public class RoleSelectionForm extends BaseBindingResultTarget {
 
     @NotNull(message = "{validation.standard.role.required}")
-    private UserRoleType selectedRole;
+    private Role selectedRole;
 
-    public UserRoleType getSelectedRole() {
+    public Role getSelectedRole() {
         return selectedRole;
     }
 
-    public void setSelectedRole(UserRoleType selectedRole) {
+    public void setSelectedRole(Role selectedRole) {
         this.selectedRole = selectedRole;
     }
 

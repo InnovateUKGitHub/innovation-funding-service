@@ -150,7 +150,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .withApplication(applications.toArray(new Application[1]))
                 .build(1);
 
-        Review review = new Review(applications.get(0), reviewParticipants.get(0), Role.PANEL_ASSESSOR);
+        Review review = new Review(applications.get(0), reviewParticipants.get(0));
         review.setActivityState(acceptedActivityState);
 
         when(reviewParticipantRepositoryMock

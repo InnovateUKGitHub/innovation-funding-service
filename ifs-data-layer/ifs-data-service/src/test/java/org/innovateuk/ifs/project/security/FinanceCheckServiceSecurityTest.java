@@ -1,21 +1,18 @@
 package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financechecks.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financechecks.service.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -46,19 +43,26 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         assertAccessDenied(
                 () -> classUnderTest.getFinanceCheckOverview(1L),
                 () -> {
-                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinanceOverviewsForTheirProject(isA(ProjectCompositeId.class), isA(UserResource.class));
-                    verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(isA(ProjectCompositeId.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .partnersCanSeeTheProjectFinanceOverviewsForTheirProject(isA(ProjectCompositeId.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(isA(ProjectCompositeId.class), isA(UserResource.class));
                 }
         );
     }
 
     @Test
     public void getFinanceCheckEligibilityDetails(){
+        when(classUnderTestMock.getFinanceCheckEligibilityDetails(1L, 2L))
+                .thenReturn(serviceSuccess(newFinanceCheckEligibilityResource().build()));
+
         assertAccessDenied(
                 () -> classUnderTest.getFinanceCheckEligibilityDetails(1L, 2L),
                 () -> {
-                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinancesForTheirOrganisation(isA(FinanceCheckEligibilityResource.class), isA(UserResource.class));
-                    verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinancesForTheirOrganisation(isA(FinanceCheckEligibilityResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .partnersCanSeeTheProjectFinancesForTheirOrganisation(isA(FinanceCheckEligibilityResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules)
+                            .internalUsersCanSeeTheProjectFinancesForTheirOrganisation(isA(FinanceCheckEligibilityResource.class), isA(UserResource.class));
                 }
         );
     }
@@ -72,7 +76,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         assertAccessDenied(() -> classUnderTest.getViability(projectOrganisationCompositeId),
                 () -> {
-                    verify(projectFinancePermissionRules).projectFinanceUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanViewViability(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -86,7 +91,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.RED),
                 () -> {
-                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -100,8 +106,10 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         assertAccessDenied(() -> classUnderTest.getEligibility(projectOrganisationCompositeId),
                 () -> {
-                    verify(projectFinancePermissionRules).projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).projectPartnersCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .projectPartnersCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -115,7 +123,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         assertAccessDenied(() -> classUnderTest.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.RED),
                 () -> {
-                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -125,7 +134,8 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         when(projectLookupStrategies.getProjectCompositeId(1l)).thenReturn(ProjectCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.getCreditReport(1L, 2L),
                 () -> {
-                    verify(projectFinancePermissionRules).projectFinanceUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanViewCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -135,75 +145,15 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         when(projectLookupStrategies.getProjectCompositeId(1l)).thenReturn(ProjectCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.saveCreditReport(1L, 2L, Boolean.TRUE),
                 () -> {
-                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
+                    verify(projectFinancePermissionRules)
+                            .projectFinanceUserCanSaveCreditReport(ProjectCompositeId.id(1L), getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
 
     @Override
-    protected Class<TestFinanceCheckService> getClassUnderTest() {
-        return TestFinanceCheckService.class;
-    }
-
-    public static class TestFinanceCheckService implements FinanceCheckService {
-
-        @Override
-        public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return serviceSuccess(newFinanceCheckEligibilityResource().build()); }
-
-        @Override public ServiceResult<Long> getTurnoverByOrganisationId(final Long applicationId, Long organisationId) { return null; }
-
-        @Override public ServiceResult<Long> getHeadCountByOrganisationId(final Long applicationId, Long organisationId) { return null; }
-
-        @Override
-        public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> getCreditReport(Long projectId, Long organisationId) { return null; }
-
-        @Override
-        public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean creditReportPresent) { return null; }
-
-        @Override
-        public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
-            return null;
-        }
+    protected Class<? extends FinanceCheckService> getClassUnderTest() {
+        return FinanceCheckServiceImpl.class;
     }
 }
 

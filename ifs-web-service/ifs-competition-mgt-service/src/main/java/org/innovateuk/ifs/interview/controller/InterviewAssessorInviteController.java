@@ -41,9 +41,9 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors")
-@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewInviteAssessorsController.class)
+@SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewAssessorInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class InterviewInviteAssessorsController extends CompetitionManagementCookieController<InterviewSelectionForm> {
+public class InterviewAssessorInviteController extends CompetitionManagementCookieController<InterviewSelectionForm> {
 
     private static final String SELECTION_FORM = "interviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
@@ -91,7 +91,7 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
         model.addAttribute("model", interviewInviteAssessorsFindViewModel);
         model.addAttribute("originQuery", originQuery);
 
-        return "assessors/interview-find";
+        return "assessors/interview/assessor-find";
     }
 
     private void updateSelectionForm(HttpServletRequest request,
@@ -234,7 +234,7 @@ public class InterviewInviteAssessorsController extends CompetitionManagementCoo
         model.addAttribute("model", interviewInviteAssessorsInviteModelPopulator.populateModel(competitionId, page, originQuery));
         model.addAttribute("originQuery", originQuery);
 
-        return "assessors/interview-invite";
+        return "assessors/interview/assessor-invite";
     }
 
     @PostMapping(value = "/invite", params = {"remove"})

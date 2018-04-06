@@ -19,8 +19,6 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static javax.persistence.EnumType.STRING;
-import static org.innovateuk.ifs.user.resource.UserRoleType.internalUserRoleTypes;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -120,8 +118,8 @@ public class User extends AuditableEntity implements Serializable{
         roles.add(role);
     }
 
-    public boolean hasRole(UserRoleType type) {
-        return getRoles().stream().anyMatch(role -> role.getName().equals(type.getName()));
+    public boolean hasRole(Role type) {
+        return getRoles().contains(type);
     }
 
     public void setRoles(Set<Role> roles) {
@@ -263,10 +261,6 @@ public class User extends AuditableEntity implements Serializable{
     }
 
     public boolean isInternalUser() {
-        return CollectionUtils.containsAny(internalUserRoleTypes(), getUserRoleTypes());
-    }
-
-    private List<UserRoleType> getUserRoleTypes() {
-        return simpleMap(getRoles(), r -> UserRoleType.fromName(r.getName()));
+        return CollectionUtils.containsAny(Role.internalRoles(), roles);
     }
 }

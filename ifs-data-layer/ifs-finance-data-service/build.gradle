@@ -72,6 +72,7 @@ dependencies {
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(':ifs-commons').sourceSets.test.output
     testCompile project(':ifs-data-layer:data-service-commons').sourceSets.test.output
+    testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }
 
 test {
