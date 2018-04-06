@@ -42,28 +42,19 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if(isCacheResources()) {
-            VersionResourceResolver versionResourceResolver = new VersionResourceResolver()
-                    .addVersionStrategy(new ContentVersionStrategy(), "/**");
+        VersionResourceResolver versionResourceResolver = new VersionResourceResolver()
+                .addVersionStrategy(new ContentVersionStrategy(), "/**");
 
-            registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
-                    .addResourceLocations(
-                            "classpath:static/js/", "static/js/",
-                            "classpath:static/css/", "static/css/",
-                            "classpath:static/images/", "static/images/"
-                    )
-                    .setCachePeriod(CACHE_PERIOD)
-                    .resourceChain(true)
-                    .addResolver(versionResourceResolver);
-        }else{
-            registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
-                    .addResourceLocations(
-                            "classpath:static/js/", "static/js/",
-                            "classpath:static/css/", "static/css/",
-                            "classpath:static/images/", "static/images/"
-                    )
-                    .resourceChain(true);
-        }
+        registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
+                .addResourceLocations(
+                        "classpath:static/js/", "static/js/",
+                        "classpath:static/css/", "static/css/",
+                        "classpath:static/images/", "static/images/"
+                )
+                .setCachePeriod(CACHE_PERIOD)
+                .resourceChain(true)
+                .addResolver(versionResourceResolver);
+
         super.addResourceHandlers(registry);
     }
 
