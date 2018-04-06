@@ -3,11 +3,15 @@ package org.innovateuk.ifs.application.repository;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -18,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
+import scala.App;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,9 +31,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.junit.Assert.assertEquals;
 
 @Rollback
@@ -45,6 +52,12 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private InterviewAssignmentRepository interviewAssignmentRepository;
+
+    @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     @Override
@@ -157,6 +170,37 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
 
         assertEquals(1, invitableApplications.getTotalElements());
+    }
+
+    @Test
+    public void findByProjectId() {
+        Application application = applicationRepository.save(newApplication().withId(17L).build());
+        Project project = projectRepository.save(newProject()
+                .withId(17L)
+                .withApplication(application)
+                .withName("Project Name")
+                .build()
+        );
+
+        Application retrieved = repository.findByProjectId(project.getId());
+
+        assertEquals(application, retrieved);
+    }
+
+    @Test
+    public void findByAssessmentId() {
+        Application application = repository.save(newApplication().withId(7L).build());
+
+        Assessment assessment = assessmentRepository.save(newAssessment()
+                .withId(13L)
+                .withApplication(application)
+                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.SUBMITTED))
+                .build()
+        );
+
+        Application retrieved = repository.findByAssessmentId(assessment.getId());
+
+        assertEquals(application, retrieved);
     }
 
     private Application createApplicationByState(ApplicationState applicationState) {

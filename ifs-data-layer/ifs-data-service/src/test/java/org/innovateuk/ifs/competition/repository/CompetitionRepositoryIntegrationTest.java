@@ -64,12 +64,6 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     private ProjectRepository projectRepository;
 
     @Autowired
-    private AssessmentRepository assessmentRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private OrganisationRepository organisationRepository;
 
     @Autowired
@@ -593,40 +587,6 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Competition retrievedCompetition = repository.findById(savedCompetition.getId());
         assertTrue(expectedDateTime.isEqual(retrievedCompetition.getStartDate()));
-    }
-
-    @Test
-    public void findByProjectId() {
-        Competition competition = repository.save(newCompetition().withId(7L).build());
-        Application application = applicationRepository.save(newApplication().withId(17L).withCompetition(competition).build());
-        Project project = projectRepository.save(newProject()
-                .withId(17L)
-                .withApplication(application)
-                .withName("Project Name")
-                .build()
-        );
-
-        Competition retrieved = repository.findByProjectId(project.getId());
-
-        assertEquals(competition, retrieved);
-    }
-
-    @Test
-    public void findByAssessmentId() {
-        Competition competition = repository.save(newCompetition().withId(7L).build());
-        Application application = applicationRepository.save(newApplication().withId(11L).withCompetition(competition).build());
-
-
-        Assessment assessment = assessmentRepository.save(newAssessment()
-                .withId(13L)
-                .withApplication(application)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.SUBMITTED))
-                .build()
-        );
-
-        Competition retrieved = repository.findByAssessmentId(assessment.getId());
-
-        assertEquals(competition, retrieved);
     }
 
     private List<Competition> createTwoQueriesFromSamePartnerSameProject() {

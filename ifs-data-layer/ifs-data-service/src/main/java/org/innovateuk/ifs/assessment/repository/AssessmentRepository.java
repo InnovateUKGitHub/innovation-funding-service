@@ -61,6 +61,8 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     @Override
     Set<Assessment> findAll();
 
+    Assessment findById(Long assessmentId);
+
     @Override
     List<Assessment> findAll(Iterable<Long> assessmentIds);
 
