@@ -4,7 +4,9 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -77,9 +79,10 @@ public class ProjectServiceImpl implements ProjectService {
         if(projectId == null) {
             return null;
         }
-        RestResult<ProjectResource> restResult =  projectRestService.withdrawProject(projectId);
+        RestResult<Void> restResult =  projectRestService.withdrawProject(projectId);
         if(restResult.isSuccess()){
-            return restResult.getSuccess();
+            // TODO update return
+            return null; //FIX LATER SAYS ANN
         } else {
             return null;
         }
