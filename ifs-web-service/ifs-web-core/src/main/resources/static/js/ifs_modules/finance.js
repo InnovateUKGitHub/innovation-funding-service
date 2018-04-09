@@ -109,6 +109,11 @@ IFS.core.finance = (function () {
       var format = element.is('[data-calculation-format]') ? element.attr('data-calculation-format') : 'currency'
       var formattedNumber = ''
 
+      // Check for valid number
+      if (!jQuery.isNumeric(calculatedValue)) {
+        calculatedValue = 0
+      }
+
       if (format === 'percentage') {
         formattedNumber = IFS.core.finance.formatPercentage(calculatedValue)
       } else if (format === 'currency') {

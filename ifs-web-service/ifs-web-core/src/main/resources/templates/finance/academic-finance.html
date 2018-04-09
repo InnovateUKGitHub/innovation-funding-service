@@ -75,6 +75,9 @@
                            id="incurred-staff"
                            th:name="cost- + ${academicFinance.incurredStaff?.id} + -incurred_staff"
                            ifs:nonZeroValue="${academicFinance.incurredStaff?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredStaff?.id +'-cost]}')}? 'form-control-error'" />
@@ -94,6 +97,9 @@
                            th:name="cost- + ${academicFinance.incurredTravelAndSubsistence?.id} + -incurred_travel_subsistence"
                            type="text"
                            ifs:nonZeroValue="${academicFinance.incurredTravelAndSubsistence?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredTravelAndSubsistence?.id +'-cost]}')}? 'form-control-error'"/>
@@ -112,6 +118,9 @@
                            th:name="cost- + ${academicFinance.incurredOtherCosts?.id} + -incurred_other_costs"
                            type="text"
                            ifs:nonZeroValue="${academicFinance.incurredOtherCosts?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.incurredOtherCosts?.id +'-cost]}')}? 'form-control-error'" />
@@ -149,6 +158,9 @@
                            id="investigators"
                            th:name="cost- + ${academicFinance.allocatedInvestigators?.id} + -allocated_investigators" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedInvestigators?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedInvestigators?.id +'-cost]}')}? 'form-control-error'"/>
@@ -166,6 +178,9 @@
                            id="estates"
                            th:name="cost- + ${academicFinance.allocatedEstatesCosts?.id} + -allocated_estates_costs" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedEstatesCosts?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedEstatesCosts?.id +'-cost]}')}? 'form-control-error'"/>
@@ -183,6 +198,9 @@
                            id="other-direct"
                            th:name="cost- + ${academicFinance.allocatedOtherCosts?.id} + -allocated_other_costs" type="text"
                            ifs:nonZeroValue="${academicFinance.allocatedOtherCosts?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.allocatedOtherCosts?.id +'-cost]}')}? 'form-control-error'"/>
@@ -218,6 +236,9 @@
                            th:name="cost- + ${academicFinance.indirectCosts?.id} + -indirect_costs"
                            type="text"
                            ifs:nonZeroValue="${academicFinance.indirectCosts?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.indirectCosts?.id +'-cost]}')}? 'form-control-error'" />
@@ -243,6 +264,9 @@
                            id="exceptions-staff"
                            th:name="cost- + ${academicFinance.exceptionsStaff?.id} + -exceptions_staff" type="text"
                            ifs:nonZeroValue="${academicFinance.exceptionsStaff?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsStaff?.id +'-cost]}')}? 'form-control-error'" />
@@ -261,6 +285,9 @@
                            th:name="cost- + ${academicFinance.exceptionsOtherCosts?.id} + -exceptions_other_costs"
                            type="text"
                            ifs:nonZeroValue="${academicFinance.exceptionsOtherCosts?.numberValue}"
+                           pattern="^[0-9]*$"
+                           data-prevent-input-regex="[^0-9]"
+                           th:attr="data-pattern-errormessage=#{validation.field.non.decimal.format}"
                            placeholder="0"
                            th:readonly="${readonly}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.exceptionsOtherCosts?.id +'-cost]}')}? 'form-control-error'" />
