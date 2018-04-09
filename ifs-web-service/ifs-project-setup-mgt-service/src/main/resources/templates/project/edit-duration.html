@@ -3,7 +3,7 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks edit duration',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
-<body class="competition-management project-management finance-checks-overview">
+<body>
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <th:block th:insert="fragments/layout :: body-start" />
@@ -14,8 +14,6 @@
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your project details.</h2>
-        <!-- /* only show underneath messages if there are global errors, which in this case are experian errors.
-                Stub values for the inputs can be found in bank details acceptance tests. */-->
         <ul class="error-summary-list">
             <li>
                 <a href="#durationInMonths">Please check your project duration.</a>
@@ -45,16 +43,16 @@
         </th:block>
       </label>
         <input name="durationInMonths"
-               id="durationInMonths"
-               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},data-pattern-errormessage=#{validation.field.non.decimal.format}"
-               type="text"
-               class="form-control width-small"
-               required="required"
-               pattern="^[0-9]*$"
-               maxlength="2"
-               data-prevent-input-regex="[^0-9]"
-               th:errorclass="form-control-error"
-               th:field="*{durationInMonths}" />
+        id="durationInMonths"
+        th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},data-pattern-errormessage=#{validation.field.non.decimal.format}"
+        type="text"
+        class="form-control width-small"
+        required="required"
+        pattern="^[0-9]*$"
+        maxlength="2"
+        data-prevent-input-regex="[^0-9]"
+        th:errorclass="form-control-error"
+        th:field="*{durationInMonths}" />
       <span>months</span>
     </div>
     <button type="submit" class="button">Save and return to finances</button>
