@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -117,7 +118,26 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     @Override
     public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
-        stagedInvites.forEach(invite -> getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition));
+        long competitionId = stagedInvites.get(0).getCompetitionId();
+
+        final List<InterviewAssignment> assignedApplications =
+                interviewAssignmentRepository
+                        .findByTargetCompetitionIdAndActivityStateState(
+                                competitionId, InterviewAssignmentState.CREATED.getBackingState());
+
+        List<Long> assignedApplicationIds = assignedApplications.stream()
+                .map(
+                        interviewAssignment -> interviewAssignment
+                                .getTarget()
+                                .getId()
+                ).collect(Collectors.toList());
+
+        stagedInvites.stream()
+                .filter(invite ->  assignedApplicationIds.contains(invite.getApplicationId()) == false)
+                .forEach(invite -> {
+                    getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition);
+                });
+
         return serviceSuccess();
     }
 
