@@ -10,8 +10,6 @@ dependencies {
 
     // weirdly, removing this line from this web module will cause the build to pull in version 2.1.2.RELEASE
     // despite 3.0.1.RELEASE being specified explicitly in ifs-web-core's build.gradle
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE"
-    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE"
 
     compile "commons-io:commons-io:2.5"
 
