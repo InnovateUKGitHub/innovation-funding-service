@@ -378,7 +378,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
                 .param("removeAll", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessment/interview/competition/13/applications/find?page=0"));
+                .andExpect(redirectedUrl("/assessment/interview/competition/" + competition.getId() + "/applications/find?page=0"));
 
         verify(interviewAssignmentRestService).unstageApplications(competition.getId());
     }
