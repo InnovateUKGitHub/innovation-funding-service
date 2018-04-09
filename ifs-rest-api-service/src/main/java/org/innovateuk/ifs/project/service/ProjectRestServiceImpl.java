@@ -63,7 +63,7 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
-    public RestResult<ProjectResource> getByWithdrawnProject(Long projectId) {
-        return postWithRestResult(projectRestURL + "/withdrawn", ProjectResource.class);
+    public RestResult<ProjectResource> withdrawProject(Long projectId) {
+        return postWithRestResult(projectRestURL + "/withdraw", ProjectResource.class);
     }
 }
