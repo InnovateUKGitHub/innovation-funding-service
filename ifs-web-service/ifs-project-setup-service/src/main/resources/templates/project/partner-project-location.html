@@ -10,7 +10,6 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project location',subTitle=${model.projectName},size='heading-xlarge'" />
 
