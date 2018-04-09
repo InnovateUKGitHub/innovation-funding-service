@@ -73,8 +73,7 @@ public interface ApplicationService {
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     ServiceResult<ApplicationPageResource> wildcardSearchById(String searchString, Pageable pageable);
 
-    @SecuredBySpring(value = "SAVE_FUNDING_DECISION_DATA", securedType = FundingDecision.class, description = "Comp Admins should be able to save the decision of what applications to fund for a given competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
