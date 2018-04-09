@@ -286,8 +286,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(GET_OPEN_QUERIES)
     List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
 
-    Competition findByApplicationsId(long applicationId);
-
     @Query(value = GET_PENDING_SPEND_PROFILES, nativeQuery = true)
     List<Object[]> getPendingSpendProfiles(@Param("competitionId") long competitionId);
 

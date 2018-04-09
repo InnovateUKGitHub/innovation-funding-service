@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -193,14 +192,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
-    private ZonedDateTime findMostRecentFundingInformDate(Competition competition) {
-        return competition.getApplications()
-                .stream()
-                .filter(application -> application.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(Application::getManageFundingEmailDate))
-                .get().getManageFundingEmailDate();
-    }
-
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
@@ -214,9 +205,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
                             .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
-                            .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
-                            .sorted(Comparator.comparing(Pair::getKey))
-                            .map(Pair::getValue)
                             .collect(Collectors.toList())),
                     this::searchResultFromCompetition));
         });

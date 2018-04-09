@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.analytics.service;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -17,10 +18,14 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
     @Autowired
     private CompetitionRepository competitionRepository;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
     @Override
     public ServiceResult<String> getCompetitionNameByApplicationId(long applicationId) {
+        Application application = applicationRepository.findById(applicationId);
         return find(competitionRepository
-                .findByApplicationsId(applicationId), notFoundError(Competition.class, applicationId))
+                .findById(application.getCompetition().getId()), notFoundError(Competition.class, applicationId))
                 .andOnSuccessReturn(Competition::getName);
     }
 

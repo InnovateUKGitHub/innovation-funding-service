@@ -134,6 +134,11 @@ public class ApplicationController {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
     }
 
+    @GetMapping("/getLatestEmailFundingDate/{competitionId}")
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
+        return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
+    }
+
     @GetMapping("/{competitionId}/unsuccessful-applications")
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
