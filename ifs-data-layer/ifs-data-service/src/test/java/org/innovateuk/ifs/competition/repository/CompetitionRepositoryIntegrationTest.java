@@ -188,7 +188,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         TermsAndConditions termsAndConditions = new TermsAndConditions();
         termsAndConditions.setId(1L);
 
-        Competition openComp = new Competition(null, null,null,"openComp", null, null, null, termsAndConditions);
+        Competition openComp = new Competition(null, null, null, "openComp", null, null, null, termsAndConditions);
         openComp.setTermsAndConditions(termsAndConditions);
 
         openComp.setLeadTechnologist(leadTechnologist);
@@ -199,7 +199,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         AssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition earliestOpenComp = new Competition(null, null,null,"earliestOpenComp", null, null, null, termsAndConditions);
+        Competition earliestOpenComp = new Competition(null, null, null, "earliestOpenComp", null, null, null, termsAndConditions);
         earliestOpenComp.setLeadTechnologist(leadTechnologist);
         earliestOpenComp.setSetupComplete(true);
         earliestOpenComp = repository.save(earliestOpenComp);
@@ -208,7 +208,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(earliestOpenComp, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compWithNoInnovationLead = new Competition(null, null,null,"compWithNoInnovationLead", null, null, null, termsAndConditions);
+        Competition compWithNoInnovationLead = new Competition(null, null, null, "compWithNoInnovationLead", null, null, null, termsAndConditions);
         compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
         compWithNoInnovationLead.setSetupComplete(true);
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
@@ -217,7 +217,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compWithNoInnovationLead, notLeadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compInPreparation = new Competition(null, null,null,"compInPreparation", null, null, null, termsAndConditions);
+        Competition compInPreparation = new Competition(null, null, null, "compInPreparation", null, null, null, termsAndConditions);
         compInPreparation.setLeadTechnologist(leadTechnologist);
         compInPreparation.setSetupComplete(false);
         compInPreparation = repository.save(compInPreparation);
@@ -226,7 +226,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInPreparation, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compReadyToOpen = new Competition(null, null,null,"compReadyToOpen", null, null, null, termsAndConditions);
+        Competition compReadyToOpen = new Competition(null, null, null, "compReadyToOpen", null, null, null, termsAndConditions);
         compReadyToOpen.setLeadTechnologist(leadTechnologist);
         compReadyToOpen.setSetupComplete(true);
         compReadyToOpen = repository.save(compReadyToOpen);
@@ -235,7 +235,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compReadyToOpen, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compInInform = new Competition(null, null,null,"compInInform", null, null, null, termsAndConditions);
+        Competition compInInform = new Competition(null, null, null, "compInInform", null, null, null, termsAndConditions);
         compInInform.setLeadTechnologist(leadTechnologist);
         compInInform.setSetupComplete(true);
         compInInform = repository.save(compInInform);
@@ -244,7 +244,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInInform, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compInProjectSetup = new Competition(null, null,null,"compInProjectSetup", null, null, null, termsAndConditions);
+        Competition compInProjectSetup = new Competition(null, null, null, "compInProjectSetup", null, null, null, termsAndConditions);
         compInProjectSetup.setLeadTechnologist(leadTechnologist);
         compInProjectSetup.setSetupComplete(true);
         compInProjectSetup = repository.save(compInProjectSetup);
