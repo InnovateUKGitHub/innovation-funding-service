@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.interview.transactional;
 
 
-import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
+import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -12,45 +13,41 @@ import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.*;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
 import org.innovateuk.ifs.invite.mapper.InterviewParticipantMapper;
-import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
 import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
+import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.profile.domain.Profile;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.ZonedDateTime.now;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.INTERVIEW_PANEL_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -67,10 +64,9 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Service
 @Transactional
-public class InterviewInviteServiceImpl implements InterviewInviteService {
+public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> implements InterviewInviteService {
 
-    private static final String WEB_CONTEXT = "/interview";
-    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
+    private static final String WEB_CONTEXT = "/assessment";
 
     @Autowired
     private InterviewInviteRepository interviewInviteRepository;
@@ -85,22 +81,10 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private InnovationAreaMapper innovationAreaMapper;
-
-    @Autowired
     private InterviewInviteMapper interviewInviteMapper;
 
     @Autowired
-    private ParticipantStatusMapper participantStatusMapper;
-
-    @Autowired
     private InterviewParticipantMapper interviewParticipantMapper;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ProfileRepository profileRepository;
 
     @Autowired
     private NotificationSender notificationSender;
@@ -117,12 +101,31 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     @Autowired
     private InterviewRepository interviewRepository;
 
+    @Autowired
+    private AvailableAssessorMapper availableAssessorMapper;
+
+    @Autowired
+    private AssessorInviteOverviewMapper assessorInviteOverviewMapper;
+
+    @Autowired
+    private AssessorCreatedInviteMapper assessorCreatedInviteMapper;
+
     enum Notifications {
         INVITE_ASSESSOR_GROUP_TO_INTERVIEW
     }
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
+
+    @Override
+    protected Class<InterviewInvite> getInviteClass() {
+        return InterviewInvite.class;
+    }
+
+    @Override
+    protected InviteRepository<InterviewInvite> getInviteRepository() {
+        return interviewInviteRepository;
+    }
 
     @Override
     public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
@@ -199,7 +202,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
                     pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
+                    simpleMap(pagedResult.getContent(), availableAssessorMapper::mapToResource),
                     pagedResult.getNumber(),
                     pagedResult.getSize()
             ));
@@ -212,41 +215,13 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }
 
-    private AvailableAssessorResource mapToAvailableAssessorResource(CompetitionParticipant participant) {
-        User assessor = participant.getUser();
-        Profile profile = profileRepository.findOne(assessor.getProfileId());
-
-        AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
-        availableAssessor.setId(assessor.getId());
-        availableAssessor.setEmail(assessor.getEmail());
-        availableAssessor.setName(assessor.getName());
-        availableAssessor.setBusinessType(profile.getBusinessType());
-        availableAssessor.setCompliant(profile.isCompliant(assessor));
-        availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-
-        return availableAssessor;
-    }
-
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
         Page<InterviewInvite> pagedResult = interviewInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
         List<AssessorCreatedInviteResource> createdInvites = simpleMap(
                 pagedResult.getContent(),
-                competitionInvite -> {
-                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
-                    assessorCreatedInvite.setName(competitionInvite.getName());
-                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
-                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
-                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
-                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
-
-                    if (competitionInvite.getUser() != null) {
-                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
-                    }
-
-                    return assessorCreatedInvite;
-                }
+                assessorCreatedInviteMapper::mapToResource
         );
 
         return serviceSuccess(new AssessorCreatedInvitePageResource(
@@ -261,7 +236,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     @Override
     public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> stagedInvites) {
         return serviceSuccess(mapWithIndex(stagedInvites, (i, invite) ->
-                getUserById(invite.getUserId()).andOnSuccess(user ->
+                getUser(invite.getUserId()).andOnSuccess(user ->
                         getByEmailAndCompetition(user.getEmail(), invite.getCompetitionId()).andOnFailure(() ->
                                 inviteUserToCompetition(user, invite.getCompetitionId())
                         )))).andOnSuccessReturnVoid();
@@ -278,24 +253,8 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),
-                participant -> {
-                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
-                    assessorInviteOverview.setName(participant.getInvite().getName());
-                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
-                    assessorInviteOverview.setDetails(getDetails(participant));
-                    assessorInviteOverview.setInviteId(participant.getInvite().getId());
-
-                    if (participant.getUser() != null) {
-                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
-
-                        assessorInviteOverview.setId(participant.getUser().getId());
-                        assessorInviteOverview.setBusinessType(profile.getBusinessType());
-                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
-                        assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-                    }
-
-                    return assessorInviteOverview;
-                });
+                assessorInviteOverviewMapper::mapToResource
+        );
 
         return serviceSuccess(new AssessorInviteOverviewPageResource(
                 pagedResult.getTotalElements(),
@@ -306,19 +265,6 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
         ));
     }
 
-    private String getDetails(InterviewParticipant participant) {
-        String details = null;
-
-        if (participant.getStatus() == REJECTED) {
-            details = "Invite declined";
-        } else if (participant.getStatus() == PENDING) {
-            if (participant.getInvite().getSentOn() != null) {
-                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
-            }
-        }
-
-        return details;
-    }
 
     @Override
     public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
@@ -363,7 +309,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     }
 
     private String getInvitePreviewContent(Competition competition) {
-        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+        NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 
         return getInvitePreviewContent(notificationTarget, asMap(
                 "competitionName", competition.getName()
@@ -374,7 +320,7 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
                                                        String customTextHtml,
                                                        InterviewInvite invite,
                                                        Notifications notificationType) {
-        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+        NotificationTarget recipient = new UserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
                 recipient,
@@ -390,26 +336,8 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
         return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<User> getUserById(long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
-    }
-
     private ServiceResult<InterviewInvite> getByEmailAndCompetition(String email, long competitionId) {
         return find(interviewInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(InterviewInvite.class, email, competitionId));
-    }
-
-    private boolean isUserCompliant(InterviewInvite competitionInvite) {
-        if (competitionInvite == null || competitionInvite.getUser() == null) {
-            return false;
-        }
-        Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
-        return profile.isCompliant(competitionInvite.getUser());
-    }
-
-    private List<InnovationAreaResource> getInnovationAreasForInvite(InterviewInvite competitionInvite) {
-        return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
-                .map(innovationAreaMapper::mapToResource)
-                .collect(toList());
     }
 
     @Override
@@ -442,18 +370,8 @@ public class InterviewInviteServiceImpl implements InterviewInviteService {
     }
 
     @Override
-    public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
-        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
-            if (invite.getUser() != null) {
-                return TRUE;
-            }
-
-            return userRepository.findByEmail(invite.getEmail()).isPresent();
-        });
-    }
-
-    private ServiceResult<InterviewInvite> getByHash(String inviteHash) {
-        return find(interviewInviteRepository.getByHash(inviteHash), notFoundError(InterviewInvite.class, inviteHash));
+    public ServiceResult<Boolean> checkUserExistsForInvite(String inviteHash) {
+        return super.checkUserExistsForInvite(inviteHash);
     }
 
     private static ServiceResult<InterviewParticipant> accept(InterviewParticipant participant) {

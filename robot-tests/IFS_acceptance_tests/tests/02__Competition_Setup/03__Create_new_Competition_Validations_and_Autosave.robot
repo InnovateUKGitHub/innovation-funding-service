@@ -226,10 +226,10 @@ Assessor: Server-side validation
 Assessor: Client-side validation
     [Documentation]  INFUND-5641
     When The user enters text to a text field  id=assessorPay  1.1
-    And the user selects the checkbox          assessors-62
+    And the user selects the radio button      assessorCount   5
     Then the user should see an error          This field can only accept whole numbers
     When The user enters text to a text field  id=assessorPay  120
-    And the user selects the checkbox          assessors-62
+    And the user selects the radio button      assessorCount   5
     Then The user should not see the text in the page  This field can only accept whole numbers
 
 *** Keywords ***

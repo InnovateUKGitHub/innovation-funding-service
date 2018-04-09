@@ -89,7 +89,7 @@ apply plugin: "com.github.hierynomus.license"
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.6'
 }
 
 ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false

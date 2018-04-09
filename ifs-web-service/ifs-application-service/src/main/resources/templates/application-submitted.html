@@ -3,13 +3,12 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Thank you for submitting your application'" />
 </head>
-<body th:with="context='applicant'" class="app-submitted">
+<body class="app-submitted">
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
      <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application status',subTitle=|${currentApplication.id} : ${currentApplication.name}|,size='heading-xlarge'" />
@@ -20,7 +19,7 @@
             <li>Application number: <span th:text="${currentApplication.id}" /></li>
             <li>
                 Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
-                <th:block th:if="${currentApplication.submittedDate != null}">
+                <th:block th:if="${currentApplication.submittedDate}">
                     on
                     <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
                     at
@@ -47,7 +46,7 @@
 
     <h3 class="heading-medium">Decision notification</h3>
     <p>You and your project partners will be emailed notification of the decision by
-        <strong th:if="${currentCompetition.fundersPanelEndDate != null}" th:text="${#temporals.format(currentCompetition.fundersPanelEndDate, 'd MMM yyyy')}"></strong>.
+        <strong th:if="${currentCompetition.fundersPanelEndDate}" th:text="${#temporals.format(currentCompetition.fundersPanelEndDate, 'd MMM yyyy')}"></strong>.
     </p>
 
     <div class="grid-row">
@@ -72,7 +71,7 @@
 
     <h3 class="heading-medium">Application feedback</h3>
     <p>Application feedback will be provided by
-        <strong th:if="${currentCompetition.releaseFeedbackDate != null}" th:text="${#temporals.format(currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
+        <strong th:if="${currentCompetition.releaseFeedbackDate}" th:text="${#temporals.format(currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
         <br />We will email you when this becomes available.
     </p>
 
@@ -84,5 +83,6 @@
 
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/service-layout :: body-end" />
 </body>
 </html>

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +37,8 @@ import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUs
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -101,8 +101,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(applicationRepositoryMock.exists(null)).thenReturn(false);
 
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(leadOnApplication1.getId(), applicationResource1.getId(), Role.LEADAPPLICANT)).thenReturn(true);
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource2.getId())).thenReturn(null);
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(user2.getId(), applicationResource1.getId())).thenReturn(null);
+        when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantProcessRoles(), applicationResource2.getId())).thenReturn(null);
+        when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(user2.getId(), applicantProcessRoles(), applicationResource1.getId())).thenReturn(null);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(user2.getId(), applicationResource2.getId(), Role.LEADAPPLICANT)).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(user3.getId(), applicationResource2.getId(), Role.APPLICANT)).thenReturn(true);
 
@@ -163,10 +163,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void testInternalUsersCanSeeApplicationFinanceTotals() {
         ApplicationResource applicationResource = newApplicationResource().build();
         allGlobalRoleUsers.forEach(user -> {
-            if (user.hasRole(UserRoleType.COMP_ADMIN) ||
-                    user.hasRole(UserRoleType.PROJECT_FINANCE) ||
-                    user.hasRole(UserRoleType.SUPPORT) ||
-                    user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+            if (user.hasRole(COMP_ADMIN) ||
+                    user.hasRole(PROJECT_FINANCE) ||
+                    user.hasRole(SUPPORT) ||
+                    user.hasRole(INNOVATION_LEAD)) {
                 assertTrue(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
             } else {
                 assertFalse(rules.internalUserCanSeeApplicationFinancesTotals(applicationResource, user));
@@ -362,7 +362,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                     } else {
                         assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
-                        verify(processRoleRepositoryMock, never()).findByUserIdAndApplicationId(user.getId(), application.getId());
+                        verify(processRoleRepositoryMock, never()).findOneByUserIdAndRoleInAndApplicationId(user.getId(), applicantProcessRoles(), application.getId());
                     }
 
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
@@ -376,7 +376,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                         verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRole(user.getId(), application.getId(), Role.COLLABORATOR);
                         verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRole(user.getId(), application.getId(), Role.LEADAPPLICANT);
                     } else {
-                        verify(processRoleRepositoryMock, never()).findByUserIdAndApplicationId(user.getId(), application.getId());
+                        verify(processRoleRepositoryMock, never()).findOneByUserIdAndRoleInAndApplicationId(user.getId(), applicantProcessRoles(), application.getId());
                     }
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
                 }

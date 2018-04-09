@@ -4,13 +4,12 @@
       <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.title) ? 'Application Form' : model.title},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
-    <body th:with="context='applicant'" class="app-form finance">
+    <body class="app-form finance">
 
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main tabindex="-1" id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
@@ -80,5 +79,6 @@
 
         <th:block th:insert="fragments/layout :: footer" />
         <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/service-layout :: body-end" />
     </body>
 </html>

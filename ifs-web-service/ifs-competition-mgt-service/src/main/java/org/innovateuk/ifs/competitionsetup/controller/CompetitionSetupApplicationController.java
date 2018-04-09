@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -40,6 +41,8 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.AP
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
  * Controller to manage the Application Questions and it's sub-sections in the
@@ -91,7 +94,7 @@ public class CompetitionSetupApplicationController {
 
     @PostMapping(value = "/landing-page", params = "deleteQuestion")
     public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
-                                 @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+                                         @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
 
         Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
@@ -336,8 +339,18 @@ public class CompetitionSetupApplicationController {
         Supplier<String> failureView = () -> getDetailsPage(model, competitionResource, true, form);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
-        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, APPLICATION_DETAILS));
+
+        return validationHandler.addAnyErrors(
+                competitionSetupService.saveCompetitionSetupSubsection(form,
+                        competitionResource,
+                        APPLICATION_FORM,
+                        APPLICATION_DETAILS),
+                fieldErrorsToFieldErrors(),
+                asGlobalErrors())
+                .failNowOrSucceedWith(
+                        failureView,
+                        successView
+                );
 
     }
 

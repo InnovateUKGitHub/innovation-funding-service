@@ -51,7 +51,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -163,7 +163,7 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
                         otherOrganisation.getId())
                 .withApplication(application.getId())
                 .withUser(otherUsers.get(0), otherUsers.get(1), otherUsers.get(2), user)
-                .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName(), ASSESSOR.getName())
+                .withRole(COLLABORATOR, LEADAPPLICANT, COLLABORATOR, ASSESSOR)
                 .build(4);
 
         List<AssessmentResource> assessment = newAssessmentResource()

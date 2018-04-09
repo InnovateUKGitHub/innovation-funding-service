@@ -14,9 +14,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.junit.Assert.*;
 
 public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceNotePermissionRules> {
     private NoteResource noteResource;

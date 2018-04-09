@@ -16,7 +16,6 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -31,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -39,6 +39,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
 
@@ -172,12 +173,12 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     private static boolean applicationContainsUserRole(List<ProcessRole> roles,
                                                        final Long userId,
-                                                       UserRoleType role) {
+                                                       Role role) {
         boolean contains = false;
         int i = 0;
         while (!contains && i < roles.size()) {
             contains = roles.get(i).getUser().getId().equals(userId)
-                    && roles.get(i).getRole().getName().equals(role.getName());
+                    && roles.get(i).getRole() == role;
             i++;
         }
 
@@ -201,8 +202,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Boolean> showApplicationTeam(Long applicationId,
                                                       Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
-                .andOnSuccess((user) ->
-                        serviceSuccess(org.innovateuk.ifs.security.SecurityRuleUtil.isInternal(user)));
+                .andOnSuccessReturn(User::isInternalUser);
     }
 
     @Override
@@ -223,10 +223,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<ApplicationResource>> findByUserId(final Long userId) {
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
-            List<Application> applications = simpleMap(roles, processRole -> {
-                Long appId = processRole.getApplicationId();
-                return appId != null ? applicationRepository.findOne(appId) : null;
-            });
+            Set<Long> applicationIds = simpleMapSet(roles, ProcessRole::getApplicationId);
+            List<Application> applications = simpleMap(applicationIds, appId -> appId != null ? applicationRepository.findOne(appId) : null);
             return simpleMap(applications, applicationMapper::mapToResource);
         });
     }
@@ -242,7 +240,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                             final Long userId,
-                                                                                            final UserRoleType role) {
+                                                                                            final Role role) {
         List<Application> allApps = applicationRepository.findAll();
         List<Application> filtered = simpleFilter(allApps, app -> app.getCompetition().getId().equals(competitionId) &&
                 applicationContainsUserRole(app.getProcessRoles(), userId, role));
