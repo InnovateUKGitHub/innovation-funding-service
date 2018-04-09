@@ -41,7 +41,7 @@
       <label for="durationInMonths">
         <span class="form-label-bold">Duration</span>
         <th:block th:if="${#fields.hasErrors('durationInMonths')}">
-            <span class="error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}"></span>
+              <span class="error-message" th:each="err : ${#fields.errors('durationInMonths')}" th:text="${err}"></span>
         </th:block>
       </label>
         <input name="durationInMonths"
@@ -54,7 +54,7 @@
                maxlength="2"
                data-prevent-input-regex="[^0-9]"
                th:errorclass="form-control-error"
-               th:field="*{durationInMonths}"/>
+               th:field="*{durationInMonths}" />
       <span>months</span>
     </div>
     <button type="submit" class="button">Save and return to finances</button>
