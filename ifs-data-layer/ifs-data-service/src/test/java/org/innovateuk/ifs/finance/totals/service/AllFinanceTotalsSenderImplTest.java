@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -37,11 +37,11 @@ public class AllFinanceTotalsSenderImplTest {
 
     @Test
     public void sendAllFinanceTotals() {
-        Stream<Application> applicationsCompsStream = newApplication()
+        List<Application> applications = newApplication()
                 .withCompetition(newCompetition().withId(1L).build())
-                .build(6).stream();
+                .build(6);
 
-        when(applicationService.getApplicationsByState(any())).thenReturn(ServiceResult.serviceSuccess(applicationsCompsStream));
+        when(applicationService.getApplicationsByState(any())).thenReturn(ServiceResult.serviceSuccess(applications));
         ServiceResult<Void> serviceResult = allFinanceTotalsSender.sendAllFinanceTotals();
 
         assertTrue(serviceResult.isSuccess());
