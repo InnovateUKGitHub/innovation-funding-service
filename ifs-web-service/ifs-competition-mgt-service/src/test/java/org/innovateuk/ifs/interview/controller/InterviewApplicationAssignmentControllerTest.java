@@ -61,6 +61,7 @@ import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -355,6 +356,41 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         inOrder.verify(interviewAssignmentRestService).getStagedApplications(competition.getId(), page);
         inOrder.verify(interviewAssignmentRestService).getKeyStatistics(competition.getId());
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void remove() throws Exception {
+        int page = 0;
+        long applicationId = 123L;
+
+        List<InterviewAssignmentStagedApplicationResource> interviewAssignmentStagedApplicationResources = setUpApplicationCreatedInviteResources();
+        InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = newInterviewAssignmentStagedApplicationPageResource()
+                .withContent(interviewAssignmentStagedApplicationResources)
+                .build();
+
+        setupDefaultInviteViewExpectations(page, interviewAssignmentStagedApplicationPageResource);
+
+        when(interviewAssignmentRestService.unstageApplication(applicationId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
+                .param("remove", String.valueOf(applicationId)))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/application-invite"));
+
+        verify(interviewAssignmentRestService).unstageApplication(applicationId);
+    }
+
+    @Test
+    public void removeAll() throws Exception {
+        when(interviewAssignmentRestService.unstageApplications(competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
+                .param("removeAll", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessment/interview/competition/" + competition.getId() + "/applications/find?page=0"));
+
+        verify(interviewAssignmentRestService).unstageApplications(competition.getId());
     }
 
     @Test

@@ -54,6 +54,13 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
+    public void unstageApplication() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.unstageApplication(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
     public void getEmailTemplate() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getEmailTemplate(),
@@ -62,6 +69,13 @@ public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
+    public void unstageApplications() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.unstageApplications(1L),
+                COMP_ADMIN, PROJECT_FINANCE
+        );
+    }
+
     public void sendInvites() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.sendInvites(1L, new AssessorInviteSendResource("Subject", "Content")),

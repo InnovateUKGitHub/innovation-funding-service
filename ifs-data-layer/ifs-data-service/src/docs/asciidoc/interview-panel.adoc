@@ -57,6 +57,28 @@ include::{snippets}/interview-panel/get-staged-applications/response-fields.adoc
 ==== Curl Example
 include::{snippets}/interview-panel/get-staged-applications/curl-request.adoc[]
 
+=== Remove staged application
+==== Request
+include::{snippets}/interview-panel/unstage-application/http-request.adoc[]
+include::{snippets}/interview-panel/unstage-application/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/unstage-application/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/unstage-application/curl-request.adoc[]
+
+=== Remove staged applications
+==== Request
+include::{snippets}/interview-panel/unstage-applications/http-request.adoc[]
+include::{snippets}/interview-panel/unstage-applications/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/interview-panel/unstage-applications/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/interview-panel/unstage-applications/curl-request.adoc[]
+
 === Get key statistics
 ==== Request
 include::{snippets}/interview-panel/get-key-statistics/http-request.adoc[]

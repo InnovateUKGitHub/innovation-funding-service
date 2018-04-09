@@ -174,6 +174,25 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
     }
 
     @Test
+    public void unstageApplication() {
+        long applicationId = 1L;
+
+        ServiceResult<Void> result = service.unstageApplication(applicationId);
+
+        assertTrue(result.isSuccess());
+        verify(interviewAssignmentRepositoryMock).deleteByTargetIdAndActivityStateState(applicationId, InterviewAssignmentState.CREATED.getBackingState());
+    }
+
+    @Test
+    public void unstageApplications() {
+        long competitionId = 1L;
+        ServiceResult<Void> result = service.unstageApplications(1L);
+
+        assertTrue(result.isSuccess());
+        verify(interviewAssignmentRepositoryMock).deleteByTargetCompetitionIdAndActivityStateState(competitionId, InterviewAssignmentState.CREATED.getBackingState());
+    }
+
+    @Test
     public void getEmailTemplate() {
         when(notificationTemplateRendererMock.renderTemplate(eq(systemNotificationSourceMock), any(NotificationTarget.class), eq("invite_applicants_to_interview_panel_text.txt"),
                 any(Map.class))).thenReturn(serviceSuccess("Content"));

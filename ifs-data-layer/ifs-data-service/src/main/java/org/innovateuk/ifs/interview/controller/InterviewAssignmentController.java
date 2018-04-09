@@ -65,6 +65,16 @@ public class InterviewAssignmentController {
         return interviewAssignmentService.getKeyStatistics(competitionId).toGetResponse();
     }
 
+    @PostMapping("/unstage-application/{applicationId}")
+    public RestResult<Void> unstageApplication(@PathVariable long applicationId) {
+        return interviewAssignmentService.unstageApplication(applicationId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/unstage-applications/{competitionId}")
+    public RestResult<Void> unstageApplications(@PathVariable long competitionId) {
+        return interviewAssignmentService.unstageApplications(competitionId).toPostWithBodyResponse();
+    }
+
     @GetMapping("/email-template")
     public RestResult<ApplicantInterviewInviteResource> getEmailTemplate() {
         return interviewAssignmentService.getEmailTemplate().toGetResponse();

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.transactional.SectionStatusService;
 import org.innovateuk.ifs.application.transactional.SectionStatusServiceImpl;
-import org.innovateuk.ifs.form.security.SectionPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,11 +19,11 @@ import static org.mockito.Mockito.when;
 public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<SectionStatusService> {
 
     private ApplicationLookupStrategy applicationLookupStrategy;
-    private SectionPermissionRules sectionPermissionRules;
+    private QuestionStatusRules questionStatusRules;
 
     @Before
     public void lookupPermissionRules() {
-        sectionPermissionRules = getMockPermissionRulesBean(SectionPermissionRules.class);
+        questionStatusRules = getMockPermissionRulesBean(QuestionStatusRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
 
@@ -37,9 +36,8 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
                 .build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules)
-                        .onlyMemberOfProjectTeamCanMarkSectionAsComplete(isA(ApplicationResource.class), isA
-                                (UserResource.class))
+                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSection(isA(ApplicationResource.class),
+                        isA(UserResource.class))
         );
     }
 
@@ -52,9 +50,8 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
                 .build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsInComplete(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules)
-                        .onlyMemberOfProjectTeamCanMarkSectionAsInComplete(isA(ApplicationResource.class), isA
-                                (UserResource.class))
+                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSection(isA(ApplicationResource.class),
+                        isA(UserResource.class))
         );
     }
 
@@ -67,9 +64,8 @@ public class SectionStatusServiceSecurityTest extends BaseServiceSecurityTest<Se
                 .build());
         assertAccessDenied(
                 () -> classUnderTest.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById),
-                () -> verify(sectionPermissionRules)
-                        .onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(isA(ApplicationResource.class), isA
-                                (UserResource.class))
+                () -> verify(questionStatusRules).onlyMemberOfProjectTeamCanMarkSection(isA(ApplicationResource.class),
+                isA(UserResource.class))
         );
     }
 

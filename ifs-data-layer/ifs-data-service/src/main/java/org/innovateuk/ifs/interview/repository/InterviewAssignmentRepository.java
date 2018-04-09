@@ -17,6 +17,10 @@ import java.util.Set;
  */
 public interface InterviewAssignmentRepository extends ProcessRepository<InterviewAssignment>, PagingAndSortingRepository<InterviewAssignment, Long> {
 
+    void deleteByTargetIdAndActivityStateState(long applicationId, State backingState);
+
+    void deleteByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
+
     Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState, Pageable pagable);
 
     List<InterviewAssignment> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
