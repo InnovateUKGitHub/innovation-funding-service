@@ -108,7 +108,7 @@ Assessor can respond to email invite and decline
     Then The user should see the element     jQuery=h1:contains("Invitation to interview panel")
     And the assessor declines the interview invitation and no longer sees the competition in the dashboard
 
-CompAdmin resends the interview panel invites
+CompAdmin resends the interview panel invite
     [Documentation]  IFS-3154
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
