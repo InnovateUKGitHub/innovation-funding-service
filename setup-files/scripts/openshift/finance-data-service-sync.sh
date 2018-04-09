@@ -57,19 +57,14 @@ pushFinanceDataServiceSyncImages
 
 financeDataServiceSync
 
-echo Waiting for container to start
-until [ "$(oc get po finance-data-service-sync ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po finance-data-service-sync -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Running' ]
+echo Waiting for container to complete
+until [ "$(oc get po finance-data-service-sync ${SVC_ACCOUNT_CLAUSE} &> /dev/null; echo $?)" == 0 ] && [ "$(oc get po finance-data-service-sync -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" == 'Succeeded' ]
 do
   echo -n .
   sleep 5
 done
 
 oc logs -f finance-data-service-sync ${SVC_ACCOUNT_CLAUSE}
-
-echo Waiting for container to terminate before checking its status
-sleep 5
-
-if [[ "$(oc get po finance-data-service-sync -o go-template --template '{{.status.phase}}' ${SVC_ACCOUNT_CLAUSE})" != "Succeeded" ]]; then exit -1; fi
 
 # tidy up the pod afterwards
 oc delete pod finance-data-service-sync ${SVC_ACCOUNT_CLAUSE}
