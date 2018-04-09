@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
+import org.innovateuk.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,10 +67,10 @@ public class ProjectDetailsController {
     }
 
     @PostMapping("/{projectId}/withdraw")
-    public String withdrawProject(@PathVariable("projectId") final long projectId) {
+    public String withdrawProject(@PathVariable("projectId") final long projectId, HttpServletRequest request) {
         ProjectResource projectResource = projectService.withdrawProject(projectId);
 
-        return "redirect:/project/withdraw";
+        return RedirectUtils.redirectToCompetitionManagementService(request, "/competition/{competitionId}/applications/unsuccessful");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
