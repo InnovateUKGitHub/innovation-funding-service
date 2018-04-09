@@ -18,6 +18,10 @@ public interface InterviewAssignmentRestService {
 
     RestResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, int page);
 
+    RestResult<Void> unstageApplication(long applicationId);
+
+    RestResult<Void> unstageApplications(long competitionId);
+
     RestResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, int page);
 
     RestResult<ApplicantInterviewInviteResource> getEmailTemplate();

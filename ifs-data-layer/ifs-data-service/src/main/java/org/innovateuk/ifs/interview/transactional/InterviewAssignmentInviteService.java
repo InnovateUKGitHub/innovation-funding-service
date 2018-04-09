@@ -39,6 +39,16 @@ public interface InterviewAssignmentInviteService {
     ServiceResult<Void> assignApplications(List<StagedApplicationResource> invites);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "UNSTAGE_INTERVIEW_PANEL_APPLICATION",
+            description = "The Competition Admin user and Project Finance users can unstage applications")
+    ServiceResult<Void> unstageApplication(long applicationId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "UNSTAGE_INTERVIEW_PANEL_APPLICATIONS",
+            description = "The Competition Admin user and Project Finance users can unstage applications")
+    ServiceResult<Void> unstageApplications(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATIONS",
             description = "The Competition Admin user and Project Finance users can view template for inviting applicants")
     ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate();

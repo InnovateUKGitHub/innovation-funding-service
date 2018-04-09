@@ -141,6 +141,17 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     @Override
+    public ServiceResult<Void> unstageApplication(long applicationId) {
+        interviewAssignmentRepository.deleteByTargetIdAndActivityStateState(applicationId, InterviewAssignmentState.CREATED.getBackingState());
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> unstageApplications(long competitionId) {
+        interviewAssignmentRepository.deleteByTargetCompetitionIdAndActivityStateState(competitionId, InterviewAssignmentState.CREATED.getBackingState());
+        return serviceSuccess();
+    }
+
     public ServiceResult<ApplicantInterviewInviteResource> getEmailTemplate() {
         NotificationTarget notificationTarget = new UserNotificationTarget("", "");
 

@@ -116,6 +116,26 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
     }
 
     @Test
+    public void unstageApplication() {
+        long applicationId = 1L;
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", REST_URL, "unstage-application", applicationId), OK);
+
+        RestResult<Void> restResult = service.unstageApplication(applicationId);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void unstageApplications() {
+        long competitionId = 1L;
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", REST_URL, "unstage-applications", competitionId), OK);
+
+        RestResult<Void> restResult = service.unstageApplications(competitionId);
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
     public void getEmailTemplate() {
         ApplicantInterviewInviteResource expected = new ApplicantInterviewInviteResource("Content");
 
