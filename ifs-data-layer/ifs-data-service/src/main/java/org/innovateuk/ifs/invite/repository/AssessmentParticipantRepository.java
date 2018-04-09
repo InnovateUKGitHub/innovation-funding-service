@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +16,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionParticipantRepository extends PagingAndSortingRepository<AssessmentParticipant, Long> {
+public interface AssessmentParticipantRepository extends PagingAndSortingRepository<AssessmentParticipant, Long> {
 
     String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
             "FROM ReviewInvite invite " +

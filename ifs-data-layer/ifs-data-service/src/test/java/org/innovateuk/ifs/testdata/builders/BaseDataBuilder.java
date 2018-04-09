@@ -40,8 +40,8 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.form.transactional.QuestionService;
 import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.repository.AssessmentInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.transactional.AcceptApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.ApplicationInviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
@@ -148,7 +148,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionRepository competitionRepository;
     protected CompetitionFunderRepository competitionFunderRepository;
     protected AssessorService assessorService;
-    protected CompetitionParticipantRepository competitionParticipantRepository;
+    protected AssessmentParticipantRepository assessmentParticipantRepository;
     protected AssessmentInviteService assessmentInviteService;
     protected TestService testService;
     protected AssessmentRepository assessmentRepository;
@@ -233,7 +233,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         assessmentInviteRepository = serviceLocator.getBean(AssessmentInviteRepository.class);
         competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         assessorService = serviceLocator.getBean(AssessorService.class);
-        competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
+        assessmentParticipantRepository = serviceLocator.getBean(AssessmentParticipantRepository.class);
         assessmentInviteService = serviceLocator.getBean(AssessmentInviteService.class);
         testService = serviceLocator.getBean(TestService.class);
         assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);

@@ -1,31 +1,31 @@
-package org.innovateuk.ifs.invite.mapper;
+package org.innovateuk.ifs.assessment.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
-import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
-import org.innovateuk.ifs.invite.resource.InterviewParticipantResource;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
+import org.innovateuk.ifs.invite.mapper.RejectionReasonMapper;
+import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-/**
- * Maps between domain and resource DTO for {@link org.innovateuk.ifs.invite.domain.competition.InterviewParticipant}.
- */
 @Mapper(
     config = GlobalMapperConfig.class,
-        uses = {
-                CompetitionMapper.class,
-                UserMapper.class,
-                InterviewInviteMapper.class,
-                RejectionReasonMapper.class,
-                CompetitionParticipantRoleMapper.class,
-                ParticipantStatusMapper.class,
-        }
+    uses = {
+        CompetitionMapper.class,
+        UserMapper.class,
+        CompetitionInviteMapper.class,
+        RejectionReasonMapper.class,
+        CompetitionParticipantRoleMapper.class,
+        ParticipantStatusMapper.class,
+    }
 )
-public abstract class InterviewParticipantMapper extends BaseMapper<InterviewParticipant, InterviewParticipantResource, Long> {
+public abstract class AssessmentParticipantMapper extends BaseMapper<AssessmentParticipant, CompetitionParticipantResource, Long> {
 
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),
@@ -37,19 +37,18 @@ public abstract class InterviewParticipantMapper extends BaseMapper<InterviewPar
             @Mapping(target = "submittedAssessments", ignore = true),
             @Mapping(target = "pendingAssessments", ignore = true),
             @Mapping(source = "process.competitionStatus", target = "competitionStatus"),
-            @Mapping(target = "awaitingApplications", ignore = true),
     })
     @Override
-    public abstract InterviewParticipantResource mapToResource(InterviewParticipant domain);
+    public abstract CompetitionParticipantResource mapToResource(AssessmentParticipant domain);
 
     @Mappings({
             @Mapping(source = "userId", target = "user"),
             @Mapping(source = "competitionId", target = "process")
     })
     @Override
-    public abstract InterviewParticipant mapToDomain(InterviewParticipantResource resource);
+    public abstract AssessmentParticipant mapToDomain(CompetitionParticipantResource resource);
 
-    public Long mapAssessmentInterviewPanelParticipantToId(InterviewParticipant object) {
+    public Long mapCompetitionParticipantToId(AssessmentParticipant object) {
         if (object == null) {
             return null;
         }
