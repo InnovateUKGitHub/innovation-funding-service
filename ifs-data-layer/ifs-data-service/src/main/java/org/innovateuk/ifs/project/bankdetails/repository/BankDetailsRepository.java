@@ -15,10 +15,9 @@ public interface BankDetailsRepository extends PagingAndSortingRepository<BankDe
             + " WHERE p.application.competition.id = c.id"
             + " AND bd.project.id = p.id"
             + " AND bd.manualApproval = FALSE"
-            + " AND (bd.verified = FALSE OR bd.registrationNumberMatched = FALSE OR bd.companyNameScore <= "
-            + EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME
-            + " OR bd.addressScore <= " +
-            + EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS
+            + " AND (bd.verified = FALSE OR bd.registrationNumberMatched = FALSE"
+            + " OR bd.companyNameScore <= " + EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME
+            + " OR bd.addressScore <= " + EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS
             + ")";
 
     //TODO - This query will need to be modified once IFS-468 is completed. IFS-468 is about having a workflow in place for the Bank Details process.
