@@ -11,9 +11,6 @@ osStageLocal.tag = assessmentServiceVersion
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 
-    // weirdly, removing this line from this web module will cause the build to pull in version 2.1.2.RELEASE
-    // despite 3.0.1.RELEASE being specified explicitly in ifs-web-core's build.gradle
-
     compile "commons-io:commons-io:2.5"
 
     testCompile project(':ifs-resources').sourceSets.test.output
