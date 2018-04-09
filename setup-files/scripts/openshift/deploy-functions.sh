@@ -135,6 +135,20 @@ function injectDBVariables() {
     sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-anonymised-data/*.yml
+
+    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+}
+
+function injectFinanceDBVariables() {
+    sed -i.bak "s#<<FINANCE-DB-USER>>#$FINANCE_DB_USER#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<FINANCE-DB-PASS>>#$FINANCE_DB_PASS#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<FINANCE-DB-NAME>>#$FINANCE_DB_NAME#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<FINANCE-DB-HOST>>#$FINANCE_DB_HOST#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<FINANCE-DB-PORT>>#$FINANCE_DB_PORT#g" $(getBuildLocation)/finance-data-service-sync/*.yml
 }
 
 
@@ -159,6 +173,12 @@ function injectLDAPVariables() {
     sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<ONLY-SYNC-LDAP>>#$ONLY_SYNC_LDAP#g" $(getBuildLocation)/db-reset/*.yml
+}
+
+function injectDataServiceVariables() {
+    DATA_SERVICE_PORT=${DATA_SERVICE_PORT:-8080}
+    sed -i.bak "s#<<DATA-SERVICE-HOST>>#$DATA_SERVICE_HOST#g" $(getBuildLocation)/finance-data-service-sync/*.yml
+    sed -i.bak "s#<<DATA-SERVICE-PORT>>#$DATA_SERVICE_PORT#g" $(getBuildLocation)/finance-data-service-sync/*.yml
 }
 
 function getEnvVariableValue() {
@@ -217,6 +237,7 @@ function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/mysql/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/finance-data-service/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/finance-data-service-sync/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml
@@ -230,12 +251,14 @@ function useContainerRegistry() {
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mail/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/finance-data-service/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/finance-data-service-sync/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-baseline/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-anonymised-data/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/robot-tests/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/finance-data-service-sync/*.yml
 }
 
 
@@ -255,6 +278,15 @@ function pushDBBaselineImages() {
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/dbbaseline:${VERSION}
+}
+
+function pushFinanceDataServiceSyncImages() {
+    docker tag innovateuk/finance-data-service-sync:latest \
+        ${REGISTRY}/${PROJECT}/finance-data-service-sync:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/finance-data-service-sync:${VERSION}
 }
 
 function pushFractalImages() {

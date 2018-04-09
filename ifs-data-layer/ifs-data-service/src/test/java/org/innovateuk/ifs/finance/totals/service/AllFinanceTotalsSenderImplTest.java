@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
 
 import java.util.stream.Stream;
 
@@ -26,9 +25,6 @@ public class AllFinanceTotalsSenderImplTest {
 
     @Mock
     private ApplicationService applicationService;
-
-    @Mock
-    private Logger logger;
 
     @InjectMocks
     private AllFinanceTotalsSenderImpl allFinanceTotalsSender;
