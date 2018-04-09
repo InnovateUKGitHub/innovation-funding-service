@@ -30,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -38,6 +39,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.state.ApplicationStateVerificationFunctions.verifyApplicationIsOpen;
 
@@ -221,10 +223,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<ApplicationResource>> findByUserId(final Long userId) {
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
-            List<Application> applications = simpleMap(roles, processRole -> {
-                Long appId = processRole.getApplicationId();
-                return appId != null ? applicationRepository.findOne(appId) : null;
-            });
+            Set<Long> applicationIds = simpleMapSet(roles, ProcessRole::getApplicationId);
+            List<Application> applications = simpleMap(applicationIds, appId -> appId != null ? applicationRepository.findOne(appId) : null);
             return simpleMap(applications, applicationMapper::mapToResource);
         });
     }
