@@ -6,7 +6,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,19 +65,17 @@ public class ProjectDetailsController {
         List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        List<PartnerOrganisationResource> partnerOrganisations = null;
-        if (competitionResource.isLocationPerPartner()) {
-            partnerOrganisations = partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess();
-        }
-
+        boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),
-                competitionResource.isLocationPerPartner(),
-                partnerOrganisations));
+                locationPerPartnerRequired,
+                locationPerPartnerRequired?
+                        partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
+                        : Collections.emptyList()));
 
         return "project/detail";
     }
