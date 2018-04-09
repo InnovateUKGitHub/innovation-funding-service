@@ -15,15 +15,15 @@ import java.util.List;
 public interface ProcessRoleRepository extends PagingAndSortingRepository<ProcessRole, Long> {
     List<ProcessRole> findByUser(User user);
     List<ProcessRole> findByUserId(Long userId);
-    List<ProcessRole> findByUserAndApplicationId(User user, Long applicationId);
-    ProcessRole findByUserIdAndRoleAndApplicationId(Long userId, Role role, Long applicationId);
-    List<ProcessRole> findByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, Long applicationId);
-    List<ProcessRole> findByApplicationId(Long applicationId);
-    List<ProcessRole> findByApplicationIdAndRole(Long applicationId, Role role);
-    ProcessRole findOneByApplicationIdAndRole(Long applicationId, Role role);
-    List<ProcessRole> findByApplicationIdAndOrganisationId(Long applicationId, Long organisationId);
-    ProcessRole findByUserIdAndApplicationId(Long userId, Long applicationId);
-    ProcessRole findByUserIdAndRoleAndApplicationIdAndOrganisationId(Long userId, Role role, Long applicationId, Long organisationId);
-    boolean existsByUserIdAndApplicationId(Long userId, Long applicationId);
-    boolean existsByUserIdAndApplicationIdAndRole(Long id, Long applicationId, Role role);
+    List<ProcessRole> findByUserAndApplicationId(User user, long applicationId);
+    ProcessRole findByUserIdAndRoleAndApplicationId(Long userId, Role role, long applicationId);
+    List<ProcessRole> findByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, long applicationId);
+    ProcessRole findOneByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, long applicationId);
+    List<ProcessRole> findByApplicationId(long applicationId);
+    List<ProcessRole> findByApplicationIdAndRole(long applicationId, Role role);
+    ProcessRole findOneByApplicationIdAndRole(long applicationId, Role role);
+    List<ProcessRole> findByApplicationIdAndOrganisationId(long applicationId, long organisationId);
+    ProcessRole findByUserIdAndRoleAndApplicationIdAndOrganisationId(Long userId, Role role, long applicationId, long organisationId);
+    boolean existsByUserIdAndApplicationId(Long userId, long applicationId);
+    boolean existsByUserIdAndApplicationIdAndRole(Long id, long applicationId, Role role);
 }
