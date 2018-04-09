@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -177,22 +176,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
-    }
-
-    @Test
-    public void findUnsuccessfulApplications() {
-        Long competitionId = 1L;
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
-
-        when(classUnderTestMock.findUnsuccessfulApplications(competitionId, 0, 0, ""))
-                .thenReturn(serviceSuccess(new ApplicationPageResource()));
-        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
-
-        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, ""), () -> {
-            verify(rules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
-            verify(rules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
-            verifyNoMoreInteractions(rules);
-        });
     }
 
     @Test
