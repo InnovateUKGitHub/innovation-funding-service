@@ -299,7 +299,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(applicationPage)))
                 .andDo(document(
-                        "competition/{method-name}",
+                        "application/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
                         )
