@@ -125,18 +125,26 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
                         .findByTargetCompetitionIdAndActivityStateState(
                                 competitionId, InterviewAssignmentState.CREATED.getBackingState());
 
-        List<Long> assignedApplicationIds = assignedApplications.stream()
-                .map(
-                        interviewAssignment -> interviewAssignment
-                                .getTarget()
-                                .getId()
-                ).collect(Collectors.toList());
+        if (assignedApplications.isEmpty()) {
+            stagedInvites.stream()
+                    .distinct()
+                    .forEach(invite -> getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition));
+        } else {
 
-        stagedInvites.stream()
-                .filter(invite ->  assignedApplicationIds.contains(invite.getApplicationId()) == false)
-                .forEach(invite -> {
-                    getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition);
-                });
+            List<Long> assignedApplicationIds = assignedApplications.stream()
+                    .map(
+                            interviewAssignment -> interviewAssignment
+                                    .getTarget()
+                                    .getId()
+                    ).collect(Collectors.toList());
+
+            stagedInvites.stream()
+                    .distinct()
+                    .filter(invite ->  assignedApplicationIds.contains(invite.getApplicationId()) == false)
+                    .forEach(invite -> {
+                        getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition);
+                    });
+        }
 
         return serviceSuccess();
     }
