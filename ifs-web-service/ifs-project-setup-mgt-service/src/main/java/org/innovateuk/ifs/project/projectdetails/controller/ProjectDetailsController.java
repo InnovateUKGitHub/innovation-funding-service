@@ -68,7 +68,7 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/withdraw")
     public String withdrawProject(@PathVariable("projectId") final long projectId, HttpServletRequest request) {
-        ProjectResource projectResource = projectService.withdrawProject(projectId);
+        Void projectResource = projectService.withdrawProject(projectId);
 
         return RedirectUtils.redirectToCompetitionManagementService(request, "/competition/{competitionId}/applications/unsuccessful");
     }

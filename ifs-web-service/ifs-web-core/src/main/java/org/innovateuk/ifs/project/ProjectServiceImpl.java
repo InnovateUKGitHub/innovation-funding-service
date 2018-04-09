@@ -75,14 +75,13 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectResource withdrawProject(Long projectId) {
+    public Void withdrawProject(Long projectId) {
         if(projectId == null) {
             return null;
         }
         RestResult<Void> restResult =  projectRestService.withdrawProject(projectId);
         if(restResult.isSuccess()){
-            // TODO update return
-            return null; //FIX LATER SAYS ANN
+            return restResult.getSuccess();
         } else {
             return null;
         }
