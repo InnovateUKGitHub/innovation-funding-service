@@ -206,6 +206,12 @@ task dbBaselineLocal(type: Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
+task financeDataSyncLocal(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
+    args = [openshiftEnv, "local", project.version]
+}
+
 task dbAnonymisedDumpLocal(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
@@ -270,6 +276,12 @@ task dbResetRemote(type: Exec) {
 task dbBaselineRemote(type: Exec) {
     dependsOn prepareDeployment
     executable = 'setup-files/scripts/openshift/db-baseline.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task financeDataSyncRemote(type: Exec) {
+    dependsOn prepareDeployment
+    executable = 'setup-files/scripts/openshift/finance-data-service-sync.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
