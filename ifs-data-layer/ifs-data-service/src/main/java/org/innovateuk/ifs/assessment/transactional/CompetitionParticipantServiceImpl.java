@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessmentParticipantMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.springframework.beans.factory.annotation.Autowired;

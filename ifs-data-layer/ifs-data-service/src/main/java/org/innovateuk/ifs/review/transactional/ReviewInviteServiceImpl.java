@@ -17,7 +17,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;

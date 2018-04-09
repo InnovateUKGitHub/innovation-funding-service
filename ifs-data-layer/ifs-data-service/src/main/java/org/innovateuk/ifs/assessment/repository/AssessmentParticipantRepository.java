@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.repository;
+package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;

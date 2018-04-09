@@ -37,7 +37,7 @@ import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
 import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
-import org.innovateuk.ifs.invite.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;

@@ -14,7 +14,6 @@ import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.review.domain.ReviewInvite;
-import org.innovateuk.ifs.invite.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;

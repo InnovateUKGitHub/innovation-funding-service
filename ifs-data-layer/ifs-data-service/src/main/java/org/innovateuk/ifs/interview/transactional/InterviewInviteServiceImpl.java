@@ -18,7 +18,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
