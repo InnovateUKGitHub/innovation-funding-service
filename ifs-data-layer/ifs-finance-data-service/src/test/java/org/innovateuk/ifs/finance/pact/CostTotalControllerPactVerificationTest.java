@@ -10,7 +10,6 @@ import au.com.dius.pact.provider.spring.SpringRestPactRunner;
 import au.com.dius.pact.provider.spring.target.SpringBootHttpTarget;
 import org.innovateuk.ifs.finance.repository.CostTotalRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +21,6 @@ import org.springframework.test.context.ActiveProfiles;
 @VerificationReports({"console", "markdown", "json"})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
-@Ignore
 public class CostTotalControllerPactVerificationTest {
 
     @Autowired
