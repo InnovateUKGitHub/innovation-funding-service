@@ -484,8 +484,8 @@ Application: Need or challenge
     And the user selects the radio button   question.scored  0
     And the user should not be able to edit the assessed question feedback
     And the user clicks the button/link     jQuery=button[type="submit"]
-    And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
-    Then the user should not see the assessed question feedback
+    When the user clicks the button/link      jQuery=h4 a:contains("${amendedQuestion}")
+    Then the user should not see the element  jQuery=dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
 Application: marking questions as complete
     [Documentation]  IFS-743
@@ -518,7 +518,7 @@ Removing an Assessed Application Question
     [Documentation]  IFS-182
     [Tags]
     Given the user clicks the button/link     jQuery=a:contains("Costs and value for money")
-    When the user clicks the button/link      css=button[name="deleteAssessedQuestion"]
+    When the user clicks the button/link      css=button[name="deleteQuestion"]
     Then the user should not see the element  jQuery=a:contains("Costs and value for money")
     When the user should see the element      jQuery=li:contains("Additionality") .task-status-complete
     Then the user should not see the element  jQuery=li:contains("Additionality") button:contains("Remove")
@@ -836,12 +836,6 @@ the user should not be able to edit the assessed question feedback
     the user should not see the element    id=guidanceRows[0].justification
     the user should not see the element    jQuery=Button:contains("+Add guidance row")
     the user should not see the element    id=question.scoreTotal
-
-the user should not see the assessed question feedback
-    the user should not see the text in the page    Out of
-    the user should not see the text in the page    Guidance for assessing business opportunity
-    the user should not see the text in the page    Your score should be based upon the following:
-    the user should not see the text in the page    There is little or no business drive to the project.
 
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
