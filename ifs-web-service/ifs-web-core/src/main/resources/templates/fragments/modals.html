@@ -583,10 +583,12 @@
         <p>The project will be marked as withdrawn and removed from project setup. You can still view the application in
             previous competitions</p>
         <hr />
+        <form th:action="@{/competition/{competitionId}/project/{projectId}/withdraw(competitionId=${model.competitionId},projectId=${model.project.id})}" method="post">
             <div>
-                <a class="button" th:href="@{~/management/competition/{competitionId}/applications/unsuccessful(competitionId=${model.competitionId})}">Withdraw project</a>
+                <button class="button" type="submit">Withdraw project</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
+        </form>
     </div>
 </th:block>
 </html>
