@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks edit duration'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks edit duration',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="competition-management project-management finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -16,8 +16,10 @@
         <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your project details.</h2>
         <!-- /* only show underneath messages if there are global errors, which in this case are experian errors.
                 Stub values for the inputs can be found in bank details acceptance tests. */-->
-        <ul class="list-bullet">
-            <li>Please check your project duration</li>
+        <ul class="error-summary-list">
+            <li>
+                <a href="#durationInMonths">Please check your project duration.</a>
+            </li>
         </ul>
     </div>
 
