@@ -47,6 +47,7 @@ createContainer.enabled = enabled
 deploy.enabled =enabled
 wait.enabled = enabled
 deploy.dependsOn ":docker:ifs-mysql:ifs-database:deploy"
+createContainer.portBindings = ['9006:8000']
 
 
 List<String> networkAliases = new ArrayList<>()
