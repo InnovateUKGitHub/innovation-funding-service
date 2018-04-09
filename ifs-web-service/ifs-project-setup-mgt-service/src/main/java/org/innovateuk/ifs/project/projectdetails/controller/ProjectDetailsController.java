@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -174,8 +176,13 @@ public class ProjectDetailsController {
 
     private void validateDuration(String durationInMonths, ValidationHandler validationHandler) {
 
-        if (StringUtils.isBlank(durationInMonths) || !StringUtils.isNumeric(durationInMonths)) {
-            validationHandler.addAnyErrors(serviceFailure(GENERAL_INVALID_ARGUMENT), toField("durationInMonths"));
+        if (StringUtils.isBlank(durationInMonths)) {
+            validationHandler.addAnyErrors(serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
+            return;
+        }
+
+        if (!StringUtils.isNumeric(durationInMonths)) {
+            validationHandler.addAnyErrors(serviceFailure(new Error("validation.standard.integer.non.decimal.format", HttpStatus.BAD_REQUEST)), toField("durationInMonths"));
             return;
         }
 
