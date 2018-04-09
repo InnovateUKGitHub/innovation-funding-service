@@ -27,7 +27,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -35,10 +34,10 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.*;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
-import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -272,7 +271,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
                         return pr1.getUser().getName().compareTo(pr2.getUser().getName());
                     }
                 })
-                .filter(pr -> asList(LEADAPPLICANT, COLLABORATOR, APPLICANT).contains(pr.getRole()))
+                .filter(pr -> applicantProcessRoles().contains(pr.getRole()))
                 .map(pr -> {
                     ApplicationTeamUserResource user = new ApplicationTeamUserResource();
                     user.setLead(pr.isLeadApplicant());

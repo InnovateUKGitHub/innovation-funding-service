@@ -19,8 +19,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -47,7 +48,9 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
 
     @Test
     public void testUserCanReadQuestionStatus() {
-        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
+        ApplicationResource application = newApplicationResource().build();
+        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
+                .withApplication(application).build();
         UserResource connectedUser = newUserResource().build();
         UserResource notConnectedUser = newUserResource().build();
 
@@ -62,8 +65,9 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
 
     @Test
     public void testUserCanUpdateQuestionStatus() {
-        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
-
+        ApplicationResource application = newApplicationResource().build();
+        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource()
+                .withApplication(application).build();
         UserResource leadApplicant = newUserResource().build();
         UserResource allowedAndConnectedUser = newUserResource().build();
         UserResource connectedUserAndNotAllowedUser = newUserResource().build();
@@ -72,7 +76,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
                 .thenReturn(true);
 
         ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
-        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(allowedAndConnectedUser.getId(), applicantRoles(), questionStatusResource.getApplication()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(allowedAndConnectedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(allowedProccesRole);
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), Role.APPLICANT))
                 .thenReturn(true);
@@ -85,7 +89,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
                 .thenReturn(QuestionBuilder.newQuestion().withMultipleStatuses(false).build());
 
         ProcessRole connectedProcessRole = ProcessRoleBuilder.newProcessRole().withRole(Role.APPLICANT).build();
-        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(connectedUserAndNotAllowedUser.getId(), applicantRoles(), questionStatusResource.getApplication()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(connectedUserAndNotAllowedUser.getId(), applicantProcessRoles(), questionStatusResource.getApplication()))
                 .thenReturn(connectedProcessRole);
 
         assertTrue(rules.userCanUpdateQuestionStatus(questionStatusResource, leadApplicant));
@@ -118,7 +122,7 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
 
         when(processRoleRepository.existsByUserIdAndApplicationIdAndRole(leadApplicant.getId(), application.getId(), Role.LEADAPPLICANT))
                 .thenReturn(true);
-        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), applicantRoles(), application.getId()))
+        when(processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(nonProjectTeamMember.getId(), applicantProcessRoles(), application.getId()))
                 .thenReturn(null);
 
         assertTrue(rules.onlyMemberOfProjectTeamCanMarkSection(application, leadApplicant));

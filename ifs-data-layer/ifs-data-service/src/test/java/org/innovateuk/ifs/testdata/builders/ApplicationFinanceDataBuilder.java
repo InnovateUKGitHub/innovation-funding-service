@@ -20,7 +20,7 @@ import java.util.function.UnaryOperator;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.AcademicCostDataBuilder.newAcademicCostData;
 import static org.innovateuk.ifs.testdata.builders.IndustrialCostDataBuilder.newIndustrialCostData;
-import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -112,7 +112,7 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
 
                 forEachWithIndex(questionsToComplete, (i, q) -> {
                     QuestionApplicationCompositeId questionKey = new QuestionApplicationCompositeId(q.getId(), data.getApplication().getId());
-                    Long processRoleId = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(data.getUser().getId(), applicantRoles(),
+                    Long processRoleId = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(data.getUser().getId(), applicantProcessRoles(),
                             data.getApplication().getId()).getId();
 
                     boolean lastElement = i == questions.size() - 1;

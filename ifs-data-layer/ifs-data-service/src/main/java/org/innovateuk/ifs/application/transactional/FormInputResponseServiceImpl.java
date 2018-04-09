@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -69,7 +69,7 @@ public class FormInputResponseServiceImpl extends BaseTransactionalService imple
         Long formInputId = formInputResponseCommand.getFormInputId();
         String htmlUnescapedValue = formInputResponseCommand.getValue();
         Long userId = formInputResponseCommand.getUserId();
-        ProcessRole userAppRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(userId, applicantRoles(), applicationId);
+        ProcessRole userAppRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(userId, applicantProcessRoles(), applicationId);
 
         return find(user(userId), formInput(formInputId), openApplication(applicationId)).
                 andOnSuccess((user, formInput, application) ->

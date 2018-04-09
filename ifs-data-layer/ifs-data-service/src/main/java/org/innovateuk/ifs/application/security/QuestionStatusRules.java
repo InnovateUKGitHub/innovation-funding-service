@@ -17,7 +17,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.user.resource.Role.applicantRoles;
+import static org.innovateuk.ifs.user.resource.Role.applicantProcessRoles;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @Component
@@ -74,7 +74,7 @@ public class QuestionStatusRules extends BasePermissionRules {
     }
 
     private boolean userIsAssigned(Long questionId, Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(user.getId(), applicantRoles(), applicationId);
+        ProcessRole processRole = processRoleRepository.findOneByUserIdAndRoleInAndApplicationId(user.getId(), applicantProcessRoles(), applicationId);
         return questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(
                 questionId,
                 applicationId,
