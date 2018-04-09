@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemMaintenanceUser;
 @Component
 @PermissionRules
 public class FinanceTotalsPermissionRules extends BasePermissionRules {
-    @PermissionRule(value = "SEND_APPLICATION_TOTALS_ON_SUBMIT", description = "Internal users and lead applicants are allowed to send the application totals.")
+    @PermissionRule(value = "SEND_APPLICATION_TOTALS", description = "Internal users and lead applicants are allowed to send the application totals.")
     public boolean leadApplicantAndInternalUsersCanUpdateTotalsForAnApplication(final ApplicationResource applicationResource,
                                                                                 final UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user) || isInternal(user) || isSystemMaintenanceUser(user);
