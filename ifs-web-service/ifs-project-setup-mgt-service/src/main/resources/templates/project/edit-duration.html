@@ -12,6 +12,15 @@
 <main tabindex="-1" id="content">
   <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.project.id})}" />
 
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your project details.</h2>
+        <!-- /* only show underneath messages if there are global errors, which in this case are experian errors.
+                Stub values for the inputs can be found in bank details acceptance tests. */-->
+        <ul class="list-bullet">
+            <li>Please check your project duration</li>
+        </ul>
+    </div>
+
   <th:block th:with="competitionTitle=${#strings.isEmpty(model.competitionName)} ? |${model.competitionId} : $#{ifs.competition.no_title}| : |${model.competitionId} : ${model.competitionName}|">
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${competitionTitle},size='heading-xlarge'" />
   </th:block>
@@ -35,6 +44,7 @@
       </label>
         <input name="durationInMonths"
                id="durationInMonths"
+               th:attr="data-required-errormessage=#{validation.field.must.not.be.blank},data-pattern-errormessage=#{validation.field.non.decimal.format}"
                type="text"
                class="form-control width-small"
                required="required"
