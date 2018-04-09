@@ -35,7 +35,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -98,13 +97,13 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         return new AssessmentFeedbackController();
     }
 
-    private ZonedDateTime now;
+    private ZonedDateTime twoHoursAgo;
 
     @Override
     @Before
     public void setUp() {
         super.setUp();
-        now = ZonedDateTime.now().minusHours(2);
+        twoHoursAgo = ZonedDateTime.now().minusHours(2);
     }
 
     @Test
@@ -303,7 +302,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     public void getQuestion_applicationDetailsQuestion() throws Exception {
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Application name")
-                .withStartDate(now.toLocalDate())
+                .withStartDate(twoHoursAgo.toLocalDate())
                 .withDurationInMonths(20L)
                 .build();
 
@@ -343,7 +342,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         AssessmentFeedbackApplicationDetailsViewModel expectedViewModel = new AssessmentFeedbackApplicationDetailsViewModel(
                 applicationResource.getId(),
                 "Application name",
-                now.toLocalDate(),
+                twoHoursAgo.toLocalDate(),
                 20L,
                 3,
                 50,
@@ -806,8 +805,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
     private CompetitionResource setupCompetitionResource() {
         CompetitionResource competitionResource = newCompetitionResource()
-                .withAssessorAcceptsDate(now.minusDays(2))
-                .withAssessorDeadlineDate(now.plusDays(4))
+                .withAssessorAcceptsDate(twoHoursAgo.minusDays(2))
+                .withAssessorDeadlineDate(twoHoursAgo.plusDays(4))
                 .build();
 
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
