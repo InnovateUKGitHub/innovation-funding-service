@@ -129,16 +129,21 @@ public class SetupStatusViewModelPopulator {
 
         ProjectPartnerStatusResource leadPartnerStatus = teamStatus.getLeadPartnerStatus();
 
-        if (partnerProjectLocationRequired) {
-            return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
-                    && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                    && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
-                    && (!allOtherPartnersFinanceContactStatusComplete(teamStatus) || !allOtherPartnersProjectLocationStatusComplete(teamStatus));
-        } else {
-            return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
-                    && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
-                    && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
-        }
+        return partnerProjectLocationRequired ? isAwaitingWhenProjectLocationRequired(teamStatus, leadPartnerStatus)
+                : isAwaitingWhenProjectLocationNotRequired(teamStatus, leadPartnerStatus);
+    }
+
+    private boolean isAwaitingWhenProjectLocationRequired(ProjectTeamStatusResource teamStatus, ProjectPartnerStatusResource leadPartnerStatus) {
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                && COMPLETE.equals(leadPartnerStatus.getPartnerProjectLocationStatus())
+                && (!allOtherPartnersFinanceContactStatusComplete(teamStatus) || !allOtherPartnersProjectLocationStatusComplete(teamStatus));
+    }
+
+    private boolean isAwaitingWhenProjectLocationNotRequired(ProjectTeamStatusResource teamStatus, ProjectPartnerStatusResource leadPartnerStatus) {
+        return COMPLETE.equals(leadPartnerStatus.getProjectDetailsStatus())
+                && COMPLETE.equals(leadPartnerStatus.getFinanceContactStatus())
+                && !allOtherPartnersFinanceContactStatusComplete(teamStatus);
     }
 
     private boolean allOtherPartnersFinanceContactStatusComplete(ProjectTeamStatusResource teamStatus) {

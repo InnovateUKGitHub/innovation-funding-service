@@ -187,20 +187,16 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     }
 
     private ServiceResult<Void> validatePostCode(String postCode) {
-
         if (StringUtils.isBlank(postCode)) {
             return serviceFailure(GENERAL_INVALID_ARGUMENT);
         }
-
         return serviceSuccess();
     }
 
     private ServiceResult<Void> validateIfPartnerProjectLocationCanBeChanged(long projectId) {
-
         if (isMonitoringOfficerAssigned(projectId)) {
             return serviceFailure(PROJECT_SETUP_PARTNER_PROJECT_LOCATION_CANNOT_BE_CHANGED_ONCE_MONITORING_OFFICER_HAS_BEEN_ASSIGNED);
         }
-
         return serviceSuccess();
     }
 
