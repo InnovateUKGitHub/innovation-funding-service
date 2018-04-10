@@ -1,5 +1,5 @@
 // prevents user typing or pasting characters that are not within a defined regex
-IFS.projectSetup.preventInputRegex = (function () {
+IFS.core.preventInputRegex = (function () {
   'use strict'
   var s // private alias to settings
   return {
