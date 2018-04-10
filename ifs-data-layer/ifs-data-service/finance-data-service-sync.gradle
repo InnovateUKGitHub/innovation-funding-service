@@ -17,6 +17,7 @@ buildscript {
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 task financeDataServiceSyncEnv {
     dependsOn "build"
+    dependsOn ":docker:ifs-mysql-client:buildDocker"
 
     def inputDir = project.file("$project.buildDir/docker-finance-data-service-sync")
     doFirst {
