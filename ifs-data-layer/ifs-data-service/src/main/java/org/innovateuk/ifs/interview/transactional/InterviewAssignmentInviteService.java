@@ -24,6 +24,11 @@ public interface InterviewAssignmentInviteService {
     ServiceResult<InterviewAssignmentStagedApplicationPageResource> getStagedApplications(long competitionId, Pageable pageable);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_ASSIGNED_APPLICATIONS_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve available applications by competition")
+    ServiceResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, Pageable pageable);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_AVAILABLE_APPLICATIONS_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve available applications by competition")
     ServiceResult<List<Long>> getAvailableApplicationIds(long competitionId);

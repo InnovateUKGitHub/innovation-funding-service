@@ -166,9 +166,11 @@ public class ReviewSendInviteController extends CompetitionManagementCookieContr
             ServiceResult<Void> resendResult = reviewInviteRestService.resendInvites(form.getInviteIds(),
                     new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
-            removeCookie(response, competitionId);
             return validationHandler.addAnyErrors(resendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> redirectToOverview(competitionId, 0));
+                    .failNowOrSucceedWith(failureView, () -> {
+                        removeCookie(response, competitionId);
+                        return redirectToOverview(competitionId, 0);
+                    });
         });
     }
 

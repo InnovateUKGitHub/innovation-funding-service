@@ -30,11 +30,10 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testAllServiceFunctionsShouldBeAuthorizedForCompAdmin() {
-
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 
     @Test
@@ -42,7 +41,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -60,6 +59,6 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     @Test(expected = AccessDeniedException.class)
     public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 }
