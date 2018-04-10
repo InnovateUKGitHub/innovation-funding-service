@@ -208,6 +208,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
         List<Application> applicationsForId = applicationRepository.findByCompetitionId(id);
 
+        // Only competitions with at least one funded and informed application can be considered as in project setup
         return serviceSuccess(applicationsForId.stream()
                 .filter(application -> application.getManageFundingEmailDate() != null)
                 .max(Comparator.comparing(Application::getManageFundingEmailDate))

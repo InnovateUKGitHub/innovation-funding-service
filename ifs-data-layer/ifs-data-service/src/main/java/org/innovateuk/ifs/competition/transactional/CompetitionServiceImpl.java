@@ -199,7 +199,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             } else {
                 competitions = competitionRepository.findProjectSetup();
             }
-            // Only competitions with at least one funded and informed application can be considered as in project setup
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
                             .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
