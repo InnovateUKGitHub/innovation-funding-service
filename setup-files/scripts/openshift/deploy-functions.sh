@@ -202,11 +202,6 @@ function tailorAppInstance() {
     fi
 }
 
-function tailorFractalInstance() {
-    sed -i.bak "s/<<FRACTAL-ADDRESS>>/fractal-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/fractal/*.yml
-}
-
-
 function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/sil-stub/*.yml
