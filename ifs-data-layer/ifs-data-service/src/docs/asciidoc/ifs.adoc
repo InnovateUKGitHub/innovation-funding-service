@@ -168,7 +168,7 @@ include::competitionSetupFinance.adoc[]
 
 [[costTotals]]
 == Cost Totals
-include::costTotals.adoc[]
+include::cost-totals.adoc[]
 
 [[inviteorganisation]]
 == Invite Organisation
