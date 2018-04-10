@@ -2,7 +2,6 @@ package org.innovateuk.ifs.question.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.question.QuestionSetupCompetitionController;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
@@ -23,49 +22,49 @@ public class QuestionSetupCompetitionControllerTest extends BaseControllerMockMV
     public void getByQuestionId() throws Exception {
         final Long questionId = 1L;
 
-        when(questionSetupServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().build()));
+        when(questionSetupCompetitionServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().build()));
 
-        mockMvc.perform(get("/question/getById/{questionId}", questionId))
+        mockMvc.perform(get("/question-setup/getById/{questionId}", questionId))
                 .andExpect(status().isOk());
 
-        verify(questionSetupServiceMock, only()).getByQuestionId(questionId);
+        verify(questionSetupCompetitionServiceMock, only()).getByQuestionId(questionId);
     }
 
     @Test
     public void save() throws Exception {
         final CompetitionSetupQuestionResource question = newCompetitionSetupQuestionResource().build();
 
-        when(questionSetupServiceMock.update(question)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().withTitle("expected question").build()));
+        when(questionSetupCompetitionServiceMock.update(question)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().withTitle("expected question").build()));
 
-        mockMvc.perform(put("/question/save")
+        mockMvc.perform(put("/question-setup/save")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(question)))
                 .andExpect(status().isOk());
 
-        verify(questionSetupServiceMock, only()).update(question);
+        verify(questionSetupCompetitionServiceMock, only()).update(question);
     }
 
     @Test
     public void addDefaultToCompetitionId() throws Exception {
         final Long competitionId = 1L;
 
-        when(questionSetupServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().build()));
+        when(questionSetupCompetitionServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(newCompetitionSetupQuestionResource().build()));
 
-        mockMvc.perform(post("/question/addDefaultToCompetition/{competitionId}", competitionId))
+        mockMvc.perform(post("/question-setup/addDefaultToCompetition/{competitionId}", competitionId))
                 .andExpect(status().isCreated());
 
-        verify(questionSetupServiceMock, only()).createByCompetitionId(competitionId);
+        verify(questionSetupCompetitionServiceMock, only()).createByCompetitionId(competitionId);
     }
 
     @Test
     public void deleteById() throws Exception {
         final Long questionId = 1L;
 
-        when(questionSetupServiceMock.delete(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(delete("/question/deleteById/{questionId}", questionId))
+        mockMvc.perform(delete("/question-setup/deleteById/{questionId}", questionId))
                 .andExpect(status().isNoContent());
 
-        verify(questionSetupServiceMock, only()).delete(questionId);
+        verify(questionSetupCompetitionServiceMock, only()).delete(questionId);
     }
 }

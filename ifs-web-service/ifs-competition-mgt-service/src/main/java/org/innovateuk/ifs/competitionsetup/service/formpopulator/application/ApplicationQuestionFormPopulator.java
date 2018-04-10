@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator.application;
 
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.form.resource.SectionResource;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
@@ -9,9 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
-import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,7 @@ import java.util.Optional;
 public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
 	@Autowired
-	private QuestionSetupCompetitionService questionSetupCompetitionService;
+	private CompetitionSetupQuestionService competitionSetupQuestionService;
 
 	@Autowired
 	private SectionService sectionService;
@@ -40,7 +39,7 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 		ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
 
 		if(objectId.isPresent()) {
-			CompetitionSetupQuestionResource questionResource = questionSetupCompetitionService.getQuestion(objectId.get()).getSuccess();
+			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccess();
 			competitionSetupForm.setQuestion(questionResource);
 
 			if(sectionContainsMoreThanOneQuestion(objectId.get())) {

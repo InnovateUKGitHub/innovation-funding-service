@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competitionsetup.form.application.AbstractApplicationQ
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSectionSaver;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
-import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -26,7 +25,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 public abstract class AbstractApplicationSectionSaver extends AbstractSectionSaver {
 
     @Autowired
-    private QuestionSetupCompetitionService questionSetupCompetitionService;
+    private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Override
     public CompetitionSetupSection sectionToSave() {
@@ -38,7 +37,7 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         AbstractApplicationQuestionForm form = (AbstractApplicationQuestionForm) competitionSetupForm;
         mapGuidanceRows(form);
-        return questionSetupCompetitionService.updateQuestion(form.getQuestion());
+        return competitionSetupQuestionService.updateQuestion(form.getQuestion());
 	}
 
 	protected abstract void mapGuidanceRows(AbstractApplicationQuestionForm form);
@@ -60,18 +59,18 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
     }
 
     private ServiceResult<Void> updateAllowedFileTypes(Optional<Long> questionId, String value) {
-        return questionSetupCompetitionService.getQuestion(questionId.get()).andOnSuccess(question -> {
+        return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
             String[] strings = StringUtils.commaDelimitedListToStringArray(value);
             Set<FileTypeCategory> fileTypeCategories = simpleToLinkedHashSet(strings, FileTypeCategory::valueOf);
 
             question.setAllowedFileTypes(fileTypeCategories);
 
-            return questionSetupCompetitionService.updateQuestion(question);
+            return competitionSetupQuestionService.updateQuestion(question);
         });
     }
 
     private ServiceResult<Void> removeGuidanceRow(Optional<Long> questionId, String fieldName, String value) {
-        return questionSetupCompetitionService.getQuestion(questionId.get()).andOnSuccess(question -> {
+        return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
             int index = Integer.valueOf(value);
             //If the index is out of range then ignore it, The UI will add rows without them being persisted yet.
             if (question.getGuidanceRows().size() <= index) {
@@ -79,12 +78,12 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
             }
 
             question.getGuidanceRows().remove(index);
-            return questionSetupCompetitionService.updateQuestion(question);
+            return competitionSetupQuestionService.updateQuestion(question);
         });
     }
 
     private ServiceResult<Void> tryUpdateGuidanceRow(Optional<Long> questionId, String fieldName, String value) {
-        return questionSetupCompetitionService.getQuestion(questionId.get()).andOnSuccess(question -> {
+        return competitionSetupQuestionService.getQuestion(questionId.get()).andOnSuccess(question -> {
             Integer index = getGuidanceRowsIndex(fieldName);
             GuidanceRowResource guidanceRow;
             if (index >= question.getGuidanceRows().size()) {
@@ -101,7 +100,7 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
             }
 
             return serviceSuccess(question);
-        }).andOnSuccess(question -> questionSetupCompetitionService.updateQuestion(question));
+        }).andOnSuccess(question -> competitionSetupQuestionService.updateQuestion(question));
     }
 
     protected abstract ServiceResult<Void> autoSaveGuidanceRowSubject(GuidanceRowResource guidanceRow, String fieldName, String value);

@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests the CompetitionSetupQuestionServiceImpl with mocked repositories/mappers.
+ * Tests the QuestionCompetitionServiceImpl with mocked repositories/mappers.
  */
 public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest<QuestionSetupCompetitionServiceImpl> {
 

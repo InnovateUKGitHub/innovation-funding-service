@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
-import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ import java.util.Optional;
 public class ApplicationProjectFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
 	@Autowired
-	private QuestionSetupCompetitionService questionSetupCompetitionService;
+	private CompetitionSetupQuestionService competitionSetupQuestionService;
 
 	@Override
 	public CompetitionSetupSubsection sectionToFill() {
@@ -34,7 +33,7 @@ public class ApplicationProjectFormPopulator implements CompetitionSetupSubsecti
 		ApplicationProjectForm competitionSetupForm = new ApplicationProjectForm();
 
 		if(objectId.isPresent()) {
-			CompetitionSetupQuestionResource questionResource = questionSetupCompetitionService.getQuestion(objectId.get()).getSuccess();
+			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccess();
 			competitionSetupForm.setQuestion(questionResource);
 
 

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.question.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.form.controller.QuestionController;
+import org.innovateuk.ifs.question.controller.QuestionSetupCompetitionController;
 import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,16 +20,16 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class QuestionSetupCompetitionControllerDocumentation extends BaseControllerMockMVCTest<QuestionController> {
+public class QuestionSetupCompetitionControllerDocumentation extends BaseControllerMockMVCTest<QuestionSetupCompetitionController> {
 
     @Mock
     QuestionSetupCompetitionService questionSetupCompetitionService;
 
-    private static String baseUrl = "/question";
+    private static String baseUrl = "/question-setup";
 
     @Override
-    protected QuestionController supplyControllerUnderTest() {
-        return new QuestionController();
+    protected QuestionSetupCompetitionController supplyControllerUnderTest() {
+        return new QuestionSetupCompetitionController();
     }
 
     @Test
@@ -40,7 +40,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
 
         mockMvc.perform(get(baseUrl + "/getById/{id}", questionId))
                 .andExpect(status().isOk())
-                .andDo(document("question/{method-name}",
+                .andDo(document("question-setup/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the question to be retrieved")
                         ),
@@ -58,7 +58,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
-                .andDo(document("question/{method-name}",
+                .andDo(document("question-setup/{method-name}",
                         requestFields(competitionSetupQuestionResourceFields)
                 ));
     }
@@ -71,7 +71,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
 
         mockMvc.perform(post(baseUrl + "/addDefaultToCompetition/{id}", competitionId))
                 .andExpect(status().isCreated())
-                .andDo(document("question/{method-name}",
+                .andDo(document("question-setup/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the competition to which the question will be added")
                         ),
@@ -86,7 +86,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
 
         mockMvc.perform(delete(baseUrl + "/deleteById/{id}", questionId)).
                 andExpect(status().isNoContent())
-                .andDo(document("question/{method-name}",
+                .andDo(document("question-setup/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the question to be removed")
                         )

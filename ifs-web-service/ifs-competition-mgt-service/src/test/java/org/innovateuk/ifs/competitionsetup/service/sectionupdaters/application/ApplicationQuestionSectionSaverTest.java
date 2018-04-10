@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
-import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
+import org.innovateuk.ifs.question.service.QuestionSetupCompetitionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

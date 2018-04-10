@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.question;
+package org.innovateuk.ifs.question.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * QuestionController exposes competition setup application questions data and operations through a REST API.
  */
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/question-setup")
 public class QuestionSetupCompetitionController {
 
     @Autowired

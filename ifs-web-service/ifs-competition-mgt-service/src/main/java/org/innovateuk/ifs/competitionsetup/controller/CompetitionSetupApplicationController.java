@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -21,7 +20,6 @@ import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionV
 import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,19 +77,12 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupPopulator competitionSetupPopulator;
 
     @Autowired
-    private QuestionSetupCompetitionService questionSetupCompetitionService;
-
-    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    /**
-     * TODO: remove in cleanup
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "moved endpoint to QuestionSetupCompetitionController")
     @PostMapping(value = "/landing-page", params = "createQuestion")
     public String createQuestion(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        ServiceResult<CompetitionSetupQuestionResource> restResult = questionSetupCompetitionService.createDefaultQuestion(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> restResult = competitionSetupQuestionService.createDefaultQuestion(competitionId);
 
         Function<CompetitionSetupQuestionResource, String> successViewFunction =
                 (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
@@ -100,14 +91,10 @@ public class CompetitionSetupApplicationController {
         return successView.get();
     }
 
-    /**
-     * TODO: remove in cleanup
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "moved endpoint to QuestionSetupCompetitionController")
     @PostMapping(value = "/landing-page", params = "deleteQuestion")
     public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
                                  @PathVariable(COMPETITION_ID_KEY) long competitionId) {
-        questionSetupCompetitionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
+        competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
 
         Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
@@ -206,7 +193,7 @@ public class CompetitionSetupApplicationController {
                                               @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                               Model model) {
 
-       return handleFinanceSaving(competitionId, model, form, validationHandler);
+        return handleFinanceSaving(competitionId, model, form, validationHandler);
     }
 
     private String handleFinanceSaving(long competitionId, Model model, ApplicationFinanceForm form, ValidationHandler validationHandler) {
@@ -223,10 +210,6 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
     }
 
-    /**
-     * TODO: remove in cleanup
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "moved endpoint to QuestionSetupCompetitionController")
     @GetMapping("/question/{questionId}")
     public String seeQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                          @PathVariable("questionId") Long questionId,
@@ -244,10 +227,6 @@ public class CompetitionSetupApplicationController {
         return getQuestionPage(model, competitionResource, questionId, false, null);
     }
 
-    /**
-     * TODO: remove in cleanup
-     */
-    @ZeroDowntime(reference = "IFS-3016", description = "moved endpoint to QuestionSetupCompetitionController")
     @GetMapping("/question/{questionId}/edit")
     public String editQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                           @PathVariable("questionId") Long questionId,
@@ -264,10 +243,10 @@ public class CompetitionSetupApplicationController {
 
     @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
-                                            BindingResult bindingResult,
-                                            ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                            Model model) {
+                                         BindingResult bindingResult,
+                                         ValidationHandler validationHandler,
+                                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                         Model model) {
         validateAssessmentGuidanceRows(competitionSetupForm, bindingResult);
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
@@ -399,7 +378,7 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getQuestionPage(Model model, CompetitionResource competitionResource, Long questionId, boolean isEditable, CompetitionSetupForm form) {
-        ServiceResult<String> view = questionSetupCompetitionService.getQuestion(questionId).andOnSuccessReturn(
+        ServiceResult<String> view = competitionSetupQuestionService.getQuestion(questionId).andOnSuccessReturn(
                 questionResource -> {
                     CompetitionSetupQuestionType type = questionResource.getType();
                     CompetitionSetupSubsection setupSubsection;
