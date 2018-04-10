@@ -91,6 +91,10 @@ the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
     the user marks the Application details section as complete    ${comp_type}
+    the user marks the Assessed questions as complete  ${growthTable}  ${comp_type}
+
+the user marks the Assessed questions as complete
+    [Arguments]  ${growthTable}  ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
@@ -104,7 +108,8 @@ the user marks the Application as done
 the user fills in the CS Application section with custom questions
     [Arguments]  ${growthTable}  ${competitionType}
     the user clicks the button/link   link=Application
-    Remove previous rows              jQuery=li:last-of-type button[type="submit"]:contains("Remove")
+    # Removing questions from the Assessed questions
+    Remove previous rows              jQuery=.no-margin-bottom li:last-of-type button[type="submit"]:contains("Remove")
     the user clicks the button/link   jQuery=li:contains("1.") a  # Click the last question left - which now will be first
     the user is able to configure the new question  How innovative is your project?
     the user clicks the button/link   css=button[name="createQuestion"]

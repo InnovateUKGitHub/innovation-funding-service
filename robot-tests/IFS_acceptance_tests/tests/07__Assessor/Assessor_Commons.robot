@@ -68,3 +68,9 @@ the compadmin can remove an assessor or application from the invite list
     the user clicks the button/link      jQuery=td:contains("${assessor_or_application}") ~ td:contains("Remove")
     the user clicks the button/link      link=Find
     the user should see the element      jQuery=tr:contains("${assessor_or_application}")
+
+the compAdmin resends the invites for interview panel
+    [Arguments]  ${resendAssessor}
+    the user clicks the button/link      jQuery=button:contains("Resend invites")
+    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor}")
+    the user clicks the button/link      jQuery=button:contains("Send invite")
