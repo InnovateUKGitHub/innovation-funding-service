@@ -42,10 +42,10 @@ dataport=$DATA_SERVICE_PORT
 [ ! -z "$7" ] && financedb=$7
 [ ! -z "$8" ] && financedbuser=$8
 [ ! -z "$9" ] && financedbpass=$9
-[ ! -z "$10" ] && financedbport=${10}
+[ ! -z "${10}" ] && financedbport=${10}
 
-[ ! -z "$11" ] && datahost=${11}
-[ ! -z "$12" ] && dataport=${12}
+[ ! -z "${11}" ] && datahost=${11}
+[ ! -z "${12}" ] && dataport=${12}
 
 echo dbhost:$dbhost
 echo db:$db
