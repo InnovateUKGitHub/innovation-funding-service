@@ -65,8 +65,8 @@ Internal users can see Project Details not yet completed
     Given the user navigates to the page           ${internal_competition_status}
     Then the user should not see the element       css=#table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
     When the user clicks the button/link           css=#table-project-status tr:nth-child(1) td:nth-child(2) a
-    Then the user should see the text in the page  These project details were supplied by the lead partner on behalf of the project.
-    And the user should see the text in the page   Each partner must provide a finance contact. We will contact them with any finance queries.
+    Then the user should see the element           jQuery=p:contains("These project details were supplied by the lead partner on behalf of the project.")
+    And the user should see the element            jQuery=p:contains("Each partner must provide a finance contact and a project location.")
     When the user should see the element           css=#project-details
     Then the user should see the element           jQuery=#project-address:contains("Not yet completed")
     And the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
@@ -203,7 +203,8 @@ Lead partner can see the overview of the project details
     And the user should see the element    link=Target start date
     And the user should see the element    link=Project address
     And the user should see the element    link=Project Manager
-    And the user should see the text in the page    Finance contacts
+    #And the user should see the text in the page    Finance contacts
+    And the user should see the element    jQuery=h2:contains("Partner details")
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
@@ -345,9 +346,9 @@ Lead partner can change the project address
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
     [Tags]  HappyPath
-    Given the user should see the element    css=#start-date-status.yes
-    And the user should see the element    css=#project-address-status.yes
-    And the user should see the element    css=#project-manager-status.yes
+    Given the user should see the element    jQuery=a:contains("Target start date")
+    And the user should see the element      jQuery=a:contains("Project address")
+    And the user should see the element      jQuery=a:contains("Project Manager")
 
 Non lead partner invites finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
@@ -358,7 +359,7 @@ Non lead partner invites finance contact
     Then the user should not see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
-    When the user clicks the button/link  link=${organisationLudlowName}
+    When the user clicks the button/link       jQuery=a:contains("Select finance contact")
     And the user selects the radio button  financeContact  new
     Then the user enters text to a text field  css=#name-finance-contact  LudlowFinContact
     And the user enters text to a text field   css=#email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
