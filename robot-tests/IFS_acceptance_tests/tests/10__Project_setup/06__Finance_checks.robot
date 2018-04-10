@@ -492,7 +492,7 @@ Project finance user can see the lead partner's information about eligibility
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468     # Other public sector funding (£)
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164   # Contribution to project (£)
 
-Finance checks eligibility s
+Finance checks eligibility
     [Documentation]    INFUND-4833
     [Tags]
     When the user expands the section                Labour
