@@ -1,4 +1,3 @@
 FROM alpine:3.7
-MAINTAINER Ben Outram <ben@hiveit.co.uk>
-RUN apk add --no-cache openldap-clients mysql-client curl
+RUN apk add --no-cache mysql-client curl
 COPY send-all-cost-totals.sh /
