@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -93,7 +94,7 @@ public class CompetitionSetupApplicationController {
 
     @PostMapping(value = "/landing-page", params = "deleteQuestion")
     public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
-                                 @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+                                         @PathVariable(COMPETITION_ID_KEY) long competitionId) {
         competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
 
         Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
