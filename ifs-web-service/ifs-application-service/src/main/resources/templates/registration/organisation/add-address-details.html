@@ -25,14 +25,18 @@
 
     <th:block th:insert="fragments/addresses :: organisation-details-minimal" />
 
-    <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" novalidate="novalidate" th:object="${organisationForm}" method="POST">
-        <input type="hidden" th:field="*{searchOrganisationId}" />
-        <h2 class="heading-medium no-margin-bottom">Operating address</h2>
-        <p>This is the address that your organisation works from</p>
-        <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
+    <th:block th:with="organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex}" th:object="${organisationForm}">
+        <th:block th:with="formURL=${#strings.isEmpty(postcode) && #strings.isEmpty(selectedPostcode)} ? |/organisation/create/selected-organisation/${organisationId}| : |/organisation/create/selected-organisation/${organisationId}/${postcode}/${selectedPostcode}|">
+            <form th:action="@{${formURL}}" novalidate="novalidate" method="POST">
+                <input type="hidden" th:field="*{searchOrganisationId}" />
+                <h2 class="heading-medium no-margin-bottom">Operating address</h2>
+                <p>This is the address that your organisation works from</p>
+                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 
-        <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
-    </form>
+                <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
+            </form>
+        </th:block>
+    </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

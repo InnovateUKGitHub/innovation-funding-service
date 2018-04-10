@@ -167,7 +167,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
-                        responseFields(fieldWithPath("[].").description("List of available application ids "))
+                        responseFields(fieldWithPath("[].").description("List of available application ids"))
                 ));
 
         verify(interviewAssignmentServiceMock, only()).getAvailableApplicationIds(competitionId);
@@ -196,7 +196,11 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
         mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}"));
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to unstage all applications on")
+                        )
+                ));
 
         verify(interviewAssignmentServiceMock, only()).unstageApplications(competitionId);
     }
