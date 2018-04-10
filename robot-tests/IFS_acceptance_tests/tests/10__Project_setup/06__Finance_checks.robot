@@ -104,11 +104,11 @@ Project Finance user can see the finance check summary page
 Validation on duration of Project
     [Documentation]  IFS-2313
     [Tags]
-    Given the user clicks the button/link     link=Edit
-    And the user moves focus to the element   id=durationInMonths
-    And the user should see an error          This field cannot be left blank.
-    When the user clicks the button/link      jQuery=button:contains("Save and return to finances")
-    Then the user should see a summary error  Please check your project duration.
+    Given the user clicks the button/link               link=Edit
+    And the user moves focus to the element             id=durationInMonths
+    And the user should see an error                    This field cannot be left blank.
+    When the user clicks the button/link                jQuery=button:contains("Save and return to finances")
+    Then the user should see a field and summary error  This field cannot be left blank.
 
 
 Project Finance can edit the duration of the Project
