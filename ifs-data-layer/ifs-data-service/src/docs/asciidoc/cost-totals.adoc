@@ -1,7 +1,6 @@
 === Send all cost totals
 ==== Request
 include::{snippets}/cost-totals/send-all/http-request.adoc[]
-include::{snippets}/cost-totals/send-all/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/cost-totals/send-all/http-response.adoc[]
