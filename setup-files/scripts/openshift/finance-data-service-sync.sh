@@ -18,7 +18,7 @@ INTERNAL_REGISTRY=$(getInternalRegistry)
 SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
-echo "Resetting the $PROJECT Openshift project"
+echo "$PROJECT: Preparing to sync cost totals for all submitted applications with the ifs-finance-data-service"
 
 function financeDataServiceSync() {
     until oc create -f $(getBuildLocation)/finance-data-service-sync/92-finance-data-service-sync.yml ${SVC_ACCOUNT_CLAUSE}
