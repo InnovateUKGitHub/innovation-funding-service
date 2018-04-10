@@ -21,6 +21,8 @@ import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.builder.OrganisationBuilder;
+import org.innovateuk.ifs.user.builder.ProcessRoleBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -44,6 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
@@ -469,5 +472,81 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getErrors().get(0).getErrorKey().equals(GENERAL_NOT_FOUND.getErrorKey()));
+    }
+
+    @Test
+    public void findUnsuccessfulApplicationsWhenNoneFound() throws Exception {
+
+        Long competitionId = 1L;
+
+        Page<Application> pagedResult = mock(Page.class);
+        when(pagedResult.getContent()).thenReturn(emptyList());
+        when(pagedResult.getTotalElements()).thenReturn(0L);
+        when(pagedResult.getTotalPages()).thenReturn(0);
+        when(pagedResult.getNumber()).thenReturn(0);
+        when(pagedResult.getSize()).thenReturn(0);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
+        assertTrue(result.isSuccess());
+
+        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
+        assertTrue(unsuccessfulApplicationsPage.getContent().isEmpty());
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+
+        Long competitionId = 1L;
+
+        Long leadOrganisationId = 7L;
+        String leadOrganisationName = "lead Organisation name";
+        Organisation leadOrganisation = OrganisationBuilder.newOrganisation()
+                .withId(leadOrganisationId)
+                .withName(leadOrganisationName)
+                .build();
+
+        ProcessRole leadProcessRole = ProcessRoleBuilder.newProcessRole()
+                .withRole(Role.LEADAPPLICANT)
+                .withOrganisationId(leadOrganisationId)
+                .build();
+
+        Application application1 = ApplicationBuilder.newApplication()
+                .withId(11L)
+                .withProcessRoles(leadProcessRole)
+                .build();
+        Application application2 = ApplicationBuilder.newApplication()
+                .withId(12L)
+                .withProcessRoles(leadProcessRole)
+                .build();
+
+        List<Application> unsuccessfulApplications = new ArrayList<>();
+        unsuccessfulApplications.add(application1);
+        unsuccessfulApplications.add(application2);
+
+        ApplicationResource applicationResource1 = ApplicationResourceBuilder.newApplicationResource().build();
+        ApplicationResource applicationResource2 = ApplicationResourceBuilder.newApplicationResource().build();
+
+        Page<Application> pagedResult = mock(Page.class);
+        when(pagedResult.getContent()).thenReturn(unsuccessfulApplications);
+        when(pagedResult.getTotalElements()).thenReturn(2L);
+        when(pagedResult.getTotalPages()).thenReturn(1);
+        when(pagedResult.getNumber()).thenReturn(0);
+        when(pagedResult.getSize()).thenReturn(2);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateIn(eq(competitionId), any(), any())).thenReturn(pagedResult);
+        when(applicationMapperMock.mapToResource(application1)).thenReturn(applicationResource1);
+        when(applicationMapperMock.mapToResource(application2)).thenReturn(applicationResource2);
+        when(organisationRepositoryMock.findOne(leadOrganisationId)).thenReturn(leadOrganisation);
+
+        ServiceResult<ApplicationPageResource> result = service.findUnsuccessfulApplications(competitionId, 0, 20, "id");
+        assertTrue(result.isSuccess());
+
+        ApplicationPageResource unsuccessfulApplicationsPage = result.getSuccess();
+        assertTrue(unsuccessfulApplicationsPage.getSize() == 2);
+        assertEquals(applicationResource1, unsuccessfulApplicationsPage.getContent().get(0));
+        assertEquals(applicationResource2, unsuccessfulApplicationsPage.getContent().get(1));
+        assertEquals(leadOrganisationName, unsuccessfulApplicationsPage.getContent().get(0).getLeadOrganisationName());
     }
 }
