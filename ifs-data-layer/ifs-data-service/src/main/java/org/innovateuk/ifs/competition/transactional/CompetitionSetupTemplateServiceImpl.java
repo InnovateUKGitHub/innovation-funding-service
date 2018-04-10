@@ -15,9 +15,9 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
-import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionCreator;
-import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorImpl;
+import org.innovateuk.ifs.question.transactional.template.DefaultApplicationQuestionCreator;
+import org.innovateuk.ifs.question.transactional.template.QuestionPriorityOrderService;
+import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

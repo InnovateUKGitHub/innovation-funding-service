@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
+import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import java.util.Optional;
 public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsectionFormPopulator {
 
 	@Autowired
-	private CompetitionSetupQuestionService competitionSetupQuestionService;
+	private QuestionSetupCompetitionService questionSetupCompetitionService;
 
 	@Autowired
 	private SectionService sectionService;
@@ -39,7 +40,7 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 		ApplicationQuestionForm competitionSetupForm = new ApplicationQuestionForm();
 
 		if(objectId.isPresent()) {
-			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccess();
+			CompetitionSetupQuestionResource questionResource = questionSetupCompetitionService.getQuestion(objectId.get()).getSuccess();
 			competitionSetupForm.setQuestion(questionResource);
 
 			if(sectionContainsMoreThanOneQuestion(objectId.get())) {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.*;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.*;
@@ -17,21 +18,25 @@ public class CompetitionSetupQuestionController {
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
     @GetMapping("/getById/{id}")
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable("id") final Long id) {
         return competitionSetupQuestionService.getByQuestionId(id).toGetResponse();
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
     @PutMapping("/save")
     public RestResult<Void> save(@RequestBody final CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         return competitionSetupQuestionService.update(competitionSetupQuestionResource).toPutResponse();
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
     @PostMapping("/addDefaultToCompetition/{id}")
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetitionId(@PathVariable("id") final Long competitionId) {
         return competitionSetupQuestionService.createByCompetitionId(competitionId).toPostCreateResponse();
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
     @DeleteMapping("/deleteById/{id}")
     public RestResult<Void> deleteById(@PathVariable("id") final Long questionId) {
         return competitionSetupQuestionService.delete(questionId).toDeleteResponse();

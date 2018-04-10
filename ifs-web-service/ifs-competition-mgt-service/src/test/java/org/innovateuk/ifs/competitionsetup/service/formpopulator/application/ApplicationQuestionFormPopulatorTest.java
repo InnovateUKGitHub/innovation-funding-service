@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,7 +34,7 @@ public class ApplicationQuestionFormPopulatorTest {
 	private ApplicationQuestionFormPopulator populator;
 
     @Mock
-    private CompetitionSetupQuestionService competitionSetupQuestionService;
+    private QuestionSetupCompetitionService questionSetupCompetitionService;
 
     @Mock
     private QuestionService questionService;
@@ -54,7 +54,7 @@ public class ApplicationQuestionFormPopulatorTest {
         SectionResource sectionResource = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
         when(questionService.getById(questionId)).thenReturn(questionResource);
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
         when(sectionService.getSectionByQuestionId(questionId)).thenReturn(sectionResource);
 
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionId));
@@ -70,7 +70,7 @@ public class ApplicationQuestionFormPopulatorTest {
         SectionResource sectionWithOneQuestion = newSectionResource().withQuestions(Arrays.asList(1L)).build();
 
         when(questionService.getById(questionId)).thenReturn(questionResource);
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
         when(sectionService.getSectionByQuestionId(questionId)).thenReturn(sectionWithOneQuestion);
 
         ApplicationQuestionForm result = (ApplicationQuestionForm) populator.populateForm(competitionResource, Optional.of(questionId));
@@ -84,7 +84,7 @@ public class ApplicationQuestionFormPopulatorTest {
         SectionResource sectionWithMultipleQuestions = newSectionResource().withQuestions(Arrays.asList(1L, 2L)).build();
 
         when(questionService.getById(questionId)).thenReturn(questionResource);
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
         when(sectionService.getSectionByQuestionId(questionId)).thenReturn(sectionWithMultipleQuestions);
 
         ApplicationQuestionForm result = (ApplicationQuestionForm) populator.populateForm(competitionResource, Optional.of(questionId));
@@ -94,7 +94,7 @@ public class ApplicationQuestionFormPopulatorTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testPopulateFormWithErrors() {
-        when(competitionSetupQuestionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
+        when(questionSetupCompetitionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionNotFoundId));
         assertEquals(null, result);
     }

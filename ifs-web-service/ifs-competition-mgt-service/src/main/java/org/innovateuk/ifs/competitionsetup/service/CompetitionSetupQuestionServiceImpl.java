@@ -26,9 +26,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 @Service
 public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQuestionService {
 
-	@Autowired
-	private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
-
     @Autowired
     private QuestionService questionService;
 
@@ -40,26 +37,6 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     @Autowired
     private QuestionSetupRestService questionSetupRestService;
-
-    @Override
-    public ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId) {
-        return competitionSetupQuestionRestService.addDefaultToCompetition(competitionId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<CompetitionSetupQuestionResource> getQuestion(final Long questionId) {
-        return competitionSetupQuestionRestService.getByQuestionId(questionId).toServiceResult();
-    }
-
-    @Override
-	public ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        return competitionSetupQuestionRestService.save(competitionSetupQuestionResource).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> deleteQuestion(Long questionId) {
-        return competitionSetupQuestionRestService.deleteById(questionId).toServiceResult();
-    }
 
     @Override
     public ServiceResult<Void> validateApplicationQuestions(CompetitionResource competitionResource, LandingPageForm form, BindingResult bindingResult) {

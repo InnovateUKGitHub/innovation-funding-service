@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.transactional;
 import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
@@ -57,6 +58,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Autowired
     private CompetitionSetupTemplateService competitionSetupTemplateService;
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionService")
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
         return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId))
@@ -130,6 +132,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         return resources;
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionService")
     @Override
     @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
@@ -138,6 +141,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionService")
     @Override
     @Transactional
     public ServiceResult<Void> delete(Long questionId) {
@@ -146,6 +150,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         return serviceSuccess();
     }
 
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionService")
     @Override
     @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {

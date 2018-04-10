@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
+import org.innovateuk.ifs.question.service.controller.service.QuestionSetupCompetitionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,7 +30,7 @@ public class ApplicationProjectFormPopulatorTest {
 	private ApplicationProjectFormPopulator populator;
 
     @Mock
-    private CompetitionSetupQuestionService competitionSetupQuestionService;
+    private QuestionSetupCompetitionService questionSetupCompetitionService;
 
     @Mock
     private QuestionService questionService;
@@ -44,7 +45,7 @@ public class ApplicationProjectFormPopulatorTest {
     public void testPopulateFormWithoutErrors() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         when(questionService.getById(questionId)).thenReturn(questionResource);
-        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
 
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionId));
 
@@ -55,7 +56,7 @@ public class ApplicationProjectFormPopulatorTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testPopulateFormWithErrors() {
-        when(competitionSetupQuestionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
+        when(questionSetupCompetitionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionNotFoundId));
         assertEquals(null, result);
     }
