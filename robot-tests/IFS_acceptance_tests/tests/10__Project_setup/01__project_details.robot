@@ -374,9 +374,11 @@ Invited Fin Contact for non lead partner
     Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
     When log in as a different user     &{collaborator1_credentials}
     Then the user navigates to the page  ${project_in_setup_page}/details
-    And the matching status checkbox is updated  project-details-finance  3  yes
-    When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element   css=li.complete:nth-of-type(1)
+    #And the matching status checkbox is updated  project-details-finance  3  yes
+    And the user should see the element    jQuery=a:contains("Ludlow's FinContact")
+    #When the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    jQuery=a:contains("Project setup status")
+    #Then the user should see the element   css=li.complete:nth-of-type(1)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
