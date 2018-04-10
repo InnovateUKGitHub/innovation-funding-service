@@ -13,6 +13,9 @@ import org.mockito.InOrder;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.List;
+
+import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -29,13 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest<InterviewSendInviteController> {
+public class InterviewAssessorSendInviteControllerTest extends BaseControllerMockMVCTest<InterviewAssessorSendInviteController> {
 
     private CompetitionResource competition;
 
     @Override
-    protected InterviewSendInviteController supplyControllerUnderTest() {
-        return new InterviewSendInviteController();
+    protected InterviewAssessorSendInviteController supplyControllerUnderTest() {
+        return new InterviewAssessorSendInviteController();
     }
 
     @Override
@@ -70,11 +73,11 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
 
         SendInvitesViewModel expectedViewModel = new SendInvitesViewModel(competitionId, "Photonics for health", singletonList( "Jessica Doe"), "Readonly content");
 
-        mockMvc.perform(get("/interview/competition/{competitionId}/assessors/invite/send", competitionId))
+        mockMvc.perform(get("/assessment/interview/competition/{competitionId}/assessors/invite/send", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("assessors/interview-send-invites"));
+                .andExpect(view().name("assessors/interview/assessor-send-invites"));
 
         verify(interviewInviteRestService, only()).getAllInvitesToSend(competitionId);
     }
@@ -90,7 +93,7 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
 
         when(interviewInviteRestService.sendAllInvites(competitionId, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
 
-        mockMvc.perform(post("/interview/competition/{competitionId}/assessors/invite/send", competitionId)
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/invite/send", competitionId)
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
@@ -99,6 +102,33 @@ public class InterviewSendInviteControllerTest extends BaseControllerMockMVCTest
 
         InOrder inOrder = inOrder(interviewInviteRestService);
         inOrder.verify(interviewInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void resendInvites() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
+
+        AssessorInvitesToSendResource invite = newAssessorInvitesToSendResource().withCompetitionId(competition.getId()).build();
+
+        AssessorInviteSendResource expectedAssessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("Subject...")
+                .withContent("Editable content...")
+                .build();
+
+        when(interviewInviteRestService.resendInvites(inviteIds, expectedAssessorInviteSendResource)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/assessors/invite/resend", competition.getId())
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("inviteIds[0]", inviteIds.get(0).toString())
+                .param("inviteIds[1]", inviteIds.get(1).toString())
+                .param("subject", "Subject...")
+                .param("content", "Editable content..."))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/assessors/pending-and-declined?page=0", competition.getId())));
+
+        InOrder inOrder = inOrder(interviewInviteRestService);
+        inOrder.verify(interviewInviteRestService).resendInvites(inviteIds, expectedAssessorInviteSendResource);
         inOrder.verifyNoMoreInteractions();
     }
 }

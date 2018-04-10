@@ -4,7 +4,7 @@ EXPOSE 8090
 EXPOSE 8081
 EXPOSE 8000
 EXPOSE 12345
-ENV JAVA_OPTS -Xmx300m
+ENV JAVA_OPTS -Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
 VOLUME /tmp

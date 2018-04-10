@@ -129,7 +129,7 @@
                         <a th:unless="${!model.interviewPanelEnabled
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
-                           th:href="@{/interview/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
+                           th:href="@{/assessment/interview/competition/{competitionId}(competitionId=${model.competitionId})}">
                             Manage interview panel
                         </a>
                     </li>

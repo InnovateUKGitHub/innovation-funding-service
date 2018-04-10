@@ -11,18 +11,17 @@ import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
+import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -102,15 +101,15 @@ public class ApplicantDashboardPopulator {
     }
 
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
-        return processRoleResource.getRoleName().equals(UserRoleType.APPLICANT.getName()) ||
-                processRoleResource.getRoleName().equals(UserRoleType.LEADAPPLICANT.getName()) ||
-                processRoleResource.getRoleName().equals(UserRoleType.COLLABORATOR.getName());
+        return processRoleResource.getRole() == Role.APPLICANT.getId() ||
+                processRoleResource.getRole() == LEADAPPLICANT.getId() ||
+                processRoleResource.getRole() == COLLABORATOR.getId();
     }
 
     private List<Long> getAssignedApplications(Map<Long, Optional<ProcessRoleResource>> inProgressProcessRoles) {
         return inProgressProcessRoles.entrySet().stream().filter(entry -> {
             if (entry.getValue().isPresent()
-                    && !UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().get().getRoleName())) {
+                    && LEADAPPLICANT.getId() != entry.getValue().get().getRole()) {
                 int count = applicationRestService.getAssignedQuestionsCount(entry.getKey(), entry.getValue().get().getId())
                         .getSuccess();
                 return count != 0;
@@ -122,7 +121,7 @@ public class ApplicantDashboardPopulator {
 
     private List<Long> getLeadApplicantApplications(Map<Long, Optional<ProcessRoleResource>> inProgressProcessRoles) {
         return inProgressProcessRoles.entrySet().stream()
-                .filter(entry -> entry.getValue().isPresent() && UserRoleType.LEADAPPLICANT.getName().equals(entry.getValue().get().getRoleName()))
+                .filter(entry -> entry.getValue().isPresent() && LEADAPPLICANT.getId() == entry.getValue().get().getRole())
                 .map(Map.Entry::getKey).collect(toList());
     }
 
@@ -175,7 +174,7 @@ public class ApplicantDashboardPopulator {
 
     @SafeVarargs
     private final Map<Long, CompetitionResource> createCompetitionMap(Long userId, List<ApplicationResource>... resources) {
-        List<CompetitionResource> allUserCompetitions = competitionRestService.getCompetitionsByUserId(userId).getSuccess();
+        List<CompetitionResource> allUserCompetitions = getAllCompetitionsForUser(userId);
 
         return combineLists(resources).stream()
                 .collect(
@@ -186,5 +185,15 @@ public class ApplicantDashboardPopulator {
                                         .findFirst()
                                         .orElse(null), (p1, p2) -> p1)
                 );
+    }
+
+    private  List<CompetitionResource> getAllCompetitionsForUser(Long userId) {
+        List<ApplicationResource> userApplications = applicationRestService.getApplicationsByUserId(userId).getSuccess();
+        List<Long> competitionIdsForUser = userApplications.stream()
+                .map(ApplicationResource::getCompetition)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return simpleMap(competitionIdsForUser, id -> competitionRestService.getCompetitionById(id).getSuccess());
     }
 }

@@ -37,6 +37,7 @@ createContainer.enabled = enabled
 deploy.enabled =enabled
 wait.enabled = enabled
 deploy.dependsOn ":docker:ifs-mysql:ifs-database:deploy"
+createContainer.portBindings = ['9006:8000']
 
 
 List<String> networkAliases = new ArrayList<>()
@@ -45,6 +46,8 @@ createContainer.networkAliases=networkAliases
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
+
+ext.companiesHouseLookupEnabled = ext.has('ifs.companies-house.enabled') ? ext.get('ifs.companies-house.enabled') : true
 
 sourceSets {
     client {
@@ -113,6 +116,7 @@ dependencies {
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile 'org.powermock:powermock-api-mockito:1.6.5'
     testCompile 'org.powermock:powermock-module-junit4:1.6.5'
+    testCompile 'au.com.dius:pact-jvm-consumer-junit_2.12:3.5.13'
 }
 
 test {
@@ -124,9 +128,11 @@ test {
     if (project.hasProperty('testGroups')) {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
+
+    systemProperty 'pact.rootDir', project.getProperty('pactDir')
+
     finalizedBy asciidoctor
 }
-
 
 asciidoctor {
     dependsOn test

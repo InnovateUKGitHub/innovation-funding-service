@@ -9,11 +9,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsFindModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsInviteModelPopulator;
+import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsStatusModelPopulator;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.viewmodel.*;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
@@ -43,11 +42,15 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentInvitedResourceBuilder.newInterviewAssignmentApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -56,6 +59,7 @@ import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,7 +67,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class InterviewAssignmentApplicationsControllerTest extends BaseControllerMockMVCTest<InterviewAssignmentApplicationsController> {
+public class InterviewApplicationAssignmentControllerTest extends BaseControllerMockMVCTest<InterviewApplicationAssignmentController> {
 
     @Spy
     @InjectMocks
@@ -77,11 +81,15 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
     @InjectMocks
     private InterviewAssignmentApplicationsInviteModelPopulator interviewAssignmentApplicationsInviteModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private InterviewAssignmentApplicationsStatusModelPopulator interviewAssignmentApplicationsStatusModelPopulator;
+
     private CompetitionResource competition;
 
     @Override
-    protected InterviewAssignmentApplicationsController supplyControllerUnderTest() {
-        return new InterviewAssignmentApplicationsController();
+    protected InterviewApplicationAssignmentController supplyControllerUnderTest() {
+        return new InterviewApplicationAssignmentController();
     }
 
     @Override
@@ -91,6 +99,7 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
         this.setupCookieUtil();
 
         competition = newCompetitionResource()
+                .withId(1L)
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .withName("Technology inspired")
                 .withInnovationSectorName("Infrastructure systems")
@@ -111,11 +120,11 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(singletonList(1L)));
         when(interviewAssignmentRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
 
-        MvcResult result = mockMvc.perform(get("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/find", competition.getId())
                 .param("page", "2"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-panel-find"))
+                .andExpect(view().name("assessors/interview/application-find"))
                 .andReturn();
 
         InterviewAssignmentSelectionForm selectionForm = (InterviewAssignmentSelectionForm) result.getModelAndView().getModel().get("interviewAssignmentApplicationSelectionForm");
@@ -142,10 +151,10 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(singletonList(1L)));
         when(interviewAssignmentRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
 
-        MvcResult result = mockMvc.perform(get("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId()))
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/find", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-panel-find"))
+                .andExpect(view().name("assessors/interview/application-find"))
                 .andReturn();
 
         InterviewAssignmentSelectionForm selectionForm = (InterviewAssignmentSelectionForm) result.getModelAndView().getModel().get("interviewAssignmentApplicationSelectionForm");
@@ -177,11 +186,11 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
         when(interviewAssignmentRestService.getAvailableApplications(competition.getId(), page)).thenReturn(restSuccess(availableAssessorPageResource));
 
-        MvcResult result = mockMvc.perform(get("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/find", competition.getId())
                 .cookie(selectionFormCookie))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-panel-find"))
+                .andExpect(view().name("assessors/interview/application-find"))
                 .andReturn();
 
         InterviewAssignmentSelectionForm selectionForm = (InterviewAssignmentSelectionForm) result.getModelAndView().getModel().get("interviewAssignmentApplicationSelectionForm");
@@ -207,7 +216,7 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
 
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
-        MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
+        MvcResult result = mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
                 .param("isSelected", "true")
                 .param("page", "1")
@@ -229,7 +238,7 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
 
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
-        MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
+        MvcResult result = mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
                 .param("isSelected", "true")
                 .cookie(formCookie))
@@ -249,7 +258,7 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
 
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
-        MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
+        MvcResult result = mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/find", competition.getId())
                 .param("addAll", "true")
                 .cookie(formCookie))
                 .andExpect(status().is2xxSuccessful())
@@ -271,7 +280,7 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
 
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
-        MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
+        MvcResult result = mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
                 .param("isSelected", "false")
                 .param("page", "1")
@@ -296,7 +305,7 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
 
         when(interviewAssignmentRestService.getAvailableApplicationIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
-        MvcResult result = mockMvc.perform(post("/assessment/interview-panel/competition/{competitionId}/applications/find", competition.getId())
+        MvcResult result = mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/find", competition.getId())
                 .param("selectionId", valueOf(applicationId))
                 .param("isSelected", "false")
                 .cookie(formCookie))
@@ -324,10 +333,10 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
         InviteNewAssessorsForm expectedForm = new InviteNewAssessorsForm();
         expectedForm.setInvites(singletonList(new InviteNewAssessorsRowForm()));
 
-        MvcResult result = mockMvc.perform(get("/assessment/interview-panel/competition/{competitionId}/applications/invite", competition.getId()))
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-panel-invite"))
+                .andExpect(view().name("assessors/interview/application-invite"))
                 .andReturn();
 
         assertCompetitionDetails(competition, result);
@@ -336,6 +345,75 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
         InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getStagedApplications(competition.getId(), page);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void remove() throws Exception {
+        int page = 0;
+        long applicationId = 123L;
+
+        List<InterviewAssignmentStagedApplicationResource> interviewAssignmentStagedApplicationResources = setUpApplicationCreatedInviteResources();
+        InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = newInterviewAssignmentStagedApplicationPageResource()
+                .withContent(interviewAssignmentStagedApplicationResources)
+                .build();
+
+        setupDefaultInviteViewExpectations(page, interviewAssignmentStagedApplicationPageResource);
+
+        when(interviewAssignmentRestService.unstageApplication(applicationId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
+                .param("remove", String.valueOf(applicationId)))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/application-invite"));
+
+        verify(interviewAssignmentRestService).unstageApplication(applicationId);
+    }
+
+    @Test
+    public void removeAll() throws Exception {
+        when(interviewAssignmentRestService.unstageApplications(competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
+                .param("removeAll", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/assessment/interview/competition/" + competition.getId() + "/applications/find?page=0"));
+
+        verify(interviewAssignmentRestService).unstageApplications(competition.getId());
+    }
+
+    @Test
+    public void viewStatus() throws Exception {
+        int page = 0;
+
+        List<InterviewAssignmentApplicationResource> interviewAssignmentApplicationResources = newInterviewAssignmentApplicationResource()
+                .withId(1L, 2L)
+                .withApplicationId(3L, 4L)
+                .withApplicationName("App 1", "App 2")
+                .withLeadOrganisationName("Org 1", "Org 2")
+                .withStatus(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE)
+                .build(2);
+
+        InterviewAssignmentApplicationPageResource interviewAssignmentApplicationPageResource = newInterviewAssignmentApplicationPageResource()
+                .withContent(interviewAssignmentApplicationResources)
+                .build();
+
+        when(interviewAssignmentRestService.getAssignedApplications(competition.getId(), page)).thenReturn(restSuccess(interviewAssignmentApplicationPageResource));
+
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/view-status", competition.getId())
+                .param("page", "0"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/application-view-status"))
+                .andReturn();
+
+        assertCompetitionDetails(competition, result);
+        assertAssignedApplications(interviewAssignmentApplicationResources, result);
+
+        InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(interviewAssignmentRestService).getAssignedApplications(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -389,6 +467,20 @@ public class InterviewAssignmentApplicationsControllerTest extends BaseControlle
             InterviewAssignmentApplicationInviteRowViewModel invitedApplicationRowViewModel = model.getApplications().get(i);
             assertEquals(createdInviteResource.getApplicationName(), invitedApplicationRowViewModel.getApplicationName());
             assertEquals(createdInviteResource.getLeadOrganisationName(), invitedApplicationRowViewModel.getLeadOrganisation());
+        });
+    }
+
+    private void assertAssignedApplications(List<InterviewAssignmentApplicationResource> expectedAssignedInvites, MvcResult result) {
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof InterviewAssignmentApplicationsViewModel);
+        InterviewAssignmentApplicationStatusViewModel model = (InterviewAssignmentApplicationStatusViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(expectedAssignedInvites.size(), model.getApplications().size());
+
+        forEachWithIndex(expectedAssignedInvites, (i, assignmentApplicationResource) -> {
+            InterviewAssignmentApplicationStatusRowViewModel assignedApplicationRowViewModel = model.getApplications().get(i);
+            assertEquals(assignmentApplicationResource.getApplicationName(), assignedApplicationRowViewModel.getApplicationName());
+            assertEquals(assignmentApplicationResource.getLeadOrganisationName(), assignedApplicationRowViewModel.getLeadOrganisation());
+            assertEquals(assignmentApplicationResource.getStatus(), assignedApplicationRowViewModel.getStatus());
         });
     }
 

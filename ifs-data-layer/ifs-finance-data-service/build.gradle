@@ -22,6 +22,7 @@ buildDocker.enabled = enabled
 createContainer.enabled = enabled
 deploy.enabled =enabled
 wait.enabled = enabled
+createContainer.portBindings = ['9012:8000']
 
 deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:deploy"
 
@@ -82,6 +83,7 @@ dependencies {
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(':ifs-commons').sourceSets.test.output
     testCompile project(':ifs-data-layer:data-service-commons').sourceSets.test.output
+    testCompile 'au.com.dius:pact-jvm-provider-spring_2.12:3.5.14'
 }
 
 test {

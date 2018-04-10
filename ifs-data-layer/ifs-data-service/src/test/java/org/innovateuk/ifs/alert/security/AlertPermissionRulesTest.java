@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_MAINTAINER;
+import static org.innovateuk.ifs.user.resource.Role.SYSTEM_MAINTAINER;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

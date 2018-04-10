@@ -1,23 +1,18 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.method.P;
 
-import java.util.Optional;
-
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Optional.of;
 import static org.mockito.Mockito.*;
 
 /**
@@ -105,7 +100,8 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         assertAccessDenied(
                 () -> classUnderTest.sendUserVerificationEmail(userToSendVerificationEmail, of(123L)),
                 () -> {
-                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail,
+                            getLoggedInUser());
                     verifyNoMoreInteractions(rules);
                 });
     }
@@ -117,7 +113,8 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
         assertAccessDenied(
                 () -> classUnderTest.resendUserVerificationEmail(userToSendVerificationEmail),
                 () -> {
-                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail, getLoggedInUser());
+                    verify(rules).systemRegistrationUserCanSendUserVerificationEmail(userToSendVerificationEmail,
+                            getLoggedInUser());
                     verifyNoMoreInteractions(rules);
                 });
     }
@@ -125,10 +122,9 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
     @Test
     public void testEditInternalUser() throws Exception {
         UserResource userToEdit = UserResourceBuilder.newUserResource().build();
-        UserRoleType userRoleType = UserRoleType.SUPPORT;
 
         assertAccessDenied(
-                () -> classUnderTest.editInternalUser(userToEdit, userRoleType),
+                () -> classUnderTest.editInternalUser(userToEdit, Role.SUPPORT),
                 () -> {
                     verify(rules).ifsAdminCanEditInternalUser(userToEdit, getLoggedInUser());
                     verifyNoMoreInteractions(rules);
@@ -137,57 +133,6 @@ public class RegistrationServiceSecurityTest extends BaseServiceSecurityTest<Reg
 
     @Override
     protected Class<? extends RegistrationService> getClassUnderTest() {
-        return TestRegistrationService.class;
-    }
-
-    public static class TestRegistrationService implements RegistrationService {
-
-        @Override
-        public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<UserResource> createOrganisationUser(long organisationId, UserResource userResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> activateUser(long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> activateApplicantAndSendDiversitySurvey(long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> activateAssessorAndSendDiversitySurvey(long userId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> createInternalUser(String inviteHash, InternalUserRegistrationResource userRegistrationResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> editInternalUser(UserResource userToEdit, UserRoleType userRoleType) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> sendUserVerificationEmail(UserResource user, Optional<Long> competitionId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> resendUserVerificationEmail(UserResource user) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> deactivateUser(long userId) { return null; }
+        return RegistrationServiceImpl.class;
     }
 }

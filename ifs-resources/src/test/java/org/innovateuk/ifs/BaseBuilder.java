@@ -98,7 +98,7 @@ public abstract class BaseBuilder<T, S> implements Builder<T, S> {
     @Override
     public List<T> build(int numberToBuild) {
 
-        return (List) IntStream.range(0, numberToBuild).mapToObj(i -> {
+        return IntStream.range(0, numberToBuild).mapToObj(i -> {
             T newElement = createInitial();
             amendActions.forEach(a -> a.accept(i, newElement));
             postProcess(i, newElement);

@@ -2,6 +2,8 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.interview.controller.InterviewAssignmentController;
+import org.innovateuk.ifs.invite.resource.ApplicantInterviewInviteResource;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
 import org.innovateuk.ifs.invite.resource.StagedApplicationResource;
 import org.junit.Test;
@@ -19,6 +21,8 @@ import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceD
 import static org.innovateuk.ifs.documentation.AvailableApplicationResourceDocs.availableApplicationResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationListResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentApplicationResourceDocs.interviewAssignmentAssignedResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.*;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
@@ -122,6 +126,36 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
     }
 
     @Test
+    public void getAssignedApplications() throws Exception {
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        when(interviewAssignmentInviteServiceMock.getAssignedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentAssignedPageResourceBuilder.build()));
+
+        mockMvc.perform(get("/interview-panel/assigned-applications/{competitionId}", 1L)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "name,asc"))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition")
+                        ),
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
+                        ),
+                        responseFields(interviewAssignmentAssignedPageResourceFields)
+                                .andWithPrefix("content[].", interviewAssignmentAssignedResourceFields)
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).getAssignedApplications(competitionId, pageable);
+    }
+
+    @Test
     public void getAvailableApplicationIds() throws Exception {
         when(interviewAssignmentInviteServiceMock.getAvailableApplicationIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
@@ -135,5 +169,65 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                 ));
 
         verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplicationIds(competitionId);
+    }
+
+    @Test
+    public void unstageApplication() throws Exception {
+        long applicationId = 123L;
+        when(interviewAssignmentInviteServiceMock.unstageApplication(applicationId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-application/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to unstage")
+                        )
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplication(applicationId);
+    }
+
+    @Test
+    public void unstageApplications() throws Exception {
+        long competitionId = 123L;
+        when(interviewAssignmentInviteServiceMock.unstageApplications(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}"));
+
+        verify(interviewAssignmentInviteServiceMock, only()).unstageApplications(competitionId);
+    }
+
+    @Test
+    public void getEmailTemplate() throws Exception {
+        when(interviewAssignmentInviteServiceMock.getEmailTemplate()).thenReturn(serviceSuccess(new ApplicantInterviewInviteResource("Content")));
+
+        mockMvc.perform(get("/interview-panel/email-template"))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        responseFields(fieldWithPath("content").description("The content of the email template sent to applicants"))
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).getEmailTemplate();
+    }
+
+    @Test
+    public void sendInvites() throws Exception {
+        AssessorInviteSendResource sendResource = new AssessorInviteSendResource("Subject", "Content");
+        when(interviewAssignmentInviteServiceMock.sendInvites(competitionId, sendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/interview-panel/send-invites/{competitionId}", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(sendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        requestFields(
+                                fieldWithPath("subject").description("Subject of the email to send to applicants"),
+                                fieldWithPath("content").description("Content of the email to send to applicants")
+                        )
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).sendInvites(competitionId, sendResource);
     }
 }

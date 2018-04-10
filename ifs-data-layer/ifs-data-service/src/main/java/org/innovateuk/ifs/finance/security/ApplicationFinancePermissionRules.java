@@ -13,8 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -128,6 +127,7 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     }
 
     private boolean hasDetailedView(long applicationId) {
+
         Competition competition = competitionRepository.findByApplicationsId(applicationId);
         return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
     }
