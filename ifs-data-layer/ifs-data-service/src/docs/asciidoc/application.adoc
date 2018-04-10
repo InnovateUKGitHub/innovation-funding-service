@@ -141,7 +141,7 @@ include::{snippets}/application/show-application-team/curl-request.adoc[]
 === Get latest email funding date
 ==== Request
 include::{snippets}/application/get-latest-email-funding-date/http-request.adoc[]
-include::{snippets}/application/get-latest-email-funding-date/request-parameters.adoc[]
+include::{snippets}/application/get-latest-email-funding-date/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/application/get-latest-email-funding-date/http-response.adoc[]

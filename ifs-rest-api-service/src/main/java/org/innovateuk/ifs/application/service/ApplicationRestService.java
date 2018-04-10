@@ -30,5 +30,5 @@ public interface ApplicationRestService {
     RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
     RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource);
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
-    RestResult<ZonedDateTime> getLatestEmailFundingDate(Long applicationId);
+    RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
 }

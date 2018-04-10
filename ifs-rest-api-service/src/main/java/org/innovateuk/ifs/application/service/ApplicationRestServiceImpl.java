@@ -119,7 +119,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<ZonedDateTime> getLatestEmailFundingDate(Long applicationId) {
-        return getWithRestResult(applicationRestURL + "/getLatestEmailFundingDate/" + applicationId, ZonedDateTime.class);
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId) {
+        return getWithRestResult(applicationRestURL + "/getLatestEmailFundingDate/" + competitionId, ZonedDateTime.class);
     }
 }
