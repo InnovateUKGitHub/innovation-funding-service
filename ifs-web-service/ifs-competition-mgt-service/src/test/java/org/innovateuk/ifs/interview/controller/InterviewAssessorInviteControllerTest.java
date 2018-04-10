@@ -100,7 +100,7 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
 
     @Override
     protected InterviewAssessorInviteController supplyControllerUnderTest() {
-        return new InterviewAssessorInviteController();
+        return new InterviewAssessorInviteController(interviewInviteRestService, interviewInviteAssessorsFindModelPopulator, interviewInviteAssessorsInviteModelPopulator, interviewInviteAssessorsAcceptedModelPopulator);
     }
 
     @Override

@@ -48,17 +48,24 @@ public class InterviewAssessorInviteController extends CompetitionManagementCook
     private static final String SELECTION_FORM = "interviewSelectionForm";
     private static final String FORM_ATTR_NAME = "form";
 
-    @Autowired
     private InterviewInviteRestService interviewInviteRestService;
 
-    @Autowired
     private InterviewInviteAssessorsFindModelPopulator interviewInviteAssessorsFindModelPopulator;
 
-    @Autowired
     private InterviewInviteAssessorsInviteModelPopulator interviewInviteAssessorsInviteModelPopulator;
 
-    @Autowired
     private InterviewInviteAssessorsAcceptedModelPopulator interviewInviteAssessorsAcceptedModelPopulator;
+
+    @Autowired
+    public InterviewAssessorInviteController(InterviewInviteRestService interviewInviteRestService,
+                                             InterviewInviteAssessorsFindModelPopulator interviewInviteAssessorsFindModelPopulator,
+                                             InterviewInviteAssessorsInviteModelPopulator interviewInviteAssessorsInviteModelPopulator,
+                                             InterviewInviteAssessorsAcceptedModelPopulator interviewInviteAssessorsAcceptedModelPopulator) {
+        this.interviewInviteRestService = interviewInviteRestService;
+        this.interviewInviteAssessorsFindModelPopulator = interviewInviteAssessorsFindModelPopulator;
+        this.interviewInviteAssessorsInviteModelPopulator = interviewInviteAssessorsInviteModelPopulator;
+        this.interviewInviteAssessorsAcceptedModelPopulator = interviewInviteAssessorsAcceptedModelPopulator;
+    }
 
     protected String getCookieName() {
         return SELECTION_FORM;
