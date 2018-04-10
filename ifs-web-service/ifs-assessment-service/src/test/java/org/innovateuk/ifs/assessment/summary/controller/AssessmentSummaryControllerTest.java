@@ -400,7 +400,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     private CompetitionResource setupCompetitionResource() {
-        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now().minusHours(2);
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withAssessorAcceptsDate(now.minusDays(2))

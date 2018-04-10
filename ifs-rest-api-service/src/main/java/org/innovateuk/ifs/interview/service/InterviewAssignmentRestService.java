@@ -22,6 +22,8 @@ public interface InterviewAssignmentRestService {
 
     RestResult<Void> unstageApplications(long competitionId);
 
+    RestResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, int page);
+
     RestResult<ApplicantInterviewInviteResource> getEmailTemplate();
 
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
