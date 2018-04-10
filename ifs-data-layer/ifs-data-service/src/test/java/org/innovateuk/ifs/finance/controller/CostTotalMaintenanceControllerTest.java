@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-public class CostTotalControllerTest extends BaseControllerMockMVCTest<CostTotalMaintenanceController> {
+public class CostTotalMaintenanceControllerTest extends BaseControllerMockMVCTest<CostTotalMaintenanceController> {
 
     @Override
     protected CostTotalMaintenanceController supplyControllerUnderTest() {
