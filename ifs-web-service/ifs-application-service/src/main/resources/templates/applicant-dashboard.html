@@ -85,8 +85,9 @@
                             </th:block>
                             <th:block th:if="${model.applicationIsSubmitted(app.id)}">
                                 <div class="task">
-                                    <h3 class="heading-small">
-                                        <a th:href="@{/application/{id}/track(id=${app.id})}" th:text="${app.name}">placeholder</a>
+                                    <h3 class="heading-small" th:with="noTitle=#{ifs.application.no_title}">
+                                        <a th:href="@{/application/{id}/track(id=${app.id})}"
+                                           th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}">placeholder</a>
                                     </h3>
                                     <ul class="application-details">
                                         <li>Application number: <span th:text="${app.id}"></span></li>
@@ -110,8 +111,9 @@
                         <li th:each="app : ${model.applicationsFinished}"
                             th:class="${model.applicationIsApproved(app.id)} ? 'positive'">
                             <div class="task">
-                                <h3 class="heading-small">
-                                    <a th:href="@{/application/{id}/summary(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
+                                <h3 class="heading-small" th:with="noTitle=#{ifs.application.no_title}">
+                                    <a th:href="@{/application/{id}/summary(id=${app.getId()})}"
+                                       th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}">placeholder</a>
                                 </h3>
                                 <ul class="application-details">
                                     <li>Application number: <span th:text="${app.id}"></span></li>
