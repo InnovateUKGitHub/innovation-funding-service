@@ -42,28 +42,19 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if(isCacheResources()) {
-            VersionResourceResolver versionResourceResolver = new VersionResourceResolver()
-                    .addVersionStrategy(new ContentVersionStrategy(), "/**");
+        VersionResourceResolver versionResourceResolver = new VersionResourceResolver()
+                .addVersionStrategy(new ContentVersionStrategy(), "/**");
 
-            registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
-                    .addResourceLocations(
-                            "classpath:static/js/", "static/js/",
-                            "classpath:static/css/", "static/css/",
-                            "classpath:static/images/", "static/images/"
-                    )
-                    .setCachePeriod(CACHE_PERIOD)
-                    .resourceChain(true)
-                    .addResolver(versionResourceResolver);
-        }else{
-            registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
-                    .addResourceLocations(
-                            "classpath:static/js/", "static/js/",
-                            "classpath:static/css/", "static/css/",
-                            "classpath:static/images/", "static/images/"
-                    )
-                    .resourceChain(true);
-        }
+        registry.addResourceHandler("/js/**", "/css/**", "/images/**", "/favicon.ico")
+                .addResourceLocations(
+                        "classpath:static/js/", "static/js/",
+                        "classpath:static/css/", "static/css/",
+                        "classpath:static/images/", "static/images/"
+                )
+                .setCachePeriod(CACHE_PERIOD)
+                .resourceChain(true)
+                .addResolver(versionResourceResolver);
+
         super.addResourceHandlers(registry);
     }
 
@@ -80,15 +71,6 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         super.addFormatters(registry);
         registry.addFormatter(new RejectionReasonFormatter());
         registry.addFormatter(new EthnicityFormatter());
-    }
-
-    /**
-     * Resources are cached in every environment other than when running locally during development.
-     * @return true if resources should be cached, otherwise false.
-     */
-    private boolean isCacheResources() {
-        // All environments except for local development have an active Spring profile of "environment".
-        return env.acceptsProfiles("environment");
     }
 
     public IfSThymeleafDialect getIfsThymeleafDialect() {

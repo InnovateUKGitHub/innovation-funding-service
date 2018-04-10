@@ -116,4 +116,11 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     public RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
         return getWithRestResult(applicationRestURL + "/showApplicationTeam/" + applicationId + "/" + userId, Boolean.class);
     }
+
+    @Override
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
+        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
+    }
 }

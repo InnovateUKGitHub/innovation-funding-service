@@ -63,11 +63,4 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
     public RestResult<Void> closeAssessment(long competitionId) {
         return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
     }
-
-    @Override
-    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
-    }
 }
