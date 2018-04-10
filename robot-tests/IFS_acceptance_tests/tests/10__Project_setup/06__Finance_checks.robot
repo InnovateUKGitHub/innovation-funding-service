@@ -127,9 +127,9 @@ Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
     Given the user navigates to the page                     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then The user should see the text in the page            Viability
-    And The user should see the text in the page             Queries raised
-    And The user should see the text in the page             Notes
+    Then The user should see the element                     jQuery=.table-progress th:contains("Viability")
+    And The user should see the element                      jQuery=.table-progress th:contains("Queries raised")
+    And The user should see the element                      jQuery=.table-progress th:contains("Notes")
     When the user should see the element                     link=Review
     Then the user should see that the element is disabled    css=.generate-spend-profile-main-button
 
