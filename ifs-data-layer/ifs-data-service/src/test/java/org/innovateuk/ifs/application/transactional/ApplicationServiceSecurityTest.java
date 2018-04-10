@@ -2,9 +2,9 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -24,11 +24,9 @@ import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -166,6 +164,13 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             verify(competitionRules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(competitionRules);
         });
+    }
+
+    @Test
+    public void getApplicationsByState() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
+                classUnderTest.getApplicationsByState(EnumSet.of(ApplicationState.SUBMITTED, ApplicationState
+                        .REJECTED)), SYSTEM_MAINTAINER);
     }
 
     @Override
