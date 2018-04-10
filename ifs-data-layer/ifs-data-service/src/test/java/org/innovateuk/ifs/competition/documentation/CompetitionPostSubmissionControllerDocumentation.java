@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
@@ -164,31 +163,6 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                 ));
 
         verify(competitionService, only()).countPendingSpendProfiles(competitionId);
-    }
-
-    @Test
-    public void findUnsuccessfulApplications() throws Exception {
-        final Long competitionId = 1L;
-        int pageIndex = 0;
-        int pageSize = 20;
-        String sortField = "id";
-
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
-
-        when(competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
-
-        mockMvc.perform(get("/competition/postSubmission/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(applicationPage)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
-                        )
-                ));
-
-        verify(competitionService, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
-
     }
 
     @Test
