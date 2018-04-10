@@ -128,13 +128,11 @@ CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link    link=Pending and declined
-    Given the user clicks the button/link     jQuery=tr:contains("${assessor_ben}") label
-    And the user clicks the button/link       jQuery=tr:contains("${assessor_joel}") label
-    And the user clicks the button/link       jQuery=button:contains("Resend invites")
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
-    When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
-    And the user should see the element       jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
+    Given the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
+    When the user clicks the button/link        jQuery=tr:contains("${assessor_joel}") label
+    Then the compAdmin resends the invites for interview panel     ${assessor_ben}
+    And the user should see the element         jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
+    And the user should see the element         jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
 
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135  IFS-1566  IFS-1138

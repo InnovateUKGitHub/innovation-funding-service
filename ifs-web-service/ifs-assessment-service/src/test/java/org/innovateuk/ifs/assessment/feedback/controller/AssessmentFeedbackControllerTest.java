@@ -22,6 +22,7 @@ import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -34,7 +35,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -97,9 +97,18 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         return new AssessmentFeedbackController();
     }
 
+    private ZonedDateTime twoHoursAgo;
+
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+        twoHoursAgo = ZonedDateTime.now().minusHours(2);
+    }
+
     @Test
     public void getQuestion() throws Exception {
-        Long applicationId = 1L;
+        long applicationId = 1L;
 
         CompetitionResource competitionResource = setupCompetitionResource();
 
@@ -291,11 +300,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void getQuestion_applicationDetailsQuestion() throws Exception {
-        LocalDate now = LocalDate.now();
-
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Application name")
-                .withStartDate(now)
+                .withStartDate(twoHoursAgo.toLocalDate())
                 .withDurationInMonths(20L)
                 .build();
 
@@ -335,7 +342,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         AssessmentFeedbackApplicationDetailsViewModel expectedViewModel = new AssessmentFeedbackApplicationDetailsViewModel(
                 applicationResource.getId(),
                 "Application name",
-                now,
+                twoHoursAgo.toLocalDate(),
                 20L,
                 3,
                 50,
@@ -797,11 +804,9 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     private CompetitionResource setupCompetitionResource() {
-        ZonedDateTime now = ZonedDateTime.now();
-
         CompetitionResource competitionResource = newCompetitionResource()
-                .withAssessorAcceptsDate(now.minusDays(2))
-                .withAssessorDeadlineDate(now.plusDays(4))
+                .withAssessorAcceptsDate(twoHoursAgo.minusDays(2))
+                .withAssessorDeadlineDate(twoHoursAgo.plusDays(4))
                 .build();
 
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
