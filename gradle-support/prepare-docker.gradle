@@ -25,7 +25,7 @@ task prepareDockerBaseInput {
             filter {
                 it.replaceAll('@version@', project.properties['version'])
                         .replaceAll('@app_name@', jar.baseName)
-                        .replaceAll('@server_context@', project.properties['serverContext'] ?: '/')
+                        .replaceAll('@server_context@', project.properties['serverContext'] ?: '')
             }
         }
         copy {
