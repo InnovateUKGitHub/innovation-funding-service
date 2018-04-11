@@ -75,7 +75,7 @@ function addTestFiles() {
 function resetDB() {
     section "=> RESETTING DATABASE STATE and syncing shibboleth users"
     cd ${rootDir}
-    ./gradlew flywayClean flywayMigrate syncShib
+    ./gradlew ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
 }
 
 function buildAndDeploy() {
