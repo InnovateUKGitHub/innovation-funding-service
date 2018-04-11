@@ -5,8 +5,6 @@ import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -33,6 +31,7 @@ import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -52,6 +51,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(competitionId)
+                .withName("Comp 1")
                 .withLocationPerPartner(true)
                 .build();
 
@@ -120,7 +120,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         // Assert that the model has the correct values
         assertEquals(project, model.getProject());
         assertEquals(competitionId, model.getCompetitionId());
-        assertNull(model.getCompetitionName());
+        assertEquals("Comp 1", model.getCompetitionName());
         assertEquals("Lead Org 1", model.getLeadOrganisation());
         assertEquals(projectManagerProjectUser, model.getProjectManager());
         assertEquals(expectedOrganisationFinanceContactMap, model.getOrganisationFinanceContactMap());
@@ -166,6 +166,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertNull(viewModel.getLeadOrganisation());
         assertNull(viewModel.getProjectManager());
         assertNull(viewModel.getOrganisationFinanceContactMap());
+        assertFalse(viewModel.isLocationPerPartnerRequired());
 
         ProjectDurationForm form = (ProjectDurationForm) result.getModelAndView().getModel().get("form");
         assertEquals(new ProjectDurationForm(), form);

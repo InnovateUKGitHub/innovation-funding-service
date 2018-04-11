@@ -71,14 +71,11 @@ public class ProjectDetailsController {
     @Autowired
     private OrganisationService organisationService;
 
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
-    @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
-    @Autowired
-    private CompetitionService competitionService;
-
     @Autowired
     private PartnerOrganisationRestService partnerOrganisationService;
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
+    @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
@@ -95,7 +92,7 @@ public class ProjectDetailsController {
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
-                null,
+                competitionResource.getName(),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),
@@ -159,7 +156,9 @@ public class ProjectDetailsController {
                 competition.getName(),
                 null,
                 null,
-                null));
+                null,
+                false,
+                Collections.emptyList()));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";

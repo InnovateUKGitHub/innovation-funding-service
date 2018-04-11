@@ -26,9 +26,6 @@ public class ProjectDetailsViewModel {
 
     public ProjectDetailsViewModel(ProjectResource project, Long competitionId, String competitionName,
                                    String leadOrganisation, ProjectUserResource projectManager,
-                                   Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap) {
-    public ProjectDetailsViewModel(ProjectResource project, Long competitionId, String leadOrganisation,
-                                   ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap,
                                    boolean locationPerPartnerRequired,
                                    List<PartnerOrganisationResource> partnerOrganisations) {
@@ -66,6 +63,18 @@ public class ProjectDetailsViewModel {
         return organisationFinanceContactMap;
     }
 
+    public boolean isLocationPerPartnerRequired() {
+        return locationPerPartnerRequired;
+    }
+
+    public String getPostCodeForPartnerOrganisation(Long organisationId) {
+        return partnerOrganisations.stream()
+                .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
+                .findFirst()
+                .map(PartnerOrganisationResource::getPostCode)
+                .orElse(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,12 +84,14 @@ public class ProjectDetailsViewModel {
         ProjectDetailsViewModel that = (ProjectDetailsViewModel) o;
 
         return new EqualsBuilder()
+                .append(locationPerPartnerRequired, that.locationPerPartnerRequired)
                 .append(project, that.project)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(projectManager, that.projectManager)
                 .append(organisationFinanceContactMap, that.organisationFinanceContactMap)
+                .append(partnerOrganisations, that.partnerOrganisations)
                 .isEquals();
     }
 
@@ -93,18 +104,8 @@ public class ProjectDetailsViewModel {
                 .append(leadOrganisation)
                 .append(projectManager)
                 .append(organisationFinanceContactMap)
+                .append(locationPerPartnerRequired)
+                .append(partnerOrganisations)
                 .toHashCode();
-    }
-
-    public boolean isLocationPerPartnerRequired() {
-        return locationPerPartnerRequired;
-    }
-
-    public String getPostCodeForPartnerOrganisation(Long organisationId) {
-        return partnerOrganisations.stream()
-                .filter(partnerOrganisation ->  partnerOrganisation.getOrganisation().equals(organisationId))
-                .findFirst()
-                .map(PartnerOrganisationResource::getPostCode)
-                .orElse(null);
     }
 }
