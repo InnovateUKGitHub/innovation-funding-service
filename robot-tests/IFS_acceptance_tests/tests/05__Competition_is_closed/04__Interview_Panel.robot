@@ -74,7 +74,8 @@ CompAdmin can add or remove the applications from the invite list
     Run Keyword If  '${status}' == 'PASS'  the user moves the closed competition to panel
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
-    Then the competition admin selects the applications and adds them to the invite list
+    Then the user check for Key Statistics on assign applications to interview panel page
+    And the competition admin selects the applications and adds them to the invite list
     And the compadmin can remove an assessor or application from the invite list   ${crowd_source_application_name}
 
 Competition Admin can send or cancel sending the invitation to the applicants
@@ -167,3 +168,9 @@ the Competition Admin should see the assigned applications in the View status ta
     the user clicks the button/link         jQuery=li:contains("View status")
     the user should see the element         jQuery=td:contains("${Neural_network_application}")
     the user should see the element         jQuery=td:contains("${computer_vision_application}")
+
+the user check for Key Statistics on assign applications to interview panel page
+    Get the total number of submitted applications
+    ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span
+    Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${Application_in_comp}
+
