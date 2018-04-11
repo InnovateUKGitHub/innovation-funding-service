@@ -57,4 +57,10 @@ public interface InterviewAssignmentInviteService {
     @SecuredBySpring(value = "STAGE_INTERVIEW_PANEL_APPLICATIONS",
             description = "The Competition Admin user and Project Finance users can send invites to applicants")
     ServiceResult<Void> sendInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
+
+
+    @PreAuthorize("hasAuthority('applicant')")
+    @SecuredBySpring(value = "IS_APPLICATION_ASSIGNED_TO_INTERVIEW",
+            description = "The applicants can see if their application is assigned to interview")
+    ServiceResult<Boolean> isApplicationAssigned(long applicationId);
 }

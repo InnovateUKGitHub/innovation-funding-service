@@ -22,11 +22,9 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Testing populator {@link ApplicantDashboardPopulator}
@@ -63,32 +61,35 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withApplication(APPLICATION_ID_IN_PROJECT)
                 .build(1)));
 
-        when(applicationService.getById(APPLICATION_ID_IN_PROJECT)).thenReturn(newApplicationResource()
+        when(applicationRestService.getApplicationById(APPLICATION_ID_IN_PROJECT)).thenReturn(restSuccess(newApplicationResource()
                 .withId(APPLICATION_ID_IN_PROJECT)
                 .withApplicationState(ApplicationState.SUBMITTED)
-                .withCompetition(competitionResource.getId()).build());
+                .withCompetition(competitionResource.getId()).build()));
 
         when(competitionRestService.getCompetitionsByUserId(loggedInUser.getId())).thenReturn(restSuccess(competitionResources));
 
-        when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));  
+        when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));
 
         when(processRoleService.getByUserId(loggedInUser.getId())).thenReturn(newProcessRoleResource()
                 .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
                 .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT)
                 .build(4));
+
+        when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_SUBMITTED)).thenReturn(restSuccess(true));
+        when(interviewAssignmentRestService.isAssignedToInterview(APPLICATION_ID_IN_PROGRESS)).thenReturn(restSuccess(true));
     }
 
     @Test
     public void populate() {
         ApplicantDashboardViewModel viewModel = populator.populate(loggedInUser.getId());
 
-        assertTrue(viewModel.getApplicationsInProgressNotEmpty());
-        assertTrue(viewModel.getApplicationsInFinishedNotEmpty());
-        assertTrue(viewModel.getProjectsInSetupNotEmpty());
+        assertFalse(viewModel.getInProgress().isEmpty());
+        assertFalse(viewModel.getPrevious().isEmpty());
+        assertFalse(viewModel.getProjects().isEmpty());
 
-        assertEquals(2, viewModel.getApplicationsInProgress().size());
+        assertEquals(2, viewModel.getInProgress().size());
 
-        verify(applicationService, times(1)).getById(APPLICATION_ID_IN_PROJECT);
+        verify(applicationRestService, times(1)).getApplicationById(APPLICATION_ID_IN_PROJECT);
         assertEquals("Applications in progress", viewModel.getApplicationInProgressText());
     }
 }

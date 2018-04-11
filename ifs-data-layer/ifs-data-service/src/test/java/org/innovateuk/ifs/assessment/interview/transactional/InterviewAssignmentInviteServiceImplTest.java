@@ -27,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -236,6 +237,19 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
         assertTrue(result.isSuccess());
         verify(notificationSenderMock, only()).sendNotification(any(Notification.class));
         verify(interviewAssignmentWorkflowHandler).notifyInterviewPanel(interviewAssignments.get(0), outcome);
+    }
+
+    @Test
+    public void isApplicationAssigned() {
+        long applicationId = 1L;
+        when(interviewAssignmentRepositoryMock.existsByTargetIdAndActivityStateStateIn(applicationId, asList(
+                InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState(),
+                InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE.getBackingState()
+                ))).thenReturn(true);
+
+        ServiceResult<Boolean> result = service.isApplicationAssigned(applicationId);
+
+        assertTrue(result.getSuccess());
     }
 
     private static InterviewAssignment interviewPanellambdaMatcher(Application application) {

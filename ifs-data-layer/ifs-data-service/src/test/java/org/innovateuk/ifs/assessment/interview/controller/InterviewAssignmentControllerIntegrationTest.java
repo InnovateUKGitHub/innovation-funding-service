@@ -359,4 +359,30 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         InterviewAssignment interview2 = interviewAssignmentRepository.findOneByTargetId(applications.get(1).getId());
         assertThat(interview2, is(nullValue()));
     }
+
+    @Test
+    public void isApplicationAssigned() {
+        loginSteveSmith();
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState()
+        );
+
+        InterviewAssignment interviewPanel = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withTarget(applications.get(0))
+                .build();
+
+        interviewAssignmentRepository.save(interviewPanel);
+
+        RestResult<Boolean> result = controller.isApplicationAssigned(applications.get(0).getId());
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccess());
+
+
+        RestResult<Boolean> notFound = controller.isApplicationAssigned(99L);
+        assertTrue(result.isSuccess());
+        assertFalse(notFound.getSuccess());
+    }
 }

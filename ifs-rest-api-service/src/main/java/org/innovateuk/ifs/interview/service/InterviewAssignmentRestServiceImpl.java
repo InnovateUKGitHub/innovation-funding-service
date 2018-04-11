@@ -83,4 +83,13 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return postWithRestResult(format("%s/%s/%s", REST_URL, "send-invites", competitionId), assessorInviteSendResource, Void.class);
     }
+
+    @Override
+    public RestResult<Boolean> isAssignedToInterview(long applicationId) {
+        String baseUrl = format("%s/%s/%s", REST_URL, "is-assigned", applicationId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), Boolean.class);
+    }
 }

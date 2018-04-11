@@ -156,4 +156,14 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         RestResult<Void> actual = service.sendAllInvites(competitionId, sendResource);
         assertTrue(actual.isSuccess());
     }
+
+    @Test
+    public void isAssignedToInterview() {
+        long applicationId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "is-assigned", applicationId), Boolean.class, true);
+
+        RestResult<Boolean> actual = service.isAssignedToInterview(applicationId);
+        assertTrue(actual.isSuccess());
+    }
 }

@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -174,6 +175,13 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
         }
 
         return result;
+    }
+
+    @Override
+    public ServiceResult<Boolean> isApplicationAssigned(long applicationId) {
+        return serviceSuccess(interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(applicationId,
+                asList(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState(),
+                        InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE.getBackingState())));
     }
 
     private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment, ActivityState awaitingFeedbackActivityState) {
