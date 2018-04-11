@@ -60,12 +60,10 @@ public class CompetitionSetupQuestionServiceImplTest {
 
     @Test
     public void testDeleteQuestion() throws Exception {
-        long questionId = 1L;
+        final Long questionId = 1L;
 
         when(restService.deleteById(questionId)).thenReturn(restSuccess());
-
-        ServiceResult<Void> result = service.deleteQuestion(questionId);
-
-        assertTrue(result.isSuccess());
+        ServiceResult<Void> resultAssessedQuestion = service.deleteQuestion(questionId);
+        assertTrue(resultAssessedQuestion.isSuccess());
     }
 }

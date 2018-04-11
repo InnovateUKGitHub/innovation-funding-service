@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.*;
 import org.innovateuk.ifs.commons.service.*;
 import org.innovateuk.ifs.competition.resource.*;

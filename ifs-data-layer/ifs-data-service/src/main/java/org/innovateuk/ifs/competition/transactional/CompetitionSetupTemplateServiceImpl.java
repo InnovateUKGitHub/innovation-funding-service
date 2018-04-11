@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY;
+import static org.innovateuk.ifs.setup.resource.QuestionSection.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -37,7 +38,6 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
-    private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
 
     @Autowired
     private SectionRepository sectionRepository;
@@ -112,7 +112,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME), notFoundError(Section.class))
+        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), APPLICATION_QUESTIONS.getName()), notFoundError(Section.class))
                 .andOnSuccess(section -> initializeAndPersistQuestion(section, competition));
     }
 
@@ -127,8 +127,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     @Override
-    public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
-        return find(questionRepository.findFirstByIdAndSectionName(questionId, ASSESSED_QUESTIONS_SECTION_NAME), notFoundError(Question.class))
+    public ServiceResult<Void> deleteQuestionInCompetition(Long questionId) {
+        return find(questionRepository.findFirstById(questionId),
+                    notFoundError(Question.class, questionId))
                 .andOnSuccess(question -> deleteQuestion(question));
     }
 
@@ -137,7 +138,11 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME) <= 1) {
+        if(sectionIsInValidForDeletion(question.getSection().getName())) {
+            return serviceFailure(new Error(GENERAL_FORBIDDEN));
+        }
+
+        if(questionRepository.countByCompetitionId(question.getCompetition().getId()) <= 1) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
@@ -166,5 +171,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private boolean competitionIsNotInSetupOrReadyToOpenState(Competition competition) {
         return !(competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)
                 || competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
+    }
+
+    private boolean sectionIsInValidForDeletion(String sectionName) {
+        return !sectionName.equals(APPLICATION_QUESTIONS.getName()) && !sectionName.equals(PROJECT_DETAILS.getName());
     }
 }

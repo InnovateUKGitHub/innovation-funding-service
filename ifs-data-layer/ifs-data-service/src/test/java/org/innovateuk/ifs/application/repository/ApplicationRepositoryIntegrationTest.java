@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -75,12 +74,12 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .map(state -> createApplicationByState(state)).collect(Collectors
                         .toList());
 
-        Long initial = repository.findByApplicationProcessActivityStateStateIn(states).count();
+        int initial = repository.findByApplicationProcessActivityStateStateIn(states).size();
 
         repository.save(applicationList);
-        Stream<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
+        List<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
 
-        assertEquals(initial + 5, applications.count());
+        assertEquals(initial + 5, applications.size());
     }
 
     @Test
