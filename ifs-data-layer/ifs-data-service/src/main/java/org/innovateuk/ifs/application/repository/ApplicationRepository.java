@@ -88,7 +88,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
-	Stream<Application> findByApplicationProcessActivityStateStateIn(Collection<State> applicationStates);
+	List<Application> findByApplicationProcessActivityStateStateIn(Collection<State> applicationStates);
 
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
 
