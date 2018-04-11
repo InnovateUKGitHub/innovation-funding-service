@@ -67,7 +67,7 @@ public class InterviewInviteAssessorsOverviewController extends CompetitionManag
                 originQuery
         ));
 
-        return "assessors/interview-overview";
+        return "assessors/interview/interview-overview";
     }
 
     private void updateOverviewSelectionForm(HttpServletRequest request,

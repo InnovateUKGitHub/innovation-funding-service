@@ -92,7 +92,7 @@ public class InterviewInviteAssessorsOverviewControllerTest extends BaseControll
                 .param("page", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/interview-overview"))
+                .andExpect(view().name("assessors/interview/interview-overview"))
                 .andReturn();
 
         assertCompetitionDetails(competition, result);

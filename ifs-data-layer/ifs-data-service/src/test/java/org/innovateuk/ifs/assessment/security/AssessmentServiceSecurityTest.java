@@ -157,7 +157,18 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long competitionId = 1L;
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getAssessmentPanelInviteStatistics(competitionId),
+                () -> classUnderTest.getReviewInviteStatistics(competitionId),
+                COMP_ADMIN,
+                PROJECT_FINANCE
+        );
+    }
+
+    @Test
+    public void getInterviewInviteStatistics() {
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(
+                () -> classUnderTest.getInterviewInviteStatistics(competitionId),
                 COMP_ADMIN,
                 PROJECT_FINANCE
         );

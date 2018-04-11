@@ -941,7 +941,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds))
                 .thenReturn(1);
 
-        ServiceResult<ReviewInviteStatisticsResource> serviceResult = assessmentService.getAssessmentPanelInviteStatistics(competitionId);
+        ServiceResult<ReviewInviteStatisticsResource> serviceResult = assessmentService.getReviewInviteStatistics(competitionId);
 
         InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);

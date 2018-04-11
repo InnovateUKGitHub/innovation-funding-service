@@ -106,7 +106,7 @@ public class CompetitionKeyStatisticsControllerTest extends BaseControllerMockMV
         final long competitionId = 1L;
 
         ReviewInviteStatisticsResource reviewInviteStatisticsResource = newReviewInviteStatisticsResource().build();
-        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
+        when(assessmentServiceMock.getReviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
 
         mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
                 .andExpect(status().isOk())

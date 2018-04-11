@@ -12,13 +12,9 @@ public class ReviewInviteStatisticsResourceTest {
     private int expectedPendingInvites = 2;
 
     @Test
-    public void invitesAddUp() throws Exception {
-        ReviewInviteStatisticsResource statisticsResource = new ReviewInviteStatisticsResource();
-        statisticsResource.setAccepted(acceptedInvites);
-        statisticsResource.setInvited(totalInvites);
-        statisticsResource.setDeclined(declinedInvites);
+    public void invitesAddUp() {
+        ReviewInviteStatisticsResource statisticsResource = new ReviewInviteStatisticsResource(totalInvites, acceptedInvites, declinedInvites);
         assertEquals(statisticsResource.getPending(), expectedPendingInvites);
         assertEquals(totalInvites, (acceptedInvites + declinedInvites + expectedPendingInvites));
     }
-
 }

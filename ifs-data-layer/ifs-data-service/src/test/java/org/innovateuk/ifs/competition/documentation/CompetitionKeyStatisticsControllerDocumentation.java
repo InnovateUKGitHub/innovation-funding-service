@@ -127,7 +127,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         long competitionId = 1L;
         ReviewInviteStatisticsResource reviewInviteStatisticsResource = reviewInviteStatisticsResourceBuilder.build();
 
-        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
+        when(assessmentServiceMock.getReviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competitionStatistics/{method-name}",

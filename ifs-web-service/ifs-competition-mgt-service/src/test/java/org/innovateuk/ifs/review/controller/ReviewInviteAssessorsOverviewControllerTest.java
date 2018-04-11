@@ -81,7 +81,7 @@ public class ReviewInviteAssessorsOverviewControllerTest extends BaseControllerM
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
+        when(competitionKeyStatisticsRestServiceMock.getReviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
     @Test

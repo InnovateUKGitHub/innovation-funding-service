@@ -12,9 +12,12 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
@@ -44,6 +47,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
@@ -87,6 +91,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Autowired
     private ReviewParticipantRepository reviewParticipantRepository;
+
+    @Autowired
+    private InterviewInviteRepository interviewInviteRepository;
+
+    @Autowired
+    private InterviewParticipantRepository interviewParticipantRepository;
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
@@ -168,7 +178,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         List<Long> assessmentPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
         reviewKeyStatisticsResource.setApplicationsInPanel(getApplicationPanelAssignedCountStatistic(competitionId));
-        reviewKeyStatisticsResource.setAssessorsAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
+        reviewKeyStatisticsResource.setAssessorsAccepted(getReviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
         reviewKeyStatisticsResource.setAssessorsPending(reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
 
         return serviceSuccess(reviewKeyStatisticsResource);
@@ -180,19 +190,41 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<ReviewInviteStatisticsResource> getAssessmentPanelInviteStatistics(long competitionId) {
-        ReviewInviteStatisticsResource statisticsResource = new ReviewInviteStatisticsResource();
-        List<Long> assessmentPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
+    public ServiceResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(long competitionId) {
+        List<Long> reviewPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
-        statisticsResource.setInvited(reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
-        statisticsResource.setAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
-        statisticsResource.setDeclined(getParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, assessmentPanelInviteIds));
+        int totalAssessorsInvited = reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
+        int assessortsAccepted = getReviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, reviewPanelInviteIds);
+        int assessorsDeclined = getReviewParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, reviewPanelInviteIds);
 
-        return serviceSuccess(statisticsResource);
+        return serviceSuccess(
+                new ReviewInviteStatisticsResource(totalAssessorsInvited, assessortsAccepted, assessorsDeclined)
+        );
     }
 
-    private int getParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
+    @Override
+    public ServiceResult<InterviewInviteStatisticsResource> getInterviewInviteStatistics(long competitionId) {
+        List<Long> reviewPanelInviteIds = simpleMap(interviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
+
+        int totalAssessorsInvited = interviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
+        int assessorsAccepted = getInterviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, reviewPanelInviteIds);
+        int assessorsDeclined = getInterviewParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, reviewPanelInviteIds);
+
+        return serviceSuccess(
+                new InterviewInviteStatisticsResource(
+                        totalAssessorsInvited,
+                        assessorsAccepted,
+                        assessorsDeclined,
+                        totalAssessorsInvited - assessorsAccepted - assessorsDeclined)
+        );
+    }
+
+    private int getReviewParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
         return reviewParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, PANEL_ASSESSOR, status, inviteIds);
+    }
+
+    private int getInterviewParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
+        return interviewParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, INTERVIEW_ASSESSOR, status, inviteIds);
     }
 
     @Override

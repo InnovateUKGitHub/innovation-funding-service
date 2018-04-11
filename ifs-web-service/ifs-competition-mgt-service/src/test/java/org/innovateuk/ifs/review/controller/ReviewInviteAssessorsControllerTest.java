@@ -127,7 +127,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
+        when(competitionKeyStatisticsRestServiceMock.getReviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
         inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestServiceMock).getReviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -196,7 +196,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
         inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestServiceMock).getReviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -237,7 +237,7 @@ public class ReviewInviteAssessorsControllerTest extends BaseControllerMockMVCTe
         InOrder inOrder = inOrder(competitionRestService, reviewInviteRestService, competitionKeyStatisticsRestServiceMock);
         inOrder.verify(reviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(competitionKeyStatisticsRestServiceMock).getAssessmentPanelInviteStatisticsByCompetition(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestServiceMock).getReviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(reviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
