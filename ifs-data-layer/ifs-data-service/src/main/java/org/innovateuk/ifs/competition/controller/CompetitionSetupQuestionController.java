@@ -18,25 +18,25 @@ public class CompetitionSetupQuestionController {
     @Autowired
     private QuestionSetupCompetitionService questionCompetitionService;
 
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionController")
     @GetMapping("/getById/{id}")
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable("id") final Long id) {
         return questionCompetitionService.getByQuestionId(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionController")
     @PutMapping("/save")
     public RestResult<Void> save(@RequestBody final CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         return questionCompetitionService.update(competitionSetupQuestionResource).toPutResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionController")
     @PostMapping("/addDefaultToCompetition/{id}")
     public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetitionId(@PathVariable("id") final Long competitionId) {
         return questionCompetitionService.createByCompetitionId(competitionId).toPostCreateResponse();
     }
 
-    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionController")
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint moved to QuestionSetupCompetitionController")
     @DeleteMapping("/deleteById/{id}")
     public RestResult<Void> deleteById(@PathVariable("id") final Long questionId) {
         return questionCompetitionService.delete(questionId).toDeleteResponse();
