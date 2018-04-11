@@ -50,7 +50,11 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation) {
+    public SectionAccess canAccessPartnerProjectLocationPage(OrganisationResource organisation, boolean partnerProjectLocationRequired) {
+
+        if (!partnerProjectLocationRequired) {
+            return NOT_ACCESSIBLE;
+        }
 
         if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access Partner Project Location page until Companies House details are complete for Organisation")) {
