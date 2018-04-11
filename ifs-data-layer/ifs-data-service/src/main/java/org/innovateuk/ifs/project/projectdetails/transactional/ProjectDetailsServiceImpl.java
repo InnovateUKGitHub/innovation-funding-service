@@ -14,6 +14,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
@@ -41,6 +42,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,10 +53,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
@@ -188,8 +192,13 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     private ServiceResult<Void> validatePostCode(String postCode) {
         if (StringUtils.isBlank(postCode)) {
-            return serviceFailure(GENERAL_INVALID_ARGUMENT);
+            return serviceFailure(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST));
         }
+
+        if (StringUtils.length(postCode) > MAX_POST_CODE_LENGTH) {
+            return serviceFailure(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST));
+        }
+
         return serviceSuccess();
     }
 
