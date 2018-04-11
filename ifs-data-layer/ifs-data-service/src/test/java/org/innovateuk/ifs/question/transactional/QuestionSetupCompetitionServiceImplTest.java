@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.question.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupTemplateService;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
@@ -77,7 +76,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     private GuidanceRowRepository guidanceRowRepository;
 
     @Mock
-    private CompetitionSetupTemplateService competitionSetupTemplateService;
+    private QuestionSetupTemplateService questionSetupTemplateService;
 
     @Test
     public void test_getByQuestionId() {
@@ -411,7 +410,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
     public void test_delete() {
         final Long questionId = 1L;
 
-        when(competitionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupTemplateService.deleteQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
         ServiceResult<Void> resultAssessedQuestion = service.delete(questionId);
         assertTrue(resultAssessedQuestion.isSuccess());
     }
@@ -423,7 +422,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().withId(questionId).build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
+        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
         when(questionRepository.findOne(questionId)).thenReturn(newlyCreatedQuestion);
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
@@ -448,7 +447,7 @@ public class QuestionSetupCompetitionServiceImplTest extends BaseServiceUnitTest
         Long competitionId = 22L;
         Competition competition = newCompetition().build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
+        when(questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isFailure());

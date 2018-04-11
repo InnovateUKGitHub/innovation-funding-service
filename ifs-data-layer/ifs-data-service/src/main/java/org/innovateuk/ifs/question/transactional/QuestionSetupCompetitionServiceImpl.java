@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupTemplateService;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.GuidanceRow;
@@ -56,7 +55,7 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     private GuidanceRowRepository guidanceRowRepository;
 
     @Autowired
-    private CompetitionSetupTemplateService competitionSetupTemplateService;
+    private QuestionSetupTemplateService questionSetupTemplateService;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
@@ -135,14 +134,14 @@ public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalServic
     @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
-                .andOnSuccess(competition -> competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
+                .andOnSuccess(competition -> questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
                 .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> delete(Long questionId) {
-        competitionSetupTemplateService.deleteQuestionInCompetition(questionId);
+        questionSetupTemplateService.deleteQuestionInCompetition(questionId);
 
         return serviceSuccess();
     }
