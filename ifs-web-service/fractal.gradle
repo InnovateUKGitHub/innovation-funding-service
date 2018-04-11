@@ -74,8 +74,10 @@ task removeFractal(type: DockerRemoveContainer, dependsOn: stopFractal) {
 
 task createFractal(type: DockerCreateContainer, dependsOn: [buildFractal, removeFractal]) {
     targetImageId { buildFractal.getImageId() }
-    containerName = "${project.name.replaceAll(/ifs-/, "")}"
-    containerId = "${project.name.replaceAll(/ifs-/, "")}"
+    hostName="fractal"
+    containerName="fractal"
+    containerId="fractal"
+    portBindings = ['4000:3000']
     network="ifs"
 }
 
