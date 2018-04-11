@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.times;
@@ -61,7 +63,8 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         when(projectService.findByUser(loggedInUser.getId())).thenReturn(ServiceResult.serviceSuccess(newProjectResource()
                 .withId(PROJECT_ID_IN_PROJECT)
                 .withApplication(APPLICATION_ID_IN_PROJECT)
-                .build(1)));
+                .withProjectState(ProjectState.SETUP, ProjectState.WITHDRAWN)
+                .build(2)));
 
         when(applicationService.getById(APPLICATION_ID_IN_PROJECT)).thenReturn(newApplicationResource()
                 .withId(APPLICATION_ID_IN_PROJECT)
@@ -76,6 +79,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withApplication(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IN_PROJECT, APPLICATION_ID_IN_FINISH, APPLICATION_ID_SUBMITTED)
                 .withRole(LEADAPPLICANT, LEADAPPLICANT, APPLICANT, APPLICANT)
                 .build(4));
+
     }
 
     @Test
@@ -87,6 +91,8 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         assertTrue(viewModel.getProjectsInSetupNotEmpty());
 
         assertEquals(2, viewModel.getApplicationsInProgress().size());
+        assertFalse(viewModel.applicationIsApprovedAndProjectIsNotWithdrawn(viewModel.getApplicationsFinished().get(0).getId()));
+        assertTrue(viewModel.applicationIsApprovedAndProjectIsNotWithdrawn(viewModel.getApplicationsFinished().get(1).getId()));
 
         verify(applicationService, times(1)).getById(APPLICATION_ID_IN_PROJECT);
         assertEquals("Applications in progress", viewModel.getApplicationInProgressText());
