@@ -82,7 +82,7 @@ dependencyManagement {
 
 repositories {
     maven { url "https://repo.spring.io/milestone" }
-    mavenCentral()
+    jcenter()
 }
 
 jar {
