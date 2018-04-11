@@ -636,7 +636,7 @@ the matching status checkbox is updated
     the user should see the element    css=#${table_id} tr:nth-of-type(${ROW}) .${STATUS}
 
 the duration should be visible
-    Element Should Contain    xpath=//*[@id="content"]/form/p/strong    36 months
+    the user should see the element    jQuery=h2:contains("Project duration") ~ p:contains("36 months")
 
 the user shouldn't be able to edit the day field as all projects start on the first of the month
     the user should see the element    css=.day [readonly]

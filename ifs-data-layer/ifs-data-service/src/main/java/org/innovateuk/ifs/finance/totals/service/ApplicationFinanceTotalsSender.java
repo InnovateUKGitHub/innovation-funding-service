@@ -8,6 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface ApplicationFinanceTotalsSender {
 
-    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'SEND_APPLICATION_TOTALS_ON_SUBMIT')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'SEND_APPLICATION_TOTALS')")
     ServiceResult<Void> sendFinanceTotalsForApplication(Long applicationId);
 }

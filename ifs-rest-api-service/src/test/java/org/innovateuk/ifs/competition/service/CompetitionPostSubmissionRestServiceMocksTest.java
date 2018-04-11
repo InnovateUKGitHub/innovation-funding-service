@@ -2,7 +2,6 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
@@ -106,23 +105,6 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
-
-    @Test
-    public void findUnsuccessfulApplications() {
-
-        int pageNumber = 0;
-        int pageSize = 20;
-        String sortField = "id";
-
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/unsuccessful-applications?page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
-
-        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccess();
-        assertNotNull(result);
-        Assert.assertEquals(applicationPage, result);
-    }
-
 
     @Test
     public void closeAssessment() {
