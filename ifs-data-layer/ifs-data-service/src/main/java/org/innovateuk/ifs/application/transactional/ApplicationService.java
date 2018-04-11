@@ -62,9 +62,9 @@ public interface ApplicationService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
-    @SecuredBySpring(value = "READ", description = "Only system registrar should be using this function")
-    @PreAuthorize("hasAuthority('system_registrar')")
-    ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates);
+    @SecuredBySpring(value = "READ", description = "Only the system maintainer should be using this function")
+    @PreAuthorize("hasAuthority('system_maintainer')")
+    ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findAll();
@@ -78,4 +78,8 @@ public interface ApplicationService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationResource> findByProcessRole(Long id);
+
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionResource', 'VIEW_UNSUCCESSFUL_APPLICATIONS')")
+    ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField);
+
 }

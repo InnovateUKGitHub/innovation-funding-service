@@ -38,6 +38,13 @@ public class InterviewAssignmentController {
         return interviewAssignmentInviteService.getStagedApplications(competitionId, pageable).toGetResponse();
     }
 
+    @GetMapping("/assigned-applications/{competitionId}")
+    public RestResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(
+            @PathVariable long competitionId,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = {"target.id"}, direction = Sort.Direction.ASC) Pageable pageable) {
+        return interviewAssignmentInviteService.getAssignedApplications(competitionId, pageable).toGetResponse();
+    }
+
     @GetMapping(value = "/available-application-ids/{competitionId}")
     public RestResult<List<Long>> getAvailableApplicationIds(@PathVariable long competitionId) {
         return interviewAssignmentInviteService.getAvailableApplicationIds(competitionId).toGetResponse();
@@ -46,6 +53,16 @@ public class InterviewAssignmentController {
     @PostMapping("/assign-applications")
     public RestResult<Void> assignApplications(@Valid @RequestBody StagedApplicationListResource stagedApplicationListResource) {
         return interviewAssignmentInviteService.assignApplications(stagedApplicationListResource.getInvites()).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/unstage-application/{applicationId}")
+    public RestResult<Void> unstageApplication(@PathVariable long applicationId) {
+        return interviewAssignmentInviteService.unstageApplication(applicationId).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/unstage-applications/{competitionId}")
+    public RestResult<Void> unstageApplications(@PathVariable long competitionId) {
+        return interviewAssignmentInviteService.unstageApplications(competitionId).toPostWithBodyResponse();
     }
 
     @GetMapping("/email-template")

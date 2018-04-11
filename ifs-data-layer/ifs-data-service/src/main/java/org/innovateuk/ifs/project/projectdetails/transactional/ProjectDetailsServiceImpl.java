@@ -131,6 +131,64 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                         andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
+    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
+        if (project.getGrantOfferLetter() != null){
+            return serviceFailure(failKey);
+        }
+        return serviceSuccess(project);
+    }
+
+    private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
+
+        List<ProjectUser> leadPartners = getLeadPartners(project);
+        List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
+
+        if (!matchingProjectUsers.isEmpty()) {
+            return getOnlyElementOrFail(matchingProjectUsers);
+        } else {
+            return serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER);
+        }
+    }
+
+    private List<ProjectUser> getLeadPartners(Project project) {
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadPartnerOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
+                && pu.getRole().isPartner());
+    }
+
+    private boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
+        return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
+    }
+
+    private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
+
+        Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
+
+        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
+            pm.setUser(leadPartnerUser.getUser());
+            pm.setOrganisation(leadPartnerUser.getOrganisation());
+            return serviceSuccess();
+
+        }).orElseGet(() -> {
+            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
+                    PROJECT_MANAGER, leadPartnerUser.getOrganisation());
+            project.addProjectUser(projectUser);
+            return serviceSuccess();
+        });
+
+        return setProjectManagerResult.andOnSuccess(result -> {
+            projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser);
+            return serviceSuccess();
+        });
+    }
+
+    private Optional<ProjectUser> getExistingProjectManager(Project project) {
+        List<ProjectUser> projectUsers = project.getProjectUsers();
+        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
+        return getOnlyElementOrEmpty(projectManagers);
+    }
+
     @Override
     @Transactional
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
@@ -173,12 +231,82 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
+    public ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
+        return validateProjectDuration(durationInMonths).
+                andOnSuccess(() -> validateIfProjectDurationCanBeChanged(projectId)).
+                andOnSuccess(() -> getProject(projectId)).
+                andOnSuccessReturnVoid(project -> project.setDurationInMonths(durationInMonths));
+    }
+
+    private ServiceResult<Void> validateProjectDuration(long durationInMonths) {
+
+        if (durationInMonths <1) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(long projectId) {
+
+        if (isSpendProfileIsGenerated(projectId)) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
+        }
+
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
         return getProject(composite.getProjectId()).
                 andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
                         andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                 andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+    }
+
+    private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
+
+        ServiceResult<ProjectUser> result = find(organisation(organisationId))
+                .andOnSuccessReturn(organisation -> project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, organisation));
+
+        if (result.isFailure()) {
+            return result;
+        }
+
+        List<ProjectUser> projectUsers = project.getProjectUsers();
+
+        List<ProjectUser> matchingUserOrganisationProcessRoles = simpleFilter(projectUsers,
+                pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
+
+        if (matchingUserOrganisationProcessRoles.isEmpty()) {
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
+        }
+
+        List<ProjectUser> partnerUsers = simpleFilter(matchingUserOrganisationProcessRoles, ProjectUser::isPartner);
+
+        if (partnerUsers.isEmpty()) {
+            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
+        }
+
+        return getOnlyElementOrFail(partnerUsers);
+    }
+
+    private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
+        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_CONTACT);
+    }
+
+    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
+        return serviceSuccess(new ProjectUser(user, project, role, organisation));
+    }
+
+    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
+
+        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
+        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
+        project.addProjectUser(newFinanceContact);
+        return serviceSuccess();
     }
 
     @Override
@@ -264,107 +392,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getProject(projectId)
                 .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
-    }
-
-    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
-        if (project.getGrantOfferLetter() != null){
-            return serviceFailure(failKey);
-        }
-        return serviceSuccess(project);
-    }
-
-    private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
-
-        List<ProjectUser> leadPartners = getLeadPartners(project);
-        List<ProjectUser> matchingProjectUsers = simpleFilter(leadPartners, pu -> pu.getUser().getId().equals(projectManagerUserId));
-
-        if (!matchingProjectUsers.isEmpty()) {
-            return getOnlyElementOrFail(matchingProjectUsers);
-        } else {
-            return serviceFailure(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER);
-        }
-    }
-
-    private List<ProjectUser> getLeadPartners(Project project) {
-        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
-        Organisation leadPartnerOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
-        return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
-                && pu.getRole().isPartner());
-    }
-
-    private boolean organisationsEqual(Organisation leadPartnerOrganisation, ProjectUser pu) {
-        return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
-    }
-
-    private ServiceResult<Void> createOrUpdateProjectManagerForProject(Project project, ProjectUser leadPartnerUser) {
-
-        Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
-
-        ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
-            pm.setUser(leadPartnerUser.getUser());
-            pm.setOrganisation(leadPartnerUser.getOrganisation());
-            return serviceSuccess();
-
-        }).orElseGet(() -> {
-            ProjectUser projectUser = new ProjectUser(leadPartnerUser.getUser(), leadPartnerUser.getProcess(),
-                    PROJECT_MANAGER, leadPartnerUser.getOrganisation());
-            project.addProjectUser(projectUser);
-            return serviceSuccess();
-        });
-
-        return setProjectManagerResult.andOnSuccess(result -> {
-            projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser);
-            return serviceSuccess();
-        });
-    }
-
-    private Optional<ProjectUser> getExistingProjectManager(Project project) {
-        List<ProjectUser> projectUsers = project.getProjectUsers();
-        List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
-        return getOnlyElementOrEmpty(projectManagers);
-    }
-
-    private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
-
-        ServiceResult<ProjectUser> result = find(organisation(organisationId))
-                .andOnSuccessReturn(organisation -> project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, organisation));
-
-        if (result.isFailure()) {
-            return result;
-        }
-
-        List<ProjectUser> projectUsers = project.getProjectUsers();
-
-        List<ProjectUser> matchingUserOrganisationProcessRoles = simpleFilter(projectUsers,
-                pr -> organisationId.equals(pr.getOrganisation().getId()) && financeContactUserId.equals(pr.getUser().getId()));
-
-        if (matchingUserOrganisationProcessRoles.isEmpty()) {
-            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
-        }
-
-        List<ProjectUser> partnerUsers = simpleFilter(matchingUserOrganisationProcessRoles, ProjectUser::isPartner);
-
-        if (partnerUsers.isEmpty()) {
-            return serviceFailure(PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION);
-        }
-
-        return getOnlyElementOrFail(partnerUsers);
-    }
-
-    private ServiceResult<ProjectUser> createFinanceContactProjectUser(User user, Project project, Organisation organisation) {
-        return createProjectUserForRole(project, user, organisation, PROJECT_FINANCE_CONTACT);
-    }
-
-    private ServiceResult<ProjectUser> createProjectUserForRole(Project project, User user, Organisation organisation, ProjectParticipantRole role) {
-        return serviceSuccess(new ProjectUser(user, project, role, organisation));
-    }
-
-    private ServiceResult<Void> addFinanceContactToProject(Project project, ProjectUser newFinanceContact) {
-
-        List<ProjectUser> existingFinanceContactForOrganisation = project.getProjectUsers(pu -> pu.getOrganisation().equals(newFinanceContact.getOrganisation()) && ProjectParticipantRole.PROJECT_FINANCE_CONTACT.equals(pu.getRole()));
-        existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
-        project.addProjectUser(newFinanceContact);
-        return serviceSuccess();
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {

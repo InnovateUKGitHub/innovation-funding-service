@@ -39,7 +39,7 @@ Companies House: User can choose the organisation and same operating address
 Companies House: Invalid company name
     [Documentation]    INFUND-887
     [Tags]
-    When the user enters text to a text field    id=organisationSearchName    no results
+    When the user enters text to a text field    id=organisationSearchName    innoavte
     And the user clicks the button/link    id=org-search
     Then the user should see the text in the page    No results found.
 
