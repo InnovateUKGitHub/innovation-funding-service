@@ -1,4 +1,8 @@
 import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.container.extras.*
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
 buildscript {
 
@@ -15,7 +19,7 @@ buildscript {
 
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 // use fully qualified class name
@@ -52,5 +56,31 @@ apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
         tag = "innovateuk/fractal:latest"
         inputDir = project.file("$project.buildDir/fractal")
     }
+
+
+task stopFractal(type: DockerStopContainer) {
+    targetContainerId { createFractal.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeFractal(type: DockerRemoveContainer, dependsOn: stopFractal) {
+    targetContainerId { createFractal.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createFractal(type: DockerCreateContainer, dependsOn: [buildFractal, removeFractal]) {
+    targetImageId { buildFractal.getImageId() }
+    containerName = "${project.name.replaceAll(/ifs-/, "")}"
+    containerId = "${project.name.replaceAll(/ifs-/, "")}"
+    network="ifs"
+}
+
+task deployFractal(type: DockerStartContainer, dependsOn: createFractal) {
+    targetContainerId { createFractal.getContainerId() }
+}
 
 

@@ -31,7 +31,6 @@ task tagDocker(type: DockerTagImage) {
 task stop(type: DockerStopContainer) {
     targetContainerId { createContainer.getContainerId() }
     onError {
-        //TODO maybe something smarter?
         //Deliberately ignore
     }
 }
@@ -39,7 +38,6 @@ task stop(type: DockerStopContainer) {
 task removeContainer(type: DockerRemoveContainer, dependsOn: stop) {
     targetContainerId { createContainer.getContainerId() }
     onError {
-        //TODO maybe something smarter?
         //Deliberately ignore
     }
 }
