@@ -24,6 +24,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3156 Assign applications to interview panel - Remove application(s) from invite tab
 ...
 ...               IFS-3154 Invite Assessor to Interview Panel: Resend invite
+...
+...               IFS-2635 Assign applications to interview panel dashboard - Key statistics
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -67,7 +69,7 @@ Assessors receives the invite to the interview panel
 
 CompAdmin can add or remove the applications from the invite list
 #to assign applications to interview panel
-    [Documentation]  IFS-2727   IFS-3156
+    [Documentation]  IFS-2727   IFS-3156   IFS-2635
     [Setup]  the user clicks the button/link    link=Manage interview panel
     Given the user clicks the button/link       link=Competition
     ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=h1:contains("Closed")
