@@ -3,9 +3,7 @@ package org.innovateuk.ifs.question.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.question.controller.QuestionSetupCompetitionController;
-import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -22,9 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class QuestionSetupCompetitionControllerDocumentation extends BaseControllerMockMVCTest<QuestionSetupCompetitionController> {
 
-    @Mock
-    QuestionSetupCompetitionService questionSetupCompetitionService;
-
     private static String baseUrl = "/question-setup";
 
     @Override
@@ -35,8 +30,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
     @Test
     public void getByQuestionId() throws Exception {
         final Long questionId = 1L;
-
-        when(questionSetupCompetitionService.getByQuestionId(questionId)).thenReturn(serviceSuccess(competitionSetupQuestionResourceBuilder.build()));
+        when(questionSetupCompetitionServiceMock.getByQuestionId(questionId)).thenReturn(serviceSuccess(competitionSetupQuestionResourceBuilder.build()));
 
         mockMvc.perform(get(baseUrl + "/getById/{id}", questionId))
                 .andExpect(status().isOk())
@@ -51,7 +45,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
     @Test
     public void save() throws Exception {
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
-        when(questionSetupCompetitionService.update(resource)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionServiceMock.update(resource)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(put(baseUrl + "/save")
 
@@ -67,7 +61,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
     public void addDefaultToCompetition() throws Exception {
         final Long competitionId = 1L;
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
-        when(questionSetupCompetitionService.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
+        when(questionSetupCompetitionServiceMock.createByCompetitionId(competitionId)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(post(baseUrl + "/addDefaultToCompetition/{id}", competitionId))
                 .andExpect(status().isCreated())
@@ -82,7 +76,7 @@ public class QuestionSetupCompetitionControllerDocumentation extends BaseControl
     @Test
     public void deleteById() throws Exception {
         final Long questionId = 1L;
-        when(questionSetupCompetitionService.delete(questionId)).thenReturn(serviceSuccess());
+        when(questionSetupCompetitionServiceMock.delete(questionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete(baseUrl + "/deleteById/{id}", questionId)).
                 andExpect(status().isNoContent())

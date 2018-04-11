@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator.application;
 
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
@@ -7,7 +8,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectForm;
-import org.innovateuk.ifs.question.service.QuestionSetupCompetitionService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,7 +29,7 @@ public class ApplicationProjectFormPopulatorTest {
 	private ApplicationProjectFormPopulator populator;
 
     @Mock
-    private QuestionSetupCompetitionService questionSetupCompetitionService;
+    private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Mock
     private QuestionService questionService;
@@ -44,7 +44,7 @@ public class ApplicationProjectFormPopulatorTest {
     public void testPopulateFormWithoutErrors() {
         CompetitionSetupQuestionResource resource = new CompetitionSetupQuestionResource();
         when(questionService.getById(questionId)).thenReturn(questionResource);
-        when(questionSetupCompetitionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(resource));
 
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionId));
 
@@ -55,7 +55,7 @@ public class ApplicationProjectFormPopulatorTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testPopulateFormWithErrors() {
-        when(questionSetupCompetitionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
+        when(competitionSetupQuestionService.getQuestion(questionNotFoundId)).thenThrow(new ObjectNotFoundException());
         CompetitionSetupForm result = populator.populateForm(competitionResource, Optional.of(questionNotFoundId));
         assertEquals(null, result);
     }
