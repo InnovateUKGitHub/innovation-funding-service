@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -51,7 +53,8 @@ public class ApplicantDashboardPopulator {
     public ApplicantDashboardViewModel populate(Long userId) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);
-        List<ProjectResource> projectsInSetup = projectService.findByUser(userId).getSuccess();
+        List<ProjectResource> allProjects = projectService.findByUser(userId).getSuccess();
+        List<ProjectResource> projectsInSetup = getNonWithdrawnProjects(allProjects);
 
         Map<Long, ApplicationState> applicationStatusMap = createApplicationStateMap(allApplications);
         List<ApplicationResource> inProgressApplications = simpleFilter(allApplications, this::applicationInProgress);
@@ -68,6 +71,7 @@ public class ApplicantDashboardPopulator {
 
         List<Long> applicationsAssigned = getAssignedApplications(inProgressProcessRoles);
         List<Long> leadApplicantApplications = getLeadApplicantApplications(inProgressProcessRoles);
+        List<Long> applicationsWithWithdrawnProjects = getApplicationsWithWithdrawnProjects(allProjects);
 
         Map<Long, CompetitionResource> competitionApplicationMap = createCompetitionMap(userId, inProgressApplications, finishedApplications, getApplicationsForProjectsInSetup(projectsInSetup));
 
@@ -78,7 +82,8 @@ public class ApplicantDashboardPopulator {
                                                projectsInSetup,
                                                competitionApplicationMap,
                                                applicationStatusMap,
-                                               leadApplicantApplications);
+                                               leadApplicantApplications,
+                                               applicationsWithWithdrawnProjects);
     }
 
     private List<ApplicationResource> getAllApplicationsAsApplicant(Long userId, List<ProcessRoleResource> usersProcessRoles) {
@@ -102,8 +107,23 @@ public class ApplicantDashboardPopulator {
         );
     }
 
+    private List<ProjectResource> getNonWithdrawnProjects(List<ProjectResource> allProjects) {
+        return simpleFilter(
+                allProjects,
+                projectResource -> !projectResource.isWithdrawn()
+        );
+    }
+
+    private List<Long> getApplicationsWithWithdrawnProjects(List<ProjectResource> allProjects) {
+        return allProjects
+                .stream()
+                .filter(ProjectResource::isWithdrawn)
+                .map(ProjectResource::getApplication)
+                .collect(toList());
+    }
+
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
-        return processRoleResource.getRole() == Role.APPLICANT.getId() ||
+        return processRoleResource.getRole() == APPLICANT.getId() ||
                 processRoleResource.getRole() == LEADAPPLICANT.getId() ||
                 processRoleResource.getRole() == COLLABORATOR.getId();
     }

@@ -42,6 +42,9 @@ public class ProjectResource {
         return offerSubmittedDate != null;
     }
 
+    @JsonIgnore
+    public boolean isWithdrawn() { return projectState.equals(ProjectState.WITHDRAWN); }
+
     public Long getId() {
         return id;
     }
