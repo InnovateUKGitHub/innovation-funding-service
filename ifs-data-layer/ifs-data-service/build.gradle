@@ -6,6 +6,7 @@ apply plugin: 'org.asciidoctor.convert'
 
 apply from: "db-reset.gradle"
 apply from: "db-baseline.gradle"
+apply from: "finance-data-service-sync.gradle"
 
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 apply from: rootProject.file("gradle-support/prepare-docker.gradle")

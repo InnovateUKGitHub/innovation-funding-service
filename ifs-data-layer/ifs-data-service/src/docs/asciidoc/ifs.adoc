@@ -166,6 +166,10 @@ include::competitionSetupQuestion.adoc[]
 == Competition Setup Finance
 include::competitionSetupFinance.adoc[]
 
+[[costTotals]]
+== Cost Totals
+include::cost-totals.adoc[]
+
 [[inviteorganisation]]
 == Invite Organisation
 include::invite-organisation.adoc[]

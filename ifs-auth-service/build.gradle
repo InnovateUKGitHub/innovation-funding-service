@@ -4,7 +4,7 @@ allprojects {
     buildscript {
 
         repositories {
-            mavenCentral()
+            jcenter()
         }
     }
 
@@ -26,7 +26,7 @@ subprojects {
 }
 
 buildscript {
-    repositories { mavenCentral() }
+    repositories { jcenter() }
 }
 
 def String spCertsVolume = 'ifs-sp-service/src/main/docker/certs'
