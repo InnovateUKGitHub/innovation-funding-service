@@ -9,8 +9,8 @@ gulp_default.dependsOn 'npmInstall'
 
 def srcDir = new File(projectDir, "src/main/resources/static")
 def targetDir = new File(project.buildDir, "resources/main/static")
-gulp_dist.inputs.dir srcDir
-gulp_dist.outputs.dir targetDir
+gulp_default.inputs.dir srcDir
+gulp_default.outputs.dir targetDir
 
 processResources.dependsOn gulp_default
 
