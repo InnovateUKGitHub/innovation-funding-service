@@ -46,9 +46,7 @@ public interface ProjectService {
  	@PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<OrganisationResource> getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "ADD_PARTNER",
-            description = "The System Registration user can add a partner to a project")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'ADD_PARTNER')")
     ServiceResult<ProjectUser> addPartner(Long projectId, Long userId, Long organisationId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")

@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.security;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -21,5 +24,10 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ", description = "Internal users can see project resources")
     public boolean internalUsersCanViewProjects(final ProjectResource project, final UserResource user) {
         return isInternal(user);
+    }
+
+    @PermissionRule(value = "ADD_PARTNER", description = "The System Registration user can add a partner to a project")
+    public boolean systemRegistrarCanAddPartnersToProject(final ProjectResource project, final UserResource user) {
+        return isSystemRegistrationUser(user) && isProjectSetupPending(project.getId());
     }
 }
