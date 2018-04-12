@@ -215,13 +215,6 @@ public class ApplicationSubmitControllerTest extends BaseControllerMockMVCTest<A
                 .andExpect(model().attribute("projectWithdrawn", true));
     }
 
-//    @Test
-//    public void testApplicationSummaryWithdrawnProjectCheck() throws Exception {
-//        CompetitionResource comp = competitionResources.get(0);
-//        comp.setCompetitionStatus(PROJECT_SETUP);
-//
-//        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource();
-//    }
 
     @Test
     public void testApplicationSummaryReadyForReviewAction() throws Exception {
