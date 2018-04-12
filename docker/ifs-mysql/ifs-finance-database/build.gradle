@@ -16,13 +16,6 @@ createContainer.cmd = cmd
 createContainer.portBindings = ['3307:3306']
 createContainer.hostName="ifs-finance-database"
 
-def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.property('ifs.finance-data-service.enabled').toBoolean() : true
-stop.enabled = enabled
-removeContainer.enabled = enabled
-buildDocker.enabled = enabled
-createContainer.enabled = enabled
-deploy.enabled =enabled
-wait.enabled = enabled
 
 
 

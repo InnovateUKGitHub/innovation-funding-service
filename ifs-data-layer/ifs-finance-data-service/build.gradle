@@ -96,6 +96,8 @@ test {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
     finalizedBy asciidoctor
+    dependsOn ":docker:ifs-mysql:ifs-finance-database:initDB"
+
 }
 
 asciidoctor {

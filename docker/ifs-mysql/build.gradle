@@ -38,7 +38,12 @@ subprojects {
     createContainer.cmd = cmd
 
     createContainer.enabled = true
-    deploy.enabled = false
+    deploy.enabled = true
+    wait.enabled = true
+    stop.enabled = true
+    removeContainer.enabled = true
+
+    //TODO I think we can change our onlyIf's to enabled?
 
     buildDocker.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
     stop.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
@@ -46,9 +51,7 @@ subprojects {
     createContainer.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
     deploy.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
 
-    wait.enabled = true
-    stop.enabled = true
-    removeContainer.enabled = true
+
 
 
     task createTestSchema(type: Exec) {
