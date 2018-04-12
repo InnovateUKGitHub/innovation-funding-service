@@ -187,8 +187,9 @@ partner fills in his bank details
 
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
-    the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
-    ${finance_contact}  ${val}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=#project-details-finance tr:nth-of-type(1):contains("Yes")
+    the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/
+    ${finance_contact}  ${val}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=.progress-list li:nth-child(1):contains("Completed")
+    the user clicks the button/link   link=Project details
     run keyword if  '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
@@ -257,6 +258,15 @@ navigate to external finance contact page, choose finance contact and save
     the user navigates to the page     ${server}/project-setup/project/${project}/details/finance-contact?organisation=${org_id}
     the user selects the radio button  financeContact  ${financeContactSelector}
     the user clicks the button/link    jQuery=.button:contains("Save")
+    ${project_details}  ${complete}=  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery=a:contains("Select project location")
+    run keyword if  '${project_details}' == 'PASS'  select project location  ${project}  ${org_id}
+
+Select project location
+    [Arguments]  ${project}  ${org_id}
+    the user navigates to the page    ${server}/project-setup/project/${project}/organisation/${org_id}/partner-project-location
+    the user enters text to a text field  css=#postCode  BA16NJ
+    the user clicks the button/link     jQuery=.button:contains("Save project location")
+    the user clicks the button/link    jQuery=a:contains("Project setup status")
 
 bank details are approved for all businesses
     partners submit bank details
