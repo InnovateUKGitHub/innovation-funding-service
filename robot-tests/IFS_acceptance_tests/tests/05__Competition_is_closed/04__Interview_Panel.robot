@@ -125,7 +125,7 @@ CompAdmin resends the interview panel invite
     And the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
 
-CompAdmin Views the assessors thta have accepted the interview panel invite
+CompAdmin Views the assessors that have accepted the interview panel invite
     [Documentation]  IFS-3201
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
