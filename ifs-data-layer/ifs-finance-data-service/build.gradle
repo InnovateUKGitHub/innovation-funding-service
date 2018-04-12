@@ -95,7 +95,10 @@ test {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
     finalizedBy asciidoctor
-    dependsOn ":docker:ifs-mysql:ifs-finance-database:initDB"
+
+    if (targetBuild == 'docker') {
+        dependsOn ":docker:ifs-mysql:ifs-finance-database:initDB"
+    }
 
 }
 

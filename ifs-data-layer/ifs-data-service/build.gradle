@@ -132,7 +132,9 @@ test {
     systemProperty 'pact.rootDir', project.getProperty('pactDir')
 
     finalizedBy asciidoctor
-    dependsOn ":docker:ifs-mysql:ifs-database:initDB"
+    if (targetBuild == 'docker') {
+        dependsOn ":docker:ifs-mysql:ifs-database:initDB"
+    }
 }
 
 asciidoctor {
