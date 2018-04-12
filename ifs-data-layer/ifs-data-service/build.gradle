@@ -32,7 +32,6 @@ tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":late
 def enabled = project.hasProperty('ifs.data-service.enabled') ? project.property('ifs.data-service.enabled').toBoolean() : true
 stop.enabled = enabled
 removeContainer.enabled = enabled
-buildDocker.enabled = enabled
 createContainer.enabled = enabled
 deploy.enabled =enabled
 wait.enabled = enabled

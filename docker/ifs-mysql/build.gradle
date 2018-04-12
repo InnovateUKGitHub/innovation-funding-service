@@ -37,7 +37,6 @@ subprojects {
 
     createContainer.cmd = cmd
 
-    buildDocker.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
     createContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
     deploy.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
     wait.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false

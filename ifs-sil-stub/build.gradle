@@ -70,7 +70,6 @@ createContainer.containerName="sil-stub"
 createContainer.containerId="sil-stub"
 createContainer.portBindings = ['8091:8080']
 
-buildDocker.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 createContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 deploy.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 wait.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false

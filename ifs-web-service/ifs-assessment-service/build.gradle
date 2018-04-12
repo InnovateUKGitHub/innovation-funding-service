@@ -16,7 +16,6 @@ createContainer.portBindings = ['9002:8000']
 def enabled = project.hasProperty('ifs.assessment-service.enabled') ? project.property('ifs.assessment-service.enabled').toBoolean() : true
 stop.enabled = enabled
 removeContainer.enabled = enabled
-buildDocker.enabled = enabled
 createContainer.enabled = enabled
 deploy.enabled =enabled
 wait.enabled = enabled

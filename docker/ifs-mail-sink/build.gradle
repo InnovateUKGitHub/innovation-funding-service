@@ -11,7 +11,6 @@ createContainer.containerName="mail"
 createContainer.containerId="mail"
 createContainer.portBindings = ['8765:8080',  "9876:8143"]
 
-buildDocker.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 createContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 deploy.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
 wait.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
