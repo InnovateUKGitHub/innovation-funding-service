@@ -76,13 +76,13 @@ CompAdmin can add or remove the applications from the invite list
     Run Keyword If  '${status}' == 'PASS'  the user moves the closed competition to panel
     And the user clicks the button/link         link=Manage interview panel
     When the user clicks the button/link        link=Assign applications
-    Then the user check for Key Statistics for submitted application
+    Then the user checks for Key Statistics for submitted application
     And the competition admin selects the applications and adds them to the invite list
     And the compadmin can remove an assessor or application from the invite list   ${crowd_source_application_name}
 
 Competition Admin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
-    [Documentation]  IFS-2782  IFS-3155
+    [Documentation]  IFS-2782  IFS-3155   IFS-2635
     [Tags]
     Given the user clicks the button/link      link=Invite
     When the user clicks the button/link       link=Review and send invites
@@ -94,7 +94,7 @@ Competition Admin can send or cancel sending the invitation to the applicants
     And the user clicks the button/link        css=.button[type="submit"]     #Send invite
     Then the user reads his email              aaron.robertson@load.example.com   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
     And the Competition Admin should see the assigned applications in the View status tab
-    And the user check for Key Statistics for assigned to interview panel
+    And the user checks for Key Statistics for assigned to interview panel
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -172,12 +172,14 @@ the Competition Admin should see the assigned applications in the View status ta
     the user should see the element         jQuery=td:contains("${Neural_network_application}")
     the user should see the element         jQuery=td:contains("${computer_vision_application}")
 
-the user check for Key Statistics for submitted application
+the user checks for Key Statistics for submitted application
+    the user should see the element    jQuery=div span:contains("6") ~ small:contains("Applications in competition")
+    the user should see the element    jQuery=div span:contains("0") ~ small:contains("Assigned to interview panel")
     Get the total number of submitted applications
     ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${Application_in_comp}
 
-the user check for Key Statistics for assigned to interview panel
+the user checks for Key Statistics for assigned to interview panel
     ${Assigned_applications}=  Get Text  css=div:nth-child(2) > div > span
     ${Application_sent}=  Get Text  css=div:nth-child(7) > div>:nth-child(1)
     Should Be Equal As Integers    ${Assigned_applications}   ${Application_sent}
