@@ -11,8 +11,9 @@ createContainer.containerName="mail"
 createContainer.containerId="mail"
 createContainer.portBindings = ['8765:8080',  "9876:8143"]
 
-buildDocker.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-stop.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-removeContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-createContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-deploy.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+buildDocker.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+createContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+deploy.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+wait.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+stop.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+removeContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
