@@ -111,7 +111,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         long competitionId = 1L;
         ReviewKeyStatisticsResource reviewKeyStatisticsResource = reviewKeyStatisticsResourceBuilder.build();
 
-        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
+        when(reviewStatisticsServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competitionStatistics/{method-name}",
@@ -127,7 +127,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         long competitionId = 1L;
         ReviewInviteStatisticsResource reviewInviteStatisticsResource = reviewInviteStatisticsResourceBuilder.build();
 
-        when(assessmentServiceMock.getReviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
+        when(reviewStatisticsServiceMock.getReviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document("competitionStatistics/{method-name}",

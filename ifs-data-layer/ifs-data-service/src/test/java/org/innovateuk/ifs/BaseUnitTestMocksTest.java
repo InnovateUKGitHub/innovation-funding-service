@@ -124,6 +124,7 @@ import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
+import org.innovateuk.ifs.review.transactional.ReviewStatisticsService;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
@@ -784,6 +785,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ReviewRejectOutcomeMapper reviewRejectOutcomeMapperMock;
+
+    @Mock
+    protected ReviewStatisticsService reviewStatisticsServiceMock;
 
     @Before
     public void setupMockInjection() {

@@ -57,10 +57,6 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Mock
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
-    @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
-
-
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {
         return new CompetitionManagementCompetitionController();

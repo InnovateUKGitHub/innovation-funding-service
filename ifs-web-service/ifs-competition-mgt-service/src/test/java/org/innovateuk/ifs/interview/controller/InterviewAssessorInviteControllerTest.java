@@ -52,6 +52,7 @@ import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilde
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.interview.builder.InterviewInviteStatisticsResourceBuilder.newInterviewInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
@@ -108,6 +109,7 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+        when(competitionKeyStatisticsRestService.getInterviewInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(newInterviewInviteStatisticsResource().build()));
     }
 
     @Test
@@ -142,9 +144,10 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService);
+        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService, competitionKeyStatisticsRestService);
         inOrder.verify(interviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(interviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -172,9 +175,10 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService);
+        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService, competitionKeyStatisticsRestService);
         inOrder.verify(interviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(interviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -212,9 +216,10 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService);
+        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService, competitionKeyStatisticsRestService);
         inOrder.verify(interviewInviteRestService).getAvailableAssessorIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(interviewInviteRestService).getAvailableAssessors(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }
@@ -354,8 +359,9 @@ public class InterviewAssessorInviteControllerTest extends BaseControllerMockMVC
         assertCompetitionDetails(competition, result);
         assertInvitedAssessors(assessorCreatedInviteResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService, categoryRestServiceMock);
+        InOrder inOrder = inOrder(competitionRestService, interviewInviteRestService, categoryRestServiceMock, competitionKeyStatisticsRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(competitionKeyStatisticsRestService).getInterviewInviteStatisticsByCompetition(competition.getId());
         inOrder.verify(interviewInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
     }

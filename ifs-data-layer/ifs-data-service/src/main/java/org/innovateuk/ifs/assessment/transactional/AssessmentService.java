@@ -45,19 +45,7 @@ public interface AssessmentService {
             description = "Comp admins and execs can see a count of assessments in a particular state per competition")
     ServiceResult<Integer> countByStateAndCompetition(AssessmentState state, long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(
-            value = "READ_ASSESSMENT_PANEL_KEY_STATISTICS",
-            description = "Comp admins and project finance users can see key statistics for the assessment panel page")
-    ServiceResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId);
-
-    // TODO can we split this up? Move stats into a new service?
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(
-            value = "READ_REVIEW_INVITE_STATISTICS",
-            description = "Comp admins and project finance users can see invite statistics for the assessment review panel invite page")
-    ServiceResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(long competitionId);
+    // TODO move on to a new service
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(

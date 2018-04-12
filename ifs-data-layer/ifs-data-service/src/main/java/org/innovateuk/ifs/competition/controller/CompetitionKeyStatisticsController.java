@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsServ
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
+import org.innovateuk.ifs.review.transactional.ReviewStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,11 +24,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping({"/competitionStatistics/{id}", "/competition-statistics/{id}"})
 public class CompetitionKeyStatisticsController {
 
-    @Autowired
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
-
-    @Autowired
+    private ReviewStatisticsService reviewStatisticsService;
     private AssessmentService assessmentService;
+
+
+    // TODO remove our dependency on AssessmentService as we're not doing anything with assessments here
+    // maybe we want review statistics controller, and interview statistics controller
+    @Autowired
+    public CompetitionKeyStatisticsController(CompetitionKeyStatisticsService competitionKeyStatisticsService,
+                                              ReviewStatisticsService reviewStatisticsService,
+                                              AssessmentService assessmentService) {
+        this.competitionKeyStatisticsService = competitionKeyStatisticsService;
+        this.reviewStatisticsService = reviewStatisticsService;
+        this.assessmentService = assessmentService;
+    }
+
+    public CompetitionKeyStatisticsController() {
+
+    }
 
     @GetMapping({"/readyToOpen", "/ready-to-open"})
     public RestResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatistics(@PathVariable("id") long id) {
@@ -54,14 +69,14 @@ public class CompetitionKeyStatisticsController {
         return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
     }
 
-    @GetMapping("/review")
-    public RestResult<ReviewKeyStatisticsResource> getInAssessmentPanelKeyStatistics(@PathVariable("id") long id) {
-        return assessmentService.getAssessmentPanelKeyStatistics(id).toGetResponse();
+    @GetMapping({"/review", "/panel"})
+    public RestResult<ReviewKeyStatisticsResource> getReviewStatistics(@PathVariable("id") long id) {
+        return reviewStatisticsService.getAssessmentPanelKeyStatistics(id).toGetResponse();
     }
 
     @GetMapping({"/panelInvites", "/review-invites"})
     public RestResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(@PathVariable("id") long id) {
-        return assessmentService.getReviewInviteStatistics(id).toGetResponse();
+        return reviewStatisticsService.getReviewInviteStatistics(id).toGetResponse();
     }
 
     @GetMapping("/interview-invites")

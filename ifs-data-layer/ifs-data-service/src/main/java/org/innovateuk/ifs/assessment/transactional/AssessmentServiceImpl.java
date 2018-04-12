@@ -64,7 +64,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    protected static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
+    public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
             .stream().map(ApplicationState::getBackingState).collect(toSet());
 
 
@@ -85,12 +85,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
-
-    @Autowired
-    private ReviewInviteRepository reviewInviteRepository;
-
-    @Autowired
-    private ReviewParticipantRepository reviewParticipantRepository;
 
     @Autowired
     private InterviewInviteRepository interviewInviteRepository;
@@ -172,35 +166,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         );
     }
 
-    @Override
-    public ServiceResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
-        ReviewKeyStatisticsResource reviewKeyStatisticsResource = new ReviewKeyStatisticsResource();
-        List<Long> assessmentPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
-
-        reviewKeyStatisticsResource.setApplicationsInPanel(getApplicationPanelAssignedCountStatistic(competitionId));
-        reviewKeyStatisticsResource.setAssessorsAccepted(getReviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
-        reviewKeyStatisticsResource.setAssessorsPending(reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
-
-        return serviceSuccess(reviewKeyStatisticsResource);
-    }
-
-    private int getApplicationPanelAssignedCountStatistic(long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                competitionId, SUBMITTED_STATES, "",  null,true).size();
-    }
-
-    @Override
-    public ServiceResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(long competitionId) {
-        List<Long> reviewPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
-
-        int totalAssessorsInvited = reviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
-        int assessortsAccepted = getReviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, reviewPanelInviteIds);
-        int assessorsDeclined = getReviewParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, reviewPanelInviteIds);
-
-        return serviceSuccess(
-                new ReviewInviteStatisticsResource(totalAssessorsInvited, assessortsAccepted, assessorsDeclined)
-        );
-    }
 
     @Override
     public ServiceResult<InterviewInviteStatisticsResource> getInterviewInviteStatistics(long competitionId) {
@@ -219,9 +184,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
         );
     }
 
-    private int getReviewParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
-        return reviewParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, PANEL_ASSESSOR, status, inviteIds);
-    }
 
     private int getInterviewParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
         return interviewParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, INTERVIEW_ASSESSOR, status, inviteIds);

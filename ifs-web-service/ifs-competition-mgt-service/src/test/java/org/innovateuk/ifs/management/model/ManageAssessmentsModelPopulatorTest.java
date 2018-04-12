@@ -46,7 +46,7 @@ public class ManageAssessmentsModelPopulatorTest extends BaseUnitTest {
                 .build();
 
         when(competitionRestService.getCompetitionById(expectedCompetitionId)).thenReturn(restSuccess(competitionResource));
-        when(competitionKeyStatisticsRestServiceMock.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
+        when(competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(expectedCompetitionId)).thenReturn(restSuccess(statisticsResource));
 
         ManageAssessmentsViewModel expectedModel = new ManageAssessmentsViewModel(competitionResource, statisticsResource);
 
