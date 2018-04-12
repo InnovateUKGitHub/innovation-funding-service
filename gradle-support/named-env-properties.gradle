@@ -25,6 +25,6 @@ ext.CLUSTER_ADDRESS="prod.ifs-test-clusters.com"
 
 ext.MAIL_ADDRESS="mail-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 ext.ADMIN_ADDRESS="admin-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
-
+ext.FRACTAL_ADDRESS="fractal-"+project.properties['openshiftEnv']+".apps."+project.properties['CLUSTER_ADDRESS']
 
 ext.FILE_UPLOAD_CLAIM=project.properties['openshiftEnv']+"-file-upload-claim"
