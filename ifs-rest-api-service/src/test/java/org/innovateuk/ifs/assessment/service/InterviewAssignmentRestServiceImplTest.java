@@ -14,7 +14,9 @@ import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentInvitedResourceBuilder.newInterviewAssignmentApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
@@ -96,6 +98,20 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
         setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "staged-applications", competitionId), InterviewAssignmentStagedApplicationPageResource.class, expected);
 
         InterviewAssignmentStagedApplicationPageResource actual = service.getStagedApplications(competitionId, page).getSuccess();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAssignedApplications() {
+        long competitionId = 1L;
+        int page = 1;
+        InterviewAssignmentApplicationPageResource expected = newInterviewAssignmentApplicationPageResource()
+                .withContent(newInterviewAssignmentApplicationResource().build(2))
+                .build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "assigned-applications", competitionId), InterviewAssignmentApplicationPageResource.class, expected);
+
+        InterviewAssignmentApplicationPageResource actual = service.getAssignedApplications(competitionId, page).getSuccess();
         assertEquals(expected, actual);
     }
 
