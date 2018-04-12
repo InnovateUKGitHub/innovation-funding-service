@@ -85,12 +85,20 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
     }
 
     @Test
+    public void testCanAccessPartnerProjectLocationPageWhenPartnerProjectLocationNotRequired() {
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, false));
+
+        verifyInteractions();
+    }
+
+    @Test
     public void testCanAccessPartnerProjectLocationPageWhenCompaniesHouseIsIncomplete() {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(false);
 
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation));
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, true));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
@@ -105,7 +113,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerAssigned()).thenReturn(true);
 
-        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation));
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, true));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
@@ -121,7 +129,7 @@ public class SetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isMonitoringOfficerAssigned()).thenReturn(false);
 
-        assertEquals(ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation));
+        assertEquals(ACCESSIBLE, accessor.canAccessPartnerProjectLocationPage(organisation, true));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),

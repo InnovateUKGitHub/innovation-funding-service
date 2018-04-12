@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.form.mapper;
 
-import org.innovateuk.ifs.application.mapper.QuestionStatusMapper;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceRowMapper;
+import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.mapstruct.*;
 
 @Mapper(
@@ -14,7 +13,6 @@ import org.mapstruct.*;
     uses = {
         SectionMapper.class,
         CompetitionMapper.class,
-        QuestionStatusMapper.class,
         FormInputMapper.class,
         ApplicationFinanceRowMapper.class
     }

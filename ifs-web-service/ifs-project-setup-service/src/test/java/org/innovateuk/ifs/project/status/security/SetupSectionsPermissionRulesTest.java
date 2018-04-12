@@ -94,11 +94,21 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Test
     public void partnerProjectLocationPageAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessPartnerProjectLocationPage, () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(123L), user));
+        setUpPartnerProjectLocationRequiredMocking();
+
+        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation, true),
+                () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void monitoringOfficerSectionAccess() {
+        setUpPartnerProjectLocationRequiredMocking();
+
+        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, true),
+                () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(123L), user));
+    }
+
+    private void setUpPartnerProjectLocationRequiredMocking() {
         Long projectId = 123L;
         Long applicationId = 1L;
         Long competitionId = 11L;
@@ -120,10 +130,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(projectServiceMock.getById(projectId)).thenReturn(projectInDb);
         when(applicationServiceMock.getById(applicationId)).thenReturn(applicationInDb);
         when(competitionServiceMock.getById(competitionId)).thenReturn(competitionInDb);
-
-
-        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, true),
-                () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(123L), user));
     }
 
     @Test

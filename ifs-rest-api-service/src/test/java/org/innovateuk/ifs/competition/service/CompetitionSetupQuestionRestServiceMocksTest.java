@@ -47,7 +47,7 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
 
     @Test
     public void test_deleteById() {
-        long questionId = 1L;
+        final Long questionId = 1L;
         setupDeleteWithRestResultExpectations(competitionsRestURL + "/deleteById/" + questionId);
 
         RestResult<Void> response = service.deleteById(questionId);

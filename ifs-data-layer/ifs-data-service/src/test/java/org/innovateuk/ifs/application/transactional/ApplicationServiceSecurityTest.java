@@ -2,11 +2,14 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
+import org.innovateuk.ifs.competition.security.CompetitionPermissionRules;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -23,8 +26,7 @@ import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.ne
 import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
-import static org.innovateuk.ifs.user.resource.Role.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -33,12 +35,14 @@ import static org.mockito.Mockito.*;
  */
 public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<ApplicationService> {
     private ApplicationPermissionRules applicationRules;
+    private CompetitionPermissionRules competitionRules;
     private ApplicationLookupStrategy applicationLookupStrategy;
     private CompetitionLookupStrategy competitionLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
         applicationRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
+        competitionRules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
         applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
         competitionLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
     }
@@ -146,6 +150,27 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                             isA(UserResource.class));
                 }
         );
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() {
+        Long competitionId = 1L;
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+
+        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, ""), () -> {
+            verify(competitionRules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(competitionRules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+            verifyNoMoreInteractions(competitionRules);
+        });
+    }
+
+    @Test
+    public void getApplicationsByState() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
+                classUnderTest.getApplicationsByState(EnumSet.of(ApplicationState.SUBMITTED, ApplicationState
+                        .REJECTED)), SYSTEM_MAINTAINER);
     }
 
     @Override

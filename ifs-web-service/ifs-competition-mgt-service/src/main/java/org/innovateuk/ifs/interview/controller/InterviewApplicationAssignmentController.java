@@ -7,6 +7,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsFindModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsInviteModelPopulator;
+import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsStatusModelPopulator;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsFindViewModel;
 import org.innovateuk.ifs.invite.resource.StagedApplicationListResource;
@@ -52,6 +53,9 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
 
     @Autowired
     private InterviewAssignmentApplicationsInviteModelPopulator interviewAssignmentApplicationsInviteModelPopulator;
+
+    @Autowired
+    private InterviewAssignmentApplicationsStatusModelPopulator interviewAssignmentApplicationsStatusModelPopulator;
 
     @Override
     protected String getCookieName() {
@@ -219,15 +223,67 @@ public class InterviewApplicationAssignmentController extends CompetitionManagem
     public String invite(Model model,
                          @PathVariable("competitionId") long competitionId,
                          @RequestParam(defaultValue = "0") int page,
-                         @RequestParam MultiValueMap<String, String> queryParams) {
+                         @RequestParam MultiValueMap<String, String> queryParams,
+                         @ModelAttribute(name = "form", binding = false) InterviewAssignmentSelectionForm selectionForm,
+                         @SuppressWarnings("unused") BindingResult bindingResult) {
 
         String originQuery = buildOriginQueryString(INTERVIEW_PANEL_INVITE, queryParams);
 
         model.addAttribute("model", interviewAssignmentApplicationsInviteModelPopulator
                 .populateModel(competitionId, page, originQuery));
+        model.addAttribute("form", selectionForm);
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/interview/application-invite";
+    }
+
+    @PostMapping(value = "/invite", params = "remove")
+    public String remove(Model model,
+                         @PathVariable("competitionId") long competitionId,
+                         @RequestParam("remove") long applicationId,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam MultiValueMap<String, String> queryParams,
+                         @ModelAttribute(name = "form") InterviewAssignmentSelectionForm selectionForm,
+                         @SuppressWarnings("unused") BindingResult bindingResult,
+                         ValidationHandler validationHandler) {
+
+        Supplier<String> failureAndSuccess = () -> invite(model, competitionId, page, queryParams, selectionForm, bindingResult);
+
+        RestResult<Void> result = interviewAssignmentRestService.unstageApplication(applicationId);
+        return validationHandler.addAnyErrors(result)
+                .failNowOrSucceedWith(failureAndSuccess, failureAndSuccess);
+    }
+
+    @PostMapping(value = "/invite", params = "removeAll")
+    public String removeAll(Model model,
+                         @PathVariable("competitionId") long competitionId,
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam MultiValueMap<String, String> queryParams,
+                         @ModelAttribute(name = "form") InterviewAssignmentSelectionForm selectionForm,
+                         @SuppressWarnings("unused") BindingResult bindingResult,
+                         ValidationHandler validationHandler) {
+
+        Supplier<String> successView = () -> redirectToFind(competitionId, 0, Optional.empty());
+        Supplier<String> failureView = () -> invite(model, competitionId, page, queryParams, selectionForm, bindingResult);
+
+        RestResult<Void> result = interviewAssignmentRestService.unstageApplications(competitionId);
+        return validationHandler.addAnyErrors(result)
+                .failNowOrSucceedWith(failureView, successView);
+    }
+
+    @GetMapping("/view-status")
+    public String viewStatus(Model model,
+                             @PathVariable("competitionId") long competitionId,
+                             @RequestParam(defaultValue = "0") int page,
+                             @RequestParam MultiValueMap<String, String> queryParams) {
+
+        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.INTERVIEW_PANEL_STATUS, queryParams);
+
+        model.addAttribute("model", interviewAssignmentApplicationsStatusModelPopulator
+                .populateModel(competitionId, page, originQuery));
+        model.addAttribute("originQuery", originQuery);
+
+        return "assessors/interview/application-view-status";
     }
 
     private String redirectToInvite(long competitionId, int page) {

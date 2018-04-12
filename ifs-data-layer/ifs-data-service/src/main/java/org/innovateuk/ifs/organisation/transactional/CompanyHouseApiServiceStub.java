@@ -30,7 +30,7 @@ public class CompanyHouseApiServiceStub implements CompanyHouseApiService {
 
     @Override
     public ServiceResult<List<OrganisationSearchResult>> searchOrganisations(String encodedSearchText) {
-        return encodedSearchText.equals("no results") ?
+        return encodedSearchText.equals("innoavte") ?
                 serviceSuccess(emptyList()) :
                 serviceSuccess(asList(getHiveIt(), getWorthIt(), getNomensa(), getInnovate(), getUniversityOfLiverpool()));
     }

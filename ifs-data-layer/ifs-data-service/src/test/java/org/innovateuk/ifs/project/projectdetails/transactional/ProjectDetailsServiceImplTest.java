@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -50,6 +52,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.validation.ValidationConstants.MAX_POST_CODE_LENGTH;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
@@ -314,6 +317,56 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
+    public void testUpdateProjectDurationWhenDurationLessThanAMonth() {
+
+        long projectId = 123L;
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 0L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
+
+        ServiceResult<Void> updateResult2 = service.updateProjectDuration(projectId, -3L);
+        assertTrue(updateResult2.isFailure());
+        assertTrue(updateResult2.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH));
+    }
+
+    @Test
+    public void testUpdateProjectDurationWhenSpendProfileAlreadyGenerated() {
+
+        long projectId = 123L;
+
+        List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
+        when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfiles);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
+    }
+
+    @Test
+    public void testUpdateProjectDurationWhenProjectDoesNotExist() {
+
+        long projectId = 123L;
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, 36L);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+    }
+
+    @Test
+    public void testUpdateProjectDurationSuccess() {
+
+        long projectId = 123L;
+        long durationInMonths = 36L;
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
+
+        ServiceResult<Void> updateResult = service.updateProjectDuration(projectId, durationInMonths);
+        assertTrue(updateResult.isSuccess());
+        assertEquals(durationInMonths, (long) existingProject.getDurationInMonths());
+    }
+
+    @Test
     public void testUpdateFinanceContact() {
 
         Project project = newProject().withId(123L).build();
@@ -444,18 +497,32 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(GENERAL_INVALID_ARGUMENT));
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
         postCode = "";
         updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(GENERAL_INVALID_ARGUMENT));
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
         postCode = "    ";
         updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
         assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(GENERAL_INVALID_ARGUMENT));
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.must.not.be.blank", HttpStatus.BAD_REQUEST)));
 
+    }
+
+    @Test
+    public void testUpdatePartnerProjectLocationWhenPostCodeEnteredExceedsMaxLength() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        String postCode = "SOME LONG POSTCODE";
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<Void> updateResult = service.updatePartnerProjectLocation(projectOrganisationCompositeId, postCode);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(new Error("validation.field.too.many.characters", asList("", MAX_POST_CODE_LENGTH), HttpStatus.BAD_REQUEST)));
     }
 
     @Test
