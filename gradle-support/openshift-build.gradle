@@ -4,7 +4,6 @@ apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 
 buildscript {
     repositories {
-        mavenCentral()
         jcenter()
     }
 

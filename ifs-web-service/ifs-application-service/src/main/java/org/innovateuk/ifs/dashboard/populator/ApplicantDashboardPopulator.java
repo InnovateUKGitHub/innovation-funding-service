@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
@@ -211,12 +212,22 @@ public class ApplicantDashboardPopulator {
 
     @SafeVarargs
     private final Map<Long, CompetitionResource> createCompetitionMap(Long userId, List<ApplicationResource>... resources) {
-        List<CompetitionResource> allUserCompetitions = competitionRestService.getCompetitionsByUserId(userId).getSuccess();
+        List<CompetitionResource> allUserCompetitions = getAllCompetitionsForUser(userId);
 
         return simpleToMap(
                 combineLists(resources),
                 ApplicationResource::getId,
                 application -> getCompetitionFromApplication(application, allUserCompetitions)
                 );
+    }
+
+    private  List<CompetitionResource> getAllCompetitionsForUser(Long userId) {
+        List<ApplicationResource> userApplications = applicationRestService.getApplicationsByUserId(userId).getSuccess();
+        List<Long> competitionIdsForUser = userApplications.stream()
+                .map(ApplicationResource::getCompetition)
+                .distinct()
+                .collect(Collectors.toList());
+
+        return simpleMap(competitionIdsForUser, id -> competitionRestService.getCompetitionById(id).getSuccess());
     }
 }

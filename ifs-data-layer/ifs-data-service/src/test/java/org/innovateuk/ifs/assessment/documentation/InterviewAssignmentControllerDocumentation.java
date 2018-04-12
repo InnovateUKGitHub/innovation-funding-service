@@ -21,6 +21,8 @@ import static org.innovateuk.ifs.documentation.AvailableApplicationPageResourceD
 import static org.innovateuk.ifs.documentation.AvailableApplicationResourceDocs.availableApplicationResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationListResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.stagedApplicationResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentApplicationResourceDocs.interviewAssignmentAssignedResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentAssignedPageResourceDocs.*;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInvitePageResourceDocs.interviewAssignmentCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.InterviewAssignmentCreatedInviteResourceDocs.interviewAssignmentCreatedInviteResourceFields;
@@ -124,6 +126,36 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
     }
 
     @Test
+    public void getAssignedApplications() throws Exception {
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        when(interviewAssignmentInviteServiceMock.getAssignedApplications(competitionId, pageable)).thenReturn(serviceSuccess(interviewAssignmentAssignedPageResourceBuilder.build()));
+
+        mockMvc.perform(get("/interview-panel/assigned-applications/{competitionId}", 1L)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "name,asc"))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition")
+                        ),
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
+                        ),
+                        responseFields(interviewAssignmentAssignedPageResourceFields)
+                                .andWithPrefix("content[].", interviewAssignmentAssignedResourceFields)
+                ));
+
+        verify(interviewAssignmentInviteServiceMock, only()).getAssignedApplications(competitionId, pageable);
+    }
+
+    @Test
     public void getAvailableApplicationIds() throws Exception {
         when(interviewAssignmentInviteServiceMock.getAvailableApplicationIds(competitionId)).thenReturn(serviceSuccess(asList(1L, 2L)));
 
@@ -133,7 +165,7 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
-                        responseFields(fieldWithPath("[].").description("List of available application ids "))
+                        responseFields(fieldWithPath("[].").description("List of available application ids"))
                 ));
 
         verify(interviewAssignmentInviteServiceMock, only()).getAvailableApplicationIds(competitionId);
@@ -162,7 +194,11 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
         mockMvc.perform(post("/interview-panel/unstage-applications/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("interview-panel/{method-name}"));
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to unstage all applications on")
+                        )
+                ));
 
         verify(interviewAssignmentInviteServiceMock, only()).unstageApplications(competitionId);
     }

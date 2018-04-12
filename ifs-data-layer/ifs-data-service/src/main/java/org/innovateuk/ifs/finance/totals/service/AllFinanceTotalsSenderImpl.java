@@ -9,13 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 /**
  * Service sends cost totals for all submitted {@link Application}s.
  */
 @Service
-public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender{
+public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender {
     private static final Logger LOG = LoggerFactory.getLogger(AllFinanceTotalsSenderImpl.class);
 
     @Autowired
@@ -28,7 +28,7 @@ public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender{
     public ServiceResult<Void> sendAllFinanceTotals() {
         LOG.debug("Initiating sendAllFinanceTotals.");
 
-        Stream<Application> applications = applicationService.getApplicationsByState(ApplicationState.submittedAndFinishedStates)
+        List<Application> applications = applicationService.getApplicationsByState(ApplicationState.submittedStates)
                 .getSuccess();
         applications.forEach(app -> applicationFinanceTotalsSender.sendFinanceTotalsForApplication(app.getId()));
 
