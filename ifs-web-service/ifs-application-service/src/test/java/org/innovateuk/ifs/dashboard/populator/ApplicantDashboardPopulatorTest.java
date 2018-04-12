@@ -86,6 +86,7 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                                     .withCompetition(competitionResource.getId()).build());
 
         when(competitionRestService.getCompetitionsByUserId(loggedInUser.getId())).thenReturn(restSuccess(competitionResources));
+        when(competitionRestService.getCompetitionById(compInProjectSetup.getId())).thenReturn(restSuccess(compInProjectSetup));
 
         when(applicationRestService.getAssignedQuestionsCount(anyLong(), anyLong())).thenReturn(restSuccess(2));  
 
