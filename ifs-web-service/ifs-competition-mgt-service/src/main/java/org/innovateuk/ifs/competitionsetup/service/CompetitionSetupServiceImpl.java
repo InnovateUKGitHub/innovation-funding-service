@@ -298,9 +298,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		if (isCompetitionReadyToOpen(competitionResource)) {
 			return competitionSetupRestService.markAsSetup(competitionId).toServiceResult();
 		} else {
-			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
-					"Please check all the madatory sections are done");
-			throw new IllegalArgumentException();
+            return serviceFailure(new Error("competition.setup.not.ready.to.open", HttpStatus.BAD_REQUEST));
 		}
 	}
 
