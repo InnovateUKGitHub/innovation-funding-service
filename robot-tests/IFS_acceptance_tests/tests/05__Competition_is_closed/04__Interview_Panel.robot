@@ -24,6 +24,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3156 Assign applications to interview panel - Remove application(s) from invite tab
 ...
 ...               IFS-3154 Invite Assessor to Interview Panel: Resend invite
+...
+...               IFS-3201 Invite Assessor to Interview Panel: Accepted tab
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -115,15 +117,21 @@ CompAdmin resends the interview panel invite
     [Documentation]  IFS-3154
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
-    Then the user clicks the button/link      link=Manage interview panel
-    And the user clicks the button/link       link=Invite assessors
+    When the user navigates to the interview invite assessors tab
     Then the user clicks the button/link      link=Pending and declined
     And the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
     When the compAdmin resends the invites for interview panel     ${assessor_ben}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
+
+CompAdmin Views the assessors thta have accepted the interview panel invite
+    [Documentation]  IFS-3201
+    [Tags]
+    Given log in as a different user          &{Comp_admin1_credentials}
+    When the user navigates to the interview invite assessors tab
+    When the user clicks the button/link      link=Accepted
+    Then the user should see the element      jQuery=a:contains("Joel George")
 
 *** Keywords ***
 Custom Suite Setup
@@ -167,3 +175,8 @@ the Competition Admin should see the assigned applications in the View status ta
     the user clicks the button/link         jQuery=li:contains("View status")
     the user should see the element         jQuery=td:contains("${Neural_network_application}")
     the user should see the element         jQuery=td:contains("${computer_vision_application}")
+
+the user navigates to the interview invite assessors tab
+    the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
+    the user clicks the button/link      link=Manage interview panel
+    the user clicks the button/link       link=Invite assessors
