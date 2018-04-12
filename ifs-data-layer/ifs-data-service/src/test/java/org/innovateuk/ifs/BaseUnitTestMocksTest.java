@@ -15,8 +15,7 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
-import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.repository.*;
 import org.innovateuk.ifs.assessment.transactional.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
@@ -31,8 +30,14 @@ import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactional
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
+import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -120,7 +125,10 @@ import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.review.mapper.ReviewInviteMapper;
 import org.innovateuk.ifs.review.mapper.ReviewMapper;
+import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
 import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.transactional.ReviewInviteService;
 import org.innovateuk.ifs.review.transactional.ReviewService;
@@ -369,7 +377,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentInviteRepository assessmentInviteRepositoryMock;
 
     @Mock
-    protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
+    protected AssessmentParticipantRepository assessmentParticipantRepositoryMock;
 
     @Mock
     protected CompetitionParticipantService competitionParticipantServiceMock;

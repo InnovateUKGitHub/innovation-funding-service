@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.domain.competition;
+package org.innovateuk.ifs.invite.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * A reason for rejecting an invitation to be a {@link CompetitionParticipant}.
+ * A reason for rejecting an invitation.
  */
 @Entity
 public class RejectionReason implements Comparable<RejectionReason> {
