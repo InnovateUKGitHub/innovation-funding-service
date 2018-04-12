@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.interview.transactional;
 
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
@@ -10,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 /**
- * Service for managing {@link org.innovateuk.ifs.invite.domain.competition.InterviewInvite}s
+ * Service for managing {@link InterviewInvite}s
  */
 public interface InterviewAssignmentService {
 

@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.invite.repository;
+package org.innovateuk.ifs.assessment.repository;
 
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.competition.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
