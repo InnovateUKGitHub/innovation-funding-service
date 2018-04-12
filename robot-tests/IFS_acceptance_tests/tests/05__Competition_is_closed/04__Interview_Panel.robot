@@ -130,8 +130,8 @@ CompAdmin Views the assessors thta have accepted the interview panel invite
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
     When the user navigates to the interview invite assessors tab
-    When the user clicks the button/link      link=Accepted
-    Then the user should see the element      jQuery=a:contains("Joel George")
+    Then the user clicks the button/link      link=Accepted
+    And the user should see the element       jQuery=a:contains("Joel George")
 
 *** Keywords ***
 Custom Suite Setup
@@ -179,4 +179,4 @@ the Competition Admin should see the assigned applications in the View status ta
 the user navigates to the interview invite assessors tab
     the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
     the user clicks the button/link      link=Manage interview panel
-    the user clicks the button/link       link=Invite assessors
+    the user clicks the button/link      link=Invite assessors
