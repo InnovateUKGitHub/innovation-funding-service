@@ -173,6 +173,8 @@ the Competition Admin should see the assigned applications in the View status ta
     the user should see the element         jQuery=td:contains("${computer_vision_application}")
 
 the user checks for Key Statistics for submitted application
+    the user should see the element    jQuery=div span:contains("6") ~ small:contains("Applications in competition")
+    the user should see the element    jQuery=div span:contains("0") ~ small:contains("Assigned to interview panel")
     Get the total number of submitted applications
     ${Application_in_comp}=  Get Text   css=div:nth-child(1) > div > span
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${Application_in_comp}
