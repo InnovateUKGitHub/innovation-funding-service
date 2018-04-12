@@ -1,0 +1,26 @@
+apply plugin: "java"
+apply plugin: 'com.moowork.gulp'
+
+// makes sure on each build that gulp is installed
+gulp_default.dependsOn 'installGulp'
+
+// processes your package.json before running gulp build
+gulp_default.dependsOn 'npmInstall'
+
+def srcDir = new File(projectDir, "src/main/resources/static")
+def targetDir = new File(project.buildDir, "resources/main/static")
+gulp_dist.inputs.dir srcDir
+gulp_dist.outputs.dir targetDir
+
+processResources.dependsOn gulp_default
+
+gulp {
+    // Set the directory where gulpfile.js should be found
+    workDir = file("${project.projectDir}")
+
+    // Whether colors should output on the terminal
+    colors = true
+
+    // Whether output from Gulp should be buffered - useful when running tasks in parallel
+    bufferOutput = false
+}
