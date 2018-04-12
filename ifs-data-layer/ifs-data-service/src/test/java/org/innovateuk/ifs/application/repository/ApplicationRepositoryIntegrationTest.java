@@ -54,7 +54,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationProcessActivityStateStateIn() {
-        Collection<State> states = ApplicationState.submittedStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        Collection<State> states = ApplicationState.submittedAndFinishedStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
 
         List<ApplicationState> applicationStates = Arrays.asList(ApplicationState.values());
         List<Application> applicationList = applicationStates.stream()
