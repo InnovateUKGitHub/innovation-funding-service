@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -16,11 +17,11 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -74,7 +75,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private UserRepository userRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -87,9 +88,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private OrganisationTypeMapper organisationTypeMapper;
-
-    @Autowired
-    private ApplicationMapper applicationMapper;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -106,11 +104,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private MilestoneService milestoneService;
 
-    private static final Map<String, Sort> APPLICATION_SORT_FIELD_MAP = new HashMap<String, Sort>() {{
-        put("id", new Sort(ASC, "id"));
-        put("name", new Sort(ASC, "name", "id"));
-    }};
-
     private static final String EOI = "Expression of interest";
 
     @Override
@@ -121,7 +114,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
 
         List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
 
@@ -144,7 +137,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                     competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
                     competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
-                    competitionParticipantRepository.save(competitionParticipant);
+                    assessmentParticipantRepository.save(competitionParticipant);
 
                     return serviceSuccess();
                 });
@@ -155,11 +148,20 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
 
-        return find(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
+        return find(assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD),
                     notFoundError(CompetitionParticipant.class, competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
-                .andOnSuccessReturnVoid(competitionParticipant -> competitionParticipantRepository.delete(competitionParticipant));
+                .andOnSuccessReturnVoid(competitionParticipant -> assessmentParticipantRepository.delete(competitionParticipant));
     }
 
+    /**
+     * IFS-3016: Because of the change in ApplicantDashboardPopulator (getAllCompetitionsForUser),
+     * the endpoint is not used anymore, so this function can also be deleted
+     *
+     * TODO: remove in ZDD cleanup
+     * @param userId
+     * @return
+     */
+    @ZeroDowntime(reference = "IFS-3016", description = "endpoint not being used")
     @Override
     public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
         List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccess();
@@ -236,39 +238,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
-    }
-
-    @Override
-    public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId,
-                                                                               int pageIndex,
-                                                                               int pageSize,
-                                                                               String sortField) {
-
-        Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
-                INELIGIBLE,
-                INELIGIBLE_INFORMED,
-                REJECTED), ApplicationState::getBackingState);
-
-        Sort sort = getApplicationSortField(sortField);
-        Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
-
-        Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
-        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
-
-        return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
-    }
-
-    private Sort getApplicationSortField(String sortBy) {
-        Sort result = APPLICATION_SORT_FIELD_MAP.get(sortBy);
-        return result != null ? result : APPLICATION_SORT_FIELD_MAP.get("id");
-    }
-
-    private ApplicationResource convertToApplicationResource(Application application) {
-
-        ApplicationResource applicationResource = applicationMapper.mapToResource(application);
-        Organisation leadOrganisation = organisationRepository.findOne(application.getLeadOrganisationId());
-        applicationResource.setLeadOrganisationName(leadOrganisation.getName());
-        return applicationResource;
     }
 
     @Override

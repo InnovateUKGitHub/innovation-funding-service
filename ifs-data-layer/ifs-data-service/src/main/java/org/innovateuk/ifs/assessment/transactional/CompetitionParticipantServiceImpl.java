@@ -4,11 +4,11 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.mapper.AssessmentParticipantMapper;
-import org.innovateuk.ifs.invite.mapper.CompetitionParticipantRoleMapper;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.assessment.mapper.AssessmentParticipantMapper;
+import org.innovateuk.ifs.competition.mapper.CompetitionParticipantRoleMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class CompetitionParticipantServiceImpl implements CompetitionParticipantService {
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private AssessmentParticipantMapper compParticipantMapper;
@@ -48,7 +48,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
 
         CompetitionParticipantRole role = competitionParticipantRoleMapper.mapToDomain(roleResource);
 
-        List<CompetitionParticipantResource> competitionParticipantResources = competitionParticipantRepository.getByUserIdAndRole(userId, role).stream()
+        List<CompetitionParticipantResource> competitionParticipantResources = assessmentParticipantRepository.getByUserIdAndRole(userId, role).stream()
                 .map(compParticipantMapper::mapToResource)
                 .filter(participant -> !participant.isRejected() && participant.isUpcomingOrInAssessment())
                 .collect(toList());
