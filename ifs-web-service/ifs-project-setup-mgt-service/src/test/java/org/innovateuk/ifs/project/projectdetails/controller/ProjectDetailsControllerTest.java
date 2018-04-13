@@ -112,7 +112,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void editProjectDuration() throws Exception {
+    public void viewEditProjectDuration() throws Exception {
 
         long competitionId = 1L;
         String competitionName = "Comp 1";
@@ -133,7 +133,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionService.getById(competitionId)).thenReturn(competition);
 
-        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/edit-duration"))
+        MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/duration"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/edit-duration"))
                 .andReturn();
@@ -186,7 +186,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     private void performUpdateProjectDurationFailurePost(long competitionId, long projectId, String durationInMonths) throws Exception {
 
-        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration")
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("durationInMonths", durationInMonths))
                 .andExpect(status().isOk())
@@ -213,7 +213,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(project);
         when(competitionService.getById(competitionId)).thenReturn(competition);
 
-        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration")
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("durationInMonths", durationInMonths))
                 .andExpect(status().isOk())
@@ -232,7 +232,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectDetailsService.updateProjectDuration(projectId, 18L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration")
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/duration")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("durationInMonths", durationInMonths))
                 .andExpect(status().is3xxRedirection())
