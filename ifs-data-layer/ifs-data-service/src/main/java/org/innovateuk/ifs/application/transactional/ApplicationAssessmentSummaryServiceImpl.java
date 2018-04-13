@@ -10,10 +10,10 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -44,7 +44,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private AssessmentRepository assessmentRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private ApplicationAssessorMapper applicationAssessorMapper;
@@ -57,7 +57,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
 
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
                     Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
-                    Page<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.findParticipantsWithoutAssessments(
+                    Page<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.findParticipantsWithoutAssessments(
                             application.getCompetition().getId(),
                             ASSESSOR,
                             ParticipantStatus.ACCEPTED,
@@ -72,7 +72,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     @Override
     public ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
-                simpleMap(competitionParticipantRepository.findParticipantsWithAssessments(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED, applicationId),
+                simpleMap(assessmentParticipantRepository.findParticipantsWithAssessments(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED, applicationId),
                         competitionParticipant -> {
                             Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
                             return applicationAssessorMapper.mapToResource(competitionParticipant, mostRecentAssessment);

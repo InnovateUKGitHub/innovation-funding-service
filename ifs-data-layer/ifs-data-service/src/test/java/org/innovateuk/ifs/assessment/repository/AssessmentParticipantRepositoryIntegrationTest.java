@@ -10,15 +10,14 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
-import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -52,12 +51,12 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInviteWithoutId;
+import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -66,7 +65,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class CompetitionParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionParticipantRepository> {
+public class AssessmentParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentParticipantRepository> {
 
     private Competition competition;
     private InnovationArea innovationArea;
@@ -110,7 +109,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Autowired
     @Override
-    protected void setRepository(CompetitionParticipantRepository repository) {
+    protected void setRepository(AssessmentParticipantRepository repository) {
         this.repository = repository;
     }
 
