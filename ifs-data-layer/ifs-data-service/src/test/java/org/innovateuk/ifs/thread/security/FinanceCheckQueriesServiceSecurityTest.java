@@ -3,17 +3,20 @@ package org.innovateuk.ifs.thread.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesService;
+import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServiceImpl;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.threads.security.QueryLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.threads.resource.PostResource;
-import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.isNull;
@@ -26,7 +29,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
 
     @Override
     protected Class<? extends FinanceCheckQueriesService> getClassUnderTest() {
-        return TestFinanceCheckQueriesService.class;
+        return FinanceCheckQueriesServiceImpl.class;
     }
 
     @Before
@@ -50,6 +53,9 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     public void test_findOne() throws Exception {
         setLoggedInUser(null);
 
+        when(classUnderTestMock.findOne(1L))
+                .thenReturn(serviceSuccess(new QueryResource(1L, null, null, null, null, false, null, null, null)));
+
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
             verify(queryRules).projectFinanceUsersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
             verify(queryRules).projectPartnersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
@@ -61,6 +67,12 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     @Test
     public void test_findAll() throws Exception {
         setLoggedInUser(null);
+
+        when(classUnderTestMock.findAll(22L))
+                .thenReturn(serviceSuccess(new ArrayList<>(asList(
+                        new QueryResource(2L, null, null, null, null, false, null, null, null),
+                        new QueryResource(3L, null, null, null, null, false, null, null, null)
+                ))));
 
         ServiceResult<List<QueryResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccess().size());
@@ -85,38 +97,4 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
             verifyNoMoreInteractions(queryRules);
         });
     }
-
-    public static class TestFinanceCheckQueriesService implements FinanceCheckQueriesService {
-
-        @Override
-        public ServiceResult<List<QueryResource>> findAll(Long contextClassPk) {
-            List<QueryResource> queries = new ArrayList<>();
-            queries.add(findOne(2L).getSuccess());
-            queries.add(findOne(3L).getSuccess());
-            return ServiceResult.serviceSuccess(queries);
-        }
-
-        @Override
-        public ServiceResult<QueryResource> findOne(Long id) {
-            return ServiceResult.serviceSuccess(new QueryResource(id,
-                    null, null, null, null, false, null, null, null));
-        }
-
-        @Override
-        public ServiceResult<Long> create(QueryResource QueryResource) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> close(Long queryId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> addPost(PostResource post, Long queryId) {
-            return null;
-        }
-    }
-
-
 }

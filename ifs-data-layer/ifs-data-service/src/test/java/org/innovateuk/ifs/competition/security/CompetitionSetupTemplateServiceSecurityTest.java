@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupTemplateService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupTemplateServiceImpl;
 import org.innovateuk.ifs.user.resource.Role;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,16 +25,15 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
 
     @Override
     protected Class<? extends CompetitionSetupTemplateService> getClassUnderTest() {
-        return CompetitionSetupTemplateServiceSecurityTest.TestCompetitionSetupTemplateService.class;
+        return CompetitionSetupTemplateServiceImpl.class;
     }
 
     @Test
     public void testAllServiceFunctionsShouldBeAuthorizedForCompAdmin() {
-
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 
     @Test
@@ -44,7 +41,7 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.PROJECT_FINANCE)).build());
         classUnderTest.initializeCompetitionByCompetitionTemplate(null, null);
         classUnderTest.addDefaultAssessedQuestionToCompetition(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 
     @Test(expected = AccessDeniedException.class)
@@ -62,20 +59,6 @@ public class CompetitionSetupTemplateServiceSecurityTest extends BaseServiceSecu
     @Test(expected = AccessDeniedException.class)
     public void testDeleteAssessedQuestionInCompetitionShouldFailForAnonymousUser() {
         setLoggedInUser(null);
-        classUnderTest.deleteAssessedQuestionInCompetition(null);
-    }
-
-    public static class TestCompetitionSetupTemplateService implements CompetitionSetupTemplateService {
-        public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
-            return null;
-        }
-
-        public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
-            return null;
-        }
-
-        public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
-            return null;
-        }
+        classUnderTest.deleteQuestionInCompetition(null);
     }
 }

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.review.builder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.builder.BaseInviteBuilder;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.ZonedDateTime;

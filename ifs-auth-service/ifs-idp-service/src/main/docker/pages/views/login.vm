@@ -257,8 +257,10 @@
         }
     </script>
     <script src="$resourcesDomain/js/ifs_modules/formValidation.js" type="text/javascript"></script>
+    <script src="$resourcesDomain/js/ifs_modules/passwordToggle.js" type="text/javascript"></script>
     <script type="text/javascript">
         IFS.core.formValidation.init();
+        IFS.core.passwordToggle.init();
     </script>
     <script>
         jQuery(document).ready(function(){
@@ -269,21 +271,6 @@
                 var valid = IFS.core.formValidation.checkEmail(emailField) && IFS.core.formValidation.checkRequired(passwordField);
                 if (valid) {
                     button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
-                }
-            });
-            jQuery(".password-toggle button").on("click", function(event){
-                event.preventDefault();
-                var button = jQuery(this);
-                var passwordInput = jQuery(this).prev();
-                var inputType = passwordInput.attr('type');
-                if (inputType === 'password') {
-                    passwordInput.prop("type", "text");
-                    button.text("Hide");
-                    button.attr("aria-checked", true);
-                } else {
-                    passwordInput.prop("type", "password");
-                    button.text("Show");
-                    button.attr("aria-checked", false);
                 }
             });
             jQuery.ajax({

@@ -20,6 +20,8 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
+    ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths);
+
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address);
 
     ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Controller for the Manage Interview Panel dashboard.
  */
 @Controller
-@RequestMapping("/interview/panel/competition/{competitionId}")
+@RequestMapping("/assessment/interview/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can view the Manage Interview Panel dashboard", securedType = InterviewController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class InterviewController {
