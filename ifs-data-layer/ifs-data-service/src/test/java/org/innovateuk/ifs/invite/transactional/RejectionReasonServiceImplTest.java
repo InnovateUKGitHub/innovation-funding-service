@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Test;
 import org.mockito.InOrder;

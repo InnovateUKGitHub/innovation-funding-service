@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.assessment.mapper;
+package org.innovateuk.ifs.competition.mapper;
 
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

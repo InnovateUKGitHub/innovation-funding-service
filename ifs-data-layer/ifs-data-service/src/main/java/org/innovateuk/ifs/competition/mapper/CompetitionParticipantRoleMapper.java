@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.invite.mapper;
+package org.innovateuk.ifs.competition.mapper;
 
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.mapstruct.Mapper;
 

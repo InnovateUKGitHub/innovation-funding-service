@@ -1,9 +1,7 @@
-package org.innovateuk.ifs.invite.domain;
+package org.innovateuk.ifs.assessment.domain;
 
 import org.innovateuk.ifs.invite.builder.RejectionReasonBuilder;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,10 +10,10 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;

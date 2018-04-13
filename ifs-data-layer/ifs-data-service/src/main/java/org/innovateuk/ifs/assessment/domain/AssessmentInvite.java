@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.invite.domain.competition;
+package org.innovateuk.ifs.assessment.domain;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionInvite;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
