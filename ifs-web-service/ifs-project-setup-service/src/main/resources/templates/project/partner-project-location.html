@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project location'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project location',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body th:with="context='project'" class="project-detail finance-contact">
@@ -27,7 +26,7 @@
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
         <h2 class="heading-medium">Project location</h2>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('postCode')} ? 'form-group-error'">
+        <div class="form-group" th:classappend="${#fields.hasErrors('postCode')} ? 'form-group-error'" >
             <label class="form-label-bold" for="postCode">
                 Postcode
                 <span class="form-hint">Please enter the postcode of the location where the majority of work will be carried out.</span>
@@ -35,12 +34,15 @@
             <th:block th:if="${#fields.hasErrors('postCode')}">
                 <span class="error-message" th:each="err : ${#fields.errors('postCode')}" th:text="${err}" />
             </th:block>
-            <input class="form-control width-medium"
-                   name="postCode"
+            <input name="postCode"
                    id="postCode"
+                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}"
                    type="text"
+                   class="form-control width-medium"
+                   required="required"
                    th:value="${form.getPostCode() != null ? form.getPostCode() : NULL}"
-            >
+                   th:errorclass="form-control-error"
+                   th:field="*{postCode}" />
         </div>
 
         <p>You can change your project location up until a Monitoring Officer is assigned to your project.</p>
