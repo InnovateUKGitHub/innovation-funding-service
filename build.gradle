@@ -6,6 +6,10 @@ if (project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.ena
     apply from: "gradle-support/zipkin.gradle"
 }
 
+if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
+    apply from: "gradle-support/spring-boot-admin.gradle"
+}
+
 allprojects {
     group 'innovateuk'
     version project.version
