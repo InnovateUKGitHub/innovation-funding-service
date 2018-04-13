@@ -23,9 +23,7 @@ createContainer.portBindings = ['9012:8000']
 
 deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:deploy"
 
-List<String> networkAliases = new ArrayList<>()
-networkAliases.add("ifs-finance-data-service")
-createContainer.networkAliases=networkAliases
+createContainer.networkAliases=["ifs-finance-data-service"]
 
 ext.dockerDir = "$project.parent.projectDir/docker/"
 ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"

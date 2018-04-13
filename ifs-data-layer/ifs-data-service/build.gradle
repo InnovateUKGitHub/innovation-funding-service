@@ -38,9 +38,7 @@ deploy.dependsOn ":docker:ifs-mysql:ifs-database:deploy"
 createContainer.portBindings = ['9006:8000']
 
 
-List<String> networkAliases = new ArrayList<>()
-networkAliases.add("ifs-data-service")
-createContainer.networkAliases=networkAliases
+createContainer.networkAliases=["ifs-data-service"]
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
@@ -182,8 +180,6 @@ task generateMainMapperClasses(type: JavaCompile) {
 }
 
 task syncShib(type:Exec) {
-    workingDir '../../'
-    //TODO block until complete? no output anymore.
     commandLine 'docker', 'exec',  '-d', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh'
 }
 
