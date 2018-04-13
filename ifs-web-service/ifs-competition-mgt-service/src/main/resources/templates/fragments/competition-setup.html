@@ -1,3 +1,6 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
 <!-- =================== Comp setup section - Overview (1) ============================== -->
 
 <th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
@@ -106,21 +109,12 @@
     <div class="complete-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Complete competition setup</h2>
-        <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
-              th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
-            <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
-                <h2 class="heading-medium error-summary-heading">We were unable to complete the setup.</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
-                </ul>
-            </div>
-            <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
-            <hr />
-            <div>
-                <button type="submit" class="button">Done</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
-            </div>
-        </form>
+        <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+        <hr />
+        <div>
+            <button type="submit" class="button">Done</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
     </div>
 </div>
 
@@ -144,3 +138,5 @@
         </form>
     </div>
 </div>
+
+</html>

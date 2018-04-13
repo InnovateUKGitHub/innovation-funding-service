@@ -11,7 +11,6 @@
 <body class="competition-management competition-setup">
 
 <th:block th:insert="fragments/modals :: modal-overlay" />
-<th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -19,8 +18,17 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
-
     <th:block th:if="${model.general.currentSectionIsHome()}">
+        <form class="js-modal-url-target" method="post" th:object="${competitionSetupForm}"
+              th:action="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}">
+            <th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" />
+            <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
+                <h2 class="heading-medium error-summary-heading">We were unable to complete the setup.</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+                </ul>
+            </div>
+        </form>
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='heading-xlarge'" />
     </th:block>
 
