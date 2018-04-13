@@ -22,9 +22,6 @@ repositories {
     jcenter()
 }
 
-// use fully qualified class name
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-
 
 task prepareFractalDockerInput {
 
