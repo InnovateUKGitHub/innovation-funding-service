@@ -157,13 +157,16 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                 .withProjectState(ProjectState.SETUP)
                 .build();
 
-        when(projectLookupStrategy.getProjectResource(1L)).thenReturn(projectResource);
+        when(projectLookupStrategy.getProjectResource(project.getId())).thenReturn(projectResource);
 
-        UserResource userResource = newUserResource().withRolesGlobal(singletonList(SYSTEM_REGISTRATION_USER)).build();
-
-        setLoggedInUser(userResource);
-        classUnderTest.addPartner(project.getId(), 2L, 3L);
-        // There should be no exception thrown
+        assertAccessDenied(
+                () -> classUnderTest.addPartner(project.getId(), 1L, 1L),
+                () -> {
+                    verify(projectPermissionRules, times(1))
+                            .systemRegistrarCanAddPartnersToProject(isA(ProjectResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(projectPermissionRules);
+                }
+        );
     }
 
     @Test
