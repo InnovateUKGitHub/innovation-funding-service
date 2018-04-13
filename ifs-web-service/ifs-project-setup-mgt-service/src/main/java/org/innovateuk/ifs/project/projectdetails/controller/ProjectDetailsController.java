@@ -122,10 +122,10 @@ public class ProjectDetailsController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
-    @GetMapping("/{projectId}/edit-duration")
-    public String editProjectDuration(@PathVariable("competitionId") final long competitionId,
-                                      @PathVariable("projectId") final long projectId, Model model,
-                                      UserResource loggedInUser) {
+    @GetMapping("/{projectId}/duration")
+    public String viewEditProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                          @PathVariable("projectId") final long projectId, Model model,
+                                          UserResource loggedInUser) {
 
 
         ProjectDurationForm form = new ProjectDurationForm();
@@ -151,7 +151,7 @@ public class ProjectDetailsController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
-    @PostMapping("/{projectId}/update-duration")
+    @PostMapping("/{projectId}/duration")
     public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
                                         @PathVariable("projectId") final long projectId,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDurationForm form,
