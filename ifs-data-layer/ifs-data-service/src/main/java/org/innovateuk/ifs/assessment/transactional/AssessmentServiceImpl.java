@@ -14,9 +14,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
 import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
-import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -40,9 +37,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.resource.Role.ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -158,29 +152,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                     .collect(Collectors.toList())
                 )
         );
-    }
-
-
-    @Override
-    public ServiceResult<InterviewInviteStatisticsResource> getInterviewInviteStatistics(long competitionId) {
-        List<Long> reviewPanelInviteIds = simpleMap(interviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
-
-        int totalAssessorsInvited = interviewInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
-        int assessorsAccepted = getInterviewParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, reviewPanelInviteIds);
-        int assessorsDeclined = getInterviewParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, reviewPanelInviteIds);
-
-        return serviceSuccess(
-                new InterviewInviteStatisticsResource(
-                        totalAssessorsInvited,
-                        assessorsAccepted,
-                        assessorsDeclined,
-                        totalAssessorsInvited - assessorsAccepted - assessorsDeclined)
-        );
-    }
-
-
-    private int getInterviewParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
-        return interviewParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, INTERVIEW_ASSESSOR, status, inviteIds);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
+import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.innovateuk.ifs.review.transactional.ReviewStatisticsService;
@@ -26,18 +27,15 @@ public class CompetitionKeyStatisticsController {
 
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
     private ReviewStatisticsService reviewStatisticsService;
-    private AssessmentService assessmentService;
+    private InterviewStatisticsService interviewStatisticsService;
 
-
-    // TODO remove our dependency on AssessmentService as we're not doing anything with assessments here
-    // maybe we want review statistics controller, and interview statistics controller
     @Autowired
     public CompetitionKeyStatisticsController(CompetitionKeyStatisticsService competitionKeyStatisticsService,
                                               ReviewStatisticsService reviewStatisticsService,
-                                              AssessmentService assessmentService) {
+                                              InterviewStatisticsService interviewStatisticsService) {
         this.competitionKeyStatisticsService = competitionKeyStatisticsService;
         this.reviewStatisticsService = reviewStatisticsService;
-        this.assessmentService = assessmentService;
+        this.interviewStatisticsService = interviewStatisticsService;
     }
 
     public CompetitionKeyStatisticsController() {
@@ -81,6 +79,6 @@ public class CompetitionKeyStatisticsController {
 
     @GetMapping("/interview-invites")
     public RestResult<InterviewInviteStatisticsResource> getInterviewInviteStatistics(@PathVariable("id") long id) {
-        return assessmentService.getInterviewInviteStatistics(id).toGetResponse();
+        return interviewStatisticsService.getInterviewInviteStatistics(id).toGetResponse();
     }
 }
