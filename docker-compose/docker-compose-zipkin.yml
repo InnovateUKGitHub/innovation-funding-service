@@ -1,9 +1,0 @@
-version: '3'
-services:
-  zipkin:
-    hostname: zipkin
-    image: openzipkin/zipkin
-    ports:
-      - "9411:9411"
-    networks:
-      - ifs

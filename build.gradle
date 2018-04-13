@@ -32,8 +32,6 @@ def isNotProductionEnv() {
 
 apply from: "gradle-support/openshift-support.gradle"
 apply from: "gradle-support/zipkin-support.gradle"
-apply from: "gradle-support/docker-compose.gradle"
-
 
 if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
@@ -88,8 +86,6 @@ dependencyUpdates.resolutionStrategy = {
         }
     }
 }
-
-
 
 
 apply plugin: "com.github.hierynomus.license"
