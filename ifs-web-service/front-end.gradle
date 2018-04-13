@@ -36,16 +36,16 @@ node {
     download = true
 
     // Set the work directory for unpacking node
-    workDir = file("${project.buildDir}/nodejs")
+    workDir = file("${projectDir}/node_install/nodejs")
 
     // Set the work directory for NPM
-    npmWorkDir = file("${project.buildDir}/npm")
+    npmWorkDir = file("${projectDir}/node_install/npm")
 
     // Set the work directory for Yarn
-    yarnWorkDir = file("${project.buildDir}/yarn")
+    yarnWorkDir = file("${projectDir}/node_install/yarn")
 
     // Set the work directory where node_modules should be located
-    nodeModulesDir = file("${project.projectDir}")
+    nodeModulesDir = file("${projectDir}")
 }
 
 npm_install {
@@ -53,6 +53,7 @@ npm_install {
     outputs.files file("${projectDir}/node_modules")
     args = ['--loglevel', 'warn']
     description = "Install Node.js packages"
+    outputs.upToDateWhen { false }
 }
 
 gulp {
