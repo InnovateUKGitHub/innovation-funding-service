@@ -27,9 +27,9 @@
         <dt>Total project cost:</dt>
         <dd>&pound;<th:block th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalProjectCost,1,'DEFAULT')}" /></dd>
         <dt>Grant applied for:</dt>
-        <dd>£<th:block  th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}" /></dd>
+        <dd>&pound;<th:block  th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.grantAppliedFor,1,'DEFAULT')}" /></dd>
         <dt>Other public sector funding:</dt>
-        <dd>£<th:block  th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}" /></dd>
+        <dd>&pound;<th:block  th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.otherPublicSectorFunding,1,'DEFAULT')}" /></dd>
         <dt>Total percentage grant:</dt>
         <dd th:text="${#numbers.formatInteger(model.financeCheckSummaryResource.totalPercentageGrant,1,'NONE')+'%'}"></dd>
       </dl>

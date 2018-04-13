@@ -41,12 +41,11 @@ configure(subprojects - project(":ifs-auth-service")) {
 buildscript {
 
     ext {
-        springBootVersion = '1.5.9.RELEASE'
+        springBootVersion = '1.5.11.RELEASE'
         springCloudVersion = 'Dalston.RELEASE'
     }
 
     repositories {
-        mavenCentral()
         jcenter()
         maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
         maven { url "http://repo.spring.io/milestone" }

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.review.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 

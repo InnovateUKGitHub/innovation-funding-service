@@ -3,11 +3,13 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
@@ -27,6 +29,8 @@ import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -144,8 +148,52 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertNull(viewModel.getProjectManager());
         assertNull(viewModel.getOrganisationFinanceContactMap());
 
+        ProjectDurationForm form = (ProjectDurationForm) result.getModelAndView().getModel().get("form");
+        assertEquals(new ProjectDurationForm(), form);
+
         verify(projectService).getById(projectId);
         verify(competitionService).getById(competitionId);
+    }
+
+    @Test
+    public void updateProjectDurationWhenDurationIsInvalid() throws Exception {
+
+        long competitionId = 1L;
+        long projectId = 11L;
+        String durationInMonths = null;
+
+        ProjectResource project = newProjectResource().build();
+
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionService.getById(competitionId)).thenReturn(competition);
+
+        performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
+
+        durationInMonths = "";
+        performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
+
+        durationInMonths = "  ";
+        performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
+
+        durationInMonths = "dddd";
+        performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
+
+        durationInMonths = "0";
+        performUpdateProjectDurationFailurePost(competitionId, projectId, durationInMonths);
+    }
+
+    private void performUpdateProjectDurationFailurePost(long competitionId, long projectId, String durationInMonths) throws Exception {
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("durationInMonths", durationInMonths))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/edit-duration")) // failure view
+                .andReturn();
+
+        verify(projectDetailsService, never()).updateProjectDuration(anyLong(), anyLong());
     }
 
     @Test
@@ -153,17 +201,26 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long competitionId = 1L;
         long projectId = 11L;
-        long durationInMonths = 18L;
+        String durationInMonths = "18";
 
-        when(projectDetailsService.updateProjectDuration(projectId, durationInMonths))
+        when(projectDetailsService.updateProjectDuration(projectId, 18L))
                 .thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
 
-        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration?durationInMonths=" + durationInMonths))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/" + competitionId + "/project/" + projectId + "/edit-duration"))
+        ProjectResource project = newProjectResource().build();
+
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(competitionService.getById(competitionId)).thenReturn(competition);
+
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("durationInMonths", durationInMonths))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/edit-duration"))
                 .andReturn();
 
-        verify(projectDetailsService).updateProjectDuration(projectId, durationInMonths);
+        verify(projectDetailsService).updateProjectDuration(projectId, 18L);
     }
 
     @Test
@@ -171,16 +228,18 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         long competitionId = 1L;
         long projectId = 11L;
-        long durationInMonths = 18L;
+        String durationInMonths = "18";
 
-        when(projectDetailsService.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
+        when(projectDetailsService.updateProjectDuration(projectId, 18L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration?durationInMonths=" + durationInMonths))
+        mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/update-duration")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("durationInMonths", durationInMonths))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/" + projectId + "/finance-check"))
                 .andReturn();
 
-        verify(projectDetailsService).updateProjectDuration(projectId, durationInMonths);
+        verify(projectDetailsService).updateProjectDuration(projectId, 18L);
     }
 
     private  List<ProjectUserResource> buildProjectUsers(OrganisationResource leadOrganisation, OrganisationResource partnerOrganisation) {

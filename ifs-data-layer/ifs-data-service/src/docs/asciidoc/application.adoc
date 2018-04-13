@@ -137,3 +137,14 @@ include::{snippets}/application/show-application-team/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/show-application-team/curl-request.adoc[]
+
+=== Find Unsuccessful Applications
+==== Request
+include::{snippets}/application/find-unsuccessful-applications/http-request.adoc[]
+include::{snippets}/application/find-unsuccessful-applications/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/application/find-unsuccessful-applications/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/application/find-unsuccessful-applications/curl-request.adoc[]

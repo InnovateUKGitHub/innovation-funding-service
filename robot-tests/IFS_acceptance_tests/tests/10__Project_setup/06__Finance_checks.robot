@@ -101,11 +101,20 @@ Project Finance user can see the finance check summary page
     And the table row has expected values
     And the user should see the element          link=Projects in setup
 
+Validation on duration of Project
+    [Documentation]  IFS-2313
+    [Tags]
+    Given the user clicks the button/link               link=Edit
+    And the user moves focus to the element             id=durationInMonths
+    And the user should see an error                    This field cannot be left blank.
+    When the user clicks the button/link                jQuery=button:contains("Save and return to finances")
+    Then the user should see a field and summary error  This field cannot be left blank.
+
+
 Project Finance can edit the duration of the Project
     [Documentation]  IFS-2313
     [Tags]
-    Given the user clicks the button/link          link=Edit
-    When the user enters text to a text field      id=durationInMonths  4
+    Given the user enters text to a text field     id=durationInMonths  4
     And the user clicks the button/link            jQuery=button:contains("Save and return to finances")
     Then the user should see the element           jQuery=dd:contains("4 months")
 
@@ -118,9 +127,9 @@ Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
     Given the user navigates to the page                     ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Then The user should see the text in the page            Viability
-    And The user should see the text in the page             Queries raised
-    And The user should see the text in the page             Notes
+    Then The user should see the element                     jQuery=.table-progress th:contains("Viability")
+    And The user should see the element                      jQuery=.table-progress th:contains("Queries raised")
+    And The user should see the element                      jQuery=.table-progress th:contains("Notes")
     When the user should see the element                     link=Review
     Then the user should see that the element is disabled    css=.generate-spend-profile-main-button
 
@@ -483,7 +492,7 @@ Project finance user can see the lead partner's information about eligibility
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468     # Other public sector funding (£)
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164   # Contribution to project (£)
 
-Finance checks eligibility validations
+Finance checks eligibility
     [Documentation]    INFUND-4833
     [Tags]
     When the user expands the section                Labour
