@@ -3,13 +3,11 @@ package org.innovateuk.ifs.commons.security.evaluator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -116,13 +114,6 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
 
         try {
             return (Boolean) method.invoke(methodAndBean.getLeft(), dto, finalAuthentication);
-        } catch (InvocationTargetException e) {
-            LOG.error("Error whilst processing a permissions method", e);
-            if (e.getTargetException() instanceof ObjectNotFoundException) {
-                throw (RuntimeException) e.getTargetException();
-            } else {
-                throw new RuntimeException(e);
-            }
         } catch (Exception e) {
             LOG.error("Error whilst processing a permissions method", e);
             throw new RuntimeException(e);
