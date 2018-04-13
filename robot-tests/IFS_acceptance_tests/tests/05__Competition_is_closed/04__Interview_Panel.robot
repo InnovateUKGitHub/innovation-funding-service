@@ -117,8 +117,7 @@ CompAdmin resends the interview panel invite
     [Documentation]  IFS-3154
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the interview invite assessors tab
-    Then the user clicks the button/link      link=Pending and declined
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/pending-and-declined
     And the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
     When the compAdmin resends the invites for interview panel     ${assessor_ben}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
@@ -128,10 +127,10 @@ CompAdmin resends the interview panel invite
 CompAdmin Views the assessors that have accepted the interview panel invite
     [Documentation]  IFS-3201
     [Tags]
-    Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the interview invite assessors tab
-    Then the user clicks the button/link      link=Accepted
-    And the user should see the element       jQuery=a:contains("Joel George")
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
+    Then the user should see the element     jQuery=span:contains("1")
+    And the user should see the element      jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
 *** Keywords ***
 Custom Suite Setup
@@ -175,8 +174,3 @@ the Competition Admin should see the assigned applications in the View status ta
     the user clicks the button/link         jQuery=li:contains("View status")
     the user should see the element         jQuery=td:contains("${Neural_network_application}")
     the user should see the element         jQuery=td:contains("${computer_vision_application}")
-
-the user navigates to the interview invite assessors tab
-    the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
-    the user clicks the button/link      link=Manage interview panel
-    the user clicks the button/link      link=Invite assessors
