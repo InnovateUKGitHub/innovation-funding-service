@@ -3,7 +3,7 @@ package org.innovateuk.ifs.interview.mapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.InterviewInvite;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
 import org.innovateuk.ifs.invite.resource.InterviewInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

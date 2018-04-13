@@ -3,9 +3,9 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -48,7 +48,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     protected InterviewRepository interviewRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -88,7 +88,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     }
 
     protected boolean userIsInnovationLeadOnCompetition(long competitionId, long loggedInUserId){
-        List<AssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<AssessmentParticipant> competitionParticipants = assessmentParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 }

@@ -31,8 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.INTERVIEW_PANEL_INVITE_ALREADY_CREATED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -106,6 +109,25 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     @Override
+    @Transactional
+    public ServiceResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, Pageable pageable) {
+
+        final Page<InterviewAssignment> pagedResult =
+                interviewAssignmentRepository
+                        .findByTargetCompetitionIdAndActivityStateStateNot(
+                                competitionId, InterviewAssignmentState.CREATED.getBackingState(), pageable);
+
+        return serviceSuccess(new InterviewAssignmentApplicationPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                simpleMap(pagedResult.getContent(), this::mapToPanelResource),
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+
+    }
+
+    @Override
     public ServiceResult<List<Long>> getAvailableApplicationIds(long competitionId) {
         return serviceSuccess(
                 simpleMap(
@@ -117,7 +139,14 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
 
     @Override
     public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
-        stagedInvites.forEach(invite -> getApplication(invite.getApplicationId()).andOnSuccess(this::assignApplicationToCompetition));
+
+        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
+
+        stagedInvites.stream()
+                .distinct()
+                .map(invite -> getApplication(invite.getApplicationId()))
+                .forEach(application -> assignApplicationToCompetition(application.getSuccess(), createdActivityState));
+
         return serviceSuccess();
     }
 
@@ -209,17 +238,35 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
                 ).getSuccess();
     }
 
+    private InterviewAssignmentApplicationResource mapToPanelResource(InterviewAssignment panelInvite) {
+        final Application application = panelInvite.getTarget();
+
+        return getOrganisation(panelInvite.getParticipant().getOrganisationId())
+                .andOnSuccessReturn(leadOrganisation ->
+                        new InterviewAssignmentApplicationResource(
+                                panelInvite.getId(),
+                                application.getId(),
+                                application.getName(),
+                                leadOrganisation.getName(),
+                                panelInvite.getActivityState()
+                        )
+                ).getSuccess();
+    }
+
     private ServiceResult<Organisation> getOrganisation(long organisationId) {
         return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
     }
 
-    private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
-        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
-        final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
-        final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
+    private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application, ActivityState createdActivityState) {
+        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateState(application.getId(), InterviewAssignmentState.CREATED.getBackingState())) {
+            final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
+            final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
 
-        interviewAssignmentRepository.save(panel);
+            interviewAssignmentRepository.save(panel);
 
-        return serviceSuccess(panel);
+            return serviceSuccess(panel);
+        }
+
+        return serviceFailure(INTERVIEW_PANEL_INVITE_ALREADY_CREATED);
     }
 }
