@@ -1,8 +1,6 @@
 apply from: rootProject.file("gradle-support/openshift-build.gradle")
 buildDocker.dependsOn ":docker:oracle-jre:buildDocker"
 
-createContainer.enabled = false
-deploy.enabled=false
-wait.enabled=false
-stop.enabled=false
-removeContainer.enabled=false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = false
+}

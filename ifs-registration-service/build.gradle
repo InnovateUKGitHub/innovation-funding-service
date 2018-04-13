@@ -67,10 +67,9 @@ createContainer.containerName="registration-svc"
 createContainer.containerId="registration-svc"
 
 
-createContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-deploy.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-wait.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-stop.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-removeContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
 
 deploy.dependsOn ":ifs-auth-service:ifs-ldap-service:deploy"

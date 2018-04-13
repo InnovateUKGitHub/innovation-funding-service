@@ -11,8 +11,7 @@ createContainer.containerName="mail"
 createContainer.containerId="mail"
 createContainer.portBindings = ['8765:8080',  "9876:8143"]
 
-createContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-deploy.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-wait.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-stop.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-removeContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}

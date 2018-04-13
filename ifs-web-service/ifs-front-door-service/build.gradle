@@ -13,11 +13,9 @@ tagDockerLocal.tag = frontDoorServiceVersion
 osStageLocal.tag = frontDoorServiceVersion
 
 def enabled = project.hasProperty('ifs.front-door-service.enabled') ? project.property('ifs.front-door-service.enabled').toBoolean() : true
-stop.enabled = enabled
-removeContainer.enabled = enabled
-createContainer.enabled = enabled
-deploy.enabled =enabled
-wait.enabled = enabled
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
 
 createContainer.hostName="front-door-svc"
 createContainer.containerName="front-door-svc"

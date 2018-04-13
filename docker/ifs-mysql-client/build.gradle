@@ -5,8 +5,6 @@ osStageRemote.tag = mysqlClientVersion
 osStageLocal.tag = mysqlClientVersion
 
 
-createContainer.enabled = false
-deploy.enabled=false
-wait.enabled=false
-stop.enabled=false
-removeContainer.enabled=false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = false
+}

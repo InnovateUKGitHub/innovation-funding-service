@@ -17,11 +17,9 @@ createContainer.containerId="application-svc"
 createContainer.portBindings = ['9001:8000']
 
 def enabled = project.hasProperty('ifs.application-service.enabled') ? project.property('ifs.application-service.enabled').toBoolean() : true
-stop.enabled = enabled
-removeContainer.enabled = enabled
-createContainer.enabled = enabled
-deploy.enabled =enabled
-wait.enabled = enabled
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
 
 
 dependencies {

@@ -37,13 +37,10 @@ subprojects {
 
     createContainer.cmd = cmd
 
-    createContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-    deploy.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-    wait.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-    stop.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-    removeContainer.enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-
-
+    def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+    [stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = enabled
+    }
 
     task createTestSchema(type: Exec) {
         doFirst {
