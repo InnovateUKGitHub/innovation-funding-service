@@ -24,7 +24,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Notes")
     public boolean onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isInProjectSetup(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
+        return isProjectFinanceUser(user) && isProjectNotWithdrawn(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
     }
 
     private boolean noteHasInitialPostWithAuthorBeingCurrentUser(NoteResource note, UserResource user) {
@@ -33,7 +33,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a note")
     public boolean onlyProjectFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isInProjectSetup(note.contextClassPk);
+        return isProjectFinanceUser(user) && isProjectNotWithdrawn(note.contextClassPk);
     }
 
     @PermissionRule(value = "PF_READ", description = "Only Project Finance Users can view Notes")
@@ -45,11 +45,11 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
         return ofNullable(projectFinanceRepository.findOne(id));
     }
 
-    private boolean isInProjectSetup(Long projectFinance) {
+    private boolean isProjectNotWithdrawn(Long projectFinance) {
         Optional<ProjectFinance> pf = findProjectFinance(projectFinance);
         if (pf.isPresent()){
             long projectId = pf.get().getProject().getId();
-            return isProjectSetupPending(projectId);
+            return isProjectNotWithdrawn(projectId);
         }
         return false;
     }

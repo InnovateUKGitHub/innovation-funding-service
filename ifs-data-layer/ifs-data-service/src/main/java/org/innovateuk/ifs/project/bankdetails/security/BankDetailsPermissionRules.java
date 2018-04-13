@@ -23,7 +23,7 @@ public class BankDetailsPermissionRules extends BasePermissionRules {
             value = "UPDATE",
             description = "Project finance users can update any organisations bank details")
     public boolean projectFinanceUsersCanUpdateAnyOrganisationsBankDetails(BankDetailsResource bankDetailsResource, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectSetupPending(bankDetailsResource.getProject());
+        return isProjectFinanceUser(user) && isProjectNotWithdrawn(bankDetailsResource.getProject());
     }
 
     @PermissionRule(

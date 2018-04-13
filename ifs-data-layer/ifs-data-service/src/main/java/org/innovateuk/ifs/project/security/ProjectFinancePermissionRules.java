@@ -30,7 +30,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Project Finance Users can save Viability")
     public boolean projectFinanceUserCanSaveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
-        return isProjectFinanceUser(user) && isProjectSetupPending(projectOrganisationCompositeId.getProjectId());
+        return isProjectFinanceUser(user) && isProjectNotWithdrawn(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(
@@ -53,7 +53,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             description = "Project Finance Users can save Eligibility")
     public boolean projectFinanceUserCanSaveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
-        return isProjectFinanceUser(user) && isProjectSetupPending(projectOrganisationCompositeId.getProjectId());
+        return isProjectFinanceUser(user) && isProjectNotWithdrawn(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(
@@ -68,7 +68,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
             value = "SAVE_CREDIT_REPORT",
             description = "Project Finance Users can save Credit Report flag")
     public boolean projectFinanceUserCanSaveCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectFinanceUser(user) && isProjectSetupPending(projectCompositeId.id());
+        return isProjectFinanceUser(user) && isProjectNotWithdrawn(projectCompositeId.id());
     }
 
     @PermissionRule(value = "READ_PROJECT_FINANCE", description = "Project partners can see the project finances of their own project")
@@ -83,12 +83,12 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean partnersCanAddEmptyRowWhenReadingProjectCosts(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
-        return isPartner(projectFinanceResource.getProject(), user.getId()) && isProjectSetupPending(projectFinanceResource.getProject());
+        return isPartner(projectFinanceResource.getProject(), user.getId()) && isProjectNotWithdrawn(projectFinanceResource.getProject());
     }
 
     @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
     public boolean internalUsersCanAddEmptyRowWhenReadingProjectCosts(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
-        return isInternal(user) && isProjectSetupPending(projectFinanceResource.getProject());
+        return isInternal(user) && isProjectNotWithdrawn(projectFinanceResource.getProject());
     }
 
     @PermissionRule(value = "READ_ELIGIBILITY", description = "Project partners can see the project finances eligibility of their own project")

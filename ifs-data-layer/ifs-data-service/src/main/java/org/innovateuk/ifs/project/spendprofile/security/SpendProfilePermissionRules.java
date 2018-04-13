@@ -101,21 +101,21 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
             description = "Partners can edit their own Spend Profile data")
     public boolean partnersCanEditTheirOwnSpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
-        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId()) && isProjectSetupPending(projectOrganisationCompositeId.getProjectId());
+        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId()) && isProjectNotWithdrawn(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(value = "MARK_SPEND_PROFILE_COMPLETE", description = "Any partner belonging to organisation can mark its spend profile as complete")
     public boolean partnersCanMarkSpendProfileAsComplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId()) && isProjectSetupPending(projectOrganisationCompositeId.getProjectId());
+        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId()) && isProjectNotWithdrawn(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "Any lead partner can mark partners spend profiles as incomplete")
     public boolean leadPartnerCanMarkSpendProfileIncomplete(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId()) && isProjectSetupPending(projectOrganisationCompositeId.getProjectId());
+        return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId()) && isProjectNotWithdrawn(projectOrganisationCompositeId.getProjectId());
     }
 
     @PermissionRule(value = "COMPLETE_SPEND_PROFILE_REVIEW", description = "Only a Project Manager can complete the project's spend profiles review")
     public boolean projectManagerCanCompleteSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
-        return isProjectManager(projectCompositeId.id(), user.getId()) && isProjectSetupPending(projectCompositeId.id());
+        return isProjectManager(projectCompositeId.id(), user.getId()) && isProjectNotWithdrawn(projectCompositeId.id());
     }
 }

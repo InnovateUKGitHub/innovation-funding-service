@@ -54,7 +54,7 @@ public abstract class BasePermissionRules extends RootPermissionRules {
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    private ProjectProcessRepository ProjectProcessRepository;
+    private ProjectProcessRepository projectProcessRepository;
 
     protected boolean isPartner(long projectId, long userId) {
         List<ProjectUser> partnerProjectUser = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_PARTNER);
@@ -96,8 +96,8 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 
-    protected boolean isProjectSetupPending(long projectId) {
-        ProjectProcess projectProcess = ProjectProcessRepository.findOneByTargetId(projectId);
-        return ProjectState.SETUP.equals(projectProcess.getActivityState());
+    protected boolean isProjectNotWithdrawn(long projectId) {
+        ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
+        return !ProjectState.WITHDRAWN.equals(projectProcess.getActivityState());
     }
 }
