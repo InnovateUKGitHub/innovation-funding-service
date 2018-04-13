@@ -48,6 +48,14 @@ node {
     nodeModulesDir = file("${project.projectDir}")
 }
 
+npm_install {
+    inputs.files file("${projectDir}/package.json")
+    outputs.files file("${projectDir}/node_modules")
+    args = ['--loglevel', 'warn']
+    description = "Install Node.js packages"
+    outputs.upToDateWhen { false }
+}
+
 gulp {
     // Set the directory where gulpfile.js should be found
     workDir = file("${project.projectDir}")
