@@ -1,9 +1,9 @@
-package org.innovateuk.ifs.invite.builder;
+package org.innovateuk.ifs.assessment.builder;
 
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -12,11 +12,10 @@ import java.util.List;
 
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AssessmentInviteBuilderTest {
 
@@ -33,7 +32,7 @@ public class AssessmentInviteBuilderTest {
         User expectedSentBy = newUser().withId(6L).build();
         ZonedDateTime expectedSentOn = ZonedDateTime.now();
 
-        AssessmentInvite invite = newAssessmentInvite()
+        AssessmentInvite invite = AssessmentInviteBuilder.newAssessmentInvite()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withEmail(expectedEmail)
@@ -72,7 +71,7 @@ public class AssessmentInviteBuilderTest {
         User[] expectedSentBy = newUser().withId(6L, 12L).buildArray(2, User.class);
         ZonedDateTime[] expectedSentOn = { ZonedDateTime.now(), ZonedDateTime.now().plusMinutes(1) };
 
-        List<AssessmentInvite> invites = newAssessmentInvite()
+        List<AssessmentInvite> invites = AssessmentInviteBuilder.newAssessmentInvite()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withEmail(expectedEmails)

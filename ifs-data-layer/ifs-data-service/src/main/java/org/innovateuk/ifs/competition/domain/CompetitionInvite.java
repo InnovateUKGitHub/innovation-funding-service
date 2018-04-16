@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.domain.competition;
+package org.innovateuk.ifs.competition.domain;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;

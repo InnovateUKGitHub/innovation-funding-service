@@ -25,6 +25,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...
 ...               IFS-3154 Invite Assessor to Interview Panel: Resend invite
 ...
+...               IFS-3201 Invite Assessor to Interview Panel: Accepted tab
+...
 ...               IFS-2635 Assign applications to interview panel dashboard - Key statistics
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
@@ -119,15 +121,20 @@ CompAdmin resends the interview panel invite
     [Documentation]  IFS-3154
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
-    Then the user clicks the button/link      link=Manage interview panel
-    And the user clicks the button/link       link=Invite assessors
-    Then the user clicks the button/link      link=Pending and declined
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/pending-and-declined
     And the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
     When the compAdmin resends the invites for interview panel     ${assessor_ben}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
     And the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
     #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
+
+CompAdmin Views the assessors that have accepted the interview panel invite
+    [Documentation]  IFS-3201
+    [Tags]
+    Given log in as a different user         &{Comp_admin1_credentials}
+    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
+    Then the user should see the element     jQuery=span:contains("1")
+    And the user should see the element      jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
 
 *** Keywords ***
 Custom Suite Setup

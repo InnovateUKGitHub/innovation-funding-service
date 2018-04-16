@@ -1,12 +1,12 @@
-package org.innovateuk.ifs.invite.domain.competition;
+package org.innovateuk.ifs.competition.domain;
 
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
