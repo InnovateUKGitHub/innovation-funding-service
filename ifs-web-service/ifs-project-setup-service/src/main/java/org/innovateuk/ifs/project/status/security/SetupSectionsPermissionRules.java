@@ -117,8 +117,8 @@ public class SetupSectionsPermissionRules {
     @PermissionRule(value = "SUBMIT_SPEND_PROFILE_SECTION", description = "A partner can attempt to submit the Spend Profile " +
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or queried")
-    public boolean partnerCanSubmitSpendProfileSection(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return doSectionCheck(projectOrganisationCompositeId.getProjectId(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()));
+    public boolean partnerCanSubmitSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @PermissionRule(value = "EDIT_SPEND_PROFILE_SECTION", description = "A partner can edit their own Spend Profile " +
