@@ -293,11 +293,7 @@ public class CompetitionSetupServiceImplTest {
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
-        ServiceResult<Void> updateResult = service.setCompetitionAsReadyToOpen(COMPETITION_ID);
-
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(
-                new org.innovateuk.ifs.commons.error.Error("competition.setup.is.already.ready.to.open", BAD_REQUEST)));
+        assertTrue(service.setCompetitionAsReadyToOpen(COMPETITION_ID).isSuccess());
 
         verify(competitionService, only()).getById(COMPETITION_ID);
         verifyNoMoreInteractions(competitionService, competitionSetupRestService);

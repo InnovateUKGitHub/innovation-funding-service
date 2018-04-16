@@ -292,7 +292,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	public ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
 		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
-            return serviceFailure(new Error("competition.setup.is.already.ready.to.open", HttpStatus.BAD_REQUEST));
+            return serviceSuccess();
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
