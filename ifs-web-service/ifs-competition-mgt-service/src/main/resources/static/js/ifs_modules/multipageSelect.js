@@ -41,6 +41,8 @@ IFS.competitionManagement.multipageSelect = (function () {
         var data = IFS.competitionManagement.multipageSelect.getData(checked, value, isSelectAll)
         var url = window.location.href
 
+        checkbox.attr('disabled', 'disabled')
+
         jQuery.ajaxProtected({
           type: 'POST',
           url: url,
@@ -67,6 +69,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
         }).always(function () {
           defer.resolve()
+          checkbox.removeAttr('disabled')
         })
 
         return defer.promise()
