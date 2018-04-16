@@ -45,7 +45,7 @@ public class TokenAuthenticationService {
                 boolean valid = token.equals(calculated);
                 if (!valid) {
                     LOG.warn("Potential security threat. Invalid auth token found for request. Token: {}, calculated:" +
-                            " {}");
+                            " {}, content: {}", token, calculated, getContentAsString(request));
                 }
                 return valid;
             } catch (InvalidKeyException e) {
