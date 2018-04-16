@@ -16,11 +16,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @TestPropertySource(locations = "classpath:application.properties")
-public class ApplicantControllerTest extends BaseControllerMockMVCTest<ApplicantController> {
+public class ApplicantDashboardControllerTest extends BaseControllerMockMVCTest<ApplicantDashboardController> {
 
     @Override
-    protected ApplicantController supplyControllerUnderTest() {
-        return new ApplicantController();
+    protected ApplicantDashboardController supplyControllerUnderTest() {
+        return new ApplicantDashboardController();
     }
 
     @Mock

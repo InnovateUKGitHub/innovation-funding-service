@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -108,7 +109,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         flushAndClearSession();
 
-        boolean interviewAssignmentExists = repository.existsByTargetIdAndActivityStateState(application.getId(), activityState.getState());
+        boolean interviewAssignmentExists = repository.existsByTargetIdAndActivityStateStateIn(application.getId(), singletonList(activityState.getState()));
 
         assertTrue(interviewAssignmentExists);
     }

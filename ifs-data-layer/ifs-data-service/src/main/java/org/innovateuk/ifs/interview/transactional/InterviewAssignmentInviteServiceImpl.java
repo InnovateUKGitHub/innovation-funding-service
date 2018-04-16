@@ -31,9 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.INTERVIEW_PANEL_INVITE_ALREADY_CREATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -266,7 +266,7 @@ public class InterviewAssignmentInviteServiceImpl implements InterviewAssignment
     }
 
     private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application, ActivityState createdActivityState) {
-        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateState(application.getId(), InterviewAssignmentState.CREATED.getBackingState())) {
+        if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(application.getId(), singletonList(InterviewAssignmentState.CREATED.getBackingState()))) {
             final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
             final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
 
