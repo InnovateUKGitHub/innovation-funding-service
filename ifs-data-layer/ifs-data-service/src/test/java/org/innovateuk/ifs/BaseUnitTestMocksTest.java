@@ -74,7 +74,7 @@ import org.innovateuk.ifs.form.transactional.SectionService;
 import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewAssignmentRepository;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
 import org.innovateuk.ifs.interview.transactional.InterviewInviteService;
 import org.innovateuk.ifs.interview.workflow.configuration.InterviewAssignmentWorkflowHandler;
 import org.innovateuk.ifs.invite.mapper.*;
@@ -230,7 +230,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected InterviewParticipantRepository interviewParticipantRepositoryMock;
 
     @Mock
-    protected InterviewAssignmentInviteService interviewAssignmentInviteServiceMock;
+    protected InterviewAssignmentService interviewAssignmentServiceMock;
 
     @Mock
     protected InterviewInviteService interviewInviteServiceMock;

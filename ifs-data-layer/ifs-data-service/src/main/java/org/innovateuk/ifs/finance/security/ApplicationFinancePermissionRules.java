@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.security;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -127,8 +129,11 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     }
 
     private boolean hasDetailedView(long applicationId) {
-
-        Competition competition = competitionRepository.findByApplicationsId(applicationId);
-        return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
+        Application application = applicationRepository.findOne(applicationId);
+        if (application != null){
+            Competition competition = competitionRepository.findById(application.getCompetition().getId());
+            return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
+        }
+        return false;
     }
 }

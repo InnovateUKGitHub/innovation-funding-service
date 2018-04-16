@@ -75,6 +75,8 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
                     verify(partnerOrganisationPermissionRules)
                             .internalUsersCanViewPartnerOrganisations(isA(PartnerOrganisationResource.class), isA
                                     (UserResource.class));
+                    verify(partnerOrganisationPermissionRules).partnersCanViewTheirOwnPartnerOrganisation(
+                            isA(PartnerOrganisationResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(partnerOrganisationPermissionRules);
                 });
     }
