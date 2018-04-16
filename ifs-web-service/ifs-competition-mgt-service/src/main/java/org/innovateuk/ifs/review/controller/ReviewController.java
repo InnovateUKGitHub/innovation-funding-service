@@ -20,7 +20,7 @@ import static java.lang.String.format;
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can view the Manage Assessment Panel dashboard", securedType = ReviewController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW_PANEL')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewController {
 
     @Autowired

@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/applications/invite")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite applications to an Interview Panel", securedType = InterviewApplicationSendInviteController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_PANEL_APPLICATIONS')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_APPLICATIONS')")
 public class InterviewApplicationSendInviteController {
 
     @Autowired

@@ -19,14 +19,14 @@ public class InterviewPermissionRules {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @PermissionRule(value = "INTERVIEW_PANEL", description = "Only project finance or competition admin can see interview panels" +
+    @PermissionRule(value = "INTERVIEW", description = "Only project finance or competition admin can see interview panels" +
             "if the competition is in the correct state.")
     public boolean interviewPanel(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();
         return isInternalAdmin(loggedInUser) && competitionHasInterviewPanel(competition);
     }
 
-    @PermissionRule(value = "INTERVIEW_PANEL_APPLICATIONS", description = "Only project finance or competition admin can " +
+    @PermissionRule(value = "INTERVIEW_APPLICATIONS", description = "Only project finance or competition admin can " +
             "see interview panel applications if the competition is in the correct state.")
     public boolean interviewPanelApplications(CompetitionCompositeId competitionCompositeId, UserResource loggedInUser) {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionCompositeId.id()).getSuccess();

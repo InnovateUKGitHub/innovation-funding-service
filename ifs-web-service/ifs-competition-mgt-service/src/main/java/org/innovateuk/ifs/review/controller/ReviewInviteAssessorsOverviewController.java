@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewInviteAssessorsOverviewController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW_PANEL')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewInviteAssessorsOverviewController extends CompetitionManagementCookieController<ReviewOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";

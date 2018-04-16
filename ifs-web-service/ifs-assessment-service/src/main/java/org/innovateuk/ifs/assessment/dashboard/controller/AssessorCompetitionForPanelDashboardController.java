@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.form.AssessorCompetitionDashboardAssessmentForm;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForPanelDashboardModelPopulator;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping(value = "/assessor")
-@SecuredBySpring(value = "Controller", description = "Assessors can access the assessment panel dashboard", securedType = AssessorCompetitionForPanelDashboardController.class)
-@PreAuthorize("hasAuthority('assessor')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSOR_COMPETITION')")
 public class AssessorCompetitionForPanelDashboardController {
 
     private static final String FORM_ATTR_NAME = "form";

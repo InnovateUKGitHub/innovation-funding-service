@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewInviteAssessorsController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW_PANEL')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW')")
 public class ReviewInviteAssessorsController extends CompetitionManagementCookieController<ReviewSelectionForm> {
 
     private static final String SELECTION_FORM = "reviewSelectionForm";

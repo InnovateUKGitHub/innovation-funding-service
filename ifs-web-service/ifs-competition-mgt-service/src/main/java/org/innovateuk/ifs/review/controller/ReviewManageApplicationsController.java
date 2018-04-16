@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = ReviewManageApplicationsController.class)
-@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW_PANEL_APPLICATIONS')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'REVIEW_APPLICATIONS')")
 public class ReviewManageApplicationsController {
     private static final int PAGE_SIZE  = 20;
 
