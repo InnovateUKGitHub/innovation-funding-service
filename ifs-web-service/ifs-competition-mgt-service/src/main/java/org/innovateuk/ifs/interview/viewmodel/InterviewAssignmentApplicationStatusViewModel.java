@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.interview.viewmodel;
 
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 
 import java.util.List;
@@ -16,12 +17,11 @@ public class InterviewAssignmentApplicationStatusViewModel  extends InterviewAss
             String innovationArea,
             String innovationSector,
             List<InterviewAssignmentApplicationStatusRowViewModel> applications,
-            int applicationsInCompetition,
-            int applicationsInPanel,
+            InterviewAssignmentKeyStatisticsResource keyStatisticsResource,
             PaginationViewModel pagination,
             String originQuery
     ) {
-        super(competitionId, competitionName, innovationArea, innovationSector, applications, applicationsInCompetition,
-                applicationsInPanel, pagination, originQuery);
+        super(competitionId, competitionName, innovationArea, innovationSector, applications, keyStatisticsResource,
+                pagination, originQuery);
     }
 }

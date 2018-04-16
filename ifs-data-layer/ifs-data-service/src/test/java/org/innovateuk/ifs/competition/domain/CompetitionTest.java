@@ -26,7 +26,6 @@ public class CompetitionTest {
     CompetitionMapper competitionMapper;
 
     private Long id;
-    private List<Application> applications;
     private List<Question> questions;
     private List<Section> sections;
     private String name;
@@ -68,7 +67,7 @@ public class CompetitionTest {
         TermsAndConditions termsAndConditions = new TermsAndConditions();
         termsAndConditions.setId(1L);
 
-        competition = new Competition(id, applications, questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);
+        competition = new Competition(id, questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
 

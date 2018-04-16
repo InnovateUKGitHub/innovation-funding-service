@@ -41,7 +41,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -218,17 +217,17 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<Role> roleTypes, Pageable pageable) {
+    public ServiceResult<UserPageResource> findActiveByRoles(Set<Role> roleTypes, Pageable pageable) {
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<Role> roleTypes, Pageable pageable) {
+    public ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable) {
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
@@ -264,9 +263,5 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         } else {
             return serviceSuccess();
         }
-    }
-
-    private List<UserResource> sortByName(List<UserResource> userResources) {
-        return userResources.stream().sorted(Comparator.comparing(userResource -> userResource.getName().toUpperCase())).collect(Collectors.toList());
     }
 }
