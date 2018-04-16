@@ -26,7 +26,6 @@ public class ProjectPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "ADD_PARTNER", description = "The System Registration user can add a partner to a project")
     public boolean systemRegistrarCanAddPartnersToProject(final ProjectResource project, final UserResource user) {
         return isSystemRegistrationUser(user)
-                && isProjectInSetup(project.getId())
- ;
+                && isProjectInSetup(project.getId());
     }
 }
