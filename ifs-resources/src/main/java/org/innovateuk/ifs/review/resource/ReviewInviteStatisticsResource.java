@@ -32,9 +32,12 @@ public class ReviewInviteStatisticsResource {
         return declined;
     }
 
-    public int getPending() {
-        return invited - (accepted + declined);
-    }
+
+    // TODO remove in S24
+//    @Deprecated
+//    public int getPending() {
+//        return invited - (accepted + declined);
+//    }
 
     @Override
     public boolean equals(Object o) {

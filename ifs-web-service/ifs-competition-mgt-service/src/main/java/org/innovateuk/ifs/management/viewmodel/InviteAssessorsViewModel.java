@@ -12,7 +12,6 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
     private long assessorsInvited;
     private long assessorsAccepted;
     private long assessorsDeclined;
-    private long assessorsStaged;
     private String innovationSector;
     private String innovationArea;
     private List<ViewModelRowType> assessors;
@@ -60,14 +59,6 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
 
     public void setAssessorsDeclined(long assessorsDeclined) {
         this.assessorsDeclined = assessorsDeclined;
-    }
-
-    public long getAssessorsStaged() {
-        return assessorsStaged;
-    }
-
-    public void setAssessorsStaged(long assessorsStaged) {
-        this.assessorsStaged = assessorsStaged;
     }
 
     public String getInnovationSector() {

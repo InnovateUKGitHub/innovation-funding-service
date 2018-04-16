@@ -160,6 +160,5 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(2, result.getInvited());
         assertEquals(1, result.getAccepted());
         assertEquals(1, result.getDeclined());
-        assertEquals(0, result.getPending());
     }
 }

@@ -38,7 +38,6 @@ abstract class ReviewInviteAssessorsModelPopulator<ViewModelType extends InviteA
         model.setAssessorsInvited(statisticsResource.getInvited());
         model.setAssessorsAccepted(statisticsResource.getAccepted());
         model.setAssessorsDeclined(statisticsResource.getDeclined());
-        model.setAssessorsStaged(statisticsResource.getPending());
     }
 
     private void populateCompetitionInnovationSectorAndArea(ViewModelType model, CompetitionResource competition) {

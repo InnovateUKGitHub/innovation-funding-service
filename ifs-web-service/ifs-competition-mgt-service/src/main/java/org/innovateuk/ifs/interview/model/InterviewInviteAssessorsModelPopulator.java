@@ -44,6 +44,5 @@ abstract class InterviewInviteAssessorsModelPopulator<ViewModelType extends Invi
         model.setAssessorsInvited(statisticsResource.getAssessorsInvited());
         model.setAssessorsAccepted(statisticsResource.getAssessorsAccepted());
         model.setAssessorsDeclined(statisticsResource.getAssessorsRejected());
-        model.setAssessorsStaged(statisticsResource.getAssessorsOnInviteList());
     }
 }
