@@ -4,6 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
@@ -28,6 +31,7 @@ import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.Role.PARTNER;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.never;
@@ -44,6 +48,12 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
+
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
+                .withId(competitionId)
+                .withName("Comp 1")
+                .withLocationPerPartner(true)
+                .build();
 
         ProjectResource project = newProjectResource()
                 .withId(projectId)
@@ -84,12 +94,18 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         projectUsers.add(leadFinanceContactProjectUser);
         projectUsers.add(partnerFinanceContactProjectUser);
 
+        List<PartnerOrganisationResource> partnerOrganisations = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource()
+                .withOrganisation(1L, 2L)
+                .withPostCode("TW14 9QG", "UB7 8QF")
+                .build(2);
 
         when(projectService.getById(project.getId())).thenReturn(project);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(partnerOrganisation.getId())).thenReturn(partnerOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(competitionService.getById(competitionId)).thenReturn(competition);
+        when(partnerOrganisationRestService.getProjectPartnerOrganisations(projectId)).thenReturn(RestResult.restSuccess(partnerOrganisations));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/details"))
                 .andExpect(view().name("project/detail"))
@@ -104,10 +120,13 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         // Assert that the model has the correct values
         assertEquals(project, model.getProject());
         assertEquals(competitionId, model.getCompetitionId());
-        assertNull(model.getCompetitionName());
+        assertEquals("Comp 1", model.getCompetitionName());
         assertEquals("Lead Org 1", model.getLeadOrganisation());
         assertEquals(projectManagerProjectUser, model.getProjectManager());
         assertEquals(expectedOrganisationFinanceContactMap, model.getOrganisationFinanceContactMap());
+        assertEquals(true, model.isLocationPerPartnerRequired());
+        assertEquals("TW14 9QG", model.getPostCodeForPartnerOrganisation(1L));
+        assertEquals("UB7 8QF", model.getPostCodeForPartnerOrganisation(2L));
 
     }
 
@@ -147,6 +166,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertNull(viewModel.getLeadOrganisation());
         assertNull(viewModel.getProjectManager());
         assertNull(viewModel.getOrganisationFinanceContactMap());
+        assertFalse(viewModel.isLocationPerPartnerRequired());
 
         ProjectDurationForm form = (ProjectDurationForm) result.getModelAndView().getModel().get("form");
         assertEquals(new ProjectDurationForm(), form);
