@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class InviteUserController {
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
     private static final String DEFAULT_PAGE_SIZE = "40";
+
+    private static final Sort DEFAULT_INVITE_SORT = new Sort(new Sort.Order(Sort.Direction.ASC, "name"));
 
     @Autowired
     private InviteUserService inviteUserService;
@@ -47,7 +50,7 @@ public class InviteUserController {
     @GetMapping("/internal/pending")
     public RestResult<RoleInvitePageResource> findPendingInternalUserInvites(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return inviteUserService.findPendingInternalUserInvites(new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return inviteUserService.findPendingInternalUserInvites(new PageRequest(pageIndex, pageSize, DEFAULT_INVITE_SORT)).toGetResponse();
     }
 
     @PutMapping("/internal/pending/{inviteId}/resend")

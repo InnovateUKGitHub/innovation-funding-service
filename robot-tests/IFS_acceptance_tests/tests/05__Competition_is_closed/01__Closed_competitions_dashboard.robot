@@ -14,6 +14,7 @@ Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          ../07__Assessor/Assessor_Commons.robot
 
 *** Test Cases ***
 Competition dashboard
@@ -69,8 +70,7 @@ Get The expected values from the invite page
     The user clicks the button/link    link=Competition
     The user clicks the button/link    link=Manage assessments
     The user clicks the button/link    jQuery=a:contains("Allocate applications")
-    ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div[2]/table/tbody/tr
-    Set Test Variable    ${NUMBER_OF_APPLICATIONS}
+    Get the total number of submitted applications
     The user clicks the button/link    link=Manage assessments
     The user clicks the button/link    link=Competition
 

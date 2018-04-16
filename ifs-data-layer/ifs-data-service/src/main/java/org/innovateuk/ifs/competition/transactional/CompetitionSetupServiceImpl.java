@@ -16,10 +16,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
@@ -55,7 +55,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
@@ -143,11 +143,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         if (existingLeadTechnologistId != null) {
 
             AssessmentParticipant competitionParticipant =
-                    competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
+                    assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
                             existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
 
             if (competitionParticipant != null) {
-                competitionParticipantRepository.delete(competitionParticipant);
+                assessmentParticipantRepository.delete(competitionParticipant);
             }
         }
 
@@ -168,7 +168,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
                 competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
-                competitionParticipantRepository.save(competitionParticipant);
+                assessmentParticipantRepository.save(competitionParticipant);
             }
         }
 
@@ -178,7 +178,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private boolean doesLeadTechnologistAlreadyExist(Competition competition) {
 
         CompetitionParticipant existingCompetitionParticipant =
-                competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competition.getId(),
+                assessmentParticipantRepository.getByCompetitionIdAndUserIdAndRole(competition.getId(),
                         competition.getLeadTechnologist().getId(), CompetitionParticipantRole.INNOVATION_LEAD);
 
         return existingCompetitionParticipant != null;

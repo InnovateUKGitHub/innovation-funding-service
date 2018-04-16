@@ -3,20 +3,24 @@ package org.innovateuk.ifs.review.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.*;
-import org.innovateuk.ifs.invite.mapper.ReviewParticipantMapper;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.review.mapper.ReviewParticipantMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
-import org.innovateuk.ifs.invite.repository.ReviewInviteRepository;
-import org.innovateuk.ifs.invite.repository.ReviewParticipantRepository;
+import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
+import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -31,7 +35,6 @@ import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -57,7 +60,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -78,7 +81,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     private ReviewInviteRepository reviewInviteRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private ReviewParticipantRepository reviewParticipantRepository;
@@ -219,7 +222,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            final Page<AssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId, pageable);
+            final Page<AssessmentParticipant> pagedResult = assessmentParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId, pageable);
 
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
@@ -232,7 +235,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        List<AssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId);
+        List<AssessmentParticipant> result = assessmentParticipantRepository.findParticipantsNotOnAssessmentPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }

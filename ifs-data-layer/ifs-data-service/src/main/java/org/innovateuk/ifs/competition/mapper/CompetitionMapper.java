@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.mapper;
 
-import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
@@ -20,7 +19,6 @@ import org.mapstruct.Mappings;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                ApplicationMapper.class,
                 QuestionMapper.class,
                 UserMapper.class,
                 InnovationAreaMapper.class,
@@ -62,7 +60,6 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(target = "sections", ignore = true),
             @Mapping(target = "questions", ignore = true),
             @Mapping(target = "template", ignore = true),
-            @Mapping(target = "applications", ignore = true),
             @Mapping(target = "assessmentPanelDate", ignore = true),
             @Mapping(target = "panelDate", ignore = true),
             @Mapping(target = "maxProjectDuration", defaultValue = "36"),
