@@ -3,6 +3,7 @@ package org.innovateuk.ifs.commons.security.evaluator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -118,7 +119,7 @@ public class DefaultPermissionMethodHandler implements PermissionMethodHandler {
             return (Boolean) method.invoke(methodAndBean.getLeft(), dto, finalAuthentication);
         } catch (InvocationTargetException e) {
             LOG.error("Error whilst processing a permissions method", e);
-            if (e.getTargetException() instanceof ObjectNotFoundException) {
+            if (e.getTargetException() instanceof ObjectNotFoundException || e.getTargetException() instanceof ForbiddenActionException) {
                 throw (RuntimeException) e.getTargetException();
             } else {
                 throw new RuntimeException(e);
