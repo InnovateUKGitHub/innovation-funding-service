@@ -18,9 +18,9 @@ public class GoogleAnalyticsDataLayerServiceImpl extends BaseTransactionalServic
 
     @Override
     public ServiceResult<String> getCompetitionNameByApplicationId(long applicationId) {
-        return find(competitionRepository
-                .findByApplicationsId(applicationId), notFoundError(Competition.class, applicationId))
-                .andOnSuccessReturn(Competition::getName);
+        return getApplication(applicationId)
+                .andOnSuccess(application -> getCompetition(application.getCompetition().getId())
+                        .andOnSuccessReturn(Competition::getName));
     }
 
     @Override
