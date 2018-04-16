@@ -346,9 +346,9 @@ Lead partner can change the project address
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
     [Tags]  HappyPath
-     Given the user should see the element    css=#start-date-status.yes
-     And the user should see the element    css=#project-address-status.yes
-     And the user should see the element    css=#project-manager-status.yes
+    Given the user should see the element    css=#start-date-status.yes
+    And the user should see the element    css=#project-address-status.yes
+    And the user should see the element    css=#project-manager-status.yes
 
 Non lead partner invites finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
@@ -374,7 +374,7 @@ Invited Fin Contact for non lead partner
     Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
     When log in as a different user       &{collaborator1_credentials}
     Then the user navigates to the page   ${project_in_setup_page}/details
-    And the user should see the element   jQuery=a:contains("Ludlow's FinContact")
+    And the user should see the element   link=Ludlow's FinContact
     And select the project location       Ludlow
     When the user clicks the button/link  link=View the status of partners
     Then the user should see the element  css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
@@ -526,7 +526,7 @@ Academic Partner nominates Finance contact
 
 Validation for project location
     [Documentation]   IFS-2920
-    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    [Setup]  log in as a different user                 &{lead_applicant_credentials}
     Given the user navigates to the page                ${project_in_setup_details_page}
     Given the user clicks the button/link               jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user moves focus to the element             id=postCode

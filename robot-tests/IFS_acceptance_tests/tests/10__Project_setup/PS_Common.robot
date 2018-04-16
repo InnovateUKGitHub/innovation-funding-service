@@ -152,6 +152,7 @@ ${account_two}   12345677
 ${sortCode_two}  000004
 
 ${postcode}  BS14NT
+
 *** Keywords ***
 project finance submits monitoring officer
     [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
@@ -267,7 +268,7 @@ Select project location
     [Arguments]  ${org_id}
     the user navigates to the page        ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/organisation/${org_id}/partner-project-location
     the user enters text to a text field  css=#postCode  ${postcode}
-    the user clicks the button/link       jQuery=.button:contains("Save project location")
+    the user clicks the button/link       css=button[type="submit"] #Save project location button
     the user clicks the button/link       link=Project setup status
 
 bank details are approved for all businesses
