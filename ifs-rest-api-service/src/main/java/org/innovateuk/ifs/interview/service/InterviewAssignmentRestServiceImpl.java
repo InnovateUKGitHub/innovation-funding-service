@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -82,5 +83,10 @@ public class InterviewAssignmentRestServiceImpl extends BaseRestService implemen
     @Override
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return postWithRestResult(format("%s/%s/%s", REST_URL, "send-invites", competitionId), assessorInviteSendResource, Void.class);
+    }
+
+    @Override
+    public RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class);
     }
 }
