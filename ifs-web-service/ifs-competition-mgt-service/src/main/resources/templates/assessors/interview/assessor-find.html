@@ -51,9 +51,7 @@
         <dd th:text="${model.innovationArea}">Agriculture and food</dd>
     </dl>
 
-    <div><br></div>
-
-    <ul class="inline-nav">
+    <ul class="inline-nav extra-margin">
         <li class="selected">
             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
         </li>
@@ -63,8 +61,8 @@
         <li class="not-selected">
             <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/pending-and-declined(competitionId=${model.competitionId})}">Pending and declined</a>
         </li>
-        <li class="not-selected" aria-label="Item not selected">
-            <a class="buttonlink disabled">Accepted</a>
+        <li class="not-selected">
+            <a th:href="@{/assessment/interview/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
         </li>
     </ul>
 
