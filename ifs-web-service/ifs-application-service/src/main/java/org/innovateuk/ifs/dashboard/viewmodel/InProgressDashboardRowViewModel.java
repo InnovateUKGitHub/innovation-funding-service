@@ -18,7 +18,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final int applicationProgress;
     private final boolean assignedToInterview;
 
-    public InProgressDashboardRowViewModel(String title, Long applicationId, String competitionTitle, boolean assignedToMe, ApplicationState applicationState, boolean leadApplicant, ZonedDateTime endDate, long daysLeft, int applicationProgress, boolean assignedToInterview) {
+    public InProgressDashboardRowViewModel(String title, long applicationId, String competitionTitle, boolean assignedToMe, ApplicationState applicationState, boolean leadApplicant, ZonedDateTime endDate, long daysLeft, int applicationProgress, boolean assignedToInterview) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;

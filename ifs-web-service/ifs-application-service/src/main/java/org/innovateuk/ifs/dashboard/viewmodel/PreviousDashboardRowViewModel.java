@@ -9,7 +9,7 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     private final ApplicationState applicationState;
 
-    public PreviousDashboardRowViewModel(String title, Long applicationId, String competitionTitle, ApplicationState applicationState) {
+    public PreviousDashboardRowViewModel(String title, long applicationId, String competitionTitle, ApplicationState applicationState) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
     }

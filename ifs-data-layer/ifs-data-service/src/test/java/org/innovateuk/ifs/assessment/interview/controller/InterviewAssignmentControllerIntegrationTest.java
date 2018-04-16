@@ -380,7 +380,6 @@ public class InterviewAssignmentControllerIntegrationTest extends BaseController
         assertTrue(result.isSuccess());
         assertTrue(result.getSuccess());
 
-
         RestResult<Boolean> notFound = controller.isApplicationAssigned(99L);
         assertTrue(result.isSuccess());
         assertFalse(notFound.getSuccess());

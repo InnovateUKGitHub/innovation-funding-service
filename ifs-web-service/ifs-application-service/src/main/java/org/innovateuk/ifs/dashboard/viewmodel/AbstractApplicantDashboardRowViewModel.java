@@ -8,10 +8,10 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 public abstract class AbstractApplicantDashboardRowViewModel {
 
     private final String title;
-    private final Long applicationNumber;
+    private final long applicationNumber;
     private final String competitionTitle;
 
-    public AbstractApplicantDashboardRowViewModel(String title, Long applicationNumber, String competitionTitle) {
+    public AbstractApplicantDashboardRowViewModel(String title, long applicationNumber, String competitionTitle) {
         this.title = title;
         this.applicationNumber = applicationNumber;
         this.competitionTitle = competitionTitle;
@@ -21,7 +21,7 @@ public abstract class AbstractApplicantDashboardRowViewModel {
         return isNullOrEmpty(title) ? "Untitled application (start here)" : title;
     }
 
-    public Long getApplicationNumber() {
+    public long getApplicationNumber() {
         return applicationNumber;
     }
 

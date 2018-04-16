@@ -10,7 +10,7 @@ public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowV
     private final Long projectId;
     private final String projectTitle;
 
-    public ProjectDashboardRowViewModel(String title, Long applicationId, String competitionTitle, Long projectId, String projectTitle) {
+    public ProjectDashboardRowViewModel(String title, long applicationId, String competitionTitle, Long projectId, String projectTitle) {
         super(title, applicationId, competitionTitle);
         this.projectId = projectId;
         this.projectTitle = projectTitle;
