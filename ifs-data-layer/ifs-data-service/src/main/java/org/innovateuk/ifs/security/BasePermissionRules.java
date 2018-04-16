@@ -96,8 +96,8 @@ public abstract class BasePermissionRules extends RootPermissionRules {
         return competitionParticipants.stream().anyMatch(cp -> cp.getUser().getId().equals(loggedInUserId));
     }
 
-    protected boolean isProjectNotWithdrawn(long projectId) {
+    protected boolean isProjectInSetup(long projectId) {
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
-        return !ProjectState.WITHDRAWN.equals(projectProcess.getActivityState());
+        return ProjectState.SETUP.equals(projectProcess.getActivityState());
     }
 }

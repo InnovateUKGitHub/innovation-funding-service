@@ -4,6 +4,9 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.project.domain.ProjectProcess;
+import org.innovateuk.ifs.project.repository.ProjectProcessRepository;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.threads.resource.NoteResource;
@@ -21,6 +24,9 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private ProjectProcessRepository projectProcessRepository;
 
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Notes")
     public boolean onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
@@ -49,8 +55,13 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
         Optional<ProjectFinance> pf = findProjectFinance(projectFinance);
         if (pf.isPresent()){
             long projectId = pf.get().getProject().getId();
-            return isProjectNotWithdrawn(projectId);
+            return isProjectStateNotWithdrawn(projectId);
         }
         return false;
+    }
+
+    private boolean isProjectStateNotWithdrawn(long projectId){
+        ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
+        return !ProjectState.WITHDRAWN.equals(projectProcess.getActivityState());
     }
 }
