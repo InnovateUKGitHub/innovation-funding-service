@@ -151,6 +151,7 @@ ${sortCode_one}  404745
 ${account_two}   12345677
 ${sortCode_two}  000004
 
+${postcode}  BS14NT
 *** Keywords ***
 project finance submits monitoring officer
     [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}
@@ -259,15 +260,15 @@ navigate to external finance contact page, choose finance contact and save
     the user navigates to the page     ${server}/project-setup/project/${project}/details/finance-contact?organisation=${org_id}
     the user selects the radio button  financeContact  ${financeContactSelector}
     the user clicks the button/link    jQuery=.button:contains("Save")
-    ${project_details}  ${complete}=  Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery=a:contains("Select project location")
+    ${project_details}  ${complete}=  Run Keyword And Ignore Error Without Screenshots    the user should see the element    link=Select project location
     run keyword if  '${project_details}' == 'PASS'  select project location  ${org_id}
 
 Select project location
     [Arguments]  ${org_id}
-    the user navigates to the page    ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/organisation/${org_id}/partner-project-location
-    the user enters text to a text field  css=#postCode  BA16NJ
-    the user clicks the button/link     jQuery=.button:contains("Save project location")
-    the user clicks the button/link    jQuery=a:contains("Project setup status")
+    the user navigates to the page        ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/organisation/${org_id}/partner-project-location
+    the user enters text to a text field  css=#postCode  ${postcode}
+    the user clicks the button/link       jQuery=.button:contains("Save project location")
+    the user clicks the button/link       link=Project setup status
 
 bank details are approved for all businesses
     partners submit bank details

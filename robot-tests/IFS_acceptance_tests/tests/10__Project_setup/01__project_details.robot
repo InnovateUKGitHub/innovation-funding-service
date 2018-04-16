@@ -372,12 +372,12 @@ Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
     Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
-    When log in as a different user     &{collaborator1_credentials}
-    Then the user navigates to the page  ${project_in_setup_page}/details
-    And the user should see the element    jQuery=a:contains("Ludlow's FinContact")
-    And select the project location    Ludlow
-    When the user clicks the button/link    link=View the status of partners
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
+    When log in as a different user       &{collaborator1_credentials}
+    Then the user navigates to the page   ${project_in_setup_page}/details
+    And the user should see the element   jQuery=a:contains("Ludlow's FinContact")
+    And select the project location       Ludlow
+    When the user clicks the button/link  link=View the status of partners
+    Then the user should see the element  css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
@@ -517,18 +517,18 @@ Academic Partner nominates Finance contact
     And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element     jQuery=td:contains("${organisationEggsName}")
-    And select the project location    EGGS
+    And select the project location         EGGS
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(1)
-    And the user should see the element    jQuery=li.require-action:nth-child(3)
+    And the user should see the element     jQuery=li.require-action:nth-child(3)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
 Validation for project location
     [Documentation]   IFS-2920
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    Given the user navigates to the page    ${project_in_setup_details_page}
-    Given the user clicks the button/link     jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
+    Given the user navigates to the page                ${project_in_setup_details_page}
+    Given the user clicks the button/link               jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user moves focus to the element             id=postCode
     And the user should see an error                    This field cannot be left blank.
     When the user clicks the button/link                jQuery=button:contains("Save project location")
@@ -537,13 +537,13 @@ Validation for project location
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]  HappyPath
-    [Setup]    log in as a different user    &{lead_applicant_credentials}
-    Given the user navigates to the page    ${project_in_setup_details_page}
-    And select the project location    Empire
+    [Setup]    log in as a different user  &{lead_applicant_credentials}
+    Given the user navigates to the page  ${project_in_setup_details_page}
+    And select the project location       Empire
     And the user clicks the button/link   link=Project details
     When all the fields are completed
     And the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=li.complete:nth-of-type(1)
+    Then the user should see the element  css=li.complete:nth-of-type(1)
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
@@ -705,8 +705,8 @@ The user resends and clicks the button
 
 Select the project location
     [Arguments]  ${org}
-    the user navigates to the page    ${project_in_setup_details_page}
-    the user clicks the button/link     jQuery=#project-details-finance td:contains("${org}") ~ td a:contains("Select project location")
-    the user enters text to a text field  css=#postCode  BA16NJ
-    the user clicks the button/link     jQuery=.button:contains("Save project location")
-    the user clicks the button/link    jQuery=a:contains("Project setup status")
+    the user navigates to the page        ${project_in_setup_details_page}
+    the user clicks the button/link       jQuery=#project-details-finance td:contains("${org}") ~ td a:contains("Select project location")
+    the user enters text to a text field  css=#postCode  ${postcode}
+    the user clicks the button/link       jQuery=.button:contains("Save project location")
+    the user clicks the button/link       link=Project setup status
