@@ -22,6 +22,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<InterviewAssignmentRepository> {
 
@@ -75,5 +76,40 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
         Page<InterviewAssignment> actual = repository.findByTargetCompetitionIdAndActivityStateState(competition.getId(), activityState.getState(), pageable);
 
         assertEquals(expected.getId(), actual.getContent().get(0).getId());
+    }
+
+    @Test
+    public void existsByTargetIdAndActivityStateState() {
+        Competition competition = newCompetition()
+                .with(id(null))
+                .build();
+
+        competitionRepository.save(competition);
+
+        Application application = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .build();
+
+        applicationRepository.save(application);
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                InterviewAssignmentState.CREATED.getBackingState()
+        );
+
+        InterviewAssignment expected = newInterviewAssignment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withTarget(application)
+                .build();
+
+        repository.save(expected);
+
+        flushAndClearSession();
+
+        boolean interviewAssignmentExists = repository.existsByTargetIdAndActivityStateState(application.getId(), activityState.getState());
+
+        assertTrue(interviewAssignmentExists);
     }
 }

@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.invite.domain.competition;
+package org.innovateuk.ifs.review.domain;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionInvite;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.DiscriminatorValue;
@@ -13,7 +14,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
  */
 @Entity
 @DiscriminatorValue("ASSESSMENT_PANEL")
-public class ReviewInvite extends CompetitionInvite<ReviewInvite>  {
+public class ReviewInvite extends CompetitionInvite<ReviewInvite> {
 
     public ReviewInvite() {
     }

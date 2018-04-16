@@ -163,10 +163,11 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
         InOrder inOrder = inOrder(applicationRepositoryMock, activityStateRepositoryMock,
                 interviewAssignmentRepositoryMock);
 
+        inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(
+                ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
+
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
             inOrder.verify(applicationRepositoryMock).findOne(expectedApplication.getId());
-            inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(
-                    ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
             inOrder.verify(interviewAssignmentRepositoryMock).save(interviewPanellambdaMatcher(expectedApplication));
         });
     }

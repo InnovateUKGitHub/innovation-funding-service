@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.invite.builder;
+package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.invite.builder.BaseInviteBuilder;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.ZonedDateTime;

@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.invite.repository;
+package org.innovateuk.ifs.interview.repository;
 
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.competition.InterviewParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -26,7 +26,7 @@ public interface InterviewParticipantRepository extends PagingAndSortingReposito
     String BY_COMP_AND_STATUS_ON_PANEL = "SELECT assessmentInterviewPanelParticipant " +
             "FROM InterviewParticipant assessmentInterviewPanelParticipant " +
             "WHERE assessmentInterviewPanelParticipant.competition.id = :competitionId " +
-            "AND assessmentInterviewPanelParticipant.role = org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR " +
+            "AND assessmentInterviewPanelParticipant.role = org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR " +
             "AND assessmentInterviewPanelParticipant.status IN :status " +
             "AND assessmentInterviewPanelParticipant.user.id IN (" + USERS_WITH_INTERVIEW_PANEL_INVITE + ")";
 

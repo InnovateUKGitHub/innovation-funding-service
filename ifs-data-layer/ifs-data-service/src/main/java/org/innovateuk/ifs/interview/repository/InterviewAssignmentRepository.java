@@ -27,5 +27,4 @@ public interface InterviewAssignmentRepository extends ProcessRepository<Intervi
     Page<InterviewAssignment> findByTargetCompetitionIdAndActivityStateStateNot(long competitionId, State backingState, Pageable pagable);
 
     boolean existsByTargetIdAndActivityStateStateIn(long applicationId, List<State> backingState);
-
 }
