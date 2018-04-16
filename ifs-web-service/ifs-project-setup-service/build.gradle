@@ -11,12 +11,9 @@ createContainer.containerId="project-setup-svc"
 createContainer.portBindings = ['9005:8000']
 
 def enabled = project.hasProperty('ifs.project-setup-service.enabled') ? project.property('ifs.project-setup-service.enabled').toBoolean() : true
-stop.enabled = enabled
-removeContainer.enabled = enabled
-buildDocker.enabled = enabled
-createContainer.enabled = enabled
-deploy.enabled =enabled
-wait.enabled = enabled
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
 
 
 ext.serverContext = '/project-setup'

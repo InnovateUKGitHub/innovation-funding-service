@@ -70,6 +70,25 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
     }
 
     @Test
+    public void updateProjectDuration() throws Exception {
+        long projectId = 1L;
+        long durationInMonths = 18L;
+
+        when(projectDetailsServiceMock.updateProjectDuration(projectId, durationInMonths)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/update-duration/{durationInMonths}", projectId, durationInMonths)
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which project duration is being updated"),
+                                parameterWithName("durationInMonths").description("The new project duration to be set")
+                        )
+                ));
+    }
+
+    @Test
     public void setProjectManager() throws Exception {
         Long project1Id = 1L;
         Long projectManagerId = 8L;

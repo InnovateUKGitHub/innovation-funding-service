@@ -1,5 +1,3 @@
-
-
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply plugin: 'org.asciidoctor.convert'
@@ -65,13 +63,12 @@ osStageRemote.tag = silStubVersion
 tagDockerLocal.tag = silStubVersion
 osStageLocal.tag = silStubVersion
 
-createContainer.hostName="sil-stub"
-createContainer.containerName="sil-stub"
-createContainer.containerId="sil-stub"
+createContainer.hostName = "sil-stub"
+createContainer.containerName = "sil-stub"
+createContainer.containerId = "sil-stub"
 createContainer.portBindings = ['8091:8080']
 
-buildDocker.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-stop.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-removeContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-createContainer.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
-deploy.onlyIf{project.hasProperty('initialise')? project.property('initialise').toBoolean() : false}
+def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}

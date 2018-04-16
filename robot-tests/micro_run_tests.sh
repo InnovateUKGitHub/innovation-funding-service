@@ -75,7 +75,7 @@ function addTestFiles() {
 function resetDB() {
     section "=> RESETTING DATABASE STATE and syncing shibboleth users"
     cd ${rootDir}
-    ./gradlew flywayClean flywayMigrate syncShib
+    ./gradlew ifs-data-layer:ifs-data-service:flywayClean ifs-data-layer:ifs-data-service:flywayMigrate syncShib
 }
 
 function buildAndDeploy() {
@@ -89,7 +89,7 @@ function buildAndDeploy() {
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
 
-    ./gradlew -Pcloud=development deploy wait -Pifs.full-deployment.enabled=true -Pifs.finance-totals.enabled=false -Pifs.prototypes.enabled=false -x test
+    ./gradlew -Pcloud=development deploy wait -x test
 }
 
 function injectRobotParameters() {

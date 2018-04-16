@@ -125,104 +125,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                         andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
-        return validateProjectStartDate(projectStartDate).
-                andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
-                andOnSuccess(() -> getProject(projectId)).
-                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
-    }
-
-    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
-
-        if (date.getDayOfMonth() != 1) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
-        }
-
-        if (date.isBefore(LocalDate.now())) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
-        }
-
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
-
-        if (isSpendProfileIsGenerated(projectId)) {
-            return serviceFailure(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
-        }
-
-        return serviceSuccess();
-    }
-
-    private boolean isSpendProfileIsGenerated(Long projectId) {
-        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
-        return !spendProfiles.isEmpty();
-    }
-
-    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
-        return spendProfileRepository.findByProjectId(projectId);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
-        return getProject(composite.getProjectId()).
-                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
-                andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
-                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
-        return getProject(projectId).
-                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
-                andOnSuccess(() ->
-                        find(getProject(projectId), getOrganisation(organisationId)).
-                                andOnSuccess((project, organisation) -> {
-                                    if (address.getId() != null && addressRepository.exists(address.getId())) {
-                                        Address existingAddress = addressRepository.findOne(address.getId());
-                                        project.setAddress(existingAddress);
-                                    } else {
-                                        Address newAddress = addressMapper.mapToDomain(address);
-                                        if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                                            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
-                                            List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
-                                            existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
-                                            OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
-                                            organisationAddressRepository.save(organisationAddress);
-                                        }
-                                        project.setAddress(newAddress);
-                                    }
-
-                                    return getCurrentlyLoggedInPartner(project).andOnSuccess(user -> {
-                                        projectDetailsWorkflowHandler.projectAddressAdded(project, user);
-                                        return serviceSuccess();
-                                    });
-                                })
-                );
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
-        return getProject(projectId)
-                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
-                .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_FINANCE_CONTACT));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
-
-        return getProject(projectId)
-                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
-                .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
-    }
-
     private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
         if (project.getGrantOfferLetter() != null){
             return serviceFailure(failKey);
@@ -281,6 +183,83 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getOnlyElementOrEmpty(projectManagers);
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
+        return validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
+                andOnSuccess(() -> getProject(projectId)).
+                andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+    }
+
+    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
+
+        if (date.getDayOfMonth() != 1) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
+        }
+
+        if (date.isBefore(LocalDate.now())) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
+
+        if (isSpendProfileIsGenerated(projectId)) {
+            return serviceFailure(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
+        }
+
+        return serviceSuccess();
+    }
+
+    private boolean isSpendProfileIsGenerated(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+        return !spendProfiles.isEmpty();
+    }
+
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
+        return validateProjectDuration(durationInMonths).
+                andOnSuccess(() -> validateIfProjectDurationCanBeChanged(projectId)).
+                andOnSuccess(() -> getProject(projectId)).
+                andOnSuccessReturnVoid(project -> project.setDurationInMonths(durationInMonths));
+    }
+
+    private ServiceResult<Void> validateProjectDuration(long durationInMonths) {
+
+        if (durationInMonths <1) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateIfProjectDurationCanBeChanged(long projectId) {
+
+        if (isSpendProfileIsGenerated(projectId)) {
+            return serviceFailure(PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
+        }
+
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
+        return getProject(composite.getProjectId()).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
+                andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
+                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+    }
+
     private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
 
         ServiceResult<ProjectUser> result = find(organisation(organisationId))
@@ -322,6 +301,54 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
         project.addProjectUser(newFinanceContact);
         return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
+        return getProject(projectId).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
+                andOnSuccess(() ->
+                        find(getProject(projectId), getOrganisation(organisationId)).
+                                andOnSuccess((project, organisation) -> {
+                                    if (address.getId() != null && addressRepository.exists(address.getId())) {
+                                        Address existingAddress = addressRepository.findOne(address.getId());
+                                        project.setAddress(existingAddress);
+                                    } else {
+                                        Address newAddress = addressMapper.mapToDomain(address);
+                                        if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
+                                            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
+                                            List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
+                                            existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
+                                            OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
+                                            organisationAddressRepository.save(organisationAddress);
+                                        }
+                                        project.setAddress(newAddress);
+                                    }
+
+                                    return getCurrentlyLoggedInPartner(project).andOnSuccess(user -> {
+                                        projectDetailsWorkflowHandler.projectAddressAdded(project, user);
+                                        return serviceSuccess();
+                                    });
+                                })
+                );
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
+        return getProject(projectId)
+                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
+                .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_FINANCE_CONTACT));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
+
+        return getProject(projectId)
+                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
+                .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {

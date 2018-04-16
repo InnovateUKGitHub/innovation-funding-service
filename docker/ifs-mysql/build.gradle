@@ -31,25 +31,10 @@ subprojects {
         }
     }
 
-
-    List<String> cmd = new ArrayList<>();
-    cmd.add("--character-set-server=utf8, --collation-server=utf8_bin")
-
-    createContainer.cmd = cmd
-
-    createContainer.enabled = true
-    deploy.enabled = false
-
-    buildDocker.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
-    stop.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
-    removeContainer.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
-    createContainer.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
-    deploy.onlyIf { project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false }
-
-    wait.enabled = true
-    stop.enabled = true
-    removeContainer.enabled = true
-
+    def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+    [stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = enabled
+    }
 
     task createTestSchema(type: Exec) {
         doFirst {
