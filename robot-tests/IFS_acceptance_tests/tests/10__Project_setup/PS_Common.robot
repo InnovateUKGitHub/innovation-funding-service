@@ -268,7 +268,7 @@ Select project location
     [Arguments]  ${org_id}
     the user navigates to the page        ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/organisation/${org_id}/partner-project-location
     the user enters text to a text field  css=#postCode  ${postcode}
-    the user clicks the button/link       css=button[type="submit"] #Save project location button
+    the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
 
 bank details are approved for all businesses
