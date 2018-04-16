@@ -164,7 +164,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
 
         InOrder inOrder = inOrder(applicationRepositoryMock, activityStateRepositoryMock,
                 interviewAssignmentRepositoryMock);
-
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
 
