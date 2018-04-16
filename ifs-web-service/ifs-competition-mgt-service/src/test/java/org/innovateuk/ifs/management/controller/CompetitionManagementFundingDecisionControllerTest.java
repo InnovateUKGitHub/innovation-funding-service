@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.FundingDecisionFilterForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionSelectionCookie;
 import org.innovateuk.ifs.competition.form.FundingDecisionSelectionForm;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -38,6 +39,7 @@ import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.util.JsonUtil.getSerializedObject;
 import static org.junit.Assert.assertEquals;
@@ -104,6 +106,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Test
     public void testGetApplications() throws Exception {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("id");
         when(applicationSummaryRestService.getAllSubmittedApplicationIds(COMPETITION_ID, empty(), empty())).thenReturn(restSuccess(asList(1L, 2L)));
@@ -126,6 +130,9 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
     @Test
     public void testGetApplications_requestWithoutFilterCookieParametersAndWithoutGetFiltersWillCreateACookieWithEmptyFilter() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
 
@@ -150,6 +157,9 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Test
     public void testGetApplications_requestWithoutFilterCookieParametersAndWithGetFiltersWillCreateACookieBasedOnGetParameters() throws Exception {
         String filterString = "an application id";
+
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
@@ -177,6 +187,9 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
 
     @Test
     public void testGetApplications_requestWithCookieWithFilterAndSelectionParametersWithoutGetFiltersWillSetFilterParametersToCookieValues() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
 
@@ -200,6 +213,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
     @Test
     public void testGetApplications_requestWithCookieWithFilterAndSelectionParametersWithoutGetFiltersAndClearFiltersParameterWillResetFilterParameters() throws Exception {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource(50, 3, newApplicationSummaryResource().build(2), 1, 20);
         when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 0, 20, empty(), empty())).thenReturn(restSuccess(summary));
@@ -226,6 +241,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         List<Long> applicationIds = asList(1L, 2L);
 
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("id");
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
@@ -313,6 +330,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         applicationIds.add(10L);
 
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("id");
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
@@ -343,6 +362,8 @@ public class CompetitionManagementFundingDecisionControllerTest extends BaseCont
         applicationIds.add(10L);
 
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(competitionSummaryResource));
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("id");
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());

@@ -8,8 +8,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -53,6 +55,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
 
     @Autowired
     private ApplicationFundingDecisionService applicationFundingDecisionService;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -273,14 +278,16 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     }
 
     private String populateSubmittedModel(Model model, long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
-        ApplicationSummaryPageResource results = getApplicationsByFilters(competitionId, paginationForm, fundingDecisionFilterForm);
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        ApplicationSummaryPageResource results = getApplicationsByFilters(competition.getId(), paginationForm, fundingDecisionFilterForm);
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
 
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
-                .getCompetitionSummary(competitionId)
+                .getCompetitionSummary(competition.getId())
                 .getSuccess();
 
-        List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competitionId, fundingDecisionFilterForm);
+        List<Long> submittableApplicationIds = getAllApplicationIdsByFilters(competition.getId(), fundingDecisionFilterForm);
         boolean selectionLimitWarning = limitIsExceeded(submittableApplicationIds.size());
         boolean selectAllDisabled =  submittableApplicationIds.isEmpty();
 
