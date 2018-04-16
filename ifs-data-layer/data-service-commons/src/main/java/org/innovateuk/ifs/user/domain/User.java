@@ -25,7 +25,7 @@ import static javax.persistence.EnumType.STRING;
  */
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User extends AuditableEntity implements Serializable{
+public class User extends AuditableEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

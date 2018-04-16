@@ -294,9 +294,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+    public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
         Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-        Stream<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
+        List<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
         return serviceSuccess(applicationResults);
     }
 
