@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.validation.validator;
+package org.innovateuk.ifs.application.validator;
 
-import static org.innovateuk.ifs.validation.validator.ValidatorTestUtil.getBindingResult;
+import static org.innovateuk.ifs.application.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

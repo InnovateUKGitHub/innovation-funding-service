@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.form.domain;
 
 import com.google.common.collect.Sets;
-import org.innovateuk.ifs.validation.validator.EmailValidator;
-import org.innovateuk.ifs.validation.validator.NotEmptyValidator;
+import org.innovateuk.ifs.application.validator.EmailValidator;
+import org.innovateuk.ifs.application.validator.NotEmptyValidator;
 import org.junit.Test;
 
 import java.util.HashSet;

@@ -18,7 +18,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.util.MapFunctions;
-import org.innovateuk.ifs.validation.validator.ApplicationFundingDecisionValidator;
+import org.innovateuk.ifs.application.validator.ApplicationFundingDecisionValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

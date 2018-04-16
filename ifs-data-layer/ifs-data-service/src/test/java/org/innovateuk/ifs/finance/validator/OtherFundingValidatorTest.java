@@ -13,8 +13,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
-import org.innovateuk.ifs.finance.validator.OtherFundingValidator;
-import org.innovateuk.ifs.validation.validator.ValidatorTestUtil;
+import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.handler.item.OtherFundingHandler.COST_KEY;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
-import static org.innovateuk.ifs.validation.validator.ValidatorTestUtil.getBindingResult;
+import static org.innovateuk.ifs.application.validator.ValidatorTestUtil.getBindingResult;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;

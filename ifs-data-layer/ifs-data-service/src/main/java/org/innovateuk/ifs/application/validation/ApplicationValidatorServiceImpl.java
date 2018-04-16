@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.validation.transactional;
+package org.innovateuk.ifs.application.validation;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.form.domain.Question;
+import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -9,16 +10,14 @@ import org.innovateuk.ifs.finance.transactional.FinanceRowCostsService;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.application.domain.FormInputResponse;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.application.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
  * TODO: INFUND-9548 adding unit tests for this class
  */
 @Service
-public class ValidatorServiceImpl extends BaseTransactionalService implements ValidatorService {
+public class ApplicationValidatorServiceImpl extends BaseTransactionalService implements ApplicationValidatorService {
 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
@@ -51,7 +50,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
-    private ValidationUtil validationUtil;
+    private ApplicationValidationUtil applicationValidationUtil;
 
     @Autowired
     private OrganisationService organisationService;
@@ -61,17 +60,17 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         List<BindingResult> results = new ArrayList<>();
         List<FormInputResponse> responses = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
         if (!responses.isEmpty()) {
-            results.addAll(responses.stream().map(formInputResponse -> validationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
+            results.addAll(responses.stream().map(formInputResponse -> applicationValidationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
         } else {
             FormInputResponse emptyResponse = new FormInputResponse();
             emptyResponse.setFormInput(formInputRepository.findOne(formInputId));
-            results.add(validationUtil.validateResponse(emptyResponse, false));
+            results.add(applicationValidationUtil.validateResponse(emptyResponse, false));
         }
 
         FormInput formInput = formInputRepository.findOne(formInputId);
         if (formInput.getType().equals(FormInputType.APPLICATION_DETAILS)) {
             Application application = applicationRepository.findOne(applicationId);
-            results.add(validationUtil.validationApplicationDetails(application));
+            results.add(applicationValidationUtil.validationApplicationDetails(application));
         }
 
         return results;
@@ -80,7 +79,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public BindingResult validateFormInputResponse(Application application, Long formInputId, Long markedAsCompleteById) {
         FormInputResponse response = formInputResponseRepository.findByApplicationIdAndUpdatedByIdAndFormInputId(application.getId(), markedAsCompleteById, formInputId);
-        BindingResult result = validationUtil.validateResponse(response, false);
+        BindingResult result = applicationValidationUtil.validateResponse(response, false);
 
         validateFileUploads(application, formInputId).forEach(objectError -> result.addError(objectError));
 
@@ -93,7 +92,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         return getProcessRole(markedAsCompleteById).andOnSuccess(role ->
                 financeService.financeDetails(applicationId, role.getOrganisationId()).andOnSuccess(financeDetails ->
                         financeRowCostsService.getCostItems(financeDetails.getId(), question.getId()).andOnSuccessReturn(costItems ->
-                                validationUtil.validateCostItem(costItems, question)
+                                applicationValidationUtil.validateCostItem(costItems, question)
                         )
                 )
         ).getSuccess();
@@ -114,7 +113,7 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         FormInput formInput = formInputRepository.findOne(formInputId);
 
         if(FormInputType.FINANCE_UPLOAD.equals(formInput.getType()) && isResearchUser()) {
-            errors.addAll(validationUtil.validationJesForm(application).getAllErrors());
+            errors.addAll(applicationValidationUtil.validationJesForm(application).getAllErrors());
         }
 
         return errors;

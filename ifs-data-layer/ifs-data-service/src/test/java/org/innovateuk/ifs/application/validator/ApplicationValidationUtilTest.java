@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.validation.util;
+package org.innovateuk.ifs.application.validator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.validation.ApplicationValidationUtil;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
@@ -9,7 +10,7 @@ import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.finance.validator.AcademicJesValidator;
-import org.innovateuk.ifs.validation.transactional.ValidatorService;
+import org.innovateuk.ifs.application.validation.ApplicationValidatorService;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Matchers;
@@ -29,33 +30,20 @@ import static org.mockito.Mockito.when;
  * Unit test for {@link ValidationUtil}
  */
 
-public class ValidationUtilTest extends BaseUnitTestMocksTest {
+public class ApplicationValidationUtilTest extends BaseUnitTestMocksTest {
 
     @Mock
-    private SpendProfileCostValidator spendProfileCostValidator;
-
-    @Mock
-    private ValidatorService validatorServiceMock;
+    private ApplicationValidatorService applicationValidatorServiceMock;
 
     @Mock
     private AcademicJesValidator academicJesValidatorMock;
 
     @InjectMocks
-    private ValidationUtil validationUtil;
+    private ApplicationValidationUtil validationUtil;
 
     private ProjectFinanceRow materialCost;
 
-    @Test
-    public void testValidateSpendProfileTableResource() {
 
-        SpendProfileTableResource tableResource = new SpendProfileTableResource();
-
-        when(spendProfileCostValidator.supports(Matchers.eq(SpendProfileTableResource.class))).thenReturn(Boolean.TRUE);
-
-        validationUtil.validateSpendProfileTableResource(tableResource);
-
-        Mockito.verify(spendProfileCostValidator).validate(Matchers.eq(tableResource), Matchers.anyObject());
-    }
 
     @Test
     public void testValidationJesForm() {
@@ -75,7 +63,7 @@ public class ValidationUtilTest extends BaseUnitTestMocksTest {
         material.setItem("");
         material.setQuantity(5);
 
-        when(validatorServiceMock.getProjectCostHandler(material)).thenReturn(new MaterialsHandler());
+        when(applicationValidatorServiceMock.getProjectCostHandler(material)).thenReturn(new MaterialsHandler());
 
         ValidationMessages validationMessages = validationUtil.validateProjectCostItem(material);
 

@@ -37,6 +37,7 @@ import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.spendprofile.validator.SpendProfileValidationUtil;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
@@ -48,7 +49,6 @@ import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
-import org.innovateuk.ifs.validation.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -114,7 +114,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private ValidationUtil validationUtil;
+    private SpendProfileValidationUtil validationUtil;
     @Autowired
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
     @Autowired

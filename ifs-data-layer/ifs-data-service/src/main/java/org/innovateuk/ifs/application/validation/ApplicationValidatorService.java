@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.validation.transactional;
+package org.innovateuk.ifs.application.validation;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.form.domain.Question;
@@ -10,7 +10,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
-public interface ValidatorService {
+public interface ApplicationValidatorService {
     @NotSecured(value = "This service is used to validate existing data", mustBeSecuredByOtherServices = false)
     List<BindingResult> validateFormInputResponse(Long applicationId, Long formInputId);
 

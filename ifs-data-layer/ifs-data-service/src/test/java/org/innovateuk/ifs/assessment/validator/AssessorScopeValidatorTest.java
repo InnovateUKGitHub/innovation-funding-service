@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.validator;
 
 import org.innovateuk.ifs.application.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.validation.validator.ValidatorTestUtil;
+import org.innovateuk.ifs.application.validator.ValidatorTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
