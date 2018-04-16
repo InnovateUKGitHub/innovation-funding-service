@@ -41,10 +41,11 @@ public class TokenAuthenticationService {
         String token = getTokenFromRequestHeader(request);
         if (token != null) {
             try {
-                boolean valid = token.equals(
-                        hashBasedMacTokenHandler.calculateHash(secretKey, getContentAsString(request)));
+                String calculated = hashBasedMacTokenHandler.calculateHash(secretKey, getContentAsString(request));
+                boolean valid = token.equals(calculated);
                 if (!valid) {
-                    LOG.warn("Potential security threat. Invalid auth token found for request.");
+                    LOG.warn("Potential security threat. Invalid auth token found for request. Token: {}, calculated:" +
+                            " {}");
                 }
                 return valid;
             } catch (InvalidKeyException e) {
