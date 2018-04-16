@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
 /**
  * Service sends cost totals for an {@link Application}.
  */
@@ -50,11 +52,12 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
         List<FinanceCostTotalResource> financeCostTotalResourceList = financeCostTotalResourceMapper
                 .mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
-        return costTotalEndpoint
-                .sendCostTotals(spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList))
-                .andOnFailure(() -> LOG.error(
-                        "Failed sending financeCostTotalResources for applicationId: {}",
-                        applicationId
-                ));
+        if (financeCostTotalResourceList.isEmpty()) {
+            LOG.debug("Ignoring empty financeCostTotalResources for applicationId: {}", applicationId);
+            return serviceSuccess();
+        }
+
+        return costTotalEndpoint.sendCostTotals(applicationId,
+                spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList));
     }
 }

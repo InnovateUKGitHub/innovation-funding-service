@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
+
 /**
  * Service sends cost totals for all submitted {@link Application}s.
  */
@@ -30,8 +32,15 @@ public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender {
 
         List<Application> applications = applicationService.getApplicationsByState(ApplicationState.submittedStates)
                 .getSuccess();
-        applications.forEach(app -> applicationFinanceTotalsSender.sendFinanceTotalsForApplication(app.getId()));
 
+        LOG.debug("Found: {} submitted applications", applications.size());
+
+        forEachWithIndex(applications, (index, application) -> {
+            LOG.debug("{}: Sending finance totals for applicationId: {}", index, application.getId());
+            applicationFinanceTotalsSender.sendFinanceTotalsForApplication(application.getId());
+        });
+
+        LOG.debug("Completed sendAllFinanceTotals");
         return ServiceResult.serviceSuccess();
     }
 }

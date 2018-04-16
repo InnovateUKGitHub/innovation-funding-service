@@ -22,6 +22,11 @@ financedbport=3306
 datahost=data-service
 dataport=8080
 
+OLD_CONTAINER="$(docker ps --all --quiet --filter=name=finance-data-service-sync)"
+if [ -n "$OLD_CONTAINER" ]; then
+  docker stop $OLD_CONTAINER && docker rm $OLD_CONTAINER
+fi
+
 docker build -t innovateuk/finance-data-service-sync -f Dockerfile-financedataservicesync .
 
 docker run --entrypoint ./send-all-cost-totals.sh --name innovationfundingservice_finance-data-service-sync_1 --net innovationfundingservice_ifs -d innovateuk/finance-data-service-sync $dbhost $db $dbuser $dbpass $dbport $financedbhost $financedb $financedbuser $financedbpass $financedbport $datahost $dataport
