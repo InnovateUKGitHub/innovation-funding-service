@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.Role;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -29,5 +30,6 @@ public interface ApplicationRestService {
     RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
     RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource);
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
+    RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId);
     RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
 }
