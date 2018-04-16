@@ -286,8 +286,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(GET_OPEN_QUERIES)
     List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
 
-    Competition findByApplicationsId(long applicationId);
-
     @Query("SELECT c FROM Competition c INNER JOIN Application a ON a.competition = c INNER JOIN Project p ON p.application = a WHERE p.id = :projectId")
     Competition findByProjectId(@Param("projectId") long projectId);
 

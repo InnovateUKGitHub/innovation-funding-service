@@ -142,4 +142,9 @@ public class ApplicationController {
 
         return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
     }
+
+    @GetMapping("/getLatestEmailFundingDate/{competitionId}")
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
+        return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
+    }
 }

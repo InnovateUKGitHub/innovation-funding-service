@@ -27,4 +27,8 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "VIEW_PARTNER_ORGANISATION", description = "Partners can view their own partner organisation")
+    public boolean partnersCanViewTheirOwnPartnerOrganisation(final PartnerOrganisationResource partnerOrganisation, final UserResource user) {
+        return partnerBelongsToOrganisation(partnerOrganisation.getProject(), user.getId(), partnerOrganisation.getOrganisation());
+    }
 }
