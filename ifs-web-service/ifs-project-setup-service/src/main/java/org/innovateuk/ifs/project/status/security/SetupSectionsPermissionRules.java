@@ -114,6 +114,13 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
+    @PermissionRule(value = "SUBMIT_SPEND_PROFILE_SECTION", description = "A partner can attempt to submit the Spend Profile " +
+            "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
+            "and the Organisation's Bank Details have been approved or queried")
+    public boolean partnerCanSubmitSpendProfileSection(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return doSectionCheck(projectOrganisationCompositeId.getProjectId(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()));
+    }
+
     @PermissionRule(value = "EDIT_SPEND_PROFILE_SECTION", description = "A partner can edit their own Spend Profile " +
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or not required")
@@ -141,7 +148,8 @@ public class SetupSectionsPermissionRules {
 
     @PermissionRule(value = "ACCESS_SIGNED_GRANT_OFFER_LETTER", description = "A lead partner can view and download signed grant offer letter document")
     public boolean leadPartnerAccess(ProjectCompositeId projectCompositeId, UserResource user) {
-        return projectService.isUserLeadPartner(projectCompositeId.id(), user.getId());
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection) &&
+                projectService.isUserLeadPartner(projectCompositeId.id(), user.getId());
     }
 
     @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "All lead partners can mark partners spend profiles as incomplete")

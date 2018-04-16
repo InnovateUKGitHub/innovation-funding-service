@@ -60,6 +60,7 @@ public class TotalProjectSpendProfileController {
         return BASE_DIR + "/spend-profile-total-confirmation";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SUBMIT_SPEND_PROFILE_SECTION')")
     @PostMapping
     public String sendForReview(@PathVariable("projectId") final Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) TotalSpendProfileForm form,
