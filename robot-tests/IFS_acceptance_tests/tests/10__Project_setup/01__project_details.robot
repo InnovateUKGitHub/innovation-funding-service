@@ -346,9 +346,9 @@ Lead partner can change the project address
 Project details can be submitted with PM, project address and start date
     [Documentation]    INFUND-4583
     [Tags]  HappyPath
-    Given the user should see the element    jQuery=a:contains("Target start date")
-    And the user should see the element      jQuery=a:contains("Project address")
-    And the user should see the element      jQuery=a:contains("Project Manager")
+     Given the user should see the element    css=#start-date-status.yes
+     And the user should see the element    css=#project-address-status.yes
+     And the user should see the element    css=#project-manager-status.yes
 
 Non lead partner invites finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
@@ -359,7 +359,7 @@ Non lead partner invites finance contact
     Then the user should not see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
-    When the user clicks the button/link       jQuery=a:contains("Select finance contact")
+    When the user clicks the button/link       link=Select finance contact
     And the user selects the radio button  financeContact  new
     Then the user enters text to a text field  css=#name-finance-contact  LudlowFinContact
     And the user enters text to a text field   css=#email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
@@ -531,7 +531,7 @@ Validation for project location
     Given the user clicks the button/link               jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
     And the user moves focus to the element             id=postCode
     And the user should see an error                    This field cannot be left blank.
-    When the user clicks the button/link                jQuery=button:contains("Save project location")
+    When the user clicks the button/link                css=button[type="submit"]
     Then the user should see a field and summary error  This field cannot be left blank.
 
 Project details submission flow
@@ -708,5 +708,5 @@ Select the project location
     the user navigates to the page        ${project_in_setup_details_page}
     the user clicks the button/link       jQuery=#project-details-finance td:contains("${org}") ~ td a:contains("Select project location")
     the user enters text to a text field  css=#postCode  ${postcode}
-    the user clicks the button/link       jQuery=.button:contains("Save project location")
+    the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
