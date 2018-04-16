@@ -11,10 +11,12 @@ import org.innovateuk.ifs.application.finance.view.FinanceViewHandlerProvider;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
@@ -78,6 +80,9 @@ public class ApplicationAjaxController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private CompetitionService competitionService;
 
     @Autowired
     private FinanceRowRestService financeRowRestService;
@@ -199,8 +204,10 @@ public class ApplicationAjaxController {
             }
         } else if (fieldName.startsWith("application.durationInMonths")) {
             Long durationInMonth = Long.valueOf(value);
-            if (durationInMonth < 1L || durationInMonth > 36L) {
-                errors.add("Your project should last between 1 and 36 months");
+            CompetitionResource competition = competitionService.getById(application.getCompetition());
+            if (durationInMonth < competition.getMinProjectDuration() || durationInMonth > competition.getMaxProjectDuration()) {
+                errors.add("Your project should last between " + competition.getMinProjectDuration() +
+                        " and " + competition.getMaxProjectDuration() + " months");
                 application.setDurationInMonths(durationInMonth);
             } else {
                 application.setDurationInMonths(durationInMonth);
