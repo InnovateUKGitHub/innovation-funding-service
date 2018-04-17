@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+
+import org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PartnerOrganisationRestServiceImplTest extends BaseRestServiceUnitTest<PartnerOrganisationRestServiceImpl> {
@@ -31,6 +34,23 @@ public class PartnerOrganisationRestServiceImplTest extends BaseRestServiceUnitT
         setupGetWithRestResultExpectations(projectRestURL + "/123/partner-organisation", partnerOrganisationResourceList(), partnerOrganisations);
         RestResult result = service.getProjectPartnerOrganisations(projectId);
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetPartnerOrganisation() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+
+        PartnerOrganisationResource partnerOrganisationResource = PartnerOrganisationResourceBuilder.newPartnerOrganisationResource().build();
+
+        setupGetWithRestResultExpectations(projectRestURL + "/" + projectId + "/partner/" + organisationId, PartnerOrganisationResource.class, partnerOrganisationResource);
+
+        RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(projectId, organisationId);
+        assertTrue(result.isSuccess());
+        assertEquals(partnerOrganisationResource, result.getSuccess());
+
+        setupGetWithRestResultVerifications(projectRestURL + "/" + projectId + "/partner/" + organisationId, null, PartnerOrganisationResource.class);
     }
 
     @Override
