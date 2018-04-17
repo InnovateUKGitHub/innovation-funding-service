@@ -12,7 +12,6 @@ import java.util.List;
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
 import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
 
-
 /**
  * Entity for persisting Bank Details for organisations associated with a project.
  */
