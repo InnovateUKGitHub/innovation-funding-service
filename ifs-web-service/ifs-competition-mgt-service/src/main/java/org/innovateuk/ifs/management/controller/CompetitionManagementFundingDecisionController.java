@@ -47,17 +47,24 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
     private static final Log log = LogFactory.getLog(CompetitionManagementFundingDecisionController.class);
     private static final int PAGE_SIZE = 20;
 
-    @Autowired
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
-
-    @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
-
-    @Autowired
     private ApplicationFundingDecisionService applicationFundingDecisionService;
+    private CompetitionService competitionService;
 
     @Autowired
-    private CompetitionService competitionService;
+    public CompetitionManagementFundingDecisionController(ApplicationSummarySortFieldService applicationSummarySortFieldService,
+                                                          ApplicationSummaryRestService applicationSummaryRestService,
+                                                          ApplicationFundingDecisionService applicationFundingDecisionService,
+                                                          CompetitionService competitionService) {
+        this.applicationSummarySortFieldService = applicationSummarySortFieldService;
+        this.applicationSummaryRestService = applicationSummaryRestService;
+        this.applicationFundingDecisionService = applicationFundingDecisionService;
+        this.competitionService = competitionService;
+    }
+
+    public CompetitionManagementFundingDecisionController() {
+    }
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -277,7 +284,12 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                 .getSuccess();
     }
 
-    private String populateSubmittedModel(Model model, long competitionId, FundingDecisionPaginationForm paginationForm, FundingDecisionFilterForm fundingDecisionFilterForm, FundingDecisionSelectionForm fundingDecisionSelectionForm) {
+    private String populateSubmittedModel(Model model,
+                                          long competitionId,
+                                          FundingDecisionPaginationForm paginationForm,
+                                          FundingDecisionFilterForm fundingDecisionFilterForm,
+                                          FundingDecisionSelectionForm fundingDecisionSelectionForm) {
+
         CompetitionResource competition = competitionService.getById(competitionId);
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competition.getId(), paginationForm, fundingDecisionFilterForm);
