@@ -75,7 +75,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(compAdmin.getId(), applicantProcessRoles(), applicationId)).thenReturn(compAdminProcessRole);
 
-            when(applicationRepositoryMock.findById(application.getId())).thenReturn(application);
+            when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
             when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(competition);
         }
         {

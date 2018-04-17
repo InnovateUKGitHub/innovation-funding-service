@@ -134,17 +134,16 @@ public class ApplicationController {
         return applicationService.showApplicationTeam(applicationId, userId).toGetResponse();
     }
 
-    @GetMapping("/getLatestEmailFundingDate/{competitionId}")
-    public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
-        return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
-    }
-
     @GetMapping("/{competitionId}/unsuccessful-applications")
     public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
                                                                             @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
                                                                             @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
-
         return applicationService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
+    }
+
+    @GetMapping("/getLatestEmailFundingDate/{competitionId}")
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(@PathVariable("competitionId") final Long competitionId) {
+        return applicationService.findLatestEmailFundingDateByCompetitionId(competitionId).toGetResponse();
     }
 }

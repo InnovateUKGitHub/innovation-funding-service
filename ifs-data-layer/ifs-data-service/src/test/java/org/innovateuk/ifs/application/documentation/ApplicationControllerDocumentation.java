@@ -286,21 +286,6 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void getLatestEmailFundingDate() throws Exception {
-        Long competitionId = 1L;
-
-        when(applicationServiceMock.findLatestEmailFundingDateByCompetitionId(competitionId)).thenReturn(serviceSuccess(ZonedDateTime.now()));
-
-        mockMvc.perform(get("/application/getLatestEmailFundingDate/{competitionId}", competitionId))
-                .andExpect(status().isOk())
-                .andDo(document("application/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition we want the latest email funding date from")
-                        )
-                ));
-    }
-
-    @Test
     public void findUnsuccessfulApplications() throws Exception {
         final Long competitionId = 1L;
         int pageIndex = 0;
@@ -323,5 +308,20 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
 
+    }
+
+    @Test
+    public void getLatestEmailFundingDate() throws Exception {
+        Long competitionId = 1L;
+
+        when(applicationServiceMock.findLatestEmailFundingDateByCompetitionId(competitionId)).thenReturn(serviceSuccess(ZonedDateTime.now()));
+
+        mockMvc.perform(get("/application/getLatestEmailFundingDate/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("application/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition we want the latest email funding date from")
+                        )
+                ));
     }
 }
