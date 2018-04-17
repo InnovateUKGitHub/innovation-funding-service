@@ -21,6 +21,8 @@ IFS.competitionManagement.multipageSelect = (function () {
       var multipageAjaxCall = jQuery.when({})
 
       jQuery('body').on('change', s.multipageCheckboxEl, function () {
+        jQuery(this).prop('disabled', 'disabled')
+        jQuery(s.submitEl).prop('disabled', 'disabled')
         multipageAjaxCall = multipageAjaxCall.then(IFS.competitionManagement.multipageSelect.processMultipageCheckbox(this))
       })
     },
@@ -41,7 +43,8 @@ IFS.competitionManagement.multipageSelect = (function () {
         var data = IFS.competitionManagement.multipageSelect.getData(checked, value, isSelectAll)
         var url = window.location.href
 
-        checkbox.attr('disabled', 'disabled')
+        checkbox.prop('disabled', 'disabled')
+        jQuery(s.submitEl).prop('disabled', 'disabled')
 
         jQuery.ajaxProtected({
           type: 'POST',
@@ -69,7 +72,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
         }).always(function () {
           defer.resolve()
-          checkbox.removeAttr('disabled')
+          checkbox.removeProp('disabled')
         })
 
         return defer.promise()
