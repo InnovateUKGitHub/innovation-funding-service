@@ -30,7 +30,7 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
 
     @Override
     public RestResult<Void> updateProjectDuration(long projectId, long durationInMonths) {
-        return postWithRestResult(projectRestURL + "/" + projectId + "/update-duration/" + durationInMonths, Void.class);
+        return postWithRestResult(projectRestURL + "/" + projectId + "/duration/" + durationInMonths, Void.class);
     }
 
     @Override
@@ -45,6 +45,11 @@ public class ProjectDetailsRestServiceImpl extends BaseRestService implements Pr
 
     public RestResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
         return postWithRestResult(projectRestURL + "/" + projectId + "/invite-finance-contact", inviteResource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> updatePartnerProjectLocation(long projectId, long organisationId, String postCode) {
+        return postWithRestResult(projectRestURL + "/" + projectId + "/organisation/" + organisationId + "/partner-project-location?postCode=" + postCode, Void.class);
     }
 
     @Override public RestResult<Void> inviteProjectManager(final Long projectId, final InviteProjectResource inviteResource) {
