@@ -127,10 +127,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindActiveByProcessRoles() {
-        when(classUnderTestMock.findActiveByProcessRoles(internalRoles(), new PageRequest(0, 5)))
+        when(classUnderTestMock.findActiveByRoles(internalRoles(), new PageRequest(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findActiveByProcessRoles(internalRoles(), new
+        assertAccessDenied(() -> classUnderTest.findActiveByRoles(internalRoles(), new
                 PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);
@@ -139,10 +139,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindInactiveByProcessRoles() {
-        when(classUnderTestMock.findInactiveByProcessRoles(internalRoles(), new PageRequest(0, 5)))
+        when(classUnderTestMock.findInactiveByRoles(internalRoles(), new PageRequest(0, 5)))
                 .thenReturn(serviceSuccess(new UserPageResource()));
 
-        assertAccessDenied(() -> classUnderTest.findInactiveByProcessRoles(internalRoles(), new
+        assertAccessDenied(() -> classUnderTest.findInactiveByRoles(internalRoles(), new
                 PageRequest(0, 5)), () -> {
             verify(userRules).internalUsersCanViewEveryone(isA(UserPageResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(userRules);

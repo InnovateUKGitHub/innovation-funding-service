@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.*;
@@ -216,6 +217,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                                                       Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccessReturn(User::isInternalUser);
+    }
+
+    @Override
+    public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
+        List<Application> applicationsForId = applicationRepository.findByCompetitionId(id);
+
+        // Only competitions with at least one funded and informed application can be considered as in project setup
+        return serviceSuccess(applicationsForId.stream()
+                .filter(application -> application.getManageFundingEmailDate() != null)
+                .max(Comparator.comparing(Application::getManageFundingEmailDate))
+                .get().getManageFundingEmailDate());
     }
 
     @Override

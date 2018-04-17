@@ -2,12 +2,14 @@ package org.innovateuk.ifs.assessment.interview.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.resource.PageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.domain.InterviewAssignmentMessageOutcome;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -32,17 +34,18 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTest<InterviewAssignmentInviteServiceImpl> {
+public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<InterviewAssignmentServiceImpl> {
 
     private static final long COMPETITION_ID = 1L;
     private static final Pageable PAGE_REQUEST = new PageRequest(0, 20);
@@ -62,8 +65,8 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
     private static final ActivityState PENDING_FEEDBACK_ACTIVITY_STATE = new ActivityState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.PENDING);
 
     @Override
-    protected InterviewAssignmentInviteServiceImpl supplyServiceUnderTest() {
-        return new InterviewAssignmentInviteServiceImpl();
+    protected InterviewAssignmentServiceImpl supplyServiceUnderTest() {
+        return new InterviewAssignmentServiceImpl();
     }
 
     @Test
@@ -152,7 +155,7 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
             when(applicationRepositoryMock.findOne(expectedApplication.getId()))
                     .thenReturn(expectedApplication);
 
-            when(interviewAssignmentRepositoryMock.save(interviewPanellambdaMatcher(expectedApplication)))
+            when(interviewAssignmentRepositoryMock.save(interviewPanelLambdaMatcher(expectedApplication)))
                     .thenReturn(newInterviewAssignment().build()
             );
         });
@@ -161,13 +164,12 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
 
         InOrder inOrder = inOrder(applicationRepositoryMock, activityStateRepositoryMock,
                 interviewAssignmentRepositoryMock);
-
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(
                 ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
 
         forEachWithIndex(EXPECTED_AVAILABLE_APPLICATIONS, (i, expectedApplication) -> {
             inOrder.verify(applicationRepositoryMock).findOne(expectedApplication.getId());
-            inOrder.verify(interviewAssignmentRepositoryMock).save(interviewPanellambdaMatcher(expectedApplication));
+            inOrder.verify(interviewAssignmentRepositoryMock).save(interviewPanelLambdaMatcher(expectedApplication));
         });
     }
 
@@ -239,12 +241,41 @@ public class InterviewAssignmentInviteServiceImplTest extends BaseServiceUnitTes
         verify(interviewAssignmentWorkflowHandler).notifyInterviewPanel(interviewAssignments.get(0), outcome);
     }
 
-    private static InterviewAssignment interviewPanellambdaMatcher(Application application) {
+    @Test
+    public void getKeyStatistics() {
+        int applicationsInCompetition = 7;
+        int applicationsAssigned = 11;
+
+        InterviewAssignmentKeyStatisticsResource expectedKeyStatisticsResource =
+                newInterviewAssignmentKeyStatisticsResource()
+                        .withApplicationsInCompetition(applicationsInCompetition)
+                        .withApplicationsAssigned(applicationsAssigned)
+                        .build();
+
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState()))
+                .thenReturn(applicationsInCompetition);
+
+        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
+                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState)))
+                .thenReturn(applicationsAssigned);
+
+        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = service.getKeyStatistics(COMPETITION_ID).getSuccess();
+
+        assertEquals(expectedKeyStatisticsResource, keyStatisticsResource);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, interviewAssignmentRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState());
+        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
+                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState));
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    private static InterviewAssignment interviewPanelLambdaMatcher(Application application) {
         return createLambdaMatcher((InterviewAssignment interviewPanel) -> {
             ProcessRole participant = interviewPanel.getParticipant();
             assertEquals(application.getId(), interviewPanel.getTarget().getId());
             assertEquals(application.getId(), participant.getApplicationId());
-            assertTrue(participant.getRole() == Role.INTERVIEW_LEAD_APPLICANT);
+            assertSame(participant.getRole(), Role.INTERVIEW_LEAD_APPLICANT);
             assertEquals(participant.getUser(), application.getLeadApplicant());
             assertEquals(participant.getOrganisationId(), application.getLeadOrganisationId());
         });

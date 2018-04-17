@@ -26,10 +26,10 @@ public class SetupSectionStatus {
     }
 
     public SectionStatus monitoringOfficerSectionStatus(final boolean monitoringOfficerAssigned,
-                                                        final boolean projectDetailsSubmitted) {
+                                                        final boolean requiredProjectDetailsForMonitoringOfficerComplete) {
         if (monitoringOfficerAssigned) {
             return TICK;
-        } else if (projectDetailsSubmitted) {
+        } else if (requiredProjectDetailsForMonitoringOfficerComplete) {
             return HOURGLASS;
         } else {
             return EMPTY;

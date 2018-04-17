@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.FinanceService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
@@ -112,6 +113,18 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createFinanceContactStatus(Project project, Organisation partnerOrganisation) {
         return getFinanceContact(project, partnerOrganisation).map(existing -> COMPLETE).orElse(ACTION_REQUIRED);
+    }
+
+    protected ProjectActivityStates createPartnerProjectLocationStatus(Project project, Organisation organisation) {
+
+        boolean locationPresent = project.getPartnerOrganisations().stream()
+                .filter(partnerOrganisation -> partnerOrganisation.getOrganisation().getId().equals(organisation.getId()))
+                .findFirst()
+                .map(partnerOrganisation -> StringUtils.isNotBlank(partnerOrganisation.getPostCode()))
+                .orElse(false);
+
+        return locationPresent ? COMPLETE : ACTION_REQUIRED;
+
     }
 
     protected Optional<ProjectUser> getFinanceContact(final Project project, final Organisation organisation) {
