@@ -3,6 +3,7 @@ package org.innovateuk.ifs.interview.model;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationInviteRowViewModel;
 import org.innovateuk.ifs.interview.viewmodel.InterviewAssignmentApplicationsInviteViewModel;
@@ -20,11 +21,16 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class InterviewAssignmentApplicationsInviteModelPopulator {
 
-    @Autowired
     private InterviewAssignmentRestService interviewAssignmentRestService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
-    private CompetitionRestService competitionRestService;
+    public InterviewAssignmentApplicationsInviteModelPopulator(
+            InterviewAssignmentRestService interviewAssignmentRestService,
+            CompetitionRestService competitionRestService) {
+        this.interviewAssignmentRestService = interviewAssignmentRestService;
+        this.competitionRestService = competitionRestService;
+    }
 
     public InterviewAssignmentApplicationsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
         CompetitionResource competition = competitionRestService
@@ -35,14 +41,15 @@ public class InterviewAssignmentApplicationsInviteModelPopulator {
                 .getStagedApplications(competition.getId(), page)
                 .getSuccess();
 
+        InterviewAssignmentKeyStatisticsResource keyStatistics = interviewAssignmentRestService.getKeyStatistics(competitionId).getSuccess();
+
         return new InterviewAssignmentApplicationsInviteViewModel(
                 competitionId,
                 competition.getName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
-                0,
-                0,
+                keyStatistics,
                 new PaginationViewModel(pageResource, originQuery),
                 originQuery
         );

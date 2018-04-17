@@ -44,6 +44,7 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
                                 fieldWithPath("organisation").description("Organisation Id"),
                                 fieldWithPath("organisationName").description("Organisation name"),
                                 fieldWithPath("leadOrganisation").description("If the partner organisation is the lead partner"),
+                                fieldWithPath("postCode").description("The project location for this partner"),
                                 fieldWithPath("project").description("Project id"))
                 ));
     }
@@ -65,6 +66,7 @@ public class PartnerOrganisationControllerDocumentation extends BaseControllerMo
                                 fieldWithPath("[].organisation").description("Organisation Id"),
                                 fieldWithPath("[].organisationName").description("Organisation name"),
                                 fieldWithPath("[].leadOrganisation").description("If the partner organisation is the lead partner"),
+                                fieldWithPath("[].postCode").description("The project location for this partner"),
                                 fieldWithPath("[].project").description("Project id"))
                 ));
     }

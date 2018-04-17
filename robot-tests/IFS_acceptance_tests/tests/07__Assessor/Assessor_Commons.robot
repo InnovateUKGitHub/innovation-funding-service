@@ -74,3 +74,7 @@ the compAdmin resends the invites for interview panel
     the user clicks the button/link      jQuery=button:contains("Resend invites")
     the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor}")
     the user clicks the button/link      jQuery=button:contains("Send invite")
+
+Get the total number of submitted applications
+    ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div[2]/table/tbody/tr
+    Set Test Variable    ${NUMBER_OF_APPLICATIONS}
