@@ -45,7 +45,7 @@ public class ApplicationValidationUtil {
     @Autowired
     private AcademicJesValidator academicJesValidator;
 
-    @ZeroDowntime(reference = "IFS-3144", description = "Remove old package names and add flyway script to correct them in database.")
+    @ZeroDowntime(reference = "IFS-3366", description = "Remove old package names and add flyway script to correct them in database.")
     private static final Map<String, Class<?>> oldPackageClassMap = ImmutableMap.<String, Class<?>> builder()
             .put("org.innovateuk.ifs.validation.validator.EmailValidator", EmailValidator.class)
             .put("org.innovateuk.ifs.validation.validator.NotEmptyValidator", NotEmptyValidator.class)

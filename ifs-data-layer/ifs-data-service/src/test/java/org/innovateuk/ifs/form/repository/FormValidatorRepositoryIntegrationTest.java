@@ -16,7 +16,7 @@ import static org.junit.Assert.assertFalse;
  * Repository Integration tests for Form Inputs.
  */
 @Ignore("Ignored until zero downtime deployment is done.")
-@ZeroDowntime()
+@ZeroDowntime(reference = "IFS-3366", description = "Unignore test.")
 public class FormValidatorRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<FormValidatorRepository> {
 
     @Autowired
