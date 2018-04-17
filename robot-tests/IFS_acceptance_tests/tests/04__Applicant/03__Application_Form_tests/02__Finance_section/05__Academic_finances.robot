@@ -23,7 +23,7 @@ Academic finances should be editable when lead marks them as complete
     [Tags]    HappyPath
     [Setup]    Lead applicant marks the finances as complete
     Given Log in as a different user          ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to the academic application finances
+    When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link       link=Your project costs
     Then the user should not see the element  css=#incurred-staff[readonly]
     [Teardown]    Lead applicant marks the finances as incomplete
@@ -32,7 +32,7 @@ Academic finance validations
     [Documentation]    INFUND-2399  IFS-2879
     [Tags]
     [Setup]    Log in as a different user    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to the academic application finances
+    When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link  link=Your project costs
     And the applicant enters invalid inputs
     And the element should be disabled       id=mark-all-as-complete
@@ -45,7 +45,7 @@ Academic finance validations
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
     [Tags]
-    Given the user navigates to the academic application finances
+    Given the user navigates to Your-finances page  Academic robot test application
     When the user clicks the button/link  link=Your project costs
     And the academic partner fills the finances
     Then the calculations should be correct and the totals rounded to the second decimal
@@ -68,7 +68,7 @@ Lead applicant can't upload a JeS file
     [Documentation]    INFUND-2720
     [Tags]
     [Setup]    log in as a different user     &{lead_applicant_credentials}
-    Given the user navigates to the academic application finances
+    Given the user navigates to Your-finances page  Academic robot test application
     When the user clicks the button/link      link=Your project costs
     Then the user should not see the element  css=.upload-section label
 
@@ -76,7 +76,7 @@ Academics upload
     [Documentation]    INFUND-917
     [Tags]    HappyPath
     [Setup]    log in as a different user              ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to the academic application finances
+    When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link                link=Your project costs
     When the academic partner uploads a file           ${valid_pdf}
     Then the user should not see the text in the page  No file currently uploaded
@@ -100,7 +100,7 @@ Lead applicant can't view the file on the finances page
     [Documentation]    INFUND-917
     [Tags]
     [Setup]    log in as a different user              &{lead_applicant_credentials}
-    When the user navigates to the academic application finances
+    When the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link                link=Your project costs
     Then the user should not see the text in the page  ${valid_pdf}
 
@@ -108,7 +108,7 @@ Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
     [Tags]
     [Setup]    log in as a different user     ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    When the user navigates to the academic application finances
+    When the user navigates to Your-finances page  Academic robot test application
     Then the user should not see the element  link=Your funding
     And the user should see correct grant percentage
     When the user clicks the button/link      link=Your project costs
@@ -118,7 +118,7 @@ Mark all as complete
     [Documentation]    INFUND-918  IFS-2879
     [Tags]
     Given log in as a different user               ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
-    And the user navigates to the academic application finances
+    And the user navigates to Your-finances page  Academic robot test application
     And the user clicks the button/link            link=Your project costs
     And the user should see the element            link=testing.pdf (opens in a new window)
     When the user enters text to a text field      css=input[name$="tsb_reference"]  123123
@@ -132,7 +132,7 @@ Mark all as complete
 User should not be able to edit or upload the form
     [Documentation]    INFUND-2437
     [Tags]
-    When the user navigates to the academic application finances
+    When the user navigates to Your-finances page  Academic robot test application
     And the user should see correct grant percentage
     And the user clicks the button/link       link=Your project costs
     Then the user should not see the element  jQuery=button:contains("Remove")
@@ -141,7 +141,7 @@ User should not be able to edit or upload the form
 File delete should not be allowed when marked as complete
     [Documentation]    INFUND-2437
     [Tags]
-    When the user navigates to the academic application finances
+    When the user navigates to Your-finances page  Academic robot test application
     Then the user should not see the text in the page  Remove
 
 Academic finance overview
@@ -197,13 +197,13 @@ Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}
     the user clicks the button/link                  link=Academic robot test application
     the applicant completes the application details  Application details
-    the user navigates to the academic application finances
+    the user navigates to Your-finances page  Academic robot test application
     the user marks the finances as complete          Academic robot test application  labour costs  n/a  no
 
 
 Lead applicant marks the finances as incomplete
     log in as a different user       &{lead_applicant_credentials}
-    the user navigates to the academic application finances
+    the user navigates to Your-finances page  Academic robot test application
     the user clicks the button/link  link=Your funding
     the user clicks the button/link  jQuery=button:contains("Edit")
 
