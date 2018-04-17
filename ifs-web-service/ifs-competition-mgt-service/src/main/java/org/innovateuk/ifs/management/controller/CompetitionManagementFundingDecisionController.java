@@ -290,7 +290,7 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
                                           FundingDecisionFilterForm fundingDecisionFilterForm,
                                           FundingDecisionSelectionForm fundingDecisionSelectionForm) {
 
-        CompetitionResource competition = competitionService.getById(competitionId);
+        CompetitionResource competition = getCompetitionIfExist(competitionId);
 
         ApplicationSummaryPageResource results = getApplicationsByFilters(competition.getId(), paginationForm, fundingDecisionFilterForm);
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.FUNDING_APPLICATIONS, mapFormFilterParametersToMultiValueMap(fundingDecisionFilterForm));
@@ -318,5 +318,9 @@ public class CompetitionManagementFundingDecisionController extends CompetitionM
             default:
                 return "redirect:/login";
         }
+    }
+
+    private CompetitionResource getCompetitionIfExist(long competitionId) {
+        return competitionService.getById(competitionId);
     }
 }
