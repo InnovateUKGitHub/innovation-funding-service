@@ -71,7 +71,7 @@ public class ApplicantDashboardPopulator {
             ApplicationResource application = applicationRestService.getApplicationById(project.getApplication()).getSuccess();
             CompetitionResource competition = competitionsById.get(application.getCompetition());
             return new ProjectDashboardRowViewModel(project.getName(), project.getApplication(), competition.getName(), project.getId(), project.getName());
-        }).collect(toList());
+        }).sorted().collect(toList());
 
         List<InProgressDashboardRowViewModel> inProgressViews = allApplications.stream().filter(this::applicationInProgress).map(application -> {
             CompetitionResource competition = competitionsById.get(application.getCompetition());
@@ -82,12 +82,12 @@ public class ApplicantDashboardPopulator {
             return new InProgressDashboardRowViewModel(application.getName(), application.getId(), competition.getName(),
                     isAssigned(application, role), application.getApplicationState(), isLead(role), competition.getEndDate(),
                     competition.getDaysLeft(), application.getCompletion().intValue(), invitedToInterview);
-        }).collect(toList());
+        }).sorted().collect(toList());
 
         List<PreviousDashboardRowViewModel> previousViews = allApplications.stream().filter(this::applicationFinished).map(application -> {
             CompetitionResource competition = competitionsById.get(application.getCompetition());
             return new PreviousDashboardRowViewModel(application.getName(), application.getId(), competition.getName(), application.getApplicationState());
-        }).collect(toList());
+        }).sorted().collect(toList());
 
 
         return new ApplicantDashboardViewModel(projectViews, inProgressViews, previousViews);

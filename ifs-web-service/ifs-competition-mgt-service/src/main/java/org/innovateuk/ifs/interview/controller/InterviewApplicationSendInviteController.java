@@ -76,12 +76,12 @@ public class InterviewApplicationSendInviteController {
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()));
 
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                    .failNowOrSucceedWith(failureView, () -> redirectToFindApplicationTab(competitionId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToStatusTab(competitionId));
         });
     }
 
-    private String redirectToFindApplicationTab(long competitionId) {
-        return format("redirect:/assessment/interview/competition/%s/applications/find", competitionId);
+    private String redirectToStatusTab(long competitionId) {
+        return format("redirect:/assessment/interview/competition/%s/applications/view-status", competitionId);
     }
 
     private void populateGroupInviteFormWithExistingValues(SendInviteForm form) {

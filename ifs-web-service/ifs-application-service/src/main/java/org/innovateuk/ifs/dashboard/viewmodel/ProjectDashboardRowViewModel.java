@@ -5,18 +5,18 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 /**
  * Applicant dashboard row view model
  */
-public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel {
+public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<ProjectDashboardRowViewModel> {
 
-    private final Long projectId;
+    private final long projectId;
     private final String projectTitle;
 
-    public ProjectDashboardRowViewModel(String title, long applicationId, String competitionTitle, Long projectId, String projectTitle) {
+    public ProjectDashboardRowViewModel(String title, long applicationId, String competitionTitle, long projectId, String projectTitle) {
         super(title, applicationId, competitionTitle);
         this.projectId = projectId;
         this.projectTitle = projectTitle;
     }
 
-    public Long getProjectId() {
+    public long getProjectId() {
         return projectId;
     }
 
@@ -32,5 +32,10 @@ public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowV
     @Override
     public String getTitle() {
        return isNullOrEmpty(projectTitle) ? super.getCompetitionTitle() : projectTitle;
+    }
+
+    @Override
+    public int compareTo(ProjectDashboardRowViewModel o) {
+        return Long.compare(projectId, o.getProjectId());
     }
 }

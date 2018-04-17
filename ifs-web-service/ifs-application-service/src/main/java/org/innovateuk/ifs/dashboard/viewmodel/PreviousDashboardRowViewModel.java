@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 /**
  * Applicant dashboard row view model
  */
-public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel {
+public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<PreviousDashboardRowViewModel> {
 
     private final ApplicationState applicationState;
 
@@ -35,5 +35,10 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     @Override
     public String getLinkUrl() {
         return String.format("/application/%s/summary", getApplicationNumber());
+    }
+
+    @Override
+    public int compareTo(PreviousDashboardRowViewModel o) {
+        return Long.compare(getApplicationNumber(), o.getApplicationNumber());
     }
 }

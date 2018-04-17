@@ -8,7 +8,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel {
+public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
 
     private final boolean assignedToMe;
     private final ApplicationState applicationState;
@@ -94,4 +94,11 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         }
     }
 
+    @Override
+    public int compareTo(InProgressDashboardRowViewModel o) {
+        if (assignedToInterview != o.isAssignedToInterview()) {
+            return assignedToInterview ? -1 : 1;
+        }
+        return Long.compare(getApplicationNumber(), o.getApplicationNumber());
+    }
 }
