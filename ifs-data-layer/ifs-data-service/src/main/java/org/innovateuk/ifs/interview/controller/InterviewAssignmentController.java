@@ -87,6 +87,6 @@ public class InterviewAssignmentController {
 
     @GetMapping("/is-assigned/{applicationId}")
     public RestResult<Boolean> isApplicationAssigned(@PathVariable long applicationId) {
-        return interviewAssignmentInviteService.isApplicationAssigned(applicationId).toGetResponse();
+        return interviewAssignmentService.isApplicationAssigned(applicationId).toGetResponse();
     }
 }
