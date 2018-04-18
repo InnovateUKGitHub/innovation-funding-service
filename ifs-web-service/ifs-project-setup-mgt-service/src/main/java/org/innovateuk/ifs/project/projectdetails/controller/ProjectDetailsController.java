@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -10,6 +12,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.util.RedirectUtils;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -44,6 +47,9 @@ public class ProjectDetailsController {
     private ProjectService projectService;
 
     @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
     private OrganisationService organisationService;
 
     @GetMapping("/{projectId}/details")
@@ -55,10 +61,17 @@ public class ProjectDetailsController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
 
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        String competitionName = competitionResource.getName();
+
+        boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
+
         List<OrganisationResource> partnerOrganisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
+                isIfsAdministrator,
+                competitionName,
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, partnerOrganisations)));
@@ -68,7 +81,7 @@ public class ProjectDetailsController {
 
     @PostMapping("/{projectId}/withdraw")
     public String withdrawProject(@PathVariable("projectId") final long projectId, HttpServletRequest request) {
-        Void projectResource = projectService.withdrawProject(projectId);
+         projectService.withdrawProject(projectId);
 
         return RedirectUtils.redirectToCompetitionManagementService(request, "/competition/{competitionId}/applications/unsuccessful");
     }
@@ -102,5 +115,4 @@ public class ProjectDetailsController {
 
         return organisationFinanceContactMap;
     }
-
 }
