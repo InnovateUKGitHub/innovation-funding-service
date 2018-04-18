@@ -99,7 +99,8 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
         }
 
         if(!financeFormField.getCostName().equals(NON_DECIMAL_FIELD) && !inputIsLong(financeFormField.getValue())) {
-            return new ValidationMessages(fieldError(fieldName, financeFormField, NON_DECIMAL_MESSAGE));
+            return new ValidationMessages(fieldError("formInput[cost-"+ financeFormField.getId() + "-cost]",
+                    financeFormField, NON_DECIMAL_MESSAGE));
         }
 
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
