@@ -39,7 +39,9 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.Role.PARTNER;
+import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -51,7 +53,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     private static final boolean monitoringOfficerExpected = true;
 
-    private CompetitionResource competition = newCompetitionResource().build();
+    private CompetitionResource competition = newCompetitionResource().withLocationPerPartner(false).build();
     private ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
     private ProjectResourceBuilder projectBuilder = newProjectResource().withApplication(application);
 
@@ -126,7 +128,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         ProjectUserResource partnerUser = newProjectUserResource()
                 .withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(PARTNER)
+                .withRole(PARTNER)
                 .build();
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
@@ -250,21 +252,21 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRoleName(FINANCE_CONTACT).build(),
+                        .withRole(FINANCE_CONTACT).build(),
                 newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRoleName(PARTNER).build()));
+                        .withRole(PARTNER).build()));
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
                 .withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(FINANCE_CONTACT).build())));
+                .withRole(FINANCE_CONTACT).build())));
 
         ProjectUserResource partnerUser = newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(PARTNER).build();
+                .withRole(PARTNER).build();
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
@@ -280,6 +282,311 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
         assertFalse(viewModel.isProjectComplete());
         assertFalse(viewModel.isProjectManager());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
+                Pair.of("financeChecksStatus", SectionStatus.EMPTY));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotYetSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(999L)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
+                Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndNotYetSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(999L)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
+                Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsNonLeadWhenPDSubmittedFCNotSubmittedAndPLRequiredAndSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(999L)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
+                Pair.of("financeChecksStatus", SectionStatus.EMPTY),
+                Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsNonLeadWhenPDSubmittedFCSubmittedAndPLRequiredAndSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(999L)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
+                Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, FC = Finance Contact, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsNonLeadWhenPDSubmittedAndOnlyNonLeadFCSubmittedAndPLRequiredAndSubmitted() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(999L)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
+                Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
     }
 
     @Test
@@ -305,6 +612,38 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    // PD = Project Details, PL = Project Location
+    @Test
+    public void testViewProjectSetupStatusAsLeadWhenPLRequiredAndAwaitingPDActionFromOtherPartners() throws Exception {
+
+        competition.setLocationPerPartner(true);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withPartnerProjectLocationStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(NOT_STARTED)
+                        .withPartnerProjectLocationStatus(ACTION_REQUIRED)
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
+                Pair.of("monitoringOfficerStatus", SectionStatus.EMPTY));
 
         assertFalse(viewModel.isProjectComplete());
     }
@@ -446,16 +785,16 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRoleName(FINANCE_CONTACT).build(),
+                        .withRole(FINANCE_CONTACT).build(),
                 newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
-                        .withRoleName(PARTNER).build()));
+                        .withRole(PARTNER).build()));
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(FINANCE_CONTACT).build())));
+                .withRole(FINANCE_CONTACT).build())));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
@@ -818,7 +1157,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(loggedInUser.getId(), loggedInUser.getId())
                 .withOrganisation(organisationResource.getId(), organisationResource.getId())
-                .withRoleName(PARTNER, PROJECT_MANAGER)
+                .withRole(PARTNER, PROJECT_MANAGER)
                 .build(2);
 
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
@@ -826,7 +1165,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
                 .withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(PROJECT_MANAGER).build())));
+                .withRole(PROJECT_MANAGER).build())));
 
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -926,7 +1265,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         ProjectUserResource pmUser = newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(PROJECT_MANAGER)
+                .withRole(PROJECT_MANAGER)
                 .build();
 
         when(applicationService.getById(application.getId())).thenReturn(application);
@@ -937,7 +1276,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().
                 withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
-                .withRoleName(PARTNER).build(1));
+                .withRole(PARTNER).build(1));
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(pmUser));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResult);

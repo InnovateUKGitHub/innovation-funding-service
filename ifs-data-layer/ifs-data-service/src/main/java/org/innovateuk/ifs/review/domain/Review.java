@@ -3,11 +3,9 @@ package org.innovateuk.ifs.review.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
@@ -33,11 +31,8 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
         super();
     }
 
-    public Review(Application application, ReviewParticipant reviewParticipant, Role panelAssessorRole) {
-        if (!panelAssessorRole.isOfType(UserRoleType.PANEL_ASSESSOR)) {
-            throw new IllegalArgumentException("panelAssessorRole must be of type PANEL_ASSESSOR");
-        }
-        this.participant = new ProcessRole(reviewParticipant.getUser(), application.getId(), panelAssessorRole);
+    public Review(Application application, ReviewParticipant reviewParticipant) {
+        this.participant = new ProcessRole(reviewParticipant.getUser(), application.getId(), Role.PANEL_ASSESSOR);
         this.target = application;
     }
 

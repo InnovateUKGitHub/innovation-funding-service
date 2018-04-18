@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.security;
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -13,8 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
@@ -128,7 +129,11 @@ public class ApplicationFinancePermissionRules extends BasePermissionRules {
     }
 
     private boolean hasDetailedView(long applicationId) {
-        Competition competition = competitionRepository.findByApplicationsId(applicationId);
-        return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
+        Application application = applicationRepository.findOne(applicationId);
+        if (application != null){
+            Competition competition = competitionRepository.findById(application.getCompetition().getId());
+            return competition.getAssessorFinanceView().equals(AssessorFinanceView.DETAILED);
+        }
+        return false;
     }
 }

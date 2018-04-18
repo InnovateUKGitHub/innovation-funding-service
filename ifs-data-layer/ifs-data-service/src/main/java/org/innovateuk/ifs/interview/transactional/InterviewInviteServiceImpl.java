@@ -13,11 +13,14 @@ import org.innovateuk.ifs.interview.mapper.InterviewInviteMapper;
 import org.innovateuk.ifs.interview.repository.InterviewRepository;
 import org.innovateuk.ifs.interview.resource.InterviewState;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.*;
-import org.innovateuk.ifs.invite.mapper.InterviewParticipantMapper;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-import org.innovateuk.ifs.invite.repository.InterviewInviteRepository;
-import org.innovateuk.ifs.invite.repository.InterviewParticipantRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.interview.domain.InterviewParticipant;
+import org.innovateuk.ifs.interview.mapper.InterviewParticipantMapper;
+import org.innovateuk.ifs.assessment.repository.AssessmentParticipantRepository;
+import org.innovateuk.ifs.interview.repository.InterviewInviteRepository;
+import org.innovateuk.ifs.interview.repository.InterviewParticipantRepository;
 import org.innovateuk.ifs.invite.repository.InviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.invite.transactional.InviteService;
@@ -50,7 +53,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.INTERVIEW_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -63,13 +66,13 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Transactional
 public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> implements InterviewInviteService {
 
-    private static final String WEB_CONTEXT = "/interview";
+    private static final String WEB_CONTEXT = "/assessment";
 
     @Autowired
     private InterviewInviteRepository interviewInviteRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentParticipantRepository assessmentParticipantRepository;
 
     @Autowired
     private InterviewParticipantRepository interviewParticipantRepository;
@@ -194,7 +197,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
 
     @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            final Page<AssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId, pageable);
+            final Page<AssessmentParticipant> pagedResult = assessmentParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId, pageable);
 
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
@@ -207,7 +210,7 @@ public class InterviewInviteServiceImpl extends InviteService<InterviewInvite> i
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        List<AssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId);
+        List<AssessmentParticipant> result = assessmentParticipantRepository.findParticipantsNotOnInterviewPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }

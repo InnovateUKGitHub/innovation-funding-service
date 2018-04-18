@@ -2,10 +2,10 @@ package org.innovateuk.ifs.review.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
-import org.innovateuk.ifs.invite.domain.competition.ReviewInvite;
-import org.innovateuk.ifs.invite.domain.competition.ReviewParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.review.domain.ReviewInvite;
+import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
 import static org.innovateuk.ifs.review.builder.ReviewParticipantBuilder.newReviewParticipant;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
