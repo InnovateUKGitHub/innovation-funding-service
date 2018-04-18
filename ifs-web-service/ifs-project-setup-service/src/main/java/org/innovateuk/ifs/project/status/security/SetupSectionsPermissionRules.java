@@ -175,7 +175,7 @@ public class SetupSectionsPermissionRules {
     }
 
     @PermissionRule(value = "ACCESS_SIGNED_GRANT_OFFER_LETTER", description = "A lead partner can view and download signed grant offer letter document")
-    public boolean leadPartnerAccess(ProjectCompositeId projectCompositeId, UserResource user) {
+    public boolean leadPartnerAccessToSignedGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection) &&
                 projectService.isUserLeadPartner(projectCompositeId.id(), user.getId());
     }
