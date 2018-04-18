@@ -35,7 +35,9 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     private UserResource intruder;
     private Project project;
     private ProjectFinance projectFinance;
-    private ProjectProcess projectProcess;
+    private ProjectProcess projectProcessInSetup;
+    private ProjectProcess projectProcessInLive;
+    private ProjectProcess projectProcessInWithdrawn;
 
     @Before
     public void setUp() throws Exception {
@@ -46,10 +48,11 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
 
         project = newProject().build();
         projectFinance = newProjectFinance().withProject(project).build();
-        projectProcess = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.LIVE.getBackingState())).build();
+        projectProcessInSetup = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.SETUP.getBackingState())).build();
+        projectProcessInLive = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.LIVE.getBackingState())).build();
+        projectProcessInWithdrawn = newProjectProcess().withActivityState(new ActivityState(PROJECT_SETUP, ProjectState.WITHDRAWN.getBackingState())).build();
 
         when(projectFinanceRepositoryMock.findOne(anyLong())).thenReturn(projectFinance);
-        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcess);
     }
 
     private NoteResource sampleNote() {
@@ -71,24 +74,38 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testThatOnlyProjectFinanceProjectFinanceUsersCanCreateNotes() throws Exception {
+        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, intruder));
     }
 
+    public void testThatProjectFinanceUsersCannotCreateNotesWhenProjectIsInLive() throws Exception {
+        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInLive);
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
+    }
+
+    public void testThatProjectFinanceUsersCannotCreateNotesWhenProjectIsInWithdrawn() throws Exception {
+        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInWithdrawn);
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
+    }
+
     @Test
     public void testThatNoteCreationRequiresTheInitialPost() throws Exception {
+        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(sampleNoteWithoutPosts(), projectFinanceUserOne));
     }
 
     @Test
     public void testThatNoteCreationRequiresTheInitialPostAuthorToBeTheCurrentUser() throws Exception {
+        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
         assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserTwo));
     }
 
     @Test
     public void testThatOnlyProjectFinanceUserCanAddPostsToANote() throws Exception {
+        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, projectFinanceUserOne));
         assertTrue(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, projectFinanceUserTwo));
         assertFalse(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, intruder));
@@ -96,6 +113,7 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testThatOnlyProjectFinanceUsersViewNotes() {
+        when(projectProcessRepositoryMock.findOneByTargetId(anyLong())).thenReturn(projectProcessInSetup);
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserOne));
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));
         assertFalse(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, intruder));

@@ -33,7 +33,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Queries")
     public boolean onlyProjectFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectNotWithdrawn(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
+        return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
 
     private boolean queryHasOnePostWithAuthorBeingCurrentProjectFinance(QueryResource query, UserResource user) {
@@ -52,12 +52,12 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a query")
     public boolean projectFinanceUsersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectNotWithdrawn(query.contextClassPk);
+        return isProjectFinanceUser(user) && isProjectInSetup(query.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project partners can add posts to a query")
     public boolean projectPartnersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return !query.posts.isEmpty() && isProjectNotWithdrawn(query.contextClassPk) && isPartner(user, query.contextClassPk);
+        return !query.posts.isEmpty() && isProjectInSetup(query.contextClassPk) && isPartner(user, query.contextClassPk);
     }
 
     private boolean isPartner(UserResource user, Long projectFinance) {
@@ -69,17 +69,17 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return ofNullable(projectFinanceRepository.findOne(id));
     }
 
-    private boolean isProjectNotWithdrawn(Long projectFinance) {
+    private boolean isProjectInSetup(Long projectFinance) {
         Optional<ProjectFinance> pf = findProjectFinance(projectFinance);
         if (pf.isPresent()){
             long projectId = pf.get().getProject().getId();
-            return isProjectStateNotWithdrawn(projectId);
+            return isProjectStateInSetup(projectId);
         }
         return false;
     }
 
-    private boolean isProjectStateNotWithdrawn(long projectId){
+    private boolean isProjectStateInSetup(long projectId){
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
-        return !ProjectState.WITHDRAWN.equals(projectProcess.getActivityState());
+        return ProjectState.SETUP.equals(projectProcess.getActivityState());
     }
 }

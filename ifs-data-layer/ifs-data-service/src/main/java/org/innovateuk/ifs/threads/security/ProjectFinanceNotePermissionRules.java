@@ -30,7 +30,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Notes")
     public boolean onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectNotWithdrawn(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
+        return isProjectFinanceUser(user) && isProjectInSetup(note.contextClassPk) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
     }
 
     private boolean noteHasInitialPostWithAuthorBeingCurrentUser(NoteResource note, UserResource user) {
@@ -39,7 +39,7 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a note")
     public boolean onlyProjectFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user) && isProjectNotWithdrawn(note.contextClassPk);
+        return isProjectFinanceUser(user) && isProjectInSetup(note.contextClassPk);
     }
 
     @PermissionRule(value = "PF_READ", description = "Only Project Finance Users can view Notes")
@@ -51,17 +51,17 @@ public class ProjectFinanceNotePermissionRules extends BasePermissionRules{
         return ofNullable(projectFinanceRepository.findOne(id));
     }
 
-    private boolean isProjectNotWithdrawn(Long projectFinance) {
+    private boolean isProjectInSetup(Long projectFinance) {
         Optional<ProjectFinance> pf = findProjectFinance(projectFinance);
         if (pf.isPresent()){
             long projectId = pf.get().getProject().getId();
-            return isProjectStateNotWithdrawn(projectId);
+            return isProjectStateInSetup(projectId);
         }
         return false;
     }
 
-    private boolean isProjectStateNotWithdrawn(long projectId){
+    private boolean isProjectStateInSetup(long projectId){
         ProjectProcess projectProcess = projectProcessRepository.findOneByTargetId(projectId);
-        return !ProjectState.WITHDRAWN.equals(projectProcess.getActivityState());
+        return ProjectState.SETUP.equals(projectProcess.getActivityState());
     }
 }
