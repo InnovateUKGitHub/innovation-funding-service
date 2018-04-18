@@ -78,15 +78,3 @@ include::{snippets}/interview-panel/unstage-applications/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/interview-panel/unstage-applications/curl-request.adoc[]
-
-=== Get key statistics
-==== Request
-include::{snippets}/interview-panel/get-key-statistics/http-request.adoc[]
-include::{snippets}/interview-panel/get-key-statistics/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/interview-panel/get-key-statistics/http-response.adoc[]
-include::{snippets}/interview-panel/get-key-statistics/response-fields.adoc[]
-
-==== Curl Example
-include::{snippets}/interview-panel/get-key-statistics/curl-request.adoc[]
