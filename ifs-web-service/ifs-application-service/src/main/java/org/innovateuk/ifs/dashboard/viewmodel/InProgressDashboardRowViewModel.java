@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.dashboard.viewmodel;
 
-
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -8,6 +7,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+/**
+ * View model for each application row in the 'In progress' section of the applicant dashboard.
+ */
 public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
 
     private final boolean assignedToMe;
@@ -18,7 +20,10 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     private final int applicationProgress;
     private final boolean assignedToInterview;
 
-    public InProgressDashboardRowViewModel(String title, long applicationId, String competitionTitle, boolean assignedToMe, ApplicationState applicationState, boolean leadApplicant, ZonedDateTime endDate, long daysLeft, int applicationProgress, boolean assignedToInterview) {
+    public InProgressDashboardRowViewModel(String title, long applicationId, String competitionTitle,
+                                           boolean assignedToMe, ApplicationState applicationState,
+                                           boolean leadApplicant, ZonedDateTime endDate, long daysLeft,
+                                           int applicationProgress, boolean assignedToInterview) {
         super(title, applicationId, competitionTitle);
         this.assignedToMe = assignedToMe;
         this.applicationState = applicationState;
@@ -64,11 +69,11 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     }
 
     public boolean isWithin24Hours() {
-        Long hoursLeft = getHoursLeftBeforeSubmit();
+        long hoursLeft = getHoursLeftBeforeSubmit();
         return hoursLeft >= 0 && hoursLeft < 24;
     }
 
-    public Long getHoursLeftBeforeSubmit() {
+    public long getHoursLeftBeforeSubmit() {
         return Duration.between(ZonedDateTime.now(), endDate).toHours();
     }
 

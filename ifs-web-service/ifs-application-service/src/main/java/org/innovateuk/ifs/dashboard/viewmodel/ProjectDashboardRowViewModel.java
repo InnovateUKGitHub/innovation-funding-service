@@ -3,14 +3,15 @@ package org.innovateuk.ifs.dashboard.viewmodel;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
- * Applicant dashboard row view model
+ * View model for each application row in the 'Project' section of the applicant dashboard.
  */
 public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<ProjectDashboardRowViewModel> {
 
     private final long projectId;
     private final String projectTitle;
 
-    public ProjectDashboardRowViewModel(String title, long applicationId, String competitionTitle, long projectId, String projectTitle) {
+    public ProjectDashboardRowViewModel(String title, long applicationId, String competitionTitle, long projectId,
+                                        String projectTitle) {
         super(title, applicationId, competitionTitle);
         this.projectId = projectId;
         this.projectTitle = projectTitle;

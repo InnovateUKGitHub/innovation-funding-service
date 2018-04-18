@@ -3,13 +3,14 @@ package org.innovateuk.ifs.dashboard.viewmodel;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
 /**
- * Applicant dashboard row view model
+ * View model for each application row in the 'Previous' section of the applicant dashboard.
  */
 public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<PreviousDashboardRowViewModel> {
 
     private final ApplicationState applicationState;
 
-    public PreviousDashboardRowViewModel(String title, long applicationId, String competitionTitle, ApplicationState applicationState) {
+    public PreviousDashboardRowViewModel(String title, long applicationId, String competitionTitle,
+                                         ApplicationState applicationState) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
     }

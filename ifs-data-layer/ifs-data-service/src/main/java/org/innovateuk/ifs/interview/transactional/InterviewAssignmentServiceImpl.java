@@ -40,6 +40,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.INTERVIEW_PANEL_INVITE_ALREADY_CREATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -193,8 +195,8 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     @Override
     public ServiceResult<Boolean> isApplicationAssigned(long applicationId) {
         return serviceSuccess(interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(applicationId,
-                asList(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState(),
-                        InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE.getBackingState())));
+                asList(AWAITING_FEEDBACK_RESPONSE.getBackingState(),
+                        SUBMITTED_FEEDBACK_RESPONSE.getBackingState())));
     }
 
     private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment, ActivityState awaitingFeedbackActivityState) {
