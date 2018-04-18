@@ -8,6 +8,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -52,6 +53,9 @@ public class ProjectDetailsController {
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private ProjectRestService projectRestService;
+
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
@@ -80,10 +84,11 @@ public class ProjectDetailsController {
     }
 
     @PostMapping("/{projectId}/withdraw")
-    public String withdrawProject(@PathVariable("projectId") final long projectId, HttpServletRequest request) {
-         projectService.withdrawProject(projectId);
+    public String withdrawProject(@PathVariable("competitionId") final Long competitionId,
+                                  @PathVariable("projectId") final long projectId, HttpServletRequest request) {
+         projectRestService.withdrawProject(projectId).getSuccess();
 
-        return RedirectUtils.redirectToCompetitionManagementService(request, "/competition/{competitionId}/applications/unsuccessful");
+        return RedirectUtils.redirectToCompetitionManagementService(request, "competition/" + competitionId + "/applications/unsuccessful");
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
