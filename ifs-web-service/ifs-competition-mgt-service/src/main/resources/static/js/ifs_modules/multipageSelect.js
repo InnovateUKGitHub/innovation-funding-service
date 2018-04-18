@@ -53,6 +53,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           dataType: 'json',
           timeout: IFS.core.autoSave.settings.ajaxTimeOut
         }).done(function (result) {
+          checkbox.removeProp('disabled')
           if (isSelectAll) {
             IFS.competitionManagement.multipageSelect.changeAllCheckboxStates(checked)
           }
@@ -72,9 +73,7 @@ IFS.competitionManagement.multipageSelect = (function () {
           checkbox.closest('fieldset').find('legend').append('<span class="error-message">' + errorMessage + '</span>')
         }).always(function () {
           defer.resolve()
-          checkbox.removeProp('disabled')
         })
-
         return defer.promise()
       }
     },
