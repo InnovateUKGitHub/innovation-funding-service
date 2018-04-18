@@ -12,13 +12,18 @@ ext.dockerDir = "docker/"
 
 task prepareDockerBaseInput {
     dependsOn build
-    def inputDir = project.file("$project.buildDir/docker")
+    def inputDir = "$project.buildDir/docker"
+    def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
 
+    outputs.files(
+            project.file("$inputDir/Dockerfile"),
+            project.file("$inputDir/$jarFile")
+    )
 
     doFirst {
         copy {
             from dockerDir
-            into inputDir
+            into project.file(inputDir)
 
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
@@ -28,7 +33,7 @@ task prepareDockerBaseInput {
         }
         copy {
             from jar
-            into inputDir
+            into project.file(inputDir)
         }
     }
 }
@@ -38,17 +43,21 @@ task prepareDockerInput {
     dependsOn prepareDockerBaseInput
     dependsOn getNewRelicAgent
 
-    def inputDir = project.file("$project.buildDir/docker")
+    def currentFilePath = "${rootProject.projectDir}/setup-files/scripts/docker"
+    def inputDir = "$project.buildDir/docker"
+
+    outputs.files(
+            project.file("$inputDir/coscale-monitoring.sh"),
+            project.file("$inputDir/newrelic.jar"),
+            project.file("$inputDir/newrelic.yml")
+    )
 
     doFirst {
         copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
-            into inputDir
+            from file("$currentFilePath/coscale-monitoring.sh")
+            from file("$currentFilePath/newrelic.jar")
+            from file("$currentFilePath/newrelic.yml")
+            into file(inputDir)
         }
     }
 
