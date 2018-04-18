@@ -30,7 +30,6 @@ public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
     private ReviewParticipantRepository reviewParticipantRepository;
     private ApplicationRepository applicationRepository;
 
-
     public ReviewStatisticsServiceImpl() {
     }
 

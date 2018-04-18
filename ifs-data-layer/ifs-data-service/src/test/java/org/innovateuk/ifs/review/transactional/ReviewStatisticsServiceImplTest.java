@@ -46,7 +46,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getAssessmentPanelKeyStatistics() {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         Profile profile = newProfile().withId(7L).build();
@@ -110,7 +110,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
 
     @Test
     public void getAssessmentPanelInviteStatistics() {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
         Profile profile = newProfile().withId(7L).build();
