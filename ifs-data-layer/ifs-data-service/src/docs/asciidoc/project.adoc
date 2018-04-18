@@ -101,6 +101,18 @@ include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-fo
 ===== User is not a Partner on the Project
 include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
 
+=== Update project location for a partner
+==== Request
+include::{snippets}/project/update-partner-project-location/http-request.adoc[]
+include::{snippets}/project/update-partner-project-location/path-parameters.adoc[]
+include::{snippets}/project/update-partner-project-location/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/update-partner-project-location/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-partner-project-location/curl-request.adoc[]
+
 === Get Project Users
 ==== Request
 include::{snippets}/project/get-project-users/http-request.adoc[]
