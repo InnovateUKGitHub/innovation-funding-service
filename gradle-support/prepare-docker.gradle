@@ -15,6 +15,8 @@ task prepareDockerBaseInput {
     def inputDir = "$project.buildDir/docker"
     def jarFile = "${jar.baseName}-${project.properties['version']}.jar"
 
+    inputs.file("$project.buildDir/libs/$jarFile")
+
     outputs.files(
             project.file("$inputDir/Dockerfile"),
             project.file("$inputDir/$jarFile")
