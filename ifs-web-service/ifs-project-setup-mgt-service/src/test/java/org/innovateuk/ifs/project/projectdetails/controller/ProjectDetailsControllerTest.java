@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
@@ -13,15 +15,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.Role.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.Role.PARTNER;
-import static org.innovateuk.ifs.user.resource.Role.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
@@ -30,10 +36,16 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(IFS_ADMINISTRATOR)).build());
 
         ProjectResource project = newProjectResource()
                 .withId(projectId)
                 .withName("Project 1")
+                .build();
+
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withName("Competition")
                 .build();
 
         OrganisationResource leadOrganisation = newOrganisationResource()
@@ -76,6 +88,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(organisationService.getOrganisationById(partnerOrganisation.getId())).thenReturn(partnerOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(competitionService.getById(competitionId)).thenReturn(competition);
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/project/" + projectId + "/details"))
                 .andExpect(view().name("project/detail"))
@@ -90,6 +103,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         // Assert that the model has the correct values
         assertEquals(project, model.getProject());
         assertEquals(competitionId, model.getCompetitionId());
+        assertEquals(true, model.isIfsAdministrator());
+        assertEquals("Competition", model.getCompetitionName());
         assertEquals("Lead Org 1", model.getLeadOrganisation());
         assertEquals(projectManagerProjectUser, model.getProjectManager());
         assertEquals(expectedOrganisationFinanceContactMap, model.getOrganisationFinanceContactMap());
@@ -134,6 +149,20 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
         return new ProjectDetailsController();
+    }
+
+    @Test
+    public void withdrawProject() throws Exception {
+        Long competitionId = 1L;
+        Long projectId = 1L;
+        setLoggedInUser(newUserResource().withRolesGlobal(asList(IFS_ADMINISTRATOR)).build());
+        when(projectRestService.withdrawProject(projectId)).thenReturn(RestResult.restSuccess());
+
+        MvcResult result = mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/withdraw"))
+                .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/unsuccessful"))
+                .andReturn();
+
+        verify(projectRestService).withdrawProject(projectId);
     }
 }
 

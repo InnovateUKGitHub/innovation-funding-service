@@ -114,4 +114,13 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         assertTrue(result.isSuccess());
         setupPostWithRestResultVerifications(projectRestURL + "/create-project/application/123", ProjectResource.class);
     }
+
+    @Test
+    public void testWithdrawProject() {
+        Long projectId = 123L;
+        ProjectResource projectResource = newProjectResource().build();
+        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/withdraw", null, OK );
+        RestResult<Void> result = service.withdrawProject(projectId);
+        assertTrue(result.isSuccess());
+    }
 }
