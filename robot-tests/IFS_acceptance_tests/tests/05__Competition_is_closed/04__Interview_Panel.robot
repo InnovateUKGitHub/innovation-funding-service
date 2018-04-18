@@ -28,6 +28,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3201 Invite Assessor to Interview Panel: Accepted tab
 ...
 ...               IFS-2635 Assign applications to interview panel dashboard - Key statistics
+...
+...               IFS-3252 Invite Assessor to Interview Panel: Key statistics
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -135,6 +137,13 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
     Then the user should see the element     jQuery=span:contains("1")
     And the user should see the element      jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
+
+CompAdmin can see the interview panel statistics
+    [Documentation]  IFS-3252
+    [Tags]
+    Then the user should see the element      jQuery=.column-quarter:contains("4") small:contains("Invited")
+    And the user should see the element       jQuery=.column-quarter:contains("1") small:contains("Accepted")
+    And the user should see the element       jQuery=.column-quarter:contains("1") small:contains("Declined")
 
 *** Keywords ***
 Custom Suite Setup
