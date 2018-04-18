@@ -31,6 +31,9 @@ public interface ProjectDetailsService {
     @PreAuthorize("hasPermission(#composite, 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
 
+    @PreAuthorize("hasPermission(#composite, 'UPDATE_PARTNER_PROJECT_LOCATION')")
+    ServiceResult<Void> updatePartnerProjectLocation(ProjectOrganisationCompositeId composite, String postCode);
+
     @PreAuthorize("hasPermission(#inviteResource, 'SEND_PROJECT_INVITE')")
     ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource);
 
