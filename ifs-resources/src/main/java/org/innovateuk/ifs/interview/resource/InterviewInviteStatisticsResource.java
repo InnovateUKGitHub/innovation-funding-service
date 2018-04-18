@@ -11,19 +11,16 @@ public class InterviewInviteStatisticsResource {
     private int assessorsInvited;
     private int assessorsAccepted;
     private int assessorsRejected;
-    private int assessorsOnInviteList;
 
     public InterviewInviteStatisticsResource() {
     }
 
     public InterviewInviteStatisticsResource(int assessorsInvited,
                                              int assessorsAccepted,
-                                             int assessorsRejected,
-                                             int assessorsOnInviteList) {
+                                             int assessorsRejected) {
         this.assessorsInvited = assessorsInvited;
         this.assessorsAccepted = assessorsAccepted;
         this.assessorsRejected = assessorsRejected;
-        this.assessorsOnInviteList = assessorsOnInviteList;
     }
 
     public int getAssessorsInvited() {
@@ -38,10 +35,6 @@ public class InterviewInviteStatisticsResource {
         return assessorsRejected;
     }
 
-    public int getAssessorsOnInviteList() {
-        return assessorsOnInviteList;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,7 +47,6 @@ public class InterviewInviteStatisticsResource {
                 .append(assessorsInvited, that.assessorsInvited)
                 .append(assessorsAccepted, that.assessorsAccepted)
                 .append(assessorsRejected, that.assessorsRejected)
-                .append(assessorsOnInviteList, that.assessorsOnInviteList)
                 .isEquals();
     }
 
@@ -64,7 +56,6 @@ public class InterviewInviteStatisticsResource {
                 .append(assessorsInvited)
                 .append(assessorsAccepted)
                 .append(assessorsRejected)
-                .append(assessorsOnInviteList)
                 .toHashCode();
     }
 }

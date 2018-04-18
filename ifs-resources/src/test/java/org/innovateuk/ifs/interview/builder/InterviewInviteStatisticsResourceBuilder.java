@@ -44,8 +44,4 @@ public class InterviewInviteStatisticsResourceBuilder
     public InterviewInviteStatisticsResourceBuilder withAssessorsRejected(Integer ...assessorsDeclined) {
         return withArraySetFieldByReflection("assessorsRejected", assessorsDeclined);
     }
-
-    public InterviewInviteStatisticsResourceBuilder withAssessorsOnInviteList(Integer ...assessorsOnInviteList) {
-        return withArraySetFieldByReflection("assessorsOnInviteList", assessorsOnInviteList);
-    }
 }

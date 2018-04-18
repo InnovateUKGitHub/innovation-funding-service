@@ -241,35 +241,6 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
         verify(interviewAssignmentWorkflowHandler).notifyInterviewPanel(interviewAssignments.get(0), outcome);
     }
 
-    @Test
-    public void getKeyStatistics() {
-        int applicationsInCompetition = 7;
-        int applicationsAssigned = 11;
-
-        InterviewAssignmentKeyStatisticsResource expectedKeyStatisticsResource =
-                newInterviewAssignmentKeyStatisticsResource()
-                        .withApplicationsInCompetition(applicationsInCompetition)
-                        .withApplicationsAssigned(applicationsAssigned)
-                        .build();
-
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState()))
-                .thenReturn(applicationsInCompetition);
-
-        when(interviewAssignmentRepositoryMock.countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
-                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState)))
-                .thenReturn(applicationsAssigned);
-
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = service.getKeyStatistics(COMPETITION_ID).getSuccess();
-
-        assertEquals(expectedKeyStatisticsResource, keyStatisticsResource);
-
-        InOrder inOrder = inOrder(applicationRepositoryMock, interviewAssignmentRepositoryMock);
-        inOrder.verify(applicationRepositoryMock).countByCompetitionIdAndApplicationProcessActivityStateState(COMPETITION_ID, ApplicationState.SUBMITTED.getBackingState());
-        inOrder.verify(interviewAssignmentRepositoryMock).countByTargetCompetitionIdAndActivityStateStateIn(COMPETITION_ID,
-                simpleMapSet(InterviewAssignmentState.ASSIGNED_STATES, InterviewAssignmentState::getBackingState));
-        inOrder.verifyNoMoreInteractions();
-    }
-
     private static InterviewAssignment interviewPanelLambdaMatcher(Application application) {
         return createLambdaMatcher((InterviewAssignment interviewPanel) -> {
             ProcessRole participant = interviewPanel.getParticipant();

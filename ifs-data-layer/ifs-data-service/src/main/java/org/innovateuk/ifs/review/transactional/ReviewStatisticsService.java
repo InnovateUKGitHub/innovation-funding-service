@@ -13,7 +13,7 @@ public interface ReviewStatisticsService {
     @SecuredBySpring(
             value = "READ_ASSESSMENT_PANEL_KEY_STATISTICS",
             description = "Comp admins and project finance users can see key statistics for the assessment review panel page")
-    ServiceResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId);
+    ServiceResult<ReviewKeyStatisticsResource> getReviewPanelKeyStatistics(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(

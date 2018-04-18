@@ -19,10 +19,14 @@ import static org.innovateuk.ifs.documentation.CompetitionOpenKeyStatisticsResou
 import static org.innovateuk.ifs.documentation.CompetitionOpenKeyStatisticsResourceDocs.competitionOpenKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyStatisticsResourceDocs.competitionReadyToOpenKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyStatisticsResourceDocs.competitionReadyToOpenKeyStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.InterviewAssignmentKeyStatisticsResourceDocs.interviewAssignmentKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.ReviewInviteStatisticsResourceDocs.reviewInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.ReviewKeyStatisticsResourceDocs.reviewKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.ReviewKeyStatisticsResourceDocs.reviewKeyStatisticsResourceFields;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -45,9 +49,9 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
 
         when(competitionKeyStatisticsServiceMock.getReadyToOpenKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
 
-        mockMvc.perform(get("/competitionStatistics/{id}/readyToOpen", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/ready-to-open", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competitionStatistics/{method-name}",
+                .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -61,9 +65,9 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         CompetitionOpenKeyStatisticsResource keyStatisticsResource = competitionOpenKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getOpenKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competitionStatistics/{id}/open", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/open", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competitionStatistics/{method-name}",
+                .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -78,9 +82,9 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         CompetitionClosedKeyStatisticsResource keyStatisticsResource = competitionClosedKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getClosedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competitionStatistics/{id}/closed", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/closed", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competitionStatistics/{method-name}",
+                .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -95,9 +99,9 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = competitionInAssessmentKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getInAssessmentKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
-        mockMvc.perform(get("/competitionStatistics/{id}/inAssessment", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/inAssessment", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competitionStatistics/{method-name}",
+                .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -111,10 +115,10 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         long competitionId = 1L;
         ReviewKeyStatisticsResource reviewKeyStatisticsResource = reviewKeyStatisticsResourceBuilder.build();
 
-        when(reviewStatisticsServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
-        mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
+        when(reviewStatisticsServiceMock.getReviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(reviewKeyStatisticsResource));
+        mockMvc.perform(get("/competition-statistics/{id}/review", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competitionStatistics/{method-name}",
+                .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
@@ -128,13 +132,32 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
         ReviewInviteStatisticsResource reviewInviteStatisticsResource = reviewInviteStatisticsResourceBuilder.build();
 
         when(reviewStatisticsServiceMock.getReviewInviteStatistics(competitionId)).thenReturn(serviceSuccess(reviewInviteStatisticsResource));
-        mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
+        mockMvc.perform(get("/competition-statistics/{id}/review-invites", competitionId))
                 .andExpect(status().isOk())
-                .andDo(document("competitionStatistics/{method-name}",
+                .andDo(document("competition-statistics/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition the stats are for")
                         ),
                         responseFields(reviewInviteStatisticsResourceFields)
                 ));
     }
+
+    @Test
+    public void getInterviewPanelKeyStatistics() throws Exception {
+        long competitionId = 1L;
+        when(interviewStatisticsServiceMock.getInterviewPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(newInterviewAssignmentKeyStatisticsResource().build()));
+
+        mockMvc.perform(get("/competition-statistics/{id}/interview", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("competition-statistics/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition")
+                        ),
+                        responseFields(interviewAssignmentKeyStatisticsResourceFields)
+                ));
+
+        verify(interviewStatisticsServiceMock, only()).getInterviewPanelKeyStatistics(competitionId);
+    }
+
+    // missing assignment key stats?
 }

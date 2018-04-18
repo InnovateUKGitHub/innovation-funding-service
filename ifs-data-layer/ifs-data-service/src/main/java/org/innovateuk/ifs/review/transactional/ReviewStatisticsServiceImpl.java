@@ -43,7 +43,7 @@ public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
     }
 
     @Override
-    public ServiceResult<ReviewKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
+    public ServiceResult<ReviewKeyStatisticsResource> getReviewPanelKeyStatistics(long competitionId) {
         ReviewKeyStatisticsResource reviewKeyStatisticsResource = new ReviewKeyStatisticsResource();
         List<Long> assessmentPanelInviteIds = simpleMap(reviewInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 

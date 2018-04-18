@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.innovateuk.ifs.interview.transactional.InterviewStatisticsService;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
@@ -29,6 +29,9 @@ public class CompetitionKeyStatisticsController {
     private ReviewStatisticsService reviewStatisticsService;
     private InterviewStatisticsService interviewStatisticsService;
 
+    public CompetitionKeyStatisticsController() {
+    }
+
     @Autowired
     public CompetitionKeyStatisticsController(CompetitionKeyStatisticsService competitionKeyStatisticsService,
                                               ReviewStatisticsService reviewStatisticsService,
@@ -36,10 +39,6 @@ public class CompetitionKeyStatisticsController {
         this.competitionKeyStatisticsService = competitionKeyStatisticsService;
         this.reviewStatisticsService = reviewStatisticsService;
         this.interviewStatisticsService = interviewStatisticsService;
-    }
-
-    public CompetitionKeyStatisticsController() {
-
     }
 
     @GetMapping({"/readyToOpen", "/ready-to-open"})
@@ -67,14 +66,21 @@ public class CompetitionKeyStatisticsController {
         return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
     }
 
-    @GetMapping({"/review", "/panel"})
+    @ZeroDowntime(reference = "", description = "remove /panel endpoint")
+    @GetMapping({"/panel", "/review"})
     public RestResult<ReviewKeyStatisticsResource> getReviewStatistics(@PathVariable("id") long id) {
-        return reviewStatisticsService.getAssessmentPanelKeyStatistics(id).toGetResponse();
+        return reviewStatisticsService.getReviewPanelKeyStatistics(id).toGetResponse();
     }
 
+    @ZeroDowntime(reference = "", description = "remove /panelInvites endpoint")
     @GetMapping({"/panelInvites", "/review-invites"})
     public RestResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(@PathVariable("id") long id) {
         return reviewStatisticsService.getReviewInviteStatistics(id).toGetResponse();
+    }
+
+    @GetMapping("/interview")
+    public RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewStatistics(@PathVariable("id") long id) {
+        return interviewStatisticsService.getInterviewPanelKeyStatistics(id).toGetResponse();
     }
 
     @GetMapping("/interview-invites")

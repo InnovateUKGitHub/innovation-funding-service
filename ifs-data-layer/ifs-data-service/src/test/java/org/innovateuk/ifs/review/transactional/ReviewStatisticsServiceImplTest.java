@@ -45,7 +45,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
     private ReviewStatisticsService reviewStatisticsService = new ReviewStatisticsServiceImpl();
 
     @Test
-    public void getAssessmentPanelKeyStatistics() {
+    public void getReviewPanelKeyStatistics() {
         long competitionId = 1L;
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
@@ -89,7 +89,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
                 competitionId, CompetitionParticipantRole.PANEL_ASSESSOR, ParticipantStatus.PENDING, panelInviteIds))
                 .thenReturn(1);
 
-        ServiceResult<ReviewKeyStatisticsResource> serviceResult = reviewStatisticsService.getAssessmentPanelKeyStatistics(competitionId);
+        ServiceResult<ReviewKeyStatisticsResource> serviceResult = reviewStatisticsService.getReviewPanelKeyStatistics(competitionId);
 
         InOrder inOrder = inOrder(applicationRepositoryMock, reviewInviteRepositoryMock, reviewParticipantRepositoryMock);
         inOrder.verify(reviewInviteRepositoryMock).getByCompetitionId(competitionId);
@@ -109,7 +109,7 @@ public class ReviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getAssessmentPanelInviteStatistics() {
+    public void getReviewInviteStatistics() {
         long competitionId = 1L;
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
