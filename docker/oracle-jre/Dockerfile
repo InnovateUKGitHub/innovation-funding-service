@@ -1,7 +1,7 @@
 FROM ubuntu:xenial AS JRE_DOWNLOADER
 
 ENV JRE_VERSION=8-u161
-ENV JRE_DOWNLOAD_URL=http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/server-jre-8u161-linux-x64.tar.gz
+ENV JRE_DOWNLOAD_URL=http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jre-8u171-linux-x64.tar.gz
 ENV JRE_SHA256=eb5776cacfd57fbf0ffb907f68c58a1cc6f823e761f4e75d78a6e3240846534e
 
 ENV JCE_POLICY_DOWNLOAD_URL=http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
