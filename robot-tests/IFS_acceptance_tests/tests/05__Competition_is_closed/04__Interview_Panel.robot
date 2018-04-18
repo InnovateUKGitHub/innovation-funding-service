@@ -137,13 +137,9 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
     Then the user should see the element     jQuery=span:contains("1")
     And the user should see the element      jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
-
-CompAdmin can see the interview panel statistics
-    [Documentation]  IFS-3252
-    [Tags]
-    Then the user should see the element      jQuery=.column-quarter:contains("4") small:contains("Invited")
-    And the user should see the element       jQuery=.column-quarter:contains("1") small:contains("Accepted")
-    And the user should see the element       jQuery=.column-quarter:contains("1") small:contains("Declined")
+    Then the user should see the element     jQuery=.column-quarter:contains("4") small:contains("Invited")
+    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Accepted")
+    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Declined")
 
 *** Keywords ***
 Custom Suite Setup
