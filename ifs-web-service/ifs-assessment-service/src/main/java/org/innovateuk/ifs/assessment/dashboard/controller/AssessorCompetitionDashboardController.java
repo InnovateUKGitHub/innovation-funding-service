@@ -24,7 +24,8 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
  */
 @Controller
 @RequestMapping(value = "/assessor")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorCompetitionDashboardController.class)
+@SecuredBySpring(value = "Controller", description = "Only assessors can access the competition if its still open for" +
+        " assessment", securedType = AssessorCompetitionDashboardController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'ASSESSOR_COMPETITION')")
 public class AssessorCompetitionDashboardController {
 

@@ -39,7 +39,8 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/applications")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = InterviewApplicationAssignmentController.class)
+@SecuredBySpring(value = "Controller", description = "Only comp admin and project finance users can setup interview" +
+        " panels if they competition supports them", securedType = InterviewApplicationAssignmentController.class)
 @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_APPLICATIONS')")
 public class InterviewApplicationAssignmentController extends CompetitionManagementCookieController<InterviewAssignmentSelectionForm> {
 
