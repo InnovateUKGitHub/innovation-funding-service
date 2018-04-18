@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
@@ -38,9 +39,9 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
         notEmptyValidator = newFormValidator().withClazzName(NotEmptyValidator.class.getName()).build();
         wordCountValidator = newFormValidator().withClazzName(WordCountValidator.class.getName()).build();
 
-        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName()))
+        when(formValidatorRepositoryMock.findByClazzNameIn(asList(NotEmptyValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME)))
                 .thenReturn(notEmptyValidator);
-        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName()))
+        when(formValidatorRepositoryMock.findByClazzNameIn(asList(WordCountValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME)))
                 .thenReturn(wordCountValidator);
     }
 

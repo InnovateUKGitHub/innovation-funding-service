@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
+
 /**
  * Component that creates a Question object containing default values & validators.
  */
@@ -31,8 +33,8 @@ public class DefaultApplicationQuestionCreator {
     private FormValidatorRepository formValidatorRepository;
 
     public Question buildQuestion(Competition competition) {
-        FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
-        FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
+        FormValidator notEmptyValidator = formValidatorRepository.findByClazzNameIn(asList(NotEmptyValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME));
+        FormValidator wordCountValidator = formValidatorRepository.findByClazzNameIn(asList(WordCountValidator.class.getName(), NotEmptyValidator.OLD_PACKAGE_NAME));
 
         FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
         FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
