@@ -55,30 +55,30 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
             .stream().map(ApplicationState::getBackingState).collect(toSet());
 
-
-    @Autowired
     private AssessmentRepository assessmentRepository;
-
-    @Autowired
     private AssessmentMapper assessmentMapper;
-
-    @Autowired
     private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
-
-    @Autowired
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
-
-    @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
-
-    @Autowired
     private ActivityStateRepository activityStateRepository;
 
-    @Autowired
-    private InterviewInviteRepository interviewInviteRepository;
+    public AssessmentServiceImpl() {
+    }
 
     @Autowired
-    private InterviewParticipantRepository interviewParticipantRepository;
+    public AssessmentServiceImpl(AssessmentRepository assessmentRepository,
+                                 AssessmentMapper assessmentMapper,
+                                 AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper,
+                                 AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper,
+                                 AssessmentWorkflowHandler assessmentWorkflowHandler,
+                                 ActivityStateRepository activityStateRepository) {
+        this.assessmentRepository = assessmentRepository;
+        this.assessmentMapper = assessmentMapper;
+        this.assessmentRejectOutcomeMapper = assessmentRejectOutcomeMapper;
+        this.assessmentFundingDecisionOutcomeMapper = assessmentFundingDecisionOutcomeMapper;
+        this.assessmentWorkflowHandler = assessmentWorkflowHandler;
+        this.activityStateRepository = activityStateRepository;
+    }
 
     @Override
     public ServiceResult<AssessmentResource> findById(long id) {
