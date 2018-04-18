@@ -36,6 +36,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE;
+import static org.innovateuk.ifs.interview.resource.InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -245,10 +247,9 @@ public class InterviewAssignmentServiceImplTest extends BaseServiceUnitTest<Inte
     @Test
     public void isApplicationAssigned() {
         long applicationId = 1L;
-        when(interviewAssignmentRepositoryMock.existsByTargetIdAndActivityStateStateIn(applicationId, asList(
-                InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState(),
-                InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE.getBackingState()
-                ))).thenReturn(true);
+        when(interviewAssignmentRepositoryMock.existsByTargetIdAndActivityStateStateIn(applicationId,
+                asList(AWAITING_FEEDBACK_RESPONSE.getBackingState(), SUBMITTED_FEEDBACK_RESPONSE.getBackingState())))
+                .thenReturn(true);
 
         ServiceResult<Boolean> result = service.isApplicationAssigned(applicationId);
 
