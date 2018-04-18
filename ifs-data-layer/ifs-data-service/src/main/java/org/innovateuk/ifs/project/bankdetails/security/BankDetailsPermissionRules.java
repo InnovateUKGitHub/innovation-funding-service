@@ -16,7 +16,9 @@ public class BankDetailsPermissionRules extends BasePermissionRules {
             value = "SUBMIT",
             description = "Partners can submit their own organisations bank details")
     public boolean partnersCanSubmitTheirOwnOrganisationsBankDetails(BankDetailsResource bankDetailsResource, UserResource user) {
-        return isPartner(bankDetailsResource.getProject(), user.getId()) && partnerBelongsToOrganisation(bankDetailsResource.getProject(), user.getId(), bankDetailsResource.getOrganisation());
+        return isPartner(bankDetailsResource.getProject(), user.getId()) &&
+                partnerBelongsToOrganisation(bankDetailsResource.getProject(), user.getId(), bankDetailsResource.getOrganisation()) &&
+                isProjectInSetup(bankDetailsResource.getProject());
     }
 
     @PermissionRule(

@@ -1,10 +1,15 @@
 package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
 import org.innovateuk.ifs.project.ProjectServiceImpl;
+import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.SectionAccess;
@@ -88,8 +93,43 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test
+    public void partnerProjectLocationPageAccess() {
+        setUpPartnerProjectLocationRequiredMocking();
+
+        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessPartnerProjectLocationPage(organisation, true),
+                () -> rules.partnerCanAccessProjectLocationPage(ProjectCompositeId.id(123L), user));
+    }
+
+    @Test
     public void monitoringOfficerSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(123L), user));
+        setUpPartnerProjectLocationRequiredMocking();
+
+        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessMonitoringOfficerSection(organisation, true),
+                () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(123L), user));
+    }
+
+    private void setUpPartnerProjectLocationRequiredMocking() {
+        Long projectId = 123L;
+        Long applicationId = 1L;
+        Long competitionId = 11L;
+
+        CompetitionResource competitionInDb = CompetitionResourceBuilder.newCompetitionResource()
+                .withLocationPerPartner(true)
+                .build();
+
+        ApplicationResource applicationInDb = ApplicationResourceBuilder.newApplicationResource()
+                .withId(applicationId)
+                .withCompetition(competitionId)
+                .build();
+
+        ProjectResource projectInDb = ProjectResourceBuilder.newProjectResource()
+                .withId(projectId)
+                .withApplication(applicationInDb.getId())
+                .build();
+
+        when(projectServiceMock.getById(projectId)).thenReturn(projectInDb);
+        when(applicationServiceMock.getById(applicationId)).thenReturn(applicationInDb);
+        when(competitionServiceMock.getById(competitionId)).thenReturn(competitionInDb);
     }
 
     @Test
@@ -302,7 +342,6 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     private void assertNonLeadPartnerSuccessfulAccess(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
                                                       Supplier<Boolean> ruleCheck) {
-
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
                 withProjectLeadStatus(newProjectPartnerStatusResource().
                         withOrganisationId(456L).

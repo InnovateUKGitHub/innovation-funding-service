@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -115,5 +116,17 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId) {
         return getWithRestResult(applicationRestURL + "/showApplicationTeam/" + applicationId + "/" + userId, Boolean.class);
+    }
+
+    @Override
+    public RestResult<ZonedDateTime> getLatestEmailFundingDate(Long competitionId) {
+        return getWithRestResult(applicationRestURL + "/getLatestEmailFundingDate/" + competitionId, ZonedDateTime.class);
+    }
+
+    @Override
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(applicationRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
+        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
     }
 }

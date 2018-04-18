@@ -85,6 +85,7 @@ public class BankDetailsPermissionRulesTest extends BasePermissionRulesTest<Bank
 
     @Test
     public void testPartnersCanUpdateTheirOwnOrganisationBankDetails(){
+        when(projectProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(projectProcess);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisationResource.getId(), PROJECT_PARTNER)).thenReturn(partnerProjectUser.get(0));
         assertTrue(rules.partnersCanSubmitTheirOwnOrganisationsBankDetails(bankDetailsResource, user));

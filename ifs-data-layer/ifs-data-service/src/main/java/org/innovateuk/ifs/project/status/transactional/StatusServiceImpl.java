@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -110,11 +111,14 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
-        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
+        boolean locationPerPartnerRequired = project.getApplication().getCompetition().isLocationPerPartner();
+        ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project, locationPerPartnerRequired);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
 
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+
+        ProjectActivityStates partnerProjectLocationStatus = getPartnerProjectLocationStatus(project);
 
         return new ProjectStatusResource(
                 project.getName(),
@@ -128,25 +132,35 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 getBankDetailsStatus(project),
                 financeChecksStatus,
                 getSpendProfileStatus(project, financeChecksStatus),
-                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project)),
+                getMonitoringOfficerStatus(project, createProjectDetailsStatus(project), locationPerPartnerRequired, partnerProjectLocationStatus),
                 getOtherDocumentsStatus(project),
                 getGrantOfferLetterStatus(project),
                 getRoleSpecificGrantOfferLetterState(project),
                 golWorkflowHandler.isSent(project));
     }
 
-    private ProjectActivityStates getProjectDetailsStatus(Project project) {
+    private ProjectActivityStates getProjectDetailsStatus(Project project, boolean locationPerPartnerRequired) {
         for (Organisation organisation : project.getOrganisations()) {
             Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
             if (financeContact == null || !financeContact.isPresent()) {
                 return PENDING;
             }
         }
+
+        if (locationPerPartnerRequired && PENDING.equals(getPartnerProjectLocationStatus(project))) {
+            return PENDING;
+        }
         return createProjectDetailsCompetitionStatus(project);
     }
 
     private ProjectActivityStates createProjectDetailsCompetitionStatus(Project project) {
         return projectDetailsWorkflowHandler.isSubmitted(project) ? COMPLETE : PENDING;
+    }
+
+    private ProjectActivityStates getPartnerProjectLocationStatus(Project project) {
+
+        return simpleAnyMatch(project.getPartnerOrganisations(), partnerOrganisation -> StringUtils.isBlank(partnerOrganisation.getPostCode()))? PENDING : COMPLETE;
+
     }
 
     private ProjectActivityStates getFinanceChecksStatus(Project project) {
@@ -219,20 +233,44 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         }
     }
 
-    private ProjectActivityStates getMonitoringOfficerStatus(Project project, ProjectActivityStates projectDetailsStatus) {
-        return createMonitoringOfficerCompetitionStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(), projectDetailsStatus);
+    private ProjectActivityStates getMonitoringOfficerStatus(Project project,
+                                                             ProjectActivityStates projectDetailsStatus,
+                                                             final boolean locationPerPartnerRequired,
+                                                             final ProjectActivityStates partnerProjectLocationStatus) {
+        return createMonitoringOfficerCompetitionStatus(getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject(),
+                                                        projectDetailsStatus,
+                                                        locationPerPartnerRequired,
+                                                        partnerProjectLocationStatus);
     }
 
     private ServiceResult<MonitoringOfficer> getExistingMonitoringOfficerForProject(Long projectId) {
         return find(monitoringOfficerRepository.findOneByProjectId(projectId), notFoundError(MonitoringOfficer.class, projectId));
     }
 
-    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
+    private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer,
+                                                                           final ProjectActivityStates leadProjectDetailsSubmitted,
+                                                                           final boolean locationPerPartnerRequired,
+                                                                           final ProjectActivityStates partnerProjectLocationStatus) {
+
+        boolean allRequiredDetailsComplete;
+        if (locationPerPartnerRequired) {
+            allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE) && partnerProjectLocationStatus.equals(COMPLETE);
+        } else {
+            allRequiredDetailsComplete = leadProjectDetailsSubmitted.equals(COMPLETE);
+        }
+
+        return getMonitoringOfficerStatus(monitoringOfficer, allRequiredDetailsComplete);
+    }
+
+    private ProjectActivityStates getMonitoringOfficerStatus(final Optional<MonitoringOfficer> monitoringOfficer,
+                                                             final boolean allRequiredDetailsComplete) {
+
         User user = loggedInUserSupplier.get();
 
-        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            if(monitoringOfficer.isPresent())
+        if (allRequiredDetailsComplete) {
+            if(monitoringOfficer.isPresent()) {
                 return COMPLETE;
+            }
             else {
                 if(isSupport(user) || isInnovationLead(user)){
                     return NOT_STARTED;
@@ -352,6 +390,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         boolean isLead = partnerOrganisation.equals(leadOrganisation);
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
+        ProjectActivityStates partnerProjectLocationStatus = createPartnerProjectLocationStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
         ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
         ProjectActivityStates projectDetailsStatus = isLead ? createProjectDetailsStatus(project) : financeContactStatus;
@@ -377,6 +416,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
                 otherDocumentsStatus,
                 grantOfferLetterStatus,
                 financeContactStatus,
+                partnerProjectLocationStatus,
                 grantOfferLetterSentToProjectTeam,
                 isLead);
     }

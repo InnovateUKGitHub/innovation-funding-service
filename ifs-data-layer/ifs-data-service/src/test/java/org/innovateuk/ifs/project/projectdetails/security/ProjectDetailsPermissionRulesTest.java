@@ -112,4 +112,30 @@ public class ProjectDetailsPermissionRulesTest extends BasePermissionRulesTest<P
 
         assertFalse(rules.partnersCanUpdateTheirOwnOrganisationsFinanceContacts(composite, user));
     }
+
+    @Test
+    public void testPartnersCanUpdateProjectLocationForTheirOwnOrganisationWhenUserDoesNotBelongToGivenOrganisation() {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        UserResource user = newUserResource().build();
+
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+
+        assertFalse(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
+    }
+
+    @Test
+    public void testPartnersCanUpdateProjectLocationForTheirOwnOrganisationSuccess() {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        ProjectOrganisationCompositeId composite = new ProjectOrganisationCompositeId(projectId, organisationId);
+        UserResource user = newUserResource().build();
+
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(new ProjectUser());
+
+        assertTrue(rules.partnersCanUpdateProjectLocationForTheirOwnOrganisation(composite, user));
+    }
 }

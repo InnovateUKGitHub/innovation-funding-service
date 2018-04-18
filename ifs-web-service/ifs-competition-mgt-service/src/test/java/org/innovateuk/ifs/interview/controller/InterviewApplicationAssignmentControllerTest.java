@@ -9,11 +9,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.interview.form.InterviewAssignmentSelectionForm;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsFindModelPopulator;
 import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsInviteModelPopulator;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
+import org.innovateuk.ifs.interview.model.InterviewAssignmentApplicationsStatusModelPopulator;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentState;
 import org.innovateuk.ifs.interview.viewmodel.*;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.AvailableApplicationResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationPageResource;
-import org.innovateuk.ifs.invite.resource.InterviewAssignmentStagedApplicationResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
@@ -43,11 +43,16 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentInvitedResourceBuilder.newInterviewAssignmentApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -78,6 +83,10 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
     @InjectMocks
     private InterviewAssignmentApplicationsInviteModelPopulator interviewAssignmentApplicationsInviteModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private InterviewAssignmentApplicationsStatusModelPopulator interviewAssignmentApplicationsStatusModelPopulator;
+
     private CompetitionResource competition;
 
     @Override
@@ -92,6 +101,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         this.setupCookieUtil();
 
         competition = newCompetitionResource()
+                .withId(1L)
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .withName("Technology inspired")
                 .withInnovationSectorName("Infrastructure systems")
@@ -99,6 +109,9 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
+
+        InterviewAssignmentKeyStatisticsResource interviewAssignmentKeyStatisticsResource = newInterviewAssignmentKeyStatisticsResource().build();
+        when(interviewAssignmentRestService.getKeyStatistics(competition.getId())).thenReturn(restSuccess(interviewAssignmentKeyStatisticsResource));
     }
 
     @Test
@@ -129,6 +142,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getKeyStatistics(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -159,6 +173,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getKeyStatistics(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -198,6 +213,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         inOrder.verify(interviewAssignmentRestService).getAvailableApplicationIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getAvailableApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getKeyStatistics(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -319,6 +335,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         InterviewAssignmentStagedApplicationPageResource interviewAssignmentStagedApplicationPageResource = newInterviewAssignmentStagedApplicationPageResource()
                 .withContent(interviewAssignmentStagedApplicationResources)
                 .build();
+        InterviewAssignmentKeyStatisticsResource interviewAssignmentKeyStatisticsResource = newInterviewAssignmentKeyStatisticsResource().build();
 
         setupDefaultInviteViewExpectations(page, interviewAssignmentStagedApplicationPageResource);
 
@@ -337,6 +354,7 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(interviewAssignmentRestService).getStagedApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getKeyStatistics(competition.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -370,9 +388,44 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
         mockMvc.perform(post("/assessment/interview/competition/{competitionId}/applications/invite", competition.getId())
                 .param("removeAll", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/assessment/interview/competition/13/applications/find?page=0"));
+                .andExpect(redirectedUrl("/assessment/interview/competition/" + competition.getId() + "/applications/find?page=0"));
 
         verify(interviewAssignmentRestService).unstageApplications(competition.getId());
+    }
+
+    @Test
+    public void viewStatus() throws Exception {
+        int page = 0;
+
+        List<InterviewAssignmentApplicationResource> interviewAssignmentApplicationResources = newInterviewAssignmentApplicationResource()
+                .withId(1L, 2L)
+                .withApplicationId(3L, 4L)
+                .withApplicationName("App 1", "App 2")
+                .withLeadOrganisationName("Org 1", "Org 2")
+                .withStatus(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE, InterviewAssignmentState.SUBMITTED_FEEDBACK_RESPONSE)
+                .build(2);
+
+        InterviewAssignmentApplicationPageResource interviewAssignmentApplicationPageResource = newInterviewAssignmentApplicationPageResource()
+                .withContent(interviewAssignmentApplicationResources)
+                .build();
+
+        when(interviewAssignmentRestService.getAssignedApplications(competition.getId(), page)).thenReturn(restSuccess(interviewAssignmentApplicationPageResource));
+
+        MvcResult result = mockMvc.perform(get("/assessment/interview/competition/{competitionId}/applications/view-status", competition.getId())
+                .param("page", "0"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/interview/application-view-status"))
+                .andReturn();
+
+        assertCompetitionDetails(competition, result);
+        assertAssignedApplications(interviewAssignmentApplicationResources, result);
+
+        InOrder inOrder = inOrder(competitionRestService, interviewAssignmentRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(interviewAssignmentRestService).getAssignedApplications(competition.getId(), page);
+        inOrder.verify(interviewAssignmentRestService).getKeyStatistics(competition.getId());
+        inOrder.verifyNoMoreInteractions();
     }
 
     private List<InterviewAssignmentStagedApplicationResource> setUpApplicationCreatedInviteResources() {
@@ -425,6 +478,20 @@ public class InterviewApplicationAssignmentControllerTest extends BaseController
             InterviewAssignmentApplicationInviteRowViewModel invitedApplicationRowViewModel = model.getApplications().get(i);
             assertEquals(createdInviteResource.getApplicationName(), invitedApplicationRowViewModel.getApplicationName());
             assertEquals(createdInviteResource.getLeadOrganisationName(), invitedApplicationRowViewModel.getLeadOrganisation());
+        });
+    }
+
+    private void assertAssignedApplications(List<InterviewAssignmentApplicationResource> expectedAssignedInvites, MvcResult result) {
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof InterviewAssignmentApplicationsViewModel);
+        InterviewAssignmentApplicationStatusViewModel model = (InterviewAssignmentApplicationStatusViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(expectedAssignedInvites.size(), model.getApplications().size());
+
+        forEachWithIndex(expectedAssignedInvites, (i, assignmentApplicationResource) -> {
+            InterviewAssignmentApplicationStatusRowViewModel assignedApplicationRowViewModel = model.getApplications().get(i);
+            assertEquals(assignmentApplicationResource.getApplicationName(), assignedApplicationRowViewModel.getApplicationName());
+            assertEquals(assignmentApplicationResource.getLeadOrganisationName(), assignedApplicationRowViewModel.getLeadOrganisation());
+            assertEquals(assignmentApplicationResource.getStatus(), assignedApplicationRowViewModel.getStatus());
         });
     }
 

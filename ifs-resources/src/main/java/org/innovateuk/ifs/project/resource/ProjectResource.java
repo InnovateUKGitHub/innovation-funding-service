@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.validation.constraints.Digits;
@@ -184,5 +186,57 @@ public class ProjectResource {
 
     public void setProjectState(ProjectState projectState) {
         this.projectState = projectState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectResource that = (ProjectResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(application, that.application)
+                .append(targetStartDate, that.targetStartDate)
+                .append(address, that.address)
+                .append(name, that.name)
+                .append(documentsSubmittedDate, that.documentsSubmittedDate)
+                .append(offerSubmittedDate, that.offerSubmittedDate)
+                .append(projectUsers, that.projectUsers)
+                .append(collaborationAgreement, that.collaborationAgreement)
+                .append(exploitationPlan, that.exploitationPlan)
+                .append(signedGrantOfferLetter, that.signedGrantOfferLetter)
+                .append(grantOfferLetter, that.grantOfferLetter)
+                .append(additionalContractFile, that.additionalContractFile)
+                .append(otherDocumentsApproved, that.otherDocumentsApproved)
+                .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
+                .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
+                .append(durationInMonths, that.durationInMonths)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(application)
+                .append(targetStartDate)
+                .append(address)
+                .append(name)
+                .append(documentsSubmittedDate)
+                .append(offerSubmittedDate)
+                .append(projectUsers)
+                .append(collaborationAgreement)
+                .append(exploitationPlan)
+                .append(signedGrantOfferLetter)
+                .append(grantOfferLetter)
+                .append(additionalContractFile)
+                .append(otherDocumentsApproved)
+                .append(grantOfferLetterRejectionReason)
+                .append(spendProfileSubmittedDate)
+                .append(durationInMonths)
+                .toHashCode();
     }
 }

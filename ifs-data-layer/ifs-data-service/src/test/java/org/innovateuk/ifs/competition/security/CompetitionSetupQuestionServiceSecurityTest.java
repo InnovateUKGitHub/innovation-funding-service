@@ -95,14 +95,18 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteAllowedIfGlobalCompAdminRole() {
+        final Long questionId = 1L;
+
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build());
-        classUnderTest.delete(1L);
+        classUnderTest.delete(questionId);
     }
 
     @Test
     public void testDeleteAllowedIfNoGlobalRolesAtAll() {
+        final Long questionId = 1L;
+
         try {
-            classUnderTest.delete(1L);
+            classUnderTest.delete(questionId);
             fail("Should not have been able to update question without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
@@ -111,11 +115,12 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void testDeleteDeniedIfNotCorrectGlobalRoles() {
+        final Long questionId = 1L;
         NON_COMP_ADMIN_ROLES.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(Role.getByName(role.getName()))).build());
             try {
-                classUnderTest.delete(1L);
+                classUnderTest.delete(questionId);
                 fail("Should not have been able to update question without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
