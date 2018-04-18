@@ -82,10 +82,10 @@
             </tr>
         </tbody>
     </table>
-        <!--<th:block th:if="${model.ifs_administrator}">-->
+        <th:block th:if="${model.ifsAdministrator}">
             <a data-js-modal="modal-withdraw-project" class="buttonlink extra-margin">Withdraw project</a>
                 <th:block th:insert="fragments/modals :: modal-withdraw-project" />
-        <!--</th:block>-->
+        </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
