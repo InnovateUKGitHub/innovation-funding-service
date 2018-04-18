@@ -80,7 +80,7 @@ public class ApplicationDetailsSectionSaverTest {
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
         assertThat(result.isFailure()).isTrue();
-        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors().size()).isEqualTo(3);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
                         error.getErrorKey().equals("validation.field.must.not.be.blank"))
@@ -88,6 +88,10 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
                         error.getErrorKey().equals("validation.field.must.not.be.blank"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("useResubmissionQuestion") &&
+                        error.getErrorKey().equals("validation.application.must.indicate.resubmission.or.not"))
                 .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);
@@ -103,7 +107,7 @@ public class ApplicationDetailsSectionSaverTest {
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
         assertThat(result.isFailure()).isTrue();
-        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors().size()).isEqualTo(3);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
@@ -111,6 +115,10 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("useResubmissionQuestion") &&
+                        error.getErrorKey().equals("validation.application.must.indicate.resubmission.or.not"))
                 .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);
@@ -126,7 +134,7 @@ public class ApplicationDetailsSectionSaverTest {
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
         assertThat(result.isFailure()).isTrue();
-        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors().size()).isEqualTo(3);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
                         error.getErrorKey().equals("validation.standard.integer.non.decimal.format"))
@@ -134,6 +142,10 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
                         error.getErrorKey().equals("validation.standard.integer.non.decimal.format"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("useResubmissionQuestion") &&
+                        error.getErrorKey().equals("validation.application.must.indicate.resubmission.or.not"))
                 .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);
@@ -146,6 +158,7 @@ public class ApplicationDetailsSectionSaverTest {
 
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(10));
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(10));
+        applicationDetailsForm.setUseResubmissionQuestion(true);
 
         when(competitionSetupRestServiceMock.update(any())).thenReturn(RestResult.restSuccess());
 
