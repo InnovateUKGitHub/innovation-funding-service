@@ -45,9 +45,4 @@ the user tries the link
 the user tries the external link
     [Arguments]    ${page}    ${link}    ${title}
     Given the user navigates to the page   ${page}
-    When the user clicks the button/link   link=${link}
-    Then the user should get a new window  ${title}
-
-the user should get a new window
-    [Arguments]    ${title}
-    Select Window    title=${title}
+    Then the user should see the element   link=${link}

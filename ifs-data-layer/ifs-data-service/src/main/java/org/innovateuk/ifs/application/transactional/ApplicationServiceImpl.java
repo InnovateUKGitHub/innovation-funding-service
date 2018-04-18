@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.*;
@@ -219,6 +220,17 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    public ServiceResult<ZonedDateTime> findLatestEmailFundingDateByCompetitionId(Long id) {
+        List<Application> applicationsForId = applicationRepository.findByCompetitionId(id);
+
+        // Only competitions with at least one funded and informed application can be considered as in project setup
+        return serviceSuccess(applicationsForId.stream()
+                .filter(application -> application.getManageFundingEmailDate() != null)
+                .max(Comparator.comparing(Application::getManageFundingEmailDate))
+                .get().getManageFundingEmailDate());
+    }
+
+    @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
         return getProcessRole(id).andOnSuccessReturn(processRole -> {
             Long appId = processRole.getApplicationId();
@@ -282,9 +294,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+    public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
         Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-        Stream<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
+        List<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
         return serviceSuccess(applicationResults);
     }
 
