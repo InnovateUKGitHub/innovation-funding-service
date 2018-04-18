@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestServiceImpl;
 import org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder;
 import org.innovateuk.ifs.invite.resource.*;
@@ -12,9 +13,12 @@ import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.lang.String.format;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationPageResourceBuilder.newAvailableApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableApplicationResourceBuilder.newAvailableApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentApplicationPageResourceBuilder.newInterviewAssignmentApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentCreatedInviteResourceBuilder.newInterviewAssignmentStagedApplicationResource;
+import static org.innovateuk.ifs.invite.builder.InterviewAssignmentInvitedResourceBuilder.newInterviewAssignmentApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InterviewAssignmentStagedApplicationPageResourceBuilder.newInterviewAssignmentStagedApplicationPageResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationListResourceBuilder.newStagedApplicationListResource;
 import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder.newStagedApplicationResource;
@@ -100,6 +104,20 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
     }
 
     @Test
+    public void getAssignedApplications() {
+        long competitionId = 1L;
+        int page = 1;
+        InterviewAssignmentApplicationPageResource expected = newInterviewAssignmentApplicationPageResource()
+                .withContent(newInterviewAssignmentApplicationResource().build(2))
+                .build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", REST_URL, "assigned-applications", competitionId), InterviewAssignmentApplicationPageResource.class, expected);
+
+        InterviewAssignmentApplicationPageResource actual = service.getAssignedApplications(competitionId, page).getSuccess();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void unstageApplication() {
         long applicationId = 1L;
 
@@ -139,5 +157,16 @@ public class InterviewAssignmentRestServiceImplTest extends BaseRestServiceUnitT
 
         RestResult<Void> actual = service.sendAllInvites(competitionId, sendResource);
         assertTrue(actual.isSuccess());
+    }
+
+    @Test
+    public void getKeyStatistics() {
+        long competitionId = 1L;
+        InterviewAssignmentKeyStatisticsResource expected = newInterviewAssignmentKeyStatisticsResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", REST_URL, "key-statistics", competitionId), InterviewAssignmentKeyStatisticsResource.class, expected);
+
+        InterviewAssignmentKeyStatisticsResource actual = service.getKeyStatistics(competitionId).getSuccess();
+        assertEquals(expected, actual);
     }
 }

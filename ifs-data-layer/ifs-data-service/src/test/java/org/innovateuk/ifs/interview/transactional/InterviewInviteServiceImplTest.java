@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.interview.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.interview.domain.InterviewInvite;
+import org.innovateuk.ifs.interview.domain.InterviewParticipant;
 import org.innovateuk.ifs.assessment.mapper.AssessorCreatedInviteMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteOverviewMapper;
 import org.innovateuk.ifs.assessment.mapper.AvailableAssessorMapper;
@@ -13,7 +16,7 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.*;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
@@ -196,7 +199,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         Page<AssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
-        when(competitionParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId, pageable))
+        when(assessmentParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
         when(availableAssessorMapper.mapToResource(participants.get(0)))
                 .thenReturn(assessorItems.get(0));
@@ -205,7 +208,7 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable).getSuccess();
 
-        verify(competitionParticipantRepositoryMock).findParticipantsNotOnInterviewPanel(competitionId, pageable);
+        verify(assessmentParticipantRepositoryMock).findParticipantsNotOnInterviewPanel(competitionId, pageable);
         verify(availableAssessorMapper).mapToResource(participants.get(0));
         verify(availableAssessorMapper).mapToResource(participants.get(1));
 
@@ -226,12 +229,12 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
 
         Page<AssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(competitionParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId, pageable))
+        when(assessmentParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId, pageable))
                 .thenReturn(assessorPage);
 
         AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable).getSuccess();
 
-        verify(competitionParticipantRepositoryMock).findParticipantsNotOnInterviewPanel(competitionId, pageable);
+        verify(assessmentParticipantRepositoryMock).findParticipantsNotOnInterviewPanel(competitionId, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());
@@ -275,12 +278,12 @@ public class InterviewInviteServiceImplTest extends BaseServiceUnitTest<Intervie
                 .withUser(assessorUsers.get(0), assessorUsers.get(1))
                 .build(2);
 
-        when(competitionParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId))
+        when(assessmentParticipantRepositoryMock.findParticipantsNotOnInterviewPanel(competitionId))
                 .thenReturn(participants);
 
         List<Long> actualAssessorIds = service.getAvailableAssessorIds(competitionId).getSuccess();
 
-        verify(competitionParticipantRepositoryMock).findParticipantsNotOnInterviewPanel(competitionId);
+        verify(assessmentParticipantRepositoryMock).findParticipantsNotOnInterviewPanel(competitionId);
 
         assertEquals(expectedAssessorIds, actualAssessorIds);
     }

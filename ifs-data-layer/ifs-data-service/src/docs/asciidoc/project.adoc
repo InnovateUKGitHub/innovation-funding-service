@@ -53,6 +53,16 @@ include::{snippets}/project/update-start-date-but-date-in-past/http-response.ado
 ===== Project start date not on the first day of the month
 include::{snippets}/project/update-start-date-but-date-not-first-of-month/http-response.adoc[]
 
+=== Update project duration
+==== Request
+include::{snippets}/project/update-project-duration/http-request.adoc[]
+include::{snippets}/project/update-project-duration/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/update-project-duration/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-project-duration/curl-request.adoc[]
 
 === Set Project Manager
 ==== Success case
@@ -90,6 +100,18 @@ include::{snippets}/project/update-finance-contact-but-user-is-not-on-project-fo
 
 ===== User is not a Partner on the Project
 include::{snippets}/project/update-finance-contact-but-user-is-not-partner-on-project-for-organisation/http-response.adoc[]
+
+=== Update project location for a partner
+==== Request
+include::{snippets}/project/update-partner-project-location/http-request.adoc[]
+include::{snippets}/project/update-partner-project-location/path-parameters.adoc[]
+include::{snippets}/project/update-partner-project-location/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/update-partner-project-location/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/update-partner-project-location/curl-request.adoc[]
 
 === Get Project Users
 ==== Request

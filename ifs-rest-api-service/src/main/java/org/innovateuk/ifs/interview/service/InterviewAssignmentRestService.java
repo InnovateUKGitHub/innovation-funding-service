@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interview.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 
 import java.util.List;
 
@@ -22,7 +23,11 @@ public interface InterviewAssignmentRestService {
 
     RestResult<Void> unstageApplications(long competitionId);
 
+    RestResult<InterviewAssignmentApplicationPageResource> getAssignedApplications(long competitionId, int page);
+
     RestResult<ApplicantInterviewInviteResource> getEmailTemplate();
 
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
+
+    RestResult<InterviewAssignmentKeyStatisticsResource> getKeyStatistics(long competitionId);
 }
