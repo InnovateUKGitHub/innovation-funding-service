@@ -3,14 +3,17 @@ package org.innovateuk.ifs.dashboard.viewmodel;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
- * View model for each application row in the 'Project' section of the applicant dashboard.
+ * View model for each project row in the 'Project' section of the applicant dashboard.
  */
 public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<ProjectDashboardRowViewModel> {
 
     private final long projectId;
     private final String projectTitle;
 
-    public ProjectDashboardRowViewModel(String title, long applicationId, String competitionTitle, long projectId,
+    public ProjectDashboardRowViewModel(String title,
+                                        long applicationId,
+                                        String competitionTitle,
+                                        long projectId,
                                         String projectTitle) {
         super(title, applicationId, competitionTitle);
         this.projectId = projectId;
@@ -32,7 +35,7 @@ public class ProjectDashboardRowViewModel extends AbstractApplicantDashboardRowV
 
     @Override
     public String getTitle() {
-       return isNullOrEmpty(projectTitle) ? super.getCompetitionTitle() : projectTitle;
+        return !isNullOrEmpty(projectTitle) ? projectTitle : super.getCompetitionTitle();
     }
 
     @Override

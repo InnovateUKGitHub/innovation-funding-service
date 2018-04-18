@@ -7,6 +7,11 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+
 /**
  * View model for each application row in the 'In progress' section of the applicant dashboard.
  */
@@ -60,12 +65,12 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
 
     /* view logic */
     public boolean isSubmitted() {
-        return ApplicationState.SUBMITTED.equals(applicationState) ||
-                ApplicationState.INELIGIBLE.equals(applicationState);
+        return SUBMITTED.equals(applicationState) ||
+                INELIGIBLE.equals(applicationState);
     }
 
     public boolean isCreated() {
-        return ApplicationState.CREATED.equals(applicationState);
+        return CREATED.equals(applicationState);
     }
 
     public boolean isWithin24Hours() {
@@ -88,7 +93,7 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
     public String getLinkUrl() {
         if (isSubmitted()) {
             if (assignedToInterview) {
-                return String.format("/application/%s/track", getApplicationNumber());
+                return null;
             } else {
                 return String.format("/application/%s/track", getApplicationNumber());
             }
@@ -97,6 +102,12 @@ public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardR
         } else {
             return String.format("/application/%s", getApplicationNumber());
         }
+    }
+
+    @Override
+    public String getTitle() {
+        return !isNullOrEmpty(title) ? title :
+                (isSubmitted() ? "Untitled application" :  "Untitled application (start here)");
     }
 
     @Override

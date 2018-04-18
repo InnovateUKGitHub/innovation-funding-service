@@ -98,8 +98,7 @@ public class ApplicantDashboardPopulator {
     }
 
     private boolean isAssigned(ApplicationResource application, Optional<ProcessRoleResource> processRole) {
-        if (processRole.isPresent()
-                && !isLead(processRole)) {
+        if (processRole.isPresent() && !isLead(processRole)) {
             int count = applicationRestService.getAssignedQuestionsCount(application.getId(), processRole.get().getId())
                     .getSuccess();
             return count != 0;

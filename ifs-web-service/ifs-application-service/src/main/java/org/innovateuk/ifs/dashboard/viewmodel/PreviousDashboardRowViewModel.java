@@ -2,6 +2,8 @@ package org.innovateuk.ifs.dashboard.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationState;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 /**
  * View model for each application row in the 'Previous' section of the applicant dashboard.
  */
@@ -9,7 +11,9 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     private final ApplicationState applicationState;
 
-    public PreviousDashboardRowViewModel(String title, long applicationId, String competitionTitle,
+    public PreviousDashboardRowViewModel(String title,
+                                         long applicationId,
+                                         String competitionTitle,
                                          ApplicationState applicationState) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
@@ -36,6 +40,11 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
     @Override
     public String getLinkUrl() {
         return String.format("/application/%s/summary", getApplicationNumber());
+    }
+
+    @Override
+    public String getTitle() {
+        return !isNullOrEmpty(title) ? title : "Untitled application";
     }
 
     @Override
