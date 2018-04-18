@@ -29,6 +29,7 @@ public class ProjectResource {
     private ApprovalType otherDocumentsApproved;
     private String grantOfferLetterRejectionReason;
     private ZonedDateTime spendProfileSubmittedDate;
+    private ProjectState projectState;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -179,6 +180,14 @@ public class ProjectResource {
         this.spendProfileSubmittedDate = spendProfileSubmittedDate;
     }
 
+    public ProjectState getProjectState() {
+        return projectState;
+    }
+
+    public void setProjectState(ProjectState projectState) {
+        this.projectState = projectState;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -205,6 +214,7 @@ public class ProjectResource {
                 .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
                 .append(durationInMonths, that.durationInMonths)
+                .append(projectState, that.projectState)
                 .isEquals();
     }
 
@@ -228,6 +238,7 @@ public class ProjectResource {
                 .append(grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate)
                 .append(durationInMonths)
+                .append(projectState)
                 .toHashCode();
     }
 }
