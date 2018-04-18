@@ -13,15 +13,20 @@ public class ProjectDetailsViewModel {
 
     private ProjectResource project;
     private Long competitionId;
+    private boolean ifsAdministrator;
+    private String competitionName;
     private String leadOrganisation;
     private ProjectUserResource projectManager;
     private Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap;
 
-    public ProjectDetailsViewModel(ProjectResource project, Long competitionId, String leadOrganisation,
+    public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
+                                   boolean isIfsAdministrator, String competitionName, String leadOrganisation,
                                    ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap) {
         this.project = project;
         this.competitionId = competitionId;
+        this.ifsAdministrator = isIfsAdministrator;
+        this.competitionName = competitionName;
         this.leadOrganisation = leadOrganisation;
         this.projectManager = projectManager;
         this.organisationFinanceContactMap = organisationFinanceContactMap;
@@ -33,6 +38,14 @@ public class ProjectDetailsViewModel {
 
     public Long getCompetitionId() {
         return competitionId;
+    }
+
+    public boolean isIfsAdministrator() {
+        return ifsAdministrator;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getLeadOrganisation() {

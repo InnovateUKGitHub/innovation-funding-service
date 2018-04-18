@@ -22,7 +22,7 @@ public interface ProjectService {
 
     ProjectResource getByApplicationId(Long applicationId);
 
-    Void withdrawProject(Long projectId);
+    void withdrawProject(Long projectId);
 
     ServiceResult<List<ProjectResource>> findByUser(Long userId);
 
