@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.transactional.ProjectDetailsService;
@@ -39,8 +40,15 @@ public class ProjectDetailsController {
         return projectDetailsService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
     }
 
-    @PostMapping("/{projectId}/update-duration/{durationInMonths}")
+    @PostMapping("/{projectId}/duration/{durationInMonths}")
     public RestResult<Void> updateProjectDuration(@PathVariable("projectId") final long projectId,
+                                                  @PathVariable("durationInMonths") final long durationInMonths) {
+        return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
+    }
+
+    @ZeroDowntime(reference = "IFS-3323", description = "Enable both end points to support ZDD. This will be removed in the next release")
+    @PostMapping("/{projectId}/update-duration/{durationInMonths}")
+    public RestResult<Void> updateProjectDurationZDD(@PathVariable("projectId") final long projectId,
                                                   @PathVariable("durationInMonths") final long durationInMonths) {
         return projectDetailsService.updateProjectDuration(projectId, durationInMonths).toPostResponse();
     }
