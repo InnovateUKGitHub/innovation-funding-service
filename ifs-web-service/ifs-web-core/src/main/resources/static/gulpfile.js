@@ -34,11 +34,11 @@ gulp.task('copy-npm-govuk', function () {
   return gulp.src(filesExist(govukNodeModules, {checkGlobs: true}), {base: nodeModulesPath}).pipe(gulp.dest('sass/vendor/'))
 })
 
-// copy over the font from the template to our sourced controlled folder
+// copy over the font from GDS node-modules to css/fonts folder
 gulp.task('copy-fonts-govuk', function () {
   return gulp.src(filesExist('sass/vendor/govuk_template_jinja/assets/stylesheets/fonts/*')).pipe(gulp.dest('css/fonts'))
 })
-//  copy over the images from the template  to our sourced controlled folder
+//  copy over the images from GDS node-modules to images folder
 gulp.task('copy-images-govuk', function () {
   return gulp.src(['sass/vendor/govuk_template_jinja/assets/images/**/**', 'sass/vendor/govuk_template_jinja/assets/stylesheets/images/**/**', 'sass/vendor/govuk_frontend_toolkit/images/**/**']).pipe(gulp.dest('images'))
 })
