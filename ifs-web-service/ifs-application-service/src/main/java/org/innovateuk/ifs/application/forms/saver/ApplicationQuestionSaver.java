@@ -86,7 +86,9 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
         if ((markAsCompleteRequest.isPresent() && markAsCompleteRequest.get())
                 || (isMarkQuestionRequest(params) && !errors.hasErrors())) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application.getId(), questionId, processRole.getId(), errors, request));
-            errors.addAll(handleResubmissionRequest(updatedApplication));
+            if (updatedApplication != null) {
+                errors.addAll(handleResubmissionRequest(updatedApplication));
+            }
         }
 
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
@@ -110,7 +112,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
 
         if(updatedApplication.getResubmission() == null) {
             messages.addAll(
-                    new ValidationMessages(fieldError(RESUBMISSION_FIELD, updatedApplication.getResubmission(), RESUBMISSION_VALIDATION_KEY))
+                    new ValidationMessages(fieldError(RESUBMISSION_FIELD, "", RESUBMISSION_VALIDATION_KEY))
             );
         }
         return messages;
