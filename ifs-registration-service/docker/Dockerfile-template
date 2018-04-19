@@ -26,4 +26,6 @@ ADD @app_name@-@version@.jar app.jar
 COPY ldap-encryption.crt /ldap-encryption.crt
 RUN $JAVA_HOME/bin/keytool -import -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /ldap-encryption.crt
 
+HEALTHCHECK --interval=15s --timeout=8s \
+  CMD curl -f http://localhost:8080/monitoring/health || exit 1
 ENTRYPOINT exec java $JAVA_OPTS $JMX_OPTS -jar app.jar
