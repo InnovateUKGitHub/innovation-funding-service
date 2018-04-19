@@ -4,12 +4,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
 
 /**
  * View model backing the Project Details page for Project Setup
@@ -48,7 +49,7 @@ public class ProjectDetailsViewModel {
     }
 
     public boolean isWithdrawn() {
-        return ProjectState.WITHDRAWN.equals(project.getProjectState());
+        return WITHDRAWN.equals(project.getProjectState());
     }
 
     public boolean isShowWithdrawLink() {
