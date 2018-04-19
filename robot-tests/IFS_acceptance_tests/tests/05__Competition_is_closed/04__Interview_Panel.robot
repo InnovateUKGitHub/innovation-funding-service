@@ -121,8 +121,8 @@ CompAdmin resends the interview panel invite
     [Documentation]  IFS-3154  IFS-3208
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the page       ${SERVER}/management/assessment/interview/competition/18/assessors/pending-and-declined
-    And the user should see the element       jQuery=td:contains("Madeleine Martin") ~ td:contains("Invite declined")
+    When the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
+    And the user should see the element       jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Invite declined: ${today}")
     And the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
     And the user clicks the button/link       jquery=tr:contains("${assessor_madeleine}") label    #resending the interview panel invite to an assessor that has been rejected initially
     When the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_madeleine}
