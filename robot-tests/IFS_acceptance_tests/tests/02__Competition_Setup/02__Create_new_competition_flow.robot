@@ -403,6 +403,10 @@ Application: Application details validations
     And the user enters text to a text field   id=maxProjectDuration  65
     Then the user should see a field error     The minimum must be smaller than the maximum.
     And the user should see a field error      This field should be 60 or lower.
+
+    When the user enters text to a text field  id=minProjectDuration  59
+    And the user clicks the button/link        css=button[type="submit"]
+    Then the user should see a summary error   This field should be 60 or lower
     [Teardown]  the user clicks the button/link  link=Application
 
 
