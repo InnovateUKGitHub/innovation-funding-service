@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -22,6 +23,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -31,12 +33,15 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys
+        .SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -281,11 +286,17 @@ public class CompetitionSetupServiceImplTest {
 
     @Test
     public void testSetCompetitionAsReadyToOpenWhenReadyToOpen() {
-        CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
-        when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
-        service.setCompetitionAsReadyToOpen(2L);
-        assertEquals(competitionResource.getCompetitionStatus(), CompetitionStatus.READY_TO_OPEN);
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionStatus(CompetitionStatus.READY_TO_OPEN)
+                .build();
 
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        assertTrue(service.setCompetitionAsReadyToOpen(COMPETITION_ID).isSuccess());
+
+        verify(competitionService, only()).getById(COMPETITION_ID);
+        verifyNoMoreInteractions(competitionService, competitionSetupRestService);
     }
 
     @Test
@@ -305,15 +316,17 @@ public class CompetitionSetupServiceImplTest {
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
         when(competitionSetupRestService.markAsSetup(COMPETITION_ID)).thenReturn(RestResult.restSuccess());
-
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
-        service.setCompetitionAsReadyToOpen(COMPETITION_ID);
-        verify(competitionSetupRestService).markAsSetup(COMPETITION_ID);
 
+        service.setCompetitionAsReadyToOpen(COMPETITION_ID).getSuccess();
+
+        verify(competitionService, only()).getById(COMPETITION_ID);
+        verify(competitionSetupRestService, times(1)).getSectionStatuses(COMPETITION_ID);
+        verify(competitionSetupRestService, times(1)).markAsSetup(COMPETITION_ID);
+        verifyNoMoreInteractions(competitionService, competitionSetupRestService);
     }
 
-
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetCompetitionAsReadyToOpenFail() {
         Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
         testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
@@ -327,11 +340,17 @@ public class CompetitionSetupServiceImplTest {
                 .build();
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
-
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
-        service.setCompetitionAsReadyToOpen(COMPETITION_ID);
-        verify(competitionService.getById(COMPETITION_ID));
-        verifyNoMoreInteractions(competitionResource);
+
+        ServiceResult<Void> updateResult = service.setCompetitionAsReadyToOpen(COMPETITION_ID);
+
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(
+                new org.innovateuk.ifs.commons.error.Error("competition.setup.not.ready.to.open", BAD_REQUEST)));
+
+        verify(competitionService, only()).getById(COMPETITION_ID);
+        verify(competitionSetupRestService, times(1)).getSectionStatuses(COMPETITION_ID);
+        verifyNoMoreInteractions(competitionService, competitionSetupRestService);
     }
 
     @Test
