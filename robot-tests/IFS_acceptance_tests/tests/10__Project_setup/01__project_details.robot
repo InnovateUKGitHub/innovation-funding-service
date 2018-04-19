@@ -50,6 +50,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               IFS-2642 Resend invites in Project Setup
 ...
 ...               IFS-2920 Project details: Project location per partner
+...
+...               IFS-2945 Withdraw a project from Project Setup
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
@@ -58,7 +60,28 @@ Resource          PS_Common.robot
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 
+
 *** Test Cases ***
+The IFS Admin withdraws a project from Project Setup
+    [Documentation]  IFS-2945
+    [Tags]  HappyPath
+    [Setup]  The user logs-in in new browser       &{ifs_admin_user_credentials}
+    Given the user navigates to the page           ${server}/project-setup-management/competition/${NOT_EDITABLE_COMPETITION}/status/all
+    And the user clicks the button/link            jQuery=tr:contains("${INFORM_COMPETITION_NAME_2}") a:contains("Incomplete")
+    When the user clicks the button/link           link=Withdraw project
+    And the user clicks the button/link            jQuery=button:contains("Withdraw project") ~ button:contains("Cancel")    #Cancel the modal
+    And the user clicks the button/link            link=Withdraw project
+    And the user clicks the button/link            css=button[type="submit"]    #Withdraw the project on the modal
+    Then the user should see the element           jQuery=a:contains("Previous applications")
+
+The internal user can see they cannot make any changes to their withdrawn project
+    [Documentation]  IFS-2945
+    [Tags]  HappyPath
+    [Setup]  log in as a different user            &{successful_released_credentials}
+    Given the user should see the element          jQuery=p:contains("Project withdrawn")
+    When the user clicks the button/link           jQuery=a:contains("${INFORM_COMPETITION_NAME_2}")
+    Then the user should see the element           jQuery=.warning-alert:contains("${externalProjectWithdrawnMessage}")
+
 Internal users can see Project Details not yet completed
     [Documentation]    INFUND-5856
     [Tags]    HappyPath
