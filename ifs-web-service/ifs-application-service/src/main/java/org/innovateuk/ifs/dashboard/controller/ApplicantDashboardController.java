@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * This controller will handle requests related to the current applicant. So pages that are relative to that user,
+ * This controller will handle requests related to the current applicants dashboard. So pages that are relative to that user,
  * are implemented here. For example the my-applications page.
  */
 @Controller
 @RequestMapping("/applicant")
-@SecuredBySpring(value="Controller", description = "Each applicant has permission to view their own dashboard", securedType = ApplicantController.class)
+@SecuredBySpring(value="Controller", description = "Each applicant has permission to view their own dashboard", securedType = ApplicantDashboardController.class)
 @PreAuthorize("hasAuthority('applicant')")
-public class ApplicantController {
+public class ApplicantDashboardController {
 
     @Autowired
     private ApplicantDashboardPopulator applicantDashboardPopulator;
