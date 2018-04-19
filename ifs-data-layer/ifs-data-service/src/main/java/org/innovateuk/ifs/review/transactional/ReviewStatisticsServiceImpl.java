@@ -23,6 +23,9 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
+/**
+ * Service to get statistics related to Review Panels.
+ */
 @Service
 public class ReviewStatisticsServiceImpl implements ReviewStatisticsService {
 

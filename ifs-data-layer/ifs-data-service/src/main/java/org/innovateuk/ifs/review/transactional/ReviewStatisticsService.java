@@ -7,6 +7,9 @@ import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service to get statistics related to Review Panels.
+ */
 @Service
 public interface ReviewStatisticsService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

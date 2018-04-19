@@ -25,6 +25,9 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
+/**
+ * Service to get statistics related to Interview Panels.
+ */
 @Service
 public class InterviewStatisticsServiceImpl implements InterviewStatisticsService{
 

@@ -73,7 +73,6 @@ public class InterviewStatisticsServiceImplTest extends BaseUnitTestMocksTest {
 
         List<Long> panelInviteIds = simpleMap(panelInvites, InterviewInvite::getId);
 
-
         when(interviewInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
 
         when(interviewInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)))

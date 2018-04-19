@@ -7,6 +7,9 @@ import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service to get statistics related to Interview Panels.
+ */
 @Service
 public interface InterviewStatisticsService {
 

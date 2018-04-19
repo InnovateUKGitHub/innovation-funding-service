@@ -66,13 +66,13 @@ public class CompetitionKeyStatisticsController {
         return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "", description = "remove /panel endpoint")
+    @ZeroDowntime(reference = "IFS-3308", description = "remove /panel endpoint")
     @GetMapping({"/panel", "/review"})
     public RestResult<ReviewKeyStatisticsResource> getReviewStatistics(@PathVariable("id") long id) {
         return reviewStatisticsService.getReviewPanelKeyStatistics(id).toGetResponse();
     }
 
-    @ZeroDowntime(reference = "", description = "remove /panelInvites endpoint")
+    @ZeroDowntime(reference = "IFS-3308", description = "remove /panelInvites endpoint")
     @GetMapping({"/panelInvites", "/review-invites"})
     public RestResult<ReviewInviteStatisticsResource> getReviewInviteStatistics(@PathVariable("id") long id) {
         return reviewStatisticsService.getReviewInviteStatistics(id).toGetResponse();
