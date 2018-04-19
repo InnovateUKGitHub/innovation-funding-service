@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/applicant")
-@SecuredBySpring(value="Controller", description = "Only applicants can see their dashboard",
-        securedType = ApplicantDashboardController.class)
+@SecuredBySpring(value="Controller", description = "Each applicant has permission to view their own dashboard", securedType = ApplicantController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicantDashboardController {
 

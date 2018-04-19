@@ -19,7 +19,6 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,8 +26,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.Role.APPLICANT;
 import static org.innovateuk.ifs.user.resource.Role.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.Role.LEADAPPLICANT;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 
@@ -37,13 +38,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
  */
 @Service
 public class ApplicantDashboardPopulator {
-
-    private EnumSet<ApplicationState> inProgress = EnumSet.of(ApplicationState.CREATED, ApplicationState.OPEN);
-    private EnumSet<ApplicationState> submitted = EnumSet.of(ApplicationState.SUBMITTED, ApplicationState.INELIGIBLE);
-    private EnumSet<ApplicationState> finished = EnumSet.of(ApplicationState.APPROVED, ApplicationState.REJECTED, ApplicationState.INELIGIBLE_INFORMED);
-    private EnumSet<CompetitionStatus> fundingNotYetCompete = EnumSet.of(CompetitionStatus.OPEN, CompetitionStatus.CLOSED, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
-    private EnumSet<CompetitionStatus> fundingComplete = EnumSet.of(CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
-    private EnumSet<CompetitionStatus> open = EnumSet.of(CompetitionStatus.OPEN);
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -108,26 +102,43 @@ public class ApplicantDashboardPopulator {
     }
 
     private List<ApplicationResource> getAllApplicationsAsApplicant(Long userId, List<ProcessRoleResource> usersProcessRoles) {
-        List<Long> usersProcessRolesApplicationIds = usersProcessRoles.stream()
-                .map(processRoleResource -> processRoleResource.getApplicationId())
-                .collect(toList());
 
-        return applicationRestService.getApplicationsByUserId(userId)
-                .getSuccess()
-                .stream()
-                .filter(applicationResource -> usersProcessRolesApplicationIds.contains(applicationResource.getId()))
-                .collect(toList());
+        List<Long> usersProcessRolesApplicationIds = simpleMap(
+                usersProcessRoles,
+                ProcessRoleResource::getApplicationId
+        );
+
+        return simpleFilter(
+                applicationRestService.getApplicationsByUserId(userId).getSuccess(),
+                appResource -> usersProcessRolesApplicationIds.contains(appResource.getId())
+        );
     }
 
     private List<ProcessRoleResource> getUserProcessRolesWithApplicationRole(Long userId) {
-        return processRoleService.getByUserId(userId)
+
+        return simpleFilter(
+                processRoleService.getByUserId(userId),
+                this::hasAnApplicantRole
+        );
+    }
+
+    private List<ProjectResource> getNonWithdrawnProjects(List<ProjectResource> allProjects) {
+        return simpleFilter(
+                allProjects,
+                projectResource -> !projectResource.isWithdrawn()
+        );
+    }
+
+    private List<Long> getApplicationsWithWithdrawnProjects(List<ProjectResource> allProjects) {
+        return allProjects
                 .stream()
-                .filter(processRoleResource -> hasAnApplicantRole(processRoleResource))
+                .filter(ProjectResource::isWithdrawn)
+                .map(ProjectResource::getApplication)
                 .collect(toList());
     }
 
     private boolean hasAnApplicantRole(ProcessRoleResource processRoleResource) {
-        return processRoleResource.getRole() == Role.APPLICANT.getId() ||
+        return processRoleResource.getRole() == APPLICANT.getId() ||
                 processRoleResource.getRole() == LEADAPPLICANT.getId() ||
                 processRoleResource.getRole() == COLLABORATOR.getId();
     }
@@ -137,38 +148,34 @@ public class ApplicantDashboardPopulator {
                 || (applicationStateSubmitted(a) && competitionFundingNotYetComplete(a));
     }
 
-    private boolean applicationFinished(ApplicationResource a) {
-        return (applicationStateFinished(a))
-                || (applicationStateInProgress(a) && competitionClosed(a))
-                || (applicationStateSubmitted(a) && competitionFundingComplete(a));
+    private boolean applicationFinished(ApplicationResource application) {
+        return (applicationStateFinished(application))
+                || (applicationStateInProgress(application) && !competitionOpen(application))
+                || (applicationStateSubmitted(application) && competitionFundingComplete(application));
     }
 
-    private boolean applicationStateInProgress(ApplicationResource a) {
-        return inProgress.contains(a.getApplicationState());
+    private boolean applicationStateInProgress(ApplicationResource application) {
+        return ApplicationState.inProgressStates.contains(application.getApplicationState());
     }
 
-    private boolean competitionOpen(ApplicationResource a) {
-        return open.contains(a.getCompetitionStatus());
+    private boolean competitionOpen(ApplicationResource application) {
+        return CompetitionStatus.OPEN.equals(application.getCompetitionStatus());
     }
 
-    private boolean competitionClosed(ApplicationResource a) {
-        return !competitionOpen(a);
+    private boolean applicationStateSubmitted(ApplicationResource application) {
+        return ApplicationState.submittedStates.contains(application.getApplicationState());
     }
 
-    private boolean applicationStateSubmitted(ApplicationResource a) {
-        return submitted.contains(a.getApplicationState());
+    private boolean applicationStateFinished(ApplicationResource application) {
+        return ApplicationState.finishedStates.contains(application.getApplicationState());
     }
 
-    private boolean applicationStateFinished(ApplicationResource a) {
-        return finished.contains(a.getApplicationState());
+    private boolean competitionFundingNotYetComplete(ApplicationResource application) {
+        return CompetitionStatus.fundingNotCompleteStatuses.contains(application.getCompetitionStatus());
     }
 
-    private boolean competitionFundingNotYetComplete(ApplicationResource a) {
-        return fundingNotYetCompete.contains(a.getCompetitionStatus());
-    }
-
-    private boolean competitionFundingComplete(ApplicationResource a) {
-        return fundingComplete.contains(a.getCompetitionStatus());
+    private boolean competitionFundingComplete(ApplicationResource application) {
+        return CompetitionStatus.fundingCompleteStatuses.contains(application.getCompetitionStatus());
     }
 
     private Map<Long, CompetitionResource> getAllCompetitionsForUser(Long userId) {

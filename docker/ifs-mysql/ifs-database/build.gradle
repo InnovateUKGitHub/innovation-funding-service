@@ -1,0 +1,10 @@
+ext.sqlContainer = "ifs-database"
+ext.testSchema = "ifs_test"
+
+
+createContainer.containerName = "ifs-database"
+createContainer.containerId = "ifs-database"
+createContainer.env = ["MYSQL_ROOT_PASSWORD=password","MYSQL_DATABASE=ifs" ]
+createContainer.cmd = ["--character-set-server=utf8, --collation-server=utf8_bin"]
+createContainer.portBindings = ['3306:3306']
+createContainer.hostName = "ifs-database"

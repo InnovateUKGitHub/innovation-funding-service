@@ -118,6 +118,7 @@
                                 <p th:if="${previousView.approved}" class="status-msg msg-progress">Successful</p>
                                 <p th:if="${previousView.createdOrOpen}" class="status-msg msg-progress not-submitted">Not submitted</p>
                                 <p th:if="${previousView.informedIneligible}" class="status-msg msg-progress">Ineligible</p>
+                                <p th:if="${previousView.withdrawn}" class="status-msg msg-progress">Project withdrawn</p>
                             </div>
                         </li>
                     </ul>

@@ -101,13 +101,13 @@ public class BankDetailsManagementController {
         }
         bankDetailsResource.setManualApproval(true);
 
-        Supplier<String> faliureView = () -> {
+        Supplier<String> failureView = () -> {
             bankDetailsResource.setManualApproval(false);
             return doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form);
         };
 
         return validationHandler.performActionOrBindErrorsToField("",
-                faliureView,
+                failureView,
                 () -> doViewReviewBankDetails(organisationResource, project, bankDetailsResource, model, form),
                 () -> {
                     Void result = bankDetailsRestService.updateBankDetails(projectId, bankDetailsResource).getSuccess();
