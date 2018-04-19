@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ public class ApplicantDashboardViewModelTest {
     private List<ProjectResource> projectsInSetup;
     private Map<Long, CompetitionResource> competitions;
     private Map<Long, ApplicationState> applicationStates;
+    private List<Long> withdrawnProjectApplications;
 
     private ApplicantDashboardViewModel viewModel;
 
@@ -70,9 +72,11 @@ public class ApplicantDashboardViewModelTest {
                 APPLICATION_ID_IS_CREATED, ApplicationState.CREATED,
                 APPLICATION_ID_IS_APPROVED, ApplicationState.APPROVED);
         this.leadApplicantApplications = asList(APPLICATION_ID_IN_PROGRESS, APPLICATION_ID_IS_FINISH);
+        this.withdrawnProjectApplications = Collections.emptyList();
+
 
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications);
+                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications, withdrawnProjectApplications);
     }
 
     @Test
@@ -129,8 +133,8 @@ public class ApplicantDashboardViewModelTest {
 
     @Test
     public void applicationIsApprovedTest() {
-        assertTrue(viewModel.applicationIsApproved(APPLICATION_ID_IS_APPROVED));
-        assertFalse(viewModel.applicationIsApproved(APPLICATION_ID_IN_PROGRESS));
+        assertTrue(viewModel.applicationIsApprovedAndProjectIsNotWithdrawn(APPLICATION_ID_IS_APPROVED));
+        assertFalse(viewModel.applicationIsApprovedAndProjectIsNotWithdrawn(APPLICATION_ID_IN_PROGRESS));
     }
 
     @Test
@@ -201,12 +205,13 @@ public class ApplicantDashboardViewModelTest {
 
     private void setupEmptyViewModel() {
         viewModel = new ApplicantDashboardViewModel(null, null,
-                null, null,
-                null,null,null, null);
+                                                    null, null,
+                                                    null,null,
+                                                    null, null, null);
     }
 
     private void resetViewModel() {
         viewModel = new ApplicantDashboardViewModel(applicationProgress, applicationsInProgress, applicationsAssigned,
-                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications);
+                applicationsFinished, projectsInSetup, competitions, applicationStates, leadApplicantApplications, withdrawnProjectApplications);
     }
 }
