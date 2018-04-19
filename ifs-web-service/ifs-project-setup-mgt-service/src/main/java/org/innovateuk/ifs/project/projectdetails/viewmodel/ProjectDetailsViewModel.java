@@ -26,14 +26,14 @@ public class ProjectDetailsViewModel {
     private List<PartnerOrganisationResource> partnerOrganisations;
 
     public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
-                                   boolean isIfsAdministrator, String competitionName,
+                                   boolean ifsAdministrator, String competitionName,
                                    String leadOrganisation, ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap,
                                    boolean locationPerPartnerRequired,
                                    List<PartnerOrganisationResource> partnerOrganisations) {
         this.project = project;
         this.competitionId = competitionId;
-        this.ifsAdministrator = isIfsAdministrator;
+        this.ifsAdministrator = ifsAdministrator;
         this.competitionName = competitionName;
         this.leadOrganisation = leadOrganisation;
         this.projectManager = projectManager;

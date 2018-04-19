@@ -16,13 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -43,7 +40,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void viewProjectDetails() throws Exception {
         Long competitionId = 1L;
         Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(asList(IFS_ADMINISTRATOR)).build());
+        setLoggedInUser(newUserResource().withRolesGlobal(Collections.singletonList(IFS_ADMINISTRATOR)).build());
 
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource()
                 .withId(competitionId)
@@ -117,7 +114,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(competitionId, model.getCompetitionId());
         assertEquals("Comp 1", model.getCompetitionName());
-        assertEquals(true, model.isIfsAdministrator());
+        assertTrue(model.isIfsAdministrator());
         assertEquals("Lead Org 1", model.getLeadOrganisation());
         assertEquals(projectManagerProjectUser, model.getProjectManager());
         assertEquals(expectedOrganisationFinanceContactMap, model.getOrganisationFinanceContactMap());
@@ -301,10 +298,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
     @Test
     public void withdrawProject() throws Exception {
-        Long competitionId = 1L;
-        Long projectId = 1L;
-        setLoggedInUser(newUserResource().withRolesGlobal(asList(IFS_ADMINISTRATOR)).build());
-        when(projectRestService.withdrawProject(projectId)).thenReturn(RestResult.restSuccess());
+        long competitionId = 1L;
+        long projectId = 1L;
+        setLoggedInUser(newUserResource().withRolesGlobal(Collections.singletonList(IFS_ADMINISTRATOR)).build());
+        when(projectRestService.withdrawProject(projectId)).thenReturn(restSuccess());
 
         MvcResult result = mockMvc.perform(post("/competition/" + competitionId + "/project/" + projectId + "/withdraw"))
                 .andExpect(redirectedUrlPattern("**/management/competition/" + competitionId + "/applications/unsuccessful"))

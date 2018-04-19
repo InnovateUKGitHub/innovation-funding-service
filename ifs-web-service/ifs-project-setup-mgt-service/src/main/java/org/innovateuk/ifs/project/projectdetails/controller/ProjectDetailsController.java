@@ -104,8 +104,10 @@ public class ProjectDetailsController {
         return "project/detail";
     }
 
+    @PreAuthorize("hasAuthority('ifs_administrator')")
+    @SecuredBySpring(value = "WITHDRAW_PROJECT", description = "Only the IFS administrator users are able to withdraw projects")
     @PostMapping("/{projectId}/withdraw")
-    public String withdrawProject(@PathVariable("competitionId") final Long competitionId,
+    public String withdrawProject(@PathVariable("competitionId") final long competitionId,
                                   @PathVariable("projectId") final long projectId, HttpServletRequest request) {
          projectRestService.withdrawProject(projectId).getSuccess();
 
