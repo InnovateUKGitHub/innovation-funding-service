@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -307,5 +308,20 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         verify(applicationServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
 
+    }
+
+    @Test
+    public void getLatestEmailFundingDate() throws Exception {
+        Long competitionId = 1L;
+
+        when(applicationServiceMock.findLatestEmailFundingDateByCompetitionId(competitionId)).thenReturn(serviceSuccess(ZonedDateTime.now()));
+
+        mockMvc.perform(get("/application/getLatestEmailFundingDate/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("application/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition we want the latest email funding date from")
+                        )
+                ));
     }
 }

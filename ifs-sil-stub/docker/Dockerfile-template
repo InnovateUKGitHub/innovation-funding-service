@@ -1,5 +1,4 @@
 FROM innovateuk/app-base-image
-MAINTAINER Richard Popple <richard@hiveit.co.uk>
 EXPOSE 8080
 ENV JAVA_OPTS -Xmx300m
 

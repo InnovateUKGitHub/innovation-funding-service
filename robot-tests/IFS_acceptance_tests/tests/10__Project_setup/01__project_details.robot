@@ -49,6 +49,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...
 ...               IFS-2642 Resend invites in Project Setup
 ...
+...               IFS-2920 Project details: Project location per partner
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
@@ -65,8 +66,8 @@ Internal users can see Project Details not yet completed
     Given the user navigates to the page           ${internal_competition_status}
     Then the user should not see the element       css=#table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
     When the user clicks the button/link           css=#table-project-status tr:nth-child(1) td:nth-child(2) a
-    Then the user should see the text in the page  These project details were supplied by the lead partner on behalf of the project.
-    And the user should see the text in the page   Each partner must provide a finance contact. We will contact them with any finance queries.
+    Then the user should see the element           jQuery=p:contains("These project details were supplied by the lead partner on behalf of the project.")
+    And the user should see the element            jQuery=p:contains("Each partner must provide a finance contact and a project location.")
     When the user should see the element           css=#project-details
     Then the user should see the element           jQuery=#project-address:contains("Not yet completed")
     And the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
@@ -203,7 +204,7 @@ Lead partner can see the overview of the project details
     And the user should see the element    link=Target start date
     And the user should see the element    link=Project address
     And the user should see the element    link=Project Manager
-    And the user should see the text in the page    Finance contacts
+    And the user should see the element    jQuery=h2:contains("Partner details")
 
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
@@ -358,7 +359,7 @@ Non lead partner invites finance contact
     Then the user should not see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
-    When the user clicks the button/link  link=${organisationLudlowName}
+    When the user clicks the button/link       link=Select finance contact
     And the user selects the radio button  financeContact  new
     Then the user enters text to a text field  css=#name-finance-contact  LudlowFinContact
     And the user enters text to a text field   css=#email-finance-contact  ${test_mailbox_one}+ludlowfincont@gmail.com
@@ -371,13 +372,12 @@ Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
     Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
-    When log in as a different user     &{collaborator1_credentials}
-    Then the user navigates to the page  ${project_in_setup_page}/details
-    And the matching status checkbox is updated  project-details-finance  3  yes
-    When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element   css=li.complete:nth-of-type(1)
-    When the user clicks the button/link    link=View the status of partners
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
+    When log in as a different user       &{collaborator1_credentials}
+    Then the user navigates to the page   ${project_in_setup_page}/details
+    And the user should see the element   link=Ludlow's FinContact
+    And select the project location       Ludlow
+    When the user clicks the button/link  link=View the status of partners
+    Then the user should see the element  css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
@@ -406,16 +406,14 @@ Option to invite a finance contact
     [Documentation]    INFUND-3579
     [Tags]  HappyPath
     [Setup]    Log in as a different user    &{lead_applicant_credentials}
-    Given the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=Project details
-    And the user should see the text in the page    Finance contacts
-    And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    When the user selects the radio button    financeContact    new
-    Then the user should see the element    id=invite-finance-contact
-    When the user selects the radio button    financeContact    financeContact1
-    Then the user should not see the element    id=invite-finance-contact    # testing that the element disappears when the option is deselected
-    [Teardown]    the user selects the radio button    financeContact    new
+    Given the user navigates to the page             ${project_in_setup_page}
+    And the user clicks the button/link              link=Project details
+    And the user clicks the button/link              jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
+    When the user selects the radio button           financeContact    new
+    Then the user should see the element             id=invite-finance-contact
+    When the user selects the radio button           financeContact    financeContact1
+    Then the user should not see the element         id=invite-finance-contact    # testing that the element disappears when the option is deselected
+    [Teardown]    the user selects the radio button  financeContact    new
 
 Inviting finance contact server side validations
     [Documentation]    INFUND-3483, INFUND-9062
@@ -470,7 +468,7 @@ Invited finance contact shows on the finance contact selection screen
     [Documentation]    INFUND-3530
     [Tags]  Email
     Given the user navigates to the page  ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details
-    And the user clicks the button/link   link=${EMPIRE_LTD_NAME}
+    And the user clicks the button/link   jQuery=td:contains("${EMPIRE_LTD_NAME}") ~ td a:contains("Select finance contact")
     Then the user should see the element  jQuery=#finance-contact-section:contains("John Smith")
 
 Lead partner selects a finance contact
@@ -478,17 +476,13 @@ Lead partner selects a finance contact
     [Tags]  HappyPath
     Then the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Project details
-    Then the user should see the text in the page    Finance contacts
-    And the user should see the text in the page    Partner
-    And the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    And the user clicks the button/link    jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") ~ td a:contains("Select finance contact")
     And the user should not see duplicated select options
     And the user should not see the text in the page    Pending
     And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated  project-details-finance  1  yes
     And the user should see the text in the page    Elmo Chenault
-    And the user should see the element    link=${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Non-lead partner cannot change start date, project manager or project address
     [Documentation]    INFUND-3157
@@ -518,28 +512,38 @@ Academic Partner nominates Finance contact
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=li.require-action:nth-child(3)
     When the user clicks the button/link    link=Project details
-    Then the user should see the text in the page  Finance contacts
-    And the user should see the text in the page   Partner
-    And the user clicks the button/link            link=${organisationEggsName}
+    And the user clicks the button/link            jQuery=td:contains("${organisationEggsName}") ~ td a:contains("Select finance contact")
     And the user selects the radio button          financeContact    financeContact1
     And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated  project-details-finance  2  yes
-    And the user should see the element     link=${organisationEggsName}
+    And the user should see the element     jQuery=td:contains("${organisationEggsName}")
+    And select the project location         EGGS
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(1)
-    And the user should see the element    jQuery=li.require-action:nth-child(3)
+    And the user should see the element     jQuery=li.require-action:nth-child(3)
     When the user clicks the button/link    link=View the status of partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
+
+Validation for project location
+    [Documentation]   IFS-2920
+    [Setup]  log in as a different user                 &{lead_applicant_credentials}
+    Given the user navigates to the page                ${project_in_setup_details_page}
+    Given the user clicks the button/link               jQuery=#project-details-finance td:contains("Empire") ~ td a:contains("Select project location")
+    And the user moves focus to the element             id=postCode
+    And the user should see an error                    This field cannot be left blank.
+    When the user clicks the button/link                css=button[type="submit"]
+    Then the user should see a field and summary error  This field cannot be left blank.
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]  HappyPath
-    [Setup]    log in as a different user    &{lead_applicant_credentials}
-    Given the user navigates to the page    ${project_in_setup_details_page}
+    [Setup]    log in as a different user  &{lead_applicant_credentials}
+    Given the user navigates to the page  ${project_in_setup_details_page}
+    And select the project location       Empire
+    And the user clicks the button/link   link=Project details
     When all the fields are completed
     And the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    css=li.complete:nth-of-type(1)
+    Then the user should see the element  css=li.complete:nth-of-type(1)
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
@@ -655,9 +659,6 @@ all the fields are completed
     the matching status checkbox is updated  project-details  1  yes
     the matching status checkbox is updated  project-details  2  yes
     the matching status checkbox is updated  project-details  3  yes
-    the matching status checkbox is updated  project-details-finance  1  yes
-    the matching status checkbox is updated  project-details-finance  2  yes
-    the matching status checkbox is updated  project-details-finance  3  yes
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]
@@ -701,3 +702,11 @@ The user resends and clicks the button
     The user clicks the button/link    jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
     The user should see the element    jQuery=h2:contains("Resend invite to team member")
     The user clicks the button/link    jQuery=button:contains("${Resend_OR_Cancel}")
+
+Select the project location
+    [Arguments]  ${org}
+    the user navigates to the page        ${project_in_setup_details_page}
+    the user clicks the button/link       jQuery=#project-details-finance td:contains("${org}") ~ td a:contains("Select project location")
+    the user enters text to a text field  css=#postCode  ${postcode}
+    the user clicks the button/link       css=button[type="submit"]
+    the user clicks the button/link       link=Project setup status

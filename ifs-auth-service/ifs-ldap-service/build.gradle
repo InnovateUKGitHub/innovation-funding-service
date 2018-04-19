@@ -43,11 +43,8 @@ osStageRemote.tag = ldapVersion
 tagDockerLocal.tag = ldapVersion
 osStageLocal.tag = ldapVersion
 
-List<String> env = new ArrayList();
-env.add("LDAP_PORT=8389")
-
 createContainer.containerName = "ldap"
 createContainer.containerId = "ldap"
-createContainer.env = env
+createContainer.env = ["LDAP_PORT=8389"]
 createContainer.portBindings = ['8389:8389']
 createContainer.hostName = "ldap"

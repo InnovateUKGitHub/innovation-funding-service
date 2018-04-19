@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.interview.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteService;
-import org.innovateuk.ifs.interview.transactional.InterviewAssignmentInviteServiceImpl;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentService;
+import org.innovateuk.ifs.interview.transactional.InterviewAssignmentServiceImpl;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
@@ -12,11 +12,11 @@ import static org.innovateuk.ifs.invite.builder.StagedApplicationResourceBuilder
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.PROJECT_FINANCE;
 
-public class InterviewAssignmentInviteServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentInviteService> {
+public class InterviewAssignmentServiceSecurityTest extends BaseServiceSecurityTest<InterviewAssignmentService> {
 
     @Override
-    protected Class<? extends InterviewAssignmentInviteService> getClassUnderTest() {
-        return InterviewAssignmentInviteServiceImpl.class;
+    protected Class<? extends InterviewAssignmentService> getClassUnderTest() {
+        return InterviewAssignmentServiceImpl.class;
     }
 
     private static Pageable PAGE_REQUEST = new PageRequest(0, 20);

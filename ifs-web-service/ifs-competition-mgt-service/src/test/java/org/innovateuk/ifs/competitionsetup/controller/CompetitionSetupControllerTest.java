@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupSummaryForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.ManageInnovationLeadsModelPopulator;
@@ -20,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
@@ -833,15 +836,41 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void testSetCompetitionAsReadyToOpen() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withCompetitionStatus(CompetitionStatus.READY_TO_OPEN)
-                .withId(COMPETITION_ID).build();
+        when(competitionSetupService.setCompetitionAsReadyToOpen(COMPETITION_ID)).thenReturn(serviceSuccess());
 
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-
-        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/ready-to-open"))
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/ready-to-open"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
+                .andExpect(redirectedUrl("/competition/setup/" + COMPETITION_ID));
+
+        verify(competitionSetupService, only()).setCompetitionAsReadyToOpen(COMPETITION_ID);
+    }
+
+    @Test
+    public void testSetCompetitionAsReadyToOpen_failure() throws Exception {
+        when(competitionSetupService.setCompetitionAsReadyToOpen(COMPETITION_ID)).thenReturn(
+                serviceFailure(new Error("competition.setup.not.ready.to.open", HttpStatus.BAD_REQUEST)));
+
+        // For re-display of Competition Setup following the failure
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withId(COMPETITION_ID)
+                .build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/ready-to-open"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().errorCount(1))
+                .andExpect(view().name("competition/setup"))
+                .andReturn();
+
+        verify(competitionSetupService).setCompetitionAsReadyToOpen(COMPETITION_ID);
+
+        CompetitionSetupSummaryForm form = (CompetitionSetupSummaryForm) result.getModelAndView().getModel()
+                .get(COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(1, bindingResult.getGlobalErrorCount());
+        assertEquals("competition.setup.not.ready.to.open", bindingResult.getGlobalErrors().get(0).getCode());
     }
 
     @Test

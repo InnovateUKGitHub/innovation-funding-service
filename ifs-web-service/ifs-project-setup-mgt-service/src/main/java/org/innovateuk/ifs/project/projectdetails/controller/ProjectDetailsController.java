@@ -2,18 +2,21 @@ package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.ProjectDetailsService;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDurationForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +41,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_INVALID_ARGUMENT;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DURATION_MUST_BE_MINIMUM_ONE_MONTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -67,6 +70,9 @@ public class ProjectDetailsController {
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private PartnerOrganisationRestService partnerOrganisationService;
+
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @SecuredBySpring(value = "VIEW_PROJECT_DETAILS", description = "Project finance, comp admin, support and innovation lead can view the project details")
     @GetMapping("/{projectId}/details")
@@ -78,14 +84,21 @@ public class ProjectDetailsController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
 
-        List<OrganisationResource> partnerOrganisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
+        List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
-                null,
+                competitionResource.getName(),
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
-                getFinanceContactForPartnerOrganisation(projectUsers, partnerOrganisations)));
+                getFinanceContactForPartnerOrganisation(projectUsers, organisations),
+                locationPerPartnerRequired,
+                locationPerPartnerRequired?
+                        partnerOrganisationService.getProjectPartnerOrganisations(projectId).getSuccess()
+                        : Collections.emptyList()));
 
         return "project/detail";
     }
@@ -122,10 +135,10 @@ public class ProjectDetailsController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW_EDIT_PROJECT_DURATION", description = "Only the project finance can view the page to edit the project duration")
-    @GetMapping("/{projectId}/edit-duration")
-    public String editProjectDuration(@PathVariable("competitionId") final long competitionId,
-                                      @PathVariable("projectId") final long projectId, Model model,
-                                      UserResource loggedInUser) {
+    @GetMapping("/{projectId}/duration")
+    public String viewEditProjectDuration(@PathVariable("competitionId") final long competitionId,
+                                          @PathVariable("projectId") final long projectId, Model model,
+                                          UserResource loggedInUser) {
 
 
         ProjectDurationForm form = new ProjectDurationForm();
@@ -142,7 +155,9 @@ public class ProjectDetailsController {
                 competition.getName(),
                 null,
                 null,
-                null));
+                null,
+                false,
+                Collections.emptyList()));
         model.addAttribute(FORM_ATTR_NAME, form);
 
         return "project/edit-duration";
@@ -151,7 +166,7 @@ public class ProjectDetailsController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "UPDATE_PROJECT_DURATION", description = "Only the project finance can update the project duration")
-    @PostMapping("/{projectId}/update-duration")
+    @PostMapping("/{projectId}/duration")
     public String updateProjectDuration(@PathVariable("competitionId") final long competitionId,
                                         @PathVariable("projectId") final long projectId,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDurationForm form,
