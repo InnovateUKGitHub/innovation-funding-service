@@ -18,15 +18,14 @@ import org.innovateuk.ifs.invite.repository.RoleInviteRepository;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -93,18 +92,18 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     @Transactional
-    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, UserRoleType adminRoleType) {
+    public ServiceResult<Void> saveUserInvite(UserResource invitedUser, Role adminRoleType) {
 
         return validateInvite(invitedUser, adminRoleType)
                 .andOnSuccess(() -> validateInternalUserRole(adminRoleType))
                 .andOnSuccess(() -> validateEmail(invitedUser.getEmail()))
                 .andOnSuccess(() -> validateUserEmailAvailable(invitedUser))
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
-                .andOnSuccess(role -> saveInvite(invitedUser, Role.getByName(adminRoleType.getName())))
+                .andOnSuccess(role -> saveInvite(invitedUser, adminRoleType))
                 .andOnSuccess(this::inviteInternalUser);
     }
 
-    private ServiceResult<Void> validateInvite(UserResource invitedUser, UserRoleType adminRoleType) {
+    private ServiceResult<Void> validateInvite(UserResource invitedUser, Role adminRoleType) {
 
         if (StringUtils.isEmpty(invitedUser.getEmail()) || StringUtils.isEmpty(invitedUser.getFirstName())
                 || StringUtils.isEmpty(invitedUser.getLastName()) || adminRoleType == null){
@@ -113,10 +112,10 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> validateInternalUserRole(UserRoleType userRoleType) {
+    private ServiceResult<Void> validateInternalUserRole(Role userRoleType) {
 
-        return UserRoleType.internalRoles().stream().anyMatch(internalRole -> internalRole.equals(userRoleType))?
-                serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
+        return Role.internalRoles().stream().anyMatch(internalRole -> internalRole == userRoleType)
+                ? serviceSuccess() : serviceFailure(NOT_AN_INTERNAL_USER_ROLE);
     }
 
     private ServiceResult<Void> validateEmail(String email) {
@@ -176,7 +175,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private NotificationTarget createInviteInternalUserNotificationTarget(RoleInvite roleInvite) {
-        return new ExternalUserNotificationTarget(roleInvite.getName(), roleInvite.getEmail());
+        return new UserNotificationTarget(roleInvite.getName(), roleInvite.getEmail());
     }
 
     private Map<String, Object> createGlobalArgsForInternalUserInvite(RoleInvite roleInvite) {
@@ -223,11 +222,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
         Page<RoleInvite> pagedResult = roleInviteRepository.findByStatus(InviteStatus.SENT, pageable);
         List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
-        return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(roleInviteResources), pagedResult.getNumber(), pagedResult.getSize()));
-    }
-
-    private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
-        return roleInviteResources.stream().sorted(Comparator.comparing(roleInviteResource -> roleInviteResource.getName().toUpperCase())).collect(Collectors.toList());
+        return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), roleInviteResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override

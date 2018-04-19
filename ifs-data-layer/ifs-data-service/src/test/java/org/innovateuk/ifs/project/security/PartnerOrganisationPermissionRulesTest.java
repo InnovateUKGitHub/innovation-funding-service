@@ -47,6 +47,40 @@ public class PartnerOrganisationPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
+    public void testPartnersCannotViewOtherPartnerOrganisations() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(null);
+
+        assertFalse(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
+    }
+
+    @Test
+    public void testPartnersCanViewTheirOwnPartnerOrganisation() {
+
+        long projectId = 1L;
+        long organisationId = 2L;
+        UserResource user = newUserResource().build();
+
+        PartnerOrganisationResource partnerOrg = newPartnerOrganisationResource()
+                .withProject(projectId)
+                .withOrganisation(organisationId)
+                .build();
+        ProjectUser projectUser = newProjectUser()
+                .build();
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, user.getId(), organisationId, PROJECT_PARTNER)).thenReturn(projectUser);
+
+        assertTrue(rules.partnersCanViewTheirOwnPartnerOrganisation(partnerOrg, user));
+    }
+
+    @Test
     public void testPartnersCanView() {
 
         UserResource user = newUserResource().withRolesGlobal(singletonList(Role.COMP_ADMIN)).build();

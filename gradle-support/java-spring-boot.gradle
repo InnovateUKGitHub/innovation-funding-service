@@ -82,10 +82,13 @@ dependencyManagement {
 
 repositories {
     maven { url "https://repo.spring.io/milestone" }
-    mavenCentral()
+    jcenter()
 }
 
 jar {
     manifest.attributes provider: 'gradle'
 }
 
+compileJava {
+    options.compilerArgs += '-parameters'
+}

@@ -38,9 +38,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INV
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -136,7 +136,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
             String hash = getAndSavePasswordResetToken(user);
 
             NotificationSource from = systemNotificationSource;
-            NotificationTarget to = new ExternalUserNotificationTarget(user.getName(), user.getEmail());
+            NotificationTarget to = new UserNotificationTarget(user.getName(), user.getEmail());
 
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("passwordResetLink", getPasswordResetLink(hash));
@@ -208,47 +208,46 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         return user
                 .getRoles()
                 .stream()
-                .anyMatch(r -> UserRoleType.COLLABORATOR.getName().equals(r.getName()) ||
-                             UserRoleType.APPLICANT.getName().equals(r.getName()) ||
-                             UserRoleType.FINANCE_CONTACT.getName().equals(r.getName()) ||
-                             UserRoleType.LEADAPPLICANT.getName().equals(r.getName()) ||
-                             UserRoleType.PARTNER.getName().equals(r.getName()) ||
-                             UserRoleType.PROJECT_MANAGER.getName().equals(r.getName()));
+                .anyMatch(r -> COLLABORATOR == r ||
+                             APPLICANT == r ||
+                             FINANCE_CONTACT == r ||
+                             LEADAPPLICANT == r ||
+                             PARTNER == r ||
+                             PROJECT_MANAGER == r);
     }
 
     @Override
-    public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+    public ServiceResult<UserPageResource> findActiveByRoles(Set<Role> roleTypes, Pageable pageable) {
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.ACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
+    public ServiceResult<UserPageResource> findInactiveByRoles(Set<Role> roleTypes, Pageable pageable) {
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesIn(UserStatus.INACTIVE, roleTypes.stream().map(r -> Role.getByName(r.getName())).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
-        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
+        return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), userResources, pagedResult.getNumber(), pagedResult.getSize()));
     }
 
     @Override
-    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
+    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<Role> roleTypes, String searchString, SearchCategory searchCategory) {
 
         return validateSearchString(searchString).andOnSuccess(() -> {
             String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
-            Set<Role> roleTypeNames = simpleMapSet(roleTypes, r -> Role.getByName(r.getName()));
             List<UserOrganisation> userOrganisations;
             switch (searchCategory) {
                 case NAME:
-                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypeNames);
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypes);
                     break;
 
                 case ORGANISATION_NAME:
-                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
                     break;
 
                 case EMAIL:
                 default:
-                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesInOrderByIdUserEmailAsc(searchStringExpr, roleTypes);
                     break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
@@ -264,9 +263,5 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         } else {
             return serviceSuccess();
         }
-    }
-
-    private List<UserResource> sortByName(List<UserResource> userResources) {
-        return userResources.stream().sorted(Comparator.comparing(userResource -> userResource.getName().toUpperCase())).collect(Collectors.toList());
     }
 }

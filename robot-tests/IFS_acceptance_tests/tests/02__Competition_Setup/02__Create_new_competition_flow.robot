@@ -403,6 +403,10 @@ Application: Application details validations
     And the user enters text to a text field   id=maxProjectDuration  65
     Then the user should see a field error     The minimum must be smaller than the maximum.
     And the user should see a field error      This field should be 60 or lower.
+
+    When the user enters text to a text field  id=minProjectDuration  59
+    And the user clicks the button/link        css=button[type="submit"]
+    Then the user should see a summary error   This field should be 60 or lower
     [Teardown]  the user clicks the button/link  link=Application
 
 
@@ -484,8 +488,8 @@ Application: Need or challenge
     And the user selects the radio button   question.scored  0
     And the user should not be able to edit the assessed question feedback
     And the user clicks the button/link     jQuery=button[type="submit"]
-    And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
-    Then the user should not see the assessed question feedback
+    When the user clicks the button/link      jQuery=h4 a:contains("${amendedQuestion}")
+    Then the user should not see the element  jQuery=dt:contains("Guidance") + dd:contains("Your score should be based upon the following")
 
 Application: marking questions as complete
     [Documentation]  IFS-743
@@ -836,12 +840,6 @@ the user should not be able to edit the assessed question feedback
     the user should not see the element    id=guidanceRows[0].justification
     the user should not see the element    jQuery=Button:contains("+Add guidance row")
     the user should not see the element    id=question.scoreTotal
-
-the user should not see the assessed question feedback
-    the user should not see the text in the page    Out of
-    the user should not see the text in the page    Guidance for assessing business opportunity
-    the user should not see the text in the page    Your score should be based upon the following:
-    the user should not see the text in the page    There is little or no business drive to the project.
 
 Custom suite setup
     The user logs-in in new browser  &{Comp_admin1_credentials}

@@ -4,7 +4,7 @@ allprojects {
     buildscript {
 
         repositories {
-            mavenCentral()
+            jcenter()
         }
     }
 
@@ -17,10 +17,15 @@ subprojects {
     buildDocker.inputDir=file("${project.buildDir}/docker")
     tagDocker.imageId="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
+    def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
+    [stop, removeContainer, createContainer, deploy, wait].each { task ->
+        task.enabled = enabled
+    }
+
 }
 
 buildscript {
-    repositories { mavenCentral() }
+    repositories { jcenter() }
 }
 
 def String spCertsVolume = 'ifs-sp-service/src/main/docker/certs'

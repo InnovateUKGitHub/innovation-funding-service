@@ -23,12 +23,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 
 @Rollback
@@ -54,20 +55,24 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationProcessActivityStateStateIn() {
-        Collection<State> states = ApplicationState.submittedStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+
+        Collection<State> states = simpleMap(
+                submittedAndFinishedStates,
+                ApplicationState::getBackingState);
 
         List<ApplicationState> applicationStates = Arrays.asList(ApplicationState.values());
-        List<Application> applicationList = applicationStates.stream()
+        List<Application> applicationList = applicationStates
+                .stream()
                 .filter(state -> state != ApplicationState.IN_PANEL)
-                .map(state -> createApplicationByState(state)).collect(Collectors
-                        .toList());
+                .map(this::createApplicationByState)
+                .collect(Collectors.toList());
 
-        Long initial = repository.findByApplicationProcessActivityStateStateIn(states).count();
+        int initial = repository.findByApplicationProcessActivityStateStateIn(states).size();
 
         repository.save(applicationList);
-        Stream<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
+        List<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
 
-        assertEquals(initial + 5, applications.count());
+        assertEquals(initial + 5, applications.size());
     }
 
     @Test

@@ -33,7 +33,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -280,13 +279,13 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
 
     @Test
     public void testFindActiveInternalUsers() throws Exception {
-        when(userServiceMock.findActiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(new UserPageResource()));
+        when(userServiceMock.findActiveByRoles(Role.internalRoles(), new PageRequest(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new UserPageResource()));
         mockMvc.perform(get(buildPaginationUri("/user/internal/active", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 
     @Test
     public void testFindInactiveInternalUsers() throws Exception {
-        when(userServiceMock.findInactiveByProcessRoles(UserRoleType.internalRoles(), new PageRequest(0, 5))).thenReturn(serviceSuccess(new UserPageResource()));
+        when(userServiceMock.findInactiveByRoles(Role.internalRoles(), new PageRequest(0, 5, UserController.DEFAULT_USER_SORT))).thenReturn(serviceSuccess(new UserPageResource()));
         mockMvc.perform(get(buildPaginationUri("/user/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()))).andExpect(status().isOk());
     }
 
@@ -311,7 +310,7 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Test
     public void editInternalUser() throws Exception {
 
-        EditUserResource editUserResource = new EditUserResource(1L, "First", "Last", UserRoleType.IFS_ADMINISTRATOR);
+        EditUserResource editUserResource = new EditUserResource(1L, "First", "Last", Role.IFS_ADMINISTRATOR);
         when(registrationServiceMock.editInternalUser(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/user/internal/edit")
@@ -343,12 +342,12 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        when(userServiceMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+        when(userServiceMock.findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
 
         mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(userOrganisationResources)));
 
-        verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+        verify(userServiceMock).findByProcessRolesAndSearchCriteria(Role.externalApplicantRoles(), searchString, searchCategory);
     }
 }

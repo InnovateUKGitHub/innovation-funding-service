@@ -4,11 +4,10 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,6 +18,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -45,7 +45,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     public void testInternalUsersOtherThanInnoLeadsCanViewAllCompetitions() {
 
         allGlobalRoleUsers.forEach(user -> {
-            if (!user.hasRole(UserRoleType.INNOVATION_LEAD) && allInternalUsers.contains(user)) {
+            if (!user.hasRole(INNOVATION_LEAD) && allInternalUsers.contains(user)) {
                 assertTrue(rules.internalUserCanViewAllCompetitions(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalUserCanViewAllCompetitions(newCompetitionResource().build(), user));
@@ -57,7 +57,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     public void testInternalUsersOtherThanInnoLeadsCanViewAllCompetitionSearchResults() {
 
         allGlobalRoleUsers.forEach(user -> {
-            if (!user.hasRole(UserRoleType.INNOVATION_LEAD) && allInternalUsers.contains(user)) {
+            if (!user.hasRole(INNOVATION_LEAD) && allInternalUsers.contains(user)) {
                 assertTrue(rules.internalUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
             } else {
                 assertFalse(rules.internalUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
@@ -68,7 +68,7 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void testInternalAdminCanManageInnovationLeadsForCompetition() {
         allGlobalRoleUsers.forEach(user -> {
-            if (getUserWithRole(UserRoleType.COMP_ADMIN).equals(user) || getUserWithRole(UserRoleType.PROJECT_FINANCE).equals(user)) {
+            if (getUserWithRole(COMP_ADMIN).equals(user) || getUserWithRole(PROJECT_FINANCE).equals(user)) {
                 assertTrue(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalAdminCanManageInnovationLeadsForCompetition(newCompetitionResource().build(), user));
@@ -79,8 +79,8 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     @Test
     public void testInternalUsersBarringInnovationLeadAndIFSAdminCanViewUnsuccessfulApplications() {
         allGlobalRoleUsers.forEach(user -> {
-            if ((allInternalUsers.contains(user) && !user.hasRoles(UserRoleType.INNOVATION_LEAD))
-                    || getUserWithRole(UserRoleType.IFS_ADMINISTRATOR).equals(user)) {
+            if ((allInternalUsers.contains(user) && !user.hasRoles(INNOVATION_LEAD))
+                    || getUserWithRole(IFS_ADMINISTRATOR).equals(user)) {
                 assertTrue(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
             } else {
                 assertFalse(rules.internalUsersAndIFSAdminCanViewUnsuccessfulApplications(newCompetitionResource().build(), user));
@@ -90,13 +90,13 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
     @Test
     public void testOnlyInnovationLeadUsersAssignedToCompCanViewUnsuccessfulApplications() {
-        List<Role> innovationLeadRoles = singletonList(Role.INNOVATION_LEAD);
+        List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
         CompetitionResource competition = newCompetitionResource().withId(1L).build();
 
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
 
         assertTrue(rules.innovationLeadForCompetitionCanViewUnsuccessfulApplications(competition, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadForCompetitionCanViewUnsuccessfulApplications(competition, innovationLeadNotAssignedToCompetition));
@@ -104,14 +104,14 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
     @Test
     public void testOnlyInnovationLeadUsersAssignedToCompCanAccess() {
-        List<Role> innovationLeadRoles = singletonList(Role.INNOVATION_LEAD);
+        List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
         CompetitionSearchResultItem competitionSearchResultItem = newCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
         CompetitionSearchResultItem competitionSearchResultItemFeedbackReleased = newCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).withId(2L).build();
 
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
 
         assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThem(competitionSearchResultItem, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(competitionSearchResultItemFeedbackReleased, innovationLeadAssignedToCompetition));
@@ -121,15 +121,15 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
 
     @Test
     public void  testOnlyInnovationLeadUsersAssignedToCompWithoutFeedbackReleasedCanAccessComp(){
-        List<Role> innovationLeadRoles = singletonList(Role.INNOVATION_LEAD);
+        List<Role> innovationLeadRoles = singletonList(INNOVATION_LEAD);
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<AssessmentParticipant> competitionParticipants = newAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
         CompetitionResource openCompetition= newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
         CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withId(2L).withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(2L).build();
 
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(2L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(assessmentParticipantRepositoryMock.getByCompetitionIdAndRole(2L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
 
         assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThem(openCompetition, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(openCompetition, innovationLeadNotAssignedToCompetition));

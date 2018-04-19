@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.Role;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -82,7 +82,7 @@ class SetupProgressChecker {
         return projectStatus.getGrantOfferLetterStatus();
     }
 
-    public Map<UserRoleType, ProjectActivityStates> getRoleSpecificActivityState() {
+    public Map<Role, ProjectActivityStates> getRoleSpecificActivityState() {
         return projectStatus.getRoleSpecificGrantOfferLetterState();
     }
 

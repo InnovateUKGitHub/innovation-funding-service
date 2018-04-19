@@ -82,7 +82,7 @@ There are no Assessors in Invite and Pending and declined tab before sending inv
     Then the user clicks the button/link   link=Pending and declined
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
-CompAdmin can add an assessors to invite list
+CompAdmin can add an assessors to the invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
     When the user clicks the button/link     link=Find
@@ -91,10 +91,8 @@ CompAdmin can add an assessors to invite list
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
     [Tags]   HappyPath
-    Given the user clicks the button/link    link=Invite
-    When the user clicks the button/link     jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Remove")
-    And the user clicks the button/link      link=Find
-    Then the user should see the element     jQuery=tr:contains("${assessor_madeleine}")
+    When the user clicks the button/link    link=Invite
+    Then the compadmin can remove an assessor or application from the invite list    ${assessor_madeleine}
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
@@ -130,13 +128,11 @@ CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link    link=Pending and declined
-    Given the user clicks the button/link     jQuery=tr:contains("${assessor_ben}") label
-    And the user clicks the button/link       jQuery=tr:contains("${assessor_joel}") label
-    And the user clicks the button/link       jQuery=button:contains("Resend invites")
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
-    When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
-    And the user should see the element       jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
+    Given the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
+    When the user clicks the button/link        jQuery=tr:contains("${assessor_joel}") label
+    Then the compAdmin resends the invites for interview panel     ${assessor_ben}
+    And the user should see the element         jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
+    And the user should see the element         jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
 
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135  IFS-1566  IFS-1138

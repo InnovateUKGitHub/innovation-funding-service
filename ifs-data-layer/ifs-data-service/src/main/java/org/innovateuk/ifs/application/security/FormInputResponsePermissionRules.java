@@ -10,15 +10,15 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.application.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.application.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.Role.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 
 @PermissionRules
@@ -72,8 +72,8 @@ public class FormInputResponsePermissionRules {
             description = "A consortium member can update the response.")
     public boolean aConsortiumMemberCanUpdateAFormInputResponse(final FormInputResponseCommand response, final UserResource user) {
         final long applicationId = response.getApplicationId();
-        final boolean isLead = checkProcessRole(user, applicationId, UserRoleType.LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationId, UserRoleType.COLLABORATOR, processRoleRepository);
+        final boolean isLead = checkProcessRole(user, applicationId, LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationId, COLLABORATOR, processRoleRepository);
 
         List<QuestionStatus> questionStatuses = getQuestionStatuses(response);
 
@@ -126,7 +126,7 @@ public class FormInputResponsePermissionRules {
         return questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true);
     }
 
-    private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
+    private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, Role userRoleType) {
         final Long organisationId = processRoleRepository.findOne(response.getUpdatedBy()).getOrganisationId();
         final Long applicationId = response.getApplication();
         return checkProcessRole(user, applicationId, organisationId, userRoleType, processRoleRepository);

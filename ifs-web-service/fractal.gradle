@@ -1,57 +1,85 @@
 import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.tasks.container.extras.*
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
 
 buildscript {
 
 
     repositories {
-        mavenCentral()
         jcenter()
     }
 
     dependencies {
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
     }
 
 }
 
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
-// use fully qualified class name
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 
+task prepareFractalDockerInput {
 
-    task prepareFractalDockerInput {
+    def inputDir = project.file("$project.buildDir/fractal")
+    inputDir.delete();
 
-        def inputDir = project.file("$project.buildDir/fractal")
-        inputDir.delete();
-
-        doFirst {
-            copy {
-                from file("ifs-web-core/src/main/resources/templates/fractal-components")
-                into file("${inputDir}/fractal-components")
-            }
-            copy {
-                from file("ifs-web-core/src/main/resources/static")
-                into file("${inputDir}/static")
-            }
-            copy {
-                from file("fractal.js")
-                into inputDir
-            }
-            copy {
-                from file("fractal")
-                into inputDir
-            }
+    doFirst {
+        copy {
+            from file("ifs-web-core/src/main/resources/templates/fractal-components")
+            into file("${inputDir}/fractal-components")
+        }
+        copy {
+            from file("ifs-web-core/src/main/resources/static")
+            into file("${inputDir}/static")
+        }
+        copy {
+            from file("fractal.js")
+            into inputDir
+        }
+        copy {
+            from file("fractal")
+            into inputDir
         }
     }
+}
 
-    task buildFractal(type: DockerBuildImage) {
-        dependsOn prepareFractalDockerInput
-        tag = "innovateuk/fractal:latest"
-        inputDir = project.file("$project.buildDir/fractal")
+task buildFractal(type: DockerBuildImage) {
+    dependsOn prepareFractalDockerInput
+    tag = "innovateuk/fractal:latest"
+    inputDir = project.file("$project.buildDir/fractal")
+}
+
+
+task stopFractal(type: DockerStopContainer) {
+    targetContainerId { createFractal.getContainerId() }
+    onError {
+        //Deliberately ignore
     }
+}
+
+task removeFractal(type: DockerRemoveContainer, dependsOn: stopFractal) {
+    targetContainerId { createFractal.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createFractal(type: DockerCreateContainer, dependsOn: [buildFractal, removeFractal]) {
+    targetImageId { buildFractal.getImageId() }
+    hostName="fractal"
+    containerName="fractal"
+    containerId="fractal"
+    portBindings = ['4000:3000']
+    network="ifs"
+}
+
+task deployFractal(type: DockerStartContainer, dependsOn: createFractal) {
+    targetContainerId { createFractal.getContainerId() }
+}
 
 

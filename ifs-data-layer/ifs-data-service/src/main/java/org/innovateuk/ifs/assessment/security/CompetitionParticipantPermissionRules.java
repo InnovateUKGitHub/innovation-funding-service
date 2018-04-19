@@ -2,11 +2,11 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.competition.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,7 +34,7 @@ public class CompetitionParticipantPermissionRules extends BasePermissionRules {
     }
 
     private static boolean isAssessor(UserResource user) {
-        return user.hasRole(UserRoleType.ASSESSOR);
+        return user.hasRole(Role.ASSESSOR);
     }
 
     private static boolean isSameUser(CompetitionParticipantResource competitionParticipant, UserResource user) {

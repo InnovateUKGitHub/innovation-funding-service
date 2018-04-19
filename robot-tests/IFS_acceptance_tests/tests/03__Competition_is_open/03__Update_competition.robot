@@ -270,15 +270,19 @@ the user can see the open date of the competition belongs to the future
 
 the user is able to change the value of the fields
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/detail/edit
-    the user selects the radio button    useResubmissionQuestion    use-resubmission-question-no
+    the user enters text to a text field  id=minProjectDuration  2
+    the user enters text to a text field  id=maxProjectDuration  30
+    the user selects the radio button  useResubmissionQuestion    use-resubmission-question-no
     the user clicks the button/link    jQuery=.button:contains("Done")
     the user clicks the button/link    link=Application details
-    the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("No")
+    the user should see the element    jQuery=dt:contains("Minimum") + dd:contains("2")
+    the user should see the element    jQuery=dt:contains("Maximum") + dd:contains("30")
+    the user should see the element    jQuery=dt:contains("resubmission") + dd:contains("No")
     the user clicks the button/link    jQuery=.button:contains("Edit this question")
     the user clicks the button/link    jQuery=label[for="use-resubmission-question-yes"]
     the user clicks the button/link    jQuery=.button:contains("Done")
     the user clicks the button/link    link=Application details
-    the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("Yes")
+    the user should see the element    jQuery=dt:contains("resubmission") + dd:contains("Yes")
 
 Custom suite setup
     the user logs-in in new browser  &{Comp_admin1_credentials}
@@ -303,7 +307,7 @@ the user moves the competition back again
     the user clicks the button/link    jQuery=button:contains("Done")   # this action  is marking appication section complete
     the user clicks the button/link    link=Competition setup
     the user clicks the button/link    link=Complete
-    the user clicks the button/link    link=Done
+    the user clicks the button/link    css=button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information

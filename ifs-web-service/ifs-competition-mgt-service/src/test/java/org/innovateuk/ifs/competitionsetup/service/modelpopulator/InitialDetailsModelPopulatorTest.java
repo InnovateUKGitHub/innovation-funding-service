@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competitionsetup.viewmodel.InitialDetailsViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -25,6 +24,8 @@ import java.util.List;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -61,7 +62,7 @@ public class InitialDetailsModelPopulatorTest {
 				.build();
 		
 		List<UserResource> compExecs = new ArrayList<>();
-		when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(compExecs);
+		when(userService.findUserByType(COMP_ADMIN)).thenReturn(compExecs);
 		List<InnovationSectorResource> innovationSectors = new ArrayList<>();
 		when(categoryRestService.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
 		List<InnovationAreaResource> innovationAreas = newInnovationAreaResource().build(2);
@@ -69,7 +70,7 @@ public class InitialDetailsModelPopulatorTest {
 		List<CompetitionTypeResource> competitionTypes = new ArrayList<>();
 		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
 		List<UserResource> leadTechs = new ArrayList<>();
-		when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(leadTechs);
+		when(userService.findUserByType(INNOVATION_LEAD)).thenReturn(leadTechs);
 
         InitialDetailsViewModel viewModel = (InitialDetailsViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
 		

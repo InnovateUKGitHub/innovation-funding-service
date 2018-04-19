@@ -11,8 +11,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentParticipant;
+import org.innovateuk.ifs.assessment.domain.AssessmentInvite;
+import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -129,20 +129,20 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         when(registrationServiceMock.activateAssessorAndSendDiversitySurvey(createdUserResource.getId())).thenReturn(serviceSuccess());
         when(assessmentInviteServiceMock.acceptInvite(hash, createdUserResource)).thenReturn(serviceSuccess());
         when(userRepositoryMock.findOne(createdUserResource.getId())).thenReturn(createdUser);
-        when(competitionParticipantRepositoryMock.getByInviteEmail(email)).thenReturn(participantsForOtherInvites);
+        when(assessmentParticipantRepositoryMock.getByInviteEmail(email)).thenReturn(participantsForOtherInvites);
 
         ServiceResult<Void> serviceResult = assessorService.registerAssessorByHash(hash, userRegistrationResource);
 
         assertTrue(serviceResult.isSuccess());
 
         InOrder inOrder = inOrder(assessmentInviteServiceMock, registrationServiceMock,
-                                  userRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, profileRepositoryMock);
+                                  userRepositoryMock, assessmentParticipantRepositoryMock, innovationAreaMapperMock, profileRepositoryMock);
         inOrder.verify(assessmentInviteServiceMock).getInvite(hash);
         inOrder.verify(registrationServiceMock).createUser(userRegistrationResource);
         inOrder.verify(registrationServiceMock).activateAssessorAndSendDiversitySurvey(createdUserResource.getId());
         inOrder.verify(userRepositoryMock).findOne(createdUserResource.getId());
-        inOrder.verify(competitionParticipantRepositoryMock).getByInviteEmail(email);
-        inOrder.verify(competitionParticipantRepositoryMock).save(participantsForOtherInvites);
+        inOrder.verify(assessmentParticipantRepositoryMock).getByInviteEmail(email);
+        inOrder.verify(assessmentParticipantRepositoryMock).save(participantsForOtherInvites);
         inOrder.verify(profileRepositoryMock).findOne(anyLong());
         inOrder.verify(innovationAreaMapperMock).mapToDomain(innovationAreaResource);
         inOrder.verify(profileRepositoryMock).save(any(Profile.class));
@@ -286,8 +286,8 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
 
         List<NotificationTarget> recipients = asList(
-                new UserNotificationTarget(users.get(0)),
-                new UserNotificationTarget(users.get(1))
+                new UserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new UserNotificationTarget(users.get(1).getName(), users.get(1).getEmail())
         );
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
@@ -374,7 +374,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
 
         EmailContent emailContent = newEmailContentResource().build();
-        NotificationTarget recipient = new UserNotificationTarget(user);
+        NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
         Notification expectedNotification = new Notification(
