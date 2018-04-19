@@ -22,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
-import scala.App;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -173,9 +172,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByProjectId() {
-        Application application = applicationRepository.save(newApplication().withId(17L).build());
+        Application application = applicationRepository.save(newApplication().build());
         Project project = projectRepository.save(newProject()
-                .withId(17L)
                 .withApplication(application)
                 .withName("Project Name")
                 .build()
@@ -188,10 +186,9 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByAssessmentId() {
-        Application application = repository.save(newApplication().withId(7L).build());
+        Application application = repository.save(newApplication().build());
 
         Assessment assessment = assessmentRepository.save(newAssessment()
-                .withId(13L)
                 .withApplication(application)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.SUBMITTED))
                 .build()

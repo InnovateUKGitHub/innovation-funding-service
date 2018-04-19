@@ -791,9 +791,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ReviewRejectOutcomeMapper reviewRejectOutcomeMapperMock;
 
-    @Mock
-    protected QuestionSetupCompetitionService questionSetupCompetitionServiceMock;
-
     @Before
     public void setupMockInjection() {
         // Process mock annotations

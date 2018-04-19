@@ -2,7 +2,9 @@ package org.innovateuk.ifs.question.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
+import org.innovateuk.ifs.question.transactional.QuestionSetupCompetitionService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -12,6 +14,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class QuestionSetupCompetitionControllerTest extends BaseControllerMockMVCTest<QuestionSetupCompetitionController> {
+
+    @Mock
+    protected QuestionSetupCompetitionService questionSetupCompetitionServiceMock;
 
     @Override
     protected QuestionSetupCompetitionController supplyControllerUnderTest() {
