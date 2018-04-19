@@ -73,7 +73,7 @@ public class ApplicationDetailsSectionSaverTest {
     }
 
     @Test
-    public void doSaveSection_emptyFormReturnsEmptyFieldErrorsWhenFormIsEmpty() {
+    public void doSaveSection_errorWhenFieldsAreEmpty() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
 
@@ -98,7 +98,30 @@ public class ApplicationDetailsSectionSaverTest {
     }
 
     @Test
-    public void doSaveSection_negativeProjectDurationsReturnEmptyFieldErrorsWhenFormIsEmpty() {
+    public void doSaveSection_errorWhenProjectDurationsAreBelowMinimumAllowed() {
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setMaxProjectDuration(new BigDecimal(0));
+        applicationDetailsForm.setMinProjectDuration(new BigDecimal(0));
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
+
+        assertThat(result.isFailure()).isTrue();
+        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
+                .isNotEmpty();
+
+        verifyZeroInteractions(competitionSetupRestServiceMock);
+    }
+
+    @Test
+    public void doSaveSection_errorWhenProjectDurationsAreNegative() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
         applicationDetailsForm.setUseResubmissionQuestion(false);
@@ -122,7 +145,7 @@ public class ApplicationDetailsSectionSaverTest {
     }
 
     @Test
-    public void doSaveSection_decimalsInProjectDurationsReturnTypeErrorsWhenFormIsEmpty() {
+    public void doSaveSection_errorWhenDecimalsInProjectDurations() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
         applicationDetailsForm.setUseResubmissionQuestion(false);
@@ -146,7 +169,7 @@ public class ApplicationDetailsSectionSaverTest {
     }
 
     @Test
-    public void doSaveSection_emptyFormReturnsSuccessWhenMinFieldIsEqualToMaxField() {
+    public void doSaveSection_successWhenMinFieldIsEqualToMaxField() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
 
@@ -164,7 +187,7 @@ public class ApplicationDetailsSectionSaverTest {
     }
 
     @Test
-    public void doSaveSection_emptyFormReturnsLargerThanErrorWhenMinExceedsMaxField() {
+    public void doSaveSection_errorWhenMinFieldExceedsMaxField() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
 
@@ -174,6 +197,7 @@ public class ApplicationDetailsSectionSaverTest {
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
         assertThat(result.isFailure()).isTrue();
+        assertThat(result.getErrors().size()).isEqualTo(2);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
                         error.getErrorKey().equals("competition.setup.applicationdetails.min.projectduration.exceedsmax"))
@@ -181,6 +205,30 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
                         error.getErrorKey().equals("competition.setup.applicationdetails.max.projectduration.beneathmin"))
+                .isNotEmpty();
+
+        verifyZeroInteractions(competitionSetupRestServiceMock);
+    }
+
+    @Test
+    public void doSaveSection_errorWhenProjectDurationsExceedMaximumAllowed() {
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+
+        applicationDetailsForm.setMinProjectDuration(new BigDecimal(61));
+        applicationDetailsForm.setMaxProjectDuration(new BigDecimal(61));
+
+        ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
+
+        assertThat(result.isFailure()).isTrue();
+        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.max"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
+                        error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.max"))
                 .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);

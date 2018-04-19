@@ -1,10 +1,11 @@
 FROM debian:jessie-slim
+EXPOSE 9443
 
 ENV DEBIAN_FRONTEND=noninteractive \
   JAVAVER=8 \
-  JAVAUPD=161 \
-  JAVABLD=12 \
-  JAVASIG=2f38c3b165be4555a1fa6e98c45e0808 \
+  JAVAUPD=171 \
+  JAVABLD=11 \
+  JAVASIG=512cd62ec5174c3487ac17c61aaa89e8 \
   IDPVER="3.3.1"
 
 ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
@@ -144,4 +145,6 @@ RUN chown -R www-data:0 /opt/shibboleth-idp /usr/local/bin && \
   chmod -R u=rwX,g=rwX,o= /opt/shibboleth-idp /usr/local/bin
 
 #USER www-data
+HEALTHCHECK --interval=15s --timeout=8s \
+  CMD curl -k -f https://localhost:9443/idp/status || exit 1
 ENTRYPOINT [ "run-idp.sh" ]
