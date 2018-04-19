@@ -1,4 +1,5 @@
 FROM mysql:5.6.29
+EXPOSE 3306
 MAINTAINER Richard Popple <richard@hiveit.co.uk>
 # Copy over replacement entry point that avoids OpenShift permissions issues
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
