@@ -11,12 +11,20 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
 
     private final ApplicationState applicationState;
 
+    private final boolean withdrawn;
+
     public PreviousDashboardRowViewModel(String title,
                                          long applicationId,
                                          String competitionTitle,
-                                         ApplicationState applicationState) {
+                                         ApplicationState applicationState,
+                                         boolean withdrawn) {
         super(title, applicationId, competitionTitle);
         this.applicationState = applicationState;
+        this.withdrawn = withdrawn;
+    }
+
+    public boolean isWithdrawn() {
+        return withdrawn;
     }
 
     /* View logic */
@@ -32,6 +40,8 @@ public class PreviousDashboardRowViewModel extends AbstractApplicantDashboardRow
         return ApplicationState.OPEN.equals(applicationState)
                 ||  ApplicationState.CREATED.equals(applicationState);
     }
+
+
 
     public boolean isInformedIneligible() {
         return ApplicationState.INELIGIBLE_INFORMED.equals(applicationState);

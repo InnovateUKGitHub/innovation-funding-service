@@ -75,12 +75,10 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
                 .withApplicationState(ApplicationState.SUBMITTED)
                 .withCompetition(competitionResource.getId()).build()));
 
-
-        when(applicationService.getById(APPLICATION_ID_IN_PROJECT_WITHDRAWN))
-                .thenReturn(newApplicationResource()
-                                    .withId(APPLICATION_ID_IN_PROJECT_WITHDRAWN)
-                                    .withApplicationState(ApplicationState.SUBMITTED)
-                                    .withCompetition(competitionResource.getId()).build());
+        when(applicationRestService.getApplicationById(APPLICATION_ID_IN_PROJECT_WITHDRAWN)).thenReturn(restSuccess(newApplicationResource()
+                .withId(APPLICATION_ID_IN_PROJECT_WITHDRAWN)
+                .withApplicationState(ApplicationState.SUBMITTED)
+                .withCompetition(competitionResource.getId()).build()));
 
         when(competitionRestService.getCompetitionsByUserId(loggedInUser.getId())).thenReturn(restSuccess(competitionResources));
         when(competitionRestService.getCompetitionById(compInProjectSetup.getId())).thenReturn(restSuccess(compInProjectSetup));
@@ -104,9 +102,9 @@ public class ApplicantDashboardPopulatorTest extends BaseUnitTest {
         assertFalse(viewModel.getPrevious().isEmpty());
         assertFalse(viewModel.getProjects().isEmpty());
 
-        assertEquals(2, viewModel.getInProgress().size());
+        assertEquals(1, viewModel.getInProgress().size());
 
         verify(applicationRestService, times(1)).getApplicationById(APPLICATION_ID_IN_PROJECT);
-        assertEquals("Applications in progress", viewModel.getApplicationInProgressText());
+        assertEquals("Application in progress", viewModel.getApplicationInProgressText());
     }
 }

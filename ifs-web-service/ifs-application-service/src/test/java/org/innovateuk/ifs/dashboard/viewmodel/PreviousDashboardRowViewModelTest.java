@@ -14,7 +14,7 @@ public class PreviousDashboardRowViewModelTest {
     @Test
     public void testConstruct() {
         PreviousDashboardRowViewModel viewModel = new PreviousDashboardRowViewModel(null, 1L,
-                "Competition", ApplicationState.APPROVED);
+                "Competition", ApplicationState.APPROVED, false);
 
         assertThat(viewModel.getLinkUrl(), equalTo("/application/1/summary"));
         assertThat(viewModel.getTitle(), equalTo("Untitled application"));
@@ -22,5 +22,6 @@ public class PreviousDashboardRowViewModelTest {
         assertThat(viewModel.isCreatedOrOpen(), equalTo(false));
         assertThat(viewModel.isInformedIneligible(), equalTo(false));
         assertThat(viewModel.isRejected(), equalTo(false));
+        assertThat(viewModel.isWithdrawn(), equalTo(false));
     }
 }
