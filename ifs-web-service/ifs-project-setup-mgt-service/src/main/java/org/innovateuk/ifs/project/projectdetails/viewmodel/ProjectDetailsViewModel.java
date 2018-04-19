@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
@@ -44,6 +45,14 @@ public class ProjectDetailsViewModel {
 
     public ProjectResource getProject() {
         return project;
+    }
+
+    public boolean isWithdrawn() {
+        return ProjectState.WITHDRAWN.equals(project.getProjectState());
+    }
+
+    public boolean isShowWithdrawLink() {
+        return ifsAdministrator && !isWithdrawn();
     }
 
     public Long getCompetitionId() {
