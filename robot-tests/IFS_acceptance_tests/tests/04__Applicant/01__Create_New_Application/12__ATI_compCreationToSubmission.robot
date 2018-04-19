@@ -32,7 +32,7 @@ Comp Admin creates an ATI competition
     When the user clicks the button/link           link=Return to setup overview
     Then the user should see the element           jQuery=div:contains("Public content") ~ .task-status-complete
     When the user clicks the button/link           jQuery=a:contains("Complete")
-    Then the user clicks the button/link           jQuery=a:contains("Done")
+    Then the user clicks the button/link           css=button[type="submit"]
 
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
