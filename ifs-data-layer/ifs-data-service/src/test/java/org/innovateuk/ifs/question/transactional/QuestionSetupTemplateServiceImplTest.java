@@ -67,12 +67,13 @@ public class QuestionSetupTemplateServiceImplTest extends BaseServiceUnitTest<Qu
 
     @Test
     public void testDeleteAssessedQuestionInCompetition_questionSectionTotalQuestionIsOneOrLessShouldResultInFailure() {
+        final Long questionId = 1L;
         Competition readyToOpenCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
         Section section = newSection().withName(APPLICATION_QUESTIONS.getName()).build();
-        Question question = newQuestion().withCompetition(readyToOpenCompetition).withSection(section).build();
+        Question question = newQuestion().withCompetition(readyToOpenCompetition).withSection(section).withId(questionId).build();
 
         when(questionRepositoryMock.findFirstById(question.getId())).thenReturn(question);
-        when(questionRepositoryMock.countByCompetitionId(readyToOpenCompetition.getId())).thenReturn(question.getId());
+        when(questionRepositoryMock.countByCompetitionId(readyToOpenCompetition.getId())).thenReturn(questionId);
         ServiceResult<Void> resultAssessedQuestion = service.deleteQuestionInCompetition(question.getId());
         assertTrue(resultAssessedQuestion.isFailure());
     }

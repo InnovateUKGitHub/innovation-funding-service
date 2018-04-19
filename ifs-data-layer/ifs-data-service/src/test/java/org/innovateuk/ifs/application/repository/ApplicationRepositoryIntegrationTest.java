@@ -172,9 +172,10 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByProjectId() {
-        Application application = applicationRepository.save(newApplication().build());
+        Application application = applicationRepository.save(newApplication().withId(17L).build());
         Project project = projectRepository.save(newProject()
                 .withApplication(application)
+                .withId(17L)
                 .withName("Project Name")
                 .build()
         );
