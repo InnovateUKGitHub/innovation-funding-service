@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.resource.ApplicationState.submittedStates;
+import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.interview.builder.InterviewAssignmentBuilder.newInterviewAssignment;
@@ -55,7 +55,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationProcessActivityStateStateIn() {
-        Collection<State> states = simpleMap(submittedStates, ApplicationState::getBackingState);
+        Collection<State> states = simpleMap(submittedAndFinishedStates, ApplicationState::getBackingState);
 
         List<Application> applicationList = simpleMap(EnumSet.complementOf(EnumSet.of(ApplicationState.IN_PANEL)),
                 this::createApplicationByState);
@@ -84,7 +84,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(0, 20);
 
-        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
+                .getId(), pageable);
 
         assertEquals(1, invitableApplications.getTotalElements());
     }
@@ -96,7 +97,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(0, 20);
 
-        Page<Application> applications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> applications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(),
+                pageable);
 
         assertEquals(0, applications.getTotalElements());
     }
@@ -125,7 +127,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(1, 20);
 
-        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
+                .getId(), pageable);
 
         assertEquals(1, invitableApplications.getTotalElements());
     }
@@ -153,7 +156,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(1, 20);
 
-        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
+                .getId(), pageable);
 
         assertEquals(1, invitableApplications.getTotalElements());
     }
@@ -168,10 +172,12 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     private ActivityState activityState(ApplicationState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, applicationState.getBackingState());
+        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, applicationState
+                .getBackingState());
     }
 
     private ActivityState activityState(InterviewAssignmentState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, applicationState.getBackingState());
+        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                applicationState.getBackingState());
     }
 }
