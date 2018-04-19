@@ -84,13 +84,15 @@ ol.list-style-type-roman{
  }
 
   .marked-as-complete {
-    @extend %mark-done-right;
+    background-image: url('../images/field/field-done-right.png');
+    background-repeat: no-repeat;
     background-position: right top;
     background-size: 30px;
   }
 
   .assigned-to-me {
-    @extend %mark-assigned-right;
+    background-image: url('../images/field/field-assigned-right.png');
+    background-repeat: no-repeat;
     background-position: right top;
     background-size: 30px;
   }
@@ -524,7 +526,8 @@ ol.navigation-list {
   }
 
   li.marked-as-complete{
-    @extend %mark-done-right;
+    background-image: url('../images/field/field-done-right.png');
+    background-repeat: no-repeat;
     background-position: 100% 0%;
     background-size: 20px;
   }

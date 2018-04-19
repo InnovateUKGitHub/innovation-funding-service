@@ -17,7 +17,7 @@
   @include inline-block;
   height: 12px;
   width: 12px;
-  background-image: url('/images/wysiwyg/editorControls.png');
+  background-image: url('/images/ifs-images/wysiwyg/editorControls.png');
   background-repeat: no-repeat;
 }
 
@@ -68,7 +68,7 @@ button {
 @include device-pixel-ratio() {
   .fa {
     &.fa {
-      background-image: url('/images/wysiwyg/editorControls@2x.png');
+      background-image: url('/images/ifs-images/wysiwyg/editorControls@2x.png');
       background-size: 12px;
     }
   }
@@ -77,7 +77,7 @@ button {
     &.ui-state-active {
       .fa {
         &.fa {
-          background-image: url('/images/wysiwyg/editorControls@2x.png');
+          background-image: url('/images/ifs-images/wysiwyg/editorControls@2x.png');
           background-size: 12px;
         }
       }

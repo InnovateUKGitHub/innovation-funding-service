@@ -18,10 +18,6 @@ ol {
       position: relative;
       margin-top: 10px;
       border:1px solid $border-colour;
-
-      &.assigned-to-me {
-        background: url("../images/field/field-assigned-right.png") right top no-repeat;
-      }
     }
   }
 }

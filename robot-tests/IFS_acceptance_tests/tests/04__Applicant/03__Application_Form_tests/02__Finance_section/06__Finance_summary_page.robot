@@ -277,7 +277,7 @@ the contribution to project and funding sought should be 0 and not a negative nu
     the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 Green check should be visible
-    Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
+    Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/ifs-images/icons/icon-tick"]
 
 the red warning should be visible
     the user should see the element  jQuery=.warning-alert h2:contains("not marked their finances as complete")
