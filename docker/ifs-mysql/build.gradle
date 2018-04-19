@@ -32,7 +32,7 @@ subprojects {
     }
 
     def enabled = project.hasProperty('initialise') ? project.property('initialise').toBoolean() : false
-    [stop, removeContainer, createContainer, deploy, wait].each { task ->
+    [stop, removeContainer, createContainer, deploy].each { task ->
         task.enabled = enabled
     }
 
@@ -42,19 +42,11 @@ subprojects {
         }
     }
 
-    task startMySql(dependsOn: deploy) {
-        doLast {
-            exec {
-                //wait for sql container to start.
-                workingDir '.'
-                commandLine 'sleep', '10'
-            }
-        }
-    }
+
 
     task initDB {
-        createTestSchema.mustRunAfter startMySql
-        dependsOn startMySql
+        createTestSchema.mustRunAfter wait
+        dependsOn wait
         dependsOn createTestSchema
     }
 
