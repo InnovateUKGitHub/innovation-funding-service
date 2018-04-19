@@ -49,7 +49,7 @@
                 <div class="progress-list">
                     <h2 class="heading-medium" th:text="${model.applicationInProgressText}"/>
                     <ul>
-                        <li class="status-2-col" th:each="app : ${model.applicationsInProgress}" th:classappend="${model.applicationIsAssignedToMe(app.id) ? 'assigned-to-me' : '' }">
+                        <li th:attr="data-application-id=${app.id}" class="status-2-col" th:each="app : ${model.applicationsInProgress}" th:classappend="${model.applicationIsAssignedToMe(app.id) ? 'assigned-to-me' : '' }">
                             <th:block th:unless="${model.applicationIsSubmitted(app.id)}">
                                 <div class="task">
                                     <h3 class="heading-small" th:with="teamUrl=@{/application/{id}/team(id=${app.id})}, formUrl=@{/application/{id}(id=${app.id})}, noTitle=#{ifs.application.dashboard.no_title}">
