@@ -38,7 +38,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/assessors/invite")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite assessors to an Interview Panel", securedType = InterviewAssessorSendInviteController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW')")
 public class InterviewAssessorSendInviteController extends CompetitionManagementCookieController<InterviewOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "interviewOverviewSelectionForm";
