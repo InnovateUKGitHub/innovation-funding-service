@@ -57,7 +57,7 @@ springBoot {
 }
 
 bootRepackage {
-    def arbitraryOutput = file("${project.buildDir}/buildDockerRan")
+    def arbitraryOutput = file("${project.buildDir}/bootRepackageRan")
     outputs.file(arbitraryOutput)
 
     mainClass = 'org.innovateuk.ifs.Application'
