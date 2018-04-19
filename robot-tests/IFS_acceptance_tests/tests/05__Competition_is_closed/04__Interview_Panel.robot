@@ -131,7 +131,7 @@ CompAdmin resends the interview panel invite
     #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
 
 CompAdmin Views the assessors that have accepted the interview panel invite
-    [Documentation]  IFS-3201
+    [Documentation]  IFS-3201 IFS-3252
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
