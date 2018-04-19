@@ -1,0 +1,60 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.tasks.container.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+import com.bmuschko.gradle.docker.tasks.container.extras.*
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.bmuschko.gradle.docker.DockerJavaApplicationPlugin
+
+buildscript {
+
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.2.6"
+    }
+
+}
+
+
+repositories {
+    jcenter()
+}
+
+task pullZipkin(type: Exec) {
+    doFirst {
+        commandLine 'docker', 'pull', 'openzipkin/zipkin'
+    }
+}
+
+task stopZipkin(type: DockerStopContainer) {
+    targetContainerId { createZipkin.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task removeZipkin(type: DockerRemoveContainer, dependsOn: stopZipkin) {
+    targetContainerId { createZipkin.getContainerId() }
+    onError {
+        //Deliberately ignore
+    }
+}
+
+task createZipkin(type: DockerCreateContainer, dependsOn: [pullZipkin, removeZipkin]) {
+    image = "openzipkin/zipkin"
+    imageId = "openzipkin/zipkin"
+    hostName="zipkin"
+    containerName="zipkin"
+    containerId="zipkin"
+    portBindings = ['9411:9411']
+    network="ifs"
+}
+
+task deployZipkin(type: DockerStartContainer, dependsOn: createZipkin) {
+    targetContainerId { createZipkin.getContainerId() }
+}
+
+

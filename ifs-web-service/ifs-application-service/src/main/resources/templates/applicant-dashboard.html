@@ -109,7 +109,7 @@
                     <h2 class="heading-medium">Previous applications</h2>
                     <ul>
                         <li th:each="app : ${model.applicationsFinished}"
-                            th:class="${model.applicationIsApproved(app.id)} ? 'positive'">
+                            th:class="${model.applicationIsApprovedAndProjectIsNotWithdrawn(app.id)} ? 'positive'">
                             <div class="task">
                                 <h3 class="heading-small" th:with="noTitle=#{ifs.application.no_title}">
                                     <a th:href="@{/application/{id}/summary(id=${app.id})}"
@@ -122,9 +122,10 @@
                             </div>
                             <div class="status">
                                 <p th:if="${model.applicationIsRejected(app.id)}" class="status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${model.applicationIsApproved(app.id)}" class="status-msg msg-progress">Successful</p>
+                                <p th:if="${model.applicationIsApprovedAndProjectIsNotWithdrawn(app.id)}" class="status-msg msg-progress">Successful</p>
                                 <p th:if="${model.applicationIsCreatedOrOpen(app.id)}" class="status-msg msg-progress not-submitted">Not submitted</p>
                                 <p th:if="${model.applicationIsInformedIneligible(app.id)}" class="status-msg msg-progress">Ineligible</p>
+                                <p th:if="${model.projectIsWithdrawn(app.id)}" class="status-msg msg-progress">Project withdrawn</p>
                             </div>
                         </li>
                     </ul>
