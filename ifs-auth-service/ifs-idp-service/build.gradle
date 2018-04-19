@@ -107,6 +107,11 @@ osStageRemote.tag = idpVersion
 osStageLocal.tag = idpVersion
 
 
-
-
+createContainer.containerName = "idp"
+createContainer.containerId = "idp"
+createContainer.env= ["SP_DOMAIN=ifs.local-dev","IDP_DOMAIN=auth.local-dev:9443","HTTPS_PORT=9443","HTTP_PORT=9080"]
+createContainer.networkAliases=["auth.local-dev","iuk-auth-localdev"]
+createContainer.portBindings = ['9443:9443']
+createContainer.hostName="idp"
+createContainer.workingDir="/usr/local/bin"
 
