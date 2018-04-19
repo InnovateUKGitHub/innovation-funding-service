@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
 
 public interface BankDetailsRepository extends PagingAndSortingRepository<BankDetails, Long> {
 
@@ -13,7 +15,10 @@ public interface BankDetailsRepository extends PagingAndSortingRepository<BankDe
             + " WHERE p.application.competition.id = c.id"
             + " AND bd.project.id = p.id"
             + " AND bd.manualApproval = FALSE"
-            + " AND (bd.verified = FALSE OR bd.registrationNumberMatched = FALSE OR bd.companyNameScore <= 6 OR bd.addressScore <= 6)";
+            + " AND (bd.verified = FALSE OR bd.registrationNumberMatched = FALSE"
+            + " OR bd.companyNameScore <= " + EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME
+            + " OR bd.addressScore <= " + EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS
+            + ")";
 
     //TODO - This query will need to be modified once IFS-468 is completed. IFS-468 is about having a workflow in place for the Bank Details process.
     String PENDING_BANK_DETAILS_APPROVALS_QUERY = " SELECT NEW org.innovateuk.ifs.competition.resource.BankDetailsReviewResource("

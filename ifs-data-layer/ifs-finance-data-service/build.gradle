@@ -5,8 +5,6 @@ apply from: rootProject.file("gradle-support/prepare-docker.gradle")
 
 apply from: "../flyway.gradle"
 apply plugin: 'org.asciidoctor.convert'
-apply from: "../database-support.gradle"
-
 configurations {
     providedRuntime
 }
@@ -17,9 +15,17 @@ osStageRemote.tag = financeDataServiceVersion
 tagDockerLocal.tag = financeDataServiceVersion
 osStageLocal.tag = financeDataServiceVersion
 
+def enabled = project.hasProperty('ifs.finance-data-service.enabled') ? project.property('ifs.finance-data-service.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+createContainer.portBindings = ['9012:8000']
+
+deploy.dependsOn ":docker:ifs-mysql:ifs-finance-database:deploy"
+
+createContainer.networkAliases=["ifs-finance-data-service"]
+
 ext.dockerDir = "$project.parent.projectDir/docker/"
-ext.sqlContainer = "ifs-finance-database"
-ext.testSchema = "ifs_finance_test"
 ext.dockerComposeFile = "docker-compose/docker-compose-finance-totals.yml"
 
 ext {
@@ -85,6 +91,11 @@ test {
         systemProperty 'testGroups', project.getProperty('testGroups')
     }
     finalizedBy asciidoctor
+
+    if (targetBuild == 'docker') {
+        dependsOn ":docker:ifs-mysql:ifs-finance-database:initDB"
+    }
+
 }
 
 asciidoctor {

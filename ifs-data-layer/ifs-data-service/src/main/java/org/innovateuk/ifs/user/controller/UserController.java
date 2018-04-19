@@ -16,6 +16,7 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,6 +37,11 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+
+    public static final Sort DEFAULT_USER_SORT = new Sort(
+            new Sort.Order(Sort.Direction.ASC, "firstName"),
+            new Sort.Order(Sort.Direction.ASC, "lastName")
+    );
 
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
@@ -75,14 +81,14 @@ public class UserController {
 
     @GetMapping("/internal/active")
     public RestResult<UserPageResource> findActiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return userService.findActiveByProcessRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+                                                                @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
+        return userService.findActiveByRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @GetMapping("/internal/inactive")
     public RestResult<UserPageResource> findInactiveInternalUsers(@RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
                                                                   @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize){
-        return userService.findInactiveByProcessRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize)).toGetResponse();
+        return userService.findInactiveByRoles(Role.internalRoles(), new PageRequest(pageIndex, pageSize, DEFAULT_USER_SORT)).toGetResponse();
     }
 
     @PostMapping("/internal/create/{inviteHash}")
@@ -199,7 +205,6 @@ public class UserController {
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userService.updateDetails(userResource).andOnSuccessReturnVoid(() -> crmService.syncCrmContact(userResource.getId())).toPutResponse();
     }
-
 
     @GetMapping("/id/{id}/deactivate")
     public RestResult<Void> deactivateUser(@PathVariable("id") final Long id) {

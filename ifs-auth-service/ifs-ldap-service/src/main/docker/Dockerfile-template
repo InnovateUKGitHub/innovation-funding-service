@@ -1,4 +1,5 @@
 FROM debian:jessie-slim
+EXPOSE 8389
 
 LABEL maintainer "infrastructure@orangebus.co.uk"
 
@@ -52,4 +53,6 @@ RUN apt-get update --fix-missing && \
   rm -f ppolicy*.ldif
 
 USER openldap
+HEALTHCHECK --interval=15s --timeout=8s \
+  CMD ldapsearch -H ldaps://localhost:8389 -b dc=nodomain -x -LLL -s base || exit 1
 ENTRYPOINT [ "run-openldap.sh" ]

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.AssessorFinanceView;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -50,8 +52,13 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             // Set up users on an organisation and application
             final long applicationId = 1L;
             final long organisationId = 2L;
+
+            Competition competition = newCompetition()
+                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+            Application application = newApplication().with(id(applicationId)).withCompetition(competition).build();
+
             organisation = newOrganisationResource().with(id(organisationId)).build();
-            applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(applicationId).build();
+            applicationFinance = newApplicationFinanceResource().withOrganisation(organisation.getId()).withApplication(application.getId()).build();
             leadApplicant = newUserResource().build();
             assessor = newUserResource().build();
             collaborator = newUserResource().build();
@@ -68,17 +75,17 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(assessor.getId(), applicationId, Role.ASSESSOR)).thenReturn(true);
             when(processRoleRepositoryMock.findOneByUserIdAndRoleInAndApplicationId(compAdmin.getId(), applicantProcessRoles(), applicationId)).thenReturn(compAdminProcessRole);
 
-            Competition competition = newCompetition()
-                    .withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
-
-            when(competitionRepositoryMock.findByApplicationsId(applicationId)).thenReturn(competition);
+            when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+            when(competitionRepositoryMock.findById(application.getCompetition().getId())).thenReturn(competition);
         }
         {
             // Set up different users on an organisation and application to check that there is no bleed through of permissions
             final long otherApplicationId = 3L;
             final long otherOrganisationId = 4L;
             otherOrganisation = newOrganisationResource().with(id(otherOrganisationId)).build();
-            otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
+            Competition otherCompetition = newCompetition().withAssessorFinanceView(AssessorFinanceView.DETAILED).build();
+            Application otherApplication = newApplication().with(id(otherApplicationId)).withCompetition(otherCompetition).build();
+            otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplication.getId()).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), Role.LEADAPPLICANT, otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRole(otherLeadApplicant.getId(), otherApplicationId, Role.LEADAPPLICANT)).thenReturn(true);

@@ -24,14 +24,20 @@ public class ApplicantDashboardViewModel {
     private Map<Long, CompetitionResource> competitions;
     private Map<Long, ApplicationState> applicationStates;
     private List<Long> leadApplicantApplications;
+    private List<Long> applicationsWithWithdrawnProjects;
 
     public ApplicantDashboardViewModel() {
     }
 
-    public ApplicantDashboardViewModel(Map<Long, Integer> applicationProgress, List<ApplicationResource> applicationsInProgress,
-                                       List<Long> applicationsAssigned, List<ApplicationResource> applicationsFinished,
-                                       List<ProjectResource> projectsInSetup, Map<Long, CompetitionResource> competitions,
-                                       Map<Long, ApplicationState> applicationStates,  List<Long> leadApplicantApplications) {
+    public ApplicantDashboardViewModel(Map<Long, Integer> applicationProgress,
+                                       List<ApplicationResource> applicationsInProgress,
+                                       List<Long> applicationsAssigned,
+                                       List<ApplicationResource> applicationsFinished,
+                                       List<ProjectResource> projectsInSetup,
+                                       Map<Long, CompetitionResource> competitions,
+                                       Map<Long, ApplicationState> applicationStates,
+                                       List<Long> leadApplicantApplications,
+                                       List <Long> applicationsWithWithdrawnProjects) {
         this.applicationProgress = applicationProgress;
         this.applicationsInProgress = applicationsInProgress;
         this.applicationsAssigned = applicationsAssigned;
@@ -40,6 +46,7 @@ public class ApplicantDashboardViewModel {
         this.competitions = competitions;
         this.applicationStates = applicationStates;
         this.leadApplicantApplications = leadApplicantApplications;
+        this.applicationsWithWithdrawnProjects = applicationsWithWithdrawnProjects;
     }
 
     public Map<Long, Integer> getApplicationProgress() {
@@ -87,11 +94,8 @@ public class ApplicantDashboardViewModel {
     }
 
     public String getApplicationInProgressText() {
-        if(applicationsInProgress.size() > 1) {
-            return "Applications in progress";
-        } else {
-            return "Application in progress";
-        }
+        return applicationsInProgress.size() == 1 ?
+                "Application in progress" : "Applications in progress";
     }
 
     public boolean applicationIsAssignedToMe(Long applicationId) {
@@ -111,8 +115,13 @@ public class ApplicantDashboardViewModel {
         return ApplicationState.CREATED.equals(getApplicationState(applicationId));
     }
 
-    public boolean applicationIsApproved(Long applicationId) {
-        return ApplicationState.APPROVED.equals(getApplicationState(applicationId));
+    public boolean applicationIsApprovedAndProjectIsNotWithdrawn(Long applicationId) {
+        return ApplicationState.APPROVED.equals(getApplicationState(applicationId))
+                && !projectIsWithdrawn(applicationId);
+    }
+
+    public boolean projectIsWithdrawn(Long applicationId) {
+        return applicationsWithWithdrawnProjects.contains(applicationId);
     }
 
     public boolean applicationIsRejected(Long applicationId) {
