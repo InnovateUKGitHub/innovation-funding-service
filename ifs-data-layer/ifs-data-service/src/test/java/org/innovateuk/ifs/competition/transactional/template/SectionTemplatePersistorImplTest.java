@@ -3,6 +3,8 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.Section;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.question.transactional.template.QuestionTemplatePersistorImpl;
+import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;

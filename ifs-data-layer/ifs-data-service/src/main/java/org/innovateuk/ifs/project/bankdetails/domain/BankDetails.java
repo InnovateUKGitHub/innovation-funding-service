@@ -9,6 +9,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import javax.persistence.*;
 import java.util.List;
 
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS;
+import static org.innovateuk.ifs.project.constant.ProjectConstants.EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME;
+
 /**
  * Entity for persisting Bank Details for organisations associated with a project.
  */
@@ -191,6 +194,10 @@ public class BankDetails {
     public boolean isApproved(){
         // Note that this criteria is temporary and will be adusted when we decide on thresholds.
         // It will likely be moved into a property file so it can be adjusted without code change.
-        return manualApproval || (verified && registrationNumberMatched && companyNameScore > 6 && addressScore > 6);
+        return manualApproval ||
+                (verified &&
+                        registrationNumberMatched &&
+                        companyNameScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_COMPANY_NAME
+                        && addressScore > EXPERIAN_AUTOMATIC_APPROVAL_THRESHOLD_ADDRESS);
     }
 }
