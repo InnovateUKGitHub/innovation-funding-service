@@ -19,8 +19,8 @@ public class ProjectDetailsViewModel {
 
     private ProjectResource project;
     private Long competitionId;
-    private boolean ifsAdministrator;
     private String competitionName;
+    private boolean ifsAdministrator;
     private String leadOrganisation;
     private ProjectUserResource projectManager;
     private Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap;
@@ -28,15 +28,15 @@ public class ProjectDetailsViewModel {
     private List<PartnerOrganisationResource> partnerOrganisations;
 
     public ProjectDetailsViewModel(ProjectResource project, Long competitionId,
-                                   boolean ifsAdministrator, String competitionName,
+                                   String competitionName, boolean ifsAdministrator,
                                    String leadOrganisation, ProjectUserResource projectManager,
                                    Map<OrganisationResource, ProjectUserResource> organisationFinanceContactMap,
                                    boolean locationPerPartnerRequired,
                                    List<PartnerOrganisationResource> partnerOrganisations) {
         this.project = project;
         this.competitionId = competitionId;
-        this.ifsAdministrator = ifsAdministrator;
         this.competitionName = competitionName;
+        this.ifsAdministrator = ifsAdministrator;
         this.leadOrganisation = leadOrganisation;
         this.projectManager = projectManager;
         this.organisationFinanceContactMap = organisationFinanceContactMap;
@@ -60,12 +60,12 @@ public class ProjectDetailsViewModel {
         return competitionId;
     }
 
-    public boolean isIfsAdministrator() {
-        return ifsAdministrator;
-    }
-
     public String getCompetitionName() {
         return competitionName;
+    }
+
+    public boolean isIfsAdministrator() {
+        return ifsAdministrator;
     }
 
     public String getLeadOrganisation() {

@@ -84,15 +84,14 @@ public class ProjectDetailsController {
         List<OrganisationResource> organisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        String competitionName = competitionResource.getName();
 
         boolean locationPerPartnerRequired = competitionResource.isLocationPerPartner();
         boolean isIfsAdministrator = SecurityRuleUtil.isIFSAdmin(loggedInUser);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
+                competitionResource.getName(),
                 isIfsAdministrator,
-                competitionName,
                 leadOrganisationResource.getName(),
                 getProjectManager(projectUsers).orElse(null),
                 getFinanceContactForPartnerOrganisation(projectUsers, organisations),
@@ -163,8 +162,8 @@ public class ProjectDetailsController {
 
         model.addAttribute("model", new ProjectDetailsViewModel(project,
                 competitionId,
-                false,
                 competition.getName(),
+                false,
                 null,
                 null,
                 null,
