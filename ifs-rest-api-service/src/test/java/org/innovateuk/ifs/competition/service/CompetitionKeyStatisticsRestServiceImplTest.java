@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
@@ -13,9 +14,11 @@ import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatist
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
+import static org.innovateuk.ifs.interview.builder.InterviewAssignmentKeyStatisticsResourceBuilder.newInterviewAssignmentKeyStatisticsResource;
 import static org.innovateuk.ifs.interview.builder.InterviewInviteStatisticsResourceBuilder.newInterviewInviteStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewInviteStatisticsResourceBuilder.newReviewInviteStatisticsResource;
 import static org.innovateuk.ifs.review.builder.ReviewKeyStatisticsResourceBuilder.newReviewKeyStatisticsResource;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestServiceUnitTest<CompetitionKeyStatisticsRestServiceImpl> {
@@ -88,6 +91,17 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "review-invites"), ReviewInviteStatisticsResource.class, expected);
         assertSame(expected, service.getReviewInviteStatisticsByCompetition(competitionId).getSuccess());
+    }
+
+    @Test
+    public void getInterviewKeyStatisticsByCompetition() {
+        long competitionId = 1L;
+        InterviewAssignmentKeyStatisticsResource expected = newInterviewAssignmentKeyStatisticsResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "interview"), InterviewAssignmentKeyStatisticsResource.class, expected);
+
+        InterviewAssignmentKeyStatisticsResource actual = service.getInterviewKeyStatisticsByCompetition(competitionId).getSuccess();
+        assertEquals(expected, actual);
     }
 
     @Test

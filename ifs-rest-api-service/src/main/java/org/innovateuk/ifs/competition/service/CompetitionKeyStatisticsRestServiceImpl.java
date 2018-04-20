@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.resource.InterviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewInviteStatisticsResource;
 import org.innovateuk.ifs.review.resource.ReviewKeyStatisticsResource;
@@ -39,7 +40,6 @@ public class CompetitionKeyStatisticsRestServiceImpl extends BaseRestService imp
     @Override
     public RestResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatisticsByCompetition(long competitionId) {
         return getWithRestResult(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "in-assessment"), CompetitionInAssessmentKeyStatisticsResource.class);
-
     }
 
     @Override
@@ -55,6 +55,11 @@ public class CompetitionKeyStatisticsRestServiceImpl extends BaseRestService imp
     @Override
     public RestResult<ReviewInviteStatisticsResource> getReviewInviteStatisticsByCompetition(long competitionId) {
         return getWithRestResult(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "review-invites"), ReviewInviteStatisticsResource.class);
+    }
+
+    @Override
+    public RestResult<InterviewAssignmentKeyStatisticsResource> getInterviewKeyStatisticsByCompetition(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", COMPETITION_KEY_STATISTICS_REST_URL, competitionId, "interview"), InterviewAssignmentKeyStatisticsResource.class);
     }
 
     @Override

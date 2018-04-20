@@ -2,6 +2,7 @@ package org.innovateuk.ifs.interview.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.interview.resource.InterviewAssignmentKeyStatisticsResource;
 import org.innovateuk.ifs.interview.service.InterviewAssignmentRestService;
@@ -19,13 +20,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Assign Application to Interview Panel 'view status' view.
  */
 @Component
-public class InterviewAssignmentApplicationsStatusModelPopulator {
+public class InterviewApplicationsStatusModelPopulator extends InterviewApplicationsModelPopulator {
 
     private InterviewAssignmentRestService interviewAssignmentRestService;
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    public InterviewAssignmentApplicationsStatusModelPopulator(
+    public InterviewApplicationsStatusModelPopulator(
             InterviewAssignmentRestService interviewAssignmentRestService,
             CompetitionRestService competitionRestService) {
         this.interviewAssignmentRestService = interviewAssignmentRestService;
@@ -41,16 +42,13 @@ public class InterviewAssignmentApplicationsStatusModelPopulator {
                 .getAssignedApplications(competition.getId(), page)
                 .getSuccess();
 
-
-        InterviewAssignmentKeyStatisticsResource keyStatisticsResource = interviewAssignmentRestService.getKeyStatistics(competitionId).getSuccess();
-
         return new InterviewAssignmentApplicationStatusViewModel(
                 competitionId,
                 competition.getName(),
                 StringUtils.join(competition.getInnovationAreaNames(), ", "),
                 competition.getInnovationSectorName(),
                 simpleMap(pageResource.getContent(), this::getRowViewModel),
-                keyStatisticsResource,
+                getKeyStatistics(competitionId),
                 new PaginationViewModel(pageResource, originQuery),
                 originQuery
         );
