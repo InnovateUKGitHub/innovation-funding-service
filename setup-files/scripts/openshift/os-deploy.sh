@@ -32,6 +32,7 @@ function deploy() {
         oc create -f $(getBuildLocation)/mysql/3-mysql.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/46-prototypes-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     # The SIL stub is required in all environments, in one form or another, except for production
