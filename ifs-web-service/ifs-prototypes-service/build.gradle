@@ -16,13 +16,10 @@ createContainer.containerName="prototypes-svc"
 createContainer.containerId="prototypes-svc"
 createContainer.portBindings = ['1234:8080']
 
-def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : false
-stop.enabled = enabled
-removeContainer.enabled = enabled
-buildDocker.enabled = enabled
-createContainer.enabled = enabled
-deploy.enabled =enabled
-wait.enabled = enabled
+def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : true
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
 
 jar {
     baseName = 'ifs-prototypes-service'
