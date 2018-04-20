@@ -71,9 +71,10 @@ the compadmin can remove an assessor or application from the invite list
     the user should see the element      jQuery=tr:contains("${assessor_or_application}")
 
 the compAdmin resends the invites for interview panel
-    [Arguments]  ${resendAssessor}
+    [Arguments]  ${resendAssessor1}   ${resendAssessor2}
     the user clicks the button/link      jQuery=button:contains("Resend invites")
-    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor}")
+    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor1}")
+    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor2}")
     the user clicks the button/link      jQuery=button:contains("Send invite")
 
 Get the total number of submitted applications

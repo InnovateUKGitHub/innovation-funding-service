@@ -122,15 +122,18 @@ Assessor can respond to email invite and decline
     And the assessor declines the interview invitation and no longer sees the competition in the dashboard
 
 CompAdmin resends the interview panel invite
-    [Documentation]  IFS-3154
+    [Documentation]  IFS-3154  IFS-3208
     [Tags]
     Given log in as a different user          &{Comp_admin1_credentials}
-    When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/pending-and-declined
+    When the user navigates to the page       ${SERVER}/management/assessment/interview/competition/${CLOSED_COMPETITION}/assessors/pending-and-declined
+    And the user should see the element       jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Invite declined: ${today}")
     And the user clicks the button/link       jQuery=tr:contains("${assessor_ben}") label
-    When the compAdmin resends the invites for interview panel     ${assessor_ben}
+    And the user clicks the button/link       jquery=tr:contains("${assessor_madeleine}") label    #resending the interview panel invite to an assessor that has been rejected initially
+    When the compAdmin resends the invites for interview panel     ${assessor_ben}   ${assessor_madeleine}
     Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
-    And the user reads his email and clicks the link   ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.  1
-    #TODO A test should be added once IFS-3208 has been fixed for an assesssor that has rejected the invite initially.
+    And the user reads his email              ${assessor_ben}   Invitation to Innovate UK interview panel for '${CLOSED_COMPETITION_NAME}'   We are inviting you to the interview panel for the competition '${CLOSED_COMPETITION_NAME}'.
+    When log in as a different user            ${assessor_madeleine_email}   ${short_password}
+    Then the user clicks the button/link      jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 CompAdmin Views the assessors that have accepted the interview panel invite
     [Documentation]  IFS-3201
