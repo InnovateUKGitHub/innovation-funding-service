@@ -37,4 +37,4 @@ Custom setup
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${TIME}' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 
 the user should see the date for submission of application
-    the user should see the element  jQuery=li:contains("Robot test application") .status:contains("days left"):contains("0% complete")
+    the user should see the element  jQuery=li:contains("Robot test application") .status:contains("days left"):contains("% complete")
