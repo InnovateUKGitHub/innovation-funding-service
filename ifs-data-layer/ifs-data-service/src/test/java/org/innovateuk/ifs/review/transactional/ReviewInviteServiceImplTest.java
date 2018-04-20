@@ -57,12 +57,14 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentParticipantBuilder.newAssessmentParticipant;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_PANEL_INVITE_EXPIRED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.assessment.builder.AssessmentInviteBuilder.newAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
@@ -76,6 +78,7 @@ import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newReject
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.competition.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.review.builder.ReviewBuilder.newReview;
@@ -648,6 +651,15 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .withUser(newUser().build())
                 .build(2);
 
+        List<ReviewParticipant> reviewParticipants = newReviewParticipant()
+                .with(id(null))
+                .withStatus(PENDING, REJECTED)
+                .withRole(ASSESSOR, ASSESSOR)
+                .withCompetition(competition, competition)
+                .withInvite(invites.get(0), invites.get(1))
+                .withUser()
+                .build(2);
+
         AssessorInviteSendResource assessorInviteSendResource = setUpAssessorInviteSendResource();
 
         Map<String, Object> expectedNotificationArguments1 = asMap(
@@ -679,15 +691,19 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
                 .build(2);
 
         when(reviewInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
+        when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(0).getHash())).thenReturn(reviewParticipants.get(0));
+        when(reviewParticipantRepositoryMock.getByInviteHash(invites.get(1).getHash())).thenReturn(reviewParticipants.get(1));
         when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
         when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
 
         ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(reviewInviteRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(reviewInviteRepositoryMock, reviewParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(reviewInviteRepositoryMock).getByIdIn(inviteIds);
+        inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(0).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(reviewParticipantRepositoryMock).getByInviteHash(invites.get(1).getHash());
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
         inOrder.verifyNoMoreInteractions();
     }
