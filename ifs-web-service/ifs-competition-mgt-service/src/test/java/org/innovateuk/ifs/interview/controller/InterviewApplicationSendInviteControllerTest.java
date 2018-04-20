@@ -114,7 +114,7 @@ public class InterviewApplicationSendInviteControllerTest extends BaseController
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/applications/find", competitionId)));
+                .andExpect(redirectedUrl(format("/assessment/interview/competition/%s/applications/view-status", competitionId)));
 
         verify(interviewAssignmentRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
         verifyNoMoreInteractions(interviewAssignmentRestService);
