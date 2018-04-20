@@ -5,6 +5,7 @@ MAINTAINER Richard Popple <richard@hiveit.co.uk>
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY mysql-docker-healthcheck.sh /usr/local/bin/docker-healthcheck.sh
 RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
+RUN chmod 755 /usr/local/bin/docker-healthcheck.sh
 # Allow the default user that OpenShift runs with to access the directories it needs
 # The user will be a member of the root group so give access to that group
 RUN chgrp -R 0 /var/run/mysqld/ && chmod -R g=u /var/run/mysqld/
