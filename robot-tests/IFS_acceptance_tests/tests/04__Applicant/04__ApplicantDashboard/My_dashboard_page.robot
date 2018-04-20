@@ -19,7 +19,7 @@ Milestone date for application in progress is visible
 Number of days remaining until submission should be correct
     [Documentation]  INFUND-37 INFUND-5485
     [Tags]
-    The days remaining should be correct (Applicant's dashboard)  ${openCompetitionBusinessRTO_closeDate}  Robot test application
+    The days remaining should be correct (Applicant's dashboard)  ${openCompetitionBusinessRTOCloseDate}  Robot test application
 
 Hours remaining should show the last 24hours
     [Documentation]    INFUND-8614
