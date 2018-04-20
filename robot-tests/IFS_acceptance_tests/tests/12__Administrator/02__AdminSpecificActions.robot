@@ -6,7 +6,6 @@ Force Tags      Administrator
 Resource        ../../resources/defaultResources.robot
 Resource        ../10__Project_setup/PS_Common.robot
 
-
 *** Test Cases ***
 Administrator is able to mark as successful an unsuccessful application
     [Documentation]  IFS-50

@@ -58,7 +58,6 @@ Resource          PS_Common.robot
 *** Variables ***
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 
-
 *** Test Cases ***
 Internal users can see Project Details not yet completed
     [Documentation]    INFUND-5856
