@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
@@ -164,13 +163,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             verify(competitionRules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(competitionRules);
         });
-    }
-
-    @Test
-    public void getApplicationsByState() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
-                classUnderTest.getApplicationsByState(EnumSet.of(ApplicationState.SUBMITTED, ApplicationState
-                        .REJECTED)), SYSTEM_MAINTAINER);
     }
 
     @Override
