@@ -19,10 +19,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
@@ -55,24 +55,18 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Test
     public void findByApplicationProcessActivityStateStateIn() {
+        Collection<State> states = simpleMap(submittedAndFinishedStates, ApplicationState::getBackingState);
 
-        Collection<State> states = simpleMap(
-                submittedAndFinishedStates,
-                ApplicationState::getBackingState);
+        List<Application> applicationList = simpleMap(EnumSet.complementOf(EnumSet.of(ApplicationState.IN_PANEL)),
+                this::createApplicationByState);
 
-        List<ApplicationState> applicationStates = Arrays.asList(ApplicationState.values());
-        List<Application> applicationList = applicationStates
-                .stream()
-                .filter(state -> state != ApplicationState.IN_PANEL)
-                .map(this::createApplicationByState)
-                .collect(Collectors.toList());
-
-        int initial = repository.findByApplicationProcessActivityStateStateIn(states).size();
+        long initial = repository.findByApplicationProcessActivityStateStateIn(states).count();
 
         repository.save(applicationList);
-        List<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
 
-        assertEquals(initial + 5, applications.size());
+        Stream<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
+
+        assertEquals(initial + 5, applications.count());
     }
 
     @Test
@@ -90,7 +84,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(0, 20);
 
-        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
+                .getId(), pageable);
 
         assertEquals(1, invitableApplications.getTotalElements());
     }
@@ -102,7 +97,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(0, 20);
 
-        Page<Application> applications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> applications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(),
+                pageable);
 
         assertEquals(0, applications.getTotalElements());
     }
@@ -131,7 +127,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(1, 20);
 
-        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
+                .getId(), pageable);
 
         assertEquals(1, invitableApplications.getTotalElements());
     }
@@ -159,7 +156,8 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Pageable pageable = new PageRequest(1, 20);
 
-        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition.getId(), pageable);
+        Page<Application> invitableApplications = repository.findSubmittedApplicationsNotOnInterviewPanel(competition
+                .getId(), pageable);
 
         assertEquals(1, invitableApplications.getTotalElements());
     }
@@ -174,10 +172,12 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     private ActivityState activityState(ApplicationState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, applicationState.getBackingState());
+        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, applicationState
+                .getBackingState());
     }
 
     private ActivityState activityState(InterviewAssignmentState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, applicationState.getBackingState());
+        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL,
+                applicationState.getBackingState());
     }
 }

@@ -294,13 +294,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-        List<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
-        return serviceSuccess(applicationResults);
-    }
-
-    @Override
     public ServiceResult<ApplicationResource> getApplicationById(final Long id) {
         return getApplication(id).andOnSuccessReturn(applicationMapper::mapToResource);
     }
