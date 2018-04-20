@@ -2,7 +2,8 @@
 
 #
 # This script is for testing syncing the finance cost totals against a local docker-compose environment
-# as opposed to a local or remote OpenShift project
+# as opposed to a local or remote OpenShift project. Its only purpose is for testing.
+# It needs to be executed directly and is not included by any other task or script.
 #
 
 set -e
