@@ -70,6 +70,7 @@ The User can Add and Remove Assessors
     [Tags]
     Given The user clicks the button/link  link=Find
     And the user clicks the button/link    jQuery=a:contains("41 to")
+    And the user clicks the button/link    jQuery=a:contains("61 to")
     Then the user clicks the button/link   jQuery=input[value="${getUserId("${invitedAssessor}")}"] ~ label
     And the user should see the element    jQuery=.form-hint:contains("1 assessors selected")
     And the user clicks the button/link    jQuery=button:contains("Add selected to invite list")
@@ -117,6 +118,7 @@ The user can select the profile link
     [Documentation]    INFUND-6669
     [Tags]
     Given the user clicks the button/link  jQuery=a:contains("41 to")
+    Given the user clicks the button/link  jQuery=a:contains("61 to")
     When the user clicks the button/link   link=Will Smith
     Then the user should see the element   jQuery=h3:contains("Email address") + p:contains("${invitedAssessor}")
     Then the user should see the element   jQuery=h3:contains("Phone") + p:contains("28572565937")
