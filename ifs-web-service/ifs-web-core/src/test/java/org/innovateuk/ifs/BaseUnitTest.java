@@ -420,6 +420,8 @@ public class BaseUnitTest {
                 .withStartDate(ZonedDateTime.now().minusDays(2))
                 .withEndDate(ZonedDateTime.now().plusDays(5))
                 .withCompetitionStatus(CompetitionStatus.OPEN)
+                .withMinProjectDuraction(1)
+                .withMaxProjectDuraction(36)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());

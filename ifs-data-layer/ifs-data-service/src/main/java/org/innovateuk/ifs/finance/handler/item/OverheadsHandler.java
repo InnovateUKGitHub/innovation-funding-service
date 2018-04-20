@@ -45,7 +45,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
                 break;
         }
     }
-    
+
     @Override
     public ApplicationFinanceRow toCost(Overhead overhead) {
         final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;

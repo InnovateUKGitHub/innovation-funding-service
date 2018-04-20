@@ -1,12 +1,8 @@
-package org.innovateuk.ifs.competition.transactional;
+package org.innovateuk.ifs.question.transactional;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.form.domain.GuidanceRow;
-import org.innovateuk.ifs.form.domain.Question;
-import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
-import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -14,8 +10,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.GuidanceRow;
+import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.form.repository.GuidanceRowRepository;
+import org.innovateuk.ifs.form.repository.QuestionRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -38,9 +38,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * Service for operations around the usage and processing of Competitions questions in setup.
  */
 @Service
-public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalService implements CompetitionSetupQuestionService {
+public class QuestionSetupCompetitionServiceImpl extends BaseTransactionalService implements QuestionSetupCompetitionService {
 
-	private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionServiceImpl.class);
+	private static final Log LOG = LogFactory.getLog(QuestionSetupCompetitionServiceImpl.class);
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -55,7 +55,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     private GuidanceRowRepository guidanceRowRepository;
 
     @Autowired
-    private CompetitionSetupTemplateService competitionSetupTemplateService;
+    private QuestionSetupTemplateService questionSetupTemplateService;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
@@ -134,14 +134,14 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
-                .andOnSuccess(competition -> competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
+                .andOnSuccess(competition -> questionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
                 .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> delete(Long questionId) {
-        competitionSetupTemplateService.deleteQuestionInCompetition(questionId);
+        questionSetupTemplateService.deleteQuestionInCompetition(questionId);
 
         return serviceSuccess();
     }
