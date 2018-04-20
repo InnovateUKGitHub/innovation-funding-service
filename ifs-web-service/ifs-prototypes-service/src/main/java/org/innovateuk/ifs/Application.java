@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @PropertySource(value = { "classpath:/application.properties", "classpath:/prototypesservice.properties" })
 @SpringBootApplication(exclude=org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class)
 @EnableAspectJAutoProxy(proxyTargetClass=true)
-@EnableAsync
 public class Application extends SpringBootServletInitializer {
 
     private static final Log LOG = LogFactory.getLog(Application.class);

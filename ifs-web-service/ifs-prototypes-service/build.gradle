@@ -16,7 +16,7 @@ createContainer.containerName="prototypes-svc"
 createContainer.containerId="prototypes-svc"
 createContainer.portBindings = ['1234:8080']
 
-def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : true
+def enabled = project.hasProperty('ifs.prototypes.enabled') ? project.property('ifs.prototypes.enabled').toBoolean() : false
 [stop, removeContainer, createContainer, deploy, wait].each { task ->
     task.enabled = enabled
 }
@@ -34,13 +34,6 @@ dependencies {
 }
 
 task startPrototypes(dependsOn: deploy) {
-    doLast {
-        exec {
-            //wait for container to start.
-            workingDir '.'
-            commandLine 'sleep', '10'
-        }
-    }
 }
 
 
