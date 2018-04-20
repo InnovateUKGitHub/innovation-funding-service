@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     public static final String COST_KEY = "other-funding";
+    public static final String OTHER_FUNDING_NAME = "other-funding";
 
     @Autowired
     OtherFundingValidator validator;
@@ -51,8 +52,11 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         return buildRowItem(cost);
     }
 
-    private FinanceRowItem buildRowItem(FinanceRow cost){
-        return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
+    private FinanceRowItem buildRowItem(FinanceRow cost) {
+        if (OTHER_FUNDING_NAME.equals(cost.getName())) {
+            return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), null, cost.getCost());
+        }
+        return new OtherFunding(cost.getId(), null, cost.getDescription(), cost.getItem(), cost.getCost());
     }
 
     private ApplicationFinanceRow mapOtherFunding(FinanceRowItem costItem) {
