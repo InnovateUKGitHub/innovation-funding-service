@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -116,7 +117,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         flushAndClearSession();
 
-        boolean interviewAssignmentExists = repository.existsByTargetIdAndActivityStateState(application.getId(), activityState.getState());
+        boolean interviewAssignmentExists = repository.existsByTargetIdAndActivityStateStateIn(application.getId(), singletonList(activityState.getState()));
 
         assertTrue(interviewAssignmentExists);
     }
