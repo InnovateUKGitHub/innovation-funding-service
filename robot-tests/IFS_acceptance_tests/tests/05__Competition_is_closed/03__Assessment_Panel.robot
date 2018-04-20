@@ -261,7 +261,7 @@ Assessors view of competition dashboard and applications in panel status
 Assessor can attend Panel and see applications he has not assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]
-    # assessor view of application summery when he has not assessed application at first place.
+    # assessor view of application summary when he has not assessed application at first place.
     Given the user clicks the button/link       link=${computer_vision_application_name}
     When the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
     And the user should see the element         jQuery=h1:contains("Application summary")
@@ -281,7 +281,6 @@ Assessor can attend Panel and see applications that he has assessed
     And the user clicks the button/link         jQuery=button:contains("Business opportunity")
     Then the user should see the element        jQuery=p:contains("This is the business opportunity feedback")
     And the user should see the element         jQuery=div:contains("Score") span:contains(8)
-
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]   IFS-1138
