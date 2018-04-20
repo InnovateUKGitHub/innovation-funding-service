@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.competition.transactional.template;
+package org.innovateuk.ifs.question.transactional.template;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.form.repository.QuestionRepository;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
