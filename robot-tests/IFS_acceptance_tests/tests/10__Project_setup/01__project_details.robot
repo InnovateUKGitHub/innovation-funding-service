@@ -72,7 +72,7 @@ The IFS Admin withdraws a project from Project Setup
     Then the user should see the element           jQuery=a:contains("Previous applications")
     #TODO 3035 This may need amending with 3035 as the redirect/page will change.
 
-The internal user can see they cannot make any changes to their withdrawn project
+The internal user can see their project is withdrawn
     [Documentation]  IFS-2945
     [Tags]  HappyPath
     [Setup]  log in as a different user            &{successful_released_credentials}
@@ -731,7 +731,7 @@ Select the project location
     the user enters text to a text field  css=#postCode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
-    
+
 The user cancels then withdraws the project
     the user clicks the button/link           link=Withdraw project
     the user clicks the button/link            jQuery=button:contains("Withdraw project") ~ button:contains("Cancel")    #Cancel the modal
