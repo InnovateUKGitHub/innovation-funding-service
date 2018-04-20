@@ -11,20 +11,15 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
 Milestone date for application in progress is visible
-    [Documentation]    INFUND-37
-    ...
-    ...    INFUND-5485
+    [Documentation]  INFUND-37 INFUND-5485
     [Tags]
-    when The user navigates to the page    ${DASHBOARD_URL}
+    When The user navigates to the page  ${DASHBOARD_URL}
     Then the user should see the date for submission of application
 
 Number of days remaining until submission should be correct
-    [Documentation]    INFUND-37
-    ...
-    ...    INFUND-5485
+    [Documentation]  INFUND-37 INFUND-5485
     [Tags]
-    Then the user should see the number of days remaining
-    And the days remaining should be correct (Applicant's dashboard)    ${openCompetitionRTOCloseDate}
+    The days remaining should be correct (Applicant's dashboard)  ${openCompetitionBusinessRTOCloseDate}  Robot test application
 
 Hours remaining should show the last 24hours
     [Documentation]    INFUND-8614
@@ -42,8 +37,4 @@ Custom setup
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${TIME}' WHERE `competition_id`='${openCompetitionRTO}' and type IN ('SUBMISSION_DATE');
 
 the user should see the date for submission of application
-    the user should see the element    css=.in-progress li:nth-child(3) .day
-    the user should see the element    css=.in-progress li:nth-child(3) .month
-
-the user should see the number of days remaining
-    the user should see the element    css=.in-progress li:nth-child(3) .days-remaining
+    the user should see the element  jQuery=li:contains("Robot test application") .status:contains("days left"):contains("% complete")

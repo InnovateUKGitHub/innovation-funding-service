@@ -105,7 +105,7 @@ public class Competition implements ProcessActivity {
     private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
-    private boolean useResubmissionQuestion = true;
+    private Boolean useResubmissionQuestion = true;
 
     private boolean template = false;
 
@@ -603,11 +603,11 @@ public class Competition implements ProcessActivity {
         this.template = template;
     }
 
-    public boolean isUseResubmissionQuestion() {
+    public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
 
-    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+    public void setUseResubmissionQuestion(Boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 

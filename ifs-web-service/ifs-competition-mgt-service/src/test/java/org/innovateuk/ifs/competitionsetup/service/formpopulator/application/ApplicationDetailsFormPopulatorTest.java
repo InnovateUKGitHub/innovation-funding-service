@@ -39,6 +39,6 @@ public class ApplicationDetailsFormPopulatorTest {
 		
 		assertTrue(result instanceof ApplicationDetailsForm);
 		ApplicationDetailsForm form = (ApplicationDetailsForm) result;
-		assertEquals(isResubmissionQuestion, form.isUseResubmissionQuestion());
+		assertEquals(isResubmissionQuestion, form.getUseResubmissionQuestion());
 	}
 }

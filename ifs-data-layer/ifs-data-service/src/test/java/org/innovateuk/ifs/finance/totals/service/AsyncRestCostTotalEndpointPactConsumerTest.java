@@ -74,7 +74,7 @@ public class AsyncRestCostTotalEndpointPactConsumerTest extends BaseIntegrationT
         List<FinanceCostTotalResource> costTotalResources = getCostTotalResources();
 
         CompletableFuture<ResponseEntity<Void>> sendCostTotalsCompletable = asyncRestCostTotalEndpoint
-                .sendCostTotalsCompletable(costTotalResources);
+                .sendCostTotalsCompletable(1L, costTotalResources);
 
         sendCostTotalsCompletable.get();
     }
