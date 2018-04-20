@@ -4,6 +4,19 @@ osStageRemote.tag = competitionMgtServiceVersion
 tagDockerLocal.tag = competitionMgtServiceVersion
 osStageLocal.tag = competitionMgtServiceVersion
 
+createContainer.hostName="competition-mgt-svc"
+createContainer.containerName="competition-mgt-svc"
+createContainer.containerId="competition-mgt-svc"
+createContainer.portBindings = ['9003:8000']
+
+def enabled = project.hasProperty('ifs.competition-mgt-service.enabled') ? project.property('ifs.competition-mgt-service.enabled').toBoolean() : true
+
+[stop, removeContainer, createContainer, deploy, wait].each { task ->
+    task.enabled = enabled
+}
+
+ext.serverContext = '/management'
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

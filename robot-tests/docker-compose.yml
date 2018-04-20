@@ -34,10 +34,10 @@ services:
       - hub
     networks:
       - selenium-network
-      - innovationfundingservice_ifs
+      - ifs
 
 networks:
   selenium-network:
     driver: bridge
-  innovationfundingservice_ifs:
+  ifs:
     external: true
