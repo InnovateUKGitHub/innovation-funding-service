@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+
 /**
  * The current state of a Competition, or {@link CompetitionResource}
  */
@@ -22,6 +25,18 @@ public enum CompetitionStatus {
         this.inFlight = inFlight;
         this.feedbackReleased = feedBackReleased;
     }
+
+    public static final ImmutableSet<CompetitionStatus> fundingNotCompleteStatuses = Sets.immutableEnumSet(
+            OPEN,
+            CLOSED,
+            IN_ASSESSMENT,
+            FUNDERS_PANEL
+    );
+
+    public static final ImmutableSet<CompetitionStatus> fundingCompleteStatuses = Sets.immutableEnumSet(
+            ASSESSOR_FEEDBACK,
+            PROJECT_SETUP
+    );
 
     public String getDisplayName() {
         return displayName;

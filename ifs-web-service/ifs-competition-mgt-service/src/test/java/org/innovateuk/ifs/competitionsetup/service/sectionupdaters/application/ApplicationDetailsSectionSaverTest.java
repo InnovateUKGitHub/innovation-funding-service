@@ -80,7 +80,7 @@ public class ApplicationDetailsSectionSaverTest {
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
         assertThat(result.isFailure()).isTrue();
-        assertThat(result.getErrors().size()).isEqualTo(2);
+        assertThat(result.getErrors().size()).isEqualTo(3);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
                         error.getErrorKey().equals("validation.field.must.not.be.blank"))
@@ -88,6 +88,10 @@ public class ApplicationDetailsSectionSaverTest {
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("maxProjectDuration") &&
                         error.getErrorKey().equals("validation.field.must.not.be.blank"))
+                .isNotEmpty();
+        assertThat(result.getErrors())
+                .filteredOn(error -> error.getFieldName().equals("useResubmissionQuestion") &&
+                        error.getErrorKey().equals("validation.application.must.indicate.resubmission.or.not"))
                 .isNotEmpty();
 
         verifyZeroInteractions(competitionSetupRestServiceMock);
@@ -97,6 +101,7 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_errorWhenProjectDurationsAreBelowMinimumAllowed() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setUseResubmissionQuestion(false);
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(0));
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(0));
 
@@ -120,6 +125,7 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_errorWhenProjectDurationsAreNegative() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setUseResubmissionQuestion(false);
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(-1));
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(-1));
 
@@ -143,6 +149,7 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_errorWhenDecimalsInProjectDurations() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setUseResubmissionQuestion(false);
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(3.5));
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(3.5));
 
@@ -169,6 +176,7 @@ public class ApplicationDetailsSectionSaverTest {
 
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(10));
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(10));
+        applicationDetailsForm.setUseResubmissionQuestion(true);
 
         when(competitionSetupRestServiceMock.update(any())).thenReturn(RestResult.restSuccess());
 
@@ -186,6 +194,7 @@ public class ApplicationDetailsSectionSaverTest {
 
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(11));
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(10));
+        applicationDetailsForm.setUseResubmissionQuestion(false);
 
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
@@ -207,9 +216,9 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_errorWhenProjectDurationsExceedMaximumAllowed() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
-
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(61));
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(61));
+        applicationDetailsForm.setUseResubmissionQuestion(false);
 
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
