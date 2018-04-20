@@ -68,10 +68,7 @@ The IFS Admin withdraws a project from Project Setup
     [Setup]  The user logs-in in new browser       &{ifs_admin_user_credentials}
     Given the user navigates to the page           ${server}/project-setup-management/competition/${NOT_EDITABLE_COMPETITION}/status/all
     And the user clicks the button/link            jQuery=tr:contains("${INFORM_COMPETITION_NAME_2}") a:contains("Incomplete")
-    When the user clicks the button/link           link=Withdraw project
-    And the user clicks the button/link            jQuery=button:contains("Withdraw project") ~ button:contains("Cancel")    #Cancel the modal
-    And the user clicks the button/link            link=Withdraw project
-    And the user clicks the button/link            css=button[type="submit"]    #Withdraw the project on the modal
+    When the user cancels then withdraws the project
     Then the user should see the element           jQuery=a:contains("Previous applications")
     #TODO 3035 This may need amending with 3035 as the redirect/page will change.
 
@@ -734,3 +731,9 @@ Select the project location
     the user enters text to a text field  css=#postCode  ${postcode}
     the user clicks the button/link       css=button[type="submit"]
     the user clicks the button/link       link=Project setup status
+    
+The user cancels then withdraws the project
+    the user clicks the button/link           link=Withdraw project
+    the user clicks the button/link            jQuery=button:contains("Withdraw project") ~ button:contains("Cancel")    #Cancel the modal
+    the user clicks the button/link            link=Withdraw project
+    the user clicks the button/link            css=button[type="submit"]    #Withdraw the project on the modal
