@@ -28,6 +28,8 @@ Documentation     IFS-2637 Manage interview panel link on competition dashboard 
 ...               IFS-3201 Invite Assessor to Interview Panel: Accepted tab
 ...
 ...               IFS-2635 Assign applications to interview panel dashboard - Key statistics
+...
+...               IFS-3251 Applicant dashboard - Assigned to interview panel box
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -84,7 +86,7 @@ CompAdmin can add or remove the applications from the invite list
 
 Competition Admin can send or cancel sending the invitation to the applicants
 #competition admin send the email to applicant with application details to attend interview panel
-    [Documentation]  IFS-2782  IFS-3155   IFS-2635
+    [Documentation]  IFS-2782  IFS-3155   IFS-2635  IFS-3251
     [Tags]
     Given the user clicks the button/link      link=Invite
     When the user clicks the button/link       link=Review and send invites
@@ -94,9 +96,11 @@ Competition Admin can send or cancel sending the invitation to the applicants
     Then the user navigates to the page        ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/invite
     When the user clicks the button/link       link=Review and send invites
     And the user clicks the button/link        css=.button[type="submit"]     #Send invite
-    Then the user reads his email              aaron.robertson@load.example.com   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
-    And the Competition Admin should see the assigned applications in the View status tab
+    Then the Competition Admin should see the assigned applications in the View status tab
     And the user checks for Key Statistics for assigned to interview panel
+    Then the user reads his email              ${aaron_robertson_email}   Please attend an interview for an Innovate UK funding competition   Competition: Machine learning for transport infrastructure
+    When log in as a different user            ${aaron_robertson_email}   ${short_password}
+    Then the user should see the element       jQuery=.progress-list div:contains("Neural networks to optimise freight train routing") ~ div span:contains("Invited to interview")
 
 Assessors accept the invitation to the interview panel
     [Documentation]  IFS-3054  IFS-3055
@@ -178,9 +182,9 @@ the assessor declines the interview invitation and no longer sees the competitio
     the user should not see the element  jQuery=h2:contains("Invitations to interview panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
 
 the Competition Admin should see the assigned applications in the View status tab
-    the user clicks the button/link         jQuery=li:contains("View status")
-    the user should see the element         jQuery=td:contains("${Neural_network_application}")
-    the user should see the element         jQuery=td:contains("${computer_vision_application}")
+    the user navigates to the page        ${server}/management/assessment/interview/competition/${CLOSED_COMPETITION}/applications/view-status     #view status tab
+    the user should see the element       jQuery=td:contains("${Neural_network_application}")
+    the user should see the element       jQuery=td:contains("${computer_vision_application}")
 
 the user checks for Key Statistics for submitted application
     the user should see the element    jQuery=div span:contains("6") ~ small:contains("Applications in competition")
