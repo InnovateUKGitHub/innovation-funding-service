@@ -41,6 +41,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.StringMultipartFileEditor;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,8 +207,9 @@ public class ApplicationAjaxController {
             Long durationInMonth = Long.valueOf(value);
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             if (durationInMonth < competition.getMinProjectDuration() || durationInMonth > competition.getMaxProjectDuration()) {
-                errors.add("Your project should last between " + competition.getMinProjectDuration() +
-                        " and " + competition.getMaxProjectDuration() + " months");
+                String message = MessageFormat.format("validation.project.duration.input.invalid",
+                        competition.getMinProjectDuration(), competition.getMaxProjectDuration());
+                errors.add(message);
                 application.setDurationInMonths(durationInMonth);
             } else {
                 application.setDurationInMonths(durationInMonth);

@@ -101,6 +101,7 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_errorWhenProjectDurationsAreBelowMinimumAllowed() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
+        applicationDetailsForm.setUseResubmissionQuestion(false);
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(0));
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(0));
 
@@ -131,7 +132,7 @@ public class ApplicationDetailsSectionSaverTest {
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
         assertThat(result.isFailure()).isTrue();
-        assertThat(result.getErrors().size()).isEqualTo(3);
+        assertThat(result.getErrors().size()).isEqualTo(2);
         assertThat(result.getErrors())
                 .filteredOn(error -> error.getFieldName().equals("minProjectDuration") &&
                         error.getErrorKey().equals("competition.setup.applicationdetails.projectduration.min"))
@@ -193,6 +194,7 @@ public class ApplicationDetailsSectionSaverTest {
 
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(11));
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(10));
+        applicationDetailsForm.setUseResubmissionQuestion(false);
 
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
@@ -214,9 +216,9 @@ public class ApplicationDetailsSectionSaverTest {
     public void doSaveSection_errorWhenProjectDurationsExceedMaximumAllowed() {
         CompetitionResource competitionResource = newCompetitionResource().build();
         ApplicationDetailsForm applicationDetailsForm = new ApplicationDetailsForm();
-
         applicationDetailsForm.setMinProjectDuration(new BigDecimal(61));
         applicationDetailsForm.setMaxProjectDuration(new BigDecimal(61));
+        applicationDetailsForm.setUseResubmissionQuestion(false);
 
         ServiceResult<Void> result = service.doSaveSection(competitionResource, applicationDetailsForm);
 
