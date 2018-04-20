@@ -120,7 +120,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         long projectId = 123L;
         setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/withdraw", null, OK );
         RestResult<Void> result = service.withdrawProject(projectId);
-        setupPostWithRestResultExpectations(projectRestURL + "/" + projectId + "/withdraw", null, OK);
+        setupPostWithRestResultVerifications(projectRestURL + "/" + projectId + "/withdraw", Void.class);
         assertTrue(result.isSuccess());
     }
 }

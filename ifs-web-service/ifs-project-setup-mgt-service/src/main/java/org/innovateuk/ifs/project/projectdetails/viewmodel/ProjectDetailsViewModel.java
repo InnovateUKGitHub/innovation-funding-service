@@ -10,6 +10,8 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import java.util.List;
 import java.util.Map;
 
+import static org.innovateuk.ifs.project.resource.ProjectState.WITHDRAWN;
+
 /**
  * View model backing the Project Details page for Project Setup
  */
@@ -44,6 +46,14 @@ public class ProjectDetailsViewModel {
 
     public ProjectResource getProject() {
         return project;
+    }
+
+    public boolean isWithdrawn() {
+        return WITHDRAWN.equals(project.getProjectState());
+    }
+
+    public boolean isShowWithdrawLink() {
+        return ifsAdministrator && !isWithdrawn();
     }
 
     public Long getCompetitionId() {
