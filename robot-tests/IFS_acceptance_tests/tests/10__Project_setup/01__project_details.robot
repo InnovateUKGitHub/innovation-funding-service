@@ -733,7 +733,7 @@ Select the project location
     the user clicks the button/link       link=Project setup status
 
 The user cancels then withdraws the project
-    the user clicks the button/link           link=Withdraw project
+    the user clicks the button/link            link=Withdraw project
     the user clicks the button/link            jQuery=button:contains("Withdraw project") ~ button:contains("Cancel")    #Cancel the modal
     the user clicks the button/link            link=Withdraw project
     the user clicks the button/link            css=button[type="submit"]    #Withdraw the project on the modal
