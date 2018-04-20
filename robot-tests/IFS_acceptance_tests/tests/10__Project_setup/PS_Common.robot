@@ -153,9 +153,6 @@ ${sortCode_two}  000004
 
 ${postcode}  BS14NT
 
-#Withdrawn project
-${externalProjectWithdrawnMessage}
-
 *** Keywords ***
 project finance submits monitoring officer
     [Arguments]    ${project_id}  ${fname}  ${lname}  ${email}  ${phone_number}

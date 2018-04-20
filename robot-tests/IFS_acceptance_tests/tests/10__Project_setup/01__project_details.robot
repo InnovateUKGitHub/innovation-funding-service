@@ -50,8 +50,6 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               IFS-2642 Resend invites in Project Setup
 ...
 ...               IFS-2920 Project details: Project location per partner
-...
-...               IFS-2945 Withdraw a project from Project Setup
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
