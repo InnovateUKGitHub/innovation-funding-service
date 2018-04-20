@@ -37,17 +37,13 @@ Academic finance validations
     And the applicant enters invalid inputs
     And the element should be disabled       id=mark-all-as-complete
     And Mark academic finances as complete
-    Then the user should see an error    This field should be 0 or higher.
-    Then the user should see an error    This field cannot be left blank.
     And the user should see the element  css=.error-summary-list
-    And the field should not contain the currency symbol
+#    And the field should not contain the currency symbol
 
 Academic finance calculations
     [Documentation]    INFUND-917, INFUND-2399
     [Tags]
-    Given the user navigates to Your-finances page  Academic robot test application
-    When the user clicks the button/link  link=Your project costs
-    And the academic partner fills the finances
+    When the academic fills in the project costs
     Then the calculations should be correct and the totals rounded to the second decimal
 
 Large pdf upload not allowed
@@ -58,7 +54,7 @@ Large pdf upload not allowed
     And the user should see the text in the page  Attempt to upload a large file
     [Teardown]    the user goes back to the previous page
 
-Non pdf uploads not allowed
+Non pdf uploads not allow
     [Documentation]    INFUND-2720
     [Tags]    Upload
     When the academic partner uploads a file  ${text_file}
@@ -159,25 +155,10 @@ Custom Suite Setup
     the guest user opens the browser
     Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
-the academic partner fills the finances
-    [Documentation]    INFUND-2399
-    The user enters text to a text field  id=incurred-staff    999.999
-    The user enters text to a text field  id=travel    999.999
-    The user enters text to a text field  id=other    999.999
-    The user enters text to a text field  id=investigators    999.999
-    The user enters text to a text field  id=estates    999.999
-    The user enters text to a text field  id=other-direct    999.999
-    The user enters text to a text field  id=indirect    999.999
-    The user enters text to a text field  id=exceptions-staff    999.999
-    The user enters text to a text field  id=exceptions-other-direct    999.999
-    The user enters text to a text field  css=input[name$="tsb_reference"]  123123
-    Mouse Out                             css=input
-    wait for autosave
-
 the calculations should be correct and the totals rounded to the second decimal
-    Textfield Value Should Be  id=subtotal-directly-allocated    £3,000
-    Textfield Value Should Be  id=subtotal-exceptions    £2,000
-    Textfield Value Should Be  id=total    £9,000
+    Textfield Value Should Be  id=subtotal-directly-allocated  £3,000
+    Textfield Value Should Be  id=subtotal-exceptions  £2,000
+    Textfield Value Should Be  id=total  £9,000
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
@@ -214,24 +195,26 @@ the user can see JeS details
     the user should see the element  css=a[href*="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance/guidance-for-academics-applying-via-the-je-s-system"]
 
 the applicant enters invalid inputs
-    The user enters text to a text field  id=incurred-staff    100£
-    The user enters text to a text field  id=travel    -89
-    The user enters text to a text field  id=other    999.999
-    The user enters text to a text field  id=investigators    999.999
-    The user enters text to a text field  id=estates    999.999
-    The user enters text to a text field  id=other-direct    999.999
-    The user enters text to a text field  id=indirect    999.999
-    The user enters text to a text field  id=exceptions-staff    999.999
-    The user enters text to a text field  id=exceptions-other-direct    999.999
-    The user enters text to a text field  css=input[name$="tsb_reference"]   ${EMPTY}
+    The user enters text to a text field  css=[name$="incurred_staff"]  100£
+    The user enters text to a text field  css=[name$="incurred_travel_subsistence"]  -89
+    The user enters text to a text field  css=[name$="incurred_other_costs"]  999.999
+    The user enters text to a text field  css=[name$="allocated_investigators"]  hello!
+    The user enters text to a text field  css=[name$="allocated_estates_costs"]  £$%^&*
+    The user enters text to a text field  css=[name$="allocated_other_costs"]  TestIt!
+    The user enters text to a text field  css=[name$="indirect_costs"]  42,42
+    The user enters text to a text field  css=[name$="exceptions_staff"]  999.999
+    The user enters text to a text field  css=[name$="exceptions_other_costs"]  ${EMPTY}
+    The user enters text to a text field  css=[name$="tsb_reference"]  ${EMPTY}
+    ##the user should see a field error  This field should be 0 or higher.  TODO
+    the user should see a field error  This field can only accept whole numbers.
+    the user should see a field error  This field cannot be left blank.
 
 the field should not contain the currency symbol
-    Textfield Value Should Be  id=incurred-staff    100
+    Textfield Value Should Be  css=[name$="incurred_staff"]  100
 
 Mark academic finances as complete
-    the user selects the checkbox        termsAgreed
-    the user moves focus to the element  id=mark-all-as-complete
-    the user clicks the button/link      id=mark-all-as-complete
+    the user selects the checkbox    termsAgreed
+    the user clicks the button/link  id=mark-all-as-complete
 
 the user waits for the file to be scanned by the anti virus software
     Sleep    5s
