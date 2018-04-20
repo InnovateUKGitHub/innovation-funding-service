@@ -234,4 +234,21 @@ public class InterviewAssignmentControllerDocumentation extends BaseControllerMo
 
         verify(interviewAssignmentServiceMock, only()).sendInvites(competitionId, sendResource);
     }
+
+    @Test
+    public void isApplicationAssigned() throws Exception {
+        long applicationId = 1L;
+        when(interviewAssignmentServiceMock.isApplicationAssigned(applicationId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/interview-panel/is-assigned/{applicationId}", applicationId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("interview-panel/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to check")
+                        )
+                ));
+
+        verify(interviewAssignmentServiceMock, only()).isApplicationAssigned(applicationId);
+    }
 }

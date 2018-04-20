@@ -79,4 +79,9 @@ public class InterviewAssignmentController {
     public RestResult<Void> sendInvites(@PathVariable long competitionId, @Valid @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return interviewAssignmentService.sendInvites(competitionId, assessorInviteSendResource).toPostWithBodyResponse();
     }
+
+    @GetMapping("/is-assigned/{applicationId}")
+    public RestResult<Boolean> isApplicationAssigned(@PathVariable long applicationId) {
+        return interviewAssignmentService.isApplicationAssigned(applicationId).toGetResponse();
+    }
 }

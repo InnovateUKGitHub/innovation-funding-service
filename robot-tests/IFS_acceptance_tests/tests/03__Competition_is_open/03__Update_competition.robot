@@ -307,7 +307,7 @@ the user moves the competition back again
     the user clicks the button/link    jQuery=button:contains("Done")   # this action  is marking appication section complete
     the user clicks the button/link    link=Competition setup
     the user clicks the button/link    link=Complete
-    the user clicks the button/link    link=Done
+    the user clicks the button/link    css=button[type="submit"]
     the user closes the browser
 
 the user fills in the milestone data with valid information
