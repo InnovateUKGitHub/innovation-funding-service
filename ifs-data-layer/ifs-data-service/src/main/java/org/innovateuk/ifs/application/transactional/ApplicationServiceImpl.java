@@ -29,13 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
 import java.util.*;
-import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
 import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
@@ -290,13 +284,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                         competitionId,
                         states
                 );
-        return serviceSuccess(applicationResults);
-    }
-
-    @Override
-    public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
-        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
-        List<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
         return serviceSuccess(applicationResults);
     }
 
