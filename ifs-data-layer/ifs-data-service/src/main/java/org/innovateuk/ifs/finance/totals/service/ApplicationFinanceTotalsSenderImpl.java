@@ -11,8 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service sends cost totals for an {@link Application}.
@@ -41,6 +45,7 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public ServiceResult<Void> sendFinanceTotalsForApplication(Long applicationId) {
         LOG.debug("Initiating sendFinanceTotalsForApplication for applicationId: {}", applicationId);
 
@@ -50,11 +55,12 @@ public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTot
         List<FinanceCostTotalResource> financeCostTotalResourceList = financeCostTotalResourceMapper
                 .mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
-        return costTotalEndpoint
-                .sendCostTotals(spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList))
-                .andOnFailure(() -> LOG.error(
-                        "Failed sending financeCostTotalResources for applicationId: {}",
-                        applicationId
-                ));
+        if (financeCostTotalResourceList.isEmpty()) {
+            LOG.debug("Ignoring empty financeCostTotalResources for applicationId: {}", applicationId);
+            return serviceSuccess();
+        }
+
+        return costTotalEndpoint.sendCostTotals(applicationId,
+                spendProfileCostFilter.filterBySpendProfile(financeCostTotalResourceList));
     }
 }

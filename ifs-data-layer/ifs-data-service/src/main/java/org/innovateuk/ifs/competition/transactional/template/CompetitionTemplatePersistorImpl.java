@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.question.transactional.template.SectionTemplatePersistorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

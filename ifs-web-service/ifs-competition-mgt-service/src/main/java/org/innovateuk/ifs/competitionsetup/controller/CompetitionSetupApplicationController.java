@@ -194,7 +194,7 @@ public class CompetitionSetupApplicationController {
                                               @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                               Model model) {
 
-       return handleFinanceSaving(competitionId, model, form, validationHandler);
+        return handleFinanceSaving(competitionId, model, form, validationHandler);
     }
 
     private String handleFinanceSaving(long competitionId, Model model, ApplicationFinanceForm form, ValidationHandler validationHandler) {
@@ -244,10 +244,10 @@ public class CompetitionSetupApplicationController {
 
     @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
-                                            BindingResult bindingResult,
-                                            ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                            Model model) {
+                                         BindingResult bindingResult,
+                                         ValidationHandler validationHandler,
+                                         @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                         Model model) {
         validateAssessmentGuidanceRows(competitionSetupForm, bindingResult);
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);

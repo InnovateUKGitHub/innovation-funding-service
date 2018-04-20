@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.form.domain.Question;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.setup.resource.QuestionSection;
+import org.innovateuk.ifs.question.transactional.template.QuestionNumberOrderService;
 import org.junit.Test;
 
 import java.util.List;
