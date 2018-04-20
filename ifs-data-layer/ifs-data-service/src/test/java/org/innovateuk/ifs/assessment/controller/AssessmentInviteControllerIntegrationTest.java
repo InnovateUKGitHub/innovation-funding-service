@@ -804,7 +804,7 @@ public class AssessmentInviteControllerIntegrationTest extends BaseControllerInt
                 .withUser()
                 .build(2);
 
-        competitionParticipantRepository.save(assessmentParticipants);
+        assessmentParticipantRepository.save(assessmentParticipants);
 
         List<Long> inviteIds =  simpleMap(IteratorUtils.toList(assessmentInviteRepository.save(invitesToResend)
                 .iterator()), AssessmentInvite::getId);
