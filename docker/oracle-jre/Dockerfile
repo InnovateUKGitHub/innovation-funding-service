@@ -45,7 +45,7 @@ RUN curl $CURL_RETRY_OPTS --progress-bar -f --output $TMP_DOWNLOAD_FILE --show-e
 RUN unzip -o -j -x $TMP_DOWNLOAD_FILE 'UnlimitedJCEPolicyJDK8/*.jar' -d /usr/local/java/jre/lib/security
 RUN rm $TMP_DOWNLOAD_FILE
 
-# Now build tfonts-ie8.csshe actual container, where we only copy over the /usr/local/java from the 1st stage container.
+# Now build the actual container, where we only copy over the /usr/local/java from the 1st stage container.
 FROM ubuntu:xenial
 COPY --from=JRE_DOWNLOADER /usr/local/java /usr/local/java
 RUN update-alternatives --install "/usr/bin/java" "java" /usr/local/java/bin/java 1
