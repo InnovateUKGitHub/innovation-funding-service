@@ -261,6 +261,7 @@ Assessors view of competition dashboard and applications in panel status
 Assessor can attend Panel and see applications he has not assessed
     [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]
+    # assessor view of application summary when he has not assessed application at first place.
     Given the user clicks the button/link       link=${computer_vision_application_name}
     When the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
     And the user should see the element         jQuery=h1:contains("Application summary")
