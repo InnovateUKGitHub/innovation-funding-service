@@ -17,7 +17,6 @@ import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -84,7 +83,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
     public void unAssignApplicationsFromPanel() {
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(reviewRepositoryMock
-                .findByTargetIdAndActivityStateStateNot(applicationId, State.WITHDRAWN))
+                .findByTargetIdAndActivityStateNot(applicationId, ReviewState.WITHDRAWN))
                 .thenReturn(emptyList());
 
         ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
@@ -92,7 +91,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         assertFalse(application.isInAssessmentReviewPanel());
 
         verify(applicationRepositoryMock).findOne(applicationId);
-        verify(reviewRepositoryMock).findByTargetIdAndActivityStateStateNot(applicationId, State.WITHDRAWN);
+        verify(reviewRepositoryMock).findByTargetIdAndActivityStateNot(applicationId, ReviewState.WITHDRAWN);
         verifyNoMoreInteractions(applicationRepositoryMock, reviewRepositoryMock);
     }
 
@@ -102,14 +101,14 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(reviewRepositoryMock
-                .findByTargetIdAndActivityStateStateNot(applicationId, State.WITHDRAWN))
+                .findByTargetIdAndActivityStateNot(applicationId, ReviewState.WITHDRAWN))
                 .thenReturn(reviews);
 
         ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
         assertTrue(result.isSuccess());
         assertFalse(application.isInAssessmentReviewPanel());
 
-        reviews.forEach(a -> assertEquals(State.WITHDRAWN, a.getProcessState().getBackingState()));
+        reviews.forEach(a -> assertEquals(ReviewState.WITHDRAWN, a.getProcessState()));
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verifyNoMoreInteractions(applicationRepositoryMock);
@@ -163,7 +162,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         when(processRoleRepositoryMock.save(isA(ProcessRole.class))).thenReturn(processRoles.get(0));
 
         when(reviewRepositoryMock
-                .findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState()))
+                .findByTargetCompetitionIdAndActivityState(competitionId, CREATED))
                 .thenReturn(asList(review));
 
         Notification expectedNotification = LambdaMatcher.createLambdaMatcher(n -> {
@@ -194,7 +193,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         inOrder.verify(reviewRepositoryMock)
                 .save(review);
         inOrder.verify(reviewRepositoryMock)
-                .findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState());
+                .findByTargetCompetitionIdAndActivityState(competitionId, CREATED);
         inOrder.verify(reviewWorkflowHandlerMock)
                 .notifyInvitation(review);
         inOrder.verify(notificationSenderMock)
@@ -230,14 +229,14 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
         List<ReviewResource> reviewResources = newReviewResource().build(2);
 
-        when(reviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId)).thenReturn(reviews);
+        when(reviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId)).thenReturn(reviews);
         when(reviewMapperMock.mapToResource(same(reviews.get(0)))).thenReturn(reviewResources.get(0));
         when(reviewMapperMock.mapToResource(same(reviews.get(1)))).thenReturn(reviewResources.get(1));
 
         assertEquals(reviewResources, service.getReviews(userId, competitionId).getSuccess());
 
         InOrder inOrder = inOrder(reviewRepositoryMock, reviewMapperMock);
-        inOrder.verify(reviewRepositoryMock).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        inOrder.verify(reviewRepositoryMock).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
         inOrder.verify(reviewMapperMock).mapToResource(same(reviews.get(0)));
         inOrder.verify(reviewMapperMock).mapToResource(same(reviews.get(1)));
     }

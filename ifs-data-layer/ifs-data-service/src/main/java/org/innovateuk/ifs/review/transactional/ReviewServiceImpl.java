@@ -22,10 +22,6 @@ import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -106,7 +102,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ServiceResult<Void> withdrawAssessmentReviewsForApplication(Application application) {
         reviewRepository
-                .findByTargetIdAndActivityStateStateNot(application.getId(), State.WITHDRAWN)
+                .findByTargetIdAndActivityStateNot(application.getId(), ReviewState.WITHDRAWN)
                 .forEach(workflowHandler::withdraw);
         return serviceSuccess();
     }
@@ -128,7 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ServiceResult<List<ReviewResource>> getReviews(long userId, long competitionId) {
-        List<Review> reviews = reviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        List<Review> reviews = reviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(userId, competitionId);
         return serviceSuccess(simpleMap(reviews, reviewMapper::mapToResource));
     }
 
@@ -192,7 +188,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {
         reviewRepository
-                .findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState())
+                .findByTargetCompetitionIdAndActivityState(competitionId, CREATED)
                 .forEach(this::notifyInvitation);
 
         return serviceSuccess();

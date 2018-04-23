@@ -18,9 +18,9 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ReviewRepository extends ProcessRepository<Review>, PagingAndSortingRepository<Review, Long> {
-    List<Review> findByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
+    List<Review> findByTargetCompetitionIdAndActivityState(long competitionId, ReviewState state);
     boolean existsByParticipantUserAndTargetAndActivityStateNot(User user, Application target, ReviewState state);
-    boolean existsByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
+    boolean existsByTargetCompetitionIdAndActivityState(long competitionId, ReviewState backingState);
 
     @Query("SELECT CASE WHEN count(a.id)>0 THEN TRUE ELSE FALSE END " +
             "FROM Application a " +
@@ -34,11 +34,11 @@ public interface ReviewRepository extends ProcessRepository<Review>, PagingAndSo
             "              WHERE " +
             "                r.target=a AND " +
             "                r.participant.user = ap.user AND " +
-            "                r.activityState.state <> org.innovateuk.ifs.workflow.resource.State.WITHDRAWN) "
+            "                r.activityState <> org.innovateuk.ifs.review.resource.ReviewState.WITHDRAWN) "
     )
     boolean notifiable(@Param("competitionId") long competitionId);
 
-    List<Review> findByTargetIdAndActivityStateStateNot(long applicationId, State withdrawnState);
+    List<Review> findByTargetIdAndActivityStateNot(long applicationId, ReviewState withdrawnState);
 
-    List<Review> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(long userId, long competitionId);
+    List<Review> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(long userId, long competitionId);
 }

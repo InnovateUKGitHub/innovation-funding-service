@@ -812,7 +812,7 @@ public class ReviewInviteServiceImplTest extends BaseServiceUnitTest<ReviewInvit
         when(reviewParticipantRepositoryMock.findByUserIdAndRole(1L, PANEL_ASSESSOR)).thenReturn(reviewParticipants);
         when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(0))).thenReturn(expected.get(0));
         when(reviewParticipantMapperMock.mapToResource(reviewParticipants.get(1))).thenReturn(expected.get(1));
-        when(reviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(1L, competition.getId())).thenReturn(reviews);
+        when(reviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(1L, competition.getId())).thenReturn(reviews);
 
         List<ReviewParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
         assertEquals(actual.get(0), expected.get(0));

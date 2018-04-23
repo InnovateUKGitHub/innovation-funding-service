@@ -16,9 +16,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +39,6 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -173,7 +167,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
         repository.save(review);
 
 
-        assertTrue(repository.existsByTargetCompetitionIdAndActivityStateState(competition.getId(), State.CREATED));
+        assertTrue(repository.existsByTargetCompetitionIdAndActivityState(competition.getId(), ReviewState.CREATED));
     }
 
     @Test
@@ -214,7 +208,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
         repository.save(review);
 
 
-        assertFalse(repository.existsByTargetCompetitionIdAndActivityStateState(competition2.getId(), State.CREATED));
+        assertFalse(repository.existsByTargetCompetitionIdAndActivityState(competition2.getId(), ReviewState.CREATED));
     }
 
     @Test

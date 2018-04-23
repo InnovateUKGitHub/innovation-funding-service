@@ -487,7 +487,7 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     private void determineStatusOfPanelApplications(ReviewParticipantResource reviewParticipantResource) {
 
         List<Review> reviews = reviewRepository.
-                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateAscIdAsc(
                         reviewParticipantResource.getUserId(),
                         reviewParticipantResource.getCompetitionId());
 

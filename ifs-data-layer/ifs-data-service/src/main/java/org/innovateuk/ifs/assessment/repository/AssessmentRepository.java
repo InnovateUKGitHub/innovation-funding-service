@@ -108,7 +108,6 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
             @Param("allStates") Collection<AssessmentState> allStates
     );
 
-
     int countByActivityStateAndTargetCompetitionId(AssessmentState state, Long competitionId);
 
     int countByActivityStateInAndTargetCompetitionId(Collection<AssessmentState> state, Long competitionId);

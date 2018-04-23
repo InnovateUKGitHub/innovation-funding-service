@@ -16,7 +16,6 @@ import org.innovateuk.ifs.review.domain.ReviewParticipant;
 import org.innovateuk.ifs.review.repository.ReviewInviteRepository;
 import org.innovateuk.ifs.review.repository.ReviewParticipantRepository;
 import org.innovateuk.ifs.review.domain.Review;
-import org.innovateuk.ifs.review.mapper.ReviewMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
@@ -27,9 +26,6 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -177,7 +173,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
 
         controller.notifyAssessors(competition.getId()).getSuccess();
 
-        assertTrue(reviewRepository.existsByTargetCompetitionIdAndActivityStateState(competition.getId(), State.PENDING));
+        assertTrue(reviewRepository.existsByTargetCompetitionIdAndActivityState(competition.getId(), ReviewState.PENDING));
     }
 
     @Test
