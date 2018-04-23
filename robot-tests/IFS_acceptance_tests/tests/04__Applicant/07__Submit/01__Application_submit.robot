@@ -18,8 +18,9 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-942 Information message when application has reached 100% complete
 ...
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
-Suite Setup       new account complete all but one
+Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
+                  #TODO IFS-3416 This ticket is in the testing backlog and covers the ${openDate} not found issue
 Force Tags        Applicant  MySQL
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
@@ -210,3 +211,7 @@ Get the original values of the competition's milestones
     ${openDate}  ${submissionDate} =  Save competition's current dates  ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Set suite variable  ${openDate}
     Set suite variable  ${submissionDate}
+
+Custom Suite Setup
+    new account complete all but one
+    Get the original values of the competition's milestones
