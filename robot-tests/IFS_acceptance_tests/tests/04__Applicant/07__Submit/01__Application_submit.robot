@@ -20,6 +20,7 @@ Documentation     INFUND-172: As a lead applicant and I am on the application su
 ...               IFS-753 Missing functionality on Mark as complete option in Application summary
 Suite Setup       Custom Suite Setup
 Suite Teardown    Custom Suite Teardown
+                  #TODO IFS-3416 This ticket is in the testing backlog and covers the ${openDate} not found issue
 Force Tags        Applicant  MySQL
 Resource          ../../../resources/defaultResources.robot
 Resource          ../Applicant_Commons.robot
