@@ -16,14 +16,14 @@ var gdsFrontendToolkitPath = nodeModulesPath + 'govuk_frontend_toolkit/'
 var gdsJinjaPath = nodeModulesPath + 'govuk_template_jinja/'
 var gdsElementsPath = nodeModulesPath + 'govuk-elements-sass/'
 var vendorImages = [
-	gdsJinjaPath + 'assets/images/**/**',
+  gdsJinjaPath + 'assets/images/**/**',
   gdsJinjaPath + 'assets/stylesheets/images/**/**',
-	gdsFrontendToolkitPath + 'images/**/**'
+  gdsFrontendToolkitPath + 'images/**/**'
 ]
 var sassFiles = [
-	'./sass/**/*.scss',
-	gdsFrontendToolkitPath + '**/*.scss',
-	gdsElementsPath + '**/*.scss'
+  './sass/**/*.scss',
+  gdsFrontendToolkitPath + '**/*.scss',
+  gdsElementsPath + '**/*.scss'
 ]
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
@@ -92,9 +92,9 @@ gulp.task('css', ['copy-govuk'], function () {
     }))
     .pipe(sassLint.format())
     .pipe(sass({includePaths: [
-		    gdsFrontendToolkitPath + 'stylesheets',
-        gdsElementsPath + 'public/sass',
-		    gdsJinjaPath + 'assets/stylesheets'
+		  gdsFrontendToolkitPath + 'stylesheets',
+      gdsElementsPath + 'public/sass',
+		  gdsJinjaPath + 'assets/stylesheets'
     ],
       importer: compass,
       outputStyle: 'compressed'
