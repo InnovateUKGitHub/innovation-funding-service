@@ -1,7 +1,36 @@
+modules:
+  jmeter:
+    gui: false
+    properties:
+      global_pause_deviation : 100
+      micro_pause_deviation : 100
+      short_pause_deviation : 500
+      normal_pause_deviation : 5000
+      long_pause_deviation : 10000
+      longer_pause_deviation : 15000
+      server_url : ifs.local-dev
+      authorisation_url : auth.local-dev:9443
+      users_csv : user_data.csv
+      competitions_csv : competition_data.csv
+      invites_csv : invite_data.csv
+      assessor_csv : assessor_data.csv
+      front_door_competitions_csv : front-door-competitions.csv
+      summariser.name : summary
+      summariser.interval : 5
+      summariser.log : true
+      summariser.out : true
+
 execution:
 - iterations: 1
   concurrency: 1
   scenario: with_script
+  properties:
+      invite_users : 1
+      applicant_users : 10
+      registration_users : 1
+      front_door_users : 10
+      competition_management_users : 10
+      assessor_users : 50
 
 scenarios:
   with_script:
