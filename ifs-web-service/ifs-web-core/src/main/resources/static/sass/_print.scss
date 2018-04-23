@@ -1,4 +1,5 @@
 //no seperate file because: http://www.phpied.com/5-years-later-print-css-still-sucks/
 @media print {
-  @import "../../../../../../node_modules/govuk_template_jinja/assets/stylesheets/govuk-template-print";
+  //@import "../../../../../../node_modules/govuk_template_jinja/assets/stylesheets/govuk-template-print";
+  @import "govuk-template-print";
 }
