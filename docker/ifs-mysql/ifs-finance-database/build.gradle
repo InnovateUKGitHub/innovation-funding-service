@@ -8,3 +8,5 @@ createContainer.env = ["MYSQL_ROOT_PASSWORD=password", "MYSQL_DATABASE=ifs_finan
 createContainer.cmd = ["--character-set-server=utf8, --collation-server=utf8_bin"]
 createContainer.portBindings = ['3307:3306']
 createContainer.hostName = "ifs-finance-database"
+
+startDbIfNotStarted.containerId = "ifs-finance-database"

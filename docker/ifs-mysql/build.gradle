@@ -1,3 +1,5 @@
+import org.innovateuk.ifs.tasks.StartDbContainerIfNotStartedTask
+
 subprojects {
 
     def sqlVersion = "5.6.29"
@@ -42,18 +44,20 @@ subprojects {
         }
     }
 
+    task startDbIfNotStarted(type: StartDbContainerIfNotStartedTask) {
+
+    }
 
 
     task initDB {
         createTestSchema.mustRunAfter wait
+        wait.mustRunAfter startDbIfNotStarted
+        dependsOn startDbIfNotStarted
         dependsOn wait
         dependsOn createTestSchema
     }
 
 }
-
-
-
 
 
 
