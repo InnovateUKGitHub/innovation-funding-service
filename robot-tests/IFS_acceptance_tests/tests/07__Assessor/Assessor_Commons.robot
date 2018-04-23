@@ -10,6 +10,7 @@ ${assessor_ben_email}        benjamin.nixon@gmail.com
 ${assessor_joel_email}       joel.george@gmail.com
 ${assessor_madeleine_email}  madeleine.martin@gmail.com
 ${assessor_riley_email}      riley.butler@gmail.com
+${aaron_robertson_email}     aaron.robertson@load.example.com
 ${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${computer_vision_application_name}  Computer vision and machine learning for transport networks
 ${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
@@ -70,9 +71,10 @@ the compadmin can remove an assessor or application from the invite list
     the user should see the element      jQuery=tr:contains("${assessor_or_application}")
 
 the compAdmin resends the invites for interview panel
-    [Arguments]  ${resendAssessor}
+    [Arguments]  ${resendAssessor1}   ${resendAssessor2}
     the user clicks the button/link      jQuery=button:contains("Resend invites")
-    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor}")
+    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor1}")
+    the user should see the element      jQuery=h2:contains("Recipients") ~ p:contains("${resendAssessor2}")
     the user clicks the button/link      jQuery=button:contains("Send invite")
 
 Get the total number of submitted applications

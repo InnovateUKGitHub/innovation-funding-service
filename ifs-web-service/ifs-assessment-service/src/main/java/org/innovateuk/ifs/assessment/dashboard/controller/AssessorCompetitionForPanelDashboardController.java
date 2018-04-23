@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.form.AssessorCompetitionDashboardAssessmentForm;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForPanelDashboardModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;

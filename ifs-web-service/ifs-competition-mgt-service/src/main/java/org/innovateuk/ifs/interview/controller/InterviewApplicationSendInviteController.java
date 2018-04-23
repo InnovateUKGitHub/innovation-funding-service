@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 @Controller
 @RequestMapping("/assessment/interview/competition/{competitionId}/applications/invite")
 @SecuredBySpring(value = "Controller", description = "Comp Admins and Project Finance users can invite applications to an Interview Panel", securedType = InterviewApplicationSendInviteController.class)
-@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+@PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'INTERVIEW_APPLICATIONS')")
 public class InterviewApplicationSendInviteController {
 
     @Autowired
@@ -76,12 +76,12 @@ public class InterviewApplicationSendInviteController {
                     .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()));
 
             return validationHandler.addAnyErrors(error(removeDuplicates(sendResult.getErrors())))
-                    .failNowOrSucceedWith(failureView, () -> redirectToFindApplicationTab(competitionId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToStatusTab(competitionId));
         });
     }
 
-    private String redirectToFindApplicationTab(long competitionId) {
-        return format("redirect:/assessment/interview/competition/%s/applications/find", competitionId);
+    private String redirectToStatusTab(long competitionId) {
+        return format("redirect:/assessment/interview/competition/%s/applications/view-status", competitionId);
     }
 
     private void populateGroupInviteFormWithExistingValues(SendInviteForm form) {
