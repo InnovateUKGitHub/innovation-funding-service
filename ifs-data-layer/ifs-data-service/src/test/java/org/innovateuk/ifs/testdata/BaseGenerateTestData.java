@@ -115,7 +115,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    @Value("${ifs.generate.test.data.competition.filter:ALL_COMPETITIONS}")
+    @Value("${ifs.generate.test.data.competition.filter:BY_NAME}")
     private CompetitionFilter competitionFilter;
 
     @Value("${flyway.url}")
@@ -190,7 +190,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private List<CsvUtils.ApplicationOrganisationFinanceBlock> applicationFinanceLines;
     private List<CsvUtils.InviteLine> inviteLines;
 
-    @Value("${ifs.generate.test.data.competition.filter.name:Generic innovation}")
+    @Value("${ifs.generate.test.data.competition.filter.name:Biosciences round three: plastic recovery in the industrial sector}")
     private void setCompetitionFilterName(String competitionNameForFilter) {
         BaseGenerateTestData.competitionNameForFilter = competitionNameForFilter;
     }

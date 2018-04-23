@@ -37,13 +37,14 @@ public abstract class Participant<P extends ProcessActivity, I extends Invite<P,
     protected void setStatus(ParticipantStatus newStatus) {
         switch (newStatus) {
             case PENDING:
-                if (this.status != null) throw new IllegalStateException("cannot change an existing Participant to PENDING");
+                if (this.status == ParticipantStatus.ACCEPTED)
+                    throw new IllegalStateException("cannot change a Participant who has ACCEPTED to PENDING");
                 break;
-            case ACCEPTED:
             case REJECTED:
+            case ACCEPTED:
                 if (this.status != ParticipantStatus.PENDING)
                     throw new IllegalStateException("cannot change a " + this.status + "  Participant to " + newStatus);
-            break;
+                break;
         }
 
         this.status = newStatus;

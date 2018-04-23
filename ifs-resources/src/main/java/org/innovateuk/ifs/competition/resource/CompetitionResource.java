@@ -87,7 +87,7 @@ public class CompetitionResource {
     private Boolean fullApplicationFinance = true;
     private boolean setupComplete = false;
 
-    private boolean useResubmissionQuestion;
+    private Boolean useResubmissionQuestion;
     private Boolean hasAssessmentPanel;
     private Boolean hasInterviewStage;
     private AssessorFinanceView assessorFinanceView = AssessorFinanceView.OVERVIEW;
@@ -498,11 +498,11 @@ public class CompetitionResource {
         this.funders = funders;
     }
 
-    public boolean isUseResubmissionQuestion() {
+    public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
 
-    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+    public void setUseResubmissionQuestion(Boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
