@@ -252,7 +252,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     private AssessmentResource setupAssessment(ProcessRole participant, AssessmentState state) {
         Assessment assessment = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, state.getBackingState()))
+                .withActivityState(state)
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);

@@ -60,7 +60,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected ProjectProcess object (say X) and verifying that X was the object that was saved.
-        ProjectProcess expectedProjectProcess = new ProjectProcess(projectUser, project, expectedActivityState);
+        ProjectProcess expectedProjectProcess = new ProjectProcess(projectUser, project, ProjectState.SETUP);
 
         // Ensure the correct event was fired by the workflow
         expectedProjectProcess.setProcessEvent(ProjectEvent.PROJECT_CREATED.getType());
@@ -109,7 +109,7 @@ public class ProjectWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected ProjectProcess object (say X) and verifying that X was the object that was saved.
-        ProjectProcess expectedProjectProcess = setUpExpectedProjectProcess(projectUser, project, expectedActivityState, expectedEventToBeFired);
+        ProjectProcess expectedProjectProcess = setUpExpectedProjectProcess(projectUser, project, destinationProjectState, expectedEventToBeFired);
 
         verify(projectProcessRepositoryMock).save(expectedProjectProcess);
     }
@@ -128,17 +128,16 @@ public class ProjectWorkflowHandlerIntegrationTest extends
 
         assertTrue(result);
 
-        ProjectProcess expectedProjectProcess = setUpExpectedProjectProcess(null, project, expectedActivityState, expectedEventToBeFired);
+        ProjectProcess expectedProjectProcess = setUpExpectedProjectProcess(null, project, destinationProjectState, expectedEventToBeFired);
 
         verify(projectProcessRepositoryMock).save(expectedProjectProcess);
     }
 
     private ProjectProcess setUpCurrentProjectProcess(ProjectUser projectUser, Project project, ProjectState currentProjectState) {
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP, currentProjectState.getBackingState());
-        return new ProjectProcess(projectUser, project, currentActivityState);
+        return new ProjectProcess(projectUser, project, currentProjectState);
     }
 
-    private ProjectProcess setUpExpectedProjectProcess(ProjectUser projectUser, Project project, ActivityState expectedActivityState, ProjectEvent eventToBeFired) {
+    private ProjectProcess setUpExpectedProjectProcess(ProjectUser projectUser, Project project, ProjectState expectedActivityState, ProjectEvent eventToBeFired) {
         ProjectProcess expectedProjectProcess = new ProjectProcess(projectUser, project, expectedActivityState);
         expectedProjectProcess.setProcessEvent(eventToBeFired.getType());
         return expectedProjectProcess;

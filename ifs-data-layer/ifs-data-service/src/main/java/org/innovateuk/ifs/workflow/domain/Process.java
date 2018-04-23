@@ -26,8 +26,8 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     private Long id;
     private String event;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    protected ActivityState activityState;
+    @ManyToOne(fetch = FetchType.LAZY)
+    protected StatesType activityState;
 
     @LastModifiedDate
     private ZonedDateTime lastModified = ZonedDateTime.now();
@@ -49,12 +49,12 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     public Process() {
     }
 
-    protected Process(String event, ActivityState activityState) {
+    protected Process(String event, StatesType activityState) {
         this.event = event;
 //        this.activityState = activityState;
     }
 
-    public Process(String event, ActivityState activityState, LocalDate startDate, LocalDate endDate) {
+    public Process(String event, StatesType activityState, LocalDate startDate, LocalDate endDate) {
         this(event, activityState);
         this.startDate = startDate;
         this.endDate = endDate;
@@ -92,7 +92,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
         return id;
     }
 
-    public void setActivityState(ActivityState status) {
+    public void setActivityState(StatesType status) {
         this.activityState = status;
     }
 
@@ -126,7 +126,7 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     }
 
     public boolean isInState(StatesType state) {
-        return state.getBackingState().equals(activityState.getState());
+        return state == activityState;
     }
 
 

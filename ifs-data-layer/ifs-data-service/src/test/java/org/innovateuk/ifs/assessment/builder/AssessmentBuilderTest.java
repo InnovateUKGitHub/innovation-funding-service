@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.junit.Test;
 
@@ -16,15 +15,15 @@ import java.util.List;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
+import static org.innovateuk.ifs.assessment.resource.AssessmentState.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.READY_TO_SUBMIT;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 
 public class AssessmentBuilderTest {
 
     @Test
-    public void buildOne() throws Exception {
+    public void buildOne() {
         Long expectedId = 1L;
         ProcessState expectedStatus = AssessmentState.OPEN;
         ZonedDateTime expectedLastModifiedDate = ZonedDateTime.now();
@@ -36,7 +35,7 @@ public class AssessmentBuilderTest {
 
         Assessment assessment = newAssessment()
                 .withId(expectedId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState()))
+                .withActivityState(OPEN)
                 .withLastModifiedDate(expectedLastModifiedDate)
                 .withStartDate(expectedStartDate)
                 .withEndDate(expectedEndDate)
@@ -70,9 +69,7 @@ public class AssessmentBuilderTest {
 
         List<Assessment> assessments = newAssessment()
                 .withId(expectedIds)
-                .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, READY_TO_SUBMIT.getBackingState()))
+                .withActivityState(OPEN, READY_TO_SUBMIT)
                 .withLastModifiedDate(expectedLastModifiedDates)
                 .withStartDate(expectedStartDates)
                 .withEndDate(expectedEndDates)

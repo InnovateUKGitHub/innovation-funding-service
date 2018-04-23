@@ -182,11 +182,7 @@ public class AssessorCompetitionSummaryServiceImplTest extends BaseUnitTestMocks
     private Assessment[] setUpAssessments(Application[] applications, AssessmentRejectOutcome rejectOutcome) {
         return newAssessment()
                 .withApplication(applications)
-                .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, ACCEPTED.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, REJECTED.getBackingState()),
-                        new ActivityState(APPLICATION_ASSESSMENT, WITHDRAWN.getBackingState()))
+                .withActivityState(ACCEPTED, SUBMITTED, REJECTED, WITHDRAWN)
                 .withRejection(null, null, rejectOutcome, null)
                 .buildArray(4, Assessment.class);
     }

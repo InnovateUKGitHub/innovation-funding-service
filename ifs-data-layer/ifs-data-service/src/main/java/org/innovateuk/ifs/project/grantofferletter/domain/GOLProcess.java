@@ -28,17 +28,16 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
     GOLProcess() {
     }
 
-    public GOLProcess(ProjectUser participant, Project target, ActivityState originalState) {
+    public GOLProcess(ProjectUser participant, Project target, GrantOfferLetterState originalState) {
         this.participant = participant;
         this.target = target;
         this.setActivityState(originalState);
     }
 
-    public GOLProcess(User internalParticipant, Project target, ActivityState originalState) {
+    public GOLProcess(User internalParticipant, Project target, GrantOfferLetterState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
@@ -66,7 +65,7 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
 
     @Override
     public GrantOfferLetterState getProcessState() {
-        return GrantOfferLetterState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override
@@ -91,5 +90,10 @@ public class GOLProcess extends Process<ProjectUser, Project, GrantOfferLetterSt
                 .append(participant)
                 .append(target)
                 .toHashCode();
+    }
+
+    @Override
+    public GrantOfferLetterState getActivityState() {
+        return activityState;
     }
 }

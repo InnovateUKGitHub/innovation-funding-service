@@ -50,7 +50,7 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() throws Exception {
+    public void testProjectCreated() {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -75,42 +75,42 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testAddProjectStartDate() throws Exception {
+    public void testAddProjectStartDate() {
 
         assertAddMandatoryValue((project, projectUser) -> projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser),
                 PROJECT_START_DATE_ADDED);
     }
 
     @Test
-    public void testAddProjectStartDateAndSubmitted() throws Exception {
+    public void testAddProjectStartDateAndSubmitted() {
 
         assertAddMandatoryValueAndNowSubmittedFromPending(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectStartDateAdded(project, projectUser), PROJECT_START_DATE_ADDED);
     }
 
     @Test
-    public void testAddProjectAddress() throws Exception {
+    public void testAddProjectAddress() {
 
         assertAddMandatoryValue((project, projectUser) -> projectDetailsWorkflowHandler.projectAddressAdded(project, projectUser),
                 PROJECT_ADDRESS_ADDED);
     }
 
     @Test
-    public void testAddProjectAddressAndSubmitted() throws Exception {
+    public void testAddProjectAddressAndSubmitted() {
 
         assertAddMandatoryValueAndNowSubmittedFromPending(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectAddressAdded(project, projectUser), PROJECT_ADDRESS_ADDED);
     }
 
     @Test
-    public void testAddProjectManager() throws Exception {
+    public void testAddProjectManager() {
 
         assertAddMandatoryValue((project, projectUser) -> projectDetailsWorkflowHandler.projectManagerAdded(project, projectUser),
                 PROJECT_MANAGER_ADDED);
     }
 
     @Test
-    public void testAddProjectManagerAndSubmitted() throws Exception {
+    public void testAddProjectManagerAndSubmitted() {
 
         assertAddMandatoryValueAndNowSubmittedFromPending(
                 (project, projectUser) -> projectDetailsWorkflowHandler.projectManagerAdded(project, projectUser), PROJECT_MANAGER_ADDED);
@@ -125,17 +125,12 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
 
-        ActivityState pendingState = new ActivityState(PROJECT_SETUP_PROJECT_DETAILS, State.PENDING);
-        ProjectDetailsProcess pendingProcess = new ProjectDetailsProcess(projectUser, project, pendingState);
-
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, State.PENDING)).thenReturn(pendingState);
+        ProjectDetailsProcess pendingProcess = new ProjectDetailsProcess(projectUser, project, ProjectDetailsState.PENDING);
 
         when(projectDetailsProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(pendingProcess);
 
         // now call the method under test
         assertTrue(handlerMethod.apply(project, projectUser));
-
-        verify(activityStateRepositoryMock, atLeastOnce()).findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, State.PENDING);
 
         verify(projectDetailsProcessRepositoryMock, atLeastOnce()).findOneByTargetId(project.getId());
 
@@ -175,9 +170,8 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
 
         ProjectUser projectUser = newProjectUser().build();
 
-        ActivityState originalActivityState = new ActivityState(PROJECT_SETUP_PROJECT_DETAILS, originalState.getBackingState());
-        ProjectDetailsProcess originalProcess = new ProjectDetailsProcess(projectUser, project, originalActivityState);
-        ProjectDetailsProcess updatedProcess = new ProjectDetailsProcess(projectUser, project, originalActivityState);
+        ProjectDetailsProcess originalProcess = new ProjectDetailsProcess(projectUser, project, originalState);
+        ProjectDetailsProcess updatedProcess = new ProjectDetailsProcess(projectUser, project, originalState);
 
         ActivityState submittedState = new ActivityState(PROJECT_SETUP_PROJECT_DETAILS, State.SUBMITTED);
 
@@ -188,8 +182,6 @@ public class ProjectDetailsWorkflowHandlerIntegrationTest extends
 
         // now call the method under test
         assertTrue(handlerFn.apply(project, projectUser));
-
-        verify(activityStateRepositoryMock, atLeastOnce()).findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, State.SUBMITTED);
 
         verify(projectDetailsProcessRepositoryMock, atLeastOnce()).findOneByTargetId(project.getId());
 

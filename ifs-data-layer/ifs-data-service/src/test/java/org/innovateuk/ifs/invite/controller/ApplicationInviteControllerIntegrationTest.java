@@ -2,7 +2,6 @@ package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.controller.ApplicationController;
-import org.innovateuk.ifs.form.controller.QuestionController;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -16,9 +15,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +34,6 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
 
     public static final long APPLICATION_ID = 1L;
 
-    private QuestionController questionController;
     private Long leadApplicantProcessRole;
     private Long leadApplicantId;
     private ApplicationController applicationController;
@@ -78,10 +73,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         leadApplicantId = 1L;
         leadApplicantProcessRole = 1L;
         List<ProcessRole> processRoles = new ArrayList<>();
-        Application app = new Application(
-                "",
-                new ActivityState(ActivityType.APPLICATION, State.CREATED)
-        );
+        Application app = new Application("");
         app.setId(APPLICATION_ID);
         processRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(app).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
@@ -93,7 +85,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void testDisplayInvites() throws Exception{
+    public void testDisplayInvites() {
         String testEmail = "jessica.doe@ludlow.co.uk";
         String testName = "Jessica Istesting";
 
@@ -136,7 +128,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void testRemovingInvites() throws Exception{
+    public void testRemovingInvites() {
         String testEmail = "jessica.doe@ludlow.co.uk";
         String testName = "Jessica Istesting";
 

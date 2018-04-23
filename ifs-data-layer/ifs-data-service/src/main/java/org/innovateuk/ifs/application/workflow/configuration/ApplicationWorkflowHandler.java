@@ -47,7 +47,7 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
 
     @Override
     protected ApplicationProcess createNewProcess(Application target, ProcessRole participant) {
-        return new ApplicationProcess(target, participant, new ActivityState(APPLICATION, State.CREATED));
+        return new ApplicationProcess(target, participant, ApplicationState.CREATED);
     }
 
     @Override

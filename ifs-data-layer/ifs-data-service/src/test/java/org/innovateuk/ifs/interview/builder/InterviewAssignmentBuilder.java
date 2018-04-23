@@ -48,10 +48,6 @@ public class InterviewAssignmentBuilder extends BaseBuilder<InterviewAssignment,
     }
 
     public InterviewAssignmentBuilder withState(InterviewAssignmentState... states) {
-        return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_INTERVIEW_PANEL, state.getBackingState())), states);
-    }
-
-    public InterviewAssignmentBuilder withActivityState(ActivityState... states) {
         return withArray((state, invite) -> invite.setActivityState(state), states);
     }
 }

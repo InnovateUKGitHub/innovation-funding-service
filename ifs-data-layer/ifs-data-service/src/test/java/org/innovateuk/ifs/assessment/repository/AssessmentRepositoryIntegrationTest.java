@@ -14,9 +14,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.Role;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
-import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +40,6 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 
 public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentRepository> {
@@ -55,9 +52,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Autowired
     private ApplicationRepository applicationRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -77,7 +71,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void findAll() throws Exception {
+    public void findAll() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
@@ -91,13 +85,11 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         Application application = applicationRepository.findOne(1L);
 
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
-
         List<Assessment> assessments = newAssessment()
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
-                .withActivityState(openState)
+                .withActivityState(OPEN)
                 .build(2);
 
         Set<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(Collectors.toSet());
@@ -108,7 +100,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void findOneByParticipantId() throws Exception {
+    public void findOneByParticipantId() {
         ProcessRole participant1 = processRoleRepository.save(newProcessRole()
                 .with(id(null))
                 .build());
@@ -119,13 +111,11 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         Application application = applicationRepository.findOne(1L);
 
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
-
         List<Assessment> assessments = newAssessment()
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
-                .withActivityState(openState)
+                .withActivityState(OPEN)
                 .build(2);
 
         List<Assessment> saved = assessments.stream().map(assessment -> repository.save(assessment)).collect(toList());
@@ -136,7 +126,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     @Rollback
-    public void findFirstByParticipantUserIdAndTargetIdOrderByIdDesc() throws Exception {
+    public void findFirstByParticipantUserIdAndTargetIdOrderByIdDesc() {
         Long applicationId = 1L;
 
         assessorFormInputResponseRepository.deleteAll();
@@ -156,7 +146,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     @Rollback
-    public void countByParticipantUserIdAndActivityStateStateNotIn() throws Exception {
+    public void countByParticipantUserIdAndActivityStateStateNotIn() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
@@ -172,7 +162,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void countByParticipantUserIdAndActivityStateStateIn() throws Exception {
+    public void countByParticipantUserIdAndActivityStateStateIn() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
@@ -190,7 +180,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     @Rollback
-    public void countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn() throws Exception {
+    public void countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
@@ -207,7 +197,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     @Test
     @Rollback
-    public void findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc() throws Exception {
+    public void findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
@@ -237,7 +227,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void findByActivityStateStateAndTargetCompetitionId() throws Exception {
+    public void findByActivityStateStateAndTargetCompetitionId() {
         State state = State.CREATED;
         Application application = applicationRepository.findOne(1L);
 
@@ -250,7 +240,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void getAssessorApplicationAssessmentCountsForStates() throws Exception {
+    public void getAssessorApplicationAssessmentCountsForStates() {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
 
@@ -266,13 +256,11 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
 
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
-
         List<Assessment> assessments = newAssessment()
                 .withId()
                 .withApplication(application1)
                 .withParticipant(participant1, participant2)
-                .withActivityState(openState)
+                .withActivityState(OPEN)
                 .build(2);
 
         assessments.add(
@@ -280,7 +268,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                         .withId()
                         .withApplication(application2)
                         .withParticipant(participant3)
-                        .withActivityState(openState)
+                        .withActivityState(OPEN)
                         .build()
         );
 
@@ -303,7 +291,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void countByActivityStateStateAndTargetCompetitionId() throws Exception {
+    public void countByActivityStateStateAndTargetCompetitionId() {
         State state = State.CREATED;
         Application application = applicationRepository.findOne(1L);
 
@@ -314,7 +302,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void countByActivityStateStateInAndTargetCompetitionId() throws Exception {
+    public void countByActivityStateStateInAndTargetCompetitionId() {
         Set<State> states = EnumSet.of(State.CREATED, State.OPEN);
 
         Application application = applicationRepository.findOne(1L);
@@ -326,16 +314,14 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
-    public void isFeedbackComplete() throws Exception {
+    public void isFeedbackComplete() {
         Application application = applicationRepository.findOne(1L);
         Competition competition = application.getCompetition();
-
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
 
         // Feedback should be incomplete for a new assessment with no responses
         Assessment assessment = repository.save(newAssessment()
                 .with(id(null))
-                .withActivityState(openState)
+                .withActivityState(OPEN)
                 .withApplication(application)
                 .build());
 
@@ -366,8 +352,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         Application application = applicationRepository.findOne(1L);
         Competition competition = application.getCompetition();
 
-        ActivityState submittedState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState());
-
         int expectedTotalScorePossible = competition.getQuestions().stream()
                 .filter(question -> question.getFormInputs().stream().anyMatch(formInput -> formInput.getActive() && ASSESSOR_SCORE == formInput.getType()))
                 .mapToInt(question -> ofNullable(question.getAssessorMaximumScore()).orElse(0))
@@ -375,7 +359,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
         Assessment assessment = repository.save(newAssessment()
                 .with(id(null))
-                .withActivityState(submittedState)
+                .withActivityState(SUBMITTED)
                 .withApplication(application)
                 .build());
 
@@ -423,8 +407,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     private List<Assessment> buildAssessments(User user, Application application, int numOfAssessmentsForEachState) {
-        List<ActivityState> states = getActivityStates();
-        return states.stream().flatMap(activityState -> newAssessment()
+        return EnumSet.allOf(AssessmentState.class).stream().flatMap(activityState -> newAssessment()
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(setUpParticipants(user, application, numOfAssessmentsForEachState))
@@ -445,11 +428,6 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
 
     private List<Long> getAssessmentIds(List<Assessment> assessments) {
         return assessments.stream().map(Process::getId).collect(toList());
-    }
-
-    private List<ActivityState> getActivityStates() {
-        return getAssessmentStatesWithoutDecisions().stream().map(assessmentState ->
-                activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, assessmentState.getBackingState())).collect(toList());
     }
 
     private EnumSet<AssessmentState> getAssessmentStatesWithoutDecisions() {

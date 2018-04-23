@@ -44,8 +44,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() throws Exception {
-
+    public void testProjectCreated() {
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectUser projectUser = newProjectUser().build();
 
@@ -60,7 +59,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
-        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(projectUser, partnerOrganisation, expectedActivityState);
+        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(projectUser, partnerOrganisation, EligibilityState.REVIEW);
 
         // Ensure the correct event was fired by the workflow
         expectedEligibilityProcess.setProcessEvent(EligibilityEvent.PROJECT_CREATED.getType());
@@ -70,7 +69,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testEligibilityApproved() throws Exception {
+    public void testEligibilityApproved() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, internalUser)),
 
@@ -79,7 +78,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testNotRequestingFunding() throws Exception {
+    public void testNotRequestingFunding() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> eligibilityWorkflowHandler.notRequestingFunding(partnerOrganisation, internalUser)),
 
@@ -96,8 +95,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
         User internalUser = newUser().build();
 
         // Set the current state in the Eligibility Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_ELIGIBILITY, currentEligibilityState.getBackingState());
-        EligibilityProcess currentEligibilityProcess = new EligibilityProcess((User) null, partnerOrganisation, currentActivityState);
+        EligibilityProcess currentEligibilityProcess = new EligibilityProcess((User) null, partnerOrganisation, currentEligibilityState);
         when(eligibilityProcessRepositoryMock.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentEligibilityProcess);
 
         // Set the destination state which we expect when the event is fired
@@ -111,7 +109,7 @@ public class EligibilityWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected EligibilityProcess object (say X) and verifying that X was the object that was saved.
-        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(internalUser, partnerOrganisation, expectedActivityState);
+        EligibilityProcess expectedEligibilityProcess = new EligibilityProcess(internalUser, partnerOrganisation, destinationEligibilityState);
 
         // Ensure the correct event was fired by the workflow
         expectedEligibilityProcess.setProcessEvent(expectedEventToBeFired.getType());

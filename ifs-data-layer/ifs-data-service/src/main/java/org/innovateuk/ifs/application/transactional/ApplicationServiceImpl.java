@@ -101,7 +101,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 State.CREATED
         );
 
-        Application application = new Application(applicationName, createdActivityState);
+        Application application = new Application(applicationName);
         application.setStartDate(null);
 
         application.setDurationInMonths(3L);

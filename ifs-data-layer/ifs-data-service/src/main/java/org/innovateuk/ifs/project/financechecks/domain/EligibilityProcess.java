@@ -28,17 +28,16 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private PartnerOrganisation target;
 
-    // for ORM use
     EligibilityProcess() {
     }
 
-    public EligibilityProcess(ProjectUser participant, PartnerOrganisation target, ActivityState originalState) {
+    public EligibilityProcess(ProjectUser participant, PartnerOrganisation target, EligibilityState originalState) {
         this.participant = participant;
         this.target = target;
         this.setActivityState(originalState);
     }
 
-    public EligibilityProcess(User internalParticipant, PartnerOrganisation target, ActivityState originalState) {
+    public EligibilityProcess(User internalParticipant, PartnerOrganisation target, EligibilityState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
@@ -66,7 +65,7 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
 
     @Override
     public EligibilityState getProcessState() {
-        return EligibilityState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override
@@ -92,5 +91,10 @@ public class EligibilityProcess extends Process<ProjectUser, PartnerOrganisation
                 .append(participant)
                 .append(target)
                 .toHashCode();
+    }
+
+    @Override
+    public EligibilityState getActivityState() {
+        return activityState;
     }
 }

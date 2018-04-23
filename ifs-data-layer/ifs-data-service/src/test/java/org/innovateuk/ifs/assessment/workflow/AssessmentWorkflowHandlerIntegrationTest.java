@@ -63,122 +63,122 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
-    public void notify_createdToPending() throws Exception {
+    public void notify_createdToPending() {
         assertWorkflowStateChange((assessment -> assessmentWorkflowHandler.notify(assessment)), setupIncompleteAssessment(CREATED), PENDING);
     }
 
     @Test
-    public void withdrawAssessment_createdToWithdrawn() throws Exception {
+    public void withdrawAssessment_createdToWithdrawn() {
         assertWorkflowStateChangeForWithdrawnFromCreated((assessment -> assessmentWorkflowHandler.withdraw(assessment)), setupIncompleteAssessment(CREATED));
     }
 
     @Test
-    public void rejectInvitation_pendingToRejected() throws Exception {
+    public void rejectInvitation_pendingToRejected() {
         assertWorkflowStateChangeForRejection((assessment) -> assessmentWorkflowHandler.rejectInvitation(assessment, createRejection()), setupIncompleteAssessment(PENDING));
     }
 
     @Test
-    public void acceptInvitation_pendingToAccepted() throws Exception {
+    public void acceptInvitation_pendingToAccepted() {
         assertWorkflowStateChange((assessment) -> assessmentWorkflowHandler.acceptInvitation(assessment), setupIncompleteAssessment(PENDING), ACCEPTED);
     }
 
     @Test
-    public void withdrawAssessment_pendingToWithdrawn() throws Exception {
+    public void withdrawAssessment_pendingToWithdrawn() {
         assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(PENDING), WITHDRAWN);
     }
 
     @Test
-    public void rejectInvitation_acceptedToRejected() throws Exception {
+    public void rejectInvitation_acceptedToRejected() {
         assertWorkflowStateChangeForRejection((assessment) -> assessmentWorkflowHandler.rejectInvitation(assessment, createRejection()), setupIncompleteAssessment(ACCEPTED));
     }
 
     @Test
-    public void withdrawAssessment_acceptedToWithdrawn() throws Exception {
+    public void withdrawAssessment_acceptedToWithdrawn() {
         assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(ACCEPTED), WITHDRAWN);
     }
 
     @Test
-    public void feedback_acceptedToOpen() throws Exception {
+    public void feedback_acceptedToOpen() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupIncompleteAssessment(ACCEPTED), OPEN);
     }
 
     @Test
-    public void feedback_acceptedToReadyToSubmit() throws Exception {
+    public void feedback_acceptedToReadyToSubmit() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupCompleteAssessment(ACCEPTED), READY_TO_SUBMIT);
     }
 
     @Test
-    public void fundingDecision_acceptedToOpen() throws Exception {
+    public void fundingDecision_acceptedToOpen() {
         assertWorkflowStateChangeForFundingDecision((assessment) -> assessmentWorkflowHandler.fundingDecision(assessment, createFundingDecision()), setupIncompleteAssessment(ACCEPTED), OPEN);
     }
 
     @Test
-    public void fundingDecision_acceptedToReadyToSubmit() throws Exception {
+    public void fundingDecision_acceptedToReadyToSubmit() {
         assertWorkflowStateChangeForFundingDecision((assessment) -> assessmentWorkflowHandler.fundingDecision(assessment, createFundingDecision()), setupCompleteAssessment(ACCEPTED), READY_TO_SUBMIT);
     }
 
     @Test
-    public void rejectInvitation_openToRejected() throws Exception {
+    public void rejectInvitation_openToRejected() {
         assertWorkflowStateChangeForRejection((assessment) -> assessmentWorkflowHandler.rejectInvitation(assessment, createRejection()), setupIncompleteAssessment(OPEN));
     }
 
     @Test
-    public void withdrawAssessment_openToWithdrawn() throws Exception {
+    public void withdrawAssessment_openToWithdrawn() {
         assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(OPEN), WITHDRAWN);
     }
 
     @Test
-    public void feedback_openToOpen() throws Exception {
+    public void feedback_openToOpen() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupIncompleteAssessment(OPEN), OPEN);
     }
 
     @Test
-    public void feedback_openToReadyToSubmit() throws Exception {
+    public void feedback_openToReadyToSubmit() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupCompleteAssessment(OPEN), READY_TO_SUBMIT);
     }
 
     @Test
-    public void fundingDecision_openToOpen() throws Exception {
+    public void fundingDecision_openToOpen() {
         assertWorkflowStateChangeForFundingDecision((assessment) -> assessmentWorkflowHandler.fundingDecision(assessment, createFundingDecision()), setupIncompleteAssessment(OPEN), OPEN);
     }
 
     @Test
-    public void fundingDecision_openToReadyToSubmit() throws Exception {
+    public void fundingDecision_openToReadyToSubmit() {
         assertWorkflowStateChangeForFundingDecision((assessment) -> assessmentWorkflowHandler.fundingDecision(assessment, createFundingDecision()), setupCompleteAssessment(OPEN), READY_TO_SUBMIT);
     }
 
     @Test
-    public void rejectInvitation_readyToSubmitToRejected() throws Exception {
+    public void rejectInvitation_readyToSubmitToRejected() {
         assertWorkflowStateChangeForRejection((assessment) -> assessmentWorkflowHandler.rejectInvitation(assessment, createRejection()), setupCompleteAssessment(READY_TO_SUBMIT));
     }
 
     @Test
-    public void withdrawAssessment_readyToSubmitToWithdrawn() throws Exception {
+    public void withdrawAssessment_readyToSubmitToWithdrawn() {
         assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(READY_TO_SUBMIT), WITHDRAWN);
     }
 
     @Test
-    public void feedback_readyToSubmitToOpen() throws Exception {
+    public void feedback_readyToSubmitToOpen() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupIncompleteAssessment(READY_TO_SUBMIT), OPEN);
     }
 
     @Test
-    public void feedback_readyToSubmitToReadyToSubmit() throws Exception {
+    public void feedback_readyToSubmitToReadyToSubmit() {
         assertWorkflowStateChangeForFeedback((assessment) -> assessmentWorkflowHandler.feedback(assessment), setupCompleteAssessment(READY_TO_SUBMIT), READY_TO_SUBMIT);
     }
 
     @Test
-    public void fundingDecision_readyToSubmitToOpen() throws Exception {
+    public void fundingDecision_readyToSubmitToOpen() {
         assertWorkflowStateChangeForFundingDecision((assessment) -> assessmentWorkflowHandler.fundingDecision(assessment, createFundingDecision()), setupIncompleteAssessment(READY_TO_SUBMIT), OPEN);
     }
 
     @Test
-    public void fundingDecision_readyToSubmitToReadyToSubmit() throws Exception {
+    public void fundingDecision_readyToSubmitToReadyToSubmit() {
         assertWorkflowStateChangeForFundingDecision((assessment) -> assessmentWorkflowHandler.fundingDecision(assessment, createFundingDecision()), setupCompleteAssessment(READY_TO_SUBMIT), READY_TO_SUBMIT);
     }
 
     @Test
-    public void submit_readyToSubmitToSubmitted() throws Exception {
+    public void submit_readyToSubmitToSubmitted() {
         Supplier<Assessment> completeAssessment = () -> {
             Assessment assessment = setupCompleteAssessment(READY_TO_SUBMIT).get();
             assessment.setTarget(
@@ -200,7 +200,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     @Test
-    public void submit_readyToSubmitToSubmittedWhenNotInAssessmentPeriod() throws Exception {
+    public void submit_readyToSubmitToSubmittedWhenNotInAssessmentPeriod() {
         Assessment assessment = setupCompleteAssessment(READY_TO_SUBMIT).get();
         assessment.setTarget(
                 newApplication()
@@ -305,14 +305,14 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     private Supplier<Assessment> setupIncompleteAssessment(AssessmentState initialState) {
         return () -> newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, initialState.getBackingState()))
+                .withActivityState(initialState)
                 .build();
     }
 
     private Supplier<Assessment> setupCompleteAssessment(AssessmentState initialState) {
         return () -> {
             Assessment assessment = newAssessment()
-                    .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, initialState.getBackingState()))
+                    .withActivityState(initialState)
                     .withFundingDecision(newAssessmentFundingDecisionOutcome().build())
                     .build();
             when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(true);

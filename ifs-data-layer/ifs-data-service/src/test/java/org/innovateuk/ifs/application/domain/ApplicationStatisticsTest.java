@@ -19,14 +19,10 @@ public class ApplicationStatisticsTest {
     ApplicationStatistics applicationStatistics;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         applicationStatistics = newApplicationStatistics()
                 .withAssessments(
-                        newAssessment().withActivityState(
-                                Arrays.stream(
-                                        AssessmentState.values())
-                                        .map(x -> new ActivityState(APPLICATION_ASSESSMENT, x.getBackingState()))
-                                        .toArray(ActivityState[]::new))
+                        newAssessment().withActivityState(AssessmentState.values())
                                 .build(AssessmentState.values().length))
                 .build();
     }

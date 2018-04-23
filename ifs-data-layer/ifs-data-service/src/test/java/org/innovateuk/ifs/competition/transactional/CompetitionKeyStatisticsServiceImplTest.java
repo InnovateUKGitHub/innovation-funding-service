@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.assessment.domain.AssessmentParticipant;
@@ -108,14 +109,11 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .build();
 
         List<Assessment> assessments = newAssessment()
-                .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, PENDING),
-                        new ActivityState(APPLICATION_ASSESSMENT, REJECTED),
-                        new ActivityState(APPLICATION_ASSESSMENT, OPEN))
+                .withActivityState(AssessmentState.PENDING, AssessmentState.REJECTED, AssessmentState.OPEN)
                 .build(3);
 
         List<Assessment> assessmentList = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED))
+                .withActivityState(AssessmentState.SUBMITTED)
                 .build(1);
 
         List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()
@@ -153,14 +151,11 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .build();
 
         List<Assessment> assessments = newAssessment()
-                .withActivityState(
-                        new ActivityState(APPLICATION_ASSESSMENT, PENDING),
-                        new ActivityState(APPLICATION_ASSESSMENT, REJECTED),
-                        new ActivityState(APPLICATION_ASSESSMENT, OPEN))
+                .withActivityState(AssessmentState.PENDING, AssessmentState.REJECTED, AssessmentState.OPEN)
                 .build(3);
 
         List<Assessment> assessmentList = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED))
+                .withActivityState(AssessmentState.SUBMITTED)
                 .build(1);
 
         List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()

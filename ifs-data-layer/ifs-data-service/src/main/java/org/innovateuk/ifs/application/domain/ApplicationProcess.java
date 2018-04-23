@@ -63,7 +63,7 @@ public class ApplicationProcess extends Process<ProcessRole, Application, Applic
 
     @Override
     public ApplicationState getProcessState() {
-        return ApplicationState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override

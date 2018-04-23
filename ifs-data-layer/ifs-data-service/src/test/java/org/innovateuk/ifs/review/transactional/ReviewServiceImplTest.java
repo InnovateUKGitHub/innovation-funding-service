@@ -16,7 +16,6 @@ import org.innovateuk.ifs.review.resource.ReviewResource;
 import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,11 +39,11 @@ import static org.innovateuk.ifs.review.builder.ReviewParticipantBuilder.newRevi
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeBuilder.newReviewRejectOutcome;
 import static org.innovateuk.ifs.review.builder.ReviewRejectOutcomeResourceBuilder.newReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.review.builder.ReviewResourceBuilder.newReviewResource;
+import static org.innovateuk.ifs.review.resource.ReviewState.ACCEPTED;
 import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
 import static org.innovateuk.ifs.review.transactional.ReviewServiceImpl.INVITE_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_REVIEW;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -141,8 +140,6 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
         List<Application> applications = newApplication()
                 .withCompetition(competition)
                 .build(1);
-        ActivityState acceptedActivityState = new ActivityState(ASSESSMENT_REVIEW, State.ACCEPTED);
-
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(assessor)
@@ -150,7 +147,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .build(1);
 
         Review review = new Review(applications.get(0), reviewParticipants.get(0));
-        review.setActivityState(acceptedActivityState);
+        review.setActivityState(ACCEPTED);
 
         when(reviewParticipantRepositoryMock
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
@@ -163,9 +160,6 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .thenReturn(true);
 
         when(processRoleRepositoryMock.save(isA(ProcessRole.class))).thenReturn(processRoles.get(0));
-
-        when(activityStateRepositoryMock.findOneByActivityTypeAndState(ASSESSMENT_REVIEW, State.CREATED))
-                .thenReturn(acceptedActivityState);
 
         when(reviewRepositoryMock
                 .findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState()))
@@ -188,7 +182,7 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
 
 
         InOrder inOrder = inOrder(reviewParticipantRepositoryMock, applicationRepositoryMock,
-                reviewRepositoryMock, activityStateRepositoryMock, reviewRepositoryMock,
+                reviewRepositoryMock, reviewRepositoryMock,
                 reviewRepositoryMock, reviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock);
         inOrder.verify(reviewParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
@@ -196,8 +190,6 @@ public class ReviewServiceImplTest extends BaseServiceUnitTest<ReviewServiceImpl
                 .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
         inOrder.verify(reviewRepositoryMock)
                 .existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, applications.get(0), (State.WITHDRAWN));
-        inOrder.verify(activityStateRepositoryMock)
-                .findOneByActivityTypeAndState(ASSESSMENT_REVIEW, State.CREATED);
         inOrder.verify(reviewRepositoryMock)
                 .save(review);
         inOrder.verify(reviewRepositoryMock)

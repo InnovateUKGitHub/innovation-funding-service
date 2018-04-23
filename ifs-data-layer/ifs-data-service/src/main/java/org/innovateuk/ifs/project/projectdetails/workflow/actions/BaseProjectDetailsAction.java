@@ -24,20 +24,17 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJ
 public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflowAction<ProjectDetailsState, ProjectDetailsEvent> {
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
 
     @Override
     public void doExecute(StateContext<ProjectDetailsState, ProjectDetailsEvent> context) {
 
         ProcessOutcome updatedProcessOutcome = (ProcessOutcome) context.getMessageHeader("processOutcome");
-        State newState = context.getTransition().getTarget().getId().getBackingState();
+        ProjectDetailsState newState = context.getTransition().getTarget().getId();
 
-        ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, newState);
+//        ActivityState newActivityState = activityStateRepository.findOneByActivityTypeAndState(PROJECT_SETUP_PROJECT_DETAILS, newState);
         doExecute(getProjectFromContext(context), getProjectDetailsFromContext(context), getProjectUserFromContext(context),
-                newActivityState, Optional.ofNullable(updatedProcessOutcome));
+                newState, Optional.ofNullable(updatedProcessOutcome));
     }
 
     private Project getProjectFromContext(StateContext<ProjectDetailsState, ProjectDetailsEvent> context) {
@@ -53,7 +50,7 @@ public abstract class BaseProjectDetailsAction extends TestableTransitionWorkflo
     }
 
     protected void doExecute(Project project, ProjectDetailsProcess projectDetails, ProjectUser projectUser,
-                                      ActivityState newState, Optional<ProcessOutcome> processOutcome) {
+                                      ProjectDetailsState newState, Optional<ProcessOutcome> processOutcome) {
 
         projectDetails.setActivityState(newState);
         projectDetailsProcessRepository.save(projectDetails);

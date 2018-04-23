@@ -61,18 +61,17 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
     }
 
     @Test
-    public void testFindAll() throws Exception {
+    public void testFindAll() {
         repository.deleteAll();
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(openState).
+                        withActivityState(AssessmentState.OPEN).
                         build());
 
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -112,10 +111,10 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(openState).
+                        withActivityState(AssessmentState.OPEN).
                         build(2);
 
-        List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);
+        List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));
 
         // Save two questions
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -153,14 +152,13 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         Assessment assessment = assessmentRepository.save(
                 newAssessment().
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(openState).
+                        withActivityState(AssessmentState.OPEN).
                         build());
         // Save two questions
         List<Question> questions = asList(new Question(), new Question()).stream().map(question -> questionRepository.save(question)).collect(toList());
@@ -198,16 +196,15 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(openState).
+                        withActivityState(AssessmentState.OPEN).
                         build(2);
 
-        List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);
+        List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));
 
         // Save a question
         Question question = questionRepository.save(new Question());
@@ -243,20 +240,18 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
     @Test
     public void findByAssessmentTargetId() {
-
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(openState).
+                        withActivityState(AssessmentState.OPEN).
                         build(2);
 
-        List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);
+        List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));
 
         // Save a question
         Question question = questionRepository.save(new Question());
@@ -290,17 +285,16 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
 
         ProcessRole processRole = processRoleRepository.findOne(1L);
         Application application = applicationRepository.findOne(1L);
-        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentState.OPEN.getBackingState());
 
         List<Assessment> assessments =
                 newAssessment().
                         withId().
                         withParticipant(processRole).
                         withApplication(application).
-                        withActivityState(openState).
+                        withActivityState(AssessmentState.OPEN).
                         build(2);
 
-        List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);
+        List<Assessment> savedAssessments = simpleMap(assessments, assessment -> assessmentRepository.save(assessment));
 
         // Save a question
         Question question = questionRepository.save(new Question());

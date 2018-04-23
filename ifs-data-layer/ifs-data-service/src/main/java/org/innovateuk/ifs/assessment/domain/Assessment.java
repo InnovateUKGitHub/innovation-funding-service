@@ -42,6 +42,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     public Assessment(Application application, ProcessRole processRole) {
         this.participant = processRole;
         this.target = application;
+        this.activityState = AssessmentState.CREATED;
     }
 
     public AssessmentFundingDecisionOutcome getFundingDecision() {
@@ -95,7 +96,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     }
 
     public AssessmentState getProcessState() {
-        return AssessmentState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override
@@ -126,5 +127,10 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
                 .append(target)
                 .append(responses)
                 .toHashCode();
+    }
+
+    @Override
+    public AssessmentState getActivityState() {
+        return activityState;
     }
 }

@@ -25,11 +25,10 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
     ProjectProcess() {
     }
 
-    public ProjectProcess(ProjectUser participant, Project target, ActivityState originalState) {
+    public ProjectProcess(ProjectUser participant, Project target, ProjectState originalState) {
         this.participant = participant;
         this.target = target;
         this.setActivityState(originalState);
@@ -57,7 +56,7 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
 
     @Override
     public ProjectState getProcessState() {
-        return ProjectState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override
@@ -83,5 +82,9 @@ public class ProjectProcess extends Process<ProjectUser, Project, ProjectState> 
                 .append(target)
                 .toHashCode();
     }
-}
 
+    @Override
+    public ProjectState getActivityState() {
+        return activityState;
+    }
+}

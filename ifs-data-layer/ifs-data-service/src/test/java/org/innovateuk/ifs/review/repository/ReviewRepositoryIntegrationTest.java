@@ -27,6 +27,8 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.review.builder.ReviewBuilder.newReview;
 import static org.innovateuk.ifs.review.builder.ReviewInviteBuilder.newReviewInvite;
+import static org.innovateuk.ifs.review.resource.ReviewState.CREATED;
+import static org.innovateuk.ifs.review.resource.ReviewState.WITHDRAWN;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
@@ -92,7 +94,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setActivityState(CREATED);
         repository.save(review);
 
         assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application, State.WITHDRAWN)); // probably should be notExists if that's allowed
@@ -127,7 +129,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setActivityState(CREATED);
         repository.save(review);
 
         assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application2, State.WITHDRAWN));
@@ -166,7 +168,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setActivityState(CREATED);
         repository.save(review);
 
 
@@ -207,7 +209,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setActivityState(CREATED);
         repository.save(review);
 
 
@@ -300,7 +302,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setActivityState(CREATED);
 
         repository.save(review);
 
@@ -354,7 +356,7 @@ public class ReviewRepositoryIntegrationTest extends BaseRepositoryIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.WITHDRAWN));
+        review.setActivityState(WITHDRAWN);
 
         repository.save(review);
 

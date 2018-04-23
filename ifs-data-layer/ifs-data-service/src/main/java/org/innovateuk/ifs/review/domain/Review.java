@@ -77,7 +77,7 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
     }
 
     public ReviewState getProcessState() {
-        return ReviewState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override
@@ -106,5 +106,10 @@ public class Review extends Process<ProcessRole, Application, ReviewState> {
                 .append(participant)
                 .append(target)
                 .toHashCode();
+    }
+
+    @Override
+    public ReviewState getActivityState() {
+        return activityState;
     }
 }

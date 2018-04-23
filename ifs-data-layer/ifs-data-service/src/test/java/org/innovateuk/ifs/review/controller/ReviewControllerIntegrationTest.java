@@ -3,6 +3,7 @@ package org.innovateuk.ifs.review.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -74,16 +75,10 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
     private ReviewParticipantRepository reviewParticipantRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private ReviewRepository reviewRepository;
 
     @Autowired
     private MilestoneRepository milestoneRepository;
-
-    @Autowired
-    private ReviewMapper reviewMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -174,7 +169,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -229,7 +224,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -282,7 +277,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -300,7 +295,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED));
+        review.setActivityState(ReviewState.CREATED);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -352,7 +347,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -370,7 +365,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                         .withParticipant(processRole)
                         .withTarget(application)
                         .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.WITHDRAWN));
+        review.setActivityState(ReviewState.WITHDRAWN);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -423,7 +418,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -442,8 +437,8 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                         .withTarget(application)
                         .build(2);
 
-        assessmentReviews.get(0).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.ACCEPTED));
-        assessmentReviews.get(1).setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
+        assessmentReviews.get(0).setActivityState(ReviewState.ACCEPTED);
+        assessmentReviews.get(1).setActivityState(ReviewState.PENDING);
         reviewRepository.save(assessmentReviews.get(0));
         reviewRepository.save(assessmentReviews.get(1));
 
@@ -469,7 +464,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -486,7 +481,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
+        review.setActivityState(ReviewState.PENDING);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -509,7 +504,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -526,7 +521,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.REJECTED));
+        review.setActivityState(ReviewState.REJECTED);
         reviewRepository.save(review);
 
         flushAndClearSession();
@@ -549,7 +544,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .with(id(null))
                 .withCompetition(competition)
                 .withInAssessmentReviewPanel(true)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .withActivityState(ApplicationState.SUBMITTED)
                 .build();
         applicationRepository.save(application);
 
@@ -566,7 +561,7 @@ public class ReviewControllerIntegrationTest extends BaseControllerIntegrationTe
                 .withTarget(application)
                 .withParticipant(processRole)
                 .build();
-        review.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING));
+        review.setActivityState(ReviewState.PENDING);
         reviewRepository.save(review);
 
         flushAndClearSession();

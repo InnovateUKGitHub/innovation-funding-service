@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 
@@ -65,7 +66,7 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((app, object) -> setField("target", app, object), application);
     }
 
-    public AssessmentBuilder withActivityState(ActivityState... activityState) {
+    public AssessmentBuilder withActivityState(AssessmentState... activityState) {
         return withArray((state, object) -> object.setActivityState(state), activityState);
     }
 

@@ -58,9 +58,6 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private InterviewAssignmentRepository interviewAssignmentRepository;
 
     @Autowired
@@ -146,12 +143,12 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
     @Override
     public ServiceResult<Void> assignApplications(List<StagedApplicationResource> stagedInvites) {
 
-        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
+//        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.CREATED.getBackingState());
 
         stagedInvites.stream()
                 .distinct()
                 .map(invite -> getApplication(invite.getApplicationId()))
-                .forEach(application -> assignApplicationToCompetition(application.getSuccess(), createdActivityState));
+                .forEach(application -> assignApplicationToCompetition(application.getSuccess()));
 
         return serviceSuccess();
     }
@@ -180,12 +177,12 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         List<InterviewAssignment> interviewAssignments = interviewAssignmentRepository.findByTargetCompetitionIdAndActivityStateState(
                 competitionId, InterviewAssignmentState.CREATED.getBackingState());
 
-        final ActivityState awaitingFeedbackActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
+//        final ActivityState awaitingFeedbackActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE.getBackingState());
 
         ServiceResult<Void> result = serviceSuccess();
         for (InterviewAssignment assignment : interviewAssignments) {
             if (result.isSuccess()) {
-                result = sendInvite(assessorInviteSendResource, assignment, awaitingFeedbackActivityState);
+                result = sendInvite(assessorInviteSendResource, assignment);
             }
         }
 
@@ -199,7 +196,7 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
                         SUBMITTED_FEEDBACK_RESPONSE.getBackingState())));
     }
 
-    private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment, ActivityState awaitingFeedbackActivityState) {
+    private ServiceResult<Void> sendInvite(AssessorInviteSendResource assessorInviteSendResource, InterviewAssignment assignment) {
         User user = assignment.getParticipant().getUser();
         NotificationTarget recipient = new UserNotificationTarget(user.getName(), user.getEmail());
         Notification notification = new Notification(
@@ -281,10 +278,10 @@ public class InterviewAssignmentServiceImpl implements InterviewAssignmentServic
         return find(organisationRepository.findOne(organisationId), notFoundError(Organisation.class, organisationId));
     }
 
-    private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application, ActivityState createdActivityState) {
+    private ServiceResult<InterviewAssignment> assignApplicationToCompetition(Application application) {
         if (!interviewAssignmentRepository.existsByTargetIdAndActivityStateStateIn(application.getId(), singletonList(InterviewAssignmentState.CREATED.getBackingState()))) {
             final ProcessRole pr = new ProcessRole(application.getLeadApplicant(), application.getId(), Role.INTERVIEW_LEAD_APPLICANT, application.getLeadOrganisationId());
-            final InterviewAssignment panel = new InterviewAssignment(application, pr, createdActivityState);
+            final InterviewAssignment panel = new InterviewAssignment(application, pr);
 
             interviewAssignmentRepository.save(panel);
 

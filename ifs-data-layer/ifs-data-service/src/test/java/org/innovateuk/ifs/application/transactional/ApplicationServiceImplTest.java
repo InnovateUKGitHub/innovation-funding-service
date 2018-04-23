@@ -50,6 +50,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.application.builder.IneligibleOutcomeBuilder.newIneligibleOutcome;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.APPLICATION_MUST_BE_SUBMITTED;
@@ -157,7 +158,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User user = newUser().build();
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(Role.LEADAPPLICANT).withOrganisationId(organisation.getId()).build();
-        ApplicationState applicationState = ApplicationState.CREATED;
+        ApplicationState applicationState = CREATED;
 
         Application application = newApplication().
                 withId(1L).
@@ -211,11 +212,11 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
         User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
-        Application testApplication1 = new Application(null, "testApplication1Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication1 = new Application(null, "testApplication1Name", null, CREATED);
         testApplication1.setId(1L);
-        Application testApplication2 = new Application(null, "testApplication2Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication2 = new Application(null, "testApplication2Name", null, CREATED);
         testApplication2.setId(2L);
-        Application testApplication3 = new Application(null, "testApplication3Name", null, new ActivityState(ActivityType.APPLICATION, State.CREATED));
+        Application testApplication3 = new Application(null, "testApplication3Name", null, CREATED);
         testApplication3.setId(3L);
 
         ApplicationResource testApplication1Resource = newApplicationResource().with(id(1L)).withName("testApplication1Name").build();
@@ -324,7 +325,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
         Competition competition = newCompetition().with(id(1L)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
-        ApplicationState applicationState = ApplicationState.CREATED;
+        ApplicationState applicationState = CREATED;
 
         String applicationName = "testApplication";
 

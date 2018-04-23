@@ -114,9 +114,6 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     private ReviewRepository reviewRepository;
 
     @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-    @Autowired
     private AvailableAssessorMapper availableAssessorMapper;
 
     @Autowired
@@ -392,10 +389,9 @@ public class ReviewInviteServiceImpl extends InviteService<ReviewInvite> impleme
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(ReviewParticipant participant) {
         Competition competition = participant.getProcess();
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.PENDING);
         applicationsInPanel.forEach(application -> {
             Review review = new Review(application, participant);
-            review.setActivityState(pendingActivityState);
+            review.setActivityState(ReviewState.PENDING);
             reviewRepository.save(review);
         });
         return serviceSuccess();

@@ -68,7 +68,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected GOLProcess object (say X) and verifying that X was the object that was saved.
-        GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, expectedActivityState);
+        GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, GrantOfferLetterState.PENDING);
 
         // Ensure the correct event was fired by the workflow
         expectedGolProcess.setProcessEvent(GrantOfferLetterEvent.PROJECT_CREATED.getType());
@@ -205,8 +205,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         ProjectUser projectUser = newProjectUser().withUser(user).build();
 
         // Set the current state in the GOL Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
-        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentGOLState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
         // Set the destination state which we expect when the event is fired
@@ -220,7 +219,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected GOLProcess object (say X) and verifying that X was the object that was saved.
-        GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, expectedActivityState);
+        GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, destinationGOLState);
 
         // Ensure the correct event was fired by the workflow
         expectedGolProcess.setProcessEvent(expectedEventToBeFired.getType());
@@ -234,8 +233,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         User internalUser = newUser().build();
 
         // Set the current state in the GOL Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
-        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentGOLState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
         // Set the destination state which we expect when the event is fired
@@ -249,7 +247,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected GOLProcess object (say X) and verifying that X was the object that was saved.
-        GOLProcess expectedGolProcess = new GOLProcess(internalUser, project, expectedActivityState);
+        GOLProcess expectedGolProcess = new GOLProcess(internalUser, project, destinationGOLState);
 
         // Ensure the correct event was fired by the workflow
         expectedGolProcess.setProcessEvent(expectedEventToBeFired.getType());
@@ -263,8 +261,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         User internalUser = newUser().build();
 
         // Set the current state in the GOL Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
-        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentGOLState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
         // Call the workflow here
@@ -282,8 +279,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         ProjectUser projectUser = newProjectUser().withUser(externalUser).build();
 
         // Set the current state in the GOL Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
-        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentGOLState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
         // Call the workflow here
@@ -300,8 +296,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         ProjectUser projectUser = newProjectUser().build();
 
         // Set the current state in the GOL Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
-        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentGOLState);
         currentGOLProcess.setParticipant(projectUser);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
@@ -316,7 +311,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected GOLProcess object (say X) and verifying that X was the object that was saved.
-        GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, expectedActivityState);
+        GOLProcess expectedGolProcess = new GOLProcess(projectUser, project, destinationGOLState);
 
         // Ensure the correct event was fired by the workflow
         expectedGolProcess.setProcessEvent(expectedEventToBeFired.getType());

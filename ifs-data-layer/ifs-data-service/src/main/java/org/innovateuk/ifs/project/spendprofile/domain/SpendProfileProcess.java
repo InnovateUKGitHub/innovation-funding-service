@@ -27,17 +27,16 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private Project target;
 
-    // for ORM use
     SpendProfileProcess() {
     }
 
-    public SpendProfileProcess(ProjectUser participant, Project target, ActivityState originalState) {
+    public SpendProfileProcess(ProjectUser participant, Project target, SpendProfileState originalState) {
         this.participant = participant;
         this.target = target;
         this.setActivityState(originalState);
     }
 
-    public SpendProfileProcess(User internalParticipant, Project target, ActivityState originalState) {
+    public SpendProfileProcess(User internalParticipant, Project target, SpendProfileState originalState) {
         this.internalParticipant = internalParticipant;
         this.target = target;
         this.setActivityState(originalState);
@@ -65,7 +64,7 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
 
     @Override
     public SpendProfileState getProcessState() {
-        return SpendProfileState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override
@@ -90,5 +89,10 @@ public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProf
                 .append(participant)
                 .append(target)
                 .toHashCode();
+    }
+
+    @Override
+    public SpendProfileState getActivityState() {
+        return activityState;
     }
 }

@@ -68,7 +68,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                 .build();
 
         Assessment assessment = newAssessment()
-                .withActivityState(buildActivityStateWithState(REJECTED))
+                .withActivityState(REJECTED)
                 .withRejection(newAssessmentRejectOutcome()
                         .withRejectReason(CONFLICT_OF_INTEREST)
                         .withRejectComment("Member of board of directors")
@@ -150,9 +150,5 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentRepositoryMock)
                 .countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(userId, competition.getId(), getBackingStates(assessmentStatesThatAreSubmitted));
 
-    }
-
-    private ActivityState buildActivityStateWithState(AssessmentState state) {
-        return new ActivityState(APPLICATION_ASSESSMENT, state.getBackingState());
     }
 }

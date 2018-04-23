@@ -18,6 +18,7 @@ import org.innovateuk.ifs.review.mapper.ReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.review.repository.ReviewRepository;
 import org.innovateuk.ifs.review.resource.ReviewRejectOutcomeResource;
 import org.innovateuk.ifs.review.resource.ReviewResource;
+import org.innovateuk.ifs.review.resource.ReviewState;
 import org.innovateuk.ifs.review.workflow.configuration.ReviewWorkflowHandler;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -64,9 +65,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private ReviewRepository reviewRepository;
-
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private NotificationSender notificationSender;
@@ -172,10 +170,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ServiceResult<Void> createAssessmentReview(ReviewParticipant assessor, Application application) {
         if (!reviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
-            final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_REVIEW, State.CREATED);
-
             Review review =  new Review(application, assessor);
-            review.setActivityState(createdActivityState);
+            review.setActivityState(ReviewState.CREATED);
             reviewRepository.save(review);
         }
         return serviceSuccess();

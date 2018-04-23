@@ -45,8 +45,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() throws Exception {
-
+    public void testProjectCreated() {
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         ProjectUser projectUser = newProjectUser().build();
 
@@ -61,17 +60,16 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected ViabilityProcess object (say X) and verifying that X was the object that was saved.
-        ViabilityProcess expectedViabilityProcess = new ViabilityProcess(projectUser, partnerOrganisation, expectedActivityState);
+        ViabilityProcess expectedViabilityProcess = new ViabilityProcess(projectUser, partnerOrganisation, ViabilityState.REVIEW);
 
         // Ensure the correct event was fired by the workflow
         expectedViabilityProcess.setProcessEvent(ViabilityEvent.PROJECT_CREATED.getType());
 
         verify(viabilityProcessRepositoryMock).save(expectedViabilityProcess);
-
     }
 
     @Test
-    public void testViabilityApproved() throws Exception {
+    public void testViabilityApproved() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, internalUser)),
 
@@ -80,7 +78,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testOrganisationIsAcademic() throws Exception {
+    public void testOrganisationIsAcademic() {
 
         callWorkflowAndCheckTransitionAndEventFired(((partnerOrganisation, internalUser) -> viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, internalUser)),
 
@@ -97,8 +95,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
         User internalUser = newUser().build();
 
         // Set the current state in the Viability Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_VIABILITY, currentViabilityState.getBackingState());
-        ViabilityProcess currentViabilityProcess = new ViabilityProcess((User) null, partnerOrganisation, currentActivityState);
+        ViabilityProcess currentViabilityProcess = new ViabilityProcess((User) null, partnerOrganisation, currentViabilityState);
         when(viabilityProcessRepositoryMock.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentViabilityProcess);
 
         // Set the destination state which we expect when the event is fired
@@ -112,7 +109,7 @@ public class ViabilityWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected ViabilityProcess object (say X) and verifying that X was the object that was saved.
-        ViabilityProcess expectedViabilityProcess = new ViabilityProcess(internalUser, partnerOrganisation, expectedActivityState);
+        ViabilityProcess expectedViabilityProcess = new ViabilityProcess(internalUser, partnerOrganisation, destinationViabilityState);
 
         // Ensure the correct event was fired by the workflow
         expectedViabilityProcess.setProcessEvent(expectedEventToBeFired.getType());

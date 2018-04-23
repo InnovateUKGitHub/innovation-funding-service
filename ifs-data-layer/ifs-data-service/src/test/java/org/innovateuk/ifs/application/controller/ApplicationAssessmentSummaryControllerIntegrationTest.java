@@ -41,7 +41,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     }
 
     @Test
-    public void getAvailableAssessors() throws Exception {
+    public void getAvailableAssessors() {
         loginCompAdmin();
         ApplicationAssessorPageResource applicationAssessorResources = controller
                 .getAvailableAssessors(1L, 0, 20, null)
@@ -50,7 +50,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
         assertEquals(Collections.emptyList(), applicationAssessorResources.getContent());
     }
     @Test
-    public void getAssignedAssessors() throws Exception {
+    public void getAssignedAssessors() {
         loginCompAdmin();
         List<ApplicationAssessorResource> applicationAssessorResources = controller
                 .getAssignedAssessors(1L)
@@ -61,7 +61,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
 
     @Test
-    public void getApplicationAssessmentSummary() throws Exception {
+    public void getApplicationAssessmentSummary() {
         Competition competition = competitionRepository.save(newCompetition()
                 .with(id(null))
                 .withName("Connected digital additive manufacturing")
@@ -73,7 +73,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
                 .withName("Progressive machines")
                 .withApplicationState(CREATED)
                 .build();
-        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED));
+//        application.getApplicationProcess().setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.CREATED));
 
         applicationRepository.save(application);
 

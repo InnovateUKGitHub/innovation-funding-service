@@ -36,13 +36,11 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
     public InterviewAssignment() {
     }
 
-    public InterviewAssignment(Application application, ProcessRole participant, ActivityState createdState) {
+    public InterviewAssignment(Application application, ProcessRole participant) {
         if (application == null) throw new NullPointerException("target cannot be null");
         if (participant == null) throw new NullPointerException("participant cannot be null");
-        if (createdState == null) throw new NullPointerException("createdState cannot be null");
 
-        if (createdState.getState() != InterviewAssignmentState.CREATED.getBackingState())
-            throw new IllegalArgumentException("createdState must be CREATED");
+
         if (participant.getRole() != INTERVIEW_LEAD_APPLICANT)
             throw new IllegalArgumentException("participant must be INTERVIEW_LEAD_APPLICANT");
         if (!participant.getApplicationId().equals(application.getId()))
@@ -54,7 +52,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
         this.target = application;
         this.participant = participant;
-        setActivityState(createdState);
+        setActivityState(InterviewAssignmentState.CREATED);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
 
     @Override
     public InterviewAssignmentState getProcessState() {
-        return InterviewAssignmentState.fromState(activityState.getState());
+        return activityState;
     }
 
     public void setResponse(InterviewAssignmentResponseOutcome response) {
@@ -116,6 +114,11 @@ public class InterviewAssignment extends Process<ProcessRole, Application, Inter
                 .append(participant)
                 .append(target)
                 .toHashCode();
+    }
+
+    @Override
+    public InterviewAssignmentState getActivityState() {
+        return activityState;
     }
 
     public InterviewAssignmentMessageOutcome getMessage() {

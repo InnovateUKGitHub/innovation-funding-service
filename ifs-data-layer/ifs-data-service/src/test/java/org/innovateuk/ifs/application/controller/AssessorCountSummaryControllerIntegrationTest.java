@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.AssessorCountSummaryPageResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -115,7 +116,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .with(id(null))
                 .withApplication(application)
                 .withParticipant(processRole)
-                .withActivityState(assessmentState(PENDING))
+                .withActivityState(AssessmentState.PENDING)
                 .build();
 
         assessmentRepository.save(assessment);

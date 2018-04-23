@@ -74,7 +74,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         InterviewAssignment expected = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(CREATED))
+                .withState(CREATED)
                 .withTarget(application)
                 .build();
 
@@ -109,7 +109,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         InterviewAssignment expected = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState)
+                .withState(CREATED)
                 .withTarget(application)
                 .build();
 
@@ -139,7 +139,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         List<InterviewAssignment> assignments = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(CREATED), activityState(AWAITING_FEEDBACK_RESPONSE), activityState(SUBMITTED_FEEDBACK_RESPONSE))
+                .withState(CREATED, AWAITING_FEEDBACK_RESPONSE, SUBMITTED_FEEDBACK_RESPONSE)
                 .withTarget(applications.toArray(new Application[3]))
                 .build(3);
 
@@ -169,7 +169,7 @@ public class InterviewAssignmentRepositoryIntegrationTest extends BaseRepository
 
         InterviewAssignment assignment = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(CREATED))
+                .withState(CREATED)
                 .withTarget(application)
                 .build();
 

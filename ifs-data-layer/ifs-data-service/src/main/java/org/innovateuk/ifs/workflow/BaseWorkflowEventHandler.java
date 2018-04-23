@@ -70,8 +70,10 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
             getParticipant(message).ifPresent(processToUpdate::setParticipant);
             getInternalParticipant(message).ifPresent(processToUpdate::setInternalParticipant);
 
-            ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
-            processToUpdate.setActivityState(newState);
+//            ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
+
+
+            processToUpdate.setActivityState(state.getId());
             processToUpdate.setProcessEvent(message.getPayload().getType());
             processToUpdate.setLastModified(ZonedDateTime.now());
             getProcessRepository().save(processToUpdate);

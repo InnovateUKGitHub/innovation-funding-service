@@ -62,7 +62,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     private Long projectId = 123L;
 
     @Test
-    public void testProjectCreated() throws Exception {
+    public void testProjectCreated() {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -78,7 +78,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state, events etc) are updated in the process table.
         // This can be done by building the expected SpendProfileProcess object (say X) and verifying that X was the object that was saved.
-        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(projectUser, project, expectedActivityState);
+        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(projectUser, project, SpendProfileState.PENDING);
 
         // Ensure the correct event was fired by the workflow
         expectedSpendProfileProcess.setProcessEvent(SpendProfileEvent.PROJECT_CREATED.getType());
@@ -87,7 +87,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileGenerated() throws Exception {
+    public void testSpendProfileGenerated() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileGenerated(project, internalUser)),
 
@@ -96,7 +96,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileSubmitted() throws Exception {
+    public void testSpendProfileSubmitted() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithProjectUser(((project, projectUser) -> spendProfileWorkflowHandler.spendProfileSubmitted(project, projectUser)),
 
@@ -105,7 +105,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileApproved() throws Exception {
+    public void testSpendProfileApproved() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileApproved(project, internalUser)),
 
@@ -114,7 +114,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileRejected() throws Exception {
+    public void testSpendProfileRejected() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileRejected(project, internalUser)),
 
@@ -123,7 +123,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSpendProfileRejectedIsSubmitted() throws Exception {
+    public void testSpendProfileRejectedIsSubmitted() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithProjectUser(((project, projectUser) -> spendProfileWorkflowHandler.spendProfileSubmitted(project, projectUser)),
 
@@ -132,7 +132,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSubmitSpendProfileWithoutProjectUser() throws Exception {
+    public void testSubmitSpendProfileWithoutProjectUser() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> spendProfileWorkflowHandler.submit(project)),
 
@@ -141,28 +141,24 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testIsReadyToGenerate() throws Exception {
+    public void testIsReadyToGenerate() {
         SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData generateSpendProfileData = new SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData().build();
 
         Project project = generateSpendProfileData.getProject();
 
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, SpendProfileState.PENDING.getBackingState());
-
-        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, SpendProfileState.PENDING);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
         assertFalse(spendProfileWorkflowHandler.isAlreadyGenerated(project));
     }
 
     @Test
-    public void testIsAlreadyGenerated() throws Exception {
+    public void testIsAlreadyGenerated() {
         SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData generateSpendProfileData = new SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData().build();
 
         Project project = generateSpendProfileData.getProject();
 
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, SpendProfileState.CREATED.getBackingState());
-
-        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, SpendProfileState.CREATED);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
         assertTrue(spendProfileWorkflowHandler.isAlreadyGenerated(project));
@@ -174,8 +170,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         User internalUser = newUser().build();
 
         // Set the current state in the Spend Profile Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, currentSpendProfileState.getBackingState());
-        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentSpendProfileState);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
         // Set the destination state which we expect when the event is fired
@@ -189,7 +184,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected SpendProfileProcess object (say X) and verifying that X was the object that was saved.
-        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(internalUser, project, expectedActivityState);
+        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(internalUser, project, destinationSpendProfileState);
 
         // Ensure the correct event was fired by the workflow
         expectedSpendProfileProcess.setProcessEvent(expectedEventToBeFired.getType());
@@ -203,8 +198,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         ProjectUser projectUser = newProjectUser().build();
 
         // Set the current state in the Spend Profile Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, currentSpendProfileState.getBackingState());
-        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentSpendProfileState);
         currentSpendProfileProcess.setParticipant(projectUser);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
@@ -219,7 +213,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected SpendProfileProcess object (say X) and verifying that X was the object that was saved.
-        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(projectUser, project, expectedActivityState);
+        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(projectUser, project, destinationSpendProfileState);
 
         // Ensure the correct event was fired by the workflow
         expectedSpendProfileProcess.setProcessEvent(expectedEventToBeFired.getType());
@@ -233,8 +227,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         ProjectUser projectUser = newProjectUser().build();
 
         // Set the current state in the Spend Profile Process
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, currentSpendProfileState.getBackingState());
-        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess(projectUser, project, currentActivityState);
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess(projectUser, project, currentSpendProfileState);
         currentSpendProfileProcess.setParticipant(projectUser);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
@@ -249,7 +242,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
 
         // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
         // This can be done by building the expected SpendProfileProcess object (say X) and verifying that X was the object that was saved.
-        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(projectUser, project, expectedActivityState);
+        SpendProfileProcess expectedSpendProfileProcess = new SpendProfileProcess(projectUser, project, destinationSpendProfileState);
 
         // Ensure the correct event was fired by the workflow
         expectedSpendProfileProcess.setProcessEvent(expectedEventToBeFired.getType());

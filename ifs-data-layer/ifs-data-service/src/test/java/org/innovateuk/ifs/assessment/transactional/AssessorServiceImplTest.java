@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
@@ -22,7 +23,6 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +67,6 @@ import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -84,7 +83,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void registerAssessorByHash_callCorrectServicesAndHaveSuccessfulOutcome() throws Exception {
+    public void registerAssessorByHash_callCorrectServicesAndHaveSuccessfulOutcome() {
         String hash = "testhash";
         String email = "email@example.com";
 
@@ -154,7 +153,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void registerAssessorByHash_inviteDoesNotExistResultsInFailureAndSkippingUserRegistrationAndInviteAcceptance() throws Exception {
+    public void registerAssessorByHash_inviteDoesNotExistResultsInFailureAndSkippingUserRegistrationAndInviteAcceptance() {
         String hash = "inviteHashNotExists";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
@@ -183,7 +182,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void registerAssessorByHash_userValidationFailureResultsInFailureAndNotAcceptingInvite() throws Exception {
+    public void registerAssessorByHash_userValidationFailureResultsInFailureAndNotAcceptingInvite() {
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
@@ -217,7 +216,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void getAssessorProfile() throws Exception {
+    public void getAssessorProfile() {
         long assessorId = 7L;
         long profileId = 11L;
 
@@ -254,10 +253,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition() throws Exception {
-        Long competitionId = 1L;
+    public void notifyAssessorsByCompetition() {
+        long competitionId = 1L;
 
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .withName("Test Competition")
@@ -271,7 +269,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .build(2);
         List<Assessment> assessments = newAssessment()
                 .withId(2L, 3L)
-                .withActivityState(activityState)
+                .withActivityState(AssessmentState.CREATED)
                 .withApplication(
                         newApplication().withCompetition(competition).build(),
                         newApplication().withCompetition(competition).build()
@@ -348,10 +346,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition_oneEmailPerUser() throws Exception {
+    public void notifyAssessorsByCompetition_oneEmailPerUser() {
         Long competitionId = 1L;
 
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .withName("Test Competition")
@@ -362,7 +359,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         List<Assessment> assessments = newAssessment()
                 .withId(2L, 3L)
-                .withActivityState(activityState)
+                .withActivityState(AssessmentState.CREATED)
                 .withApplication(
                         newApplication().withCompetition(competition).build(),
                         newApplication().withCompetition(competition).build()
@@ -412,11 +409,10 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
 
         assertTrue(serviceResult.isSuccess());
         assertTrue(serviceResult.getErrors().isEmpty());
-
     }
 
     @Test
-    public void notifyAssessorsByCompetition_competitionNotFound() throws Exception {
+    public void notifyAssessorsByCompetition_competitionNotFound() {
         long competitionId = 1L;
 
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
@@ -432,16 +428,14 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition_oneTransitionFails() throws Exception {
-        Long competitionId = 1L;
-
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+    public void notifyAssessorsByCompetition_oneTransitionFails() {
+        long competitionId = 1L;
 
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .build();
         List<Assessment> assessments = newAssessment()
-                .withActivityState(activityState)
+                .withActivityState(AssessmentState.CREATED)
                 .withId(2L, 3L)
                 .build(2);
 
@@ -466,16 +460,14 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessorsByCompetition_allTransitionsFail() throws Exception {
-        Long competitionId = 1L;
-
-        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+    public void notifyAssessorsByCompetition_allTransitionsFail() {
+        long competitionId = 1L;
 
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .build();
         List<Assessment> assessments = newAssessment()
-                .withActivityState(activityState)
+                .withActivityState(AssessmentState.CREATED)
                 .withId(2L, 3L)
                 .build(2);
 

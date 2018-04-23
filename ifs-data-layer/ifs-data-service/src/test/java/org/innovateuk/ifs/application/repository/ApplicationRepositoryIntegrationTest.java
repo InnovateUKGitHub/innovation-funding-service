@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.interview.domain.InterviewAssignment;
@@ -29,6 +30,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.application.resource.ApplicationState.submittedAndFinishedStates;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -88,7 +91,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
-                .withActivityState(activityState(ApplicationState.CREATED), activityState(ApplicationState.SUBMITTED))
+                .withActivityState(CREATED, SUBMITTED)
                 .with(id(null))
                 .build(2);
 
@@ -123,7 +126,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
-                .withActivityState(activityState(ApplicationState.SUBMITTED), activityState(ApplicationState.SUBMITTED))
+                .withActivityState(SUBMITTED)
                 .with(id(null))
                 .build(2);
 
@@ -131,7 +134,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         InterviewAssignment interviewPanel = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(InterviewAssignmentState.CREATED))
+                .withState(InterviewAssignmentState.CREATED)
                 .withTarget(applications.get(0))
                 .build();
 
@@ -153,14 +156,14 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> applications = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withActivityState(activityState(ApplicationState.SUBMITTED), activityState(ApplicationState.SUBMITTED))
+                .withActivityState(SUBMITTED)
                 .build(2);
 
         applicationRepository.save(applications);
 
         InterviewAssignment interviewAssignment = newInterviewAssignment()
                 .with(id(null))
-                .withActivityState(activityState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE))
+                .withState(InterviewAssignmentState.AWAITING_FEEDBACK_RESPONSE)
                 .withTarget(applications.get(0))
                 .build();
 
@@ -195,7 +198,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Assessment assessment = assessmentRepository.save(newAssessment()
                 .withApplication(application)
-                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.SUBMITTED))
+                .withActivityState(AssessmentState.SUBMITTED)
                 .build()
         );
 
@@ -209,17 +212,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
                 .with(id(null))
                 .withApplicationState(applicationState)
                 .build();
-        application.getApplicationProcess().setActivityState(activityState(applicationState));
+        application.getApplicationProcess().setActivityState(applicationState);
         return application;
-    }
-
-    private ActivityState activityState(ApplicationState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, applicationState
-                .getBackingState());
-    }
-
-    private ActivityState activityState(InterviewAssignmentState applicationState) {
-        return activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL,
-                applicationState.getBackingState());
     }
 }

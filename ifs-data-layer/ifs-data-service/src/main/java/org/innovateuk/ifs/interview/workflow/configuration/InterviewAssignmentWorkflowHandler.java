@@ -45,15 +45,9 @@ public class InterviewAssignmentWorkflowHandler extends BaseWorkflowEventHandler
     @Autowired
     private ProcessRoleRepository processRoleRepository;
 
-    @Autowired
-    private ActivityStateRepository activityStateRepository;
-
-
     @Override
     protected InterviewAssignment createNewProcess(Application application, ProcessRole participant) {
-        final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_INTERVIEW_PANEL, State.CREATED);
-
-        return new InterviewAssignment(application, participant, createdActivityState);
+        return new InterviewAssignment(application, participant);
     }
 
     public boolean notifyInterviewPanel(InterviewAssignment interviewAssignment, InterviewAssignmentMessageOutcome messageOutcome) {

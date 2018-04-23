@@ -48,6 +48,6 @@ public class InterviewBuilder extends BaseBuilder<Interview, InterviewBuilder> {
     }
 
     public InterviewBuilder withState(InterviewState... states) {
-        return withArray((state, invite) -> invite.setActivityState(new ActivityState(ASSESSMENT_INTERVIEW, state.getBackingState())), states);
+        return withArray((state, invite) -> invite.setActivityState(state), states);
     }
 }

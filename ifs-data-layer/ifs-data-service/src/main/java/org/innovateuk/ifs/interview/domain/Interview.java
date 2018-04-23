@@ -56,7 +56,7 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
     }
 
     public InterviewState getProcessState() {
-        return InterviewState.fromState(activityState.getState());
+        return activityState;
     }
 
     @Override
@@ -85,5 +85,10 @@ public class Interview extends Process<ProcessRole, Application, InterviewState>
                 .append(participant)
                 .append(target)
                 .toHashCode();
+    }
+
+    @Override
+    public InterviewState getActivityState() {
+        return null;
     }
 }

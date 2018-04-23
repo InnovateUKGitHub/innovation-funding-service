@@ -143,7 +143,7 @@ public class GrantOfferLetterWorkflowHandlerTest extends BaseUnitTestMocksTest {
 
     private void assertGetGrantOfferLetterStateForUser(Project project, User currentUser, GrantOfferLetterState state, GrantOfferLetterEvent lastEvent, GrantOfferLetterStateResource expectedStateInformation) {
 
-        GOLProcess golProcess = new GOLProcess(newProjectUser().build(), project, new ActivityState(ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER, state.getBackingState()));
+        GOLProcess golProcess = new GOLProcess(newProjectUser().build(), project, state);
         golProcess.setProcessEvent(lastEvent.getType());
 
         when(authenticationHelperMock.getCurrentlyLoggedInUser()).thenReturn(ServiceResult.serviceSuccess(currentUser));
