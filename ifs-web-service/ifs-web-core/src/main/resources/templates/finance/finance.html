@@ -1605,6 +1605,18 @@
                         <label th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
                                 No
                         </label>
+                        <div class="multiple-choice invisible"
+                             th:with="unchosen=${!(costCategory.otherPublicFunding?.equals('No') or costCategory.otherPublicFunding?.equals('Yes'))}">
+                            <input type="radio"
+                                   th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-empty'}"
+                                   th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                                   value="unchosen"
+                                   required="required"
+                                   th:checked="${unchosen}" />
+                            <label th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-empty'}">
+                                Not chosen (hidden)
+                            </label>
+                        </div>
                     </div>
                     <div id="other-funding-table">
                         <div class="form-group" th:attr="data-repeatable-container=${question.id}">
