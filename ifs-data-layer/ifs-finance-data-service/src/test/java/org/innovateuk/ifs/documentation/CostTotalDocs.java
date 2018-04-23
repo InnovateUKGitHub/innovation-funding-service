@@ -22,6 +22,6 @@ public class CostTotalDocs {
     public static final FinanceCostTotalResourceBuilder financeCostTotalResourceBuilder = newFinanceCostTotalResource()
             .withFinanceType(FinanceType.APPLICATION)
             .withFinanceRowType(FinanceRowType.MATERIALS)
-            .withTotal(BigDecimal.valueOf(2000L))
+            .withTotal(new BigDecimal("150000.123456"))
             .withFinanceId(1L);
 }

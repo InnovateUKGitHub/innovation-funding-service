@@ -706,7 +706,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        final boolean useResubmissionQuestion = true;
+        final Boolean useResubmissionQuestion = true;
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(APPLICATION_DETAILS))).thenReturn(ServiceResult.serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/detail/edit")
