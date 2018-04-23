@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.validation.constraints.FieldComparison;
 import org.innovateuk.ifs.commons.validation.predicate.BiPredicateProvider;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
@@ -26,15 +27,18 @@ public class ApplicationDetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @DecimalMin(value = "1", message = "{competition.setup.applicationdetails.projectduration.min}")
+    @DecimalMax(value = "60", message = "{competition.setup.applicationdetails.projectduration.max}")
     @Digits(integer = MAX_DIGITS, fraction = 0, message = "{validation.standard.integer.non.decimal.format}")
     private BigDecimal minProjectDuration;
 
     @NotNull(message = "{validation.field.must.not.be.blank}")
     @DecimalMin(value = "1", message = "{competition.setup.applicationdetails.projectduration.min}")
+    @DecimalMax(value = "60", message = "{competition.setup.applicationdetails.projectduration.max}")
     @Digits(integer = MAX_DIGITS, fraction = 0, message = "{validation.standard.integer.non.decimal.format}")
     private BigDecimal maxProjectDuration;
 
-    private boolean useResubmissionQuestion;
+    @NotNull(message = "{validation.application.must.indicate.resubmission.or.not}")
+    private Boolean useResubmissionQuestion;
 
     public BigDecimal getMinProjectDuration() {
         return minProjectDuration;
@@ -52,11 +56,11 @@ public class ApplicationDetailsForm extends CompetitionSetupForm {
         this.maxProjectDuration = maxProjectDuration;
     }
 
-    public boolean isUseResubmissionQuestion() {
+    public Boolean getUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
 
-    public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
+    public void setUseResubmissionQuestion(Boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 

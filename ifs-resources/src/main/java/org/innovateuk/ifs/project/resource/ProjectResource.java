@@ -44,6 +44,9 @@ public class ProjectResource {
         return offerSubmittedDate != null;
     }
 
+    @JsonIgnore
+    public boolean isWithdrawn() { return projectState.equals(ProjectState.WITHDRAWN); }
+
     public Long getId() {
         return id;
     }
@@ -214,6 +217,7 @@ public class ProjectResource {
                 .append(grantOfferLetterRejectionReason, that.grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate, that.spendProfileSubmittedDate)
                 .append(durationInMonths, that.durationInMonths)
+                .append(projectState, that.projectState)
                 .isEquals();
     }
 
@@ -237,6 +241,7 @@ public class ProjectResource {
                 .append(grantOfferLetterRejectionReason)
                 .append(spendProfileSubmittedDate)
                 .append(durationInMonths)
+                .append(projectState)
                 .toHashCode();
     }
 }
