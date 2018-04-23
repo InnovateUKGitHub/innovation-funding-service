@@ -142,11 +142,10 @@ CompAdmin Views the assessors that have accepted the interview panel invite
     [Tags]
     Given log in as a different user         &{Comp_admin1_credentials}
     When the user navigates to the page      ${SERVER}/management/assessment/interview/competition/18/assessors/accepted
-    Then the user should see the element     jQuery=span:contains("1")
-    And the user should see the element      jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
+    Then the user should see the element     jQuery=td:contains("${assessor_joel}") ~ td:contains("Digital manufacturing")
     Then the user should see the element     jQuery=.column-quarter:contains("4") small:contains("Invited")
     And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Accepted")
-    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Declined")
+    And the user should see the element      jQuery=.column-quarter:contains("0") small:contains("Declined")
 
 *** Keywords ***
 Custom Suite Setup
