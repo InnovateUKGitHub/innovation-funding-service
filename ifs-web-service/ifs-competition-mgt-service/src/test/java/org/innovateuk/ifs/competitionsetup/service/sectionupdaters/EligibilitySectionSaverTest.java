@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
-import org.innovateuk.ifs.competitionsetup.eligibility.sectionupdater.EligibilitySectionSaver;
+import org.innovateuk.ifs.competitionsetup.eligibility.sectionupdater.EligibilitySectionUpdater;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 public class EligibilitySectionSaverTest {
 	
 	@InjectMocks
-	private EligibilitySectionSaver service;
+	private EligibilitySectionUpdater service;
 
 	@Mock
 	private MilestoneRestService milestoneRestService;

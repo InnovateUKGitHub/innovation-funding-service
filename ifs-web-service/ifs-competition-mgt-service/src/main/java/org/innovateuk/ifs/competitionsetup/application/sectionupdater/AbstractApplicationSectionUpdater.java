@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.AP
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToLinkedHashSet;
 
 
-public abstract class AbstractApplicationSectionSaver extends AbstractSectionSaver {
+public abstract class AbstractApplicationSectionUpdater extends AbstractSectionUpdater {
 
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;

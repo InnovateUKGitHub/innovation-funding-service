@@ -10,7 +10,7 @@ import java.util.Optional;
 /**
  * The interface for saving and autosaving competition forms.
  */
-public interface CompetitionSetupSaver {
+public interface CompetitionSetupUpdater {
 
 	ServiceResult<Void> autoSaveSectionField(CompetitionResource competitionResource, CompetitionSetupForm form, String fieldName, String value, Optional<Long> ObjectId);
 

@@ -10,8 +10,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionSaver;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,9 +28,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * Competition setup section saver for the additional info section.
  */
 @Service
-public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+public class AdditionalInfoSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
-	private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
+	private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionUpdater.class);
 
 	@Autowired
 	private CompetitionSetupRestService competitionSetupRestService;

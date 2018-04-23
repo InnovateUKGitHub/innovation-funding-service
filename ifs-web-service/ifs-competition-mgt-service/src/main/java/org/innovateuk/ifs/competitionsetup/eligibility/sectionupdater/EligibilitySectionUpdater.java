@@ -8,8 +8,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.eligibility.form.EligibilityForm;
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionSaver;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.Optional;
  * Competition setup section saver for the eligibility section.
  */
 @Service
-public class EligibilitySectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+public class EligibilitySectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     public static final String RESEARCH_CATEGORY_ID = "researchCategoryId";
     public static final String LEAD_APPLICANT_TYPES = "leadApplicantTypes";

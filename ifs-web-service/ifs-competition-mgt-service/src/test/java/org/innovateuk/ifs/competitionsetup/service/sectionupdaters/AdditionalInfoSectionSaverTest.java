@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.common.form.FunderRowForm;
-import org.innovateuk.ifs.competitionsetup.fundinginformation.sectionupdater.AdditionalInfoSectionSaver;
+import org.innovateuk.ifs.competitionsetup.fundinginformation.sectionupdater.AdditionalInfoSectionUpdater;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 public class AdditionalInfoSectionSaverTest {
 
 	@InjectMocks
-	private AdditionalInfoSectionSaver service;
+	private AdditionalInfoSectionUpdater service;
 	
 	@Mock
 	private CompetitionService competitionService;

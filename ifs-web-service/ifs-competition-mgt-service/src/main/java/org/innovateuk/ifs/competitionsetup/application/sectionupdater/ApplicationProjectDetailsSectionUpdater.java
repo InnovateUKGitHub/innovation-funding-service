@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.AbstractApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationProjectForm;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSubsectionSaver;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSubsectionUpdater;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection
  * Competition setup section saver for the application form section.
  */
 @Service
-public class ApplicationProjectDetailsSectionSaver extends AbstractApplicationSectionSaver implements CompetitionSetupSubsectionSaver {
+public class ApplicationProjectDetailsSectionUpdater extends AbstractApplicationSectionUpdater implements CompetitionSetupSubsectionUpdater {
 
     @Override
 	public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) {

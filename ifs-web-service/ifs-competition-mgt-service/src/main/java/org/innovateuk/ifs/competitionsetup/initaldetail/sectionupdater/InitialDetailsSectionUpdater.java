@@ -20,8 +20,8 @@ import org.innovateuk.ifs.competitionsetup.initaldetail.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionSaver;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionSpecialSectors;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.innovateuk.ifs.user.service.UserService;
@@ -48,10 +48,10 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
  * Competition setup section saver for the initial details section.
  */
 @Service
-public class InitialDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+public class InitialDetailsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
-	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
+	private static Log LOG = LogFactory.getLog(InitialDetailsSectionUpdater.class);
 
 	@Autowired
 	private CompetitionService competitionService;

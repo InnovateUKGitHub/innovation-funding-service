@@ -51,7 +51,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.*;
-import static org.innovateuk.ifs.competitionsetup.initaldetail.sectionupdater.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
+import static org.innovateuk.ifs.competitionsetup.initaldetail.sectionupdater.InitialDetailsSectionUpdater.OPENINGDATE_FIELDNAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Role.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.Role.INNOVATION_LEAD;

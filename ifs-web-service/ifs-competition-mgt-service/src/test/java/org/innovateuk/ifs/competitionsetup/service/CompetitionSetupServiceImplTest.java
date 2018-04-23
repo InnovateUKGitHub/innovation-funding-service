@@ -19,7 +19,7 @@ import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupForm
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.initaldetail.populator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.competitionsetup.common.populator.CompetitionSetupPopulator;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
 import org.junit.Before;
 import org.junit.Test;
@@ -168,11 +168,11 @@ public class CompetitionSetupServiceImplTest {
                 INITIAL_DETAILS, Optional.of(true),
                 CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(false))));
 
-        CompetitionSetupSectionSaver matchingSaver = mock(CompetitionSetupSectionSaver.class);
+        CompetitionSetupSectionUpdater matchingSaver = mock(CompetitionSetupSectionUpdater.class);
         when(matchingSaver.sectionToSave()).thenReturn(CompetitionSetupSection.ADDITIONAL_INFO);
         when(matchingSaver.supportsForm(AdditionalInfoForm.class)).thenReturn(true);
 
-        CompetitionSetupSectionSaver otherSaver = mock(CompetitionSetupSectionSaver.class);
+        CompetitionSetupSectionUpdater otherSaver = mock(CompetitionSetupSectionUpdater.class);
         when(otherSaver.sectionToSave()).thenReturn(CompetitionSetupSection.APPLICATION_FORM);
         when(otherSaver.supportsForm(AdditionalInfoForm.class)).thenReturn(false);
 
@@ -425,7 +425,7 @@ public class CompetitionSetupServiceImplTest {
         Optional<Long> objectId = Optional.empty();
         CompetitionSetupForm form = new InitialDetailsForm();
 
-        CompetitionSetupSectionSaver saver = mock(CompetitionSetupSectionSaver.class);
+        CompetitionSetupSectionUpdater saver = mock(CompetitionSetupSectionUpdater.class);
         CompetitionSetupFormPopulator populator = mock(CompetitionSetupFormPopulator.class);
 
         when(saver.sectionToSave()).thenReturn(INITIAL_DETAILS);

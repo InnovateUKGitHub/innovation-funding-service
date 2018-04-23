@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.milestone.sectionupdater.MilestonesSectionSaver;
+import org.innovateuk.ifs.competitionsetup.milestone.sectionupdater.MilestonesSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
 public class MilestonesSectionSaverTest {
 
     @InjectMocks
-    private MilestonesSectionSaver service;
+    private MilestonesSectionUpdater service;
 
     @Mock
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;

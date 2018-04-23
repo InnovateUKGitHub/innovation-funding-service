@@ -8,8 +8,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.assessor.form.AssessorsForm;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionSaver;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
  * Competition setup section saver for the assessor section.
  */
 @Service
-public class AssessorsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+public class AssessorsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
 	@Autowired
 	private CompetitionService competitionService;

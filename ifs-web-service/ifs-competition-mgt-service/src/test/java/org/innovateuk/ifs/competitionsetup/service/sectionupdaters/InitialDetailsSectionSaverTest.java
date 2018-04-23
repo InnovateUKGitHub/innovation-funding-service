@@ -12,7 +12,7 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.initaldetail.form.InitialDetailsForm;
-import org.innovateuk.ifs.competitionsetup.initaldetail.sectionupdater.InitialDetailsSectionSaver;
+import org.innovateuk.ifs.competitionsetup.initaldetail.sectionupdater.InitialDetailsSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.user.service.UserService;
@@ -51,7 +51,7 @@ public class InitialDetailsSectionSaverTest {
     private static final Long COMPETITION_ID = 24L;
 
     @InjectMocks
-    private InitialDetailsSectionSaver service;
+    private InitialDetailsSectionUpdater service;
 
     @Mock
     private MilestoneRestService milestoneRestService;

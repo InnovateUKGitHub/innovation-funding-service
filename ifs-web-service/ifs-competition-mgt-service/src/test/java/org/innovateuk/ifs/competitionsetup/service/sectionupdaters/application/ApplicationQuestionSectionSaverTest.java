@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationQuestionForm;
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.ApplicationQuestionSectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.ApplicationQuestionSectionUpdater;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.file.resource.FileTypeCategory;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class ApplicationQuestionSectionSaverTest {
 
     @InjectMocks
-    private ApplicationQuestionSectionSaver service;
+    private ApplicationQuestionSectionUpdater service;
 
     @Mock
     private CompetitionSetupQuestionService competitionSetupQuestionService;

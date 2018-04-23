@@ -15,8 +15,8 @@ import org.innovateuk.ifs.competitionsetup.common.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.common.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.milestone.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionSaver;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSectionUpdater;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +38,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * Competition setup section saver for the milestones section.
  */
 @Service
-public class MilestonesSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
+public class MilestonesSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSectionUpdater {
 
-    private static Log LOG = LogFactory.getLog(MilestonesSectionSaver.class);
+    private static Log LOG = LogFactory.getLog(MilestonesSectionUpdater.class);
 
     @Autowired
     private MilestoneRestService milestoneRestService;

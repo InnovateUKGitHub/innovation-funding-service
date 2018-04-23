@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 public class ApplicationDetailsSectionSaverTest {
 
     @InjectMocks
-    private ApplicationDetailsSectionSaver service;
+    private ApplicationDetailsSectionUpdater service;
 
     @Mock
     private CompetitionSetupRestService competitionSetupRestServiceMock;

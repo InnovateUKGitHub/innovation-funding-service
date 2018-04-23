@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.ApplicationFinanceSectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.ApplicationFinanceSectionUpdater;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.QuestionType;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 public class ApplicationFinanceSectionSaverTest {
 
     @InjectMocks
-    private ApplicationFinanceSectionSaver service;
+    private ApplicationFinanceSectionUpdater service;
 
     @Mock
     private CompetitionSetupFinanceService competitionSetupFinanceService;

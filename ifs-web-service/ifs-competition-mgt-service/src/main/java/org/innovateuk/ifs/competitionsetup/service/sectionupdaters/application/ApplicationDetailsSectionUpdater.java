@@ -9,8 +9,8 @@ import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.application.form.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionSaver;
-import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSubsectionSaver;
+import org.innovateuk.ifs.competitionsetup.application.sectionupdater.AbstractSectionUpdater;
+import org.innovateuk.ifs.competitionsetup.common.sectionupdater.CompetitionSetupSubsectionUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection
  * Competition setup section saver for the application -> application details form sub-section.
  */
 @Service
-public class ApplicationDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSubsectionSaver {
+public class ApplicationDetailsSectionUpdater extends AbstractSectionUpdater implements CompetitionSetupSubsectionUpdater {
 
     @Autowired
 	private Validator validator;
