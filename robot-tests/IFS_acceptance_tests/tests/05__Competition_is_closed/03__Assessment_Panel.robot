@@ -296,6 +296,7 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today} =  get today short month
     set suite variable  ${today}
+    get the initial milestone value
 
 Custom Tear Down
     return back to original milestone  FUNDERS_PANEL  ${assessmentPanelDate}  ${CLOSED_COMPETITION}
