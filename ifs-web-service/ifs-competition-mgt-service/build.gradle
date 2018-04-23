@@ -15,6 +15,11 @@ def enabled = project.hasProperty('ifs.competition-mgt-service.enabled') ? proje
     task.enabled = enabled
 }
 
+prepareDockerBaseInput {
+    inputs.file("$rootProject.projectDir/ifs-web-service/ifs-web-core/build/classes")
+    dependsOn ":ifs-web-service:ifs-web-core:build"
+}
+
 ext.serverContext = '/management'
 
 dependencies {
