@@ -8,15 +8,12 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.innovateuk.ifs.application.resource.ApplicationState.CREATED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
-import static org.innovateuk.ifs.application.resource.ApplicationState.SUBMITTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 
 /**
  * View model for each application row in the 'In progress' section of the applicant dashboard.
  */
 public class InProgressDashboardRowViewModel extends AbstractApplicantDashboardRowViewModel<InProgressDashboardRowViewModel> {
-
     private final boolean assignedToMe;
     private final ApplicationState applicationState;
     private final boolean leadApplicant;
