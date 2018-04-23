@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competitionsetup.form.milestone.form.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.milestone.form.MilestoneRowForm;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;

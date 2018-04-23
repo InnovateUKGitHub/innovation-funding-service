@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competitionsetup.form.fundinginformation.form.AdditionalInfoForm;
-import org.innovateuk.ifs.competitionsetup.form.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.fundinginformation.populator.AdditionalInfoFormPopulator;
+import org.innovateuk.ifs.competitionsetup.fundinginformation.form.AdditionalInfoForm;
+import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.fundinginformation.populator.AdditionalInfoFormPopulator;
 import org.innovateuk.ifs.fixtures.CompetitionFundersFixture;
 import org.junit.Before;
 import org.junit.Test;

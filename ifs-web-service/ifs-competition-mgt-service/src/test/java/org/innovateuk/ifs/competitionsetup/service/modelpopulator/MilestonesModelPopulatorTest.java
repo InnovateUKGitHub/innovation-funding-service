@@ -2,9 +2,9 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competitionsetup.form.milestone.populator.MilestonesModelPopulator;
-import org.innovateuk.ifs.competitionsetup.form.milestone.viewmodel.MilestonesViewModel;
-import org.innovateuk.ifs.competitionsetup.form.common.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.milestone.populator.MilestonesModelPopulator;
+import org.innovateuk.ifs.competitionsetup.milestone.viewmodel.MilestonesViewModel;
+import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;

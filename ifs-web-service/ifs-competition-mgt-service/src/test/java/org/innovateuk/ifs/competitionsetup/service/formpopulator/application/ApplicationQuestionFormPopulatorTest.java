@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator.application;
 
-import org.innovateuk.ifs.competitionsetup.form.application.populator.ApplicationQuestionFormPopulator;
+import org.innovateuk.ifs.competitionsetup.application.populator.ApplicationQuestionFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.form.resource.QuestionResource;
 import org.innovateuk.ifs.form.resource.SectionResource;
@@ -9,8 +9,8 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competitionsetup.form.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.application.form.ApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.application.form.ApplicationQuestionForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

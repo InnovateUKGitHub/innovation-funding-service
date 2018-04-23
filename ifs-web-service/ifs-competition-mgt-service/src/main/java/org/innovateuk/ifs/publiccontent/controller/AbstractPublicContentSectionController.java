@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.competitionsetup.form.CompetitionSetupController.COMPETITION_ID_KEY;
+import static org.innovateuk.ifs.competitionsetup.CompetitionSetupController.COMPETITION_ID_KEY;
 
 /**
  * Abstract controller for all public content sections.

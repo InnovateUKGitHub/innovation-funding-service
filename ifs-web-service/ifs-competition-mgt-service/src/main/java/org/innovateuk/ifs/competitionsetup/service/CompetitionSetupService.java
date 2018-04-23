@@ -4,9 +4,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.form.common.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.common.viewmodel.CompetitionSetupSubsectionViewModel;
-import org.innovateuk.ifs.competitionsetup.form.common.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.common.viewmodel.CompetitionSetupViewModel;
 
 import java.util.Optional;
 

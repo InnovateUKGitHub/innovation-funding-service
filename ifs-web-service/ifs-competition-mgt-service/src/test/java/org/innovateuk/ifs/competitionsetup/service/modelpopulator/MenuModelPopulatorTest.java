@@ -5,9 +5,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.form.common.populator.MenuModelPopulator;
-import org.innovateuk.ifs.competitionsetup.form.common.viewmodel.MenuViewModel;
-import org.innovateuk.ifs.competitionsetup.form.common.viewmodel.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.common.populator.MenuModelPopulator;
+import org.innovateuk.ifs.competitionsetup.common.viewmodel.MenuViewModel;
+import org.innovateuk.ifs.competitionsetup.common.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;

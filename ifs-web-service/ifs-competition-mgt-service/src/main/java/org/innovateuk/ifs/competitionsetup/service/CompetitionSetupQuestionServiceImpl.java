@@ -12,7 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.form.application.form.LandingPageForm;
+import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;

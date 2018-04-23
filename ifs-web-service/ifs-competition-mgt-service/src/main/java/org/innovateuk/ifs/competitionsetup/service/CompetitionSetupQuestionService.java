@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competitionsetup.form.application.form.LandingPageForm;
+import org.innovateuk.ifs.competitionsetup.application.form.LandingPageForm;
 import org.springframework.validation.BindingResult;
 
 /**
