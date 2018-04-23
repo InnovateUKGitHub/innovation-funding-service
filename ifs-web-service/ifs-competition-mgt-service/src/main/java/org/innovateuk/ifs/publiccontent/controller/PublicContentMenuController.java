@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
+import static org.innovateuk.ifs.competitionsetup.form.CompetitionSetupController.COMPETITION_ID_KEY;
 
 /**
  * Controller for setup of public content.

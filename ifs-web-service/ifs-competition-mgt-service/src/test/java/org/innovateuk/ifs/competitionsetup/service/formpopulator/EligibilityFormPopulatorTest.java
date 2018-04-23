@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
+import org.innovateuk.ifs.competitionsetup.form.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.eligibility.form.EligibilityForm;
+import org.innovateuk.ifs.competitionsetup.form.eligibility.populator.EligibilityFormPopulator;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;

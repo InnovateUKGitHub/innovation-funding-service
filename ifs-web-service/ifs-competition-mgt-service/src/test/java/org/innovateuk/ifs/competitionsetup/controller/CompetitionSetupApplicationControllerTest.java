@@ -6,14 +6,16 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupApplicationController;
+import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupController;
+import org.innovateuk.ifs.competitionsetup.form.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.application.form.ApplicationDetailsForm;
+import org.innovateuk.ifs.competitionsetup.form.application.form.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
-import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
-import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
-import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.form.common.populator.CompetitionSetupPopulator;
+import org.innovateuk.ifs.competitionsetup.form.common.viewmodel.QuestionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.form.common.viewmodel.GeneralSetupViewModel;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Before;
 import org.junit.Test;
@@ -428,7 +430,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+ CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedFileTypes").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.appendixGuidance").getCode());
 

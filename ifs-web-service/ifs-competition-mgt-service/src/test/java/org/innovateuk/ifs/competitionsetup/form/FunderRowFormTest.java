@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
+import org.innovateuk.ifs.competitionsetup.form.common.form.FunderRowForm;
 import org.junit.Test;
 
 import java.math.BigInteger;

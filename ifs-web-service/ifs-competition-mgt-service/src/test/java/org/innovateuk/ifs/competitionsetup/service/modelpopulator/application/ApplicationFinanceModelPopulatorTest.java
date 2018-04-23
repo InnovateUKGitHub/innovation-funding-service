@@ -2,7 +2,8 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator.application;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationFinanceViewModel;
+import org.innovateuk.ifs.competitionsetup.form.application.populator.ApplicationFinanceModelPopulator;
+import org.innovateuk.ifs.competitionsetup.form.application.viewmodel.ApplicationFinanceViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;

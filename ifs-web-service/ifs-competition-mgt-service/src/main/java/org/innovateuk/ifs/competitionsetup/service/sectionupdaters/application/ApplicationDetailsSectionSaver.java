@@ -6,11 +6,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
-import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
+import org.innovateuk.ifs.competitionsetup.form.common.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.application.form.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
-import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSectionSaver;
-import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
+import org.innovateuk.ifs.competitionsetup.form.application.sectionupdater.AbstractSectionSaver;
+import org.innovateuk.ifs.competitionsetup.form.common.sectionupdater.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

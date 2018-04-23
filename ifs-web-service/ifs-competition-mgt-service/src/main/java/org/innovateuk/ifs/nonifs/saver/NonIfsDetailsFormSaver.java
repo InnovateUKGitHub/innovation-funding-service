@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
-import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.common.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.springframework.beans.factory.annotation.Autowired;
