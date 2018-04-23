@@ -25,54 +25,58 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
 
     Sort SORT_BY_FIRSTNAME = new Sort("firstName");
 
-    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
-
     String APPLICATION_FILTER = "SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
-            "AND (a.applicationProcess.activityState.state IN :states) " +
+            "AND (a.applicationProcess.activityState IN :states) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
     String INNOVATION_AREA_FILTER = "SELECT a FROM ApplicationStatistics a " +
             "LEFT JOIN ApplicationInnovationAreaLink innovationArea ON innovationArea.application.id = a.id " +
             "AND (innovationArea.className = 'org.innovateuk.ifs.application.domain.Application#innovationArea') " +
             "WHERE a.competition = :compId " +
-            "AND (a.applicationProcess.activityState.state IN :states) " +
+            "AND (a.applicationProcess.activityState IN :states) " +
             "AND (innovationArea.category.id = :innovationArea OR :innovationArea IS NULL) " +
             "AND NOT EXISTS (SELECT 'found' FROM Assessment b WHERE b.participant.user.id = :assessorId AND b.target.id = a.id) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
+    String SUBMITTED_STATES_STRING = "(org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED)";
+
     String REJECTED_AND_SUBMITTED_STATES_STRING =
-            "(org.innovateuk.ifs.workflow.resource.State.REJECTED," +
-                    "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN," +
-                    "org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+            "(org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED)";
 
     String NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING =
-            "(org.innovateuk.ifs.workflow.resource.State.PENDING,org.innovateuk.ifs.workflow.resource.State.REJECTED," +
-                    "org.innovateuk.ifs.workflow.resource.State.WITHDRAWN,org.innovateuk.ifs.workflow.resource.State.CREATED,org.innovateuk.ifs.workflow.resource.State.SUBMITTED)";
+            "(org.innovateuk.ifs.assessment.resource.AssessmentState.PENDING," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.REJECTED," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.WITHDRAWN," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.CREATED," +
+                    "org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED)";
 
 
     List<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(long competitionId, Collection<ApplicationState> applicationStates);
 
     @Query(APPLICATION_FILTER)
     Page<ApplicationStatistics> findByCompetitionAndApplicationProcessActivityStateIn(@Param("compId") long competitionId,
-                                                                                           @Param("states") Collection<ApplicationState> applicationStates,
-                                                                                           @Param("filter") String filter,
-                                                                                           Pageable pageable);
+                                                                                      @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                      @Param("filter") String filter,
+                                                                                      Pageable pageable);
 
     @Query(INNOVATION_AREA_FILTER)
     Page<ApplicationStatistics> findByCompetitionAndInnovationAreaProcessActivityStateIn(@Param("compId") long competitionId,
-                                                                                           @Param("assessorId") long assessorId,
-                                                                                           @Param("states") Collection<ApplicationState> applicationStates,
-                                                                                           @Param("filter") String filter,
-                                                                                           @Param("innovationArea") Long innovationArea,
-                                                                                           Pageable pageable);
+                                                                                         @Param("assessorId") long assessorId,
+                                                                                         @Param("states") Collection<ApplicationState> applicationStates,
+                                                                                         @Param("filter") String filter,
+                                                                                         @Param("innovationArea") Long innovationArea,
+                                                                                         Pageable pageable);
+
     @Query("SELECT NEW org.innovateuk.ifs.application.resource.AssessorCountSummaryResource(" +
             "  user.id, " +
             "  concat(user.firstName, ' ', user.lastName), " +
             "  profile.skillsAreas, " +
-            "  sum(case when activityState.state NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
-            "  sum(case when assessmentParticipant.competition.id = :compId AND activityState.state NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
-            "  sum(case when assessmentParticipant.competition.id = :compId AND activityState.state NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
-            "  sum(case when assessmentParticipant.competition.id = :compId AND activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
+            "  sum(case when assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // total assigned
+            "  sum(case when assessmentParticipant.competition.id = :compId AND assessment.activityState NOT IN " + REJECTED_AND_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // assigned
+            "  sum(case when assessmentParticipant.competition.id = :compId AND assessment.activityState NOT IN " + NOT_ACCEPTED_OR_SUBMITTED_STATES_STRING + " THEN 1 ELSE 0 END), " + // accepted
+            "  sum(case when assessmentParticipant.competition.id = :compId AND assessment.activityState     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM User user " +
             "JOIN AssessmentParticipant assessmentParticipant ON assessmentParticipant.user.id = user.id " +
@@ -81,7 +85,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id " +
             "LEFT JOIN Assessment assessment ON assessment.participant = processRole.id " +
             "LEFT JOIN Application application ON assessment.target.id = application.id AND application.competition.id = assessmentParticipant.competition.id  " +
-            "LEFT JOIN ActivityState activityState ON application.id IS NOT NULL AND assessment.activityState.id = activityState.id " +
+//            "LEFT JOIN ActivityState activityState ON application.id IS NOT NULL AND assessment.activityState.id = activityState.id " +
             "WHERE " +
             "  assessmentParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  assessmentParticipant.role = 'ASSESSOR' AND " +
